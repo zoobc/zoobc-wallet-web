@@ -74,19 +74,20 @@
 
 <body>
   <header>
-    <h1 class="logo">Welcome to Spine Chain</h1>
+    <h1 class="logo">Spine Chain</h1>
     <div class="description">
-      <a href="">Don't have an account? Click here to create one!</a>
+     <a href="/dashboard">LOGIN</a>
     </div>
-  </header>
-
+  </header> 
   <footer>
-    <div class="author">
-      Official website:
-      <a href="http://{{.Website}}">{{.Website}}</a> /
-      Contact me:
-      <a class="email" href="mailto:{{.Email}}">{{.Email}}</a>
-    </div>
+    <!--
+        <div class="author">
+          Official website:
+          <a href="http://{{.Website}}">{{.Website}}</a> /
+          Contact me:
+          <a class="email" href="mailto:{{.Email}}">{{.Email}}</a>
+        </div>
+    -->    
   </footer>
   <div class="backdrop"></div>
 
