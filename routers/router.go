@@ -12,4 +12,6 @@ func init() {
 	beego.Router("/sendmessage", &controllers.AccountController{}, "get:SendMessageForm")
 	beego.Router("/transferhistory", &controllers.AccountController{}, "get:TransferHistoryTable")
 	beego.Router("/blocks", &controllers.SettingController{}, "get:BlockList")
+	beego.Router("/peers", &controllers.SettingController{}, "get:PeerList")
+	beego.Router("/generators", &controllers.SettingController{}, "get:GeneratorList")
 }
