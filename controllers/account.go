@@ -4,39 +4,28 @@ import (
 	"github.com/astaxie/beego"
 )
 
-//AccountController ...
+//AccountController conrtoller related account
 type AccountController struct {
 	beego.Controller
 }
 
-//AddAccountForm ...
-func (acc *AccountController) AddAccountForm() {
-	acc.Layout = "admin.html"
-	acc.Data["Website"] = "spinechain.go"
-	acc.Data["Email"] = "admin@spineshain.com"
-	acc.TplName = "account/index.tpl"
-}
-
-//SendMoneyForm ...
+//SendMoneyForm send money form
 func (acc *AccountController) SendMoneyForm() {
 	acc.Layout = "admin.html"
-	acc.Data["Website"] = "spinechain.go"
-	acc.Data["Email"] = "admin@spineshain.com"
+	acc.Data["title"] = "Send Money"
 	acc.TplName = "account/sendmoney.tpl"
 }
 
-//SendMessageForm ...
+//SendMessageForm send message form
 func (acc *AccountController) SendMessageForm() {
 	acc.Layout = "admin.html"
-	acc.Data["Website"] = "spinechain.go"
-	acc.Data["Email"] = "admin@spineshain.com"
+	acc.Data["title"] = "Send Message"
 	acc.TplName = "account/sendmessage.tpl"
 }
 
-//TransferHistoryTable ...
+//TransferHistoryTable transfer history
 func (acc *AccountController) TransferHistoryTable() {
 	acc.Layout = "admin.html"
-	acc.Data["Website"] = "spinechain.go"
-	acc.Data["Email"] = "admin@spineshain.com"
+	acc.Data["title"] = "Transfer History"
 	acc.TplName = "account/transferhistory.tpl"
 }
