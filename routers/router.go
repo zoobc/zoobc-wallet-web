@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/BlockchainZoo/spinechain-prototype/src/html/controllers"
+	"github.com/BlockchainZoo/spinechain-ui-prototype/controllers"
 	"github.com/astaxie/beego"
 )
 
