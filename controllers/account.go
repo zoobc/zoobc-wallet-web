@@ -11,6 +11,7 @@ type AccountController struct {
 
 //AddAccountForm ...
 func (acc *AccountController) AddAccountForm() {
+	acc.Layout = "admin.html"
 	acc.Data["Website"] = "spinechain.go"
 	acc.Data["Email"] = "admin@spineshain.com"
 	acc.TplName = "account/index.tpl"
@@ -18,6 +19,7 @@ func (acc *AccountController) AddAccountForm() {
 
 //SendMoneyForm ...
 func (acc *AccountController) SendMoneyForm() {
+	acc.Layout = "admin.html"
 	acc.Data["Website"] = "spinechain.go"
 	acc.Data["Email"] = "admin@spineshain.com"
 	acc.TplName = "account/sendmoney.tpl"
@@ -25,6 +27,7 @@ func (acc *AccountController) SendMoneyForm() {
 
 //SendMessageForm ...
 func (acc *AccountController) SendMessageForm() {
+	acc.Layout = "admin.html"
 	acc.Data["Website"] = "spinechain.go"
 	acc.Data["Email"] = "admin@spineshain.com"
 	acc.TplName = "account/sendmessage.tpl"
@@ -32,6 +35,7 @@ func (acc *AccountController) SendMessageForm() {
 
 //TransferHistoryTable ...
 func (acc *AccountController) TransferHistoryTable() {
+	acc.Layout = "admin.html"
 	acc.Data["Website"] = "spinechain.go"
 	acc.Data["Email"] = "admin@spineshain.com"
 	acc.TplName = "account/transferhistory.tpl"

@@ -8,6 +8,7 @@ type MainController struct {
 	beego.Controller
 }
 
+//Get ...
 func (c *MainController) Get() {
 	c.Data["Website"] = "spinechain.go"
 	c.Data["Email"] = "admin@spineshain.com"
@@ -15,6 +16,7 @@ func (c *MainController) Get() {
 }
 
 func (main *MainController) Dashboard() {
+	main.Layout = "admin.html"
 	main.Data["Website"] = "My Website"
 	main.Data["Email"] = "your.email.address@example.com"
 	main.Data["EmailName"] = "Your Name"
