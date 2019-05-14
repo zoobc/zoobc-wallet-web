@@ -10,6 +10,6 @@ func init() {
 	beego.Router("/dashboard", &controllers.MainController{}, "get:Dashboard")
 	beego.Router("/sendmoney", &controllers.AccountController{}, "get:SendMoneyForm")
 	beego.Router("/sendmessage", &controllers.AccountController{}, "get:SendMessageForm")
-	beego.Router("/newaccount/", &controllers.AccountController{}, "get:AddAccountForm")
-	beego.Router("/transferhistory/", &controllers.AccountController{}, "get:TransferHistoryTable")
+	beego.Router("/transferhistory", &controllers.AccountController{}, "get:TransferHistoryTable")
+	beego.Router("/blocks", &controllers.SettingController{}, "get:BlockList")
 }
