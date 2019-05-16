@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Beego</title>
+  <title>{{.title}}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
   <style type="text/css">
@@ -70,27 +70,26 @@
       left: 0px;
     }
   </style>
+  <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 
 <body>
-  <header>
-    <h1 class="logo">Spine Chain</h1>
-    <div class="description">
-     <a href="/dashboard">LOGIN</a>
-    </div>
-  </header> 
-  <footer>
-    <!--
-        <div class="author">
-          Official website:
-          <a href="http://{{.Website}}">{{.Website}}</a> /
-          Contact me:
-          <a class="email" href="mailto:{{.Email}}">{{.Email}}</a>
-        </div>
-    -->    
-  </footer>
-  <div class="backdrop"></div>
+   <script src="/static/vendor/jquery/jquery.min.js"></script>
+        {{.LayoutContent}}        
+   <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+   <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+   <script src="/static/js/sb-admin-2.min.js"></script>
+   <script src="/static/js/crypto/3rdparty/crypto-js/core.js"></script>
+   <script src="/static/js/crypto/3rdparty/crypto-js/x64-core.js"></script>   
+   <script src="/static/js/crypto/3rdparty/crypto-js/cipher-core.js"></script>
+   <script src="/static/js/crypto/3rdparty/crypto-js/sha256.js"></script>
+   <script src="/static/js/crypto/3rdparty/crypto-js/sha3.js"></script>
+   <script src="/static/js/crypto/curve25519_.js"></script>
+   <script src="/static/js/crypto/curve25519.js"></script>
+   <script src="/static/js/crypto/sha3.min.js"></script>   
+   <script src="/static/js/util/converters.js"></script>
+   <!-- <script src="/static/js/reload.min.js"></script> -->
 
-  <script src="/static/js/reload.min.js"></script>
 </body>
 </html>

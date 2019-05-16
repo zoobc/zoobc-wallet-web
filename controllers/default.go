@@ -10,13 +10,14 @@ type MainController struct {
 
 //Get is login page
 func (main *MainController) Get() {
+	main.Layout = "template/template_login.html"
 	main.Data["title"] = "Login - Register"
-	main.TplName = "index.tpl"
+	main.TplName = "default/login.html"
 }
 
 //Dashboard main dashboard
 func (main *MainController) Dashboard() {
 	main.Data["title"] = "Dashboard"
-	main.Layout = "admin.html"
+	main.Layout = "template/admin.html"
 	main.TplName = "default/dashboard.tpl"
 }

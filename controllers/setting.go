@@ -12,20 +12,20 @@ type SettingController struct {
 //GeneratorList list of block generator
 func (acc *SettingController) GeneratorList() {
 	acc.Data["title"] = "Generator List"
-	acc.Layout = "admin.html"
+	acc.Layout = "template/admin.html"
 	acc.TplName = "setting/generators.tpl"
 }
 
 //PeerList list of peers
 func (acc *SettingController) PeerList() {
 	acc.Data["title"] = "Peer List"
-	acc.Layout = "admin.html"
+	acc.Layout = "template/admin.html"
 	acc.TplName = "setting/peers.tpl"
 }
 
 //BlockList list of Block
 func (acc *SettingController) BlockList() {
 	acc.Data["title"] = "Block List"
-	acc.Layout = "admin.html"
+	acc.Layout = "template/admin.html"
 	acc.TplName = "setting/blocks.tpl"
 }
