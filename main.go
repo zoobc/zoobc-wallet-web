@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/BlockchainZoo/spinechain-ui-prototype/routers"
+	_ "github.com/BlockchainZoo/spinechain-web-wallet-prototype/routers"
 	"github.com/astaxie/beego"
 )
 
