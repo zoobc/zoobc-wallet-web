@@ -10,6 +10,8 @@ import { SendmessageComponent } from './sendmessage/sendmessage.component';
 import { LoginComponent } from './login/login.component';
 import { TransferhistoryComponent } from './transferhistory/transferhistory.component';
 import { MessagehistoryComponent } from './messagehistory/messagehistory.component';
+import { ParentComponent } from './components/parent/parent.component';
+import { SignupComponent } from './pages/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { MessagehistoryComponent } from './messagehistory/messagehistory.compone
     SendmessageComponent,
     LoginComponent,
     TransferhistoryComponent,
-    MessagehistoryComponent
+    MessagehistoryComponent,
+    ParentComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
