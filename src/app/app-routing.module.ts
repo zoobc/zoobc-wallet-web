@@ -14,10 +14,10 @@ const routes: Routes = [
     path: "",
     component: ParentComponent,
     children: [
-      { path: "sendmoney", component: SendmoneyComponent },
       { path: "sendmessage", component: SendmessageComponent },
       { path: "dashboard", component: DashboardComponent },
-      { path: "transferhistory", component: TransferhistoryComponent }
+      { path: "transferhistory", component: TransferhistoryComponent },
+      { path: "sendmoney", component: SendmoneyComponent }
     ]
   },
   { path: "login", component: LoginComponent },
