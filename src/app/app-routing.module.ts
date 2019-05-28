@@ -17,8 +17,7 @@ const routes: Routes = [
       { path: "sendmoney", component: SendmoneyComponent },
       { path: "sendmessage", component: SendmessageComponent },
       { path: "dashboard", component: DashboardComponent },
-      { path: "transferhistory", component: TransferhistoryComponent },
-      { path: "sendmoney", component: SendmoneyComponent }
+      { path: "transferhistory", component: TransferhistoryComponent }
     ]
   },
   { path: "login", component: LoginComponent },
