@@ -1,17 +1,19 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { SendmoneyComponent } from './sendmoney/sendmoney.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { SendmessageComponent } from './sendmessage/sendmessage.component';
-import { LoginComponent } from './login/login.component';
-import { TransferhistoryComponent } from './transferhistory/transferhistory.component';
-import { MessagehistoryComponent } from './messagehistory/messagehistory.component';
-import { ParentComponent } from './components/parent/parent.component';
-import { SignupComponent } from './pages/signup/signup.component';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { DashboardComponent } from "./pages/dashboard/dashboard.component";
+import { SendmoneyComponent } from "./pages/sendmoney/sendmoney.component";
+import { NavbarComponent } from "./navbar/navbar.component";
+import { SendmessageComponent } from "./pages/sendmessage/sendmessage.component";
+import { LoginComponent } from "./login/login.component";
+import { TransferhistoryComponent } from "./pages/transferhistory/transferhistory.component";
+import { MessagehistoryComponent } from "./pages/messagehistory/messagehistory.component";
+import { ParentComponent } from "./components/parent/parent.component";
+import { SignupComponent } from "./pages/signup/signup.component";
+import { SidebarComponent } from "./components/sidebar/sidebar.component";
 
 @NgModule({
   declarations: [
@@ -25,12 +27,10 @@ import { SignupComponent } from './pages/signup/signup.component';
     MessagehistoryComponent,
     ParentComponent,
     SignupComponent,
+    SidebarComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, NgbModule.forRoot()],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,12 @@
 // Topbar
 .topbar {
   height: $topbar-base-height;
+  position: fixed;
+  width: calc(100% - #{$sidebar-base-width});
+  z-index: 999;
+  @include media-breakpoint-down(sm) {
+    width: calc(100% - #{$sidebar-collapsed-width});
+  }
   #sidebarToggleTop {
     height: 2.5rem;
     width: 2.5rem;
