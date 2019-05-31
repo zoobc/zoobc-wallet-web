@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { DashboardComponent } from "./dashboard/dashboard.component";
-import { SendmoneyComponent } from "./sendmoney/sendmoney.component";
-import { SendmessageComponent } from "./sendmessage/sendmessage.component";
+import { DashboardComponent } from "./pages/dashboard/dashboard.component";
+import { SendmoneyComponent } from "./pages/sendmoney/sendmoney.component";
+import { SendmessageComponent } from "./pages/sendmessage/sendmessage.component";
 import { LoginComponent } from "./login/login.component";
-import { TransferhistoryComponent } from "./transferhistory/transferhistory.component";
+import { TransferhistoryComponent } from "./pages/transferhistory/transferhistory.component";
 import { SignupComponent } from './pages/signup/signup.component'
 
 import { ParentComponent } from "../app/components/parent/parent.component";

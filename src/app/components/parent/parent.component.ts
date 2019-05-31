@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ParentComponent implements OnInit {
 
+  isSidebarOpen = false
   constructor() { }
 
   ngOnInit() {
+  }
+
+  toggleSidebar(e) {
+    console.log(this.isSidebarOpen);
+    this.isSidebarOpen = !this.isSidebarOpen
   }
 
 }
