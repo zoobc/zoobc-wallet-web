@@ -10,6 +10,7 @@ import { SignupComponent } from './pages/signup/signup.component'
 import { ParentComponent } from "../app/components/parent/parent.component";
 
 const routes: Routes = [
+  { path: "", redirectTo: "login", pathMatch: "full" },
   {
     path: "",
     component: ParentComponent,

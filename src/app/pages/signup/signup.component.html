@@ -7,25 +7,32 @@
         <div class="row">
           <div class="col-4" *ngFor="let p of phaseprase; let key = index">
             <div class="box-passphrase">
-              <div class="number">{{key}}</div>
+              <div class="number">{{key+1}}</div>
               <div class="word">{{p}}</div>
             </div>
           </div>
         </div>
         <br>
 
-        <button class="btn btn-primary btn-icon-split">
-          <span class="icon text-white-50">
-            <i class="fas fa-copy"></i>
-          </span>
-          <span class="text">Copy Passphrase</span>
-        </button>
-        <br><br>
+        <div class="btn-grouped">
+          <button class="btn btn-primary btn-icon-split" (click)="copyPassphrase()">
+            <span class="icon text-white-50">
+              <i class="fas fa-copy"></i>
+            </span>
+            <span class="text">Copy Passphrase</span>
+          </button>
+          <button class="btn btn-success btn-icon-split" (click)="generateNewPassphrase()">
+            <span class="icon text-white-50">
+              <i class="fas fa-sync"></i>
+            </span>
+            <span class="text">Random</span>
+          </button>
+        </div>
 
-        <h5 class="h5 text-center">Your Public Account Address</h5>
+        <h6 class="h6 text-center">Your Public Account Address</h6>
         <div class="public-address">
           <span>BCZEGOb3WNx3fDOVf9ZS4EjvOIv</span>
-          <a href="#"><i class="fas fa-copy"></i></a>
+          <button class="btn btn-link" (click)="copyText('BCZEGOb3WNx3fDOVf9ZS4EjvOIv')"><i class="fas fa-copy"></i></button>
         </div>
 
         <div class="text-left">
@@ -45,14 +52,30 @@
         </div>
 
         <div class="text-right">
-          <a href="#" class="btn btn-success btn-icon-split">
+          <button class="btn btn-success btn-icon-split" (click)="openCreatePin(content)">
             <span class="icon text-white-50">
               <i class="fas fa-key"></i>
             </span>
-            <span class="text"><a href="/dashboard">Set My Pin</a></span>
-          </a>
+            <span class="text">Set My Pin</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Set Your Pin</h5>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <input type="text" class="form-control" id="pin" placeholder="Type Your Pin...">
+      </div>
+      <div class="text-right">
+        <button type="button" class="btn btn-primary" (click)="modal.close('Save click')">Save</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
