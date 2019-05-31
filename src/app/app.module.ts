@@ -11,9 +11,11 @@ import { SendmessageComponent } from "./pages/sendmessage/sendmessage.component"
 import { LoginComponent } from "./login/login.component";
 import { TransferhistoryComponent } from "./pages/transferhistory/transferhistory.component";
 import { MessagehistoryComponent } from "./pages/messagehistory/messagehistory.component";
+import { ReceiveComponent } from './pages/receive/receive.component'
 import { ParentComponent } from "./components/parent/parent.component";
 import { SignupComponent } from "./pages/signup/signup.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 @NgModule({
   declarations: [
@@ -24,12 +26,13 @@ import { SidebarComponent } from "./components/sidebar/sidebar.component";
     SendmessageComponent,
     LoginComponent,
     TransferhistoryComponent,
+    ReceiveComponent,
     MessagehistoryComponent,
     ParentComponent,
     SignupComponent,
-    SidebarComponent
+    SidebarComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule.forRoot()],
+  imports: [BrowserModule,  NgxQRCodeModule, AppRoutingModule, NgbModule.forRoot()],
   providers: [],
   bootstrap: [AppComponent]
 })

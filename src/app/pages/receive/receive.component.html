@@ -1,0 +1,12 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Deposit Address</h6>
+  </div>
+  <div class="card text-center">
+    <div class="card-body">
+      <h5 class="card-title">My Deposit Address :</h5>
+      <p class="card-text">{{address}}</p>
+      <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode>
+    </div>
+  </div>
+</div>
