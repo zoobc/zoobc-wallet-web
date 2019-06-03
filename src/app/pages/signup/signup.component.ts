@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import { wordlist} from '../../../assets/js/wordlist';
+import objectHash from 'object-hash'
 
 @Component({
   selector: "app-signup",
@@ -56,9 +57,8 @@ export class SignupComponent implements OnInit {
   }
 
   convertHash(){
-    let hash = require('object-hash');
     const phaseprases = this.phaseprase;
-    this.publicKey = hash(phaseprases);
+    this.publicKey = objectHash(phaseprases);
     localStorage.setItem('publicKey', JSON.stringify(this.publicKey));
   }
 
