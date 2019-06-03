@@ -10,6 +10,7 @@ import { wordlist} from '../../../assets/js/wordlist';
 })
 export class SignupComponent implements OnInit {
   phaseprase: any;
+  publicKey: string;
 
   constructor(private modalService: NgbModal, private router: Router) {}
 
@@ -45,12 +46,20 @@ export class SignupComponent implements OnInit {
       }
     }
     this.phaseprase = phraseWords;
+    this.convertHash()
     return this.phaseprase.sort(() => Math.random() - 0.5);
   }
 
   copyPassphrase() {
     const phaseprase = this.phaseprase.join(" ");
     this.copyText(phaseprase);
+  }
+
+  convertHash(){
+    let hash = require('object-hash');
+    const phaseprases = this.phaseprase;
+    this.publicKey = hash(phaseprases);
+    localStorage.setItem('publicKey', JSON.stringify(this.publicKey));
   }
 
   copyText(text) {
