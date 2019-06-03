@@ -1,8 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
-import { wordlist} from '../../../assets/js/wordlist';
-import objectHash from 'object-hash'
+import { wordlist } from "../../../assets/js/wordlist";
+import objectHash from "object-hash";
+import * as sha512 from 'js-sha512';
+import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { formArrayNameProvider } from "@angular/forms/src/directives/reactive_directives/form_group_name";
 
 @Component({
   selector: "app-signup",
@@ -10,18 +13,40 @@ import objectHash from 'object-hash'
   styleUrls: ["./signup.component.scss"]
 })
 export class SignupComponent implements OnInit {
+  modalRef: NgbModalRef;
+
   phaseprase: any;
   publicKey: string;
 
-  constructor(private modalService: NgbModal, private router: Router) {}
+  formTerms: FormGroup;
+  isWrittenDown = new FormControl(false, Validators.required);
+  isAgree = new FormControl(false, Validators.required);
+
+  formSetPin: FormGroup;
+  pinForm = new FormControl("", [
+    Validators.required,
+    Validators.minLength(6),
+    Validators.maxLength(6),
+    Validators.pattern("^[0-9]*$")
+  ]);
+
+  constructor(private modalService: NgbModal, private router: Router) {
+    this.formSetPin = new FormGroup({
+      pin: this.pinForm
+    });
+
+    this.formTerms = new FormGroup({
+      isWrittenDown: this.isWrittenDown,
+      isAgree: this.isAgree
+    });
+  }
 
   ngOnInit() {
-    window.scroll(0, 0)
+    window.scroll(0, 0);
     this.generateNewPassphrase();
   }
 
   generateNewPassphrase() {
-
     const crypto = window.crypto;
     let pass: any;
     const phraseWords = [];
@@ -47,7 +72,7 @@ export class SignupComponent implements OnInit {
       }
     }
     this.phaseprase = phraseWords;
-    this.convertHash()
+    this.convertHash();
     return this.phaseprase.sort(() => Math.random() - 0.5);
   }
 
@@ -56,10 +81,10 @@ export class SignupComponent implements OnInit {
     this.copyText(phaseprase);
   }
 
-  convertHash(){
+  convertHash() {
     const phaseprases = this.phaseprase;
     this.publicKey = objectHash(phaseprases);
-    localStorage.setItem('publicKey', JSON.stringify(this.publicKey));
+    localStorage.setItem("publicKey", JSON.stringify(this.publicKey));
   }
 
   copyText(text) {
@@ -75,13 +100,29 @@ export class SignupComponent implements OnInit {
   }
 
   openCreatePin(content) {
-    this.modalService
-      .open(content, {
-        ariaLabelledBy: "modal-basic-title",
-        beforeDismiss: () => false
-      })
-      .result.then(() => {
-        this.router.navigateByUrl("/dashboard");
-      });
+    this.modalRef = this.modalService.open(content, {
+      ariaLabelledBy: "modal-basic-title",
+      beforeDismiss: () => false
+    });
+    this.modalRef.result.then(() => {
+      this.router.navigateByUrl("/dashboard");
+    });
+  }
+
+  onSetPin() {
+    if (this.formSetPin.valid) {
+      let account = JSON.parse(localStorage.getItem("account")) || [];
+      let isDuplicate = account.find(a => a.publicKey == this.publicKey)
+
+      if (!isDuplicate) {
+        account.push({
+          publicKey: this.publicKey,
+          pin: sha512.sha512(this.pinForm.value)
+        });
+        localStorage.setItem('account', JSON.stringify(account))
+      }
+
+      this.modalRef.close();
+    }
   }
 }
