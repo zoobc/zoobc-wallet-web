@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SidebarComponent implements OnInit {
 
   @Input() isActive: string;
+  @Input() menu: string;
 
   constructor() { }
 

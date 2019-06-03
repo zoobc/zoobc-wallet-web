@@ -3,7 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { SendmoneyComponent } from "./pages/sendmoney/sendmoney.component";
 import { SendmessageComponent } from "./pages/sendmessage/sendmessage.component";
-import { LoginComponent } from "./login/login.component";
+import { LoginComponent } from "./pages/login/login.component";
 import { TransferhistoryComponent } from "./pages/transferhistory/transferhistory.component";
 import { SignupComponent } from './pages/signup/signup.component'
 
