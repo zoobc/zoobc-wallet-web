@@ -3,7 +3,7 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-  <app-sidebar [isActive]="isSidebarOpen"></app-sidebar>
+  <app-sidebar [isActive]="isSidebarOpen" [menu]="menu"></app-sidebar>
 
   <!-- Content Wrapper -->
   <div id="content-wrapper" class="d-flex flex-column">
@@ -11,7 +11,7 @@
     <!-- Main Content -->
     <div id="content">
 
-      <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+      <app-navbar (toggleSidebar)="toggleSidebar()" [isActive]="isSidebarOpen"></app-navbar>
 
       <!-- Begin Page Content -->
       <div class="container-fluid">

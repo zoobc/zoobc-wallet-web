@@ -13,7 +13,7 @@
   <hr class="sidebar-divider my-0">
 
   <!-- Nav Item - Dashboard -->
-  <li class="nav-item active">
+  <li class="nav-item" [ngClass]="menu == 'dashboard' && 'active'">
     <a class="nav-link" [routerLink]="['/dashboard']">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>Dashboard</span>
@@ -21,7 +21,7 @@
   </li>
 
   <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
+  <li class="nav-item" [ngClass]="menu == 'transferhistory' && 'active'">
     <a class="nav-link" [routerLink]="['/transferhistory']">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>My Transaction</span>
@@ -33,7 +33,7 @@
   <hr class="sidebar-divider">
 
   <!-- Nav Item - Send Money -->
-  <li class="nav-item">
+  <li class="nav-item" [ngClass]="menu == 'sendmoney' && 'active'">
     <a class="nav-link" [routerLink]="['/sendmoney']">
       <i class="fas fa-fw fa-chart-area"></i>
       <span>Send Money</span>
@@ -41,7 +41,7 @@
   </li>
 
   <!-- Nav Item - Send Message -->
-  <li class="nav-item">
+  <li class="nav-item" [ngClass]="menu == 'sendmessage' && 'active'">
     <a class="nav-link" [routerLink]="['/sendmessage']">
       <i class="fas fa-fw fa-table"></i>
       <span>Send Message</span>
