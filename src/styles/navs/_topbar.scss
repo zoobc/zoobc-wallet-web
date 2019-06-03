@@ -5,6 +5,9 @@
   width: calc(100% - #{$sidebar-base-width});
   z-index: 999;
   @include media-breakpoint-down(sm) {
+    &.toggled {
+      width: 100%;
+    }
     width: calc(100% - #{$sidebar-collapsed-width});
   }
   #sidebarToggleTop {
@@ -85,7 +88,7 @@
           position: absolute;
           bottom: 0;
           right: 0;
-          border: .125rem solid $white;
+          border: 0.125rem solid $white;
         }
       }
       .text-truncate {
@@ -116,7 +119,8 @@
   }
 }
 
-.topbar.navbar-dark {}
+.topbar.navbar-dark {
+}
 
 .topbar.navbar-light {
   .navbar-nav {
