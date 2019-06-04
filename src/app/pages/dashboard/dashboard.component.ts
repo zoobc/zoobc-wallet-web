@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from "../../services/account.service"
 
 @Component({
   selector: 'app-dashboard',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
-  constructor() { }
+  accountBalance;
+  constructor(private accountService: AccountService) {
+   }
 
   ngOnInit() {
+    this.accountService.getAccountBalance().subscribe(data =>{
+      this.accountBalance = data;
+    });
     window.scroll(0, 0)
   }
 

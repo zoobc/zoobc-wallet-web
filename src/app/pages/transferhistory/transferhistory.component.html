@@ -26,7 +26,7 @@
         <tbody>
           <tr *ngFor="let transaction of (accountHistory | async)?.transactions | paginate: config">
            <td>{{transaction.Timestamp | date: 'yyyy-MM-dd'}}</td>
-           <td>{{transaction.Type === 0 ? "Send Money" : "Receive Money" }}</td> 
+           <td>{{transaction.Type === 0 ? "Send Money" : "Received From" }}</td> 
            <td>{{transaction.Type === 0 ? transaction.Recipient : transaction.senderPublicKey }}</td>
            <td>{{transaction.AmountNQT/1e8}}</td>
            <td>{{transaction.feeNQT/1e8}}</td>

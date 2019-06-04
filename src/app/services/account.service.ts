@@ -21,6 +21,9 @@ export class AccountService {
       `${this.apiUrl}/getAccountTransactions/${this.PublicKey}`
     );
   }
+  getAccountBalance(){
+    return this.http.get(`${this.apiUrl}/getBalance/${this.PublicKey}`);
+  }
 
   sendMoney(data) {
     return this.http.post(`${this.apiUrl}/sendMoney`, data);
