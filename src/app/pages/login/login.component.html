@@ -1,22 +1,60 @@
 <div class="login-page">
   <div class="container">
     <h3 class="h3 text-center" style="margin-bottom:24px">Spinechain Logo</h3>
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4" *ngIf="!isPinNeeded">
       <div class="card-body">
-        <h5 class="h5 text-center">Login Spinechain</h5>
-        <div class="form-group">
-          <input type="email" class="form-control" placeholder="Your Passphrase">
-        </div>
+        <ngb-tabset type="pills" justify="center" [activeId]="accounts.length > 0 ? '1' : '2'">
+          <ngb-tab title="By Account" id="1">
+            <ng-template ngbTabContent>
+              <br>
+              <select class="custom-select" (change)="onLoginAccount($event.target.value)">
+                <option selected disabled>Select an account to Login</option>
+                <option *ngFor="let pubKey of accounts" [value]="pubKey">{{pubKey}}</option>
+              </select>
+              <a [routerLink]="['/signup']" class="btn btn-transparent">
+                <span class="text">Create new account</span>
+              </a>
+            </ng-template>
+          </ngb-tab>
+          <ngb-tab id="2">
+            <ng-template ngbTabTitle>By Mnemonic</ng-template>
+            <ng-template ngbTabContent>
+              <br>
+              <form [formGroup]="formLoginMnemonic" (submit)="onLoginMnemonic()">
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Your Passphrase" formControlName="passPhrase">
+                </div>
 
-        <a [routerLink]="['/dashboard']" class="btn btn-success btn-icon-split">
-          <span class="icon text-white-50">
-            <i class="fas fa-check"></i>
-          </span>
-          <span class="text">Login</span>
-        </a>
-        <a [routerLink]="['/signup']" class="btn btn-transparent">
-          <span class="text">Create new account</span>
-        </a>
+                <button class="btn btn-success btn-icon-split" type="submit">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-check"></i>
+                  </span>
+                  <span class="text">Login</span>
+                </button>
+                <a [routerLink]="['/signup']" class="btn btn-transparent">
+                  <span class="text">Create new account</span>
+                </a>
+              </form>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+
+      </div>
+    </div>
+
+    <div class="card shadow mb-4" *ngIf="isPinNeeded">
+      <div class="card-body">
+        <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
+          <div class="form-group">
+            <input type="password" class="form-control" placeholder="Your Pin..." formControlName="pin">
+          </div>
+          <button class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+              <i class="fas fa-check"></i>
+            </span>
+            <span class="text">Login</span>
+          </button>
+        </form>
       </div>
     </div>
   </div>
