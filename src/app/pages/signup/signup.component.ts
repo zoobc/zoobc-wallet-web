@@ -3,9 +3,11 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import { wordlist } from "../../../assets/js/wordlist";
 import objectHash from "object-hash";
-import * as sha512 from 'js-sha512';
+import * as sha512 from "js-sha512";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { formArrayNameProvider } from "@angular/forms/src/directives/reactive_directives/form_group_name";
+
+import { AppService } from "../../app.service";
 
 @Component({
   selector: "app-signup",
@@ -13,6 +15,8 @@ import { formArrayNameProvider } from "@angular/forms/src/directives/reactive_di
   styleUrls: ["./signup.component.scss"]
 })
 export class SignupComponent implements OnInit {
+  isPinNeeded = localStorage.getItem("pin") ? false : true;
+
   modalRef: NgbModalRef;
 
   phaseprase: any;
@@ -30,7 +34,11 @@ export class SignupComponent implements OnInit {
     Validators.pattern("^[0-9]*$")
   ]);
 
-  constructor(private modalService: NgbModal, private router: Router) {
+  constructor(
+    private modalService: NgbModal,
+    private router: Router,
+    private appServ: AppService
+  ) {
     this.formSetPin = new FormGroup({
       pin: this.pinForm
     });
@@ -100,6 +108,12 @@ export class SignupComponent implements OnInit {
   }
 
   openCreatePin(content) {
+    if (!this.isPinNeeded) {
+      this.saveNewAccount();
+      this.router.navigateByUrl("/dashboard");
+      return true;
+    }
+
     this.modalRef = this.modalService.open(content, {
       ariaLabelledBy: "modal-basic-title",
       beforeDismiss: () => false
@@ -111,18 +125,15 @@ export class SignupComponent implements OnInit {
 
   onSetPin() {
     if (this.formSetPin.valid) {
-      let account = JSON.parse(localStorage.getItem("account")) || [];
-      let isDuplicate = account.find(a => a.publicKey == this.publicKey)
-
-      if (!isDuplicate) {
-        account.push({
-          publicKey: this.publicKey,
-          pin: sha512.sha512(this.pinForm.value)
-        });
-        localStorage.setItem('account', JSON.stringify(account))
-      }
+      this.saveNewAccount()
+      localStorage.setItem("pin", sha512.sha512(this.pinForm.value));
 
       this.modalRef.close();
     }
+  }
+
+  saveNewAccount() {
+    this.appServ.updateAllAccount(this.publicKey);
+    this.appServ.changeCurrentAccount(this.publicKey);
   }
 }
