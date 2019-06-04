@@ -16,7 +16,10 @@ import { ReceiveComponent } from "./pages/receive/receive.component";
 import { ParentComponent } from "./components/parent/parent.component";
 import { SignupComponent } from "./pages/signup/signup.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
-import { NgxQRCodeModule } from "ngx-qrcode2";
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { HttpClientModule } from '@angular/common/http';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { AccountService } from "./services/account.service"
 
 @NgModule({
   declarations: [
@@ -36,12 +39,14 @@ import { NgxQRCodeModule } from "ngx-qrcode2";
   imports: [
     BrowserModule,
     NgxQRCodeModule,
+    HttpClientModule,
+    NgxPaginationModule,
     AppRoutingModule,
     NgbModule.forRoot(),
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [AccountService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
