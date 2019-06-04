@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from '../../app.service'
 
 @Component({
   selector: 'app-receive',
@@ -8,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class ReceiveComponent implements OnInit {
 
   // value for QR Code
-  address = localStorage.getItem('publicKey');;
+  address: string = ''
 
-  constructor() { }
+  constructor(private appServ: AppService) {
+    appServ.currAccount.subscribe(account => {
+      this.address = account
+    })
+  }
 
   ngOnInit() {
   }
