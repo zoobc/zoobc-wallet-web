@@ -20,19 +20,21 @@
             <ng-template ngbTabTitle>By Mnemonic</ng-template>
             <ng-template ngbTabContent>
               <br>
-              <div class="form-group">
-                <input type="email" class="form-control" placeholder="Your Passphrase">
-              </div>
+              <form [formGroup]="formLoginMnemonic" (submit)="onLoginMnemonic()">
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Your Passphrase" formControlName="passPhrase">
+                </div>
 
-              <a [routerLink]="['/dashboard']" class="btn btn-success btn-icon-split">
-                <span class="icon text-white-50">
-                  <i class="fas fa-check"></i>
-                </span>
-                <span class="text">Login</span>
-              </a>
-              <a [routerLink]="['/signup']" class="btn btn-transparent">
-                <span class="text">Create new account</span>
-              </a>
+                <button class="btn btn-success btn-icon-split" type="submit">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-check"></i>
+                  </span>
+                  <span class="text">Login</span>
+                </button>
+                <a [routerLink]="['/signup']" class="btn btn-transparent">
+                  <span class="text">Create new account</span>
+                </a>
+              </form>
             </ng-template>
           </ngb-tab>
         </ngb-tabset>

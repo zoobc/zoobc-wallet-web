@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import * as sha512 from 'js-sha512';
 import { Router } from '@angular/router';
+import * as sha512 from 'js-sha512';
+import objectHash from "object-hash";
 
 import { AppService } from '../../app.service'
 
@@ -24,16 +25,23 @@ export class LoginComponent implements OnInit {
     Validators.pattern("^[0-9]*$")
   ]);
 
+  formLoginMnemonic: FormGroup
+  passPhraseForm = new FormControl("", Validators.required)
+
   constructor(private router: Router, private appServ: AppService) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm
+    })
+
+    this.formLoginMnemonic = new FormGroup({
+      passPhrase: this.passPhraseForm
     })
 
     this.accounts = appServ.getAllAccount()
   }
 
   ngOnInit() {
-    console.log(this.appServ.getAllAccount());
+    
   }
 
   onLoginPin() {
@@ -47,6 +55,17 @@ export class LoginComponent implements OnInit {
   onLoginAccount(val) {
     this.appServ.changeCurrentAccount(val)
     this.router.navigateByUrl("/dashboard");
+  }
+
+  onLoginMnemonic() {
+    if (this.formLoginMnemonic.valid) {
+      let pubKey = objectHash(this.passPhraseForm.value);
+
+      this.appServ.updateAllAccount(pubKey);
+      this.appServ.changeCurrentAccount(pubKey)
+
+      this.router.navigateByUrl("/dashboard");
+    }
   }
 
 }
