@@ -36,7 +36,9 @@ export class AppService implements CanActivate {
     });
 
     if (pubKey) return true;
-
+    console.log(pubKey);
+    console.log('cant login');
+    
     this.router.navigateByUrl("/login");
     return false;
   }
