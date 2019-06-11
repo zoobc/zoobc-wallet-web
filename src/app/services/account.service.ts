@@ -41,7 +41,6 @@ export class AccountService {
         request,
         null,
         (err, response: GetTransactionsResponse) => {
-          console.log(response.toObject());
           if (err) return reject(err);
           resolve(response.toObject());
         }
@@ -57,7 +56,6 @@ export class AccountService {
         request,
         null,
         (err, response: AccountBalance) => {
-          console.log(response.toObject());
           if (err) return reject(err)
           resolve(response.toObject())
         }

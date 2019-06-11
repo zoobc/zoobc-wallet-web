@@ -6,7 +6,7 @@ import { BehaviorSubject } from "rxjs";
   providedIn: "root"
 })
 export class AppService implements CanActivate {
-  private sourceCurrAccount = new BehaviorSubject("01557a5d8b101b29a930400b5b83a346dc39e107");
+  private sourceCurrAccount = new BehaviorSubject("AiElJCMjIh8hHyUfIyMiIFNdIUlcISUkIyMiHyEfJR8jIyIgU10hSVw=");
   currAccount = this.sourceCurrAccount.asObservable();
 
   constructor(private router: Router) {}
