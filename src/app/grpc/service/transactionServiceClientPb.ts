@@ -73,5 +73,27 @@ export class TransactionServiceClient {
       callback);
   }
 
+  methodInfoGetTransaction = new grpcWeb.AbstractClientBase.MethodInfo(
+    model_transaction_pb.GetTransactionResponse,
+    (request: model_transaction_pb.GetTransactionRequest) => {
+      return request.serializeBinary();
+    },
+    model_transaction_pb.GetTransactionResponse.deserializeBinary
+  );
+
+  getTransaction(
+    request: model_transaction_pb.GetTransactionRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: model_transaction_pb.GetTransactionResponse) => void) {
+    return this.client_.rpcCall(
+      this.hostname_ +
+        '/service.TransactionService/GetTransaction',
+      request,
+      metadata || {},
+      this.methodInfoGetTransaction,
+      callback);
+  }
+
 }
 

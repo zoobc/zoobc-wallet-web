@@ -90,6 +90,54 @@ export namespace Transaction {
   }
 }
 
+export class GetTransactionRequest extends jspb.Message {
+  getTransactionbytes(): Uint8Array | string;
+  getTransactionbytes_asU8(): Uint8Array;
+  getTransactionbytes_asB64(): string;
+  setTransactionbytes(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionRequest): GetTransactionRequest.AsObject;
+  static serializeBinaryToWriter(message: GetTransactionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionRequest;
+  static deserializeBinaryFromReader(message: GetTransactionRequest, reader: jspb.BinaryReader): GetTransactionRequest;
+}
+
+export namespace GetTransactionRequest {
+  export type AsObject = {
+    transactionbytes: Uint8Array | string,
+  }
+}
+
+export class GetTransactionResponse extends jspb.Message {
+  getMessage(): string;
+  setMessage(value: string): void;
+
+  getIsvalid(): boolean;
+  setIsvalid(value: boolean): void;
+
+  getTransactionbytes(): Uint8Array | string;
+  getTransactionbytes_asU8(): Uint8Array;
+  getTransactionbytes_asB64(): string;
+  setTransactionbytes(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetTransactionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetTransactionResponse): GetTransactionResponse.AsObject;
+  static serializeBinaryToWriter(message: GetTransactionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetTransactionResponse;
+  static deserializeBinaryFromReader(message: GetTransactionResponse, reader: jspb.BinaryReader): GetTransactionResponse;
+}
+
+export namespace GetTransactionResponse {
+  export type AsObject = {
+    message: string,
+    isvalid: boolean,
+    transactionbytes: Uint8Array | string,
+  }
+}
+
 export class GetTransactionsByAccountPublicKeyRequest extends jspb.Message {
   getAccountpublickey(): Uint8Array | string;
   getAccountpublickey_asU8(): Uint8Array;
