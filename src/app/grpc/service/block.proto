@@ -1,0 +1,12 @@
+syntax="proto3";
+
+package service;
+
+option go_package = "github.com/BlockchainZoo/spinechain-api-prototype/backend/schema/service";
+
+import "model/block.proto";
+
+// BlockService represent request on Blockchain's Block
+service BlockService {
+    rpc GetBlocks(model.GetBlocksRequest) returns (model.GetBlocksResponse) {}
+}
