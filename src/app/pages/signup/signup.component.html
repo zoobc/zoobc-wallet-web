@@ -84,6 +84,10 @@
     <form [formGroup]="formSetPin" (submit)="onSetPin()">
       <div class="form-group">
         <input type="password" class="form-control" placeholder="Type Your Pin..." formControlName="pin">
+        <small class="form-text error-text">
+          <span *ngIf="pinForm.hasError('pattern')">Pin must be numeric. </span>
+          <span *ngIf="pinForm.hasError('minlength') || pinForm.hasError('maxlength')">Pin must be 6 digits. </span>
+        </small>
       </div>
       <div class="text-right">
         <button type="submit" class="btn btn-primary">Save</button>
