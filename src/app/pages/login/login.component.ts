@@ -64,8 +64,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   onLoginPin() {
-    console.log(`${this.pin} == ${sha512.sha512(this.pinForm.value)}`);
-
     if (this.formLoginPin.valid) {
       if (this.pin == sha512.sha512(this.pinForm.value))
         this.isPinNeeded = false;

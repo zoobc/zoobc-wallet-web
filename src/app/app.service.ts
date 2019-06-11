@@ -6,7 +6,7 @@ import { BehaviorSubject } from "rxjs";
   providedIn: "root"
 })
 export class AppService implements CanActivate {
-  private sourceCurrAccount = new BehaviorSubject("");
+  private sourceCurrAccount = new BehaviorSubject("AiElJCMjIh8hHyUfIyMiIFNdIUlcISUkIyMiHyEfJR8jIyIgU10hSVw=");
   currAccount = this.sourceCurrAccount.asObservable();
 
   constructor(private router: Router) {}
@@ -36,8 +36,6 @@ export class AppService implements CanActivate {
     });
 
     if (pubKey) return true;
-    console.log(pubKey);
-    console.log('cant login');
     
     this.router.navigateByUrl("/login");
     return false;

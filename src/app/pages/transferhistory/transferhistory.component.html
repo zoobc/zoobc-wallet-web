@@ -3,7 +3,7 @@
     <h6 class="m-0 font-weight-bold text-primary">Transaction History</h6>
   </div>
   <div class="card-body">
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf="accountHistory.length > 0">
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
@@ -24,12 +24,12 @@
           </tr>
         </tfoot>
         <tbody>
-          <tr *ngFor="let transaction of (accountHistory | async)?.transactions | paginate: config">
-           <td>{{transaction.Timestamp | date: 'yyyy-MM-dd'}}</td>
-           <td>{{transaction.Type === 0 ? "Send Money" : "Received From" }}</td> 
-           <td>{{transaction.Type === 0 ? transaction.Recipient : transaction.senderPublicKey }}</td>
-           <td>{{transaction.AmountNQT/1e8}}</td>
-           <td>{{transaction.feeNQT/1e8}}</td>
+          <tr *ngFor="let transaction of accountHistory | paginate: config">
+           <td>{{transaction.timestamp | date: 'yyyy-MM-dd'}}</td>
+           <td>{{transaction.recipientpublickey === pubKey ? 'Receive Money' : 'Send Money' }}</td> 
+           <td>{{transaction.recipientpublickey === pubKey ? transaction.senderpublickey : transaction.recipientpublickey }}</td>
+           <td>{{transaction.amountnqt / 1e8}}</td>
+           <td>{{transaction.feenqt / 1e8}}</td>
           </tr>
         </tbody>
       </table>
