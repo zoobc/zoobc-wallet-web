@@ -2,10 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import { wordlist } from "../../../assets/js/wordlist";
-import objectHash from "object-hash";
 import * as sha512 from "js-sha512";
+import * as sha256 from "sha256";
+import { eddsa as EdDSA } from "elliptic";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { formArrayNameProvider } from "@angular/forms/src/directives/reactive_directives/form_group_name";
 
 import { AppService } from "../../app.service";
 
@@ -19,8 +19,9 @@ export class SignupComponent implements OnInit {
 
   modalRef: NgbModalRef;
 
-  phaseprase: any;
-  publicKey: string;
+  passphrase: any;
+  pairKey: any;
+  address: string;
 
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
@@ -79,20 +80,75 @@ export class SignupComponent implements OnInit {
         phraseWords.push(wordlist[w3]);
       }
     }
-    this.phaseprase = phraseWords;
-    this.convertHash();
-    return this.phaseprase.sort(() => Math.random() - 0.5);
+    this.passphrase = phraseWords;
+    this.pairKey = this.getPairKey(phraseWords);
+    return phraseWords;
   }
 
   copyPassphrase() {
-    const phaseprase = this.phaseprase.join(" ");
-    this.copyText(phaseprase);
+    const passphrase = this.passphrase.join(" ");
+    this.copyText(passphrase);
   }
 
-  convertHash() {
-    const phaseprases = this.phaseprase;
-    this.publicKey = objectHash(phaseprases);
-    localStorage.setItem("publicKey", JSON.stringify(this.publicKey));
+  getPairKey(passphrase) {
+    // convert passphrase string to bytes
+    let seedBuffer = new TextEncoder().encode(passphrase);
+    console.log(seedBuffer);
+
+    // convert bytes to sha256
+    let seedHash = sha256(seedBuffer);
+    console.log(seedHash);
+
+    // generate keypair from sha256
+    let ec = new EdDSA("ed25519");
+    let pairKey = ec.keyFromSecret(seedHash);
+    console.log("pubkey", pairKey.getPublic());
+    console.log("private key", pairKey.secret());
+    console.log("ec all", pairKey);
+
+    // get checksum from pubkey
+    let checksum = this.getChecksumByte(pairKey.getPublic());
+    // concat pubkey and checksum
+    let addressByte = [...pairKey.getPublic(), checksum[0]];
+    console.log("address", addressByte);
+
+    // convert address byte to base64
+    var binary = "";
+    var bytes = new Uint8Array(addressByte);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    let address = window.btoa(binary);
+    this.address = address
+    console.log("base64", address);
+
+    // SEND MONEY OR MESSAGE
+    // let message = "SpineChain is Best BlockChain";
+    // let messageBuffer = new TextEncoder().encode(message);
+    // console.log("messageBuffer", messageBuffer);
+
+    // let signature = pairKey.sign(pairKey.getPublic());
+    // console.log("hex pubkey", this.toHexString(pairKey.getPublic()));
+
+    // console.log(pairKey.verify(messageBuffer, [...signature._Rencoded, 11]));
+
+    return pairKey;
+  }
+
+  toHexString(byteArray) {
+    return Array.from(byteArray, (byte: any) => {
+      return ("0" + (byte & 0xff).toString(16)).slice(-2);
+    }).join("");
+  }
+
+  getChecksumByte(bytes) {
+    var n = bytes.length;
+    var a = 0;
+    for (let i = 0; i < n; i++) a += bytes[i];
+    let res = new Uint8Array([a]);
+
+    return res;
   }
 
   copyText(text) {
@@ -125,7 +181,7 @@ export class SignupComponent implements OnInit {
 
   onSetPin() {
     if (this.formSetPin.valid) {
-      this.saveNewAccount()
+      this.saveNewAccount();
       localStorage.setItem("pin", sha512.sha512(this.pinForm.value));
 
       this.modalRef.close();
@@ -133,7 +189,7 @@ export class SignupComponent implements OnInit {
   }
 
   saveNewAccount() {
-    this.appServ.updateAllAccount(this.publicKey);
-    this.appServ.changeCurrentAccount(this.publicKey);
+    this.appServ.updateAllAccount(this.pairKey.getPublic);
+    this.appServ.changeCurrentAccount(this.pairKey.getPublic);
   }
 }
