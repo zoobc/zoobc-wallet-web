@@ -6,7 +6,6 @@ import { BehaviorSubject } from "rxjs";
   providedIn: "root"
 })
 export class AppService implements CanActivate {
-  // private sourceCurrAccount = new BehaviorSubject("AiElJCMjIh8hHyUfIyMiIFNdIUlcISUkIyMiHyEfJR8jIyIgU10hSVw=");
   private sourceCurrAccount = new BehaviorSubject("");
   currAccount = this.sourceCurrAccount.asObservable();
 
