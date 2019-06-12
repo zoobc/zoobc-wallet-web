@@ -10,16 +10,14 @@ import { AppService } from "../../app.service";
 })
 export class TransferhistoryComponent implements OnInit {
   accountHistory: any = []
-  pubKey: string
+  address: string
   config: any;
 
   constructor(
     private accountService: AccountService,
     private appServ: AppService
   ) {
-    this.appServ.currAccount.subscribe(res => {
-      this.pubKey = res
-    })
+    this.address = this.appServ.getAddress()
     
     this.accountService.getAccountTransaction().then((res: any) => {
       this.accountHistory = res.transactionsList;

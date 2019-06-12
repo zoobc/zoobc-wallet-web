@@ -1,8 +1,0 @@
-syntax="proto3";
-
-package model;
-
-option go_package = "github.com/BlockchainZoo/spinechain-api-prototype/backend/schema/model";
-
-// Empty structure to represent empty parameter in proto
-message Empty {}

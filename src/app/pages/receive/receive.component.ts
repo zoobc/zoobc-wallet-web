@@ -12,9 +12,7 @@ export class ReceiveComponent implements OnInit {
   address: string = ''
 
   constructor(private appServ: AppService) {
-    appServ.currAccount.subscribe(account => {
-      this.address = account
-    })
+    this.address = appServ.getAddress()
   }
 
   ngOnInit() {

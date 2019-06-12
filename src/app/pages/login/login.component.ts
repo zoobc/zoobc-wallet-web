@@ -71,7 +71,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLoginAccount(val) {
-    this.appServ.changeCurrentAccount(val);
+    let account = this.accounts.find(acc => acc.address == val)
+    this.appServ.changeCurrentAccount(account.publicKey, account.address);
     this.router.navigateByUrl("/dashboard");
   }
 
@@ -104,7 +105,8 @@ export class LoginComponent implements OnInit {
   }
 
   saveNewAccount() {
-    this.appServ.updateAllAccount(this.publicKey);
-    this.appServ.changeCurrentAccount(this.publicKey);
+    // MUST SEND PUBLIC KEY AND ADDRESS
+    // this.appServ.updateAllAccount(this.publicKey);
+    // this.appServ.changeCurrentAccount(this.publicKey);
   }
 }
