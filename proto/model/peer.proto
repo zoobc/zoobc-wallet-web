@@ -1,0 +1,25 @@
+syntax="proto3";
+
+package model;
+
+option go_package = "github.com/BlockchainZoo/spinechain-api-prototype/backend/schema/model";
+
+// Peer represent the peer data structure stored in the database
+message Peer {
+    string Address = 1;
+    string AnnouncedAddress = 2;
+    int32 Port = 3;
+    enum StateEnum {
+        NON_CONNECTED = 0;
+        CONNECTED = 1;
+        DISCONNECTED = 2;
+        BLACKLISTED = 3;
+    }
+    StateEnum State = 4;
+    string Version = 5;
+}
+
+message GetPeersResponse {
+    // peers returned
+    repeated Peer Peers = 1;
+}

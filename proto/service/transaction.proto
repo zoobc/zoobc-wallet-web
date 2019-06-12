@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package service;
+
+option go_package = "github.com/BlockchainZoo/spinechain-api-prototype/backend/schema/service";
+
+import "model/transaction.proto"; 
+
+// TransactionService represent request on Send Money
+service TransactionService {
+    rpc GetTransactionsByAccountPublicKey(model.GetTransactionsByAccountPublicKeyRequest) returns (model.GetTransactionsResponse) {}
+    rpc GetTransactionsByBlockID(model.GetTransactionsByBlockIDRequest) returns (model.GetTransactionsResponse) {}
+    
+    // Use this for Send Money or Send Message
+    rpc GetTransaction(model.GetTransactionRequest) returns (model.GetTransactionResponse) {}
+}
