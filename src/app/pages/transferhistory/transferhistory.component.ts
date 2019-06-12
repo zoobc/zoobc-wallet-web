@@ -23,7 +23,6 @@ export class TransferhistoryComponent implements OnInit {
     
     this.accountService.getAccountTransaction().then((res: any) => {
       this.accountHistory = res.transactionsList;
-      console.log(this.accountHistory);
     });
     this.config = {
       itemsPerPage: 5,
