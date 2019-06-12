@@ -82,7 +82,7 @@ export class AccountService {
       let dataBytes = new Uint8Array(len);
       for (let i = 0; i < len; i++) {
         dataBytes[i] = binary_string.charCodeAt(i);
-      }      
+      }
 
       const request = new GetTransactionRequest();
       request.setTransactionbytes(dataBytes);

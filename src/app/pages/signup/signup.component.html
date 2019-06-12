@@ -5,7 +5,7 @@
       <div class="card-body text-center">
         <h5 class="h5">Your Passphrase</h5>
         <div class="row">
-          <div class="col-4" *ngFor="let p of phaseprase; let key = index">
+          <div class="col-4" *ngFor="let p of passphrase; let key = index">
             <div class="box-passphrase">
               <div class="number">{{key+1}}</div>
               <div class="word">{{p}}</div>
@@ -31,7 +31,7 @@
 
         <h6 class="h6 text-center">Your Public Account Address</h6>
         <div class="public-address">
-          <span>{{publicKey}}</span>
+          <span>{{address}}</span>
           <button class="btn btn-link" (click)="copyText(publicKey)"><i
               class="fas fa-copy"></i></button>
         </div>
