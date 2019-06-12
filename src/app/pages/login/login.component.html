@@ -9,7 +9,7 @@
               <br>
               <select class="custom-select" (change)="onLoginAccount($event.target.value)">
                 <option selected disabled>Select an account to Login</option>
-                <option *ngFor="let pubKey of accounts" [value]="pubKey">{{pubKey}}</option>
+                <option *ngFor="let account of accounts" [value]="account.address">{{account.address}}</option>
               </select>
               <a [routerLink]="['/signup']" class="btn btn-transparent">
                 <span class="text">Create new account</span>

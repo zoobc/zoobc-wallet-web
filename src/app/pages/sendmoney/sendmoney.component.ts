@@ -30,7 +30,7 @@ export class SendmoneyComponent implements OnInit {
       passphrase: this.passPhraseForm
     });
 
-    appServ.currAccount.subscribe(pubKey => (this.pubKey = pubKey));
+    this.pubKey = appServ.getAddress()
   }
 
   ngOnInit() {}

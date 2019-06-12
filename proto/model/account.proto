@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package model;
+
+option go_package = "github.com/BlockchainZoo/spinechain-api-prototype/backend/schema/model";
+
+import "model/accountBalance.proto";
+
+message Account {
+    int64 ID = 1;
+    bytes PublicKey = 2;
+    model.AccountBalance AccountBalance = 3;
+}
+
+message GetAccountsResponse {
+    repeated Account Accounts = 1;
+}
+
+message GetAccountByPublicKeyRequest {
+    bytes PublicKey = 1;
+}

@@ -26,14 +26,12 @@ export class AccountService {
   txServ: TransactionServiceClient;
 
   AccountTransaction = [];
-  PublicKey: string = "";
+  PublicKey: Uint8Array
   apiUrl = "http://54.254.196.180:8000";
   grpcUrl = "http://18.139.3.139:8080";
 
   constructor(private http: HttpClient, private appServ: AppService) {
-    appServ.currAccount.subscribe(account => {
-      this.PublicKey = account;
-    });
+    this.PublicKey = appServ.getPublicKey()
   }
   getAccountTransaction() {
     this.txServ = new TransactionServiceClient(this.grpcUrl, null, null);
@@ -55,6 +53,7 @@ export class AccountService {
     this.client = new AccountBalancesServiceClient(this.grpcUrl, null, null);
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
+      console.log(this.PublicKey);
       request.setPublickey(this.PublicKey);
 
       this.client.getAccountBalance(
@@ -73,10 +72,18 @@ export class AccountService {
     // return this.http.post(`${this.apiUrl}/sendMoney`, data);
 
     return new Promise((resolve, reject) => {
-      const { recipient, amount, fee, passphrase, from, senderPublicKey, signatureHash } = data
-      let dataString = `${recipient}${amount}${fee}${passphrase}${from}${senderPublicKey}${signatureHash}`
-      let dataSHA = sha512.sha512(dataString)
-      
+      const {
+        recipient,
+        amount,
+        fee,
+        passphrase,
+        from,
+        senderPublicKey,
+        signatureHash
+      } = data;
+      let dataString = `${recipient}${amount}${fee}${passphrase}${from}${senderPublicKey}${signatureHash}`;
+      let dataSHA = sha512.sha512(dataString);
+
       let binary_string = window.atob(dataSHA);
       let len = binary_string.length;
       let dataBytes = new Uint8Array(len);

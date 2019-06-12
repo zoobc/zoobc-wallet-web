@@ -6,32 +6,52 @@ import { BehaviorSubject } from "rxjs";
   providedIn: "root"
 })
 export class AppService implements CanActivate {
-  private sourceCurrAccount = new BehaviorSubject("");
-  currAccount = this.sourceCurrAccount.asObservable();
+  // private sourceCurrPublicKey = new BehaviorSubject("242,71,255,92,144,93,48,182,91,196,152,28,137,238,74,71,200,58,142,46,223,176,10,137,139,243,246,29,169,46,114,107");
+  private sourceCurrPublicKey = new BehaviorSubject("");
+  currPublicKey = this.sourceCurrPublicKey.asObservable();
+  private sourceCurrAddress = new BehaviorSubject("");
+  currAddress = this.sourceCurrAddress.asObservable();
 
   constructor(private router: Router) {}
 
-  changeCurrentAccount(pubKey) {
-    this.sourceCurrAccount.next(pubKey);
+  changeCurrentAccount(pubKey, address) {
+    this.sourceCurrPublicKey.next(pubKey);
+    this.sourceCurrAddress.next(address);
   }
 
   getAllAccount() {
     return JSON.parse(localStorage.getItem("accounts")) || [];
   }
 
-  updateAllAccount(pubKey) {
+  getPublicKey() {
+    let publicKey: Uint8Array
+    this.sourceCurrPublicKey.subscribe(account => {
+      publicKey = new Uint8Array(account.split(",").map(Number));
+    });
+    return publicKey
+  }
+
+  getAddress() {
+    let address: string
+    this.sourceCurrAddress.subscribe(res => {
+      address = res
+    });
+    return address
+  }
+
+  updateAllAccount(publicKey, address) {
     let accounts = this.getAllAccount();
-    let isDuplicate = accounts.find(key => key == pubKey);
+    let isDuplicate = accounts.find(acc => acc.publicKey == publicKey);
 
     if (!isDuplicate) {
-      accounts.push(pubKey);
+      accounts.push({ publicKey, address });
       localStorage.setItem("accounts", JSON.stringify(accounts));
     }
   }
 
   canActivate(): boolean {
     let pubKey = "";
-    this.currAccount.subscribe(account => {
+    this.sourceCurrPublicKey.subscribe(account => {
       pubKey = account;
     });
 

@@ -20,7 +20,10 @@ export class SignupComponent implements OnInit {
   modalRef: NgbModalRef;
 
   passphrase: any;
-  pairKey: any;
+  pairKey: {
+    privateKey: string,
+    publicKey: string
+  }
   address: string;
 
   formTerms: FormGroup;
@@ -93,24 +96,26 @@ export class SignupComponent implements OnInit {
   getPairKey(passphrase) {
     // convert passphrase string to bytes
     let seedBuffer = new TextEncoder().encode(passphrase);
-    console.log(seedBuffer);
+    // console.log(seedBuffer);
 
     // convert bytes to sha256
     let seedHash = sha256(seedBuffer);
-    console.log(seedHash);
+    // console.log(seedHash);
 
     // generate keypair from sha256
     let ec = new EdDSA("ed25519");
     let pairKey = ec.keyFromSecret(seedHash);
-    console.log("pubkey", pairKey.getPublic());
-    console.log("private key", pairKey.secret());
-    console.log("ec all", pairKey);
+    let publicKey = pairKey.getPublic()
+    let privateKey = pairKey.secret()
+    // console.log("pubkey", pairKey.getPublic());
+    // console.log("private key", pairKey.secret());
+    // console.log("ec all", pairKey);
 
     // get checksum from pubkey
     let checksum = this.getChecksumByte(pairKey.getPublic());
     // concat pubkey and checksum
     let addressByte = [...pairKey.getPublic(), checksum[0]];
-    console.log("address", addressByte);
+    // console.log("address", addressByte);
 
     // convert address byte to base64
     var binary = "";
@@ -121,7 +126,7 @@ export class SignupComponent implements OnInit {
     }
     let address = window.btoa(binary);
     this.address = address
-    console.log("base64", address);
+    // console.log("base64", address);
 
     // SEND MONEY OR MESSAGE
     // let message = "SpineChain is Best BlockChain";
@@ -133,7 +138,9 @@ export class SignupComponent implements OnInit {
 
     // console.log(pairKey.verify(messageBuffer, [...signature._Rencoded, 11]));
 
-    return pairKey;
+    console.log(pairKey.getPublic().toString());
+
+    return { privateKey, publicKey };
   }
 
   toHexString(byteArray) {
@@ -189,7 +196,8 @@ export class SignupComponent implements OnInit {
   }
 
   saveNewAccount() {
-    this.appServ.updateAllAccount(this.pairKey.getPublic);
-    this.appServ.changeCurrentAccount(this.pairKey.getPublic);
+    let strPubKey = this.pairKey.publicKey.toString()
+    this.appServ.updateAllAccount(strPubKey, this.address);
+    this.appServ.changeCurrentAccount(strPubKey, this.address);
   }
 }

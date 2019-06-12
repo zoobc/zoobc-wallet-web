@@ -4,7 +4,7 @@
 @import "./styles/variables";
 
 // Import Bootstrap
-@import "../src/assets/vendor/bootstrap/scss/bootstrap.scss";
+@import "./styles/bootstraps/bootstrap.scss";
 
 // Import Custom SB Admin 2 Mixins and Components
 @import "./styles/mixins.scss";
