@@ -1,0 +1,11 @@
+<div class="pins-container d-flex">
+  <div *ngFor="let index of pins">
+    <input
+      type="password"
+      class="form-control"
+      (change)="onChange(index, $event)"
+      (keyup)="onChange(index, $event)"
+      maxlength="1"
+    />
+  </div>
+</div>

@@ -25,6 +25,7 @@
     "elliptic": "^6.4.1",
     "google-protobuf": "^3.8.0",
     "grpc-web": "^1.0.4",
+    "jQuery": "^1.7.4",
     "jquery": "^3.4.1",
     "js-sha512": "^0.8.0",
     "ngx-pagination": "^3.2.1",

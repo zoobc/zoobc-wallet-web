@@ -1,0 +1,14 @@
+$spacePins: 0.4rem;
+.pins-container {
+  margin-left: -$spacePins;
+  margin-right: -$spacePins;
+  div {
+    padding-left: $spacePins;
+    padding-right: $spacePins;
+
+    input {
+      text-align: center;
+      border: 1px solid;
+    }
+  }
+}
