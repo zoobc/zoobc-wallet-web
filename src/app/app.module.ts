@@ -2,6 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import * as $ from "jquery";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -16,10 +17,11 @@ import { ReceiveComponent } from "./pages/receive/receive.component";
 import { ParentComponent } from "./components/parent/parent.component";
 import { SignupComponent } from "./pages/signup/signup.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
-import { NgxQRCodeModule } from 'ngx-qrcode2';
-import { HttpClientModule } from '@angular/common/http';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { GrpcapiService } from './services/grpcapi.service'
+import { NgxQRCodeModule } from "ngx-qrcode2";
+import { HttpClientModule } from "@angular/common/http";
+import { NgxPaginationModule } from "ngx-pagination";
+import { GrpcapiService } from "./services/grpcapi.service";
+import { PinsComponent } from "./components/pins/pins.component";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { GrpcapiService } from './services/grpcapi.service'
     MessagehistoryComponent,
     ParentComponent,
     SignupComponent,
-    SidebarComponent
+    SidebarComponent,
+    PinsComponent
   ],
   imports: [
     BrowserModule,

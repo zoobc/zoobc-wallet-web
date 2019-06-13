@@ -3,13 +3,24 @@
     <h3 class="h3 text-center" style="margin-bottom:24px">Spinechain Logo</h3>
     <div class="card shadow mb-4" *ngIf="!isPinNeeded">
       <div class="card-body">
-        <ngb-tabset type="pills" justify="center" [activeId]="accounts.length > 0 ? '1' : '2'">
+        <ngb-tabset
+          type="pills"
+          justify="center"
+          [activeId]="accounts.length > 0 ? '1' : '2'"
+        >
           <ngb-tab title="By Account" id="1">
             <ng-template ngbTabContent>
-              <br>
-              <select class="custom-select" (change)="onLoginAccount($event.target.value)">
+              <br />
+              <select
+                class="custom-select"
+                (change)="onLoginAccount($event.target.value)"
+              >
                 <option selected disabled>Select an account to Login</option>
-                <option *ngFor="let account of accounts" [value]="account.address">{{account.address}}</option>
+                <option
+                  *ngFor="let account of accounts"
+                  [value]="account.address"
+                  >{{ account.address }}</option
+                >
               </select>
               <a [routerLink]="['/signup']" class="btn btn-transparent">
                 <span class="text">Create new account</span>
@@ -19,10 +30,18 @@
           <ngb-tab id="2">
             <ng-template ngbTabTitle>By Mnemonic</ng-template>
             <ng-template ngbTabContent>
-              <br>
-              <form [formGroup]="formLoginMnemonic" (submit)="onLoginMnemonic(content)">
+              <br />
+              <form
+                [formGroup]="formLoginMnemonic"
+                (submit)="onLoginMnemonic(content)"
+              >
                 <div class="form-group">
-                  <input type="email" class="form-control" placeholder="Your Passphrase" formControlName="passPhrase">
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="Your Passphrase"
+                    formControlName="passPhrase"
+                  />
                 </div>
 
                 <button class="btn btn-success btn-icon-split" type="submit">
@@ -38,7 +57,6 @@
             </ng-template>
           </ngb-tab>
         </ngb-tabset>
-
       </div>
     </div>
 
@@ -46,10 +64,18 @@
       <div class="card-body">
         <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
           <div class="form-group">
-            <input type="password" class="form-control" placeholder="Your Pin..." formControlName="pin">
+            <label>Enter your PIN</label>
+            <field-pins formControlName="pin"></field-pins>
             <small class="form-text error-text">
-              <span *ngIf="pinForm.hasError('pattern')">Pin must be numeric. </span>
-              <span *ngIf="pinForm.hasError('minlength') || pinForm.hasError('maxlength')">Pin must be 6 digits. </span>
+              <span *ngIf="pinForm.hasError('pattern')"
+                >Pin must be numeric.
+              </span>
+              <span
+                *ngIf="
+                  pinForm.hasError('minlength') || pinForm.hasError('maxlength')
+                "
+                >Pin must be 6 digits.
+              </span>
             </small>
           </div>
           <button class="btn btn-success btn-icon-split">
@@ -65,21 +91,33 @@
 </div>
 
 <ng-template #content let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">Set Your Pin</h5>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="formSetPin" (submit)="onSetPin()">
-        <div class="form-group">
-          <input type="password" class="form-control" placeholder="Type Your Pin..." formControlName="pin">
-          <small class="form-text error-text">
-            <span *ngIf="setPinForm.hasError('pattern')">Pin must be numeric. </span>
-            <span *ngIf="setPinForm.hasError('minlength') || pinForm.hasError('maxlength')">Pin must be 6 digits. </span>
-          </small>
-        </div>
-        <div class="text-right">
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
-    </div>
-  </ng-template>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">Set Your Pin</h5>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="formSetPin" (submit)="onSetPin()">
+      <div class="form-group">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Type Your Pin..."
+          formControlName="pin"
+        />
+        <small class="form-text error-text">
+          <span *ngIf="setPinForm.hasError('pattern')"
+            >Pin must be numeric.
+          </span>
+          <span
+            *ngIf="
+              setPinForm.hasError('minlength') || pinForm.hasError('maxlength')
+            "
+            >Pin must be 6 digits.
+          </span>
+        </small>
+      </div>
+      <div class="text-right">
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
