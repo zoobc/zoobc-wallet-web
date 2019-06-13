@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
 import { GrpcapiService } from '../../services/grpcapi.service';
 import { AppService } from "../../app.service";
+import { AccountService } from '../../services/account.service';
+import * as sha256 from 'sha256';
 
 @Component({
   selector: "app-sendmoney",
@@ -16,11 +18,16 @@ export class SendmoneyComponent implements OnInit {
   feeForm = new FormControl("", Validators.required);
   passPhraseForm = new FormControl("", Validators.required);
 
-  pubKey: string;
+  address: string;
+  pairKey: any;
+  pubKey: any;
+  passphrase: any;
+  signature: any;
 
   constructor(
     private grpcServ: GrpcapiService,
-    private appServ: AppService
+    private appServ: AppService,
+    private accServ: AccountService
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -28,19 +35,33 @@ export class SendmoneyComponent implements OnInit {
       fee: this.feeForm,
       passphrase: this.passPhraseForm
     });
-
-    this.pubKey = appServ.getAddress()
   }
 
   ngOnInit() {}
 
   onSendMoney() {
     if (this.formSend.valid) {
+      // for testing uncomment comment
+      let datahash = sha256(this.formSend.valid)
+      this.passphrase = this.formSend.value.passphrase
+      console.log("pass",this.passphrase)
+
+      // convert passphrase to array
+      let arrayOfPasspharase = this.passphrase.split(' ')
+      
+      this.pairKey = this.accServ.GetKeyPairFromSeed(arrayOfPasspharase)
+      console.log("pair",this.pairKey)
+      this.address = this.accServ.GetAddressFromSeed(arrayOfPasspharase)
+      console.log("address",this.address)
+      this.pubKey = this.accServ.GetPublicKeyFromSeed(arrayOfPasspharase)
+      console.log("pubkey",this.pubKey)
+      this.signature = this.accServ.GetSignature(this.pairKey, datahash)
+      console.log("signature",this.signature)
       let data = {
         ...this.formSend.value,
-        from: this.pubKey,
-        senderPublicKey: "Send Pub Key",
-        signatureHash: "Sig Hash"
+        from: this.address,
+        senderPublicKey: this.pubKey,
+        signatureHash: this.signature
       };
       console.log(data);
 
