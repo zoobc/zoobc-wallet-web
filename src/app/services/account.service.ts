@@ -1,107 +1,92 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import * as sha512 from "js-sha512";
-
-import { AppService } from "../app.service";
-
-import { AccountBalancesServiceClient } from "../grpc/service/accountBalanceServiceClientPb";
-import { TransactionServiceClient } from "../grpc/service/transactionServiceClientPb";
-
-import {
-  GetAccountBalanceRequest,
-  AccountBalance
-} from "../grpc/model/accountBalance_pb";
-import {
-  GetTransactionsByAccountPublicKeyRequest,
-  GetTransactionsResponse,
-  GetTransactionRequest,
-  GetTransactionResponse
-} from "../grpc/model/transaction_pb";
+import { Injectable } from '@angular/core';
+import { wordlist } from '../..//assets/js/wordlist';
+import * as sha256 from 'sha256';
+import { eddsa as EdDSA } from 'elliptic';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class AccountService {
-  client: AccountBalancesServiceClient;
-  txServ: TransactionServiceClient;
-
-  AccountTransaction = [];
-  PublicKey: Uint8Array
-  apiUrl = "http://54.254.196.180:8000";
-  grpcUrl = "http://18.139.3.139:8080";
-
-  constructor(private http: HttpClient, private appServ: AppService) {
-    this.PublicKey = appServ.getPublicKey()
-  }
-  getAccountTransaction() {
-    this.txServ = new TransactionServiceClient(this.grpcUrl, null, null);
-    return new Promise((resolve, reject) => {
-      const request = new GetTransactionsByAccountPublicKeyRequest();
-      request.setAccountpublickey(this.PublicKey);
-
-      this.txServ.getTransactionsByAccountPublicKey(
-        request,
-        null,
-        (err, response: GetTransactionsResponse) => {
-          if (err) return reject(err);
-          resolve(response.toObject());
-        }
-      );
-    });
-  }
-  getAccountBalance() {
-    this.client = new AccountBalancesServiceClient(this.grpcUrl, null, null);
-    return new Promise((resolve, reject) => {
-      const request = new GetAccountBalanceRequest();
-      console.log(this.PublicKey);
-      request.setPublickey(this.PublicKey);
-
-      this.client.getAccountBalance(
-        request,
-        null,
-        (err, response: AccountBalance) => {
-          if (err) return reject(err);
-          resolve(response.toObject());
-        }
-      );
-    });
+  constructor() {
   }
 
-  sendMoney(data) {
-    this.txServ = new TransactionServiceClient(this.grpcUrl, null, null);
-    // return this.http.post(`${this.apiUrl}/sendMoney`, data);
+  generateNewPassphrase(): any {
+    const crypto = window.crypto;
+    const phraseWords = [];
 
-    return new Promise((resolve, reject) => {
-      const {
-        recipient,
-        amount,
-        fee,
-        passphrase,
-        from,
-        senderPublicKey,
-        signatureHash
-      } = data;
-      let dataString = `${recipient}${amount}${fee}${passphrase}${from}${senderPublicKey}${signatureHash}`;
-      let dataSHA = sha512.sha512(dataString);
+    if (crypto) {
+      const bits = 128;
+      const random = new Uint32Array(bits / 32);
+      crypto.getRandomValues(random);
+      const n = wordlist.length;
+      let x: any;
+      let w1: any;
+      let w2: any;
+      let w3: any;
 
-      let binary_string = window.atob(dataSHA);
-      let len = binary_string.length;
-      let dataBytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        dataBytes[i] = binary_string.charCodeAt(i);
+      for (let i = 0; i < random.length; i++) {
+        x = random[i];
+        w1 = x % n;
+        w2 = (((x / n) >> 0) + w1) % n;
+        w3 = (((((x / n) >> 0) / n) >> 0) + w2) % n;
+        phraseWords.push(wordlist[w1]);
+        phraseWords.push(wordlist[w2]);
+        phraseWords.push(wordlist[w3]);
       }
-
-      const request = new GetTransactionRequest();
-      request.setTransactionbytes(dataBytes);
-
-      this.txServ.getTransaction(
-        request,
-        null,
-        (err, response: GetTransactionResponse) => {
-          if (err) return reject(err);
-          resolve(response.toObject());
-        }
-      );
-    });
+    }
+    return phraseWords;
   }
+
+  VerifySignature(key, singnature, dataHash) {
+    const result = key.verify(dataHash, singnature);
+    return result;
+  }
+
+  GetSignature(key, dataHash): any {
+    const signature = key.sign(dataHash).toHex();
+    return signature;
+  }
+
+  GetAddressFromSeed(seed) {
+    return this.GetAddressFromPublicKey(this.GetPublicKeyFromSeed(seed))
+  }
+
+  // GetAddressFromPublicKey Get the formatted address from a raw public key
+  GetAddressFromPublicKey(publicKey) {
+    const checksum = this.GetChecksumByte(publicKey);
+    const addressBuffer = [...publicKey, checksum[0]];
+
+    // change to base64
+    let binary = '';
+    const bytes = new Uint8Array(addressBuffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const address = window.btoa(binary);
+    return address;
+  }
+
+  GetKeyPairFromSeed(seed): any {
+    const seedBuffer = new TextEncoder().encode(seed);
+    const seedHash = sha256(seedBuffer);
+    const ec = new EdDSA('ed25519');
+    const keyPair = ec.keyFromSecret(seedHash);
+    return keyPair;
+  }
+
+  GetPublicKeyFromSeed(seed): any {
+    const keyPair = this.GetKeyPairFromSeed(seed)
+    const publicKey = keyPair.getPublic();
+    return publicKey;
+  }
+
+  GetChecksumByte(bytes): any {
+    let n = bytes.length;
+    let a = 0;
+    for (let i = 0; i < n; i++) { a += bytes[i]; }
+    const res = new Uint8Array([a]);
+    return res;
+  }
+
 }

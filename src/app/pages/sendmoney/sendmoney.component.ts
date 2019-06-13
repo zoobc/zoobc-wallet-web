@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
-
-import { AccountService } from "../../services/account.service";
+import { GrpcapiService } from '../../services/grpcapi.service';
 import { AppService } from "../../app.service";
 
 @Component({
@@ -20,7 +19,7 @@ export class SendmoneyComponent implements OnInit {
   pubKey: string;
 
   constructor(
-    private accountServ: AccountService,
+    private grpcServ: GrpcapiService,
     private appServ: AppService
   ) {
     this.formSend = new FormGroup({
@@ -44,13 +43,13 @@ export class SendmoneyComponent implements OnInit {
         signatureHash: "Sig Hash"
       };
       console.log(data);
-      
+
       Swal.fire({
         title: `Are you sure want to send money?`,
         showCancelButton: true,
         showLoaderOnConfirm: true,
         preConfirm: () => {
-          return this.accountServ
+          return this.grpcServ
             .sendMoney(data)
             .then((res: any) => {
               Swal.fire("Money sent");

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AccountService } from "../../services/account.service";
+import { GrpcapiService } from '../../services/grpcapi.service';
 
 @Component({
   selector: "app-dashboard",
@@ -13,16 +13,13 @@ export class DashboardComponent implements OnInit {
   getAccountBalanceReq: any
 
   constructor(
-    private accountService: AccountService,
+    private grpcapiService: GrpcapiService,
   ) { }
 
   ngOnInit() {
-    this.accountService.getAccountBalance().then(data => {
+    this.grpcapiService.getAccountBalance().then(data => {
       this.accountBalance = data;
     });
-    // this.accountService.getAccountBalance().subscribe(data => {
-    //   this.accountBalance = data;
-    // });
     window.scroll(0, 0);
   }
 }

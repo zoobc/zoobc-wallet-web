@@ -19,7 +19,7 @@ import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { AccountService } from "./services/account.service"
+import { GrpcapiService } from './services/grpcapi.service'
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ import { AccountService } from "./services/account.service"
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [AccountService],
+  providers: [GrpcapiService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
