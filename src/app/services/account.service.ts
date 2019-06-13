@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { wordlist } from '../..//assets/js/wordlist';
+import { wordlist } from '../../assets/js/wordlist';
 import * as sha256 from 'sha256';
 import { eddsa as EdDSA } from 'elliptic';
 
