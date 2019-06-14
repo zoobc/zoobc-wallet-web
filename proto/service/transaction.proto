@@ -12,5 +12,5 @@ service TransactionService {
     rpc GetTransactionsByBlockID(model.GetTransactionsByBlockIDRequest) returns (model.GetTransactionsResponse) {}
     
     // Use this for Send Money or Send Message
-    rpc GetTransaction(model.GetTransactionRequest) returns (model.GetTransactionResponse) {}
+    rpc PostTransaction(model.PostTransactionRequest) returns (model.PostTransactionResponse) {}
 }

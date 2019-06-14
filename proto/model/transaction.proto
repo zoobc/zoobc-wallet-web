@@ -23,11 +23,11 @@ message Transaction {
 	string Hash = 16;
 }
 
-message  GetTransactionRequest{
+message PostTransactionRequest{
     bytes TransactionBytes = 1;
 }
 
-message GetTransactionResponse {
+message PostTransactionResponse {
     string Message = 1;
     bool IsValid = 2;
     bytes TransactionBytes = 3;
