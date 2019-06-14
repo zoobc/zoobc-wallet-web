@@ -37,13 +37,13 @@ export class AccountService {
     return phraseWords;
   }
 
-  VerifySignature(key, singnature, dataHash) {
-    const result = key.verify(dataHash, singnature);
+  VerifySignature(key, signature, data) {
+    const result = key.verify(data, signature);
     return result;
   }
 
-  GetSignature(key, dataHash): any {
-    const signature = key.sign(dataHash).toHex();
+  GetSignature(key, data): any {
+    const signature = key.sign(data);
     return signature;
   }
 
@@ -78,6 +78,7 @@ export class AccountService {
   GetPublicKeyFromSeed(seed): any {
     const keyPair = this.GetKeyPairFromSeed(seed)
     const publicKey = keyPair.getPublic();
+    console.log("__a",publicKey)
     return publicKey;
   }
 
