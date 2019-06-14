@@ -53,6 +53,8 @@ export class AccountService {
 
   // GetAddressFromPublicKey Get the formatted address from a raw public key
   GetAddressFromPublicKey(publicKey) {
+    console.log(publicKey);
+    
     const checksum = this.GetChecksumByte(publicKey);
     const addressBuffer = [...publicKey, checksum[0]];
 
@@ -64,6 +66,8 @@ export class AccountService {
       binary += String.fromCharCode(bytes[i]);
     }
     const address = window.btoa(binary);
+    console.log(address);
+    
     return address;
   }
 
