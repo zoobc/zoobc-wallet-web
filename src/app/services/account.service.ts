@@ -21,7 +21,6 @@ export class AccountService {
   publicKey: Uint8Array
 
   constructor(private appServ: AppService) {
-    this.publicKey = appServ.getPublicKey()
     this.accBalanceServ = new AccountBalancesServiceClient(environment.grpcUrl, null, null);
   }
 
@@ -52,13 +51,13 @@ export class AccountService {
     return phraseWords;
   }
 
-  VerifySignature(key, singnature, dataHash) {
-    const result = key.verify(dataHash, singnature);
+  VerifySignature(key, signature, data) {
+    const result = key.verify(data, signature);
     return result;
   }
 
-  GetSignature(key, dataHash): any {
-    const signature = key.sign(dataHash).toHex();
+  GetSignature(key, data): any {
+    const signature = key.sign(data);
     return signature;
   }
 
@@ -97,6 +96,7 @@ export class AccountService {
   GetPublicKeyFromSeed(seed): any {
     const keyPair = this.GetKeyPairFromSeed(seed)
     const publicKey = keyPair.getPublic();
+    console.log("__a",publicKey)
     return publicKey;
   }
 
@@ -109,7 +109,7 @@ export class AccountService {
   }
 
   getAccountBalance() {
-    this.accBalanceServ = new AccountBalancesServiceClient(environment.grpcUrl, null, null);
+    this.publicKey = this.appServ.getPublicKey()
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
       console.log(this.publicKey);

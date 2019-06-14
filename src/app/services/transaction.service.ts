@@ -21,12 +21,11 @@ export class TransactionService {
   publicKey: Uint8Array;
 
   constructor(private appServ: AppService) {
-    this.publicKey = appServ.getPublicKey()
     this.txServ = new TransactionServiceClient(environment.grpcUrl, null, null);
   }
 
   getAccountTransaction() {
-    this.txServ = new TransactionServiceClient(environment.grpcUrl, null, null);
+    this.publicKey = this.appServ.getPublicKey()
     return new Promise((resolve, reject) => {
       const request = new GetTransactionsByAccountPublicKeyRequest();
       request.setAccountpublickey(this.publicKey);
@@ -42,32 +41,29 @@ export class TransactionService {
     });
   }
 
-  sendMoney(data) {
-    this.txServ = new TransactionServiceClient(environment.grpcUrl, null, null);
-    // return this.http.post(`${this.apiUrl}/sendMoney`, data);
-
+  postTransaction(txBytes) {
     return new Promise((resolve, reject) => {
-      const {
-        recipient,
-        amount,
-        fee,
-        passphrase,
-        from,
-        senderPublicKey,
-        signatureHash
-      } = data;
-      let dataString = `${recipient}${amount}${fee}${passphrase}${from}${senderPublicKey}${signatureHash}`;
-      let dataSHA = sha512.sha512(dataString);
+      // const {
+      //   recipient,
+      //   amount,
+      //   fee,
+      //   from,
+      //   senderPublicKey,
+      //   signatureHash,
+      //   timestamp
+      // } = data;
+      // let dataString = `${recipient}${amount}${fee}${from}${senderPublicKey}${signatureHash}${timestamp}`;
+      // let dataSHA = sha512.sha512(dataString);
 
-      const binary_string = window.atob(dataSHA);
-      const len = binary_string.length;
-      const dataBytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        dataBytes[i] = binary_string.charCodeAt(i);
-      }
+      // const binary_string = window.atob(dataSHA);
+      // const len = binary_string.length;
+      // const dataBytes = new Uint8Array(len);
+      // for (let i = 0; i < len; i++) {
+      //   dataBytes[i] = binary_string.charCodeAt(i);
+      // }
 
       const request = new PostTransactionRequest();
-      request.setTransactionbytes(dataBytes);
+      request.setTransactionbytes(txBytes);
 
       this.txServ.postTransaction(
         request,
