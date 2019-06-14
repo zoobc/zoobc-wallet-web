@@ -4,7 +4,7 @@
   </div>
   <div class="card text-left">
     <div class="card-body">
-      <form [formGroup]="formSend" (submit)="onSendMoney()">
+      <form [formGroup]="formSend" (submit)="onSendMoney($event)" action="">
         <div class="form-group">
           <label for="recipient">Pay To</label>
           <input type="text" class="form-control" id="recipient" placeholder="Recipient" formControlName="recipient">
