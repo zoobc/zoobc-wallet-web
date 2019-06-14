@@ -3,11 +3,26 @@ import { wordlist } from '../../assets/js/wordlist';
 import * as sha256 from 'sha256';
 import { eddsa as EdDSA } from 'elliptic';
 
+import { AccountBalancesServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
+import {
+  GetAccountBalanceRequest,
+  AccountBalance
+} from '../grpc/model/accountBalance_pb';
+
+import { environment } from "../../environments/environment";
+import { AppService } from '../app.service'
+
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  constructor() {
+
+  accBalanceServ: AccountBalancesServiceClient
+  publicKey: Uint8Array
+
+  constructor(private appServ: AppService) {
+    this.publicKey = appServ.getPublicKey()
+    this.accBalanceServ = new AccountBalancesServiceClient(environment.grpcUrl, null, null);
   }
 
   generateNewPassphrase(): any {
@@ -91,6 +106,24 @@ export class AccountService {
     for (let i = 0; i < n; i++) { a += bytes[i]; }
     const res = new Uint8Array([a]);
     return res;
+  }
+
+  getAccountBalance() {
+    this.accBalanceServ = new AccountBalancesServiceClient(environment.grpcUrl, null, null);
+    return new Promise((resolve, reject) => {
+      const request = new GetAccountBalanceRequest();
+      console.log(this.publicKey);
+      request.setPublickey(this.publicKey);
+
+      this.accBalanceServ.getAccountBalance(
+        request,
+        null,
+        (err, response: AccountBalance) => {
+          if (err) return reject(err);
+          resolve(response.toObject());
+        }
+      );
+    });
   }
 
 }

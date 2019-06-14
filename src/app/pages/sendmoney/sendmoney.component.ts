@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
-import { GrpcapiService } from '../../services/grpcapi.service';
+import { TransactionService } from '../../services/transaction.service';
 import { AppService } from "../../app.service";
 import { AccountService } from '../../services/account.service';
 import * as sha256 from 'sha256';
@@ -25,7 +25,7 @@ export class SendmoneyComponent implements OnInit {
   signature: any;
 
   constructor(
-    private grpcServ: GrpcapiService,
+    private transactionServ: TransactionService,
     private appServ: AppService,
     private accServ: AccountService
   ) {
@@ -70,7 +70,7 @@ export class SendmoneyComponent implements OnInit {
         showCancelButton: true,
         showLoaderOnConfirm: true,
         preConfirm: () => {
-          return this.grpcServ
+          return this.transactionServ
             .sendMoney(data)
             .then((res: any) => {
               Swal.fire("Money sent");
