@@ -41,8 +41,8 @@ export class SendmoneyComponent implements OnInit {
 
   ngOnInit() {}
 
-  onSendMoney(event) {
-    event.preventDefault()
+  onSendMoney() {
+    // event.preventDefault()
     if (this.formSend.valid) {
       // for testing uncomment comment
       let dataForm = {
@@ -50,7 +50,6 @@ export class SendmoneyComponent implements OnInit {
         amount: this.amountForm.value,
         fee: this.feeForm.value,
       }
-      let dataHash = sha256(dataForm)
 
       this.passphrase = this.formSend.value.passphrase
       // console.log("pass",this.passphrase)
@@ -72,7 +71,7 @@ export class SendmoneyComponent implements OnInit {
         // signatureHash: this.signature,
         timestamp : timestamps
       };
-      console.log("oi",data)
+      // console.log("oi",data)
 
       const txBytes = hexToByteArray("0100018407025d3c00000004264abef89b96225a837f9d6a2ccc09e8b1422e090c0fa3852bb139d99caec404264a2ef814619d4a2b1fa3b45f4aa09b248d53ef07d8e92237f3cc8eb30d6d809698000000000000e1f5050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004264a2ef814619d4a2b1fa3b45f4aa09b248d53ef07d8e92237f3cc8eb30d6d809698000000000000e1f50500000000")
       txBytes.set(data.senderPublicKey, 11)
@@ -101,7 +100,7 @@ export class SendmoneyComponent implements OnInit {
           return this.grpcServ
             .postTransaction(txBytes)
             .then((res: any) => {
-              console.log("__result", res)
+              // console.log("__result", res)
               Swal.fire("Money sent");
               return false;
             })
