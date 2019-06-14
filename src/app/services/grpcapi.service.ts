@@ -13,8 +13,8 @@ import {
 import {
   GetTransactionsByAccountPublicKeyRequest,
   GetTransactionsResponse,
-  GetTransactionRequest,
-  GetTransactionResponse
+  PostTransactionRequest,
+  PostTransactionResponse
 } from '../grpc/model/transaction_pb';
 
 @Injectable({
@@ -93,13 +93,13 @@ export class GrpcapiService {
         dataBytes[i] = binary_string.charCodeAt(i);
       }
 
-      const request = new GetTransactionRequest();
+      const request = new PostTransactionRequest();
       request.setTransactionbytes(dataBytes);
 
-      this.txServ.getTransaction(
+      this.txServ.postTransaction(
         request,
         null,
-        (err, response: GetTransactionResponse) => {
+        (err, response: PostTransactionResponse) => {
           if (err) return reject(err);
           resolve(response.toObject());
         }

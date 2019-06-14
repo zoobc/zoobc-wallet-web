@@ -90,27 +90,27 @@ export namespace Transaction {
   }
 }
 
-export class GetTransactionRequest extends jspb.Message {
+export class PostTransactionRequest extends jspb.Message {
   getTransactionbytes(): Uint8Array | string;
   getTransactionbytes_asU8(): Uint8Array;
   getTransactionbytes_asB64(): string;
   setTransactionbytes(value: Uint8Array | string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetTransactionRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetTransactionRequest): GetTransactionRequest.AsObject;
-  static serializeBinaryToWriter(message: GetTransactionRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetTransactionRequest;
-  static deserializeBinaryFromReader(message: GetTransactionRequest, reader: jspb.BinaryReader): GetTransactionRequest;
+  toObject(includeInstance?: boolean): PostTransactionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: PostTransactionRequest): PostTransactionRequest.AsObject;
+  static serializeBinaryToWriter(message: PostTransactionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): PostTransactionRequest;
+  static deserializeBinaryFromReader(message: PostTransactionRequest, reader: jspb.BinaryReader): PostTransactionRequest;
 }
 
-export namespace GetTransactionRequest {
+export namespace PostTransactionRequest {
   export type AsObject = {
     transactionbytes: Uint8Array | string,
   }
 }
 
-export class GetTransactionResponse extends jspb.Message {
+export class PostTransactionResponse extends jspb.Message {
   getMessage(): string;
   setMessage(value: string): void;
 
@@ -123,14 +123,14 @@ export class GetTransactionResponse extends jspb.Message {
   setTransactionbytes(value: Uint8Array | string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetTransactionResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: GetTransactionResponse): GetTransactionResponse.AsObject;
-  static serializeBinaryToWriter(message: GetTransactionResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetTransactionResponse;
-  static deserializeBinaryFromReader(message: GetTransactionResponse, reader: jspb.BinaryReader): GetTransactionResponse;
+  toObject(includeInstance?: boolean): PostTransactionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: PostTransactionResponse): PostTransactionResponse.AsObject;
+  static serializeBinaryToWriter(message: PostTransactionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): PostTransactionResponse;
+  static deserializeBinaryFromReader(message: PostTransactionResponse, reader: jspb.BinaryReader): PostTransactionResponse;
 }
 
-export namespace GetTransactionResponse {
+export namespace PostTransactionResponse {
   export type AsObject = {
     message: string,
     isvalid: boolean,
