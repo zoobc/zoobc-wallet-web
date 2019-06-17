@@ -6,8 +6,8 @@ import { BehaviorSubject } from "rxjs";
   providedIn: "root"
 })
 export class AppService implements CanActivate {
-  // private sourceCurrPublicKey = new BehaviorSubject("242,71,255,92,144,93,48,182,91,196,152,28,137,238,74,71,200,58,142,46,223,176,10,137,139,243,246,29,169,46,114,107");
-  private sourceCurrPublicKey = new BehaviorSubject("");
+  private sourceCurrPublicKey = new BehaviorSubject("169,179,175,43,250,68,156,57,49,173,179,170,82,74,66,106,186,235,27,56,68,235,10,19,197,151,48,223,37,186,121,84");
+  // private sourceCurrPublicKey = new BehaviorSubject("");
   currPublicKey = this.sourceCurrPublicKey.asObservable();
   private sourceCurrAddress = new BehaviorSubject("");
   currAddress = this.sourceCurrAddress.asObservable();
