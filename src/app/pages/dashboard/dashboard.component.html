@@ -62,38 +62,14 @@
                   <th>Fee</th>
                 </tr>
               </thead>
-              <tfoot>
-                <tr>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Account</th>
-                  <th>Amount</th>
-                  <th>Fee</th>
-                </tr>
-              </tfoot>
               <tbody>
-                <tr>
-                  <td>04/30/2019 18:50:29</td>
-                  <td>Send To</td>
-                  <td>1BoatSLRHtKNngkdXEeobR76b53LETtpyT</td>
-                  <td>500</td>
-                  <td>1</td>
-                </tr>
-                <tr>
-                  <td>05/01/2019 12:50:29</td>
-                  <td>Send To</td>
-                  <td>5YoatSLItKNngkdXEeobR76b53LETtpyT</td>
-                  <td>6500</td>
-                  <td>1</td>
-                </tr>
-
-                <tr>
-                  <td>05/01/2019 14:52:29</td>
-                  <td>Received From</td>
-                  <td>1BoatSLRHtKNngkdXEeobR76b53LETtpyT</td>
-                  <td>7800</td>
-                  <td>2</td>
-                </tr>
+                <tr *ngFor="let transaction of recentTx">
+                  <td>{{transaction.timestamp | date: 'dd-MM-yyyy'}}</td>
+                  <td>{{transaction.recipientpublickey === address ? 'Receive Money' : 'Send Money' }}</td> 
+                  <td>{{transaction.recipientpublickey === address ? transaction.senderpublickey : transaction.recipientpublickey }}</td>
+                  <td>{{transaction.amountnqt / 1e8}}</td>
+                  <td>{{transaction.feenqt / 1e8}}</td>
+                 </tr>
               </tbody>
             </table>
 
