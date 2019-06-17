@@ -6,7 +6,7 @@
       <div class="card-body text-center">
         <h5 class="h5">Your Passphrase</h5>
         <div class="row">
-          <div class="col-4" *ngFor="let p of passphrase; let key = index">
+          <div class="col-4" *ngFor="let p of phraseWords; let key = index">
             <div class="box-passphrase">
               <div class="number">{{ key + 1 }}</div>
               <div class="word">{{ p }}</div>
@@ -27,7 +27,7 @@
           </button>
           <button
             class="btn btn-success btn-icon-split"
-            (click)="generateNewPassphrase()"
+            (click)="regenerateNewPassphrase()"
           >
             <span class="icon text-white-50">
               <i class="fas fa-sync"></i>
