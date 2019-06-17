@@ -41,6 +41,10 @@ export function toBase64Url(base64Str: string) : string {
   return base64Str.replace(/\+/g, '-').replace(/\//g, '_');
 }
 
+export function fromBase64Url(base64Str: string) : string {
+  return base64Str.replace(/\-/g, '+').replace(/\_/g, '/');
+}
+
 export function mergeByteArrays(resultConstructor, arrays: Array<ArrayBufferView | number[]>) {
   let totalLength = arrays.reduce((acc, arr) => ((arr as ArrayBufferView).byteLength || (arr as number[]).length) + acc, 0);
   let result = new resultConstructor(totalLength);
@@ -60,6 +64,12 @@ export function publicKeyToAddress(hexOrBytes: string | ArrayBuffer | ArrayBuffe
   return toBase64Url(byteArrayToBase64(addressBytes));
 }
 
+export function addressToPublicKey(address: string) : Uint8Array {
+  const addressBytes = base64ToByteArray(fromBase64Url(address));
+  // return addressBytes.subarray(0, addressBytes.length - 1);
+  return new Uint8Array(addressBytes.buffer, addressBytes.byteOffset, addressBytes.byteLength - 1);
+}
+
 export function getAddressChecksum(bytes: ArrayBuffer | ArrayBufferView | Array<number>) : Uint8Array {
   const view : DataView = bytes instanceof ArrayBuffer ? new DataView(bytes) : ArrayBuffer.isView(bytes) ? new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength) : new DataView(Uint8Array.from(bytes).buffer);
   const n = view.byteLength;
@@ -75,5 +85,5 @@ export function BigInt(number: number, base? , endian?): BN {
 }
 
 export function bigintToByteArray(bn: BN) : Uint8Array {
-  return bn.toArrayLike(Uint8Array,"be", 8);
+  return bn.toArrayLike(Uint8Array,"le", 8);
 }

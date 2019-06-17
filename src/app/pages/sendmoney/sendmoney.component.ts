@@ -1,11 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
-import { TransactionService } from '../../services/transaction.service';
+import { TransactionService } from "../../services/transaction.service";
 import { AppService } from "../../app.service";
-import { AccountService } from '../../services/account.service';
-import * as sha256 from 'sha256';
-import { hexToByteArray, byteArrayToHex, publicKeyToAddress, bigintToByteArray, BigInt }  from '../../../helpers/converters'
+import { AccountService } from "../../services/account.service";
+import * as sha256 from "sha256";
+import {
+  hexToByteArray,
+  byteArrayToHex,
+  publicKeyToAddress,
+  bigintToByteArray,
+  BigInt,
+  addressToPublicKey,
+} from "../../../helpers/converters";
 // import * as BN from 'bn.js'
 
 @Component({
@@ -42,57 +49,52 @@ export class SendmoneyComponent implements OnInit {
   ngOnInit() {}
 
   onSendMoney() {
-    // event.preventDefault()
     if (this.formSend.valid) {
       // for testing uncomment comment
       let dataForm = {
         recipient: this.recipientForm.value,
-        amount: this.amountForm.value,
-        fee: this.feeForm.value,
+        amount: this.amountForm.value * 1e8,
+        fee: this.feeForm.value * 1e8,
       }
 
       this.passphrase = this.formSend.value.passphrase
-      // console.log("pass",this.passphrase)
 
       // split passphrase
       let splitPassphrase = this.passphrase.split(' ')
-      
+
       this.pairKey = this.accServ.GetKeyPairFromSeed(splitPassphrase)
       // console.log("pair",this.pairKey)
       this.address = this.accServ.GetAddressFromSeed(splitPassphrase)
       // console.log("address",this.address)
       this.pubKey = this.accServ.GetPublicKeyFromSeed(splitPassphrase)
       console.log("pubkey",this.pubKey)
-      let timestamps = Date.now()
       let data = {
         ... dataForm,
         from: this.address,
         senderPublicKey: this.pubKey,
-        // signatureHash: this.signature,
-        timestamp : timestamps
+        timestamp : Math.trunc(Date.now()/1000)
       };
       // console.log("oi",data)
 
-      const txBytes = hexToByteArray("0100018407025d3c00000004264abef89b96225a837f9d6a2ccc09e8b1422e090c0fa3852bb139d99caec404264a2ef814619d4a2b1fa3b45f4aa09b248d53ef07d8e92237f3cc8eb30d6d809698000000000000e1f5050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004264a2ef814619d4a2b1fa3b45f4aa09b248d53ef07d8e92237f3cc8eb30d6d809698000000000000e1f50500000000")
+      // template bytes
+      let txBytes = new Uint8Array([0,1,1,225,217,1,0,60,0,0,0,157,100,181,77,94,255,208,17,9,95,54,97,111,213,162,252,31,195,106,89,187,189,33,99,54,62,15,98,177,235,172,238,53,228,6,41,106,120,241,180,5,188,0,192,177,125,33,241,252,223,225,24,29,133,124,214,172,146,164,162,67,23,204,224,213,78,0,0,0,0,0,0,191,47,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,235,91,34,231,240,116,163,104,100,178,95,155,232,156,43,34,172,200,50,190,109,240,242,239,33,48,247,117,86,37,254,132,240,165,184,252,137,55,84,181,70,89,141,106,213,21,150,205,214,168,54,160,10,180,105,161,74,135,17,235,210,42,102,1])
+      // set signature bytes to 0
+      txBytes.fill(0, 123, 187)
+
       txBytes.set(data.senderPublicKey, 11)
-      // txBytes.set(bigintToByteArray(BigInt(data.recipient)), 43)
+      txBytes.set(addressToPublicKey(data.recipient), 43)
       txBytes.set(bigintToByteArray(BigInt(data.amount)), 75)
       txBytes.set(bigintToByteArray(BigInt(data.fee)), 83)
-      console.log(txBytes);
-      
+      let timestampsView = new DataView(txBytes.buffer, txBytes.byteOffset, txBytes.byteLength)
+      timestampsView.setUint32(3, data.timestamp, true)
 
-      // const txView = new DataView(txBytes.buffer, txBytes.byteOffset, txBytes.byteLength)
-      // console.log("__acc",new BN(10).toArrayLike(Uint8Array,"be",8))
-      // txView.setBigUint64(83, new BN(data.fee))
-      // txView.setBigUint64(75, new BN(data.amount))
-      // txBytes.set(data.recipient,43) // uintarray pubkey
-  
-      console.log("unsignedTxBytes:", byteArrayToHex(txBytes))
+      // console.log("unsignedTxBytes:", byteArrayToHex(txBytes))
       this.signature = this.accServ.GetSignature(this.pairKey, txBytes)
-      console.log("txSignature:", this.signature.toHex().toLowerCase())
+      // console.log("txSignature:", this.signature.toHex().toLowerCase())
 
+      // set signature to bytes
       txBytes.set(this.signature.toBytes(), 123)
-      console.log("signedTxBytes:", byteArrayToHex(txBytes))
+      // console.log("signedTxBytes:", byteArrayToHex(txBytes))
 
       Swal.fire({
         title: `Are you sure want to send money?`,
