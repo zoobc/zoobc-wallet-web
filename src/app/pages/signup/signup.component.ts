@@ -5,6 +5,10 @@ import * as sha512 from "js-sha512";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AccountService } from "../../services/account.service";
 import { AppService } from "../../app.service";
+import {
+  toBase64Url
+} from "../../../helpers/converters";
+
 
 @Component({
   selector: "app-signup",
@@ -61,7 +65,7 @@ export class SignupComponent implements OnInit {
     this.passphrase = phraseWords;
     this.keyPair = this.accountService.GetKeyPairFromSeed(this.passphrase);
     this.publicKey = this.accountService.GetPublicKeyFromSeed(this.passphrase);
-    this.address = this.accountService.GetAddressFromSeed(phraseWords);
+    this.address = toBase64Url(this.accountService.GetAddressFromSeed(phraseWords)); 
     return phraseWords;
   }
 

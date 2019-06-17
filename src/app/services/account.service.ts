@@ -11,6 +11,9 @@ import {
 
 import { environment } from "../../environments/environment";
 import { AppService } from '../app.service'
+import {
+  toBase64Url
+} from "../../helpers/converters"
 
 @Injectable({
   providedIn: 'root'
@@ -67,7 +70,7 @@ export class AccountService {
 
   // GetAddressFromPublicKey Get the formatted address from a raw public key
   GetAddressFromPublicKey(publicKey) {
-    console.log(publicKey);
+    // console.log(publicKey);
     
     const checksum = this.GetChecksumByte(publicKey);
     const addressBuffer = [...publicKey, checksum[0]];
@@ -79,8 +82,8 @@ export class AccountService {
     for (let i = 0; i < len; i++) {
       binary += String.fromCharCode(bytes[i]);
     }
-    const address = window.btoa(binary);
-    console.log(address);
+    const address = toBase64Url(window.btoa(binary));
+    // console.log(address);
     
     return address;
   }
@@ -96,7 +99,7 @@ export class AccountService {
   GetPublicKeyFromSeed(seed): any {
     const keyPair = this.GetKeyPairFromSeed(seed)
     const publicKey = keyPair.getPublic();
-    console.log("__a",publicKey)
+    // console.log("__a",publicKey)
     return publicKey;
   }
 
@@ -112,7 +115,7 @@ export class AccountService {
     this.publicKey = this.appServ.getPublicKey()
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
-      console.log(this.publicKey);
+      // console.log(this.publicKey);
       request.setPublickey(this.publicKey);
 
       this.accBalanceServ.getAccountBalance(
