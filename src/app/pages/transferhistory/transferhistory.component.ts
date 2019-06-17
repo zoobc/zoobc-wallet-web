@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
-import { GrpcapiService } from '../../services/grpcapi.service';
+import { TransactionService } from '../../services/transaction.service';
 import { AppService } from "../../app.service";
 
 @Component({
@@ -14,12 +14,12 @@ export class TransferhistoryComponent implements OnInit {
   config: any;
 
   constructor(
-    private grpcService: GrpcapiService,
-    private appServ: AppService
+    private appServ: AppService,
+    private transactionServ: TransactionService
   ) {
     this.address = this.appServ.getAddress()
 
-    this.grpcService.getAccountTransaction().then((res: any) => {
+    this.transactionServ.getAccountTransaction().then((res: any) => {
       this.accountHistory = res.transactionsList;
     });
     this.config = {

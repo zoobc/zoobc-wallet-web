@@ -6,6 +6,7 @@ import * as sha512 from "js-sha512";
 import objectHash from "object-hash";
 
 import { AppService } from "../../app.service";
+import { AccountService } from "../../services/account.service"
 
 @Component({
   selector: "app-login",
@@ -36,7 +37,7 @@ export class LoginComponent implements OnInit {
     Validators.pattern("^[0-9]*$")
   ]);
 
-  publicKey = "";
+  publicKey: string;
 
   formLoginMnemonic: FormGroup;
   passPhraseForm = new FormControl("", Validators.required);
@@ -44,7 +45,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private appServ: AppService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private accountServ: AccountService
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm
@@ -105,8 +107,10 @@ export class LoginComponent implements OnInit {
   }
 
   saveNewAccount() {
-    // MUST SEND PUBLIC KEY AND ADDRESS
-    // this.appServ.updateAllAccount(this.publicKey);
-    // this.appServ.changeCurrentAccount(this.publicKey);
+    let publicKey = this.accountServ.GetPublicKeyFromSeed(this.passPhraseForm.value)
+    let address = this.accountServ.GetAddressFromPublicKey(publicKey)
+    
+    this.appServ.updateAllAccount(publicKey.toString(), address);
+    this.appServ.changeCurrentAccount(publicKey.toString(), address);
   }
 }
