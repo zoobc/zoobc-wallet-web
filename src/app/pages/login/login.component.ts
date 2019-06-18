@@ -37,8 +37,6 @@ export class LoginComponent implements OnInit {
     Validators.pattern("^[0-9]*$")
   ]);
 
-  publicKey: string;
-
   formLoginMnemonic: FormGroup;
   passPhraseForm = new FormControl("", Validators.required);
 
@@ -80,8 +78,6 @@ export class LoginComponent implements OnInit {
 
   onLoginMnemonic(content) {
     if (this.formLoginMnemonic.valid) {
-      this.publicKey = objectHash(this.passPhraseForm.value);
-
       if (!this.isNeedNewPin) {
         this.saveNewAccount();
         this.router.navigateByUrl("/dashboard");
@@ -107,8 +103,10 @@ export class LoginComponent implements OnInit {
   }
 
   saveNewAccount() {
-    let publicKey = this.accountServ.GetPublicKeyFromSeed(this.passPhraseForm.value)
+    const seed = this.accountServ.GetSeedFromPhrase(this.passPhraseForm.value)
+    let publicKey = this.accountServ.GetPublicKeyFromSeed(seed)
     let address = this.accountServ.GetAddressFromPublicKey(publicKey)
+    console.log(this.passPhraseForm.value, address)
     
     this.appServ.updateAllAccount(publicKey.toString(), address);
     this.appServ.changeCurrentAccount(publicKey.toString(), address);

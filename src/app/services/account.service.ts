@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { wordlist } from '../../assets/js/wordlist';
 import * as sha256 from 'sha256';
+// import { SHA3 } from 'sha3';
 import { eddsa as EdDSA } from 'elliptic';
 
 import { AccountBalancesServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
@@ -12,7 +13,8 @@ import {
 import { environment } from "../../environments/environment";
 import { AppService } from '../app.service'
 import {
-  toBase64Url
+  toBase64Url,
+  stringToByteArray
 } from "../../helpers/converters"
 
 @Injectable({
@@ -27,7 +29,7 @@ export class AccountService {
     this.accBalanceServ = new AccountBalancesServiceClient(environment.grpcUrl, null, null);
   }
 
-  generateNewPassphrase(): any {
+  generatePhraseWords(): string[] {
     const crypto = window.crypto;
     const phraseWords = [];
 
@@ -64,10 +66,6 @@ export class AccountService {
     return signature;
   }
 
-  GetAddressFromSeed(seed) {
-    return this.GetAddressFromPublicKey(this.GetPublicKeyFromSeed(seed))
-  }
-
   // GetAddressFromPublicKey Get the formatted address from a raw public key
   GetAddressFromPublicKey(publicKey) {
     // console.log(publicKey);
@@ -88,19 +86,26 @@ export class AccountService {
     return address;
   }
 
-  GetKeyPairFromSeed(seed): any {
-    const seedBuffer = new TextEncoder().encode(seed);
-    const seedHash = sha256(seedBuffer);
+  // GetSeedFromPhrase(phrase: string) {
+  //   const seedHash = new SHA3(256);
+  //   seedHash.update(phrase);
+  //   return seedHash.digest();
+  // }
+
+  GetSeedFromPhrase(phrase: string) {
+    const seed = sha256(stringToByteArray(phrase), { asBytes: true });
+    return seed;
+  }
+  
+
+  GetKeyPairFromSeed(seed: ArrayLike<number>): any {
     const ec = new EdDSA('ed25519');
-    const keyPair = ec.keyFromSecret(seedHash);
+    const keyPair = ec.keyFromSecret(seed);
     return keyPair;
   }
 
-  GetPublicKeyFromSeed(seed): any {
-    const keyPair = this.GetKeyPairFromSeed(seed)
-    const publicKey = keyPair.getPublic();
-    // console.log("__a",publicKey)
-    return publicKey;
+  GetPublicKeyFromSeed(seed: ArrayLike<number>): any {
+    return this.GetKeyPairFromSeed(seed).getPublic();
   }
 
   GetChecksumByte(bytes): any {

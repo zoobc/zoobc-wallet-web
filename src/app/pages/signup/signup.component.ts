@@ -5,9 +5,7 @@ import * as sha512 from "js-sha512";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AccountService } from "../../services/account.service";
 import { AppService } from "../../app.service";
-import {
-  toBase64Url
-} from "../../../helpers/converters";
+
 
 
 @Component({
@@ -20,7 +18,7 @@ export class SignupComponent implements OnInit {
 
   modalRef: NgbModalRef;
 
-  passphrase: any;
+  phraseWords: string[];
   keyPair: any;
   publicKey: any;
   address: string;
@@ -57,20 +55,26 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     window.scroll(0, 0);
-    this.generateNewPassphrase();
+    this.phraseWords = this.generateNewPassphrase();
+  }
+
+  regenerateNewPassphrase(){
+    this.phraseWords = this.generateNewPassphrase();
   }
 
   generateNewPassphrase() {
-    const phraseWords = this.accountService.generateNewPassphrase();
-    this.passphrase = phraseWords;
-    this.keyPair = this.accountService.GetKeyPairFromSeed(this.passphrase);
-    this.publicKey = this.accountService.GetPublicKeyFromSeed(this.passphrase);
-    this.address = toBase64Url(this.accountService.GetAddressFromSeed(phraseWords)); 
+    const phraseWords : string[] = this.accountService.generatePhraseWords();
+    const phrase = phraseWords.join(' ');
+
+    const seed = this.accountService.GetSeedFromPhrase(phrase);
+    let publicKey = this.accountService.GetPublicKeyFromSeed(seed);
+    this.address = this.accountService.GetAddressFromPublicKey(publicKey);
+
     return phraseWords;
   }
 
   copyPassphrase() {
-    const passphrase = this.passphrase.join(" ");
+    const passphrase = this.phraseWords.join(" ");
     this.copyText(passphrase);
   }
 
@@ -114,9 +118,17 @@ export class SignupComponent implements OnInit {
   }
 
   saveNewAccount() {
-    const strPubKey = this.toHexString(this.publicKey);
-    this.appServ.updateAllAccount(strPubKey, this.address);
-    this.appServ.changeCurrentAccount(strPubKey, this.address);
+    // const strPubKey = this.toHexString(this.publicKey);
+    // this.appServ.updateAllAccount(strPubKey, this.address);
+    // this.appServ.changeCurrentAccount(strPubKey, this.address);
+    const phrase = this.phraseWords.join(' ')
+    const seed = this.accountService.GetSeedFromPhrase(phrase)
+    let publicKey = this.accountService.GetPublicKeyFromSeed(seed)
+    let address = this.accountService.GetAddressFromPublicKey(publicKey)
+    console.log(phrase, address)
+    
+    this.appServ.updateAllAccount(publicKey.toString(), address);
+    this.appServ.changeCurrentAccount(publicKey.toString(), address);
   }
 
   toHexString(byteArray) {

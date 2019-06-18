@@ -58,16 +58,18 @@ export class SendmoneyComponent implements OnInit {
       }
 
       this.passphrase = this.formSend.value.passphrase
+      const seed = this.accServ.GetSeedFromPhrase(this.passphrase)
+      
 
       // split passphrase
-      let splitPassphrase = this.passphrase.split(' ')
+      // let splitPassphrase = this.passphrase.split(' ')
 
-      this.pairKey = this.accServ.GetKeyPairFromSeed(splitPassphrase)
+      this.pairKey = this.accServ.GetKeyPairFromSeed(seed)
       // console.log("pair",this.pairKey)
-      this.address = this.accServ.GetAddressFromSeed(splitPassphrase)
-      // console.log("address",this.address)
-      this.pubKey = this.accServ.GetPublicKeyFromSeed(splitPassphrase)
+      this.pubKey = this.accServ.GetPublicKeyFromSeed(seed)
       console.log("pubkey",this.pubKey)
+      this.address = this.accServ.GetAddressFromPublicKey(this.pubKey)
+      // console.log("address",this.address)
       let data = {
         ... dataForm,
         from: this.address,
@@ -94,7 +96,7 @@ export class SendmoneyComponent implements OnInit {
 
       // set signature to bytes
       txBytes.set(this.signature.toBytes(), 123)
-      // console.log("signedTxBytes:", byteArrayToHex(txBytes))
+      console.log("signedTxBytes:", byteArrayToHex(txBytes))
 
       Swal.fire({
         title: `Are you sure want to send money?`,
