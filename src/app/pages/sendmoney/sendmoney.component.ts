@@ -49,7 +49,7 @@ export class SendmoneyComponent implements OnInit {
   ngOnInit() {}
 
   onSendMoney() {
-    // if (this.formSend.valid) {
+    if (this.formSend.valid) {
 
       this.passphrase = this.formSend.value.passphrase
       const seed = this.accServ.GetSeedFromPhrase(this.passphrase)
@@ -121,5 +121,5 @@ export class SendmoneyComponent implements OnInit {
         Swal.fire({ html: "Passphrase is invalid", type: "error" });
       }
     }
-  // }
+  }
 }
