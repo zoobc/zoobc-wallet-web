@@ -27,6 +27,7 @@ export class SendmoneyComponent implements OnInit {
   feeForm = new FormControl("", Validators.required);
   passPhraseForm = new FormControl("", Validators.required);
 
+  balance: any;
   address: string;
   pairKey: any;
   pubKey: any;
@@ -46,22 +47,24 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.accServ.getAccountBalance().then(data => {
+      this.balance = data;
+    });
+  }
 
   onSendMoney() {
     if (this.formSend.valid) {
-
       this.passphrase = this.formSend.value.passphrase
       const seed = this.accServ.GetSeedFromPhrase(this.passphrase)
 
       this.pairKey = this.accServ.GetKeyPairFromSeed(seed)
       // console.log("pair",this.pairKey)
       this.pubKey = this.accServ.GetPublicKeyFromSeed(seed)
-      console.log("pubkey",this.pubKey)
+      // console.log("pubkey",this.pubKey)
       this.address = this.accServ.GetAddressFromPublicKey(this.pubKey)
       // console.log("address",this.address)
-
-      if (this.address == this.appServ.getAddress()) {
+      if ((this.balance.balance / 1e8) > (this.amountForm.value + this.feeForm.value)){
         // for testing uncomment comment
         let dataForm = {
           recipient: this.recipientForm.value,
@@ -96,7 +99,6 @@ export class SendmoneyComponent implements OnInit {
         // set signature to bytes
         txBytes.set(this.signature.toBytes(), 123)
         // console.log("signedTxBytes:", byteArrayToHex(txBytes))
-
         Swal.fire({
           title: `Are you sure want to send money?`,
           showCancelButton: true,
@@ -117,8 +119,12 @@ export class SendmoneyComponent implements OnInit {
               });
           }
         });
-      } else {
+      } 
+      else if (!(this.address == this.appServ.getAddress())) {
         Swal.fire({ html: "Passphrase is invalid", type: "error" });
+      }
+      else {
+        Swal.fire({ html: "Balance not enough", type: "error" });
       }
     }
   }
