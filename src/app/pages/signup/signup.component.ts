@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
-import * as sha512 from "js-sha512";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import * as CryptoJS from "crypto-js";
+
 import { AppService } from "../../app.service";
 import {
   generatePhraseWords,
@@ -113,16 +114,13 @@ export class SignupComponent implements OnInit {
 
     if (this.formSetPin.valid) {
       this.saveNewAccount();
-      localStorage.setItem("pin", sha512.sha512(this.pinForm.value));
+      localStorage.setItem("pin", CryptoJS.SHA256(this.pinForm.value));
 
       this.modalRef.close();
     }
   }
 
   saveNewAccount() {
-    // const strPubKey = this.toHexString(this.publicKey);
-    // this.appServ.updateAllAccount(strPubKey, this.address);
-    // this.appServ.changeCurrentAccount(strPubKey, this.address);
     const phrase = this.phraseWords.join(" ");
     const seed = GetSeedFromPhrase(phrase);
 

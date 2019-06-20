@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
-// import { AccountService } from './services/account.service';
 import * as CryptoJS from 'crypto-js'
 import { GetPublicKeyFromSeed, GetAddressFromPublicKey } from '../helpers/utils'
 import { byteArrayToBase64, toBase64Url, base64ToByteArray } from '../helpers/converters'

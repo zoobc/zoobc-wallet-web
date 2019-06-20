@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
-import * as sha512 from "js-sha512";
 import * as CryptoJS from "crypto-js";
 
 import { AppService } from "../../app.service";
@@ -81,7 +80,7 @@ export class LoginComponent implements OnInit {
 
   onLoginPin() {
     if (this.formLoginPin.valid) {
-      if (this.pin == sha512.sha512(this.pinForm.value))
+      if (this.pin == CryptoJS.SHA256(this.pinForm.value))
         this.isPinNeeded = false;
     }
   }
@@ -112,7 +111,7 @@ export class LoginComponent implements OnInit {
 
   onSetPin() {
     if (this.formSetPin.valid) {
-      localStorage.setItem("pin", sha512.sha512(this.setPinForm.value));
+      localStorage.setItem("pin", CryptoJS.SHA256(this.setPinForm.value));
       this.saveNewAccount();
       this.modalRef.close();
     }
