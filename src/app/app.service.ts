@@ -1,21 +1,43 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
+// import { AccountService } from './services/account.service';
+import * as CryptoJS from 'crypto-js'
+import { GetPublicKeyFromSeed, GetAddressFromPublicKey } from '../helpers/utils'
+import { byteArrayToBase64, toBase64Url, base64ToByteArray } from '../helpers/converters'
 
 @Injectable({
   providedIn: "root"
 })
 export class AppService implements CanActivate {
-  // private sourceCurrPublicKey = new BehaviorSubject("169,179,175,43,250,68,156,57,49,173,179,170,82,74,66,106,186,235,27,56,68,235,10,19,197,151,48,223,37,186,121,84");
+  private sourceCurrSeed = new BehaviorSubject("");
   private sourceCurrPublicKey = new BehaviorSubject("");
-  currPublicKey = this.sourceCurrPublicKey.asObservable();
   private sourceCurrAddress = new BehaviorSubject("");
-  currAddress = this.sourceCurrAddress.asObservable();
 
-  constructor(private router: Router) {}
+  currPublicKey: Uint8Array
+  currAddress: string
+  
+  constructor(private router: Router) {
+    this.sourceCurrPublicKey.subscribe(value => {
+      this.currPublicKey = base64ToByteArray(value)
+    })
 
-  changeCurrentAccount(pubKey, address) {
-    this.sourceCurrPublicKey.next(pubKey);
+    this.sourceCurrAddress.subscribe(value => {
+      this.currAddress = value
+    })
+  }
+
+  changeCurrentAccount(seed) {
+    let pin = localStorage.getItem('pin')
+    let seedBase64Url = toBase64Url(byteArrayToBase64(seed))
+    let encSeed = CryptoJS.AES.encrypt(seedBase64Url, pin).toString()
+
+    let publicKey = GetPublicKeyFromSeed(seed)
+    let publicKeyBase64 = byteArrayToBase64(publicKey)
+    let address = GetAddressFromPublicKey(publicKey)
+
+    this.sourceCurrSeed.next(encSeed);
+    this.sourceCurrPublicKey.next(publicKeyBase64);
     this.sourceCurrAddress.next(address);
   }
 
@@ -23,39 +45,21 @@ export class AppService implements CanActivate {
     return JSON.parse(localStorage.getItem("accounts")) || [];
   }
 
-  getPublicKey() {
-    let publicKey: Uint8Array
-    this.sourceCurrPublicKey.subscribe(account => {
-      publicKey = new Uint8Array(account.split(",").map(Number));
-    });
-    return publicKey
-  }
-
-  getAddress() {
-    let address: string
-    this.sourceCurrAddress.subscribe(res => {
-      address = res
-    });
-    return address
-  }
-
-  updateAllAccount(publicKey, address) {
+  updateAllAccount(seed) {
     let accounts = this.getAllAccount();
-    let isDuplicate = accounts.find(acc => acc.publicKey == publicKey);
+    let pin = localStorage.getItem('pin')
+    let seedBase64Url = toBase64Url(byteArrayToBase64(seed))
+    let encSeed = CryptoJS.AES.encrypt(seedBase64Url, pin).toString()
+    let isDuplicate = accounts.find(acc => acc.encSeed == encSeed);
 
     if (!isDuplicate) {
-      accounts.push({ publicKey, address });
+      accounts.push(encSeed);
       localStorage.setItem("accounts", JSON.stringify(accounts));
     }
   }
 
   canActivate(): boolean {
-    let pubKey = "";
-    this.sourceCurrPublicKey.subscribe(account => {
-      pubKey = account;
-    });
-
-    if (pubKey) return true;
+    if (this.currPublicKey.length > 0) return true;
     
     this.router.navigateByUrl("/login");
     return false;

@@ -18,17 +18,16 @@ import { AppService } from '../app.service'
 export class TransactionService {
 
   txServ: TransactionServiceClient;
-  publicKey: Uint8Array;
 
   constructor(private appServ: AppService) {
     this.txServ = new TransactionServiceClient(environment.grpcUrl, null, null);
   }
 
   getAccountTransaction() {
-    this.publicKey = this.appServ.getPublicKey()
+    let publicKey = this.appServ.currPublicKey
     return new Promise((resolve, reject) => {
       const request = new GetTransactionsByAccountPublicKeyRequest();
-      request.setAccountpublickey(this.publicKey);
+      request.setAccountpublickey(publicKey);
 
       this.txServ.getTransactionsByAccountPublicKey(
         request,

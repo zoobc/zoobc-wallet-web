@@ -23,7 +23,6 @@ import {
 export class AccountService {
 
   accBalanceServ: AccountBalancesServiceClient
-  publicKey: Uint8Array
 
   constructor(private appServ: AppService) {
     this.accBalanceServ = new AccountBalancesServiceClient(environment.grpcUrl, null, null);
@@ -117,11 +116,10 @@ export class AccountService {
   }
 
   getAccountBalance() {
-    this.publicKey = this.appServ.getPublicKey()
+    let publicKey = this.appServ.currPublicKey
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
-      // console.log(this.publicKey);
-      request.setPublickey(this.publicKey);
+      request.setPublickey(publicKey);
 
       this.accBalanceServ.getAccountBalance(
         request,
