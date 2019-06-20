@@ -3,10 +3,13 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import * as sha512 from "js-sha512";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { AccountService } from "../../services/account.service";
 import { AppService } from "../../app.service";
-
-
+import {
+  generatePhraseWords,
+  GetSeedFromPhrase,
+  GetPublicKeyFromSeed,
+  GetAddressFromPublicKey,
+} from "../../../helpers/utils";
 
 @Component({
   selector: "app-signup",
@@ -40,7 +43,6 @@ export class SignupComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private accountService: AccountService,
     private appServ: AppService
   ) {
     this.formSetPin = new FormGroup({
@@ -58,17 +60,17 @@ export class SignupComponent implements OnInit {
     this.phraseWords = this.generateNewPassphrase();
   }
 
-  regenerateNewPassphrase(){
+  regenerateNewPassphrase() {
     this.phraseWords = this.generateNewPassphrase();
   }
 
   generateNewPassphrase() {
-    const phraseWords : string[] = this.accountService.generatePhraseWords();
-    const phrase = phraseWords.join(' ');
+    const phraseWords: string[] = generatePhraseWords();
+    const phrase = phraseWords.join(" ");
 
-    const seed = this.accountService.GetSeedFromPhrase(phrase);
-    let publicKey = this.accountService.GetPublicKeyFromSeed(seed);
-    this.address = this.accountService.GetAddressFromPublicKey(publicKey);
+    const seed = GetSeedFromPhrase(phrase);
+    let publicKey = GetPublicKeyFromSeed(seed);
+    this.address = GetAddressFromPublicKey(publicKey);
 
     return phraseWords;
   }
@@ -121,14 +123,11 @@ export class SignupComponent implements OnInit {
     // const strPubKey = this.toHexString(this.publicKey);
     // this.appServ.updateAllAccount(strPubKey, this.address);
     // this.appServ.changeCurrentAccount(strPubKey, this.address);
-    const phrase = this.phraseWords.join(' ')
-    const seed = this.accountService.GetSeedFromPhrase(phrase)
-    let publicKey = this.accountService.GetPublicKeyFromSeed(seed)
-    let address = this.accountService.GetAddressFromPublicKey(publicKey)
-    console.log(phrase, address)
-    
-    this.appServ.updateAllAccount(publicKey.toString(), address);
-    this.appServ.changeCurrentAccount(publicKey.toString(), address);
+    const phrase = this.phraseWords.join(" ");
+    const seed = GetSeedFromPhrase(phrase);
+
+    this.appServ.updateAllAccount(seed);
+    this.appServ.changeCurrentAccount(seed);
   }
 
   toHexString(byteArray) {

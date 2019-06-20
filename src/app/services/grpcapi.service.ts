@@ -31,7 +31,7 @@ export class GrpcapiService {
   grpcUrl = 'http://18.139.3.139:8080';
 
   constructor(private http: HttpClient, private appServ: AppService) {
-    this.PublicKey = appServ.getPublicKey()
+    this.PublicKey = appServ.currPublicKey
   }
 
   getAccountTransaction() {

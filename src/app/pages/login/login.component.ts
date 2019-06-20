@@ -3,10 +3,15 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import * as sha512 from "js-sha512";
-import objectHash from "object-hash";
+import * as CryptoJS from "crypto-js";
 
 import { AppService } from "../../app.service";
-import { AccountService } from "../../services/account.service"
+import {
+  GetPublicKeyFromSeed,
+  GetAddressFromPublicKey,
+  GetSeedFromPhrase
+} from "../../../helpers/utils";
+import { base64ToByteArray, fromBase64Url } from "../../../helpers/converters";
 
 @Component({
   selector: "app-login",
@@ -44,7 +49,6 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private appServ: AppService,
     private modalService: NgbModal,
-    private accountServ: AccountService
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm
@@ -58,7 +62,19 @@ export class LoginComponent implements OnInit {
       pin: this.setPinForm
     });
 
-    this.accounts = appServ.getAllAccount();
+    let pin = localStorage.getItem("pin");
+    let PKList: [] = appServ.getAllAccount();
+    if (PKList.length > 0) {
+      this.accounts = PKList.map(pk => {
+        let seed = CryptoJS.AES.decrypt(pk, pin).toString(CryptoJS.enc.Utf8);
+        let seedByte = base64ToByteArray(fromBase64Url(seed));
+
+        let publicKey = GetPublicKeyFromSeed(seedByte);
+        let address = GetAddressFromPublicKey(publicKey);
+
+        return { seed: seedByte, address };
+      });
+    }
   }
 
   ngOnInit() {}
@@ -71,8 +87,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLoginAccount(val) {
-    let account = this.accounts.find(acc => acc.address == val)
-    this.appServ.changeCurrentAccount(account.publicKey, account.address);
+    let account = this.accounts.find(acc => acc.address == val);
+    this.appServ.changeCurrentAccount(account.seed);
     this.router.navigateByUrl("/dashboard");
   }
 
@@ -81,7 +97,7 @@ export class LoginComponent implements OnInit {
       if (!this.isNeedNewPin) {
         this.saveNewAccount();
         this.router.navigateByUrl("/dashboard");
-        return true;
+        return false;
       }
 
       this.modalRef = this.modalService.open(content, {
@@ -96,19 +112,16 @@ export class LoginComponent implements OnInit {
 
   onSetPin() {
     if (this.formSetPin.valid) {
-      this.saveNewAccount();
       localStorage.setItem("pin", sha512.sha512(this.setPinForm.value));
+      this.saveNewAccount();
       this.modalRef.close();
     }
   }
 
   saveNewAccount() {
-    const seed = this.accountServ.GetSeedFromPhrase(this.passPhraseForm.value)
-    let publicKey = this.accountServ.GetPublicKeyFromSeed(seed)
-    let address = this.accountServ.GetAddressFromPublicKey(publicKey)
-    console.log(this.passPhraseForm.value, address)
-    
-    this.appServ.updateAllAccount(publicKey.toString(), address);
-    this.appServ.changeCurrentAccount(publicKey.toString(), address);
+    const seed = GetSeedFromPhrase(this.passPhraseForm.value);
+
+    this.appServ.updateAllAccount(seed);
+    this.appServ.changeCurrentAccount(seed);
   }
 }

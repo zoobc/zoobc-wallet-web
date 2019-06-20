@@ -17,7 +17,7 @@ export class TransferhistoryComponent implements OnInit {
     private appServ: AppService,
     private transactionServ: TransactionService
   ) {
-    this.address = this.appServ.getAddress()
+    this.address = this.appServ.currAddress
 
     this.transactionServ.getAccountTransaction().then((res: any) => {
       this.accountHistory = res.transactionsList;
