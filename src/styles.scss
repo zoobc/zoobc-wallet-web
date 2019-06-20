@@ -1,31 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
-
-// Import Custom SB Admin 2 Variables (Overrides Default Bootstrap Variables)
-@import "./styles/variables";
-
-// Import Bootstrap
-@import "./styles/bootstraps/bootstrap.scss";
-
-// Import Custom SB Admin 2 Mixins and Components
-@import "./styles/mixins.scss";
-@import "./styles/global.scss";
-@import "./styles/utilities.scss";
-
-// Custom Components
-@import "./styles/dropdowns.scss";
-@import "./styles/navs.scss";
-@import "./styles/buttons.scss";
-@import "./styles/cards.scss";
-@import "./styles/charts.scss";
-@import "./styles/login.scss";
-@import "./styles/error.scss";
-@import "./styles/footer.scss";
+@import "./styles/sb-admin-2.min.css";
 
 .container-fluid {
-  margin-top: $topbar-base-height;
+  margin-top: 4.375rem;
   padding-top: 16px;
 }
 
 .error-text {
   color: red;
+}
+
+.sidebar {
+  height: 100%;
 }
