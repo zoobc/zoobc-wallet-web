@@ -16,7 +16,7 @@
   <li class="nav-item" [ngClass]="menu == 'dashboard' && 'active'">
     <a class="nav-link" [routerLink]="['/dashboard']">
       <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>Dashboard</span>
+      <span>{{'Navigation.Dashboard' | translate}}</span>
     </a>
   </li>
 
@@ -24,7 +24,7 @@
   <li class="nav-item" [ngClass]="menu == 'transferhistory' && 'active'">
     <a class="nav-link" [routerLink]="['/transferhistory']">
       <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>My Transaction</span>
+      <span>{{'Navigation.MyTrans' | translate}}</span>
     </a>
   </li>
 
@@ -36,7 +36,7 @@
   <li class="nav-item" [ngClass]="menu == 'sendmoney' && 'active'">
     <a class="nav-link" [routerLink]="['/sendmoney']">
       <i class="fas fa-fw fa-chart-area"></i>
-      <span>Send Money</span>
+      <span>{{'Navigation.SendMoney' | translate}}</span>
     </a>
   </li>
 
@@ -52,7 +52,7 @@
   <li class="nav-item" [ngClass]="menu == 'receive' && 'active'">
     <a class="nav-link" [routerLink]="['/receive']">
       <i class="fas fa-fw fa-table"></i>
-      <span>Receive</span>
+      <span>{{'Navigation.Receive' | translate}}</span>
     </a>
   </li>
 
