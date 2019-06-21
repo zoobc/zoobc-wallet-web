@@ -4,6 +4,7 @@ import { BehaviorSubject } from "rxjs";
 import * as CryptoJS from 'crypto-js'
 import { GetPublicKeyFromSeed, GetAddressFromPublicKey } from '../helpers/utils'
 import { byteArrayToBase64, toBase64Url, base64ToByteArray } from '../helpers/converters'
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: "root"
@@ -16,7 +17,7 @@ export class AppService implements CanActivate {
   currPublicKey: Uint8Array
   currAddress: string
   
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
     this.sourceCurrPublicKey.subscribe(value => {
       this.currPublicKey = base64ToByteArray(value)
     })
@@ -62,6 +63,10 @@ export class AppService implements CanActivate {
     
     this.router.navigateByUrl("/login");
     return false;
+  }
+
+  getCurrencyRate() {
+    return this.http.get('https://api.exchangeratesapi.io/latest?base=USD')
   }
 }
 // Language

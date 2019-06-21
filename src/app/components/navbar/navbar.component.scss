@@ -1,3 +1,23 @@
-.select-language{
+.navbar {
+  .dropdown-list {
+    max-height: 300px;
+    max-width: 200px;
+    overflow-y: scroll;
+    text-align: right;
+    .dropdown-item {
+      justify-content: flex-end;
+      i {
+        margin-right: 4px;
+        color: green;
+      }
+    }
+  }
+  
+  #rateDropdown {
+    font-size: 14px;
+  }
+
+  .select-language{
     margin-top: 18px;
+  }
 }

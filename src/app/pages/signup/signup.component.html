@@ -6,7 +6,7 @@
       <div class="card-body text-center">
         <h5 class="h5">{{'Login.YourPassphrase' | translate}}</h5>
         <div class="row">
-          <div class="col-4" *ngFor="let p of phraseWords; let key = index">
+          <div class="col-6 col-sm-4" *ngFor="let p of phraseWords; let key = index">
             <div class="box-passphrase">
               <div class="number">{{ key + 1 }}</div>
               <div class="word">{{ p }}</div>
@@ -106,7 +106,7 @@
     <h5 class="modal-title" id="modal-basic-title">{{'Misc.SMP' | translate}}</h5>
   </div>
   <div class="modal-body">
-    <form [formGroup]="formSetPin" (submit)="onSetPin($event)">
+    <form [formGroup]="formSetPin" (submit)="onSetPin()">
       <div class="form-group">
         <field-pins formControlName="pin"></field-pins>
         <small class="form-text error-text">

@@ -10,7 +10,6 @@ import {
 
 export function generatePhraseWords(): string {
   const mnemonic = bip39.generateMnemonic();
-  console.log('.... mnemonic passphrase 2: ..:', mnemonic);
   return mnemonic;
 
   // const crypto = window.crypto;

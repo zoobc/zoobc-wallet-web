@@ -117,10 +117,8 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  onSetPin(event) {
-    event.preventDefault()
+  onSetPin() {
     this.submitted = true;
-    console.log(this.formSetPin.value);
 
     if (this.formSetPin.valid) {
       localStorage.setItem("pin", CryptoJS.SHA256(this.pinForm.value));
