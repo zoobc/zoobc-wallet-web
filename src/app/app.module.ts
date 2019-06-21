@@ -20,7 +20,6 @@ import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NgxQRCodeModule } from "ngx-qrcode2";
 import { HttpClientModule } from "@angular/common/http";
 import { NgxPaginationModule } from "ngx-pagination";
-import { GrpcapiService } from "./services/grpcapi.service";
 import { PinsComponent } from "./components/pins/pins.component";
 
 @NgModule({
@@ -49,7 +48,6 @@ import { PinsComponent } from "./components/pins/pins.component";
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [GrpcapiService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

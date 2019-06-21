@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import * as sha512 from 'js-sha512';
 
 import { TransactionServiceClient } from "../grpc/service/transactionServiceClientPb";
 import {
