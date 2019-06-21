@@ -108,7 +108,7 @@
     <h5 class="modal-title" id="modal-basic-title">Set Your Pin</h5>
   </div>
   <div class="modal-body">
-    <form [formGroup]="formSetPin" (submit)="onSetPin()">
+    <form [formGroup]="formSetPin" (submit)="onSetPin($event)">
       <div class="form-group">
         <field-pins formControlName="pin"></field-pins>
         <small class="form-text error-text">
