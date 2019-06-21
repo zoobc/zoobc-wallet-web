@@ -64,3 +64,14 @@ export class AppService implements CanActivate {
     return false;
   }
 }
+// Language
+export const LANGUAGES = [
+    {
+        country: 'English',
+        code: 'en'
+    },
+    {
+        country: 'Indonesia',
+        code: 'id'
+    },
+] 

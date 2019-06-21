@@ -21,7 +21,11 @@
 
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">
-
+    <li>
+    <select class="browser-default custom-select custom-select-sm select-language" [(ngModel)]="activeLanguage" (change)="selectActiveLanguage()">
+      <option *ngFor="let language of languages; let i = index" value="{{ language.code }}">{{ language.country }}</option>
+    </select>
+    </li>
     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
     <li class="nav-item dropdown no-arrow d-sm-none">
       <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
@@ -32,7 +36,7 @@
       <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
         <form class="form-inline mr-auto w-100 navbar-search">
           <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+            <input type="text" class="form-control bg-light border-0 small" placeholder="{{'Search.title' | translate}}"
               aria-label="Search" aria-describedby="basic-addon2">
             <div class="input-group-append">
               <button class="btn btn-primary" type="button">
@@ -91,7 +95,7 @@
             Spending Alert: We've noticed unusually high spending for your account.
           </div>
         </a>
-        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+        <a class="dropdown-item text-center small text-gray-500" href="#">{{'Misc.AllAlert' | translate}}</a>
       </div>
     </li>
 
@@ -153,7 +157,7 @@
             <div class="small text-gray-500">Chicken the Dog · 2w</div>
           </div>
         </a>
-        <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+        <a class="dropdown-item text-center small text-gray-500" href="#">{{'Misc.ReadMore' | translate}}</a>
       </div>
     </li>
 
@@ -170,12 +174,12 @@
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
         <a class="dropdown-item" href="#">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          Profile
+          {{'Account.Profile' | translate}}
         </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
           <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-          Logout
+          {{'Account.Logout' | translate}}
         </a>
       </div>
     </li>
@@ -191,15 +195,15 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{'Misc.ReadyLeave' | translate}}</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
-      <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+      <div class="modal-body" [innerHTML]="'Account.DescLogout' | translate"></div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-        <a class="btn btn-primary" href="/login">Logout</a>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">{{'Button.Cancel' | translate}}</button>
+        <a class="btn btn-primary" href="/login">{{'Account.Logout' | translate}}</a>
       </div>
     </div>
   </div>

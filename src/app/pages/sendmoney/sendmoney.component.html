@@ -1,17 +1,17 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Send Money</h6>
+    <h6 class="m-0 font-weight-bold text-primary">{{'Navigation.SendMoney' | translate}}</h6>
   </div>
   <div class="card text-left">
     <div class="card-body">
       <form [formGroup]="formSend" (submit)="onSendMoney()">
         <div class="form-group">
-          <label for="recipient">Pay To</label>
-          <input type="text" class="form-control" id="recipient" placeholder="Recipient" formControlName="recipient">
+          <label for="recipient">{{'SendMoney.Payto' | translate}}</label>
+          <input type="text" class="form-control" id="recipient" placeholder="{{'SendMoney.Payto' | translate}}" formControlName="recipient">
         </div>
         <div class="form-group">
-          <label for="amount">Amount</label>
-          <input type="number" class="form-control" id="amount" placeholder="Amount" formControlName="amount">
+          <label for="amount">{{'SendMoney.Amount' | translate}}</label>
+          <input type="number" class="form-control" id="amount" placeholder="{{'SendMoney.Amount' | translate}}" formControlName="amount">
         </div>
         <div class="form-group">
           <label for="fee">Fee</label>
@@ -22,8 +22,8 @@
           <input type="text" class="form-control" id="passphrase" placeholder="Passphrase" formControlName="passphrase">
         </div>
 
-        <button type="reset" class="btn btn-secondary" style="margin-right:10px">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="formSend.invalid">Send</button>
+        <button type="reset" class="btn btn-secondary" style="margin-right:10px">{{'Button.Cancel' | translate}}</button>
+        <button type="submit" class="btn btn-primary" [disabled]="formSend.invalid">{{'Button.Save' | translate}}</button>
 
       </form>
     </div>

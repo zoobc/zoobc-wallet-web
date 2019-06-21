@@ -66,15 +66,23 @@ export class SignupComponent implements OnInit {
   }
 
   generateNewPassphrase() {
-    const phraseWords: string[] = generatePhraseWords();
-    const phrase = phraseWords.join(" ");
-
+    const phrase = generatePhraseWords();
     const seed = GetSeedFromPhrase(phrase);
-    let publicKey = GetPublicKeyFromSeed(seed);
+    const publicKey = GetPublicKeyFromSeed(seed);
     this.address = GetAddressFromPublicKey(publicKey);
-
-    return phraseWords;
+    return phrase.split(' ');
   }
+
+  // generateNewPassphrase() {
+  //   const phraseWords: string[] = generatePhraseWords();
+  //   const phrase = phraseWords.join(" ");
+
+  //   const seed = GetSeedFromPhrase(phrase);
+  //   let publicKey = GetPublicKeyFromSeed(seed);
+  //   this.address = GetAddressFromPublicKey(publicKey);
+
+  //   return phraseWords;
+  // }
 
   copyPassphrase() {
     const passphrase = this.phraseWords.join(" ");
@@ -112,6 +120,7 @@ export class SignupComponent implements OnInit {
   onSetPin(event) {
     event.preventDefault()
     this.submitted = true;
+    console.log(this.formSetPin.value);
 
     if (this.formSetPin.valid) {
       localStorage.setItem("pin", CryptoJS.SHA256(this.pinForm.value));
