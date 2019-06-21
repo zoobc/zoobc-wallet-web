@@ -66,15 +66,23 @@ export class SignupComponent implements OnInit {
   }
 
   generateNewPassphrase() {
-    const phraseWords: string[] = generatePhraseWords();
-    const phrase = phraseWords.join(" ");
-
+    const phrase = generatePhraseWords();
     const seed = GetSeedFromPhrase(phrase);
-    let publicKey = GetPublicKeyFromSeed(seed);
+    const publicKey = GetPublicKeyFromSeed(seed);
     this.address = GetAddressFromPublicKey(publicKey);
-
-    return phraseWords;
+    return phrase.split(' ');
   }
+
+  // generateNewPassphrase() {
+  //   const phraseWords: string[] = generatePhraseWords();
+  //   const phrase = phraseWords.join(" ");
+
+  //   const seed = GetSeedFromPhrase(phrase);
+  //   let publicKey = GetPublicKeyFromSeed(seed);
+  //   this.address = GetAddressFromPublicKey(publicKey);
+
+  //   return phraseWords;
+  // }
 
   copyPassphrase() {
     const passphrase = this.phraseWords.join(" ");

@@ -1,37 +1,42 @@
 import { wordlist } from '../assets/js/wordlist';
 import * as sha256 from 'sha256';
 import { eddsa as EdDSA } from 'elliptic';
+import * as bip39 from '../assets/js/bip39';
 
 import {
   toBase64Url,
   stringToByteArray
 } from "../helpers/converters"
 
-export function generatePhraseWords(): string[] {
-  const crypto = window.crypto;
-  const phraseWords = [];
+export function generatePhraseWords(): string {
+  const mnemonic = bip39.generateMnemonic();
+  console.log('.... mnemonic passphrase 2: ..:', mnemonic);
+  return mnemonic;
 
-  if (crypto) {
-    const bits = 128;
-    const random = new Uint32Array(bits / 32);
-    crypto.getRandomValues(random);
-    const n = wordlist.length;
-    let x: any;
-    let w1: any;
-    let w2: any;
-    let w3: any;
+  // const crypto = window.crypto;
+  // const phraseWords = [];
 
-    for (let i = 0; i < random.length; i++) {
-      x = random[i];
-      w1 = x % n;
-      w2 = (((x / n) >> 0) + w1) % n;
-      w3 = (((((x / n) >> 0) / n) >> 0) + w2) % n;
-      phraseWords.push(wordlist[w1]);
-      phraseWords.push(wordlist[w2]);
-      phraseWords.push(wordlist[w3]);
-    }
-  }
-  return phraseWords;
+  // if (crypto) {
+  //   const bits = 128;
+  //   const random = new Uint32Array(bits / 32);
+  //   crypto.getRandomValues(random);
+  //   const n = wordlist.length;
+  //   let x: any;
+  //   let w1: any;
+  //   let w2: any;
+  //   let w3: any;
+
+  //   for (let i = 0; i < random.length; i++) {
+  //     x = random[i];
+  //     w1 = x % n;
+  //     w2 = (((x / n) >> 0) + w1) % n;
+  //     w3 = (((((x / n) >> 0) / n) >> 0) + w2) % n;
+  //     phraseWords.push(wordlist[w1]);
+  //     phraseWords.push(wordlist[w2]);
+  //     phraseWords.push(wordlist[w3]);
+  //   }
+  // }
+  // return phraseWords;
 }
 
 export function VerifySignature(key, signature, data) {
@@ -47,7 +52,7 @@ export function GetSignature(key, data): any {
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey) {
   // console.log(publicKey);
-  
+
   const checksum = GetChecksumByte(publicKey);
   const addressBuffer = [...publicKey, checksum[0]];
 
@@ -60,7 +65,7 @@ export function GetAddressFromPublicKey(publicKey) {
   }
   const address = toBase64Url(window.btoa(binary));
   // console.log(address);
-  
+
   return address;
 }
 
