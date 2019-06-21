@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.languages = LANGUAGES
-    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE")
+    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || 'en'
   }
 
   onLoginPin() {

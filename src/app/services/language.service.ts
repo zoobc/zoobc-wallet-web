@@ -15,10 +15,8 @@ export class LanguageService {
     let language = this.translate.getBrowserLang();
     this.translate.setDefaultLang(language);
 
-    const active = localStorage.getItem("SELECTED_LANGUAGE")
-    if(active){
-        this.setLanguage(active)
-    }
+    const active = localStorage.getItem("SELECTED_LANGUAGE") || 'en'
+    this.setLanguage(active)
   }
   setLanguage(lng) {
     this.translate.use(lng);

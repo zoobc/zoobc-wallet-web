@@ -18,6 +18,9 @@
         "SendMoney": "Kirim Uang",
         "Receive": "Terima Uang"
     },
+    "Navbar": {
+        "Currency": "Mata Uang"
+    },
     "Dashboard":{
         "ReceiveMoney": "Terima Uang",
         "AvailableBalance": "Saldo Tersedia",

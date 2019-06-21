@@ -19,6 +19,9 @@
         "Receive": "Receive Money"
 
     },
+    "Navbar": {
+        "Currency": "Currency"
+    },
     "Dashboard":{
         "ReceiveMoney": "Receive Money",
         "AvailableBalance": "Available Balance",
