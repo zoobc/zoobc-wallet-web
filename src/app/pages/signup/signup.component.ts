@@ -109,12 +109,14 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  onSetPin() {
+  onSetPin(event) {
+    event.preventDefault()
     this.submitted = true;
+    console.log(this.formSetPin.value);
 
     if (this.formSetPin.valid) {
-      this.saveNewAccount();
       localStorage.setItem("pin", CryptoJS.SHA256(this.pinForm.value));
+      this.saveNewAccount();
 
       this.modalRef.close();
     }

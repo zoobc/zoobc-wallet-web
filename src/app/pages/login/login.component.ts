@@ -3,14 +3,15 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import * as CryptoJS from "crypto-js";
-
-import { AppService } from "../../app.service";
 import {
   GetPublicKeyFromSeed,
   GetAddressFromPublicKey,
   GetSeedFromPhrase
 } from "../../../helpers/utils";
 import { base64ToByteArray, fromBase64Url } from "../../../helpers/converters";
+import { AppService, LANGUAGES } from "../../app.service";
+import { LanguageService } from 'src/app/services/language.service';
+
 
 @Component({
   selector: "app-login",
@@ -18,6 +19,8 @@ import { base64ToByteArray, fromBase64Url } from "../../../helpers/converters";
   styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
+  private languages = []
+  private activeLanguage = 'en'
   pin = localStorage.getItem("pin");
   accounts: any = [];
   isPinNeeded = this.pin ? true : false;
@@ -48,6 +51,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private appServ: AppService,
     private modalService: NgbModal,
+    private langServ: LanguageService
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm
@@ -76,7 +80,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.languages = LANGUAGES
+    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE")
+  }
 
   onLoginPin() {
     if (this.formLoginPin.valid) {
@@ -122,5 +129,10 @@ export class LoginComponent implements OnInit {
 
     this.appServ.updateAllAccount(seed);
     this.appServ.changeCurrentAccount(seed);
+  }
+
+  selectActiveLanguage() {
+    console.log("this.activeLanguage", this.activeLanguage)
+    this.langServ.setLanguage(this.activeLanguage)
   }
 }

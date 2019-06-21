@@ -4,7 +4,7 @@
   </div>
   <div class="card text-center">
     <div class="card-body">
-      <h5 class="card-title">My Deposit Address :</h5>
+      <h5 class="card-title">{{'ReceiveMoney.MyDepositAddress' | translate}}</h5>
       <p class="card-text">{{address}}</p>
       <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode>
     </div>

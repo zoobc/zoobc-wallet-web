@@ -18,9 +18,16 @@ import { ParentComponent } from "./components/parent/parent.component";
 import { SignupComponent } from "./pages/signup/signup.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NgxQRCodeModule } from "ngx-qrcode2";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { NgxPaginationModule } from "ngx-pagination";
 import { PinsComponent } from "./components/pins/pins.component";
+import { TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient);
+}
 
 @NgModule({
   declarations: [
@@ -46,7 +53,14 @@ import { PinsComponent } from "./components/pins/pins.component";
     AppRoutingModule,
     NgbModule.forRoot(),
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   bootstrap: [AppComponent]
 })
