@@ -14,9 +14,13 @@ export function byteArrayToHex(bytes: ArrayBuffer | ArrayBufferView | Array<numb
 /*
  * See: https://developers.google.com/web/updates/2014/08/Easier-ArrayBuffer-String-conversion-with-the-Encoding-API
  */
-export function stringToByteArray(str: string) : Uint8Array {
-  const encoder = new TextEncoder();
-  return encoder.encode(str);
+export function stringToByteArray(str: string): any {
+  let bytes = [];
+  for (let i = 0; i < str.length; ++i) {
+    const code = str.charCodeAt(i);
+    bytes = bytes.concat([code]);
+  }
+  return bytes;
 }
 
 export function byteArrayToString(bytes: ArrayBuffer | ArrayBufferView | Array<number>) : string {
