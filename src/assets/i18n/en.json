@@ -17,7 +17,6 @@
         "MyTrans": "My Transaction",
         "SendMoney": "Send Money",
         "Receive": "Receive Money"
-
     },
     "Navbar": {
         "Currency": "Currency"
@@ -62,8 +61,7 @@
         "DescLogout": "Choose <b>logout</b> button on below, to continue logout from this spinechain wallet."
     },
     "Warning":{
-        "PinWarningNumber": "Pin must contains number",
-        "PinWarningLength": "Pin should have 6 digit",
+        "PinInvalid": "Pin invalid",
         "SignUpWarning": "<b>Remember:</b> Never tell your passphrase. If you lose it, you lose access to your account!"
     },
     "Misc":{

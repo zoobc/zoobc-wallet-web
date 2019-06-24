@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef, Input } from "@angular/core";
+import { Component, OnInit, forwardRef, Input, ViewChildren, ElementRef, QueryList, AfterViewInit } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
@@ -13,13 +13,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
     }
   ]
 })
-export class PinsComponent implements OnInit, ControlValueAccessor {
+export class PinsComponent implements OnInit, ControlValueAccessor, AfterViewInit {
   @Input() digit: number = 6;
+  @ViewChildren("pinDigit") pinDigit: QueryList<ElementRef>
 
   pins = [];
-
   value = "";
-
   values: any = {};
 
   constructor() {}
@@ -28,6 +27,11 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
     for (let i = 0; i < this.digit; i++) {
       this.pins.push(i);
     }
+  }
+
+  ngAfterViewInit() {
+    // focus to first field
+    this.pinDigit.first.nativeElement.children[0].focus()
   }
 
   private _onChange = (value: any) => {};
@@ -45,10 +49,35 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
   registerOnTouched() {}
 
   onChange(index, event) {
-    const el = event.target;
-    const newValue = event.target.value;
+    // set regex number only
+    const pinValue: string = event.target.value
+    const regex = RegExp(/\d+/)    
+    
+    // if user press backpress
+    if (event.keyCode == 8 && this.values[6] == "") {
+      this.pinDigit.forEach((el: ElementRef, key) => {
+        if (key == index-1) {
+          // back to prev field and clear the value
+          el.nativeElement.children[0].focus()
+          el.nativeElement.children[0].value = ''
+        }
+      })
+    }
 
-    this.values[index + 1] = newValue;
+    // if regex is true
+    if (regex.test(pinValue)) {
+      this.pinDigit.forEach((el: ElementRef, key) => {
+        // focus to next field
+        if (key == index+1) el.nativeElement.children[0].focus()
+      })
+    } else { // regex is false
+      this.pinDigit.forEach((el: ElementRef, key) => {
+        // clear current field
+        if (key == index) el.nativeElement.children[0].value = ''
+      })
+    }
+
+    this.values[index + 1] = pinValue;
 
     let value = "";
     let _hasEmpty = false;
@@ -62,20 +91,6 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
 
     if (!_hasEmpty) {
       value = Object.values(this.values).join("");
-    }
-
-    if (newValue.length == el.maxLength) {
-      const _parent = $(el).parent();
-      const _next = _parent.next("div");
-
-      if (_next.length) {
-        _parent
-          .next("div")
-          .find("input")
-          .focus();
-      } else {
-        el.blur();
-      }
     }
 
     this._onChange(value);

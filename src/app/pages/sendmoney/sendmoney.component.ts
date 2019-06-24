@@ -15,6 +15,7 @@ import {
   GetAddressFromPublicKey
 } from "../../../helpers/utils";
 import { transactionByte } from "../../../helpers/transactionByteTemplate";
+import { ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-sendmoney",
@@ -26,7 +27,7 @@ export class SendmoneyComponent implements OnInit {
   recipientForm = new FormControl("", Validators.required);
   amountForm = new FormControl("", Validators.required);
   feeForm = new FormControl("", Validators.required);
-  isFormSendLoading = false
+  isFormSendLoading = false;
 
   constructor(
     private transactionServ: TransactionService,
@@ -40,11 +41,11 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   async onSendMoney() {
     if (this.formSend.valid) {
-      this.isFormSendLoading = true
+      this.isFormSendLoading = true;
 
       const seed = this.appServ.currSeed;
       const pairKey = GetKeyPairFromSeed(seed);
@@ -54,7 +55,7 @@ export class SendmoneyComponent implements OnInit {
       // let balance = await this.accServ.getAccountBalance().then((data: any) => {
       //   return data.balance
       // });
-      let balance = 100 * 1e8
+      let balance = 100 * 1e8;
 
       if (balance / 1e8 > this.amountForm.value + this.feeForm.value) {
         // for testing uncomment comment
@@ -101,20 +102,18 @@ export class SendmoneyComponent implements OnInit {
                 console.log("__result", res);
                 if (res.isvalid) Swal.fire("Money sent");
                 else Swal.fire({ html: res.message, type: "error" });
-                this.isFormSendLoading = false
                 return false;
               })
               .catch(err => {
-                this.isFormSendLoading = false
                 console.log(err);
                 Swal.fire({ html: err.error.error, type: "error" });
                 return false;
               });
           }
-        });
+        }).then(() => (this.isFormSendLoading = false));
       } else {
         Swal.fire({ html: "Balance is not enough", type: "error" });
-        this.isFormSendLoading = false
+        this.isFormSendLoading = false;
       }
     }
   }
