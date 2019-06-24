@@ -6,7 +6,7 @@
       <option *ngFor="let language of languages; let i = index" value="{{ language.code }}">{{ language.country }}
       </option>
     </select>
-    <div class="card shadow mb-4" *ngIf="!isPinNeeded">
+    <div class="card shadow mb-4" *ngIf="isLoggedIn">
       <div class="card-body">
         <ngb-tabset type="pills" justify="center" [activeId]="accounts.length > 0 ? '1' : '2'">
           <ngb-tab title="{{'Login.ByAcc' | translate}}" id="1">
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div class="card shadow mb-4" *ngIf="isPinNeeded">
+    <div class="card shadow mb-4" *ngIf="!isLoggedIn">
       <div class="card-body">
         <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
           <div class="form-group">

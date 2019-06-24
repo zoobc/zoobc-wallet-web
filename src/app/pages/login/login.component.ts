@@ -18,11 +18,12 @@ import { LanguageService } from "src/app/services/language.service";
   styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
-  private languages = [];
   private activeLanguage = "en";
   pin = localStorage.getItem("pin");
   accounts: any = [];
-  isPinNeeded = this.pin ? true : false;
+  private languages = [];
+
+  isLoggedIn = this.pin ? false : true;
   isNeedNewPin = this.pin ? false : true;
 
   modalRef: NgbModalRef;
@@ -82,6 +83,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || "en";
+    
+    this.isLoggedIn = this.appServ.isLoginPin
   }
 
   onChangePin() {
@@ -90,9 +93,10 @@ export class LoginComponent implements OnInit {
 
   onLoginPin() {
     if (this.formLoginPin.valid) {
-      if (this.pin == CryptoJS.SHA256(this.pinForm.value))
-        this.isPinNeeded = false;
-      else {
+      if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
+        this.appServ.onLoginPin()
+        this.isLoggedIn = true;
+      } else {
         this.pinForm.setErrors({ invalid: true });
       }
     }

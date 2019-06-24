@@ -13,10 +13,12 @@ export class AppService implements CanActivate {
   private sourceCurrSeed = new BehaviorSubject("");
   private sourceCurrPublicKey = new BehaviorSubject("");
   private sourceCurrAddress = new BehaviorSubject("");
+  private sourceIsLoginPin = new BehaviorSubject(false);
 
   currSeed: Uint8Array
   currPublicKey: Uint8Array
   currAddress: string
+  isLoginPin: boolean
   
   constructor(private router: Router, private http: HttpClient) {
     this.sourceCurrSeed.subscribe(value => {
@@ -29,6 +31,10 @@ export class AppService implements CanActivate {
 
     this.sourceCurrAddress.subscribe(value => {
       this.currAddress = value
+    })
+
+    this.sourceIsLoginPin.subscribe(value => {
+      this.isLoginPin = value
     })
   }
 
@@ -61,6 +67,10 @@ export class AppService implements CanActivate {
       accounts.push(encSeed);
       localStorage.setItem("accounts", JSON.stringify(accounts));
     }
+  }
+
+  onLoginPin() {
+    this.sourceIsLoginPin.next(true)
   }
 
   canActivate(): boolean {

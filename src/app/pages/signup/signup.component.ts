@@ -59,6 +59,9 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
     this.phraseWords = this.generateNewPassphrase();
+    
+    let isLoggedIn = this.appServ.isLoginPin
+    if (!isLoggedIn) this.router.navigateByUrl("/login");
   }
 
   regenerateNewPassphrase() {
@@ -72,17 +75,6 @@ export class SignupComponent implements OnInit {
     this.address = GetAddressFromPublicKey(publicKey);
     return phrase.split(' ');
   }
-
-  // generateNewPassphrase() {
-  //   const phraseWords: string[] = generatePhraseWords();
-  //   const phrase = phraseWords.join(" ");
-
-  //   const seed = GetSeedFromPhrase(phrase);
-  //   let publicKey = GetPublicKeyFromSeed(seed);
-  //   this.address = GetAddressFromPublicKey(publicKey);
-
-  //   return phraseWords;
-  // }
 
   copyPassphrase() {
     const passphrase = this.phraseWords.join(" ");
