@@ -14,10 +14,15 @@ export class AppService implements CanActivate {
   private sourceCurrPublicKey = new BehaviorSubject("");
   private sourceCurrAddress = new BehaviorSubject("");
 
+  currSeed: Uint8Array
   currPublicKey: Uint8Array
   currAddress: string
   
   constructor(private router: Router, private http: HttpClient) {
+    this.sourceCurrSeed.subscribe(value => {
+      this.currSeed = base64ToByteArray(value)
+    })
+
     this.sourceCurrPublicKey.subscribe(value => {
       this.currPublicKey = base64ToByteArray(value)
     })
