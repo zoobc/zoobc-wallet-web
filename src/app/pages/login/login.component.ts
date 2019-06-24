@@ -10,8 +10,7 @@ import {
 } from "../../../helpers/utils";
 import { base64ToByteArray, fromBase64Url } from "../../../helpers/converters";
 import { AppService, LANGUAGES } from "../../app.service";
-import { LanguageService } from 'src/app/services/language.service';
-
+import { LanguageService } from "src/app/services/language.service";
 
 @Component({
   selector: "app-login",
@@ -19,8 +18,8 @@ import { LanguageService } from 'src/app/services/language.service';
   styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
-  private languages = []
-  private activeLanguage = 'en'
+  private languages = [];
+  private activeLanguage = "en";
   pin = localStorage.getItem("pin");
   accounts: any = [];
   isPinNeeded = this.pin ? true : false;
@@ -81,14 +80,21 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.languages = LANGUAGES
-    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || 'en'
+    this.languages = LANGUAGES;
+    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || "en";
+  }
+
+  onChangePin() {
+    if (this.pinForm.value.length == 6) this.onLoginPin();
   }
 
   onLoginPin() {
     if (this.formLoginPin.valid) {
       if (this.pin == CryptoJS.SHA256(this.pinForm.value))
         this.isPinNeeded = false;
+      else {
+        this.pinForm.setErrors({ invalid: true });
+      }
     }
   }
 
@@ -132,7 +138,7 @@ export class LoginComponent implements OnInit {
   }
 
   selectActiveLanguage() {
-    console.log("this.activeLanguage", this.activeLanguage)
-    this.langServ.setLanguage(this.activeLanguage)
+    console.log("this.activeLanguage", this.activeLanguage);
+    this.langServ.setLanguage(this.activeLanguage);
   }
 }
