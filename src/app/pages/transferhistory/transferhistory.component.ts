@@ -12,16 +12,13 @@ export class TransferhistoryComponent implements OnInit {
   accountHistory: any = []
   address: string
   config: any;
+  showSpinner: boolean = true;
 
   constructor(
     private appServ: AppService,
     private transactionServ: TransactionService
   ) {
     this.address = this.appServ.currAddress
-
-    this.transactionServ.getAccountTransaction().then((res: any) => {
-      this.accountHistory = res.transactionsList;
-    });
     this.config = {
       itemsPerPage: 5,
       currentPage: 1,
@@ -33,5 +30,15 @@ export class TransferhistoryComponent implements OnInit {
     this.config.currentPage = event;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.transactionServ.getAccountTransaction().then((res: any) => {
+      this.accountHistory = res.transactionsList;
+      // console.log("Loader on init", res)
+
+      setTimeout(() => {
+        this.showSpinner = false;
+        // console.log("loading timeot")
+      }, 3000)
+    });
+  }
 }
