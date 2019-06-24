@@ -23,6 +23,7 @@ import { NgxPaginationModule } from "ngx-pagination";
 import { PinsComponent } from "./components/pins/pins.component";
 import { TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LoadingSpinnerComponent } from './ui/loading-spinner/loading-spinner.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -43,7 +44,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ParentComponent,
     SignupComponent,
     SidebarComponent,
-    PinsComponent
+    PinsComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,

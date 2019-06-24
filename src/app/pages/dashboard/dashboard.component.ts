@@ -10,6 +10,7 @@ import { TransactionService } from '../../services/transaction.service';
 })
 export class DashboardComponent implements OnInit {
   accountBalance;
+  showSpinner: boolean = true;
 
   accountBalanceServ: any
   getAccountBalanceReq: any
@@ -25,6 +26,10 @@ export class DashboardComponent implements OnInit {
 
     this.accountServ.getAccountBalance().then(data => {
       this.accountBalance = data;
+      setTimeout(() => {
+        this.showSpinner = false;
+        // console.log("loading timeot")
+      }, 3000)
     });
 
     this.transactionServ.getAccountTransaction().then((res: any) => {
