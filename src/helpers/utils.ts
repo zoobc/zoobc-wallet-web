@@ -1,4 +1,3 @@
-import { wordlist } from '../assets/js/wordlist';
 import * as sha256 from 'sha256';
 import { eddsa as EdDSA } from 'elliptic';
 import * as bip39 from '../assets/js/bip39';
@@ -6,7 +5,7 @@ import * as bip39 from '../assets/js/bip39';
 import {
   toBase64Url,
   stringToByteArray
-} from "../helpers/converters"
+} from '../helpers/converters';
 
 export function generatePhraseWords(): string {
   const mnemonic = bip39.generateMnemonic();
