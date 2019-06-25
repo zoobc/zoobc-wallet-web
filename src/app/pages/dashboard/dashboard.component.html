@@ -12,8 +12,8 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{'Dashboard.AvailableBalance' | translate}}</div>
-              <loading-spinner class="spinner-sm" *ngIf="showSpinner"></loading-spinner>
-              <div class="h5 mb-0 font-weight-bold text-gray-800" *ngIf="!showSpinner">{{accountBalance && accountBalance.balance / 1e8 | number}} BCZ</div>
+              <loading-spinner class="spinner-sm" *ngIf="showSpinnerBalance"></loading-spinner>
+              <div class="h5 mb-0 font-weight-bold text-gray-800" *ngIf="!showSpinnerBalance">{{accountBalance && accountBalance.balance / 1e8 | number}} BCZ</div>
           </div>
           <div class="col-auto">
             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -30,8 +30,8 @@
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{'Dashboard.PendingBalance' | translate}}</div>
-            <loading-spinner class="spinner-sm" *ngIf="showSpinner"></loading-spinner>
-            <div class="h5 mb-0 font-weight-bold text-gray-800" *ngIf="!showSpinner">{{accountBalance && accountBalance.unconfirmedbalance / 1e8 | number}} BCZ</div>
+            <loading-spinner class="spinner-sm" *ngIf="showSpinnerBalance"></loading-spinner>
+            <div class="h5 mb-0 font-weight-bold text-gray-800" *ngIf="!showSpinnerBalance">{{accountBalance && accountBalance.unconfirmedbalance / 1e8 | number}} BCZ</div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -52,8 +52,8 @@
           <h6 class="m-0 font-weight-bold text-primary">{{'Dashboard.RecentTransaction' | translate}}</h6>
         </div>
         <div class="card-body">
-          <loading-spinner class="" *ngIf="showSpinner"></loading-spinner>
-          <div class="table-responsive" *ngIf="!showSpinner">
+          <loading-spinner class="" *ngIf="showSpinnerRecentTx"></loading-spinner>
+          <div class="table-responsive" *ngIf="!showSpinnerRecentTx">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>

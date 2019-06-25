@@ -10,7 +10,8 @@ import { TransactionService } from '../../services/transaction.service';
 })
 export class DashboardComponent implements OnInit {
   accountBalance;
-  showSpinner: boolean = true;
+  showSpinnerBalance: boolean = true;
+  showSpinnerRecentTx: boolean = true;
 
   accountBalanceServ: any
   getAccountBalanceReq: any
@@ -27,7 +28,7 @@ export class DashboardComponent implements OnInit {
     this.accountServ.getAccountBalance().then(data => {
       this.accountBalance = data;
       setTimeout(() => {
-        this.showSpinner = false;
+        this.showSpinnerBalance = false;
         // console.log("loading timeot")
       }, 3000)
     });
@@ -35,6 +36,10 @@ export class DashboardComponent implements OnInit {
     this.transactionServ.getAccountTransaction().then((res: any) => {
       this.recentTx = res.transactionsList;
       this.recentTx = this.recentTx.slice(0, 4)
+      setTimeout(() => {
+        this.showSpinnerRecentTx = false;
+        // console.log("loading timeot")
+      }, 3000)
     });
   }
 }
