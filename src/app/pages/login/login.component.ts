@@ -85,6 +85,9 @@ export class LoginComponent implements OnInit {
     this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || "en";
     
     this.isLoggedIn = this.appServ.isLoginPin
+
+    console.log(this.isLoggedIn);
+    console.log(this.isNeedNewPin);
   }
 
   onChangePin() {
