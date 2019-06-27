@@ -15,14 +15,10 @@ export class AppService implements CanActivate {
   private sourceCurrSeed = new BehaviorSubject("");
   private sourceCurrPublicKey = new BehaviorSubject("");
   private sourceCurrAddress = new BehaviorSubject("");
-  private sourceCurrAccount = new BehaviorSubject(null);
-  private sourceIsLoginPin = new BehaviorSubject(false);
 
   currSeed: BIP32Interface;
   currPublicKey: Uint8Array;
   currAddress: string;
-  currAccount: { path: string; name: string };
-  isLoginPin: boolean;
 
   constructor(private router: Router, private http: HttpClient) {
     this.sourceCurrSeed.subscribe(seedBase58 => {
@@ -36,15 +32,6 @@ export class AppService implements CanActivate {
 
     this.sourceCurrAddress.subscribe(address => {
       this.currAddress = address;
-    });
-
-    this.sourceCurrAccount.subscribe(idxAcc => {
-      const accounts = JSON.parse(localStorage.getItem("accounts"));
-      if (idxAcc != null) this.currAccount = accounts[idxAcc];
-    });
-
-    this.sourceIsLoginPin.subscribe(value => {
-      this.isLoginPin = value;
     });
   }
 
@@ -63,17 +50,21 @@ export class AppService implements CanActivate {
       const address = GetAddressFromPublicKey(publicKey);
 
       const accounts = JSON.parse(localStorage.getItem("accounts"));
-      const idxAcc = accounts.findIndex((acc: any) => acc.path == path);
+      const account = accounts.find((acc: any) => acc.path == path);
 
       this.sourceCurrSeed.next(masterSeed.toBase58());
       this.sourceCurrPublicKey.next(byteArrayToHex(publicKey));
       this.sourceCurrAddress.next(address);
-      this.sourceCurrAccount.next(idxAcc);
+
+      localStorage.setItem("currAccount", JSON.stringify(account));
       // console.log(seed.toBase58());
       // console.log(byteArrayToHex(publicKey));
       // console.log(address);
-      console.log(accounts[idxAcc]);
     }
+  }
+
+  getCurrAccount() {
+    return JSON.parse(localStorage.getItem("currAccount"));
   }
 
   getAllAccount() {
@@ -98,8 +89,8 @@ export class AppService implements CanActivate {
     }
   }
 
-  onLoginPin() {
-    this.sourceIsLoginPin.next(true);
+  isLoggedIn() {
+    return this.currPublicKey ? true : false;
   }
 
   canActivate(): boolean {

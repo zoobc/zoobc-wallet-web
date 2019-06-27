@@ -44,7 +44,7 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isFormSendLoading = true;
 
-      const account = this.appServ.currAccount;
+      const account = this.appServ.getCurrAccount();
       console.log(account);
 
       const seed: BIP32Interface = this.appServ.currSeed;

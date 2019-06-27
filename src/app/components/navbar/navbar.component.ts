@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
 import { LANGUAGES } from "src/app/app.service";
 import { LanguageService } from "src/app/services/language.service";
 import { AppService } from "src/app/app.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-navbar",
@@ -19,17 +20,31 @@ export class NavbarComponent implements OnInit {
   zbcPriceInUsd: number = 10;
   currPrice: number = 0;
   currRate: string = localStorage.getItem("rate") || "USD";
+  accounts: [{ path: string; name: string }];
+  currAcc: { path: string; name: string };
 
-  constructor(private langServ: LanguageService, private appServ: AppService) {}
+  constructor(
+    private langServ: LanguageService,
+    private appServ: AppService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.languages = LANGUAGES;
-    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || 'en';
+    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || "en";
     this.getCurrencyRates();
+    this.accounts = this.appServ.getAllAccount();
+    this.currAcc = this.appServ.getCurrAccount();
   }
 
   onToggleSidebar(e) {
     this.toggleSidebar.emit(e);
+  }
+
+  onSwitchAccount(path) {
+    this.appServ.changeCurrentAccount(path);
+    this.currAcc = this.appServ.getCurrAccount();
+    this.router.navigateByUrl("/");
   }
 
   getCurrencyRates() {

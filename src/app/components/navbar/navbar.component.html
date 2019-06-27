@@ -9,9 +9,11 @@
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">
     <li>
-    <select class="browser-default custom-select custom-select-sm select-language" [(ngModel)]="activeLanguage" (change)="selectActiveLanguage()">
-      <option *ngFor="let language of languages; let i = index" value="{{ language.code }}">{{ language.country }}</option>
-    </select>
+      <select class="browser-default custom-select custom-select-sm select-language" [(ngModel)]="activeLanguage"
+        (change)="selectActiveLanguage()">
+        <option *ngFor="let language of languages; let i = index" value="{{ language.code }}">{{ language.country }}
+        </option>
+      </select>
     </li>
     <!-- Nav Item - Search Dropdown (Visible Only XS) -->
     <li class="nav-item dropdown no-arrow d-sm-none">
@@ -44,7 +46,8 @@
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
         aria-labelledby="rateDropdown">
         <h6 class="dropdown-header" translate>Navbar.Currency</h6>
-        <button class="dropdown-item d-flex align-items-center" *ngFor="let rate of currencyRates" (click)="onChangeRate(rate)">
+        <button class="dropdown-item d-flex align-items-center" *ngFor="let rate of currencyRates"
+          (click)="onChangeRate(rate)">
           <i class="fas fa-check fa-sm" *ngIf="currRate == rate.name"></i>
           <span>{{rate.value | number:'0.1-2'}} {{rate.name}}</span>
         </button>
@@ -62,6 +65,12 @@
       </a>
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+        <button class="dropdown-item" *ngFor="let acc of accounts" (click)="onSwitchAccount(acc.path)">
+          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path != currAcc.path"></i>
+          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path == currAcc.path"></i>
+          <span>{{acc.name}}</span>
+        </button>
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
           {{'Account.Profile' | translate}}

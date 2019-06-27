@@ -59,9 +59,6 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
     this.generateNewWallet();
-
-    let isLoggedIn = this.appServ.isLoginPin;
-    if (!isLoggedIn && !this.isPinNeeded) this.router.navigateByUrl("/login");
   }
 
   generateNewWallet() {
