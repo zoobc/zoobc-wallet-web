@@ -3,14 +3,13 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import * as CryptoJS from "crypto-js";
+import * as bip39 from "bip39";
+import * as bip32 from "bip32";
+import { BIP32Interface } from "bip32";
 
 import { AppService } from "../../app.service";
-import {
-  generatePhraseWords,
-  GetSeedFromPhrase,
-  GetPublicKeyFromSeed,
-  GetAddressFromPublicKey,
-} from "../../../helpers/utils";
+import { GetAddressFromPublicKey } from "../../../helpers/utils";
+import { AccountService } from "src/app/services/account.service";
 
 @Component({
   selector: "app-signup",
@@ -22,10 +21,10 @@ export class SignupComponent implements OnInit {
 
   modalRef: NgbModalRef;
 
-  phraseWords: string[];
-  keyPair: any;
-  publicKey: any;
+  passphrase: string[];
+  masterSeed: string;
   address: string;
+  path: string;
 
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
@@ -44,7 +43,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private appServ: AppService
+    private appServ: AppService,
+    private accServ: AccountService
   ) {
     this.formSetPin = new FormGroup({
       pin: this.pinForm
@@ -58,26 +58,29 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     window.scroll(0, 0);
-    this.phraseWords = this.generateNewPassphrase();
-    
-    let isLoggedIn = this.appServ.isLoginPin
-    if (!isLoggedIn) this.router.navigateByUrl("/login");
+    this.generateNewWallet();
+
+    let isLoggedIn = this.appServ.isLoginPin;
+    if (!isLoggedIn && !this.isPinNeeded) this.router.navigateByUrl("/login");
   }
 
-  regenerateNewPassphrase() {
-    this.phraseWords = this.generateNewPassphrase();
-  }
+  generateNewWallet() {
+    let passphrase = bip39.generateMnemonic();
+    bip39.mnemonicToSeed(passphrase).then(seed => {
+      this.path = this.accServ.generateDerivationPath();
 
-  generateNewPassphrase() {
-    const phrase = generatePhraseWords();
-    const seed = GetSeedFromPhrase(phrase);
-    const publicKey = GetPublicKeyFromSeed(seed);
-    this.address = GetAddressFromPublicKey(publicKey);
-    return phrase.split(' ');
+      const masterSeed = bip32.fromSeed(seed);
+      const childSeed: BIP32Interface = masterSeed.derivePath(this.path);
+      const publicKey: Uint8Array = childSeed.publicKey.slice(1, 33);
+
+      this.address = GetAddressFromPublicKey(publicKey);
+      this.masterSeed = masterSeed.toBase58();
+      this.passphrase = passphrase.split(" ");
+    });
   }
 
   copyPassphrase() {
-    const passphrase = this.phraseWords.join(" ");
+    const passphrase = this.passphrase.join(" ");
     this.copyText(passphrase);
   }
 
@@ -121,16 +124,8 @@ export class SignupComponent implements OnInit {
   }
 
   saveNewAccount() {
-    const phrase = this.phraseWords.join(" ");
-    const seed = GetSeedFromPhrase(phrase);
-
-    this.appServ.updateAllAccount(seed);
-    this.appServ.changeCurrentAccount(seed);
-  }
-
-  toHexString(byteArray) {
-    return Array.from(byteArray, (byte: any) => {
-      return ("0" + (byte & 0xff).toString(16)).slice(-2);
-    }).join("");
+    this.appServ.saveMasterWallet(this.masterSeed);
+    this.appServ.updateAllAccount(this.path, "Account 1");
+    this.appServ.changeCurrentAccount(this.path);
   }
 }

@@ -3,12 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import * as CryptoJS from "crypto-js";
-import {
-  GetPublicKeyFromSeed,
-  GetAddressFromPublicKey,
-  GetSeedFromPhrase
-} from "../../../helpers/utils";
-import { base64ToByteArray, fromBase64Url } from "../../../helpers/converters";
+import { GetSeedFromPhrase } from "../../../helpers/utils";
 import { AppService, LANGUAGES } from "../../app.service";
 import { LanguageService } from "src/app/services/language.service";
 
@@ -23,7 +18,7 @@ export class LoginComponent implements OnInit {
   accounts: any = [];
   private languages = [];
 
-  isLoggedIn = this.pin ? false : true;
+  isLoggedIn: boolean;
   isNeedNewPin = this.pin ? false : true;
 
   modalRef: NgbModalRef;
@@ -65,29 +60,14 @@ export class LoginComponent implements OnInit {
       pin: this.setPinForm
     });
 
-    let pin = localStorage.getItem("pin");
-    let PKList: [] = appServ.getAllAccount();
-    if (PKList.length > 0) {
-      this.accounts = PKList.map(pk => {
-        let seed = CryptoJS.AES.decrypt(pk, pin).toString(CryptoJS.enc.Utf8);
-        let seedByte = base64ToByteArray(fromBase64Url(seed));
-
-        let publicKey = GetPublicKeyFromSeed(seedByte);
-        let address = GetAddressFromPublicKey(publicKey);
-
-        return { seed: seedByte, address };
-      });
-    }
+    this.accounts = appServ.getAllAccount();
   }
 
   ngOnInit() {
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || "en";
-    
-    this.isLoggedIn = this.appServ.isLoginPin
 
-    console.log(this.isLoggedIn);
-    console.log(this.isNeedNewPin);
+    this.isLoggedIn = this.appServ.isLoginPin;
   }
 
   onChangePin() {
@@ -97,7 +77,7 @@ export class LoginComponent implements OnInit {
   onLoginPin() {
     if (this.formLoginPin.valid) {
       if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
-        this.appServ.onLoginPin()
+        this.appServ.onLoginPin();
         this.isLoggedIn = true;
       } else {
         this.pinForm.setErrors({ invalid: true });
@@ -105,9 +85,11 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onLoginAccount(val) {
-    let account = this.accounts.find(acc => acc.address == val);
-    this.appServ.changeCurrentAccount(account.seed);
+  onLoginAccount(name: string) {
+    let account = this.accounts.find(acc => acc.name == name);
+    console.log(account);
+
+    this.appServ.changeCurrentAccount(account.path);
     this.router.navigateByUrl("/dashboard");
   }
 
@@ -140,8 +122,8 @@ export class LoginComponent implements OnInit {
   saveNewAccount() {
     const seed = GetSeedFromPhrase(this.passPhraseForm.value);
 
-    this.appServ.updateAllAccount(seed);
-    this.appServ.changeCurrentAccount(seed);
+    // this.appServ.updateAllAccount(seed);
+    // this.appServ.changeCurrentAccount(seed);
   }
 
   selectActiveLanguage() {

@@ -1,44 +1,72 @@
 <div class="login-page">
   <div class="container">
     <h3 class="h3 text-center" style="margin-bottom:24px">Spinechain Logo</h3>
-    <select class="browser-default custom-select custom-select-sm select-language" [(ngModel)]="activeLanguage"
-      (change)="selectActiveLanguage()">
-      <option *ngFor="let language of languages; let i = index" value="{{ language.code }}">{{ language.country }}
+    <select
+      class="browser-default custom-select custom-select-sm select-language"
+      [(ngModel)]="activeLanguage"
+      (change)="selectActiveLanguage()"
+    >
+      <option
+        *ngFor="let language of languages; let i = index"
+        value="{{ language.code }}"
+        >{{ language.country }}
       </option>
     </select>
     <div class="card shadow mb-4" *ngIf="isLoggedIn || isNeedNewPin">
       <div class="card-body">
-        <ngb-tabset type="pills" justify="center" [activeId]="accounts.length > 0 ? '1' : '2'">
-          <ngb-tab title="{{'Login.ByAcc' | translate}}" id="1">
+        <ngb-tabset
+          type="pills"
+          justify="center"
+          [activeId]="accounts.length > 0 ? '1' : '2'"
+        >
+          <ngb-tab title="{{ 'Login.ByAcc' | translate }}" id="1">
             <ng-template ngbTabContent>
               <br />
-              <select class="custom-select" (change)="onLoginAccount($event.target.value)">
-                <option selected disabled>{{'Login.Select' | translate}}</option>
-                <option *ngFor="let account of accounts" [value]="account.address">{{ account.address }}</option>
+              <select
+                class="custom-select"
+                (change)="onLoginAccount($event.target.value)"
+              >
+                <option selected disabled>{{
+                  "Login.Select" | translate
+                }}</option>
+                <option
+                  *ngFor="let account of accounts"
+                  [value]="account.name"
+                  >{{ account.name }}</option
+                >
               </select>
               <a [routerLink]="['/signup']" class="btn btn-transparent">
-                <span class="text">{{'Login.CreateAcc'| translate}}</span>
+                <span class="text">{{ "Login.CreateAcc" | translate }}</span>
               </a>
             </ng-template>
           </ngb-tab>
           <ngb-tab id="2">
-            <ng-template ngbTabTitle>{{'Login.ByMnemonic' | translate}}</ng-template>
+            <ng-template ngbTabTitle>{{
+              "Login.ByMnemonic" | translate
+            }}</ng-template>
             <ng-template ngbTabContent>
               <br />
-              <form [formGroup]="formLoginMnemonic" (submit)="onLoginMnemonic(content)">
+              <form
+                [formGroup]="formLoginMnemonic"
+                (submit)="onLoginMnemonic(content)"
+              >
                 <div class="form-group">
-                  <input type="email" class="form-control" placeholder="{{'Login.YourPassphrase' | translate}}"
-                    formControlName="passPhrase" />
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="{{ 'Login.YourPassphrase' | translate }}"
+                    formControlName="passPhrase"
+                  />
                 </div>
 
                 <button class="btn btn-success btn-icon-split" type="submit">
                   <span class="icon text-white-50">
                     <i class="fas fa-check"></i>
                   </span>
-                  <span class="text">{{'Login.BtnLogin' | translate}}</span>
+                  <span class="text">{{ "Login.BtnLogin" | translate }}</span>
                 </button>
                 <a [routerLink]="['/signup']" class="btn btn-transparent">
-                  <span class="text">{{'Login.CreateAcc' | translate }}</span>
+                  <span class="text">{{ "Login.CreateAcc" | translate }}</span>
                 </a>
               </form>
             </ng-template>
@@ -51,17 +79,25 @@
       <div class="card-body">
         <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
           <div class="form-group">
-            <label>{{'Login.EYP' | translate}}</label>
-            <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
+            <label>{{ "Login.EYP" | translate }}</label>
+            <field-pins
+              formControlName="pin"
+              (keyup)="onChangePin()"
+            ></field-pins>
             <small class="form-text error-text">
-              <span *ngIf="pinForm.hasError('invalid')">{{'Warning.PinInvalid' | translate}}</span>
+              <span *ngIf="pinForm.hasError('invalid')">{{
+                "Warning.PinInvalid" | translate
+              }}</span>
             </small>
           </div>
-          <button class="btn btn-success btn-icon-split" [disabled]="formLoginPin.invalid">
+          <button
+            class="btn btn-success btn-icon-split"
+            [disabled]="formLoginPin.invalid"
+          >
             <span class="icon text-white-50">
               <i class="fas fa-check"></i>
             </span>
-            <span class="text">{{'Login.BtnLogin' | translate}}</span>
+            <span class="text">{{ "Login.BtnLogin" | translate }}</span>
           </button>
         </form>
       </div>
@@ -71,7 +107,9 @@
 
 <ng-template #content let-modal>
   <div class="modal-header">
-    <h5 class="modal-title" id="modal-basic-title">{{'Login.SYP' | translate }}</h5>
+    <h5 class="modal-title" id="modal-basic-title">
+      {{ "Login.SYP" | translate }}
+    </h5>
   </div>
   <div class="modal-body">
     <form [formGroup]="formSetPin" (submit)="onSetPin()">
@@ -79,7 +117,9 @@
         <field-pins formControlName="pin"></field-pins>
       </div>
       <div class="text-right">
-        <button type="submit" class="btn btn-primary">{{'Button.Save' | translate}}</button>
+        <button type="submit" class="btn btn-primary">
+          {{ "Button.Save" | translate }}
+        </button>
       </div>
     </form>
   </div>
