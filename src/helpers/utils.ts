@@ -1,11 +1,8 @@
-import * as sha256 from 'sha256';
-import { eddsa as EdDSA } from 'elliptic';
-import * as bip39 from '../assets/js/bip39';
+import * as sha256 from "sha256";
+import { eddsa as EdDSA } from "elliptic";
+import * as bip39 from "../assets/js/bip39";
 
-import {
-  toBase64Url,
-  stringToByteArray
-} from '../helpers/converters';
+import { toBase64Url, stringToByteArray } from "../helpers/converters";
 
 export function generatePhraseWords(): string {
   const mnemonic = bip39.generateMnemonic();
@@ -48,15 +45,13 @@ export function GetSignature(key, data): any {
 }
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
-export function GetAddressFromPublicKey(publicKey) {
-  // console.log(publicKey);
-
+export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
   const checksum = GetChecksumByte(publicKey);
-  const addressBuffer = [...publicKey, checksum[0]];
+  let binary = "";
+  const bytes = new Uint8Array(33);
+  bytes.set(publicKey, 0);
+  bytes.set([checksum[0]], 32);
 
-  // change to base64
-  let binary = '';
-  const bytes = new Uint8Array(addressBuffer);
   const len = bytes.byteLength;
   for (let i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i]);
@@ -78,9 +73,8 @@ export function GetSeedFromPhrase(phrase: string) {
   return seed;
 }
 
-
 export function GetKeyPairFromSeed(seed: ArrayLike<number>): any {
-  const ec = new EdDSA('ed25519');
+  const ec = new EdDSA("ed25519");
   const keyPair = ec.keyFromSecret(seed);
   return keyPair;
 }
@@ -92,7 +86,9 @@ export function GetPublicKeyFromSeed(seed: ArrayLike<number>): any {
 export function GetChecksumByte(bytes): any {
   let n = bytes.length;
   let a = 0;
-  for (let i = 0; i < n; i++) { a += bytes[i]; }
+  for (let i = 0; i < n; i++) {
+    a += bytes[i];
+  }
   const res = new Uint8Array([a]);
   return res;
 }

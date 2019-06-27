@@ -9,13 +9,10 @@ import {
   BigInt,
   addressToPublicKey
 } from "../../../helpers/converters";
-import {
-  GetPublicKeyFromSeed,
-  GetKeyPairFromSeed,
-  GetAddressFromPublicKey
-} from "../../../helpers/utils";
+import { GetKeyPairFromSeed } from "../../../helpers/utils";
 import { transactionByte } from "../../../helpers/transactionByteTemplate";
-import { ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
+import { BIP32Interface } from "bip32";
+import * as base58 from "bs58";
 
 @Component({
   selector: "app-sendmoney",
@@ -47,10 +44,17 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isFormSendLoading = true;
 
-      const seed = this.appServ.currSeed;
-      const pairKey = GetKeyPairFromSeed(seed);
-      const pubKey = GetPublicKeyFromSeed(seed);
-      const address = GetAddressFromPublicKey(pubKey);
+      const account = this.appServ.currAccount;
+      console.log(account);
+
+      const seed: BIP32Interface = this.appServ.currSeed;
+      const childSeed = seed.derivePath(account.path);
+      let childSeedBase58 = seed.toBase58();
+      const keyPair = GetKeyPairFromSeed(
+        new Buffer(base58.decode(childSeedBase58))
+      );
+      const pubKey = this.appServ.currPublicKey;
+      const address = this.appServ.currAddress;
 
       // let balance = await this.accServ.getAccountBalance().then((data: any) => {
       //   return data.balance
@@ -85,12 +89,14 @@ export class SendmoneyComponent implements OnInit {
         timestampsView.setUint32(3, dataForm.timestamp, true);
 
         // console.log("unsignedTxBytes:", byteArrayToHex(txBytes))
-        let signature = this.accServ.GetSignature(pairKey, txBytes);
-        // console.log("txSignature:", this.signature.toHex().toLowerCase())
+        console.log(childSeed.privateKey);
+
+        let signature = keyPair.sign(txBytes);
+        // console.log("txSignature:", signature);
 
         // set signature to bytes
         txBytes.set(signature.toBytes(), 123);
-        // console.log("signedTxBytes:", byteArrayToHex(txBytes))
+        console.log("signedTxBytes:", txBytes);
         Swal.fire({
           title: `Are you sure want to send money?`,
           showCancelButton: true,
