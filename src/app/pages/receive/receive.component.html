@@ -4,8 +4,17 @@
   </div>
   <div class="card text-center">
     <div class="card-body">
-      <h5 class="card-title">{{'ReceiveMoney.MyDepositAddress' | translate}}</h5>
-      <p class="card-text">{{address}}</p>
+      <h5 class="card-title">
+        {{ 'ReceiveMoney.MyDepositAddress' | translate }}
+      </h5>
+      <span class="icon text-black-50">
+        <p class="card-text">
+          {{ address }}
+          <button class="btn btn-primary">
+            <i class="fas fa-copy" (click)="copyAddress()"></i>
+          </button>
+        </p>
+      </span>
       <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode>
     </div>
   </div>
