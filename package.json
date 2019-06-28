@@ -33,8 +33,6 @@
     "elliptic": "^6.4.1",
     "google-protobuf": "^3.8.0",
     "grpc-web": "^1.0.4",
-    "jQuery": "^1.7.4",
-    "jquery": "^3.4.1",
     "ngx-build-plus": "^7.8.3",
     "ngx-pagination": "^3.3.1",
     "ngx-qrcode2": "0.0.9",
@@ -45,6 +43,7 @@
     "sweetalert2": "^8.11.7",
     "ts-protoc-gen": "^0.10.0",
     "tslib": "^1.9.0",
+    "tweetnacl": "^1.0.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

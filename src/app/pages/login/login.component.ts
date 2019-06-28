@@ -79,7 +79,8 @@ export class LoginComponent implements OnInit {
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
 
-    this.isLoggedIn = this.appServ.isLoginPin;
+    let isLoggedIn: boolean = this.appServ.isLoggedIn();
+    if (isLoggedIn) this.router.navigateByUrl("/dashboard");
   }
 
   onChangePin() {
@@ -89,8 +90,9 @@ export class LoginComponent implements OnInit {
   onLoginPin() {
     if (this.formLoginPin.valid) {
       if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
-        this.appServ.onLoginPin();
-        this.isLoggedIn = true;
+        let account = this.appServ.getCurrAccount();
+        this.appServ.changeCurrentAccount(account.path);
+        this.router.navigateByUrl("/dashboard");
       } else {
         this.pinForm.setErrors({ invalid: true });
       }

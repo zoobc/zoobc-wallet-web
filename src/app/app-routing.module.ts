@@ -7,10 +7,10 @@ import { SendmessageComponent } from "./pages/sendmessage/sendmessage.component"
 import { LoginComponent } from "./pages/login/login.component";
 import { TransferhistoryComponent } from "./pages/transferhistory/transferhistory.component";
 import { ReceiveComponent } from "./pages/receive/receive.component";
-import { SignupComponent } from './pages/signup/signup.component';
+import { SignupComponent } from "./pages/signup/signup.component";
 import { ParentComponent } from "../app/components/parent/parent.component";
 
-import { AppService } from './app.service'
+import { AppService } from "./app.service";
 
 const routes: Routes = [
   { path: "", redirectTo: "login", pathMatch: "full" },
@@ -27,7 +27,7 @@ const routes: Routes = [
     ]
   },
   { path: "login", component: LoginComponent },
-  { path: "signup", component: SignupComponent },
+  { path: "signup", component: SignupComponent }
 ];
 
 @NgModule({
