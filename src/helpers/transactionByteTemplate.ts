@@ -1,4 +1,4 @@
-export const transactionByte =  new Uint8Array([
+export const transactionByte = new Uint8Array([
   0,
   1,
   1,

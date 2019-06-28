@@ -2,7 +2,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
-import * as $ from "jquery";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -21,9 +20,9 @@ import { NgxQRCodeModule } from "ngx-qrcode2";
 import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { NgxPaginationModule } from "ngx-pagination";
 import { PinsComponent } from "./components/pins/pins.component";
-import { TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LoadingSpinnerComponent } from './ui/loading-spinner/loading-spinner.component';
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { LoadingSpinnerComponent } from "./ui/loading-spinner/loading-spinner.component";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {

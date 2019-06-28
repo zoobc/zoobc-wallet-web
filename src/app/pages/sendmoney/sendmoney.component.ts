@@ -9,10 +9,9 @@ import {
   BigInt,
   addressToPublicKey
 } from "../../../helpers/converters";
-import { GetKeyPairFromSeed } from "../../../helpers/utils";
 import { transactionByte } from "../../../helpers/transactionByteTemplate";
 import { BIP32Interface } from "bip32";
-import * as base58 from "bs58";
+import * as nacl from "tweetnacl";
 
 @Component({
   selector: "app-sendmoney",
@@ -45,30 +44,28 @@ export class SendmoneyComponent implements OnInit {
       this.isFormSendLoading = true;
 
       const account = this.appServ.getCurrAccount();
-      console.log(account);
 
       const seed: BIP32Interface = this.appServ.currSeed;
       const childSeed = seed.derivePath(account.path);
-      let childSeedBase58 = seed.toBase58();
-      const keyPair = GetKeyPairFromSeed(
-        new Buffer(base58.decode(childSeedBase58))
+      const { publicKey, secretKey } = nacl.sign.keyPair.fromSeed(
+        childSeed.privateKey
       );
-      const pubKey = this.appServ.currPublicKey;
+
+      // const publicKey = this.appServ.currPublicKey;
       const address = this.appServ.currAddress;
 
-      // let balance = await this.accServ.getAccountBalance().then((data: any) => {
-      //   return data.balance
-      // });
-      let balance = 100 * 1e8;
+      // if using balance validation
+      let balance = await this.accServ.getAccountBalance().then((data: any) => {
+        return data.balance;
+      });
 
-      if (balance / 1e8 > this.amountForm.value + this.feeForm.value) {
-        // for testing uncomment comment
+      if (/*balance / 1e8 > */ this.amountForm.value + this.feeForm.value) {
         let dataForm = {
           recipient: this.recipientForm.value,
           amount: this.amountForm.value * 1e8,
           fee: this.feeForm.value * 1e8,
           from: address,
-          senderPublicKey: pubKey,
+          senderPublicKey: publicKey,
           timestamp: Math.trunc(Date.now() / 1000)
         };
 
@@ -88,15 +85,13 @@ export class SendmoneyComponent implements OnInit {
         );
         timestampsView.setUint32(3, dataForm.timestamp, true);
 
-        // console.log("unsignedTxBytes:", byteArrayToHex(txBytes))
-        console.log(childSeed.privateKey);
-
-        let signature = keyPair.sign(txBytes);
-        // console.log("txSignature:", signature);
+        let signature = nacl.sign.detached(txBytes, secretKey);
+        console.log("txSignature:", signature);
 
         // set signature to bytes
-        txBytes.set(signature.toBytes(), 123);
+        txBytes.set(signature, 123);
         console.log("signedTxBytes:", txBytes);
+
         Swal.fire({
           title: `Are you sure want to send money?`,
           showCancelButton: true,
@@ -108,12 +103,12 @@ export class SendmoneyComponent implements OnInit {
                 console.log("__result", res);
                 if (res.isvalid) Swal.fire("Money sent");
                 else Swal.fire({ html: res.message, type: "error" });
-                return false;
+                return true;
               })
               .catch(err => {
                 console.log(err);
                 Swal.fire({ html: err.error.error, type: "error" });
-                return false;
+                return true;
               });
           }
         }).then(() => (this.isFormSendLoading = false));
