@@ -4,7 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { GetSeedFromPhrase } from '../../../helpers/utils';
-import { AppService, LANGUAGES } from '../../app.service';
+import { AppService, LANGUAGES, SavedAccount } from '../../app.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 import * as bip39 from 'bip39';
@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
 
     let isLoggedIn: boolean = this.appServ.isLoggedIn();
-    if (isLoggedIn) this.router.navigateByUrl("/dashboard");
+    if (isLoggedIn) this.router.navigateByUrl('/dashboard');
   }
 
   onChangePin() {
@@ -91,8 +91,8 @@ export class LoginComponent implements OnInit {
     if (this.formLoginPin.valid) {
       if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
         let account = this.appServ.getCurrAccount();
-        this.appServ.changeCurrentAccount(account.path);
-        this.router.navigateByUrl("/dashboard");
+        this.appServ.changeCurrentAccount(account);
+        this.router.navigateByUrl('/dashboard');
       } else {
         this.pinForm.setErrors({ invalid: true });
       }
@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
     let account = this.accounts.find(acc => acc.name == name);
     console.log(account);
 
-    this.appServ.changeCurrentAccount(account.path);
+    // this.appServ.changeCurrentAccount(account.path);
     this.router.navigateByUrl('/dashboard');
   }
 
@@ -142,12 +142,18 @@ export class LoginComponent implements OnInit {
       const childSeed: BIP32Interface = masterSeed.derivePath(this.path);
       const publicKey: Uint8Array = childSeed.publicKey.slice(1, 33);
 
+      const account: SavedAccount = {
+        name: 'Account 1',
+        path: this.path,
+        imported: false,
+      };
+
       this.address = GetAddressFromPublicKey(publicKey);
       this.masterSeed = masterSeed.toBase58();
       this.passphrase = passphrase.split(' ');
-      this.appServ.saveMasterWallet(this.masterSeed);
-      this.appServ.updateAllAccount(this.path, 'Account 1');
-      this.appServ.changeCurrentAccount(this.path);
+
+      this.appServ.saveMasterSeed(this.masterSeed);
+      this.appServ.addAccount(account);
       this.router.navigateByUrl('/dashboard');
     });
   }

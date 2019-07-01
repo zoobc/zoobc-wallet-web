@@ -65,11 +65,18 @@
       </a>
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <button class="dropdown-item" *ngFor="let acc of accounts" (click)="onSwitchAccount(acc.path)">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path != currAcc.path"></i>
-          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path == currAcc.path"></i>
-          <span>{{acc.name}}</span>
+        <button class="dropdown-item" *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)">
+          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path && acc.path != currAcc.path"></i>
+          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path && acc.path == currAcc.path"></i>
+          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.secret && acc.secret != currAcc.secret"></i>
+          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.secret && acc.secret == currAcc.secret"></i>
+          <span>{{acc.name}} </span>
+          <span *ngIf="acc.imported ">(Imported)</span>
         </button>
+        <a class="dropdown-item" routerLink="/add-account">
+          <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+          <span>Add New Account</span>
+        </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#">
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>

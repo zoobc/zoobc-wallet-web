@@ -1,20 +1,30 @@
-import { Injectable } from "@angular/core";
-import { CanActivate, Router } from "@angular/router";
-import { BehaviorSubject } from "rxjs";
-import * as CryptoJS from "crypto-js";
-import * as bip32 from "bip32";
-import { BIP32Interface } from "bip32";
-import { GetAddressFromPublicKey } from "../helpers/utils";
-import { byteArrayToHex, hexToByteArray } from "../helpers/converters";
-import { HttpClient } from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import * as CryptoJS from 'crypto-js';
+import * as bip32 from 'bip32';
+import { BIP32Interface } from 'bip32';
+import { GetAddressFromPublicKey } from '../helpers/utils';
+import { byteArrayToHex, hexToByteArray } from '../helpers/converters';
+import { HttpClient } from '@angular/common/http';
+import * as base58 from 'bs58';
+import * as ecc from 'tiny-secp256k1';
+import * as wif from 'wif';
+
+export interface SavedAccount {
+  secret?: string;
+  path?: string;
+  name: string;
+  imported: boolean;
+}
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class AppService implements CanActivate {
-  private sourceCurrSeed = new BehaviorSubject("");
-  private sourceCurrPublicKey = new BehaviorSubject("");
-  private sourceCurrAddress = new BehaviorSubject("");
+  private sourceCurrSeed = new BehaviorSubject('');
+  private sourceCurrPublicKey = new BehaviorSubject('');
+  private sourceCurrAddress = new BehaviorSubject('');
 
   currSeed: BIP32Interface;
   currPublicKey: Uint8Array;
@@ -35,57 +45,80 @@ export class AppService implements CanActivate {
     });
   }
 
-  changeCurrentAccount(path: string) {
-    const pin = localStorage.getItem("pin");
+  changeCurrentAccount(account: SavedAccount) {
+    const pin = localStorage.getItem('pin');
 
     if (pin) {
-      const seedBase58 = CryptoJS.AES.decrypt(
-        localStorage.getItem("encMasterSeed"),
-        pin
-      ).toString(CryptoJS.enc.Utf8);
+      let seed: string;
+      let publicKey: Uint8Array;
+      let address: string;
 
-      const masterSeed: BIP32Interface = bip32.fromBase58(seedBase58);
-      const childSeed = masterSeed.derivePath(path);
-      const publicKey = childSeed.publicKey.slice(1, 33);
-      const address = GetAddressFromPublicKey(publicKey);
+      if (account.imported) {
+        // switch to imported account
 
-      const accounts = JSON.parse(localStorage.getItem("accounts"));
-      const account = accounts.find((acc: any) => acc.path == path);
+        // decode wif private key to generate pubkey and address
+        const decoded = wif.decode(account.secret);
+        const privateKey = decoded.privateKey;
 
-      this.sourceCurrSeed.next(masterSeed.toBase58());
+        seed = byteArrayToHex(privateKey);
+        publicKey = ecc.pointFromScalar(privateKey, decoded.compressed);
+        address = GetAddressFromPublicKey(publicKey);
+      } else {
+        // switch to HD wallet
+
+        // get master seed to create child seed
+        const seedBase58 = CryptoJS.AES.decrypt(
+          localStorage.getItem('encMasterSeed'),
+          pin
+        ).toString(CryptoJS.enc.Utf8);
+        const masterSeed: BIP32Interface = bip32.fromBase58(seedBase58);
+        // create child seed with derivation path to generate pubkey and address
+        const childSeed = masterSeed.derivePath(account.path);
+
+        seed = masterSeed.toBase58();
+        publicKey = childSeed.publicKey.slice(1, 33);
+        address = GetAddressFromPublicKey(publicKey);
+
+        this.sourceCurrSeed.next(seed);
+      }
+
+      // save current pubkey and address to global variable (behavior subject) for auth
       this.sourceCurrPublicKey.next(byteArrayToHex(publicKey));
       this.sourceCurrAddress.next(address);
 
-      localStorage.setItem("currAccount", JSON.stringify(account));
-      // console.log(seed.toBase58());
+      localStorage.setItem('currAccount', JSON.stringify(account));
+      // console.log(masterSeed.toBase58());
       // console.log(byteArrayToHex(publicKey));
       // console.log(address);
     }
   }
 
   getCurrAccount() {
-    return JSON.parse(localStorage.getItem("currAccount"));
+    return JSON.parse(localStorage.getItem('currAccount'));
   }
 
   getAllAccount() {
-    return JSON.parse(localStorage.getItem("accounts")) || [];
+    return JSON.parse(localStorage.getItem('accounts')) || [];
   }
 
-  updateAllAccount(path: string, name: string) {
+  addAccount(account: SavedAccount) {
     const accounts = this.getAllAccount();
-    const isDuplicate = accounts.find(acc => acc.path === path);
+    const { path, secret } = account;
+    let isDuplicate = accounts.find(acc => path && acc.path === path);
+    isDuplicate = accounts.find(acc => secret && acc.secret === secret);
 
     if (!isDuplicate) {
-      accounts.push({ path, name });
-      localStorage.setItem("accounts", JSON.stringify(accounts));
+      accounts.push(account);
+      localStorage.setItem('accounts', JSON.stringify(accounts));
+      this.changeCurrentAccount(account);
     }
   }
 
-  saveMasterWallet(seedBase58: string) {
-    const pin = localStorage.getItem("pin");
+  saveMasterSeed(seedBase58: string) {
+    const pin = localStorage.getItem('pin');
     if (pin) {
       const encSeed = CryptoJS.AES.encrypt(seedBase58, pin).toString();
-      localStorage.setItem("encMasterSeed", encSeed);
+      localStorage.setItem('encMasterSeed', encSeed);
     }
   }
 
@@ -95,23 +128,23 @@ export class AppService implements CanActivate {
 
   canActivate(): boolean {
     if (this.currPublicKey) return true;
-    this.router.navigateByUrl("/login");
+    this.router.navigateByUrl('/login');
     return false;
   }
 
   getCurrencyRate() {
-    return this.http.get("https://api.exchangeratesapi.io/latest?base=USD");
+    return this.http.get('https://api.exchangeratesapi.io/latest?base=USD');
   }
 }
 
 // Language
 export const LANGUAGES = [
   {
-    country: "English",
-    code: "en"
+    country: 'English',
+    code: 'en',
   },
   {
-    country: "Indonesia",
-    code: "id"
-  }
+    country: 'Indonesia',
+    code: 'id',
+  },
 ];
