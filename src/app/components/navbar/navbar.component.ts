@@ -1,27 +1,27 @@
-import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
-import { LANGUAGES } from "src/app/app.service";
-import { LanguageService } from "src/app/services/language.service";
-import { AppService } from "src/app/app.service";
-import { Router } from "@angular/router";
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { LANGUAGES, SavedAccount } from 'src/app/app.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { AppService } from 'src/app/app.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: "app-navbar",
-  templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.scss"]
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
   @Input() isActive: string;
 
   private languages = [];
-  private activeLanguage = "en";
+  private activeLanguage = 'en';
 
   currencyRates: { name: string; value: number }[];
   zbcPriceInUsd: number = 10;
   currPrice: number = 0;
-  currRate: string = localStorage.getItem("rate") || "USD";
-  accounts: [{ path: string; name: string }];
-  currAcc: { path: string; name: string };
+  currRate: string = localStorage.getItem('rate') || 'USD';
+  accounts: [SavedAccount];
+  currAcc: SavedAccount;
 
   constructor(
     private langServ: LanguageService,
@@ -31,7 +31,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.languages = LANGUAGES;
-    this.activeLanguage = localStorage.getItem("SELECTED_LANGUAGE") || "en";
+    this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
     this.getCurrencyRates();
     this.accounts = this.appServ.getAllAccount();
     this.currAcc = this.appServ.getCurrAccount();
@@ -41,10 +41,10 @@ export class NavbarComponent implements OnInit {
     this.toggleSidebar.emit(e);
   }
 
-  onSwitchAccount(path) {
-    this.appServ.changeCurrentAccount(path);
+  onSwitchAccount(account: SavedAccount) {
+    this.appServ.changeCurrentAccount(account);
     this.currAcc = this.appServ.getCurrAccount();
-    this.router.navigateByUrl("/");
+    this.router.navigateByUrl('/');
   }
 
   getCurrencyRates() {
@@ -52,7 +52,7 @@ export class NavbarComponent implements OnInit {
       let rates = Object.keys(res.rates).map(currencyName => {
         let rate = {
           name: currencyName,
-          value: res.rates[currencyName] * this.zbcPriceInUsd
+          value: res.rates[currencyName] * this.zbcPriceInUsd,
         };
         if (this.currRate == currencyName) this.currPrice = rate.value;
         return rate;
@@ -71,7 +71,7 @@ export class NavbarComponent implements OnInit {
   }
 
   onChangeRate(rate) {
-    localStorage.setItem("rate", rate.name);
+    localStorage.setItem('rate', rate.name);
     this.currRate = rate.name;
     this.currPrice = rate.value;
   }

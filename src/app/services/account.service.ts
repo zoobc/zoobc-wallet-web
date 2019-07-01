@@ -1,20 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-import { AccountBalancesServiceClient } from "../grpc/service/accountBalanceServiceClientPb";
+import { AccountBalancesServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
 import {
   GetAccountBalanceRequest,
-  AccountBalance
-} from "../grpc/model/accountBalance_pb";
+  AccountBalance,
+} from '../grpc/model/accountBalance_pb';
 
-import { environment } from "../../environments/environment";
-import { AppService } from "../app.service";
+import { environment } from '../../environments/environment';
+import { AppService } from '../app.service';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class AccountService {
   accBalanceServ: AccountBalancesServiceClient;
-  accounts: [] = JSON.parse(localStorage.getItem("accounts")) || [];
+  accounts: [] = JSON.parse(localStorage.getItem('accounts')) || [];
 
   constructor(private appServ: AppService) {
     this.accBalanceServ = new AccountBalancesServiceClient(
