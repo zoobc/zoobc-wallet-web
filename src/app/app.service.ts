@@ -22,9 +22,18 @@ export interface SavedAccount {
   providedIn: 'root',
 })
 export class AppService implements CanActivate {
-  private sourceCurrSeed = new BehaviorSubject('');
-  private sourceCurrPublicKey = new BehaviorSubject('');
-  private sourceCurrAddress = new BehaviorSubject('');
+  // private sourceCurrSeed = new BehaviorSubject('');
+  // private sourceCurrPublicKey = new BehaviorSubject('');
+  // private sourceCurrAddress = new BehaviorSubject('');
+  private sourceCurrSeed = new BehaviorSubject(
+    'xprv9s21ZrQH143K4UDhoFjuMtS4MdkywpTWuVxi5swbSJVUfBxusyfk36ZPECUkg9Z9UmVhnmxkbwJZCx9UT1eqM9TmjBfVQ3wApJQ9JYNfyCM'
+  );
+  private sourceCurrPublicKey = new BehaviorSubject(
+    'cb9c60614ef744f80fdab468d2362ddd34eb3350e5ac596dc6454024a9c92ab6'
+  );
+  private sourceCurrAddress = new BehaviorSubject(
+    'y5xgYU73RPgP2rRo0jYt3TTrM1DlrFltxkVAJKnJKrZ6'
+  );
 
   currSeed: BIP32Interface;
   currPublicKey: Uint8Array;

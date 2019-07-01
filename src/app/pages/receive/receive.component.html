@@ -15,7 +15,22 @@
           </button>
         </p>
       </span>
-      <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode>
+
+      <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
+        <div class="form-group">
+          <label for="amount">Request Money</label>
+          <input type="text" class="form-control" id="amount" placeholder="Coin amount..." formControlName="amount"
+            (keyup)="onChangeAmount()" type="number">
+          <small class="form-text error-text">
+            <span *ngIf="amountField.hasError('required')">Amount is required</span>
+          </small>
+        </div>
+      </form>
+      <!-- <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode> -->
+      <span *ngIf="formRequest.valid">
+        <ngx-qrcode qrc-element-type="canvas" [qrc-value]="urlReqCoin"></ngx-qrcode>
+        <span>Scan this qr code to send money to this address</span>
+      </span>
     </div>
   </div>
 </div>
