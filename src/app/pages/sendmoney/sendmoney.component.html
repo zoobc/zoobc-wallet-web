@@ -1,37 +1,77 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">{{'Navigation.SendMoney' | translate}}</h6>
+    <h6 class="m-0 font-weight-bold text-primary">
+      {{ 'Navigation.SendMoney' | translate }}
+    </h6>
   </div>
   <div class="card text-left">
     <div class="card-body">
       <form [formGroup]="formSend" (submit)="onSendMoney()">
         <div class="form-group">
-          <label for="recipient">{{'SendMoney.Payto' | translate}}</label>
-          <input type="text" class="form-control" id="recipient" placeholder="{{'SendMoney.Payto' | translate}}" formControlName="recipient">
-          <small class="form-text error-text" *ngIf="recipientForm.touched">
-            <span *ngIf="recipientForm.hasError('required')">Recepient address is required</span>
-          </small>
+          <label for="recipient">{{ 'SendMoney.Payto' | translate }}</label>
+          <ng-autocomplete
+            [data]="contact"
+            [searchKeyword]="keyword"
+            placeHolder="{{ 'SendMoney.Payto' | translate }}"
+            (selected)="selectEvent($event)"
+            (inputChanged)="onChangeSearch($event)"
+            (inputFocused)="onFocused($event)"
+            historyIdentifier="contact"
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate"
+            formControlName="recipient"
+            id="recipient"
+          >
+          </ng-autocomplete>
+          <ng-template #itemTemplate let-item>
+            &nbsp;
+            <span [innerHTML]="item.alias"></span> &nbsp; | &nbsp;
+            <small>{{ 'Misc.Address' | translate }} : {{ item.address }}</small>
+            &nbsp;
+          </ng-template>
+          <ng-template #notFoundTemplate let-notFound>
+            <div [innerHTML]="notFound"></div>
+          </ng-template>
         </div>
         <div class="form-group">
-          <label for="amount">{{'SendMoney.Amount' | translate}}</label>
-          <input type="number" class="form-control" id="amount" placeholder="{{'SendMoney.Amount' | translate}}" formControlName="amount">
+          <label for="amount">{{ 'SendMoney.Amount' | translate }}</label>
+          <input
+            type="number"
+            class="form-control"
+            id="amount"
+            placeholder="{{ 'SendMoney.Amount' | translate }}"
+            formControlName="amount"
+          />
           <small class="form-text error-text" *ngIf="amountForm.touched">
-            <span *ngIf="amountForm.hasError('required')">Amount is required</span>
+            <span *ngIf="amountForm.hasError('required')"
+              >Amount is required</span
+            >
           </small>
         </div>
         <div class="form-group">
           <label for="fee">Fee</label>
-          <input type="number" class="form-control" id="fee" placeholder="Fee" formControlName="fee">
+          <input
+            type="number"
+            class="form-control"
+            id="fee"
+            placeholder="Fee"
+            formControlName="fee"
+          />
           <small class="form-text error-text" *ngIf="feeForm.touched">
             <span *ngIf="feeForm.hasError('required')">Fee is required</span>
           </small>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="formSend.invalid || isFormSendLoading">
-          <span *ngIf="isFormSendLoading"><i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
-          <span>{{'Button.Send' | translate}}</span>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="formSend.invalid || isFormSendLoading"
+        >
+          <span *ngIf="isFormSendLoading"
+            ><i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span
+          >
+          <span>{{ 'Button.Send' | translate }}</span>
         </button>
-
       </form>
     </div>
   </div>

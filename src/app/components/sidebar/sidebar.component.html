@@ -1,8 +1,14 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" [ngClass]="isActive && 'toggled'" id="accordionSidebar">
-
+<ul
+  class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+  [ngClass]="isActive && 'toggled'"
+  id="accordionSidebar"
+>
   <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
+  <a
+    class="sidebar-brand d-flex align-items-center justify-content-center"
+    href="/dashboard"
+  >
     <div class="sidebar-brand-icon rotate-n-15">
       <i class="fas fa-laugh-wink"></i>
     </div>
@@ -10,35 +16,48 @@
   </a>
 
   <!-- Divider -->
-  <hr class="sidebar-divider my-0">
+  <hr class="sidebar-divider my-0" />
 
   <!-- Nav Item - Dashboard -->
   <li class="nav-item" [ngClass]="menu == 'dashboard' && 'active'">
     <a class="nav-link" [routerLink]="['/dashboard']">
       <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>{{'Navigation.Dashboard' | translate}}</span>
+      <span>{{ 'Navigation.Dashboard' | translate }}</span>
     </a>
   </li>
 
   <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item" [ngClass]="menu == 'transferhistory' && 'active'">
-    <a class="nav-link" [routerLink]="['/transferhistory']">
-      <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>{{'Navigation.MyTrans' | translate}}</span>
+  <li class="nav-item" [ngClass]="menu == 'Contact-list' && 'active'">
+    <a class="nav-link" [routerLink]="['/Contact-list']">
+      <i class="fas fa-address-book"></i>
+      <span>{{ 'Misc.ContactList' | translate }}</span>
     </a>
   </li>
 
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <!-- Nav Item - My Transaction -->
+  <li class="nav-item" [ngClass]="menu == 'transferhistory' && 'active'">
+    <a class="nav-link" [routerLink]="['/transferhistory']">
+      <i class="fas fa-fw fa-tachometer-alt"></i>
+      <span>{{ 'Navigation.MyTrans' | translate }}</span>
+    </a>
+  </li>
 
   <!-- Divider -->
-  <hr class="sidebar-divider">
+  <hr class="sidebar-divider" />
 
   <!-- Nav Item - Send Money -->
   <li class="nav-item" [ngClass]="menu == 'sendmoney' && 'active'">
     <a class="nav-link" [routerLink]="['/sendmoney']">
       <i class="fas fa-fw fa-chart-area"></i>
-      <span>{{'Navigation.SendMoney' | translate}}</span>
+      <span>{{ 'Navigation.SendMoney' | translate }}</span>
     </a>
   </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
 
   <!-- Nav Item - Send Message -->
   <!-- <li class="nav-item" [ngClass]="menu == 'sendmessage' && 'active'">
@@ -52,9 +71,8 @@
   <li class="nav-item" [ngClass]="menu == 'receive' && 'active'">
     <a class="nav-link" [routerLink]="['/receive']">
       <i class="fas fa-fw fa-table"></i>
-      <span>{{'Navigation.Receive' | translate}}</span>
+      <span>{{ 'Navigation.Receive' | translate }}</span>
     </a>
   </li>
-
 </ul>
 <!-- End of Sidebar -->

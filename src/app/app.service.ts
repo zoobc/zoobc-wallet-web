@@ -7,7 +7,6 @@ import { BIP32Interface } from 'bip32';
 import { GetAddressFromPublicKey } from '../helpers/utils';
 import { byteArrayToHex, hexToByteArray } from '../helpers/converters';
 import { HttpClient } from '@angular/common/http';
-import * as base58 from 'bs58';
 import * as ecc from 'tiny-secp256k1';
 import * as wif from 'wif';
 
@@ -81,16 +80,44 @@ export class AppService implements CanActivate {
 
         this.sourceCurrSeed.next(seed);
       }
-
-      // save current pubkey and address to global variable (behavior subject) for auth
       this.sourceCurrPublicKey.next(byteArrayToHex(publicKey));
       this.sourceCurrAddress.next(address);
 
       localStorage.setItem('currAccount', JSON.stringify(account));
-      // console.log(masterSeed.toBase58());
-      // console.log(byteArrayToHex(publicKey));
-      // console.log(address);
     }
+  }
+
+  getContactList() {
+    return JSON.parse(localStorage.getItem('CONTACT_LIST'));
+  }
+
+  addContact(newContact) {
+    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    contact = contact || [];
+    contact.push(newContact);
+    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
+  }
+
+  deleteContact(id) {
+    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+
+    for (let i = 0; i < contact.length; i++) {
+      if (contact[i].id == id) {
+        contact.splice(i, 1);
+      }
+    }
+    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
+  }
+
+  updateContact(oldContact, newContact) {
+    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+
+    for (let i = 0; i < contact.length; i++) {
+      if (contact[i].id == oldContact.id) {
+        contact[i] = newContact;
+      }
+    }
+    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
   }
 
   getCurrAccount() {
