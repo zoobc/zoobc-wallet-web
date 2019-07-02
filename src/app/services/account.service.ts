@@ -7,7 +7,7 @@ import {
 } from '../grpc/model/accountBalance_pb';
 
 import { environment } from '../../environments/environment';
-import { AppService } from '../app.service';
+import { AppService, SavedAccount } from '../app.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,17 +25,14 @@ export class AccountService {
   }
 
   generateDerivationPath(): string {
-    let isDuplicate: boolean = true;
-    let path: string;
-    while (isDuplicate) {
-      const m1 = Math.floor(Math.random() * Math.pow(2, 31));
-      const m2 = Math.floor(Math.random() * Math.pow(2, 31));
+    const accounts: [SavedAccount] =
+      JSON.parse(localStorage.getItem('accounts')) || [];
+    // filter only not imported account
+    const filterAcc = accounts.filter(acc => !acc.imported);
 
-      path = `m/${m1}/${m2}`;
-      isDuplicate = this.accounts.find((acc: any) => acc.path == path);
-      console.log(path);
-    }
-    return path;
+    // find total of not imported account. the result is the derivation path
+    const sizeAcc = filterAcc.length;
+    return `m/44'/148'/0'/0/${sizeAcc}`;
   }
 
   getAccountBalance() {

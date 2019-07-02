@@ -22,18 +22,9 @@ export interface SavedAccount {
   providedIn: 'root',
 })
 export class AppService implements CanActivate {
-  // private sourceCurrSeed = new BehaviorSubject('');
-  // private sourceCurrPublicKey = new BehaviorSubject('');
-  // private sourceCurrAddress = new BehaviorSubject('');
-  private sourceCurrSeed = new BehaviorSubject(
-    'xprv9s21ZrQH143K4UDhoFjuMtS4MdkywpTWuVxi5swbSJVUfBxusyfk36ZPECUkg9Z9UmVhnmxkbwJZCx9UT1eqM9TmjBfVQ3wApJQ9JYNfyCM'
-  );
-  private sourceCurrPublicKey = new BehaviorSubject(
-    'cb9c60614ef744f80fdab468d2362ddd34eb3350e5ac596dc6454024a9c92ab6'
-  );
-  private sourceCurrAddress = new BehaviorSubject(
-    'y5xgYU73RPgP2rRo0jYt3TTrM1DlrFltxkVAJKnJKrZ6'
-  );
+  private sourceCurrSeed = new BehaviorSubject('');
+  private sourceCurrPublicKey = new BehaviorSubject('');
+  private sourceCurrAddress = new BehaviorSubject('');
 
   currSeed: BIP32Interface;
   currPublicKey: Uint8Array;
@@ -113,8 +104,11 @@ export class AppService implements CanActivate {
   addAccount(account: SavedAccount) {
     const accounts = this.getAllAccount();
     const { path, secret } = account;
-    let isDuplicate = accounts.find(acc => path && acc.path === path);
-    isDuplicate = accounts.find(acc => secret && acc.secret === secret);
+    const isDuplicate = accounts.find(acc => {
+      if (path && acc.path === path) return true;
+      if (secret && acc.secret === secret) return true;
+      return false;
+    });
 
     if (!isDuplicate) {
       accounts.push(account);
@@ -139,10 +133,6 @@ export class AppService implements CanActivate {
     if (this.currPublicKey) return true;
     this.router.navigateByUrl('/login');
     return false;
-  }
-
-  getCurrencyRate() {
-    return this.http.get('https://api.exchangeratesapi.io/latest?base=USD');
   }
 }
 
