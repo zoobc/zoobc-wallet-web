@@ -40,7 +40,7 @@
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="rateDropdown" role="button" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
-        1 ZBC = {{currPrice | number:'0.1-2'}} {{currRate}}
+        1 ZBC = {{currencyRate.value | number:'0.1-2'}} {{currencyRate.name}}
       </a>
 
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -48,7 +48,7 @@
         <h6 class="dropdown-header" translate>Navbar.Currency</h6>
         <button class="dropdown-item d-flex align-items-center" *ngFor="let rate of currencyRates"
           (click)="onChangeRate(rate)">
-          <i class="fas fa-check fa-sm" *ngIf="currRate == rate.name"></i>
+          <i class="fas fa-check fa-sm" *ngIf="currencyRate.name == rate.name"></i>
           <span>{{rate.value | number:'0.1-2'}} {{rate.name}}</span>
         </button>
       </div>

@@ -134,10 +134,6 @@ export class AppService implements CanActivate {
     this.router.navigateByUrl('/login');
     return false;
   }
-
-  getCurrencyRate() {
-    return this.http.get('https://api.exchangeratesapi.io/latest?base=USD');
-  }
 }
 
 // Language
