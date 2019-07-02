@@ -9,7 +9,7 @@ import { AppService } from 'src/app/app.service';
 })
 export class EditcontactComponent implements OnInit {
   contact;
-  id;
+  address;
 
   @ViewChild('f') form: any;
   constructor(
@@ -19,9 +19,9 @@ export class EditcontactComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = this.activRoute.snapshot.params['id'];
+    this.address = this.activRoute.snapshot.params['address'];
     let contact = this.appServ.getContactList();
-    this.contact = contact.find(p => p.id == this.id);
+    this.contact = contact.find(p => p.address == this.address);
     console.log('a', this.contact);
   }
 

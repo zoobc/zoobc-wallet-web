@@ -11,14 +11,6 @@
         #f="ngForm"
         (ngSubmit)="f.form.valid && onSubmit()"
       >
-        <input
-          type="hidden"
-          class="form-control"
-          required
-          name="id"
-          [(ngModel)]="contact.id"
-          value=""
-        />
         <div class="form-group">
           <label for="alias">{{ 'Misc.Alias' | translate }}</label>
           <input

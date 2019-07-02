@@ -15,13 +15,13 @@ export class ContactlistComponent implements OnInit {
     this.contact = this.appServ.getContactList();
   }
 
-  deleteContact(id) {
+  deleteContact(address) {
     for (let i = 0; i < this.contact.length; i++) {
-      if (this.contact[i].id == id) {
+      if (this.contact[i].address == address) {
         this.contact.splice(i, 1);
       }
     }
 
-    this.appServ.deleteContact(id);
+    this.appServ.deleteContact(address);
   }
 }

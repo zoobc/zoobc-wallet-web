@@ -35,14 +35,14 @@
             <td>
               <button
                 class="btn btn-success"
-                [routerLink]="['/editContact', contactlist.id]"
+                [routerLink]="['/editContact', contactlist.address]"
               >
                 {{ 'Misc.Edit' | translate }}
               </button>
 
               <button
                 class="btn btn-danger"
-                (click)="deleteContact(contactlist.id)"
+                (click)="deleteContact(contactlist.address)"
                 style="margin-left: 20px;"
               >
                 {{ 'Misc.Delete' | translate }}

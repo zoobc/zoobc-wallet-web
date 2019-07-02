@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppService } from 'src/app/app.service';
 import { Router } from '@angular/router';
-import { v4 as uuid } from 'uuid';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -22,7 +21,6 @@ export class AddcontactComponent implements OnInit {
   onSubmit() {
     if (this.form.value) {
       let newContact = {
-        id: uuid(),
         alias: this.form.value.alias,
         address: this.form.value.address,
       };

@@ -98,11 +98,11 @@ export class AppService implements CanActivate {
     localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
   }
 
-  deleteContact(id) {
+  deleteContact(address) {
     let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
 
     for (let i = 0; i < contact.length; i++) {
-      if (contact[i].id == id) {
+      if (contact[i].address == address) {
         contact.splice(i, 1);
       }
     }
@@ -113,7 +113,7 @@ export class AppService implements CanActivate {
     let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
 
     for (let i = 0; i < contact.length; i++) {
-      if (contact[i].id == oldContact.id) {
+      if (contact[i].address == oldContact.address) {
         contact[i] = newContact;
       }
     }
