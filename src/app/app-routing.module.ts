@@ -12,6 +12,9 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { ParentComponent } from '../app/components/parent/parent.component';
 
 import { AppService } from './app.service';
+import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
+import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
+import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,6 +29,9 @@ const routes: Routes = [
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'add-account', component: AddNewAccountComponent },
+      { path: 'Contact-list', component: ContactlistComponent },
+      { path: 'addContact', component: AddcontactComponent },
+      { path: 'editContact/:address', component: EditcontactComponent },
     ],
   },
   { path: 'login', component: LoginComponent },

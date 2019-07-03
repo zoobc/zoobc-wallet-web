@@ -1,0 +1,63 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h5 class="m-0 font-weight-bold text-primary">
+      {{ 'Misc.ContactList' | translate }}
+      <button
+        type="button"
+        class="btn btn-info float-right"
+        [routerLink]="['/addContact']"
+      >
+        <i class="fa fa-plus"></i> {{ 'Misc.AddNew' | translate }}
+      </button>
+    </h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <loading-spinner *ngIf="showSpinner"></loading-spinner>
+      <table
+        *ngIf="!showSpinner"
+        class="table table-bordered"
+        id="dataTable"
+        width="100%"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>{{ 'Misc.Alias' | translate }}</th>
+            <th>{{ 'Misc.Address' | translate }}</th>
+            <th>{{ 'Misc.Action' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let contactlist of contact">
+            <td>{{ contactlist.alias }}</td>
+            <td>{{ contactlist.address }}</td>
+            <td>
+              <button
+                class="btn btn-success"
+                [routerLink]="['/editContact', contactlist.address]"
+              >
+                {{ 'Misc.Edit' | translate }}
+              </button>
+
+              <button
+                class="btn btn-danger"
+                (click)="deleteContact(contactlist.address)"
+                style="margin-left: 20px;"
+              >
+                {{ 'Misc.Delete' | translate }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>{{ 'Misc.Alias' | translate }}</th>
+            <th>{{ 'Misc.Address' | translate }}</th>
+            <th>{{ 'Misc.Action' | translate }}</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

@@ -19,6 +19,8 @@ import * as nacl from 'tweetnacl';
   styleUrls: ['./sendmoney.component.css'],
 })
 export class SendmoneyComponent implements OnInit {
+  contact;
+  keyword = 'alias';
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', Validators.required);
@@ -37,7 +39,22 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.contact = this.appServ.getContactList();
+  }
+
+  selectEvent(item) {
+    // do something with selected item
+  }
+
+  onChangeSearch(search: string) {
+    // fetch remote data from here
+    // And reassign the 'data' which is binded to 'data' property.
+  }
+
+  onFocused(e) {
+    // do something
+  }
 
   async onSendMoney() {
     if (this.formSend.valid) {
@@ -61,13 +78,14 @@ export class SendmoneyComponent implements OnInit {
 
       if (/*balance / 1e8 > */ this.amountForm.value + this.feeForm.value) {
         let dataForm = {
-          recipient: this.recipientForm.value,
+          recipient: this.recipientForm.value.address,
           amount: this.amountForm.value * 1e8,
           fee: this.feeForm.value * 1e8,
           from: address,
           senderPublicKey: publicKey,
           timestamp: Math.trunc(Date.now() / 1000),
         };
+        console.log(dataForm);
 
         // template bytes
         let txBytes = transactionByte;

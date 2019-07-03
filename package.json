@@ -23,6 +23,7 @@
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "@types/jquery": "^3.3.29",
+    "angular-ng-autocomplete": "^1.1.13",
     "bip32": "^2.0.3",
     "bip39": "^3.0.2",
     "bn.js": "^4.11.8",
