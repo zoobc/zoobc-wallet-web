@@ -1,164 +1,53 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import * as CryptoJS from 'crypto-js';
-import * as bip32 from 'bip32';
-import { BIP32Interface } from 'bip32';
-import { GetAddressFromPublicKey } from '../helpers/utils';
-import { byteArrayToHex, hexToByteArray } from '../helpers/converters';
-import { HttpClient } from '@angular/common/http';
-import * as ecc from 'tiny-secp256k1';
-import * as wif from 'wif';
-
-export interface SavedAccount {
-  secret?: string;
-  path?: string;
-  name: string;
-  imported: boolean;
-}
+import { Injectable } from "@angular/core";
+import { CanActivate, Router } from "@angular/router";
+import { AccountService } from "./services/account.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class AppService implements CanActivate {
-  private sourceCurrSeed = new BehaviorSubject('');
-  private sourceCurrPublicKey = new BehaviorSubject('');
-  private sourceCurrAddress = new BehaviorSubject('');
-
-  currSeed: BIP32Interface;
-  currPublicKey: Uint8Array;
-  currAddress: string;
-
-  constructor(private router: Router, private http: HttpClient) {
-    this.sourceCurrSeed.subscribe(seedBase58 => {
-      console.log(seedBase58);
-      if (seedBase58) this.currSeed = bip32.fromBase58(seedBase58);
-    });
-
-    this.sourceCurrPublicKey.subscribe(pubKeyHex => {
-      if (pubKeyHex) this.currPublicKey = hexToByteArray(pubKeyHex);
-    });
-
-    this.sourceCurrAddress.subscribe(address => {
-      this.currAddress = address;
-    });
-  }
-
-  changeCurrentAccount(account: SavedAccount) {
-    const pin = localStorage.getItem('pin');
-
-    if (pin) {
-      let seed: string;
-      let publicKey: Uint8Array;
-      let address: string;
-
-      if (account.imported) {
-        // switch to imported account
-
-        // decode wif private key to generate pubkey and address
-        const decoded = wif.decode(account.secret);
-        const privateKey = decoded.privateKey;
-
-        seed = byteArrayToHex(privateKey);
-        publicKey = ecc.pointFromScalar(privateKey, decoded.compressed);
-        address = GetAddressFromPublicKey(publicKey);
-      } else {
-        // switch to HD wallet
-
-        // get master seed to create child seed
-        const seedBase58 = CryptoJS.AES.decrypt(
-          localStorage.getItem('encMasterSeed'),
-          pin
-        ).toString(CryptoJS.enc.Utf8);
-        const masterSeed: BIP32Interface = bip32.fromBase58(seedBase58);
-        // create child seed with derivation path to generate pubkey and address
-        const childSeed = masterSeed.derivePath(account.path);
-
-        seed = masterSeed.toBase58();
-        publicKey = childSeed.publicKey.slice(1, 33);
-        address = GetAddressFromPublicKey(publicKey);
-
-        this.sourceCurrSeed.next(seed);
-      }
-      this.sourceCurrPublicKey.next(byteArrayToHex(publicKey));
-      this.sourceCurrAddress.next(address);
-
-      localStorage.setItem('currAccount', JSON.stringify(account));
-    }
-  }
+  constructor(private router: Router, private accServ: AccountService) {}
 
   getContactList() {
-    return JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    return JSON.parse(localStorage.getItem("CONTACT_LIST"));
   }
 
   addContact(newContact) {
-    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    let contact = JSON.parse(localStorage.getItem("CONTACT_LIST"));
     contact = contact || [];
     contact.push(newContact);
-    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
+    localStorage.setItem("CONTACT_LIST", JSON.stringify(contact));
   }
 
   deleteContact(address) {
-    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    let contact = JSON.parse(localStorage.getItem("CONTACT_LIST"));
 
     for (let i = 0; i < contact.length; i++) {
       if (contact[i].address == address) {
         contact.splice(i, 1);
       }
     }
-    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
+    localStorage.setItem("CONTACT_LIST", JSON.stringify(contact));
   }
 
   updateContact(oldContact, newContact) {
-    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    let contact = JSON.parse(localStorage.getItem("CONTACT_LIST"));
 
     for (let i = 0; i < contact.length; i++) {
       if (contact[i].address == oldContact.address) {
         contact[i] = newContact;
       }
     }
-    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
-  }
-
-  getCurrAccount() {
-    return JSON.parse(localStorage.getItem('currAccount'));
-  }
-
-  getAllAccount() {
-    return JSON.parse(localStorage.getItem('accounts')) || [];
-  }
-
-  addAccount(account: SavedAccount) {
-    const accounts = this.getAllAccount();
-    const { path, secret } = account;
-    const isDuplicate = accounts.find(acc => {
-      if (path && acc.path === path) return true;
-      if (secret && acc.secret === secret) return true;
-      return false;
-    });
-
-    if (!isDuplicate) {
-      accounts.push(account);
-      localStorage.setItem('accounts', JSON.stringify(accounts));
-      this.changeCurrentAccount(account);
-    }
-  }
-
-  saveMasterSeed(seedBase58: string) {
-    const pin = localStorage.getItem('pin');
-    if (pin) {
-      const encSeed = CryptoJS.AES.encrypt(seedBase58, pin).toString();
-      localStorage.setItem('encMasterSeed', encSeed);
-    }
+    localStorage.setItem("CONTACT_LIST", JSON.stringify(contact));
   }
 
   isLoggedIn() {
-    return this.currPublicKey ? true : false;
+    return this.accServ.currPublicKey ? true : false;
   }
 
   canActivate(): boolean {
-    if (this.currPublicKey) return true;
-    this.router.navigateByUrl('/login');
+    if (this.accServ.currPublicKey) return true;
+    this.router.navigateByUrl("/login");
     return false;
   }
 }
@@ -166,11 +55,11 @@ export class AppService implements CanActivate {
 // Language
 export const LANGUAGES = [
   {
-    country: 'English',
-    code: 'en',
+    country: "English",
+    code: "en"
   },
   {
-    country: 'Indonesia',
-    code: 'id',
-  },
+    country: "Indonesia",
+    code: "id"
+  }
 ];

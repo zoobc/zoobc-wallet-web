@@ -66,8 +66,10 @@
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
         <button class="dropdown-item" *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path && acc.path != currAcc.path"></i>
-          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.path && acc.path == currAcc.path"></i>
+          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"
+            *ngIf="acc.path != undefined && acc.path != currAcc.path"></i>
+          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400"
+            *ngIf="acc.path != undefined && acc.path == currAcc.path"></i>
           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.secret && acc.secret != currAcc.secret"></i>
           <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.secret && acc.secret == currAcc.secret"></i>
           <span>{{acc.name}} </span>

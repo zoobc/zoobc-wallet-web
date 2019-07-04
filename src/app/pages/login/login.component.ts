@@ -3,15 +3,14 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
-import { GetSeedFromPhrase } from '../../../helpers/utils';
-import { AppService, LANGUAGES, SavedAccount } from '../../app.service';
-import { LanguageService } from 'src/app/services/language.service';
 
-import * as bip39 from 'bip39';
-import * as bip32 from 'bip32';
-import { BIP32Interface } from 'bip32';
+import { AppService, LANGUAGES } from '../../app.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { KeyringService } from '../../services/keyring.service';
 import { GetAddressFromPublicKey } from '../../../helpers/utils';
-import { AccountService } from 'src/app/services/account.service';
+import { AccountService, SavedAccount } from 'src/app/services/account.service';
+
+const coin = 'ZBC';
 
 @Component({
   selector: 'app-login',
@@ -58,7 +57,8 @@ export class LoginComponent implements OnInit {
     private appServ: AppService,
     private modalService: NgbModal,
     private langServ: LanguageService,
-    private accServ: AccountService
+    private accServ: AccountService,
+    private keyringServ: KeyringService
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
       pin: this.setPinForm,
     });
 
-    this.accounts = appServ.getAllAccount();
+    this.accounts = accServ.getAllAccount();
   }
 
   ngOnInit() {
@@ -90,8 +90,8 @@ export class LoginComponent implements OnInit {
   onLoginPin() {
     if (this.formLoginPin.valid) {
       if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
-        let account = this.appServ.getCurrAccount();
-        this.appServ.changeCurrentAccount(account);
+        let account = this.accServ.getCurrAccount();
+        this.accServ.changeCurrentAccount(account);
         this.router.navigateByUrl('/dashboard');
       } else {
         this.pinForm.setErrors({ invalid: true });
@@ -101,7 +101,6 @@ export class LoginComponent implements OnInit {
 
   onLoginAccount(name: string) {
     let account = this.accounts.find(acc => acc.name == name);
-    console.log(account);
 
     // this.appServ.changeCurrentAccount(account.path);
     this.router.navigateByUrl('/dashboard');
@@ -135,31 +134,30 @@ export class LoginComponent implements OnInit {
 
   saveNewAccount() {
     const passphrase = this.passPhraseForm.value;
-    bip39.mnemonicToSeed(passphrase).then(seed => {
-      this.path = this.accServ.generateDerivationPath();
 
-      const masterSeed = bip32.fromSeed(seed);
-      const childSeed: BIP32Interface = masterSeed.derivePath(this.path);
-      const publicKey: Uint8Array = childSeed.publicKey.slice(1, 33);
+    const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
+      coin,
+      passphrase,
+      'p4ssphr4se'
+    );
 
-      const account: SavedAccount = {
-        name: 'Account 1',
-        path: this.path,
-        imported: false,
-      };
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
 
-      this.address = GetAddressFromPublicKey(publicKey);
-      this.masterSeed = masterSeed.toBase58();
-      this.passphrase = passphrase.split(' ');
+    this.address = GetAddressFromPublicKey(childSeed.publicKey);
+    this.masterSeed = seed;
 
-      this.appServ.saveMasterSeed(this.masterSeed);
-      this.appServ.addAccount(account);
-      this.router.navigateByUrl('/dashboard');
-    });
+    const account: SavedAccount = {
+      name: 'Account 1',
+      path: 0,
+      imported: false,
+    };
+
+    this.accServ.saveMasterSeed(this.masterSeed);
+    this.accServ.addAccount(account);
+    this.router.navigateByUrl('/dashboard');
   }
 
   selectActiveLanguage() {
-    console.log('this.activeLanguage', this.activeLanguage);
     this.langServ.setLanguage(this.activeLanguage);
   }
 }

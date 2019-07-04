@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { TransactionService } from '../../services/transaction.service';
-import { AppService } from '../../app.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-transferhistory',
@@ -15,10 +15,10 @@ export class TransferhistoryComponent implements OnInit {
   showSpinner: boolean = true;
 
   constructor(
-    private appServ: AppService,
-    private transactionServ: TransactionService
+    private transactionServ: TransactionService,
+    private accServ: AccountService
   ) {
-    this.address = this.appServ.currAddress;
+    this.address = this.accServ.currAddress;
     this.config = {
       itemsPerPage: 5,
       currentPage: 1,
@@ -33,9 +33,7 @@ export class TransferhistoryComponent implements OnInit {
   ngOnInit() {
     this.transactionServ.getAccountTransaction().then((res: any) => {
       this.accountHistory = res.transactionsList;
-      // console.log("Loader on init", res)
       this.showSpinner = false;
-      // console.log("loading timeot")
     });
   }
 }

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AppService, SavedAccount } from 'src/app/app.service';
-import { AccountService } from 'src/app/services/account.service';
+import { AppService } from 'src/app/app.service';
+import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { Router } from '@angular/router';
-import { byteArrayToHex } from 'src/helpers/converters';
 import * as wif from 'wif';
 import * as ecc from 'tiny-secp256k1';
 
@@ -13,7 +12,7 @@ import * as ecc from 'tiny-secp256k1';
   styleUrls: ['./add-new-account.component.scss'],
 })
 export class AddNewAccountComponent implements OnInit {
-  lenAccount = this.appServ.getAllAccount().length + 1;
+  lenAccount = this.accServ.getAllAccount().length + 1;
 
   formAddAccount: FormGroup;
   accountNameField = new FormControl(
@@ -50,7 +49,7 @@ export class AddNewAccountComponent implements OnInit {
         imported: false,
       };
 
-      this.appServ.addAccount(account);
+      this.accServ.addAccount(account);
       this.router.navigateByUrl('/');
     }
   }
@@ -71,7 +70,7 @@ export class AddNewAccountComponent implements OnInit {
         imported: true,
       };
 
-      this.appServ.addAccount(account);
+      this.accServ.addAccount(account);
       this.router.navigateByUrl('/');
     }
   }

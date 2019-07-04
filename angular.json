@@ -19,15 +19,22 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/_redirects"
+            "assets": ["src/favicon.ico", "src/assets", "src/_redirects"],
+            "styles": ["src/styles.scss"],
+            "scripts": [
+              "externals/bip39/src/js/bitcoinjs-3.3.2.js",
+              "externals/bip39/src/js/bitcoinjs-extensions.js",
+              "externals/bip39/src/js/wordlist_english.js",
+              "externals/bip39/src/js/wordlist_japanese.js",
+              "externals/bip39/src/js/wordlist_spanish.js",
+              "externals/bip39/src/js/wordlist_chinese_simplified.js",
+              "externals/bip39/src/js/wordlist_chinese_traditional.js",
+              "externals/bip39/src/js/wordlist_french.js",
+              "externals/bip39/src/js/wordlist_italian.js",
+              "externals/bip39/src/js/wordlist_korean.js",
+              "externals/bip39/src/js/jsbip39.js",
+              "externals/bip39/src/js/sjcl-bip39.js"
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": [],
             "es5BrowserSupport": true
           },
           "configurations": {
@@ -82,26 +89,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ]
+            "assets": ["src/favicon.ico", "src/assets"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -127,9 +124,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

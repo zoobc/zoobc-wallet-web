@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AppService } from '../../app.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-receive',
@@ -15,8 +15,8 @@ export class ReceiveComponent implements OnInit {
   formRequest: FormGroup;
   amountField = new FormControl('', Validators.required);
 
-  constructor(private appServ: AppService) {
-    this.address = appServ.currAddress;
+  constructor(private accServ: AccountService) {
+    this.address = accServ.currAddress;
     this.urlReqCoin = `${window.location.origin}/request/${this.address}/10`;
 
     this.formRequest = new FormGroup({

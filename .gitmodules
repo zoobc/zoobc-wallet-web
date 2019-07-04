@@ -1,0 +1,8 @@
+[submodule "externals/bip32"]
+	path = externals/bip32
+	url = https://github.com/BlockchainZoo/bip32.git
+	branch = SLIP10
+[submodule "externals/bip39"]
+	path = externals/bip39
+	url = https://github.com/iancoleman/bip39.git
+	branch = master

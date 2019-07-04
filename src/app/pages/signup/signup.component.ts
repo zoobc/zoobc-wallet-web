@@ -3,13 +3,12 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as CryptoJS from 'crypto-js';
-import * as bip39 from 'bip39';
-import * as bip32 from 'bip32';
-import { BIP32Interface } from 'bip32';
 
-import { AppService, SavedAccount } from '../../app.service';
+import { KeyringService } from '../../services/keyring.service';
 import { GetAddressFromPublicKey } from '../../../helpers/utils';
-import { AccountService } from 'src/app/services/account.service';
+import { AccountService, SavedAccount } from 'src/app/services/account.service';
+
+const coin = 'ZBC';
 
 @Component({
   selector: 'app-signup',
@@ -43,8 +42,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private appServ: AppService,
-    private accServ: AccountService
+    private accServ: AccountService,
+    private keyringServ: KeyringService
   ) {
     this.formSetPin = new FormGroup({
       pin: this.pinForm,
@@ -62,18 +61,21 @@ export class SignupComponent implements OnInit {
   }
 
   generateNewWallet() {
-    let passphrase = bip39.generateMnemonic();
-    bip39.mnemonicToSeed(passphrase).then(seed => {
-      this.path = this.accServ.generateDerivationPath();
+    let { phrase: passphrase } = this.keyringServ.generateRandomPhrase();
+    // let passphrase =
+    //   'cause bicycle craft spike mention matter ensure fancy crisp climb lamp easily dish wedding tomorrow wing ancient flight man host river record joke cannon';
+    const pass = 'p4ssphr4se';
 
-      const masterSeed = bip32.fromSeed(seed);
-      const childSeed: BIP32Interface = masterSeed.derivePath(this.path);
-      const publicKey: Uint8Array = childSeed.publicKey.slice(1, 33);
+    const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
+      coin,
+      passphrase,
+      pass
+    );
 
-      this.address = GetAddressFromPublicKey(publicKey);
-      this.masterSeed = masterSeed.toBase58();
-      this.passphrase = passphrase.split(' ');
-    });
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
+    this.address = GetAddressFromPublicKey(childSeed.publicKey);
+    this.masterSeed = seed;
+    this.passphrase = passphrase.split(' ');
   }
 
   copyPassphrase() {
@@ -109,7 +111,8 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  onSetPin() {
+  onSetPin(event) {
+    event.preventDefault();
     this.submitted = true;
 
     if (this.formSetPin.valid) {
@@ -121,12 +124,12 @@ export class SignupComponent implements OnInit {
   }
 
   saveNewAccount() {
-    this.appServ.saveMasterSeed(this.masterSeed);
+    this.accServ.saveMasterSeed(this.masterSeed);
     const account: SavedAccount = {
-      path: this.path,
+      path: 0,
       name: 'Account 1',
       imported: false,
     };
-    this.appServ.addAccount(account);
+    this.accServ.addAccount(account);
   }
 }
