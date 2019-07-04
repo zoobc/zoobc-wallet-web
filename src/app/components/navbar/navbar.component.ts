@@ -2,11 +2,12 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { LanguageService } from 'src/app/services/language.service';
-import { AppService, LANGUAGES, SavedAccount } from 'src/app/app.service';
+import { LANGUAGES } from 'src/app/app.service';
 import {
   currency,
   CurrencyRateService,
 } from 'src/app/services/currency-rate.service';
+import { AccountService, SavedAccount } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,7 +31,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private langServ: LanguageService,
-    private appServ: AppService,
+    private accServ: AccountService,
     private router: Router,
     private currencyServ: CurrencyRateService
   ) {}
@@ -39,11 +40,9 @@ export class NavbarComponent implements OnInit {
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
     this.getCurrencyRates();
-    this.accounts = this.appServ.getAllAccount();
-    this.currAcc = this.appServ.getCurrAccount();
-
+    this.accounts = this.accServ.getAllAccount();
+    this.currAcc = this.accServ.getCurrAccount();
     this.currencyRate = this.currencyServ.rate;
-    console.log(this.currencyRate);
   }
 
   onToggleSidebar(e) {
@@ -51,8 +50,8 @@ export class NavbarComponent implements OnInit {
   }
 
   onSwitchAccount(account: SavedAccount) {
-    this.appServ.changeCurrentAccount(account);
-    this.currAcc = this.appServ.getCurrAccount();
+    this.accServ.changeCurrentAccount(account);
+    this.currAcc = this.accServ.getCurrAccount();
     this.router.navigateByUrl('/');
   }
 

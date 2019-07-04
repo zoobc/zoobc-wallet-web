@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "git submodule update --init --recursive && cd externals/bip32 && npm install --ignore-scripts"
   },
   "private": true,
   "dependencies": {
@@ -24,8 +25,6 @@
     "@ngx-translate/http-loader": "^4.0.0",
     "@types/jquery": "^3.3.29",
     "angular-ng-autocomplete": "^1.1.13",
-    "bip32": "^2.0.3",
-    "bip39": "^3.0.2",
     "bn.js": "^4.11.8",
     "bootstrap": "^4.3.1",
     "bs58": "^4.0.1",

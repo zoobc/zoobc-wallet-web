@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+
 import { TransactionService } from '../../services/transaction.service';
 import { AppService } from '../../app.service';
 import { AccountService } from '../../services/account.service';
@@ -10,8 +11,9 @@ import {
   addressToPublicKey,
 } from '../../../helpers/converters';
 import { transactionByte } from '../../../helpers/transactionByteTemplate';
-import { BIP32Interface } from 'bip32';
-import * as nacl from 'tweetnacl';
+import { KeyringService } from 'src/app/services/keyring.service';
+
+const coin = 'ZBC';
 
 @Component({
   selector: 'app-sendmoney',
@@ -30,7 +32,8 @@ export class SendmoneyComponent implements OnInit {
   constructor(
     private transactionServ: TransactionService,
     private appServ: AppService,
-    private accServ: AccountService
+    private accServ: AccountService,
+    private keyringServ: KeyringService
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -60,16 +63,18 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isFormSendLoading = true;
 
-      const account = this.appServ.getCurrAccount();
+      const account = this.accServ.getCurrAccount();
 
-      const seed: BIP32Interface = this.appServ.currSeed;
-      const childSeed = seed.derivePath(account.path);
-      const { publicKey, secretKey } = nacl.sign.keyPair.fromSeed(
-        childSeed.privateKey
-      );
+      const seed = Buffer.from(this.accServ.currSeed, 'hex');
+      // this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
+      // const childSeed = seed.derivePath(account.path);
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
+      // const { publicKey, secretKey } = nacl.sign.keyPair.fromSeed(
+      //   childSeed.privateKey
+      // );
 
       // const publicKey = this.appServ.currPublicKey;
-      const address = this.appServ.currAddress;
+      const address = this.accServ.currAddress;
 
       // if using balance validation
       let balance = await this.accServ.getAccountBalance().then((data: any) => {
@@ -82,7 +87,7 @@ export class SendmoneyComponent implements OnInit {
           amount: this.amountForm.value * 1e8,
           fee: this.feeForm.value * 1e8,
           from: address,
-          senderPublicKey: publicKey,
+          senderPublicKey: childSeed.publicKey,
           timestamp: Math.trunc(Date.now() / 1000),
         };
         console.log(dataForm);
@@ -103,7 +108,8 @@ export class SendmoneyComponent implements OnInit {
         );
         timestampsView.setUint32(3, dataForm.timestamp, true);
 
-        let signature = nacl.sign.detached(txBytes, secretKey);
+        // let signature = nacl.sign.detached(txBytes, secretKey);
+        let signature = childSeed.sign(txBytes);
         console.log('txSignature:', signature);
 
         // set signature to bytes
