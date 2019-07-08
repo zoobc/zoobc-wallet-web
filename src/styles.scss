@@ -1,10 +1,18 @@
-@import './styles/sb-admin-2.min.css';
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+// @import './styles/sb-admin-2.min.css';
+// @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~@angular/material/theming';
 @import './styles/variables';
 @import './styles/mixins';
 @import './styles/colors';
 @import './styles/general';
 @import './styles/grid.css';
+
+@include mat-core();
+$app-primary: mat-palette($mat-blue);
+$app-accent: mat-palette($mat-blue, 800);
+$app-theme: mat-light-theme($app-primary, $app-accent);
+
+@include angular-material-theme($app-theme);
 
 .container-fluid {
   margin-top: 4.375rem;

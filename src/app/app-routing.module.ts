@@ -34,8 +34,12 @@ const routes: Routes = [
       { path: 'editContact/:address', component: EditcontactComponent },
     ],
   },
+  {
+    path: '',
+    component: ParentComponent,
+    children: [{ path: 'signup', component: SignupComponent }],
+  },
   { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignupComponent },
 ];
 
 @NgModule({

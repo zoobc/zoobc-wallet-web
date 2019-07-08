@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="parent-container">
   <mat-drawer-container class="drawer-container">
-    <mat-drawer mode="side" [opened]="largeScreen" [disableClose]="true">
+    <mat-drawer mode="side" [opened]="largeScreen && isLogin" [disableClose]="true">
       <app-sidebar [menu]="menu"></app-sidebar>
     </mat-drawer>
     <mat-drawer-content class="main-container">

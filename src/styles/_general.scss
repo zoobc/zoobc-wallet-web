@@ -9,3 +9,21 @@ body {
   box-shadow: 0 0 40px rgba(52, 61, 72, 0.2) !important;
   border-radius: 8px !important;
 }
+
+button[mat-flat-button] {
+  text-transform: uppercase;
+  border-radius: 6px;
+  i[matPrefix] {
+    margin-right: 12px;
+  }
+}
+
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}

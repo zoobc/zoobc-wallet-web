@@ -1,57 +1,73 @@
-.signup-page {
-  background-color: #4e73df;
-  padding-top: 24px;
-  min-height: 100vh;
-  height: 100%;
-  .container {
-    max-width: 700px;
-  }
-  h3 {
-    color: white;
+@import '../../../styles/variables';
+
+.signup-container {
+  text-align: center;
+  h2 {
     font-weight: bold;
   }
-  h5 {
-    margin-bottom: 16px;
+  h4 {
+    font-weight: bold;
+    color: $black2;
   }
-  h6 {
-    font-weight: 600;
-    font-size: 16px;
-  }
-  .box-passphrase {
-    display: flex;
-    margin: 8px 0;
-    .number {
-      background-color: #64b5f6;
-      width: 28px;
-      color: white;
-      text-align: center;
-      padding: 4px 4px;
-    }
-    .word {
-      background-color: #e3f2fd;
-      color: #448aff;
-      width: calc(100% - 28px);
-      text-align: center;
-      padding: 4px 0px;
+  .passphrase-section {
+    max-width: 600px;
+    margin: 0 auto;
+    .box-passphrase {
+      display: flex;
+      margin: 8px 0;
+      border-radius: 6px;
+      overflow: hidden;
+      font-size: 14px;
+      .number {
+        background-color: #64b5f6;
+        width: 32px;
+        color: white;
+        text-align: center;
+        padding: 8px;
+      }
+      .word {
+        background-color: #e3f2fd;
+        color: #448aff;
+        width: calc(100% - 32px);
+        text-align: center;
+        padding: 8px 0px;
+      }
     }
   }
 
   .btn-grouped {
-    margin-bottom: 32px;
+    margin: 32px auto;
+    text-align: center;
+    font-weight: bold;
     button {
-      margin-right: 8px;
+      margin: 0 4px;
     }
+  }
+
+  .warning-box {
+    background-color: #fff176;
+    color: $black2;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
   }
 
   .public-address {
     background-color: #e3f2fd;
+    border-radius: 6px;
     color: #64b5f6;
     font-weight: bold;
-    padding: 8px 16px;
+    padding: 16px 16px 8px 16px;
     display: inline-block;
     font-size: 18px;
-    margin-left: 8px;
-    margin-bottom: 16px;
+    margin: 0 auto 16px auto;
+    align-content: center;
+    word-break: break-all;
+    .label {
+      font-size: 13px;
+      text-align: left;
+      margin-bottom: 4px;
+    }
     i {
       font-size: 18px;
     }

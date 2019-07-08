@@ -1,7 +1,8 @@
 <div class="header">
   <div class="header-container">
     <div class="brand">
-      <h3>ZooBC Wallet</h3>
+      <img src="/assets/img/zbc-white.png" alt="">
+      <h3><b>ZooBC</b> Wallet</h3>
     </div>
     <div class="menu">
       <!-- language menu -->
@@ -16,7 +17,7 @@
       </mat-menu>
 
       <!-- account menu -->
-      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account">
+      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="accounts.length > 0">
         <i class="fa fa-user-circle"></i>
       </button>
       <mat-menu #account="matMenu">

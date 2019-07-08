@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { AccountService, SavedAccount } from 'src/app/services/account.service';
+import { AppService } from 'src/app/app.service';
 
 @Component({
   selector: 'app-parent',
@@ -11,7 +13,13 @@ export class ParentComponent implements OnInit {
   routerEvent: any;
   menu: string = '';
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  isLogin: boolean;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private appServ: AppService
+  ) {
     window.onresize = () => {
       this.largeScreen = window.innerWidth >= 500 ? true : false;
     };
@@ -21,6 +29,8 @@ export class ParentComponent implements OnInit {
         this.menu = this.route.snapshot.firstChild.url[0].path;
       }
     });
+
+    this.isLogin = appServ.isLoggedIn();
   }
 
   ngOnInit() {}
