@@ -1,3 +1,23 @@
-.container-fluid {
-  margin-top: 0;
+@import '../../../styles/variables';
+
+.parent-container {
+  margin: calc(#{$header-height} - #{$header-height-offset}) auto 0 auto;
+  height: calc(100vh - #{$header-height});
+  max-width: $parent-width;
+  background-color: white;
+  box-shadow: 0 0 40px rgba(52, 61, 72, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  .drawer-container {
+    height: 100%;
+    background-color: white;
+  }
+}
+
+.main-container {
+  padding: 24px;
+  background-color: #f9fafb;
+  @media #{$small-and-down} {
+    padding: 24px 16px;
+  }
 }

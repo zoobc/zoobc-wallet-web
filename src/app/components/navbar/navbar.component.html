@@ -1,118 +1,90 @@
-<!-- Topbar -->
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" [ngClass]="isActive && 'toggled'">
-
-  <!-- Sidebar Toggle (Topbar) -->
-  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" (click)="onToggleSidebar($event)">
-    <i class="fa fa-bars"></i>
-  </button>
-
-  <!-- Topbar Navbar -->
-  <ul class="navbar-nav ml-auto">
-    <li>
-      <select class="browser-default custom-select custom-select-sm select-language" [(ngModel)]="activeLanguage"
-        (change)="selectActiveLanguage()">
-        <option *ngFor="let language of languages; let i = index" value="{{ language.code }}">{{ language.country }}
-        </option>
-      </select>
-    </li>
-    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-    <li class="nav-item dropdown no-arrow d-sm-none">
-      <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-search fa-fw"></i>
-      </a>
-      <!-- Dropdown - Messages -->
-      <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-        <form class="form-inline mr-auto w-100 navbar-search">
-          <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="{{'Search.title' | translate}}"
-              aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button">
-                <i class="fas fa-search fa-sm"></i>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </li>
-
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="rateDropdown" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        1 ZBC = {{currencyRate.value | number:'0.1-2'}} {{currencyRate.name}}
-      </a>
-
-      <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-        aria-labelledby="rateDropdown">
-        <h6 class="dropdown-header" translate>Navbar.Currency</h6>
-        <button class="dropdown-item d-flex align-items-center" *ngFor="let rate of currencyRates"
-          (click)="onChangeRate(rate)">
-          <i class="fas fa-check fa-sm" *ngIf="currencyRate.name == rate.name"></i>
-          <span>{{rate.value | number:'0.1-2'}} {{rate.name}}</span>
+<div class="header">
+  <div class="header-container">
+    <div class="brand">
+      <h3>ZooBC Wallet</h3>
+    </div>
+    <div class="menu">
+      <!-- language menu -->
+      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
+        <span>{{ activeLanguage }}</span>
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <mat-menu #language="matMenu">
+        <button *ngFor="let language of languages" (click)="selectActiveLanguage(language.code)" mat-menu-item>
+          {{ language.country }}
         </button>
-      </div>
-    </li>
+      </mat-menu>
 
-    <div class="topbar-divider d-none d-sm-block"></div>
-
-    <!-- Nav Item - User Information -->
-    <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Satoshi Nakamoto</span>
-        <img class="img-profile rounded-circle" src="/assets/img/employee.png">
-      </a>
-      <!-- Dropdown - User Information -->
-      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <button class="dropdown-item" *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"
-            *ngIf="acc.path != undefined && acc.path != currAcc.path"></i>
-          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400"
-            *ngIf="acc.path != undefined && acc.path == currAcc.path"></i>
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.secret && acc.secret != currAcc.secret"></i>
-          <i class="fas fa-check fa-sm fa-fw mr-2 text-gray-400" *ngIf="acc.secret && acc.secret == currAcc.secret"></i>
-          <span>{{acc.name}} </span>
-          <span *ngIf="acc.imported ">(Imported)</span>
-        </button>
-        <a class="dropdown-item" routerLink="/add-account">
-          <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
-          <span>Add New Account</span>
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#">
-          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-          {{'Account.Profile' | translate}}
-        </a>
-        <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-          {{'Account.Logout' | translate}}
-        </a>
-      </div>
-    </li>
-
-  </ul>
-
-</nav>
-<!-- End of Topbar -->
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{'Misc.ReadyLeave' | translate}}</h5>
-        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body" [innerHTML]="'Account.DescLogout' | translate"></div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-dismiss="modal">{{'Button.Cancel' | translate}}</button>
-        <a class="btn btn-primary" href="/login">{{'Account.Logout' | translate}}</a>
-      </div>
+      <!-- account menu -->
+      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account">
+        <i class="fa fa-user-circle"></i>
+      </button>
+      <mat-menu #account="matMenu">
+        <div class="account-dropdown-list">
+          <button *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)" mat-menu-item>
+            <i class="fas fa-user" *ngIf="acc.path != undefined && acc.path != currAcc.path"></i>
+            <i class="fas fa-check" *ngIf="acc.path != undefined && acc.path == currAcc.path"></i>
+            <i class="fas fa-user" *ngIf="acc.secret && acc.secret != currAcc.secret"></i>
+            <i class="fas fa-check" *ngIf="acc.secret && acc.secret == currAcc.secret"></i>
+            <span>{{ acc.name }} </span>
+            <span *ngIf="acc.imported">(Imported)</span>
+          </button>
+          <button routerLink="/add-account" mat-menu-item>
+            <i class="fas fa-plus"></i>
+            <span>Add New Account</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item>
+            <i class="fas fa-user"></i>
+            {{ 'Account.Profile' | translate }}
+          </button>
+          <mat-divider></mat-divider>
+          <button data-toggle="modal" data-target="#logoutModal" mat-menu-item>
+            <i class="fas fa-sign-out-alt"></i>
+            {{ 'Account.Logout' | translate }}
+          </button>
+        </div>
+      </mat-menu>
     </div>
   </div>
 </div>
+
+<!-- Logout Modal-->
+<!-- <div
+  class="modal fade"
+  id="logoutModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{ 'Misc.ReadyLeave' | translate }}
+        </h5>
+        <button
+          class="close"
+          type="button"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div
+        class="modal-body"
+        [innerHTML]="'Account.DescLogout' | translate"
+      ></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">
+          {{ 'Button.Cancel' | translate }}
+        </button>
+        <a class="btn btn-primary" href="/login">{{
+          'Account.Logout' | translate
+        }}</a>
+      </div>
+    </div>
+  </div>
+</div> -->

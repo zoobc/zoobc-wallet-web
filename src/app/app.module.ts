@@ -4,6 +4,32 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { sign as naclSign } from 'tweetnacl';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatGridListModule,
+  MatCardModule,
+  MatInputModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatSelectModule,
+  MatRadioModule,
+  MatDialogModule,
+  MatExpansionModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatSidenavModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSnackBarModule,
+  MatBadgeModule,
+  MatMenuModule,
+  MatProgressSpinnerModule,
+  MatTooltipModule,
+  MatChipsModule,
+  MatDividerModule,
+} from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -59,6 +85,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AutocompleteLibModule,
     AppConfigModule,
     NgxQRCodeModule,
@@ -75,6 +102,30 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
+
+    MatButtonModule,
+    MatCheckboxModule,
+    MatGridListModule,
+    MatCardModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSnackBarModule,
+    MatBadgeModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+    MatChipsModule,
+    MatDividerModule,
   ],
   bootstrap: [AppComponent],
   providers: [

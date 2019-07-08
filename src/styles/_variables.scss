@@ -1,0 +1,60 @@
+// header properties
+$header-height-offset: 300px;
+$header-height: 64px;
+$brand-width: 200px;
+
+// sidebar properties
+$sidebar-width: 96px;
+
+// parent properties
+$parent-width: 800px;
+
+// Media Query Ranges
+$small-screen-up: 601px !default;
+$medium-screen-up: 993px !default;
+$large-screen-up: 1201px !default;
+$small-screen: 600px !default;
+$medium-screen: 992px !default;
+$large-screen: 1200px !default;
+
+$medium-and-up: 'only screen and (min-width : #{$small-screen-up})' !default;
+$large-and-up: 'only screen and (min-width : #{$medium-screen-up})' !default;
+$extra-large-and-up: 'only screen and (min-width : #{$large-screen-up})' !default;
+$small-and-down: 'only screen and (max-width : #{$small-screen})' !default;
+$medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
+$medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
+
+// colors
+$primary-color: #2196f3;
+
+// black
+$black1: rgba(
+  $color: black,
+  $alpha: 0.8,
+);
+$black2: rgba(
+  $color: black,
+  $alpha: 0.6,
+);
+$black3: rgba(
+  $color: black,
+  $alpha: 0.5,
+);
+$black4: rgba(
+  $color: black,
+  $alpha: 0.3,
+);
+
+// white
+$white1: rgba(
+  $color: white,
+  $alpha: 0.8,
+);
+$white2: rgba(
+  $color: white,
+  $alpha: 0.6,
+);
+$white3: rgba(
+  $color: white,
+  $alpha: 0.4,
+);

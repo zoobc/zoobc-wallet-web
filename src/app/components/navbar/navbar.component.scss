@@ -1,23 +1,48 @@
-.navbar {
-  .dropdown-list {
-    max-height: 300px;
-    max-width: 200px;
-    overflow-y: scroll;
-    text-align: right;
-    .dropdown-item {
-      justify-content: flex-end;
-      i {
-        margin-right: 4px;
-        color: green;
+@import '../../../styles/variables';
+
+.header {
+  height: $header-height-offset;
+  background-color: #1976d2;
+  .header-container {
+    margin: 0 auto;
+    display: flex;
+    max-width: $parent-width;
+    align-items: center;
+    height: 64px;
+    color: white;
+    @media only screen and (max-width: 800px) {
+      padding: 0 16px;
+    }
+    .brand {
+      width: $brand-width;
+      h3 {
+        margin: 0;
+        font-weight: 400;
+        font-size: 22px;
+      }
+    }
+    .menu {
+      width: calc(100% - #{$brand-width});
+      text-align: right;
+      .account-dropdown i {
+        font-size: 28px;
+      }
+
+      .language-dropdown {
+        i {
+          margin-left: 8px;
+        }
+        span {
+          text-transform: uppercase;
+        }
       }
     }
   }
-  
-  #rateDropdown {
-    font-size: 14px;
-  }
+}
 
-  .select-language{
-    margin-top: 18px;
+.account-dropdown-list {
+  button i {
+    margin-right: 8px;
+    color: $black3;
   }
 }

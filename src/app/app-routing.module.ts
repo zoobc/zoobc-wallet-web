@@ -29,7 +29,7 @@ const routes: Routes = [
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'add-account', component: AddNewAccountComponent },
-      { path: 'Contact-list', component: ContactlistComponent },
+      { path: 'contact-list', component: ContactlistComponent },
       { path: 'addContact', component: AddcontactComponent },
       { path: 'editContact/:address', component: EditcontactComponent },
     ],
