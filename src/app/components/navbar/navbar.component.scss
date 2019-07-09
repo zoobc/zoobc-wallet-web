@@ -16,12 +16,14 @@
     .brand {
       width: $brand-width;
       display: contents;
+      color: white;
+      text-decoration: none;
       img {
         width: 40px;
-        margin-right: 16px;
       }
       h3 {
         margin: 0;
+        padding-left: 16px;
         font-weight: 200;
         font-size: 22px;
       }

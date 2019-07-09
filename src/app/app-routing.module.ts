@@ -37,9 +37,11 @@ const routes: Routes = [
   {
     path: '',
     component: ParentComponent,
-    children: [{ path: 'signup', component: SignupComponent }],
+    children: [
+      { path: 'signup', component: SignupComponent },
+      { path: 'login', component: LoginComponent },
+    ],
   },
-  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
