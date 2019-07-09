@@ -41,7 +41,9 @@ export class PinsComponent
 
   ngAfterViewInit() {
     // focus to first field
-    this.pinDigit.first.nativeElement.children[0].focus();
+    const children = this.pinDigit.first.nativeElement.children[0].children[0]
+      .children[0].children[0].children[0];
+    children.focus();
   }
 
   private _onChange = (value: any) => {};

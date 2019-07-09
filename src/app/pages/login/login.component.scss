@@ -1,33 +1,67 @@
-.login-page {
-  background-color: #4e73df;
-  padding-top: calc((100vh / 2) - 100px);
-  min-height: 100vh;
-  height: 100%;
-  .select-language {
-    width: 24%;
+@import '../../../styles/variables';
+
+.login-container {
+  text-align: center;
+  img {
+    max-width: 240px;
+    margin-top: 24px;
   }
-  .container {
-    max-width: 480px;
-  }  
-  h3 {
-    color: white;
+  h2 {
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: $black1;
   }
-  .input-group {
-    margin-bottom: 8px;
+  a {
+    display: block;
+    margin: 8px auto;
+    width: 240px;
+    padding: 6px 0;
+    font-weight: bold;
+    letter-spacing: 1px;
   }
-  .custom-select { margin-bottom: 8px; }
-  .btn {
-    width: 100%;
-    justify-content: baseline;
-    margin-bottom: 8px;
-    &.btn-transparent {
-      background-color: transparent;
-      &:hover {
-        background-color: rgba(0, 0, 0, .1)
-      }
+  form {
+    max-width: 360px;
+    margin: 0 auto;
+    label {
+      font-size: 18px;
+      color: $black2;
     }
-    .text {
-      margin: 0 auto;
+    button {
+      width: 100%;
+      padding: 4px 0;
     }
   }
 }
+// .login-page {
+//   background-color: #4e73df;
+//   padding-top: calc((100vh / 2) - 100px);
+//   min-height: 100vh;
+//   height: 100%;
+//   .select-language {
+//     width: 24%;
+//   }
+//   .container {
+//     max-width: 480px;
+//   }
+//   h3 {
+//     color: white;
+//   }
+//   .input-group {
+//     margin-bottom: 8px;
+//   }
+//   .custom-select { margin-bottom: 8px; }
+//   .btn {
+//     width: 100%;
+//     justify-content: baseline;
+//     margin-bottom: 8px;
+//     &.btn-transparent {
+//       background-color: transparent;
+//       &:hover {
+//         background-color: rgba(0, 0, 0, .1)
+//       }
+//     }
+//     .text {
+//       margin: 0 auto;
+//     }
+//   }
+// }

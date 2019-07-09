@@ -1,4 +1,26 @@
-<div class="login-page">
+<div class="login-container">
+  <img src="/assets/img/zbc-black.png" alt="">
+  <h2 class="mat-h2"><b>ZooBC</b> Wallet</h2>
+  <ng-container *ngIf="isLoggedIn || isNeedNewPin">
+    <a routerLink="/signup" mat-flat-button color="primary">Create New Wallet</a>
+    <a routerLink="/restore" mat-flat-button color="primary">Import Wallet</a>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoggedIn && !isNeedNewPin">
+    <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
+      <label>{{ "Login.EYP" | translate }}</label>
+      <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
+      <small class="form-text error-text">
+        <span *ngIf="pinForm.hasError('invalid')">{{"Warning.PinInvalid" | translate}}</span>
+      </small>
+      <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
+        <i matPrefix class="fas fa-check"></i>
+        <span class="text">{{ "Login.BtnLogin" | translate }}</span>
+      </button>
+    </form>
+  </ng-container>
+</div>
+<!-- <div class="login-page">
   <div class="container">
     <h3 class="h3 text-center" style="margin-bottom:24px">Spinechain Logo</h3>
     <select class="browser-default custom-select custom-select-sm select-language" [(ngModel)]="activeLanguage"
@@ -93,4 +115,4 @@
       </div>
     </form>
   </div>
-</ng-template>
+</ng-template> -->
