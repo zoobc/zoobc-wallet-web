@@ -1,7 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 
-import { APP_CONFIG, AppConfig } from '../app-config.module';
-
+import { environment } from '../../environments/environment';
 import { hexToByteArray } from '../../helpers/converters';
 
 const INVALID_ENTROPY = 'Invalid entropy';
@@ -36,12 +35,9 @@ export class MnemonicsService {
   public mnemonic: any;
   public mnemonics = new Map<string, any>();
 
-  constructor(
-    @Inject('global') private global: any,
-    @Inject(APP_CONFIG) private config: AppConfig
-  ) {
+  constructor(@Inject('global') private global: any) {
     this.Mnemonic = global.Mnemonic;
-    const language = config.mnemonicLanguage;
+    const language = environment.mnemonicLanguage;
 
     const Mnemonic = this.Mnemonic;
     this.mnemonic = new Mnemonic(language);
@@ -71,7 +67,7 @@ export class MnemonicsService {
   }
 
   generateMnemonicWords(
-    numWords: number = this.config.mnemonicNumWords,
+    numWords: number = environment.mnemonicNumWords,
     rng?: (size: number) => Uint8Array,
     wordlist?: string[]
   ): [string, string] {
