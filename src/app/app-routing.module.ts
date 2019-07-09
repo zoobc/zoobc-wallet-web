@@ -14,6 +14,7 @@ import { AppService } from './app.service';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
+import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -38,6 +39,7 @@ const routes: Routes = [
       { path: 'signup', component: SignupComponent },
       { path: 'login', component: LoginComponent },
       { path: 'restore', component: RestoreWalletComponent },
+      { path: 'feedback', component: ContactUsComponent },
     ],
   },
 ];

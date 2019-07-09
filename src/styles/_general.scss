@@ -14,7 +14,7 @@ body {
 // ===================== CUSTOM BUTTON =================
 button[mat-flat-button] {
   text-transform: uppercase;
-  border-radius: 6px;
+  border-radius: 4px;
   *[matPrefix] {
     margin-right: 12px;
   }
@@ -48,7 +48,7 @@ label {
 
 .mat-form-field {
   .mat-form-field-infix {
-    padding: 16px 0 !important;
+    padding: 12px 0 !important;
     border: 0 !important;
   }
   .mat-form-field-flex {
