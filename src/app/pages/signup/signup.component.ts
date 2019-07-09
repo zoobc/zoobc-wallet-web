@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as CryptoJS from 'crypto-js';
+import { MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 import { KeyringService } from '../../services/keyring.service';
 import { GetAddressFromPublicKey } from '../../../helpers/utils';
@@ -16,9 +18,8 @@ const coin = 'ZBC';
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
+  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   isPinNeeded = localStorage.getItem('pin') ? false : true;
-
-  modalRef: NgbModalRef;
 
   passphrase: string[];
   masterSeed: string;
@@ -43,7 +44,9 @@ export class SignupComponent implements OnInit {
     private modalService: NgbModal,
     private router: Router,
     private accServ: AccountService,
-    private keyringServ: KeyringService
+    private keyringServ: KeyringService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.formSetPin = new FormGroup({
       pin: this.pinForm,
@@ -58,6 +61,8 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
     this.generateNewWallet();
+
+    if (this.accServ.getCurrAccount()) this.router.navigateByUrl('/login');
   }
 
   generateNewWallet() {
@@ -93,20 +98,21 @@ export class SignupComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+    this.snackBar.open('Text Copied', null, { duration: 3000 });
   }
 
-  openCreatePin(content) {
+  openCreatePin() {
     if (!this.isPinNeeded) {
       this.saveNewAccount();
       this.router.navigateByUrl('/dashboard');
       return true;
     }
 
-    this.modalRef = this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      beforeDismiss: () => false,
+    let pinDialog = this.dialog.open(this.pinDialog, {
+      width: '400px',
+      disableClose: true,
     });
-    this.modalRef.result.then(() => {
+    pinDialog.afterClosed().subscribe(() => {
       this.router.navigateByUrl('/dashboard');
     });
   }
@@ -119,7 +125,7 @@ export class SignupComponent implements OnInit {
       localStorage.setItem('pin', CryptoJS.SHA256(this.pinForm.value));
       this.saveNewAccount();
 
-      this.modalRef.close();
+      this.dialog.closeAll();
     }
   }
 

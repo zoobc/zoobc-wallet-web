@@ -35,8 +35,7 @@ const coin = 'ZBC';
   providedIn: 'root',
 })
 export class AccountService {
-  accBalanceServ: AccountBalancesServiceClient;
-  accounts: [] = JSON.parse(localStorage.getItem('accounts')) || [];
+  private accBalanceServ: AccountBalancesServiceClient;
 
   currSeed: string;
   currPublicKey: Uint8Array;
@@ -86,7 +85,6 @@ export class AccountService {
 
   changeCurrentAccount(account: SavedAccount) {
     const pin = localStorage.getItem('pin');
-    console.log(account);
 
     if (pin) {
       let seed: string;
@@ -140,7 +138,7 @@ export class AccountService {
     }
   }
 
-  getCurrAccount() {
+  getCurrAccount(): SavedAccount {
     return JSON.parse(localStorage.getItem('currAccount'));
   }
 

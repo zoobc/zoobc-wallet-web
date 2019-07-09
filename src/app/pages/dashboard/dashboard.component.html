@@ -3,7 +3,7 @@
     <div class="col-4">
       <h2 class="mat-h2">Dashboard</h2>
     </div>
-    <div class="col-8 text-right" style="text-align: right">
+    <div class="col-8 text-right">
       <button mat-button class="rates-dropdown" [matMenuTriggerFor]="rate">
         <span>
           1 ZBC = {{ currencyRate.value | number: '0.1-2' }}
@@ -34,7 +34,7 @@
     <div class="row">
       <div class="col-12 col-sm-6 balance-section">
         <div class="icon">
-          <i class="fab fa-bitcoin"></i>
+          <img src="/assets/img/zbc-white.png" width="48">
         </div>
         <div class="balance-detail">
           <div class="label">balance</div>
@@ -60,7 +60,7 @@
 
       <div class="col-12 col-sm-6 balance-section">
         <div class="icon">
-          <i class="fab fa-bitcoin"></i>
+          <img src="/assets/img/zbc-white.png" width="48">
         </div>
         <div class="balance-detail">
           <div class="label">pending balance</div>
@@ -105,7 +105,7 @@
           {{ transaction.timestamp | date: 'dd MMMM yyyy' }}
         </div>
       </div>
-      <div class="col-5 col-sm-4" style="text-align: right">
+      <div class="col-5 col-sm-4 text-right">
         <div class="amount-send" *ngIf="i % 2 == 0">
           - {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
         </div>

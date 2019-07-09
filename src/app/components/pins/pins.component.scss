@@ -5,10 +5,12 @@ $spacePins: 0.4rem;
   div {
     padding-left: $spacePins;
     padding-right: $spacePins;
-
+    .mat-form-field {
+      width: 100%;
+    }
     input {
       text-align: center;
-      border: 1px solid;
+      font-size: 32px;
     }
   }
 }

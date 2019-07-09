@@ -15,9 +15,14 @@
     }
     .brand {
       width: $brand-width;
+      display: contents;
+      img {
+        width: 40px;
+        margin-right: 16px;
+      }
       h3 {
         margin: 0;
-        font-weight: 400;
+        font-weight: 200;
         font-size: 22px;
       }
     }
