@@ -33,7 +33,6 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AppConfigModule } from './app-config.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SendmoneyComponent } from './pages/sendmoney/sendmoney.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -87,7 +86,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     BrowserModule,
     BrowserAnimationsModule,
     AutocompleteLibModule,
-    AppConfigModule,
     NgxQRCodeModule,
     HttpClientModule,
     NgxPaginationModule,
