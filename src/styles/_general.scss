@@ -39,3 +39,36 @@ button[mat-flat-button] {
     padding: 0 8px;
   }
 }
+
+label {
+  font-size: 13px;
+  color: $black2;
+  font-weight: bold;
+}
+
+.mat-form-field {
+  .mat-form-field-infix {
+    padding: 16px 0 !important;
+    border: 0 !important;
+  }
+  .mat-form-field-flex {
+    margin: 0 !important;
+  }
+  .mat-form-field-outline {
+    top: 0 !important;
+  }
+  .mat-form-field-label {
+    font-size: 14px !important;
+    margin: 0 !important;
+    top: 27px !important;
+  }
+  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
+    .mat-form-field-label {
+    margin-top: 4px !important;
+    transform: translateY(-1.59373em) scale(0.7) !important;
+  }
+
+  .mat-select-arrow-wrapper {
+    transform: none !important;
+  }
+}

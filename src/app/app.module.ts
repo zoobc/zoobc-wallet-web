@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { sign as naclSign } from 'tweetnacl';
-import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatButtonModule,
@@ -29,6 +28,7 @@ import {
   MatTooltipModule,
   MatChipsModule,
   MatDividerModule,
+  MatAutocompleteModule,
 } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -89,7 +89,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AutocompleteLibModule,
     NgxQRCodeModule,
     HttpClientModule,
     NgxPaginationModule,
@@ -128,6 +127,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatTooltipModule,
     MatChipsModule,
     MatDividerModule,
+    MatAutocompleteModule,
   ],
   bootstrap: [AppComponent],
   providers: [
