@@ -6,6 +6,12 @@
         <span>Dashboard</span>
       </a>
     </li>
+    <li [ngClass]="menu == 'nodeadmin' && 'active'">
+      <a routerLink="/nodeadmin">
+        <i class="fa fa-desktop"></i>
+        <span>Node Admin</span>
+      </a>
+    </li>
     <li [ngClass]="menu == 'transferhistory' && 'active'">
       <a routerLink="/transferhistory">
         <i class="fa fa-receipt"></i>

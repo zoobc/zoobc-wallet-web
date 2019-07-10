@@ -1,0 +1,145 @@
+@import '../../../styles/variables';
+
+.node-admin-container {
+  .status-card {
+    display: flex;
+    background: linear-gradient(45deg, #0288d1, #26c6da) !important;
+    color: white;
+    margin-bottom: 16px;
+    .icon {
+      width: 56px;
+      .label {
+        font-size: 13px;
+        color: $white1;
+        text-align: center;
+        padding-top: 4px;
+      }
+      i {
+        padding: 16px;
+        font-size: 22px;
+        text-align: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 56px;
+        background-color: rgba($color: white, $alpha: 0.4);
+      }
+    }
+    .status {
+      text-align: right;
+      width: calc(100% - 56px);
+      .label {
+        color: $white2;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+      .value {
+        font-size: 16px;
+      }
+      .mat-flat-button {
+        background-color: $white3;
+        margin-top: 8px;
+        height: 28px;
+        font-size: 12px;
+        color: white;
+        line-height: 28px;
+      }
+    }
+  }
+  .node-spec {
+    .label {
+      font-size: 13px;
+      color: $black3;
+      margin: 0 0 4px 0;
+    }
+    .value {
+      font-size: 14px;
+      color: $black1;
+      margin: 0 0 16px 0;
+    }
+  }
+}
+
+.cpu-usage {
+  .percentage {
+    text-align: center;
+    position: relative;
+    .mat-progress-spinner {
+      margin: 0 auto;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #ccc;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        margin: auto;
+        width: 80%;
+        height: 80%;
+        top: 8px;
+        left: 8px;
+        border-radius: 50%;
+        background: white;
+      }
+    }
+    .label {
+      position: absolute;
+      top: calc(50% - 7px);
+      text-align: center;
+      width: 100%;
+      font-size: 14px;
+      color: $black2;
+    }
+  }
+  .cpu-number {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+}
+
+.memory-container {
+  .mat-h4 {
+    margin-bottom: 8px;
+  }
+
+  .mat-divider {
+    margin: 16px 0 8px 0;
+  }
+}
+
+.memory-usage {
+  display: flex;
+  flex-wrap: wrap;
+  .label {
+    width: 30%;
+    font-size: 14px;
+    color: $black2;
+  }
+  .usage {
+    width: 70%;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    color: $black2;
+  }
+  .persentage-container {
+    position: relative;
+    height: 8px;
+    width: 100%;
+    margin-top: 4px;
+    border-radius: 6px;
+    background-color: #ccc;
+    .percentage {
+      background-color: $primary-color;
+      height: 8px;
+      border-radius: 6px;
+    }
+  }
+}

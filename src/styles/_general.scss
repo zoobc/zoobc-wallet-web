@@ -5,11 +5,13 @@ body {
   font-family: 'Roboto', sans-serif !important;
 }
 
+// ==================== CARD ========================
 .mat-card {
   box-shadow: 0 0 40px rgba(52, 61, 72, 0.2) !important;
   border-radius: 8px !important;
 }
 
+// ===================== CUSTOM BUTTON =================
 button[mat-flat-button] {
   text-transform: uppercase;
   border-radius: 6px;
@@ -18,6 +20,7 @@ button[mat-flat-button] {
   }
 }
 
+// ====================== TEXT ALIGNMENT ======================
 .text-left {
   text-align: left;
 }
@@ -26,4 +29,13 @@ button[mat-flat-button] {
 }
 .text-right {
   text-align: right;
+}
+
+// ============================ CUSTOM GRID ========================
+.row {
+  padding: 0px;
+  margin: 0 -8px;
+  [class^='col'] {
+    padding: 0 8px;
+  }
 }

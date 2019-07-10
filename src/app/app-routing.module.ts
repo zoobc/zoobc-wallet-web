@@ -15,6 +15,7 @@ import { AppService } from './app.service';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
+import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,6 +27,7 @@ const routes: Routes = [
       { path: 'sendmessage', component: SendmessageComponent },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'transferhistory', component: TransferhistoryComponent },
+      { path: 'nodeadmin', component: NodeAdminComponent },
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'add-account', component: AddNewAccountComponent },
