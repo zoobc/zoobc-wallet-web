@@ -1,40 +1,14 @@
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">{{'Transaction.Title' | translate}}</h6>
-  </div>
-  <div class="card-body">
-    <div class="table-responsive" *ngIf="accountHistory.length > 0">
+<div>
+  <h2 class="mat-h2">
+    {{ 'Transaction.Title' | translate }}
+  </h2>
+  <div>
+    <div *ngIf="accountHistory.length > 0">
       <loading-spinner *ngIf="showSpinner"></loading-spinner>
-      <table *ngIf="!showSpinner" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        <thead>
-          <tr>
-            <th>{{'Table.Date' | translate}}</th>
-            <th>{{'Table.Type' | translate}}</th>
-            <th>{{'Table.Account' | translate}}</th>
-            <th>{{'Table.Amount' | translate}}</th>
-            <th>{{'Table.Fee' | translate}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let transaction of accountHistory | paginate: config">
-            <td>{{transaction.timestamp | date: 'dd-MM-yyyy'}}</td>
-            <td>{{transaction.recipientpublickey === address ? ('Table.RecMoney' | translate) : ('Table.SendMoneys'| translate) }}</td> 
-            <td>{{transaction.recipientpublickey === address ? transaction.senderpublickey : transaction.recipientpublickey }}</td>
-            <td>{{transaction.amountnqt / 1e8}}</td>
-            <td>{{transaction.feenqt / 1e8}}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-              <th>{{'Table.Date' | translate}}</th>
-              <th>{{'Table.Type' | translate}}</th>
-              <th>{{'Table.Account' | translate}}</th>
-              <th>{{'Table.Amount' | translate}}</th>
-              <th>{{'Table.Fee' | translate}}</th>
-            </tr>
-        </tfoot>
-      </table>
-      <pagination-controls  *ngIf="!showSpinner" class="pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+      <app-transaction-table
+        [isLoading]="showSpinner"
+        [transactionData]="accountHistory"
+      ></app-transaction-table>
     </div>
   </div>
 </div>

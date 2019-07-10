@@ -92,49 +92,14 @@
     }
   }
 
-  .transaction-item {
-    border-bottom: 1px solid #ddd;
-    padding: 16px 0;
-    align-items: center;
-    .name {
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-    .address {
-      word-break: break-all;
+  .rates-dropdown-list {
+    max-height: 400px;
+    button {
       color: $black1;
-      font-size: 13px;
-      margin-bottom: 16px;
-    }
-    .date {
-      color: $black2;
-      font-size: 13px;
-    }
-
-    .amount-send {
-      color: #f44336;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .amount-receive {
-      color: #4caf50;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .fee {
-      color: #f44336;
-      font-size: 14px;
-    }
-  }
-}
-
-.rates-dropdown-list {
-  max-height: 400px;
-  button {
-    color: $black1;
-    text-align: right;
-    i {
-      margin-right: 8px;
+      text-align: right;
+      i {
+        margin-right: 8px;
+      }
     }
   }
 }

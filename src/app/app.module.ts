@@ -55,6 +55,7 @@ import { AddNewAccountComponent } from './pages/add-new-account/add-new-account.
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
+import { TransactionTableComponent } from './components/transaction-table/transaction-table.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -81,6 +82,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     ContactlistComponent,
     AddcontactComponent,
     EditcontactComponent,
+    TransactionTableComponent,
   ],
   imports: [
     BrowserModule,

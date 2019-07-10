@@ -6,7 +6,6 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
-  AfterViewInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -22,8 +21,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     },
   ],
 })
-export class PinsComponent
-  implements OnInit, ControlValueAccessor, AfterViewInit {
+export class PinsComponent implements OnInit, ControlValueAccessor {
   @Input() digit: number = 6;
   @ViewChildren('pinDigit') pinDigit: QueryList<ElementRef>;
 
@@ -37,13 +35,6 @@ export class PinsComponent
     for (let i = 0; i < this.digit; i++) {
       this.pins.push(i);
     }
-  }
-
-  ngAfterViewInit() {
-    // focus to first field
-    const children = this.pinDigit.first.nativeElement.children[0].children[0]
-      .children[0].children[0].children[0];
-    children.focus();
   }
 
   private _onChange = (value: any) => {};
