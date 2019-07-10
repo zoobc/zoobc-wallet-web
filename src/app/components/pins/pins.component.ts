@@ -56,15 +56,14 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
     const pinValue: string = event.target.value;
     const regex = RegExp(/\d+/);
 
-    // if user press backpress
-    if (event.keyCode == 8 && this.values[6] == '') {
-      this.pinDigit.forEach((el: ElementRef, key) => {
-        if (key == index - 1) {
-          // back to prev field and clear the value
-          el.nativeElement.children[0].focus();
-          el.nativeElement.children[0].value = '';
-        }
-      });
+    // if user press backspace
+    if (event.keyCode == 8) {
+      const prevDigit = this.pinDigit.find((element, i) => i + 1 == index);
+      if (prevDigit) {
+        prevDigit.nativeElement.children[0].children[0].children[0].children[0].children[0].focus();
+        prevDigit.nativeElement.children[0].children[0].children[0].children[0].children[0].value =
+          '';
+      }
     }
 
     // if regex is true
