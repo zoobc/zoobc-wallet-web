@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 import { TransactionService } from '../../services/transaction.service';
 import { AppService } from '../../app.service';
-import { AccountService } from '../../services/account.service';
+import { AccountService, SavedAccount } from '../../services/account.service';
 import {
   bigintToByteArray,
   BigInt,
@@ -18,16 +18,18 @@ const coin = 'ZBC';
 @Component({
   selector: 'app-sendmoney',
   templateUrl: './sendmoney.component.html',
-  styleUrls: ['./sendmoney.component.css'],
+  styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
-  contact;
+  contacts;
   keyword = 'alias';
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('', Validators.required);
+  feeForm = new FormControl('0', Validators.required);
   isFormSendLoading = false;
+
+  account: SavedAccount;
 
   constructor(
     private transactionServ: TransactionService,
@@ -40,50 +42,37 @@ export class SendmoneyComponent implements OnInit {
       amount: this.amountForm,
       fee: this.feeForm,
     });
+
+    this.account = accServ.getCurrAccount();
   }
 
   ngOnInit() {
-    this.contact = this.appServ.getContactList();
-  }
-
-  selectEvent(item) {
-    // do something with selected item
-  }
-
-  onChangeSearch(search: string) {
-    // fetch remote data from here
-    // And reassign the 'data' which is binded to 'data' property.
-  }
-
-  onFocused(e) {
-    // do something
+    this.contacts = this.appServ.getContactList();
   }
 
   async onSendMoney() {
     if (this.formSend.valid) {
-      this.isFormSendLoading = true;
+      this.isFormSendLoading = false;
 
-      const account = this.accServ.getCurrAccount();
-
+      const account = this.account;
       const seed = Buffer.from(this.accServ.currSeed, 'hex');
-      // this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
-      // const childSeed = seed.derivePath(account.path);
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
-      // const { publicKey, secretKey } = nacl.sign.keyPair.fromSeed(
-      //   childSeed.privateKey
-      // );
 
-      // const publicKey = this.appServ.currPublicKey;
+      this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        account.path
+      );
       const address = this.accServ.currAddress;
 
       // if using balance validation
       let balance = await this.accServ.getAccountBalance().then((data: any) => {
+        this.isFormSendLoading = false;
         return data.balance;
       });
 
       if (/*balance / 1e8 > */ this.amountForm.value + this.feeForm.value) {
         let dataForm = {
-          recipient: this.recipientForm.value.address,
+          recipient: this.recipientForm.value,
           amount: this.amountForm.value * 1e8,
           fee: this.feeForm.value * 1e8,
           from: address,
@@ -108,7 +97,6 @@ export class SendmoneyComponent implements OnInit {
         );
         timestampsView.setUint32(3, dataForm.timestamp, true);
 
-        // let signature = nacl.sign.detached(txBytes, secretKey);
         let signature = childSeed.sign(txBytes);
         console.log('txSignature:', signature);
 
@@ -121,21 +109,29 @@ export class SendmoneyComponent implements OnInit {
           showCancelButton: true,
           showLoaderOnConfirm: true,
           preConfirm: () => {
+            this.isFormSendLoading = true;
             return this.transactionServ
               .postTransaction(txBytes)
               .then((res: any) => {
-                console.log('__result', res);
                 if (res.isvalid) Swal.fire('Money sent');
                 else Swal.fire({ html: res.message, type: 'error' });
-                return true;
+
+                this.isFormSendLoading = false;
+
+                this.formSend.reset();
+                Object.keys(this.formSend.controls).forEach(key => {
+                  this.formSend.controls[key].setErrors(null);
+                });
+                return false;
               })
               .catch(err => {
                 console.log(err);
                 Swal.fire({ html: err.error.error, type: 'error' });
-                return true;
+                this.isFormSendLoading = false;
+                return false;
               });
           },
-        }).then(() => (this.isFormSendLoading = false));
+        });
       } else {
         Swal.fire({ html: 'Balance is not enough', type: 'error' });
         this.isFormSendLoading = false;
