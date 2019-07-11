@@ -1,5 +1,4 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as CryptoJS from 'crypto-js';
@@ -19,7 +18,6 @@ const coin = 'ZBC';
 })
 export class SignupComponent implements OnInit {
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
-  isPinNeeded = localStorage.getItem('pin') ? false : true;
 
   passphrase: string[];
   masterSeed: string;
@@ -41,7 +39,6 @@ export class SignupComponent implements OnInit {
   submitted = false;
 
   constructor(
-    private modalService: NgbModal,
     private router: Router,
     private accServ: AccountService,
     private keyringServ: KeyringService,
@@ -102,12 +99,6 @@ export class SignupComponent implements OnInit {
   }
 
   openCreatePin() {
-    if (!this.isPinNeeded) {
-      this.saveNewAccount();
-      this.router.navigateByUrl('/dashboard');
-      return true;
-    }
-
     let pinDialog = this.dialog.open(this.pinDialog, {
       width: '400px',
       disableClose: true,
@@ -117,7 +108,7 @@ export class SignupComponent implements OnInit {
     });
   }
 
-  onSetPin(event) {
+  onSetPin() {
     event.preventDefault();
     this.submitted = true;
 

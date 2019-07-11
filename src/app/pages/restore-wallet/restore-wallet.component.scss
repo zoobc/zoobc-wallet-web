@@ -1,0 +1,21 @@
+.restore-wallet-container {
+  max-width: 360px;
+  margin: 0 auto;
+  text-align: center;
+  .mat-h2 {
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  form {
+    .passphrase-input {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    button {
+      width: 100%;
+      height: 40px;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+  }
+}

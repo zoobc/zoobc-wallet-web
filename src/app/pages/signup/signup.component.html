@@ -45,14 +45,8 @@
     <div class="text-right">
       <button mat-flat-button color="primary" (click)="openCreatePin()" type="button"
         [disabled]="!isWrittenDown.value || !isAgree.value">
-        <ng-container *ngIf="isPinNeeded">
-          <i matPrefix class="fas fa-key"></i>
-          <span class="text">{{ "Misc.SMP" | translate }}</span>
-        </ng-container>
-        <ng-container *ngIf="!isPinNeeded">
-          <i matPrefix class="fas fa-plus"></i>
-          <span class="text">{{ "Login.CreateAcc" | translate }}</span>
-        </ng-container>
+        <i matPrefix class="fas fa-key"></i>
+        <span class="text">{{ "Misc.SMP" | translate }}</span>
       </button>
     </div>
   </form>
@@ -60,7 +54,7 @@
 
 <ng-template #pinDialog>
   <h3 class="mat-h3" id="modal-basic-title"><b>{{ "Misc.SMP" | translate }}</b></h3>
-  <form [formGroup]="formSetPin" (submit)="onSetPin($event)">
+  <form [formGroup]="formSetPin" (submit)="onSetPin()">
     <field-pins formControlName="pin"></field-pins>
     <small class="form-text error-text">
       <span *ngIf="submitted && pinForm.hasError('pattern')">{{ "Warning.PinWarningNumber" | translate }}</span>

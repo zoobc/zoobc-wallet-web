@@ -15,6 +15,7 @@ import { AppService } from './app.service';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
+import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 
 const routes: Routes = [
@@ -42,6 +43,7 @@ const routes: Routes = [
     children: [
       { path: 'signup', component: SignupComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'restore', component: RestoreWalletComponent },
     ],
   },
 ];
