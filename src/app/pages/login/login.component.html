@@ -1,12 +1,12 @@
 <div class="login-container">
   <img src="/assets/img/zbc-black.png" alt="">
   <h2 class="mat-h2"><b>ZooBC</b> Wallet</h2>
-  <ng-container *ngIf="isLoggedIn || !hasAccount">
+  <ng-container *ngIf="!hasAccount">
     <a routerLink="/signup" mat-flat-button color="primary">Create New Wallet</a>
     <a routerLink="/restore" mat-flat-button color="primary">Import Wallet</a>
   </ng-container>
 
-  <ng-container *ngIf="!isLoggedIn && hasAccount">
+  <ng-container *ngIf="hasAccount && !isLoggedIn">
     <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
       <label>{{ "Login.EYP" | translate }}</label>
       <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
