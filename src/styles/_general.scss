@@ -15,7 +15,7 @@ body {
 button[mat-flat-button] {
   text-transform: uppercase;
   border-radius: 6px;
-  i[matPrefix] {
+  *[matPrefix] {
     margin-right: 12px;
   }
 }
