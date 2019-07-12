@@ -12,6 +12,7 @@ import {
 } from '../../../helpers/converters';
 import { transactionByte } from '../../../helpers/transactionByteTemplate';
 import { KeyringService } from 'src/app/services/keyring.service';
+import { ContactService } from 'src/app/services/contact.service';
 
 const coin = 'ZBC';
 
@@ -33,9 +34,9 @@ export class SendmoneyComponent implements OnInit {
 
   constructor(
     private transactionServ: TransactionService,
-    private appServ: AppService,
     private accServ: AccountService,
-    private keyringServ: KeyringService
+    private keyringServ: KeyringService,
+    private contactServ: ContactService
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -47,7 +48,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.contacts = this.appServ.getContactList();
+    this.contacts = this.contactServ.getContactList();
   }
 
   async onSendMoney() {
