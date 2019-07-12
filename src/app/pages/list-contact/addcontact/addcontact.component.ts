@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AppService } from 'src/app/app.service';
-import { Router } from '@angular/router';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-addcontact',
@@ -11,24 +11,31 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class AddcontactComponent implements OnInit {
   contacts = [];
 
-  @ViewChild('f') form: any;
-  constructor(private appServ: AppService, private route: Router) {}
+  addForm: FormGroup;
+  aliasField = new FormControl('', Validators.required);
+  addressField = new FormControl('', Validators.required);
 
-  ngOnInit() {
-    this.contacts = this.appServ.getContactList();
+  constructor(
+    private contactServ: ContactService,
+    public dialogRef: MatDialogRef<AddcontactComponent>
+  ) {
+    this.addForm = new FormGroup({
+      alias: this.aliasField,
+      address: this.addressField,
+    });
+
+    this.contacts = this.contactServ.getContactList();
   }
 
+  ngOnInit() {}
+
   onSubmit() {
-    if (this.form.value) {
-      let newContact = {
-        alias: this.form.value.alias,
-        address: this.form.value.address,
-      };
-      console.log(newContact);
+    if (this.addForm.valid) {
+      const newContact = this.addForm.value;
       this.contacts = this.contacts || [];
       this.contacts.push(newContact);
-      this.appServ.addContact(newContact);
-      this.route.navigateByUrl('/Contact-list');
+      this.contactServ.addContact(newContact);
+      this.dialogRef.close(this.contacts);
     }
   }
 }

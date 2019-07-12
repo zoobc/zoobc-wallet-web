@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AppService } from 'src/app/app.service';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AddcontactComponent } from '../addcontact/addcontact.component';
+import { EditcontactComponent } from '../editcontact/editcontact.component';
+import Swal from 'sweetalert2';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-contactlist',
@@ -8,20 +11,44 @@ import { Router } from '@angular/router';
   styleUrls: ['./contactlist.component.scss'],
 })
 export class ContactlistComponent implements OnInit {
-  contact;
-  constructor(private appServ: AppService, private router: Router) {}
+  contacts;
+
+  constructor(private contactServ: ContactService, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.contact = this.appServ.getContactList();
+    this.contacts = this.contactServ.getContactList();
   }
 
-  deleteContact(address) {
-    for (let i = 0; i < this.contact.length; i++) {
-      if (this.contact[i].address == address) {
-        this.contact.splice(i, 1);
-      }
-    }
+  deleteContact(contact) {
+    Swal.fire({
+      title: `Are you sure want to delete '${contact.alias}'?`,
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        this.contacts = this.contactServ.deleteContact(contact.address);
+        return true;
+      },
+    });
+  }
 
-    this.appServ.deleteContact(address);
+  onOpenAddContact() {
+    const dialog = this.dialog.open(AddcontactComponent, {
+      width: '460px',
+    });
+
+    dialog.afterClosed().subscribe(contacts => {
+      if (contacts) this.contacts = contacts;
+    });
+  }
+
+  onOpenEditContact(contact) {
+    const dialog = this.dialog.open(EditcontactComponent, {
+      width: '460px',
+      data: contact,
+    });
+
+    dialog.afterClosed().subscribe(contacts => {
+      if (contacts) this.contacts = contacts;
+    });
   }
 }
