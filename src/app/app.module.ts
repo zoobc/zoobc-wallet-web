@@ -51,7 +51,7 @@ import { PinsComponent } from './components/pins/pins.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LoadingSpinnerComponent } from './ui/loading-spinner/loading-spinner.component';
-import { AddNewAccountComponent } from './pages/add-new-account/add-new-account.component';
+import { AddAccountComponent } from './pages/add-account/add-account.component';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
@@ -80,7 +80,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     SidebarComponent,
     PinsComponent,
     LoadingSpinnerComponent,
-    AddNewAccountComponent,
+    AddAccountComponent,
     ContactlistComponent,
     AddcontactComponent,
     EditcontactComponent,
@@ -135,6 +135,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   providers: [
     { provide: 'global', useFactory: () => window },
     { provide: 'nacl.sign', useFactory: () => naclSign },
+  ],
+  entryComponents: [
+    AddAccountComponent,
+    AddcontactComponent,
+    EditcontactComponent,
   ],
 })
 export class AppModule {}

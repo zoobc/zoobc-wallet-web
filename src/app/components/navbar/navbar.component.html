@@ -30,7 +30,7 @@
             <span>{{ acc.name }} </span>
             <span *ngIf="acc.imported">(Imported)</span>
           </button>
-          <button routerLink="/add-account" mat-menu-item>
+          <button mat-menu-item (click)="onOpenAddAccount()">
             <i class="fas fa-plus"></i>
             <span>Add New Account</span>
           </button>

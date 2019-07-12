@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as ecc from 'tiny-secp256k1';
-import * as wif from 'wif';
 import * as CryptoJS from 'crypto-js';
 
 import { AccountBalancesServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
@@ -14,10 +12,8 @@ import { byteArrayToHex } from '../../helpers/converters';
 import { KeyringService } from './keyring.service';
 
 export interface SavedAccount {
-  secret?: string;
-  path?: number;
+  path: number;
   name: string;
-  imported: boolean;
 }
 
 export interface Account {
@@ -76,11 +72,9 @@ export class AccountService {
   generateDerivationPath(): number {
     const accounts: [SavedAccount] =
       JSON.parse(localStorage.getItem('accounts')) || [];
-    // filter only not imported account
-    const filterAcc = accounts.filter(acc => !acc.imported);
 
     // find length of not imported account. the result is the new derivation path
-    return filterAcc.length;
+    return accounts.length;
   }
 
   changeCurrentAccount(account: SavedAccount) {
@@ -91,46 +85,31 @@ export class AccountService {
       let publicKey: Uint8Array;
       let address: string;
 
-      if (account.imported) {
-        // switch to imported account
+      // get master seed to create child seed
+      const seedHex = CryptoJS.AES.decrypt(
+        localStorage.getItem('encMasterSeed'),
+        pin
+      ).toString(CryptoJS.enc.Utf8);
 
-        // decode wif private key to generate pubkey and address
-        const decoded = wif.decode(account.secret);
-        const privateKey = decoded.privateKey;
+      this.keyringServ.calcBip32RootKeyFromSeed(
+        coin,
+        Buffer.from(seedHex, 'hex')
+      );
 
-        seed = byteArrayToHex(privateKey);
-        publicKey = ecc.pointFromScalar(privateKey, decoded.compressed);
-        address = GetAddressFromPublicKey(publicKey);
-      } else {
-        // switch to HD wallet
+      // create child seed with derivation path to generate pubkey and address
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        account.path
+      );
 
-        // get master seed to create child seed
-        const seedHex = CryptoJS.AES.decrypt(
-          localStorage.getItem('encMasterSeed'),
-          pin
-        ).toString(CryptoJS.enc.Utf8);
+      seed = seedHex;
+      publicKey = childSeed.publicKey;
+      address = GetAddressFromPublicKey(publicKey);
+      console.log('seed', seed);
+      console.log('pubkey', byteArrayToHex(publicKey));
+      console.log('address', address);
 
-        this.keyringServ.calcBip32RootKeyFromSeed(
-          coin,
-          Buffer.from(seedHex, 'hex')
-        );
-
-        // create child seed with derivation path to generate pubkey and address
-        const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-          coin,
-          account.path
-        );
-
-        seed = seedHex;
-        publicKey = childSeed.publicKey;
-        address = GetAddressFromPublicKey(publicKey);
-        console.log('seed', seed);
-        console.log('pubkey', byteArrayToHex(publicKey));
-        console.log('address', address);
-
-        this.currSeed = seed;
-      }
-
+      this.currSeed = seed;
       this.currPublicKey = publicKey;
       this.currAddress = address;
 
@@ -148,10 +127,9 @@ export class AccountService {
 
   addAccount(account: SavedAccount) {
     const accounts = this.getAllAccount();
-    const { path, secret } = account;
+    const { path } = account;
     const isDuplicate = accounts.find(acc => {
       if (path && acc.path === path) return true;
-      if (secret && acc.secret === secret) return true;
       return false;
     });
 

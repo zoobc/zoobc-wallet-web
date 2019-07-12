@@ -125,7 +125,6 @@ export class SignupComponent implements OnInit {
     const account: SavedAccount = {
       path: 0,
       name: 'Account 1',
-      imported: false,
     };
     this.accServ.addAccount(account);
   }
