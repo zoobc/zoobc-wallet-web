@@ -13,15 +13,8 @@
       </button>
       <mat-menu #rate="matMenu">
         <div class="rates-dropdown-list">
-          <button
-            mat-menu-item
-            *ngFor="let rate of currencyRates"
-            (click)="onChangeRate(rate)"
-          >
-            <i
-              class="fas fa-check fa-sm"
-              *ngIf="currencyRate.name == rate.name"
-            ></i>
+          <button mat-menu-item *ngFor="let rate of currencyRates" (click)="onChangeRate(rate)">
+            <i class="fas fa-check fa-sm" *ngIf="currencyRate.name == rate.name"></i>
             <span>{{ rate.value | number: '0.1-2' }} {{ rate.name }}</span>
           </button>
         </div>
@@ -46,20 +39,14 @@
         <div class="balance-detail">
           <div class="label">balance</div>
           <div class="balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
+            <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
               {{ accountBalance.balance / 1e8 | number: '0.1-2' }}
             </span>
             <span> ZBC</span>
           </div>
           <div class="converted-balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
+            <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
               {{
                 (accountBalance.balance / 1e8) * currencyRate.value
@@ -78,20 +65,14 @@
         <div class="balance-detail">
           <div class="label">pending balance</div>
           <div class="balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
+            <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
               {{ accountBalance.unconfirmedbalance / 1e8 | number: '0.1-2' }}
             </span>
             <span> ZBC</span>
           </div>
           <div class="converted-balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
+            <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
               {{
                 (accountBalance.unconfirmedbalance / 1e8) * currencyRate.value
@@ -105,15 +86,21 @@
     </div>
 
     <div class="button-group">
-      <button mat-flat-button>deposit</button>
-      <button mat-flat-button>send</button>
-      <button mat-flat-button>receive</button>
+      <button mat-flat-button>
+        <img matPrefix src="/assets/img/zbc-white.png" width="18">
+        <span>deposit</span>
+      </button>
+      <button mat-flat-button>
+        <i matPrefix class="fa fa-paper-plane"></i>
+        <span>send</span>
+      </button>
+      <button mat-flat-button (click)="openReceiveForm()">
+        <i matPrefix class="fa fa-hand-holding-usd"></i>
+        <span>receive</span>
+      </button>
     </div>
   </mat-card>
 
   <h2 class="mat-h2">Recent Transactions</h2>
-  <app-transaction-table
-    [isLoading]="showSpinnerRecentTx"
-    [transactionData]="recentTx"
-  ></app-transaction-table>
+  <app-transaction-table [isLoading]="showSpinnerRecentTx" [transactionData]="recentTx"></app-transaction-table>
 </div>

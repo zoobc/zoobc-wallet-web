@@ -1,36 +1,24 @@
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Deposit Address</h6>
-  </div>
-  <div class="card text-center">
-    <div class="card-body">
-      <h5 class="card-title">
-        {{ 'ReceiveMoney.MyDepositAddress' | translate }}
-      </h5>
-      <span class="icon text-black-50">
-        <p class="card-text">
-          {{ address }}
-          <button class="btn btn-primary">
-            <i class="fas fa-copy" (click)="copyAddress()"></i>
-          </button>
-        </p>
-      </span>
+<div class="receive-container">
+  <h2 class="mat-h2 text-center">My ZooBC Address</h2>
+  <p class="address-text" (click)="copyAddress()" matTooltip="Copy to clipboard">{{ address }}</p>
 
-      <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
-        <div class="form-group">
-          <label for="amount">Request Money</label>
-          <input type="text" class="form-control" id="amount" placeholder="Coin amount..." formControlName="amount"
-            (keyup)="onChangeAmount()" type="number">
-          <small class="form-text error-text">
-            <span *ngIf="amountField.hasError('required')">Amount is required</span>
-          </small>
-        </div>
-      </form>
-      <!-- <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode> -->
-      <span *ngIf="formRequest.valid">
-        <ngx-qrcode qrc-element-type="canvas" [qrc-value]="urlReqCoin"></ngx-qrcode>
-        <span>Scan this qr code to send money to this address</span>
-      </span>
+  <div class="qrcode-container">
+    <ng-container *ngIf="formRequest.valid">
+      <ngx-qrcode qrc-element-type="canvas" [qrc-value]="urlReqCoin"></ngx-qrcode>
+      <div class="url" (click)="onCopyText()" matTooltip="Copy to clipboard">{{urlReqCoin}}</div>
+      <div class="instruction">Scan this qr code to send money to this address</div>
+    </ng-container>
+    <div class="qrcode-icon" *ngIf="!formRequest.valid">
+      <i class="fa fa-qrcode"></i>
+      <div class="mat-body-1">QR Code will Appear Here</div>
     </div>
   </div>
+
+  <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
+    <mat-form-field appearance="outline">
+      <input matInput type="text" placeholder="Coin amount..." formControlName="amount" (keyup)="onChangeAmount()"
+        type="number">
+      <mat-error *ngIf="amountField.hasError('required')">Amount is required</mat-error>
+    </mat-form-field>
+  </form>
 </div>

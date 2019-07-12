@@ -35,7 +35,7 @@
         margin-top: 8px;
         color: $white1;
         word-break: break-all;
-        @include transition(0.4s ease-in all);
+        @include transition(0.3s ease-in all);
         &:hover {
           color: white;
           cursor: pointer;

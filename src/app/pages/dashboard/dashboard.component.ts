@@ -11,7 +11,8 @@ import {
   Currency,
   CurrencyRateService,
 } from 'src/app/services/currency-rate.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { ReceiveComponent } from '../receive/receive.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,7 +44,8 @@ export class DashboardComponent implements OnInit {
     private transactionServ: TransactionService,
     private appServ: AppService,
     private currencyServ: CurrencyRateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.account = accountServ.getCurrAccount();
     this.address = accountServ.currAddress;
@@ -107,5 +109,11 @@ export class DashboardComponent implements OnInit {
     document.execCommand('copy');
     document.body.removeChild(selBox);
     this.snackBar.open('Address Copied', null, { duration: 5000 });
+  }
+
+  openReceiveForm() {
+    this.dialog.open(ReceiveComponent, {
+      width: '480px',
+    });
   }
 }
