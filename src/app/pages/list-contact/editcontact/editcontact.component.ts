@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppService } from 'src/app/app.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-editcontact',
@@ -8,28 +9,38 @@ import { AppService } from 'src/app/app.service';
   styleUrls: ['./editcontact.component.scss'],
 })
 export class EditcontactComponent implements OnInit {
-  contact;
-  address;
+  contacts = [];
 
-  @ViewChild('f') form: any;
+  editForm: FormGroup;
+  aliasField: FormControl;
+  addressField: FormControl;
+
   constructor(
-    private activRoute: ActivatedRoute,
-    private appServ: AppService,
-    private router: Router
+    private contactServ: ContactService,
+    public dialogRef: MatDialogRef<EditcontactComponent>,
+    @Inject(MAT_DIALOG_DATA) public contact: any
   ) {}
 
   ngOnInit() {
-    this.address = this.activRoute.snapshot.params['address'];
-    let contact = this.appServ.getContactList();
-    this.contact = contact.find(p => p.address == this.address);
-    console.log('a', this.contact);
+    this.aliasField = new FormControl(this.contact.alias, Validators.required);
+    this.addressField = new FormControl(
+      this.contact.address,
+      Validators.required
+    );
+
+    this.editForm = new FormGroup({
+      alias: this.aliasField,
+      address: this.addressField,
+    });
   }
 
   onSubmit() {
-    if (this.form.value) {
-      console.log('b', this.form.value);
-      this.appServ.updateContact(this.contact, this.form.value);
-      this.router.navigateByUrl('/Contact-list');
+    if (this.editForm.valid) {
+      let contacts = this.contactServ.updateContact(
+        this.contact,
+        this.editForm.value
+      );
+      this.dialogRef.close(contacts);
     }
   }
 }

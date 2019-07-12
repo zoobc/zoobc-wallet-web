@@ -1,46 +1,15 @@
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">
-      {{ 'Misc.NewContact' | translate }}
-    </h6>
-  </div>
-  <div class="card text-left">
-    <div class="card-body">
-      <form
-        class="form-horizontal"
-        #f="ngForm"
-        (ngSubmit)="f.form.valid && onSubmit()"
-      >
-        <div class="form-group">
-          <label for="alias">{{ 'Misc.Alias' | translate }}</label>
-          <input
-            type="text"
-            class="form-control"
-            name="alias"
-            [(ngModel)]="alias"
-            placeholder="Alias"
-            value=""
-          />
-        </div>
+<div class="addcontact-container">
+  <h2 class="mat-h2">{{ 'Misc.NewContact' | translate }}</h2>
+  <form [formGroup]="addForm" (submit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <input matInput type="text" formControlName="alias" placeholder="Alias" />
+      <mat-error *ngIf="aliasField.hasError('required')">Alias is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <input matInput type="text" formControlName="address" placeholder="Address" />
+      <mat-error *ngIf="addressField.hasError('required')">Address is required</mat-error>
+    </mat-form-field>
 
-        <div class="form-group">
-          <label for="address">{{ 'Misc.Address' | translate }}</label>
-
-          <input
-            type="text"
-            class="form-control"
-            name="address"
-            [(ngModel)]="address"
-            placeholder="Address"
-            value=""
-          />
-        </div>
-        <input
-          type="submit"
-          class="btn btn-primary"
-          value="{{ 'Button.Save' | translate }}"
-        />
-      </form>
-    </div>
-  </div>
+    <button mat-flat-button color="primary" type="submit">{{ 'Button.Save' | translate }}</button>
+  </form>
 </div>

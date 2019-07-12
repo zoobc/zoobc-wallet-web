@@ -1,0 +1,32 @@
+@import 'src/styles/variables';
+
+.contacts-container {
+  .contacts-list {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    .alias {
+      font-size: 14px;
+      margin: 0 0 4px;
+      color: $black1;
+      font-weight: bold;
+    }
+    .address {
+      font-size: 13px;
+      word-break: break-all;
+      color: $black2;
+      margin: 0;
+    }
+    .action-row {
+      align-self: flex-end;
+      text-align: right;
+      padding-top: 16px;
+      button {
+        margin: 0 4px;
+        height: 28px;
+        font-size: 12px;
+        line-height: 28px;
+      }
+    }
+  }
+}
