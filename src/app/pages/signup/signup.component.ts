@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material';
 import { KeyringService } from '../../services/keyring.service';
 import { GetAddressFromPublicKey } from '../../../helpers/utils';
 import { AccountService, SavedAccount } from 'src/app/services/account.service';
+import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 
 const coin = 'ZBC';
 
@@ -28,14 +29,6 @@ export class SignupComponent implements OnInit {
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
 
-  formSetPin: FormGroup;
-  pinForm = new FormControl('', [
-    Validators.required,
-    Validators.minLength(6),
-    Validators.maxLength(6),
-    Validators.pattern('^[0-9]*$'),
-  ]);
-
   submitted = false;
 
   constructor(
@@ -45,10 +38,6 @@ export class SignupComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
-    this.formSetPin = new FormGroup({
-      pin: this.pinForm,
-    });
-
     this.formTerms = new FormGroup({
       isWrittenDown: this.isWrittenDown,
       isAgree: this.isAgree,
@@ -99,25 +88,14 @@ export class SignupComponent implements OnInit {
   }
 
   openCreatePin() {
-    let pinDialog = this.dialog.open(this.pinDialog, {
+    let pinDialog = this.dialog.open(PinSetupDialogComponent, {
       width: '400px',
       disableClose: true,
     });
     pinDialog.afterClosed().subscribe(() => {
+      this.saveNewAccount();
       this.router.navigateByUrl('/dashboard');
     });
-  }
-
-  onSetPin() {
-    event.preventDefault();
-    this.submitted = true;
-
-    if (this.formSetPin.valid) {
-      localStorage.setItem('pin', CryptoJS.SHA256(this.pinForm.value));
-      this.saveNewAccount();
-
-      this.dialog.closeAll();
-    }
   }
 
   saveNewAccount() {

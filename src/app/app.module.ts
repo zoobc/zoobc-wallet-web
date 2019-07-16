@@ -58,6 +58,7 @@ import { EditcontactComponent } from './pages/list-contact/editcontact/editconta
 import { TransactionTableComponent } from './components/transaction-table/transaction-table.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
+import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
 
@@ -89,6 +90,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TransactionTableComponent,
     RestoreWalletComponent,
     NodeAdminComponent,
+    PinSetupDialogComponent,
     ContactUsComponent,
     AddNodeAdminComponent,
   ],
@@ -144,6 +146,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     AddAccountComponent,
     AddcontactComponent,
     EditcontactComponent,
+    PinSetupDialogComponent,
     AddNodeAdminComponent,
   ],
 })

@@ -1,27 +1,10 @@
 <div class="restore-wallet-container">
   <h2 class="mat-h2">Import Your Wallet</h2>
   <form [formGroup]="restoreForm" (submit)="onRestore()">
-    <mat-form-field class="passphrase-input">
+    <mat-form-field class="passphrase-input" appearance="outline">
       <textarea formControlName="passphrase" matInput placeholder="Put your passphrase here..." rows="9"></textarea>
       <mat-error *ngIf="passphraseField.hasError('required')">Passphrase is required</mat-error>
     </mat-form-field>
     <button mat-flat-button color="primary" type="submit">Import Wallet</button>
   </form>
 </div>
-
-<ng-template #pinDialog>
-  <h3 class="mat-h3" id="modal-basic-title"><b>{{ "Misc.SMP" | translate }}</b></h3>
-  <form [formGroup]="formSetPin" (submit)="onSetPin()">
-    <field-pins formControlName="pin"></field-pins>
-    <small class="form-text error-text">
-      <mat-error *ngIf="pinForm.hasError('pattern')">{{ "Warning.PinWarningNumber" | translate }}</mat-error>
-      <mat-error
-        *ngIf="submitted && (pinForm.hasError('required') || pinForm.hasError('minlength') || pinForm.hasError('maxlength'))">
-        {{ "Warning.PinWarningLength" | translate }}
-      </mat-error>
-    </small>
-    <div class="text-right">
-      <button mat-flat-button color="primary" type="submit" class="btn btn-primary">Set Pin</button>
-    </div>
-  </form>
-</ng-template>

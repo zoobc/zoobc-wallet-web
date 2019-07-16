@@ -8,11 +8,9 @@
 
   <ng-container *ngIf="hasAccount && !isLoggedIn">
     <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
-      <label>{{ "Login.EYP" | translate }}</label>
+      <mat-label>{{ "Login.EYP" | translate }}</mat-label><br>
       <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
-      <small class="form-text error-text">
-        <span *ngIf="pinForm.hasError('invalid')">{{"Warning.PinInvalid" | translate}}</span>
-      </small>
+      <mat-error *ngIf="pinForm.hasError('invalid')">{{"Warning.PinInvalid" | translate}}</mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
         <i matPrefix class="fas fa-check"></i>
         <span class="text">{{ "Login.BtnLogin" | translate }}</span>

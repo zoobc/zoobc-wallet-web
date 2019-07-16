@@ -1,0 +1,22 @@
+<div class="pin-setup-container">
+  <ng-container *ngIf="setPin">
+    <h3 class="mat-h3" id="modal-basic-title"><b>{{ "Misc.SMP" | translate }}</b></h3>
+    <form [formGroup]="formSetPin" (submit)="onSetPin()">
+      <field-pins formControlName="pin"></field-pins>
+      <div class="text-right">
+        <button mat-flat-button color="primary" type="submit" [disabled]="formSetPin.invalid">Set Pin</button>
+      </div>
+    </form>
+  </ng-container>
+  <ng-container *ngIf="confirmPin">
+    <h3 class="mat-h3" id="modal-basic-title"><b>Confirm Your Password</b></h3>
+    <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()">
+      <field-pins formControlName="pin" (change)="onResetPinValidation()"></field-pins>
+      <mat-error *ngIf="isPinMatched == false">Pin is not match</mat-error>
+      <div class="text-right">
+        <button mat-flat-button color="primary" type="button" (click)="onBack()">Back</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="formConfirmPin.invalid">Confirm Pin</button>
+      </div>
+    </form>
+  </ng-container>
+</div>

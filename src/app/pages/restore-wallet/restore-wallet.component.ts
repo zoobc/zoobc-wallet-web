@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import * as CryptoJS from 'crypto-js';
 import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { KeyringService } from 'src/app/services/keyring.service';
+import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 
 const coin = 'ZBC';
 
@@ -19,14 +19,6 @@ export class RestoreWalletComponent implements OnInit {
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
 
-  formSetPin: FormGroup;
-  pinForm = new FormControl('', [
-    Validators.required,
-    Validators.minLength(6),
-    Validators.maxLength(6),
-    Validators.pattern('^[0-9]*$'),
-  ]);
-
   constructor(
     private dialog: MatDialog,
     private router: Router,
@@ -36,32 +28,20 @@ export class RestoreWalletComponent implements OnInit {
     this.restoreForm = new FormGroup({
       passphrase: this.passphraseField,
     });
-
-    this.formSetPin = new FormGroup({
-      pin: this.pinForm,
-    });
   }
 
   ngOnInit() {}
 
   onRestore() {
     if (this.restoreForm.valid) {
-      let pinDialog = this.dialog.open(this.pinDialog, {
+      let pinDialog = this.dialog.open(PinSetupDialogComponent, {
         width: '400px',
         disableClose: true,
       });
       pinDialog.afterClosed().subscribe(() => {
+        this.saveNewAccount();
         this.router.navigateByUrl('/dashboard');
       });
-    }
-  }
-
-  onSetPin() {
-    if (this.formSetPin.valid) {
-      localStorage.setItem('pin', CryptoJS.SHA256(this.pinForm.value));
-      this.saveNewAccount();
-
-      this.dialog.closeAll();
     }
   }
 

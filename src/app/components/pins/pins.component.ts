@@ -59,9 +59,10 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
     // if user press backspace
     if (event.keyCode == 8) {
       const prevDigit = this.pinDigit.find((element, i) => i + 1 == index);
+
       if (prevDigit) {
-        prevDigit.nativeElement.children[0].children[0].children[0].children[0].children[0].focus();
-        prevDigit.nativeElement.children[0].children[0].children[0].children[0].children[0].value =
+        prevDigit.nativeElement.children[0].children[0].children[0].children[2].children[0].focus();
+        prevDigit.nativeElement.children[0].children[0].children[0].children[2].children[0].value =
           '';
       }
     }
@@ -72,8 +73,9 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
         // focus to next field
         if (key == index + 1) {
           const children =
-            el.nativeElement.children[0].children[0].children[0].children[0]
+            el.nativeElement.children[0].children[0].children[0].children[2]
               .children[0];
+
           children.focus();
         }
       });
@@ -83,7 +85,7 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
         // clear current field
         if (key == index) {
           const children =
-            el.nativeElement.children[0].children[0].children[0].children[0]
+            el.nativeElement.children[0].children[0].children[0].children[2]
               .children[0];
           children.value = '';
         }

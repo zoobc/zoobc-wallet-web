@@ -51,19 +51,3 @@
     </div>
   </form>
 </div>
-
-<ng-template #pinDialog>
-  <h3 class="mat-h3" id="modal-basic-title"><b>{{ "Misc.SMP" | translate }}</b></h3>
-  <form [formGroup]="formSetPin" (submit)="onSetPin()">
-    <field-pins formControlName="pin"></field-pins>
-    <small class="form-text error-text">
-      <span *ngIf="submitted && pinForm.hasError('pattern')">{{ "Warning.PinWarningNumber" | translate }}</span>
-      <span
-        *ngIf="submitted && (pinForm.hasError('required') || pinForm.hasError('minlength') || pinForm.hasError('maxlength'))">{{ "Warning.PinWarningLength" | translate }}
-      </span>
-    </small>
-    <div class="text-right">
-      <button mat-flat-button color="primary" type="submit" class="btn btn-primary">Set Pin</button>
-    </div>
-  </form>
-</ng-template>
