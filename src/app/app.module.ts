@@ -58,6 +58,7 @@ import { EditcontactComponent } from './pages/list-contact/editcontact/editconta
 import { TransactionTableComponent } from './components/transaction-table/transaction-table.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
+import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -87,6 +88,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     TransactionTableComponent,
     RestoreWalletComponent,
     NodeAdminComponent,
+    ContactUsComponent,
   ],
   imports: [
     BrowserModule,

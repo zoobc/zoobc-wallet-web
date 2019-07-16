@@ -72,6 +72,8 @@ export class SendmoneyComponent implements OnInit {
       });
 
       if (/*balance / 1e8 > */ this.amountForm.value + this.feeForm.value) {
+        // const recepients =
+        //   typeof this.recipientForm.value === 'object' ?  this.recipientForm.value.address : this.recipientForm.value;
         let dataForm = {
           recipient: this.recipientForm.value,
           amount: this.amountForm.value * 1e8,
@@ -80,7 +82,6 @@ export class SendmoneyComponent implements OnInit {
           senderPublicKey: childSeed.publicKey,
           timestamp: Math.trunc(Date.now() / 1000),
         };
-        console.log(dataForm);
 
         // template bytes
         let txBytes = transactionByte;
