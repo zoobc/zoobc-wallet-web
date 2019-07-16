@@ -59,6 +59,7 @@ import { TransactionTableComponent } from './components/transaction-table/transa
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
+import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -89,6 +90,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     RestoreWalletComponent,
     NodeAdminComponent,
     ContactUsComponent,
+    AddNodeAdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -142,6 +144,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     AddAccountComponent,
     AddcontactComponent,
     EditcontactComponent,
+    AddNodeAdminComponent,
   ],
 })
 export class AppModule {}

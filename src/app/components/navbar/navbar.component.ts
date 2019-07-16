@@ -6,6 +6,7 @@ import { LANGUAGES } from 'src/app/app.service';
 import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { MatDialog } from '@angular/material';
 import { AddAccountComponent } from 'src/app/pages/add-account/add-account.component';
+import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
 
 @Component({
   selector: 'app-navbar',
@@ -49,6 +50,12 @@ export class NavbarComponent implements OnInit {
 
   onOpenAddAccount() {
     this.dialog.open(AddAccountComponent, {
+      width: '360px',
+    });
+  }
+
+  onOpenAddNodeAdmin() {
+    this.dialog.open(AddNodeAdminComponent, {
       width: '360px',
     });
   }
