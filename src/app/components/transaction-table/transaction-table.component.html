@@ -2,28 +2,38 @@
   <loading-spinner *ngIf="isLoading"></loading-spinner>
   <mat-card style="padding: 0 16px" *ngIf="!isLoading">
     <div
-      class="transaction-item row"
-      *ngFor="let transaction of transactionData; let i = index"
+      class="data-unavailable"
+      *ngIf="!transactionData || transactionData.length <= 0"
     >
-      <div class="col-7 col-sm-8">
-        <div class="name" *ngIf="i % 2 == 0">Alias</div>
-        <div class="address">{{ transaction.senderpublickey }}</div>
-        <div class="date">
-          {{ transaction.timestamp | date: 'dd MMMM yyyy' }}
-        </div>
-      </div>
-      <div class="col-5 col-sm-4 text-right">
-        <div class="amount-send" *ngIf="i % 2 == 0">
-          - {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
-        </div>
-        <div class="amount-receive" *ngIf="i % 2 == 1">
-          + {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
-        </div>
-        <div class="fee" *ngIf="i % 2 == 0">
-          - {{ transaction.feenqt / 1e8 }}
-          <small>ZBC Fee</small>
-        </div>
-      </div>
+      <i matPrefix class="fa fa-receipt"></i>
+      <span class="message">{{ 'No Transaction Record' | translate }}</span>
     </div>
+
+    <ng-container *ngIf="transactionData && transactionData.length > 0">
+      <div
+        class="transaction-item row"
+        *ngFor="let transaction of transactionData; let i = index"
+      >
+        <div class="col-7 col-sm-8">
+          <div class="name" *ngIf="i % 2 == 0">Alias</div>
+          <div class="address">{{ transaction.senderpublickey }}</div>
+          <div class="date">
+            {{ transaction.timestamp | date: 'dd MMMM yyyy' }}
+          </div>
+        </div>
+        <div class="col-5 col-sm-4 text-right">
+          <div class="amount-send" *ngIf="i % 2 == 0">
+            - {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
+          </div>
+          <div class="amount-receive" *ngIf="i % 2 == 1">
+            + {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
+          </div>
+          <div class="fee" *ngIf="i % 2 == 0">
+            - {{ transaction.feenqt / 1e8 }}
+            <small>ZBC Fee</small>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </mat-card>
 </div>
