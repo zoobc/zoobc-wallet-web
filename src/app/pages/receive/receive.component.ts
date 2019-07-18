@@ -41,7 +41,7 @@ export class ReceiveComponent implements OnInit {
     this.snackBar.open('Copied to clipboard', null, { duration: 3000 });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onChangeAmount() {
     if (this.formRequest.valid) {

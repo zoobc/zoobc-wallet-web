@@ -13,6 +13,7 @@ import {
 import { transactionByte } from '../../../helpers/transactionByteTemplate';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService } from 'src/app/services/contact.service';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 const coin = 'ZBC';
@@ -24,6 +25,8 @@ const coin = 'ZBC';
 })
 export class SendmoneyComponent implements OnInit {
   contacts;
+  payTo;
+  amounts;
   keyword = 'alias';
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
@@ -34,6 +37,7 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
 
   constructor(
+    private activRoute: ActivatedRoute,
     private transactionServ: TransactionService,
     private accServ: AccountService,
     private keyringServ: KeyringService,
@@ -50,6 +54,8 @@ export class SendmoneyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.amounts = this.activRoute.snapshot.params['amount'];
+    this.payTo = this.activRoute.snapshot.params['payto'];
     this.contacts = this.contactServ.getContactList();
   }
 

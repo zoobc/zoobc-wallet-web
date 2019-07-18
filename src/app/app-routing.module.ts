@@ -30,6 +30,7 @@ const routes: Routes = [
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
+      { path: 'request/:payto/:amount', component: SendmoneyComponent },
     ],
   },
   {
@@ -48,4 +49,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

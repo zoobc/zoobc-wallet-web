@@ -10,8 +10,8 @@
 
       <label>{{ 'Recepient address' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="State"
-          [matAutocomplete]="auto" formControlName="recipient">
+        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="State" [matAutocomplete]="auto"
+          formControlName="recipient" [(ngModel)]="payTo">
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">{{"Recepient is required" | translate}}</span>
         </mat-error>
@@ -25,7 +25,8 @@
 
       <label>{{ 'Coin amount' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}" />
+        <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}"
+          [(ngModel)]="amounts" />
         <mat-error *ngIf="amountForm.touched">
           <span *ngIf="amountForm.hasError('required')">{{"Amount is required" | translate}}</span>
         </mat-error>
