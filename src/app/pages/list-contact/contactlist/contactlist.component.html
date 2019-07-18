@@ -1,13 +1,8 @@
 <div class="contacts-container">
-  <h2 class="mat-h2">{{ 'Misc.ContactList' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'Contact List' | translate }}</h2>
   <div class="text-right" style="margin-bottom: 8px">
-    <button
-      mat-flat-button
-      color="primary"
-      type="button"
-      (click)="onOpenAddContact()"
-    >
-      <i matPrefix class="fa fa-plus"></i> {{ 'Misc.AddNew' | translate }}
+    <button mat-flat-button color="primary" type="button" (click)="onOpenAddContact()">
+      <i matPrefix class="fa fa-plus"></i> {{ 'Add New' | translate }}
     </button>
   </div>
 
@@ -24,15 +19,11 @@
           <p class="address">{{ contact.address }}</p>
         </div>
         <div class="col-12 col-sm-4 action-row">
-          <button
-            mat-flat-button
-            color="primary"
-            (click)="onOpenEditContact(contact)"
-          >
-            {{ 'Misc.Edit' | translate }}
+          <button mat-flat-button color="primary" (click)="onOpenEditContact(contact)">
+            {{ 'Edit' | translate }}
           </button>
           <button mat-flat-button color="warn" (click)="deleteContact(contact)">
-            {{ 'Misc.Delete' | translate }}
+            {{ 'Delete' | translate }}
           </button>
         </div>
       </div>

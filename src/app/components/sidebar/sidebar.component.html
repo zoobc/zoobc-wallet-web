@@ -3,25 +3,28 @@
     <li [ngClass]="menu == 'dashboard' && 'active'">
       <a routerLink="/dashboard">
         <i class="fa fa-home"></i>
-        <span>Dashboard</span>
+        <span>{{"Dashboard" | translate}}</span>
       </a>
     </li>
-    <li [ngClass]="menu == 'nodeadmin' && 'active'">
-      <a routerLink="/nodeadmin">
-        <i class="fa fa-desktop"></i>
-        <span>Node Admin</span>
-      </a>
-    </li>
+    <ng-template [ngIf]="nodeAdminAttributes">
+      <li [ngClass]="menu == 'nodeadmin' && 'active'">
+        <a routerLink="/nodeadmin">
+          <i class="fa fa-desktop"></i>
+          <span>{{"Node Admin" | translate}}</span>
+        </a>
+      </li>
+    </ng-template>
+
     <li [ngClass]="menu == 'transferhistory' && 'active'">
       <a routerLink="/transferhistory">
         <i class="fa fa-receipt"></i>
-        <span>History</span>
+        <span>{{"History" | translate}}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'sendmoney' && 'active'">
       <a routerLink="/sendmoney">
         <i class="fa fa-paper-plane"></i>
-        <span>Send</span>
+        <span>{{"Send" | translate}}</span>
       </a>
     </li>
     <!-- <li [ngClass]="menu == 'receive' && 'active'">
@@ -33,13 +36,13 @@
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list">
         <i class="fa fa-address-book"></i>
-        <span>Contacts</span>
+        <span>{{"Contacts" | translate}}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'feedback' && 'active'">
       <a routerLink="/feedback">
         <i class="fa fa-comment"></i>
-        <span>Feedback</span>
+        <span>{{"Feedback" | translate}}</span>
       </a>
     </li>
   </ul>

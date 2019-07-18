@@ -1,15 +1,15 @@
 <div class="addcontact-container">
-  <h2 class="mat-h2">{{ 'Misc.NewContact' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'New Contact' | translate }}</h2>
   <form [formGroup]="addForm" (submit)="onSubmit()">
     <mat-form-field appearance="outline">
-      <input matInput type="text" formControlName="alias" placeholder="Alias" />
-      <mat-error *ngIf="aliasField.hasError('required')">Alias is required</mat-error>
+      <input matInput type="text" formControlName="alias" placeholder="{{'Alias' | translate}}" />
+      <mat-error *ngIf="aliasField.hasError('required')">{{"Alias is required" | translate}}</mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <input matInput type="text" formControlName="address" placeholder="Address" />
-      <mat-error *ngIf="addressField.hasError('required')">Address is required</mat-error>
+      <input matInput type="text" formControlName="address" placeholder="{{'Address' | translate}}" />
+      <mat-error *ngIf="addressField.hasError('required')">{{"Address is required" | translate}}</mat-error>
     </mat-form-field>
 
-    <button mat-flat-button color="primary" type="submit">{{ 'Button.Save' | translate }}</button>
+    <button mat-flat-button color="primary" type="submit">{{ 'Save' | translate }}</button>
   </form>
 </div>

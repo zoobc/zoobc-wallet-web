@@ -14,6 +14,7 @@ import { transactionByte } from '../../../helpers/transactionByteTemplate';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService } from 'src/app/services/contact.service';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 const coin = 'ZBC';
 
@@ -40,7 +41,8 @@ export class SendmoneyComponent implements OnInit {
     private transactionServ: TransactionService,
     private accServ: AccountService,
     private keyringServ: KeyringService,
-    private contactServ: ContactService
+    private contactServ: ContactService,
+    private translate: TranslateService
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -112,8 +114,12 @@ export class SendmoneyComponent implements OnInit {
         txBytes.set(signature, 123);
         console.log('signedTxBytes:', txBytes);
 
+        let sendMoneySentence: string;
+        this.translate
+          .get('Are you sure want to send money?')
+          .subscribe(res => (sendMoneySentence = res));
         Swal.fire({
-          title: `Are you sure want to send money?`,
+          title: sendMoneySentence,
           showCancelButton: true,
           showLoaderOnConfirm: true,
           preConfirm: () => {
@@ -121,7 +127,11 @@ export class SendmoneyComponent implements OnInit {
             return this.transactionServ
               .postTransaction(txBytes)
               .then((res: any) => {
-                if (res.isvalid) Swal.fire('Money sent');
+                let sentSentence: string;
+                this.translate
+                  .get('Money sent')
+                  .subscribe(res => (sentSentence = res));
+                if (res.isvalid) Swal.fire(sentSentence);
                 else Swal.fire({ html: res.message, type: 'error' });
 
                 this.isFormSendLoading = false;
@@ -141,7 +151,11 @@ export class SendmoneyComponent implements OnInit {
           },
         });
       } else {
-        Swal.fire({ html: 'Balance is not enough', type: 'error' });
+        let balanceNotEnoughSentence: string;
+        this.translate
+          .get('Balance is not enough')
+          .subscribe(res => (balanceNotEnoughSentence = res));
+        Swal.fire({ html: balanceNotEnoughSentence, type: 'error' });
         this.isFormSendLoading = false;
       }
     }

@@ -6,3 +6,7 @@
 	path = externals/bip39
 	url = https://github.com/iancoleman/bip39.git
 	branch = master
+[submodule "src/assets/languages"]
+	path = src/assets/languages
+	url = https://github.com/zoobc/zoobc-language-files
+	branch = master
