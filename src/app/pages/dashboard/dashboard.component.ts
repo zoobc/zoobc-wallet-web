@@ -13,6 +13,7 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ReceiveComponent } from '../receive/receive.component';
+import { SendmoneyComponent } from '../sendmoney/sendmoney.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -113,6 +114,11 @@ export class DashboardComponent implements OnInit {
 
   openReceiveForm() {
     this.dialog.open(ReceiveComponent, {
+      width: '480px',
+    });
+  }
+  openSendForm() {
+    this.dialog.open(SendmoneyComponent, {
       width: '480px',
     });
   }
