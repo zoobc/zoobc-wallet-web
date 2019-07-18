@@ -4,6 +4,7 @@ import { AddcontactComponent } from '../addcontact/addcontact.component';
 import { EditcontactComponent } from '../editcontact/editcontact.component';
 import Swal from 'sweetalert2';
 import { ContactService } from 'src/app/services/contact.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contactlist',
@@ -13,15 +14,17 @@ import { ContactService } from 'src/app/services/contact.service';
 export class ContactlistComponent implements OnInit {
   contacts;
 
-  constructor(private contactServ: ContactService, private dialog: MatDialog) {}
+  constructor(private contactServ: ContactService, private dialog: MatDialog, private translate: TranslateService) { }
 
   ngOnInit() {
     this.contacts = this.contactServ.getContactList();
   }
 
   deleteContact(contact) {
+    let sentence: string
+    this.translate.get('Are you sure want to delete?', { alias: contact.alias }).subscribe(res => sentence = res)
     Swal.fire({
-      title: `Are you sure want to delete '${contact.alias}'?`,
+      title: sentence,
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {

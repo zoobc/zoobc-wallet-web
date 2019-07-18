@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-node-admin',
@@ -16,20 +17,28 @@ export class AddNodeAdminComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<AddNodeAdminComponent>,
     private nodeAdminServ: NodeAdminService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.formAddNodeAdmin = new FormGroup({
       ipAddress: this.ipAddressField,
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
   onAddNodeAdmin() {
     if (this.formAddNodeAdmin.valid) {
+      let nodeAdded: string;
+      this.translate
+        .get('Node Admin Added!')
+        .subscribe(res => (nodeAdded = res));
+      let nodeAddedMessage: string;
+      this.translate
+        .get('Your Node Already Added with IP Address')
+        .subscribe(res => (nodeAddedMessage = res));
       Swal.fire(
-        'Node Admin Added!',
-        'Your Node Already Added with IP Address : ' +
-        `${this.ipAddressField.value}`,
+        nodeAdded,
+        `${nodeAddedMessage} : ${this.ipAddressField.value}`,
         'success'
       );
       const attribute = this.formAddNodeAdmin.value;

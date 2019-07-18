@@ -6,77 +6,48 @@
     </a>
     <div class="menu">
       <!-- language menu -->
-      <button
-        mat-button
-        class="language-dropdown"
-        [matMenuTriggerFor]="language"
-      >
+      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
         <span>{{ activeLanguage }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
       <mat-menu #language="matMenu">
-        <button
-          *ngFor="let language of languages"
-          (click)="selectActiveLanguage(language.code)"
-          mat-menu-item
-        >
+        <button *ngFor="let language of languages" (click)="selectActiveLanguage(language.code)" mat-menu-item>
           {{ language.country }}
         </button>
       </mat-menu>
 
       <!-- account menu -->
-      <button
-        mat-icon-button
-        class="account-dropdown"
-        [matMenuTriggerFor]="account"
-        *ngIf="accounts.length > 0"
-      >
+      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="accounts.length > 0">
         <i class="fa fa-user-circle"></i>
       </button>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
-          <button
-            *ngFor="let acc of accounts"
-            (click)="onSwitchAccount(acc)"
-            mat-menu-item
-          >
-            <i
-              class="fas fa-user"
-              *ngIf="acc.path != undefined && acc.path != currAcc.path"
-            ></i>
-            <i
-              class="fas fa-check"
-              *ngIf="acc.path != undefined && acc.path == currAcc.path"
-            ></i>
-            <i
-              class="fas fa-user"
-              *ngIf="acc.secret && acc.secret != currAcc.secret"
-            ></i>
-            <i
-              class="fas fa-check"
-              *ngIf="acc.secret && acc.secret == currAcc.secret"
-            ></i>
+          <button *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)" mat-menu-item>
+            <i class="fas fa-user" *ngIf="acc.path != undefined && acc.path != currAcc.path"></i>
+            <i class="fas fa-check" *ngIf="acc.path != undefined && acc.path == currAcc.path"></i>
+            <i class="fas fa-user" *ngIf="acc.secret && acc.secret != currAcc.secret"></i>
+            <i class="fas fa-check" *ngIf="acc.secret && acc.secret == currAcc.secret"></i>
             <span>{{ acc.name }} </span>
             <span *ngIf="acc.imported">(Imported)</span>
           </button>
           <button mat-menu-item (click)="onOpenAddAccount()">
             <i class="fas fa-plus"></i>
-            <span>Add New Account</span>
+            <span>{{"Add New Account" | translate}}</span>
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="onOpenAddNodeAdmin()">
             <i class="fas fa-plus"></i>
-            <span>Add Node Admin</span>
+            <span>{{"Add Node Admin" | translate}}</span>
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item>
             <i class="fas fa-user"></i>
-            {{ 'Account.Profile' | translate }}
+            {{ 'Profile' | translate }}
           </button>
           <mat-divider></mat-divider>
           <button data-toggle="modal" data-target="#logoutModal" mat-menu-item>
             <i class="fas fa-sign-out-alt"></i>
-            {{ 'Account.Logout' | translate }}
+            {{ 'Logout' | translate }}
           </button>
         </div>
       </mat-menu>
@@ -97,7 +68,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">
-          {{ 'Misc.ReadyLeave' | translate }}
+          {{ 'Are you sure you want to leave the page?' | translate }}
         </h5>
         <button
           class="close"
@@ -110,15 +81,16 @@
       </div>
       <div
         class="modal-body"
-        [innerHTML]="'Account.DescLogout' | translate"
+        [innerHTML]="
+          'Choose <b>logout</b> button on below, to continue logout from this spinechain wallet.'
+            | translate
+        "
       ></div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-dismiss="modal">
-          {{ 'Button.Cancel' | translate }}
+          {{ 'Cancel' | translate }}
         </button>
-        <a class="btn btn-primary" href="/login">{{
-          'Account.Logout' | translate
-        }}</a>
+        <a class="btn btn-primary" href="/login">{{ 'Logout' | translate }}</a>
       </div>
     </div>
   </div>

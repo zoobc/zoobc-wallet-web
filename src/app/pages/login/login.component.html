@@ -2,18 +2,18 @@
   <img src="/assets/img/zbc-black.png" alt="">
   <h2 class="mat-h2"><b>ZooBC</b> Wallet</h2>
   <ng-container *ngIf="!hasAccount">
-    <a routerLink="/signup" mat-flat-button color="primary">Create New Wallet</a>
-    <a routerLink="/restore" mat-flat-button color="primary">Import Wallet</a>
+    <a routerLink="/signup" mat-flat-button color="primary">{{"Create New Wallet" | translate}}</a>
+    <a routerLink="/restore" mat-flat-button color="primary">{{"Import Wallet" | translate}}</a>
   </ng-container>
 
   <ng-container *ngIf="hasAccount && !isLoggedIn">
     <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
-      <mat-label>{{ "Login.EYP" | translate }}</mat-label><br>
+      <mat-label>{{ "Please Enter Your Pin" | translate }}</mat-label><br>
       <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
-      <mat-error *ngIf="pinForm.hasError('invalid')">{{"Warning.PinInvalid" | translate}}</mat-error>
+      <mat-error *ngIf="pinForm.hasError('invalid')">{{"Pin invalid" | translate}}</mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
         <i matPrefix class="fas fa-check"></i>
-        <span class="text">{{ "Login.BtnLogin" | translate }}</span>
+        <span class="text">{{ "Login" | translate }}</span>
       </button>
     </form>
   </ng-container>

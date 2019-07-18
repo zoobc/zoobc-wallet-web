@@ -1,36 +1,38 @@
 <div class="feedback-container">
-  <h2 class="mat-h2">Feedback</h2>
+  <h2 class="mat-h2">{{"Feedback" | translate}}</h2>
   <mat-card>
     <form [formGroup]="contactForm" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
       <!-- Email -->
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
-        <mat-error *ngIf="emailField.hasError('required')">Email is required</mat-error>
-        <mat-error *ngIf="emailField.hasError('email')">Incorrect email format</mat-error>
+        <mat-error *ngIf="emailField.hasError('required')">{{"Email is required" | translate}}</mat-error>
+        <mat-error *ngIf="emailField.hasError('email')">{{"Incorrect email format" | translate}}</mat-error>
       </mat-form-field>
       <!-- Subject -->
       <mat-form-field appearance="outline">
-        <mat-label>Subject</mat-label>
+        <mat-label>{{"Subject" | translate}}</mat-label>
         <input matInput type="text" formControlName="subject" />
-        <mat-error *ngIf="subjectField.hasError('required')">Subject is required</mat-error>
+        <mat-error *ngIf="subjectField.hasError('required')">{{"Subject is required" | translate}}</mat-error>
       </mat-form-field>
       <!-- Message -->
       <mat-form-field appearance="outline">
-        <mat-label>Message</mat-label>
+        <mat-label>{{"Message" | translate}}</mat-label>
         <textarea matInput formControlName="message" rows="5"></textarea>
-        <mat-error *ngIf="messageField.hasError('required')">Message is required</mat-error>
+        <mat-error *ngIf="messageField.hasError('required')">{{"Message is required" | translate}}</mat-error>
       </mat-form-field>
       <!--File Upload-->
       <div>
         <input formControlName="file" #fileInput type="file" (change)="onFileChange($event)" style="display: none" />
-        <button mat-flat-button color="primary" type="button" (click)="openFile()">Browse</button>
+        <button mat-flat-button color="primary" type="button"
+          (click)="openFile()">{{"Upload image" | translate}}</button>
         <span class="mat-body-1">{{filename}}</span>
       </div>
       <!-- Copy -->
       <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0">Send me a copy of this message</mat-checkbox>
       <!-- Send button -->
-      <button mat-flat-button color="primary" type="submit" [disabled]="contactForm.invalid">Send</button>
+      <button mat-flat-button color="primary" type="submit"
+        [disabled]="contactForm.invalid">{{"Send" | translate}}</button>
     </form>
   </mat-card>
 </div>

@@ -1,47 +1,24 @@
 <div class="receive-container">
-  <h2 class="mat-h2 text-center">My ZooBC Address</h2>
-  <p
-    class="address-text"
-    (click)="copyAddress()"
-    matTooltip="Copy to clipboard"
-  >
-    {{ address }}
-  </p>
+  <h2 class="mat-h2 text-center">{{"Your ZooBC Address" | translate}}</h2>
+  <p class="address-text" (click)="copyAddress()" matTooltip="Copy to clipboard">{{ address }}</p>
 
   <div class="qrcode-container">
     <ng-container *ngIf="formRequest.valid">
-      <ngx-qrcode
-        qrc-element-type="canvas"
-        [qrc-value]="urlReqCoin"
-      ></ngx-qrcode>
-      <div class="url" (click)="onCopyText()" matTooltip="Copy to clipboard">
-        {{ urlReqCoin }}
-      </div>
-      <div class="instruction">
-        Scan this qr code to send money to this address
-      </div>
+      <ngx-qrcode qrc-element-type="canvas" [qrc-value]="urlReqCoin"></ngx-qrcode>
+      <div class="url" (click)="onCopyText()" matTooltip="Copy to clipboard">{{urlReqCoin}}</div>
+      <div class="instruction">{{"Scan this QR code to send money to this address" | translate}}</div>
     </ng-container>
     <div class="qrcode-icon" *ngIf="!formRequest.valid">
       <i class="fa fa-qrcode"></i>
-      <div class="mat-body-1">QR Code will Appear Here</div>
+      <div class="mat-body-1">{{"QR Code will Appear Here" | translate}}</div>
     </div>
   </div>
 
   <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
     <mat-form-field appearance="outline">
-      <input
-        matInput
-        type="text"
-        placeholder="Coin amount..."
-        formControlName="amount"
-        (keyup)="onChangeAmount()"
-        (change)="onChangeAmount($event)"
-        type="number"
-        min="0"
-      />
-      <mat-error *ngIf="amountField.hasError('required')"
-        >Amount is required</mat-error
-      >
+      <input matInput type="text" placeholder="{{'Coin amount' | translate}}..." formControlName="amount"
+        (keyup)="onChangeAmount()" type="number">
+      <mat-error *ngIf="amountField.hasError('required')">{{"Amount is required" | translate}}</mat-error>
     </mat-form-field>
   </form>
 </div>

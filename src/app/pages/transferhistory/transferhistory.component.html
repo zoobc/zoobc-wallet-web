@@ -1,11 +1,9 @@
 <div>
-  <h2 class="mat-h2">
-    {{ 'Transaction.Title' | translate }}
-  </h2>
+  <h2 class="mat-h2">{{ 'Latest transactions' | translate }}</h2>
   <div>
-    <app-transaction-table
-      [isLoading]="showSpinner"
-      [transactionData]="accountHistory"
-    ></app-transaction-table>
+    <div *ngIf="accountHistory.length > 0">
+      <loading-spinner *ngIf="showSpinner"></loading-spinner>
+      <app-transaction-table [isLoading]="showSpinner" [transactionData]="accountHistory"></app-transaction-table>
+    </div>
   </div>
 </div>

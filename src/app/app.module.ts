@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { sign as naclSign } from 'tweetnacl';
@@ -33,6 +33,7 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LanguageService } from './services/language.service';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SendmoneyComponent } from './pages/sendmoney/sendmoney.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -64,7 +65,15 @@ import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.com
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient);
+  return new TranslateHttpLoader(
+    httpClient,
+    './assets/languages/locales/',
+    '.json'
+  );
+}
+
+export function getLanguage(languageServ: LanguageService) {
+  return languageServ.selected
 }
 
 @NgModule({
@@ -139,6 +148,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   ],
   bootstrap: [AppComponent],
   providers: [
+    {
+      provide: LOCALE_ID,
+      deps: [LanguageService],
+      useFactory: getLanguage
+    },
     { provide: 'global', useFactory: () => window },
     { provide: 'nacl.sign', useFactory: () => naclSign },
   ],
@@ -150,4 +164,4 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     AddNodeAdminComponent,
   ],
 })
-export class AppModule {}
+export class AppModule { }

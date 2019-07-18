@@ -1,10 +1,11 @@
 <div class="restore-wallet-container">
-  <h2 class="mat-h2">Import Your Wallet</h2>
+  <h2 class="mat-h2">{{"Import Your Wallet" | translate}}</h2>
   <form [formGroup]="restoreForm" (submit)="onRestore()">
     <mat-form-field class="passphrase-input" appearance="outline">
-      <textarea formControlName="passphrase" matInput placeholder="Put your passphrase here..." rows="9"></textarea>
-      <mat-error *ngIf="passphraseField.hasError('required')">Passphrase is required</mat-error>
+      <textarea formControlName="passphrase" matInput placeholder="{{'Put your passphrase here' | translate}}..."
+        rows="9"></textarea>
+      <mat-error *ngIf="passphraseField.hasError('required')">{{"Passphrase is required" | translate}}</mat-error>
     </mat-form-field>
-    <button mat-flat-button color="primary" type="submit">Import Wallet</button>
+    <button mat-flat-button color="primary" type="submit">{{"Import Wallet" | translate}}</button>
   </form>
 </div>
