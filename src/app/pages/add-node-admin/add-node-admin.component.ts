@@ -23,17 +23,17 @@ export class AddNodeAdminComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
   onAddNodeAdmin() {
     if (this.formAddNodeAdmin.valid) {
       Swal.fire(
         'Node Admin Added!',
         'Your Node Already Added with IP Address : ' +
-          `${this.ipAddressField.value}`,
+        `${this.ipAddressField.value}`,
         'success'
       );
-      const newNodeAdmin = this.formAddNodeAdmin.value;
-      this.nodeAdminServ.addNodeAdmin(newNodeAdmin);
+      const attribute = this.formAddNodeAdmin.value;
+      this.nodeAdminServ.addNodeAdmin(attribute);
       this.dialogRef.close();
       this.router.navigateByUrl('/nodeadmin');
     }
