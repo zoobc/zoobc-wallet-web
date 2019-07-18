@@ -117,9 +117,4 @@ export class DashboardComponent implements OnInit {
       width: '480px',
     });
   }
-  openSendForm() {
-    this.dialog.open(SendmoneyComponent, {
-      width: '480px',
-    });
-  }
 }
