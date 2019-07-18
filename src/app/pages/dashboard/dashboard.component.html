@@ -90,12 +90,10 @@
         <img matPrefix src="/assets/img/zbc-white.png" width="18">
         <span>deposit</span>
       </button>
-      <a routerLink="/sendmoney">
-        <button mat-flat-button>
-          <i matPrefix class="fa fa-paper-plane"></i>
-          <span>send</span>
-        </button>
-      </a>
+      <button mat-flat-button routerLink="/sendmoney">
+        <i matPrefix class="fa fa-paper-plane"></i>
+        <span>{{"Send" | translate}}</span>
+      </button>
       <button mat-flat-button (click)="openReceiveForm()">
         <i matPrefix class="fa fa-hand-holding-usd"></i>
         <span>{{"Receive" | translate}}</span>

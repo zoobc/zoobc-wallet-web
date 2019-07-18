@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 import { TransactionService } from '../../services/transaction.service';
-import { AppService } from '../../app.service';
 import { AccountService, SavedAccount } from '../../services/account.service';
 import {
   bigintToByteArray,
@@ -25,8 +24,6 @@ const coin = 'ZBC';
 })
 export class SendmoneyComponent implements OnInit {
   contacts;
-  payTo;
-  amounts;
   keyword = 'alias';
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
@@ -54,8 +51,11 @@ export class SendmoneyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.amounts = this.activRoute.snapshot.params['amount'];
-    this.payTo = this.activRoute.snapshot.params['payto'];
+    this.formSend.patchValue({
+      recipient: this.activRoute.snapshot.params['recipient'] || '',
+      amount: this.activRoute.snapshot.params['amount'] || '',
+    });
+
     this.contacts = this.contactServ.getContactList();
   }
 

@@ -14,7 +14,8 @@ export class AppService implements CanActivate {
 
   canActivate(): boolean {
     if (this.accServ.currPublicKey) return true;
-    this.router.navigateByUrl('/login');
+
+    this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
     return false;
   }
 }

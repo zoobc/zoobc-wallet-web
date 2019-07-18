@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 
 import { AppService } from '../../app.service';
@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private appServ: AppService,
     private accServ: AccountService
   ) {
@@ -67,7 +68,11 @@ export class LoginComponent implements OnInit {
       if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
         let account = this.accServ.getCurrAccount();
         this.accServ.changeCurrentAccount(account);
-        this.router.navigateByUrl('/dashboard');
+
+        this.route.queryParams.subscribe(params => {
+          const redirect = params.redirect || '/dashboard';
+          this.router.navigateByUrl(redirect);
+        });
       } else {
         this.pinForm.setErrors({ invalid: true });
       }
