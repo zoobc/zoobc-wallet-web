@@ -1,17 +1,4 @@
-import * as sha256 from 'sha256';
-import { eddsa as EdDSA } from 'elliptic';
-
-import { toBase64Url, stringToByteArray } from '../helpers/converters';
-
-export function VerifySignature(key, signature, data) {
-  const result = key.verify(data, signature);
-  return result;
-}
-
-export function GetSignature(key, data): any {
-  const signature = key.sign(data);
-  return signature;
-}
+import { toBase64Url } from '../helpers/converters';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
@@ -26,30 +13,8 @@ export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
     binary += String.fromCharCode(bytes[i]);
   }
   const address = toBase64Url(window.btoa(binary));
-  // console.log(address);
 
   return address;
-}
-
-// GetSeedFromPhrase(phrase: string) {
-//   const seedHash = new SHA3(256);
-//   seedHash.update(phrase);
-//   return seedHash.digest();
-// }
-
-export function GetSeedFromPhrase(phrase: string) {
-  const seed = sha256(stringToByteArray(phrase), { asBytes: true });
-  return seed;
-}
-
-export function GetKeyPairFromSeed(seed: ArrayLike<number>): any {
-  const ec = new EdDSA('ed25519');
-  const keyPair = ec.keyFromSecret(seed);
-  return keyPair;
-}
-
-export function GetPublicKeyFromSeed(seed: ArrayLike<number>): any {
-  return GetKeyPairFromSeed(seed).getPublic();
 }
 
 export function GetChecksumByte(bytes): any {

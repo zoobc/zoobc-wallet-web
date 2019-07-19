@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { sign as naclSign } from 'tweetnacl';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -73,7 +72,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 }
 
 export function getLanguage(languageServ: LanguageService) {
-  return languageServ.selected
+  return languageServ.selected;
 }
 
 @NgModule({
@@ -110,7 +109,6 @@ export function getLanguage(languageServ: LanguageService) {
     HttpClientModule,
     NgxPaginationModule,
     AppRoutingModule,
-    NgbModule.forRoot(),
     ReactiveFormsModule,
     FormsModule,
     TranslateModule.forRoot({
@@ -151,7 +149,7 @@ export function getLanguage(languageServ: LanguageService) {
     {
       provide: LOCALE_ID,
       deps: [LanguageService],
-      useFactory: getLanguage
+      useFactory: getLanguage,
     },
     { provide: 'global', useFactory: () => window },
     { provide: 'nacl.sign', useFactory: () => naclSign },
@@ -164,4 +162,4 @@ export function getLanguage(languageServ: LanguageService) {
     AddNodeAdminComponent,
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 
 import { MnemonicsService } from './mnemonics.service';
 // import { APP_CONFIG, AppConfig } from "../app-config.module";
-import * as base58 from 'bs58';
 
 import {
   BIP32Interface,
@@ -14,7 +13,6 @@ import {
 } from '../../helpers/childkeys';
 
 import { findCoin } from '../../helpers/coins';
-import { byteArrayToHex, hexToByteArray } from 'src/helpers/converters';
 
 const NOT_IMPLEMENTED = 'Not Implemented';
 

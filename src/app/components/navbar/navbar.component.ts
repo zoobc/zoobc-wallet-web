@@ -17,8 +17,8 @@ export class NavbarComponent implements OnInit {
   @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
   @Input() isActive: string;
 
-  private languages = [];
-  private activeLanguage = 'en';
+  languages = [];
+  activeLanguage = 'en';
 
   accounts: [SavedAccount];
   currAcc: SavedAccount;

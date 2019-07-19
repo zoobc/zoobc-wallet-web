@@ -35,8 +35,6 @@ export function base64ToByteArray(base64Str: string) : Uint8Array {
 }
 
 export function byteArrayToBase64(bytes: ArrayBuffer | ArrayBufferView | Array<number>) : string {
-  // const byteArray = bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : ArrayBuffer.isView(bytes) ? new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength) : Uint8Array.from(bytes);
-  // return btoa([].reduce.call(byteArray, (acc, byte) => acc + String.fromCharCode(byte), ''));
   const buf = bytes instanceof ArrayBuffer ? Buffer.from(bytes) : ArrayBuffer.isView(bytes) ? Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength) : Buffer.from(bytes);
   return buf.toString('base64');
 }
@@ -70,7 +68,6 @@ export function publicKeyToAddress(hexOrBytes: string | ArrayBuffer | ArrayBuffe
 
 export function addressToPublicKey(address: string) : Uint8Array {
   const addressBytes = base64ToByteArray(fromBase64Url(address));
-  // return addressBytes.subarray(0, addressBytes.length - 1);
   return new Uint8Array(addressBytes.buffer, addressBytes.byteOffset, addressBytes.byteLength - 1);
 }
 
