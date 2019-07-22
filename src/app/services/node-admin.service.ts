@@ -29,4 +29,12 @@ export class NodeAdminService {
     this.sourceCurrencyNodeAdminAttribue.next(attribute);
     localStorage.setItem('Node_Admin', JSON.stringify(attribute));
   }
+  updateIPAddress(oldIPAddress, newIPAddress) {
+    let nodeAdminIP = JSON.parse(localStorage.getItem('Node_Admin'));
+    if (nodeAdminIP.ipAddress == oldIPAddress.ipAddress) {
+      nodeAdminIP = newIPAddress;
+    }
+    this.sourceCurrencyNodeAdminAttribue.next(nodeAdminIP);
+    localStorage.setItem('Node_Admin', JSON.stringify(nodeAdminIP));
+  }
 }

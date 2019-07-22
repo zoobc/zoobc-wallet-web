@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NodeAdminAttribute, NodeAdminService } from 'src/app/services/node-admin.service';
+import {
+  NodeAdminAttribute,
+  NodeAdminService,
+} from 'src/app/services/node-admin.service';
+import { MatDialog } from '@angular/material';
+import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
 
 @Component({
   selector: 'app-node-admin',
@@ -7,20 +12,37 @@ import { NodeAdminAttribute, NodeAdminService } from 'src/app/services/node-admi
   styleUrls: ['./node-admin.component.scss'],
 })
 export class NodeAdminComponent implements OnInit {
+  nodeAdminIPAddress;
   public doughnutChartData = [70, 30];
   public doughnutChartType = 'doughnut';
   nodeAdminAttribute: NodeAdminAttribute = {
-    ipAddress: ''
+    ipAddress: '',
   };
   nodeAdminAttributes: NodeAdminAttribute;
 
-
-  constructor(private nodeAdminServ: NodeAdminService
+  constructor(
+    private nodeAdminServ: NodeAdminService,
+    private dialog: MatDialog
   ) {
-    this.nodeAdminServ.nodeAdminAttribute.subscribe((attribute: NodeAdminAttribute) => {
-      this.nodeAdminAttributes = attribute;
-    });
+    this.nodeAdminServ.nodeAdminAttribute.subscribe(
+      (attribute: NodeAdminAttribute) => {
+        this.nodeAdminAttributes = attribute;
+      }
+    );
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.nodeAdminIPAddress = this.nodeAdminServ.getNodeAdminList();
+  }
+  onOpenChangeIPAddress(nodeAdminAttributes) {
+    const dialog = this.dialog.open(ChangeIpAddressComponent, {
+      width: '460px',
+      data: nodeAdminAttributes,
+    });
+
+    dialog.afterClosed().subscribe(nodeAdminAttributes => {
+      if (nodeAdminAttributes) this.nodeAdminIPAddress = nodeAdminAttributes;
+    });
+    console.log(nodeAdminAttributes);
+  }
 }
