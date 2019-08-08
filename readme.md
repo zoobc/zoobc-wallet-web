@@ -5,7 +5,7 @@ Web wallet for spinechain of Blockchainzoo.com. This project was generated with 
 ## Installation
 
 - npm install -g @angular/cli
-- git clone https://github.com/BlockchainZoo/spinechain-wallet-web-prototype.git
+- git clone https://github.com/zoobc/zoobc-wallet-web.git
 - cd spinechain-wallet-web-prototype
 - npm install
 - ng serve
