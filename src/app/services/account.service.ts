@@ -71,58 +71,67 @@ export class AccountService {
 
   generateDerivationPath(): number {
     const accounts: [SavedAccount] =
-      JSON.parse(localStorage.getItem('accounts')) || [];
+      JSON.parse(localStorage.getItem('ACCOUNT')) || [];
 
     // find length of not imported account. the result is the new derivation path
     return accounts.length;
   }
 
-  changeCurrentAccount(account: SavedAccount) {
-    const pin = localStorage.getItem('pin');
+  login(account: SavedAccount, key: string) {
+    let seed: string;
+    let publicKey: Uint8Array;
+    let address: string;
 
-    if (pin) {
-      let seed: string;
-      let publicKey: Uint8Array;
-      let address: string;
+    // get master seed to create child seed
+    const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+    const seedHex = CryptoJS.AES.decrypt(encSeed, key).toString(
+      CryptoJS.enc.Utf8
+    );
 
-      // get master seed to create child seed
-      const seedHex = CryptoJS.AES.decrypt(
-        localStorage.getItem('encMasterSeed'),
-        pin
-      ).toString(CryptoJS.enc.Utf8);
+    this.keyringServ.calcBip32RootKeyFromSeed(
+      coin,
+      Buffer.from(seedHex, 'hex')
+    );
 
-      this.keyringServ.calcBip32RootKeyFromSeed(
-        coin,
-        Buffer.from(seedHex, 'hex')
-      );
+    // create child seed with derivation path to generate pubkey and address
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+      coin,
+      account.path
+    );
 
-      // create child seed with derivation path to generate pubkey and address
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        coin,
-        account.path
-      );
+    seed = seedHex;
+    publicKey = childSeed.publicKey;
+    address = GetAddressFromPublicKey(publicKey);
+    console.log('seed', seed);
+    console.log('pubkey', byteArrayToHex(publicKey));
+    console.log('address', address);
 
-      seed = seedHex;
-      publicKey = childSeed.publicKey;
-      address = GetAddressFromPublicKey(publicKey);
-      console.log('seed', seed);
-      console.log('pubkey', byteArrayToHex(publicKey));
-      console.log('address', address);
+    this.currSeed = seed;
+    this.currPublicKey = publicKey;
+    this.currAddress = address;
 
-      this.currSeed = seed;
-      this.currPublicKey = publicKey;
-      this.currAddress = address;
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+  }
 
-      localStorage.setItem('currAccount', JSON.stringify(account));
-    }
+  switchAccount(account: SavedAccount) {
+    // create child seed with derivation path to generate pubkey and address
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+      coin,
+      account.path
+    );
+
+    this.currPublicKey = childSeed.publicKey;
+    this.currAddress = GetAddressFromPublicKey(this.currPublicKey);
+
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
   }
 
   getCurrAccount(): SavedAccount {
-    return JSON.parse(localStorage.getItem('currAccount'));
+    return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }
 
   getAllAccount() {
-    return JSON.parse(localStorage.getItem('accounts')) || [];
+    return JSON.parse(localStorage.getItem('ACCOUNT')) || [];
   }
 
   addAccount(account: SavedAccount) {
@@ -135,16 +144,13 @@ export class AccountService {
 
     if (!isDuplicate) {
       accounts.push(account);
-      localStorage.setItem('accounts', JSON.stringify(accounts));
-      this.changeCurrentAccount(account);
+      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+      this.switchAccount(account);
     }
   }
 
-  saveMasterSeed(seedBase58: string) {
-    const pin = localStorage.getItem('pin');
-    if (pin) {
-      const encSeed = CryptoJS.AES.encrypt(seedBase58, pin).toString();
-      localStorage.setItem('encMasterSeed', encSeed);
-    }
+  saveMasterSeed(seedBase58: string, key: string) {
+    const encSeed = CryptoJS.AES.encrypt(seedBase58, key).toString();
+    localStorage.setItem('ENC_MASTER_SEED', encSeed);
   }
 }

@@ -51,8 +51,12 @@ export class PinSetupDialogComponent implements OnInit {
   onConfirmPin() {
     if (this.formConfirmPin.valid) {
       if (this.pin2Form.value == this.pinForm.value) {
-        localStorage.setItem('pin', CryptoJS.SHA256(this.pinForm.value));
-        this.dialogRef.close();
+        const key = CryptoJS.PBKDF2(this.pinForm.value, 'salt', {
+          keySize: 8,
+          iterations: 10000,
+        }).toString();
+
+        this.dialogRef.close(key);
       } else {
         this.isPinMatched = false;
       }

@@ -12,9 +12,10 @@ import { AccountService } from 'src/app/services/account.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  pin = localStorage.getItem('pin');
+  encSeed = localStorage.getItem('ENC_MASTER_SEED');
   isLoggedIn: boolean;
-  hasAccount = this.pin ? true : false;
+  isLoading: boolean = false;
+  hasAccount = this.encSeed ? true : false;
 
   formSetPin: FormGroup;
   setPinForm = new FormControl('', [
@@ -65,17 +66,34 @@ export class LoginComponent implements OnInit {
 
   onLoginPin() {
     if (this.formLoginPin.valid) {
-      if (this.pin == CryptoJS.SHA256(this.pinForm.value)) {
-        let account = this.accServ.getCurrAccount();
-        this.accServ.changeCurrentAccount(account);
+      this.isLoading = true;
 
-        this.route.queryParams.subscribe(params => {
-          const redirect = params.redirect || '/dashboard';
-          this.router.navigateByUrl(redirect);
-        });
-      } else {
-        this.pinForm.setErrors({ invalid: true });
-      }
+      // give some delay so that the dom have time to render the spinner
+      setTimeout(() => {
+        const key = CryptoJS.PBKDF2(this.pinForm.value, 'salt', {
+          keySize: 8,
+          iterations: 10000,
+        }).toString();
+
+        try {
+          const seed = CryptoJS.AES.decrypt(this.encSeed, key).toString(
+            CryptoJS.enc.Utf8
+          );
+          if (!seed) throw 'not match';
+
+          let account = this.accServ.getCurrAccount();
+          this.accServ.login(account, key);
+
+          this.route.queryParams.subscribe(params => {
+            const redirect = params.redirect || '/dashboard';
+            this.router.navigateByUrl(redirect);
+          });
+        } catch (e) {
+          this.pinForm.setErrors({ invalid: true });
+        } finally {
+          this.isLoading = false;
+        }
+      }, 50);
     }
   }
 }

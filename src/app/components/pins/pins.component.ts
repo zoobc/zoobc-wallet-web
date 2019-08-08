@@ -61,9 +61,10 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
       const prevDigit = this.pinDigit.find((element, i) => i + 1 == index);
 
       if (prevDigit) {
-        prevDigit.nativeElement.children[0].children[0].children[0].children[2].children[0].focus();
-        prevDigit.nativeElement.children[0].children[0].children[0].children[2].children[0].value =
-          '';
+        const children =
+          prevDigit.nativeElement.children[0].children[0].children[0]
+            .children[2].children[0];
+        children.focus();
       }
     }
 

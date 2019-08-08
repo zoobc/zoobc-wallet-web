@@ -92,18 +92,19 @@ export class SignupComponent implements OnInit {
       width: '400px',
       disableClose: true,
     });
-    pinDialog.afterClosed().subscribe(() => {
-      this.saveNewAccount();
+    pinDialog.afterClosed().subscribe((key: string) => {
+      this.saveNewAccount(key);
       this.router.navigateByUrl('/dashboard');
     });
   }
 
-  saveNewAccount() {
-    this.accServ.saveMasterSeed(this.masterSeed);
+  saveNewAccount(key: string) {
+    this.accServ.saveMasterSeed(this.masterSeed, key);
     const account: SavedAccount = {
       path: 0,
       name: 'Account 1',
     };
     this.accServ.addAccount(account);
+    this.accServ.login(account, key);
   }
 }
