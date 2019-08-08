@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 import { TransactionService } from '../../services/transaction.service';
-import { AccountService, SavedAccount } from '../../services/account.service';
+import { AccountService } from '../../services/account.service';
 import {
   bigintToByteArray,
   BigInt,
@@ -14,6 +14,7 @@ import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService } from 'src/app/services/contact.service';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
 const coin = 'ZBC';
 
@@ -37,6 +38,7 @@ export class SendmoneyComponent implements OnInit {
     private activRoute: ActivatedRoute,
     private transactionServ: TransactionService,
     private accServ: AccountService,
+    private authServ: AuthService,
     private keyringServ: KeyringService,
     private contactServ: ContactService,
     private translate: TranslateService
@@ -47,7 +49,7 @@ export class SendmoneyComponent implements OnInit {
       fee: this.feeForm,
     });
 
-    this.account = accServ.getCurrAccount();
+    this.account = authServ.getCurrAccount();
   }
 
   ngOnInit() {
@@ -64,14 +66,14 @@ export class SendmoneyComponent implements OnInit {
       this.isFormSendLoading = false;
 
       const account = this.account;
-      const seed = Buffer.from(this.accServ.currSeed, 'hex');
+      const seed = Buffer.from(this.authServ.currSeed, 'hex');
 
       this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
       const childSeed = this.keyringServ.calcForDerivationPathForCoin(
         coin,
         account.path
       );
-      const address = this.accServ.currAddress;
+      const address = this.authServ.currAddress;
 
       // if using balance validation
       let balance = await this.accServ.getAccountBalance().then((data: any) => {

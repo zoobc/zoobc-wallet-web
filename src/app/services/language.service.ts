@@ -1,38 +1,38 @@
-import { TranslateService } from "@ngx-translate/core";
-import { Injectable } from "@angular/core";
+import { TranslateService } from '@ngx-translate/core';
+import { Injectable } from '@angular/core';
 
 import { registerLocaleData } from '@angular/common';
 import localeId from '@angular/common/locales/id';
-import localeIdExtra from '@angular/common/locales/extra/id';
 import localeEn from '@angular/common/locales/en';
+import localeAr from '@angular/common/locales/ar';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class LanguageService {
-  selected = ""
+  selected = '';
 
-  constructor(
-    private translate: TranslateService,
-  ) { }
+  constructor(private translate: TranslateService) {}
 
   setInitialAppLanguage() {
     let language = this.translate.getBrowserLang();
     this.translate.setDefaultLang(language);
 
-    const lang = localStorage.getItem("SELECTED_LANGUAGE") || 'en'
-    this.setLanguage(lang)
+    const lang = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
+    this.setLanguage(lang);
 
     switch (lang) {
       case 'id':
         registerLocaleData(localeId, 'id');
       case 'en':
         registerLocaleData(localeEn, 'en');
+      case 'ar':
+        registerLocaleData(localeAr, 'ar');
     }
   }
   setLanguage(lng) {
     this.translate.use(lng);
     this.selected = lng;
-    localStorage.setItem("SELECTED_LANGUAGE", lng);
+    localStorage.setItem('SELECTED_LANGUAGE', lng);
   }
 }

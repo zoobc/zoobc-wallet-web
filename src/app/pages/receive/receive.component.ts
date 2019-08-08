@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AccountService } from 'src/app/services/account.service';
 import { MatSnackBar } from '@angular/material';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-receive',
@@ -16,8 +16,8 @@ export class ReceiveComponent implements OnInit {
   formRequest: FormGroup;
   amountField = new FormControl('', Validators.required);
 
-  constructor(private accServ: AccountService, private snackBar: MatSnackBar) {
-    this.address = accServ.currAddress;
+  constructor(private authServ: AuthService, private snackBar: MatSnackBar) {
+    this.address = this.authServ.currAddress;
     this.urlReqCoin = `${window.location.origin}/request/${this.address}/10`;
 
     this.formRequest = new FormGroup({
@@ -41,7 +41,7 @@ export class ReceiveComponent implements OnInit {
     this.snackBar.open('Copied to clipboard', null, { duration: 3000 });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   onChangeAmount() {
     if (this.formRequest.valid) {

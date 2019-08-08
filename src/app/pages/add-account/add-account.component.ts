@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-add-new-account',
@@ -10,7 +10,7 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./add-account.component.scss'],
 })
 export class AddAccountComponent implements OnInit {
-  lenAccount = this.accServ.getAllAccount().length + 1;
+  lenAccount = this.authServ.getAllAccount().length + 1;
 
   formAddAccount: FormGroup;
   accountNameField = new FormControl(
@@ -19,7 +19,7 @@ export class AddAccountComponent implements OnInit {
   );
 
   constructor(
-    private accServ: AccountService,
+    private authServ: AuthService,
     private router: Router,
     private dialogRef: MatDialogRef<AddAccountComponent>
   ) {
@@ -32,13 +32,13 @@ export class AddAccountComponent implements OnInit {
 
   onAddAccount() {
     if (this.formAddAccount.valid) {
-      const path = this.accServ.generateDerivationPath();
+      const path = this.authServ.generateDerivationPath();
       const account: SavedAccount = {
         name: this.accountNameField.value,
         path,
       };
 
-      this.accServ.addAccount(account);
+      this.authServ.addAccount(account);
       this.dialogRef.close();
       this.router.navigateByUrl('/');
     }

@@ -1,14 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import * as CryptoJS from 'crypto-js';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog } from '@angular/material';
 
 import { KeyringService } from '../../services/keyring.service';
 import { GetAddressFromPublicKey } from '../../../helpers/utils';
-import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
 const coin = 'ZBC';
 
@@ -33,7 +32,7 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private accServ: AccountService,
+    private authServ: AuthService,
     private keyringServ: KeyringService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
@@ -48,7 +47,7 @@ export class SignupComponent implements OnInit {
     window.scroll(0, 0);
     this.generateNewWallet();
 
-    if (this.accServ.getCurrAccount()) this.router.navigateByUrl('/login');
+    if (this.authServ.getCurrAccount()) this.router.navigateByUrl('/login');
   }
 
   generateNewWallet() {
@@ -99,12 +98,12 @@ export class SignupComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
-    this.accServ.saveMasterSeed(this.masterSeed, key);
+    this.authServ.saveMasterSeed(this.masterSeed, key);
     const account: SavedAccount = {
       path: 0,
       name: 'Account 1',
     };
-    this.accServ.addAccount(account);
-    this.accServ.login(account, key);
+    this.authServ.addAccount(account);
+    this.authServ.login(account, key);
   }
 }

@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 
 import { AppService } from '../../app.service';
-import { AccountService } from 'src/app/services/account.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private appServ: AppService,
-    private accServ: AccountService
+    private authServ: AuthService
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
@@ -81,8 +81,8 @@ export class LoginComponent implements OnInit {
           );
           if (!seed) throw 'not match';
 
-          let account = this.accServ.getCurrAccount();
-          this.accServ.login(account, key);
+          let account = this.authServ.getCurrAccount();
+          this.authServ.login(account, key);
 
           this.route.queryParams.subscribe(params => {
             const redirect = params.redirect || '/dashboard';

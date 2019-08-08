@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { AppService } from 'src/app/app.service';
 
 @Component({
@@ -30,7 +29,7 @@ export class ParentComponent implements OnInit {
       }
     });
 
-    this.isLogin = appServ.isLoggedIn();
+    this.isLogin = this.appServ.isLoggedIn();
   }
 
   ngOnInit() {}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { TransactionService } from '../../services/transaction.service';
-import { AccountService } from 'src/app/services/account.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-transferhistory',
@@ -16,9 +16,9 @@ export class TransferhistoryComponent implements OnInit {
 
   constructor(
     private transactionServ: TransactionService,
-    private accServ: AccountService
+    private authServ: AuthService
   ) {
-    this.address = this.accServ.currAddress;
+    this.address = this.authServ.currAddress;
     this.config = {
       itemsPerPage: 5,
       currentPage: 1,

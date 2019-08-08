@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { AccountService } from './services/account.service';
+import { AuthService } from './services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService implements CanActivate {
-  constructor(private router: Router, private accServ: AccountService) {}
+  constructor(private router: Router, private authServ: AuthService) {}
 
   isLoggedIn() {
-    return this.accServ.currPublicKey ? true : false;
+    return this.authServ.currPublicKey ? true : false;
   }
 
   canActivate(): boolean {
-    if (this.accServ.currPublicKey) return true;
+    if (this.authServ.currPublicKey) return true;
 
     this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
     return false;

@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
 const coin = 'ZBC';
 
@@ -22,7 +22,7 @@ export class RestoreWalletComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private accServ: AccountService,
+    private authServ: AuthService,
     private keyringServ: KeyringService
   ) {
     this.restoreForm = new FormGroup({
@@ -38,14 +38,14 @@ export class RestoreWalletComponent implements OnInit {
         width: '400px',
         disableClose: true,
       });
-      pinDialog.afterClosed().subscribe(() => {
-        this.saveNewAccount();
+      pinDialog.afterClosed().subscribe((key: string) => {
+        this.saveNewAccount(key);
         this.router.navigateByUrl('/dashboard');
       });
     }
   }
 
-  saveNewAccount() {
+  saveNewAccount(key: string) {
     const passphrase = this.passphraseField.value;
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
@@ -60,8 +60,8 @@ export class RestoreWalletComponent implements OnInit {
       path: 0,
     };
 
-    this.accServ.saveMasterSeed(masterSeed);
-    this.accServ.addAccount(account);
+    this.authServ.saveMasterSeed(masterSeed, key);
+    this.authServ.addAccount(account);
     this.router.navigateByUrl('/dashboard');
   }
 }

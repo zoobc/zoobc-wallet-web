@@ -1,18 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-import {
-  AccountService,
-  SavedAccount,
-  Account,
-} from '../../services/account.service';
+import { AccountService, Account } from '../../services/account.service';
 import { TransactionService } from '../../services/transaction.service';
-import { AppService } from 'src/app/app.service';
 import {
   Currency,
   CurrencyRateService,
 } from 'src/app/services/currency-rate.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ReceiveComponent } from '../receive/receive.component';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,14 +37,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private accountServ: AccountService,
+    private authServ: AuthService,
     private transactionServ: TransactionService,
-    private appServ: AppService,
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
-    this.account = accountServ.getCurrAccount();
-    this.address = accountServ.currAddress;
+    this.account = this.authServ.getCurrAccount();
+    this.address = this.authServ.currAddress;
   }
 
   ngOnInit() {

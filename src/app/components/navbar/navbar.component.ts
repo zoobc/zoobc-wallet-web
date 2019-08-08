@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 
 import { LanguageService } from 'src/app/services/language.service';
 import { LANGUAGES } from 'src/app/app.service';
-import { AccountService, SavedAccount } from 'src/app/services/account.service';
 import { MatDialog } from '@angular/material';
 import { AddAccountComponent } from 'src/app/pages/add-account/add-account.component';
 import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private langServ: LanguageService,
-    private accServ: AccountService,
+    private authServ: AuthService,
     private router: Router,
     private dialog: MatDialog
   ) {}
@@ -33,13 +33,13 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
-    this.accounts = this.accServ.getAllAccount();
-    this.currAcc = this.accServ.getCurrAccount();
+    this.accounts = this.authServ.getAllAccount();
+    this.currAcc = this.authServ.getCurrAccount();
   }
 
   onSwitchAccount(account: SavedAccount) {
-    this.accServ.changeCurrentAccount(account);
-    this.currAcc = this.accServ.getCurrAccount();
+    this.authServ.switchAccount(account);
+    this.currAcc = this.authServ.getCurrAccount();
     this.router.navigateByUrl('/');
   }
 
