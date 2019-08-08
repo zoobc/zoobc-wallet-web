@@ -30,4 +30,8 @@ export const LANGUAGES = [
     country: 'Indonesia',
     code: 'id',
   },
+  {
+    country: 'Arabic',
+    code: 'ar',
+  },
 ];
