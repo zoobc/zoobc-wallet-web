@@ -1,3 +1,5 @@
+![](/src/assets/img/ZooBC-wallet-web.png)
+
 # SpinechainWalletWeb
 
 Web wallet for spinechain of Blockchainzoo.com. This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
@@ -7,9 +9,8 @@ Web wallet for spinechain of Blockchainzoo.com. This project was generated with 
 - npm install -g @angular/cli
 - git clone https://github.com/BlockchainZoo/spinechain-wallet-web-prototype.git
 - cd spinechain-wallet-web-prototype
-- npm install 
+- npm install
 - ng serve
-
 
 ## Development server
 
@@ -26,4 +27,3 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
