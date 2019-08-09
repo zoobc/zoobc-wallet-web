@@ -2,42 +2,74 @@
   <div class="header-container">
     <a routerLink="/" class="brand">
       <img src="/assets/img/zbc-white.png" alt="" />
-      <h3><b>ZooBC</b> Wallet</h3>
+      <h3>
+        <b>ZooBC</b>
+        Wallet
+      </h3>
     </a>
     <div class="menu">
       <!-- language menu -->
-      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
+      <button
+        mat-button
+        class="language-dropdown"
+        [matMenuTriggerFor]="language"
+      >
         <span>{{ activeLanguage }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
       <mat-menu #language="matMenu">
-        <button *ngFor="let language of languages" (click)="selectActiveLanguage(language.code)" mat-menu-item>
+        <button
+          *ngFor="let language of languages"
+          (click)="selectActiveLanguage(language.code)"
+          mat-menu-item
+        >
           {{ language.country }}
         </button>
       </mat-menu>
 
       <!-- account menu -->
-      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="accounts.length > 0">
+      <button
+        mat-icon-button
+        class="account-dropdown"
+        [matMenuTriggerFor]="account"
+        *ngIf="isLoggedIn"
+      >
         <i class="fa fa-user-circle"></i>
       </button>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
-          <button *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)" mat-menu-item>
-            <i class="fas fa-user" *ngIf="acc.path != undefined && acc.path != currAcc.path"></i>
-            <i class="fas fa-check" *ngIf="acc.path != undefined && acc.path == currAcc.path"></i>
-            <i class="fas fa-user" *ngIf="acc.secret && acc.secret != currAcc.secret"></i>
-            <i class="fas fa-check" *ngIf="acc.secret && acc.secret == currAcc.secret"></i>
-            <span>{{ acc.name }} </span>
+          <button
+            *ngFor="let acc of accounts"
+            (click)="onSwitchAccount(acc)"
+            mat-menu-item
+          >
+            <i
+              class="fas fa-user"
+              *ngIf="acc.path != undefined && acc.path != currAcc.path"
+            ></i>
+            <i
+              class="fas fa-check"
+              *ngIf="acc.path != undefined && acc.path == currAcc.path"
+            ></i>
+            <i
+              class="fas fa-user"
+              *ngIf="acc.secret && acc.secret != currAcc.secret"
+            ></i>
+            <i
+              class="fas fa-check"
+              *ngIf="acc.secret && acc.secret == currAcc.secret"
+            ></i>
+            <span>{{ acc.name }}</span>
             <span *ngIf="acc.imported">(Imported)</span>
           </button>
           <button mat-menu-item (click)="onOpenAddAccount()">
             <i class="fas fa-plus"></i>
-            <span>{{"Add New Account" | translate}}</span>
+            <span>{{ 'Add New Account' | translate }}</span>
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="onOpenAddNodeAdmin()">
             <i class="fas fa-plus"></i>
-            <span>{{"Add Node Admin" | translate}}</span>
+            <span>{{ 'Add Node Admin' | translate }}</span>
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item>
@@ -45,7 +77,7 @@
             {{ 'Profile' | translate }}
           </button>
           <mat-divider></mat-divider>
-          <button data-toggle="modal" data-target="#logoutModal" mat-menu-item>
+          <button (click)="onLogout()" mat-menu-item>
             <i class="fas fa-sign-out-alt"></i>
             {{ 'Logout' | translate }}
           </button>
