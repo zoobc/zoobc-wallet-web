@@ -1,0 +1,32 @@
+<div class="confirm-passphrase-container">
+  <h2 class="mat-h2">{{ 'Confirm Your Passphrase' | translate }}</h2>
+  <form [formGroup]="confirmForm" (submit)="onConfirm()">
+    <div class="row" formArrayName="words">
+      <div
+        class="col-6 col-sm-4"
+        *ngFor="let word of prefillPassphrase; let i = index"
+      >
+        <mat-form-field class="passphrase-input" [formGroupName]="i">
+          <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
+          <input matInput formControlName="word" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div style="margin-bottom:8px;text-align: center">
+      <mat-error *ngIf="confirmForm.invalid">
+        Please fill all of the passphrase
+      </mat-error>
+      <mat-error *ngIf="!isMatched">
+        The passphrase is not matched
+      </mat-error>
+    </div>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="confirmForm.invalid"
+    >
+      {{ 'Confirm' | translate }}
+    </button>
+  </form>
+</div>

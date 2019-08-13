@@ -6,8 +6,7 @@ import { MatDialog } from '@angular/material';
 
 import { KeyringService } from '../../services/keyring.service';
 import { GetAddressFromPublicKey } from '../../../helpers/utils';
-import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
-import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 const coin = 'ZBC';
 
@@ -86,24 +85,9 @@ export class SignupComponent implements OnInit {
     this.snackBar.open('Text Copied', null, { duration: 3000 });
   }
 
-  openCreatePin() {
-    let pinDialog = this.dialog.open(PinSetupDialogComponent, {
-      width: '400px',
-      disableClose: true,
+  goToConfirmPage() {
+    this.router.navigate(['confirm-passphrase'], {
+      state: { masterSeed: this.masterSeed, passphrase: this.passphrase },
     });
-    pinDialog.afterClosed().subscribe((key: string) => {
-      this.saveNewAccount(key);
-      this.router.navigateByUrl('/dashboard');
-    });
-  }
-
-  saveNewAccount(key: string) {
-    this.authServ.saveMasterSeed(this.masterSeed, key);
-    const account: SavedAccount = {
-      path: 0,
-      name: 'Account 1',
-    };
-    this.authServ.addAccount(account);
-    this.authServ.login(account, key);
   }
 }

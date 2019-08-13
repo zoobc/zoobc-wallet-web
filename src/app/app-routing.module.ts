@@ -15,6 +15,7 @@ import { ContactlistComponent } from './pages/list-contact/contactlist/contactli
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
+import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -40,6 +41,7 @@ const routes: Routes = [
       { path: 'signup', component: SignupComponent },
       { path: 'login', component: LoginComponent },
       { path: 'restore', component: RestoreWalletComponent },
+      { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
       { path: 'feedback', component: ContactUsComponent },
     ],
   },
@@ -49,4 +51,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

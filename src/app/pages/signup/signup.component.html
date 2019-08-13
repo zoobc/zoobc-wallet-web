@@ -1,6 +1,6 @@
 <div class="signup-container">
-  <h2 class="mat-h2">{{ "Create New Account" | translate }}</h2>
-  <h4 class="mat-h4">{{"Your Passphrase" | translate}}:</h4>
+  <h2 class="mat-h2">{{ 'Create New Account' | translate }}</h2>
+  <h4 class="mat-h4">{{ 'Your Passphrase' | translate }}:</h4>
   <div class="row passphrase-section">
     <div class="col-6 col-sm-4" *ngFor="let p of passphrase; let key = index">
       <div class="box-passphrase">
@@ -13,16 +13,16 @@
   <div class="btn-grouped">
     <button mat-flat-button color="primary" (click)="copyPassphrase()">
       <i matPrefix class="fas fa-copy"></i>
-      <span class="text">{{ "Copy Passphrase" | translate }}</span>
+      <span class="text">{{ 'Copy Passphrase' | translate }}</span>
     </button>
     <button mat-flat-button color="primary" (click)="generateNewWallet()">
       <i matPrefix class="fas fa-sync"></i>
-      <span class="text">{{ "Regenerate" | translate }}</span>
+      <span class="text">{{ 'Regenerate' | translate }}</span>
     </button>
   </div>
 
   <div class="public-address">
-    <div class="label">{{ "Your ZooBC Address" | translate }}:</div>
+    <div class="label">{{ 'Your ZooBC Address' | translate }}:</div>
     <span>{{ address }}</span>
     <button mat-icon-button (click)="copyText(address)">
       <i class="fas fa-copy"></i>
@@ -31,23 +31,35 @@
 
   <form [formGroup]="formTerms">
     <div class="text-left">
-      <div class="warning-box mat-body-2"
-        [innerHTML]="'Remember: Never tell your passphrase. If you lose it, you lose access to your account!' | translate">
-      </div>
+      <div
+        class="warning-box mat-body-2"
+        [innerHTML]="
+          'Remember: Never tell your passphrase. If you lose it, you lose access to your account!'
+            | translate
+        "
+      ></div>
       <div style="margin-bottom: 8px">
-        <mat-checkbox formControlName="isWrittenDown">{{ "I have written or saved my passphrase safely" | translate }}
+        <mat-checkbox formControlName="isWrittenDown"
+          >{{ 'I have written or saved my passphrase safely' | translate }}
         </mat-checkbox>
       </div>
       <div>
-        <mat-checkbox formControlName="isAgree">{{ "I Approve Terms & Conditions" | translate }}</mat-checkbox>
+        <mat-checkbox formControlName="isAgree">{{
+          'I Approve Terms & Conditions' | translate
+        }}</mat-checkbox>
       </div>
     </div>
 
     <div class="text-right">
-      <button mat-flat-button color="primary" (click)="openCreatePin()" type="button"
-        [disabled]="!isWrittenDown.value || !isAgree.value">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="goToConfirmPage()"
+        type="button"
+        [disabled]="!isWrittenDown.value || !isAgree.value"
+      >
         <i matPrefix class="fas fa-key"></i>
-        <span class="text">{{ "Set Your Pin" | translate }}</span>
+        <span class="text">{{ 'Create Wallet' | translate }}</span>
       </button>
     </div>
   </form>
