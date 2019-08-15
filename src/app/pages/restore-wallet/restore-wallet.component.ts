@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import Swal from 'sweetalert2';
 
 const coin = 'ZBC';
 
@@ -34,15 +35,32 @@ export class RestoreWalletComponent implements OnInit {
 
   onRestore() {
     if (this.restoreForm.valid) {
-      let pinDialog = this.dialog.open(PinSetupDialogComponent, {
-        width: '400px',
-        disableClose: true,
-      });
-      pinDialog.afterClosed().subscribe((key: string) => {
-        this.saveNewAccount(key);
-        this.router.navigateByUrl('/dashboard');
-      });
+      if (localStorage.getItem('ENC_MASTER_SEED')) {
+        Swal.fire({
+          title: 'Your old wallet will be removed from this device',
+          confirmButtonText: 'Continue?',
+          showCancelButton: true,
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            this.openPinDialog();
+            return true;
+          },
+        });
+      } else {
+        this.openPinDialog();
+      }
     }
+  }
+
+  openPinDialog() {
+    let pinDialog = this.dialog.open(PinSetupDialogComponent, {
+      width: '400px',
+      disableClose: true,
+    });
+    pinDialog.afterClosed().subscribe((key: string) => {
+      this.saveNewAccount(key);
+      this.router.navigateByUrl('/dashboard');
+    });
   }
 
   saveNewAccount(key: string) {
