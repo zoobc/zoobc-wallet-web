@@ -5,6 +5,16 @@ body {
   font-family: 'Roboto', sans-serif !important;
 }
 
+a:not([href='']) {
+  text-decoration: none;
+  font-weight: 400;
+  color: $primary-color;
+  @include transition(0.3s ease-in all);
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 // ==================== CARD ========================
 .mat-card {
   box-shadow: 0 0 40px rgba(52, 61, 72, 0.2) !important;
@@ -40,6 +50,8 @@ button[mat-flat-button] {
   }
 }
 
+// ============================ FORM ========================
+
 label {
   font-size: 13px;
   color: $black2;
@@ -72,6 +84,22 @@ label {
     transform: none !important;
   }
 }
+
+// ============================ SWAL CUSTOM STYLE ========================
+
+.swal2-styled {
+  border-radius: 8px !important;
+  font-weight: bold !important;
+}
+.swal2-confirm {
+  background: linear-gradient(45deg, #0288d1 30%, #26c6da 90%) !important;
+}
+.swal2-title {
+  font-size: 24px !important;
+  font-weight: 400 !important;
+}
+
+// =========================== MISC ==========================
 
 .data-unavailable {
   display: flex;
