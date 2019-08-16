@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "spinechain-wallet-web": {
+    "zoobc-wallet-web": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -14,7 +14,7 @@
           "builder": "ngx-build-plus:build",
           "options": {
             "extraWebpackConfig": "webpack.extra.js",
-            "outputPath": "dist/spinechain-wallet-web",
+            "outputPath": "dist/zoobc-wallet-web",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -68,18 +68,18 @@
           "builder": "ngx-build-plus:dev-server",
           "options": {
             "extraWebpackConfig": "webpack.extra.js",
-            "browserTarget": "spinechain-wallet-web:build"
+            "browserTarget": "zoobc-wallet-web:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "spinechain-wallet-web:build:production"
+              "browserTarget": "zoobc-wallet-web:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "spinechain-wallet-web:build"
+            "browserTarget": "zoobc-wallet-web:build"
           }
         },
         "test": {
@@ -103,7 +103,7 @@
         }
       }
     },
-    "spinechain-wallet-web-e2e": {
+    "zoobc-wallet-web-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -112,11 +112,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "spinechain-wallet-web:serve"
+            "devServerTarget": "zoobc-wallet-web:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "spinechain-wallet-web:serve:production"
+              "devServerTarget": "zoobc-wallet-web:serve:production"
             }
           }
         },
@@ -130,7 +130,7 @@
       }
     }
   },
-  "defaultProject": "spinechain-wallet-web",
+  "defaultProject": "zoobc-wallet-web",
   "schematics": {
     "@schematics/angular:component": {
       "styleext": "scss"
