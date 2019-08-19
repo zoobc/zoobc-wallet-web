@@ -31,6 +31,10 @@ const routes: Routes = [
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
+      {
+        path: 'settings',
+        loadChildren: './pages/settings/settings.module#SettingsModule',
+      },
       { path: 'request/:recipient/:amount', component: SendmoneyComponent },
     ],
   },
@@ -51,4 +55,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
