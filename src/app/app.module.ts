@@ -63,6 +63,8 @@ import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
 import { ChangeIpAddressComponent } from './pages/change-ip-address/change-ip-address.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
+import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -105,6 +107,8 @@ export function getLanguage(languageServ: LanguageService) {
     AddNodeAdminComponent,
     ChangeIpAddressComponent,
     ConfirmPassphraseComponent,
+    TermsOfUseComponent,
+    PrivacyPolicyComponent,
   ],
   imports: [
     BrowserModule,
