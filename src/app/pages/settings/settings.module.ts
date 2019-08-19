@@ -28,6 +28,7 @@ import {
   MatDividerModule,
   MatStepperModule,
   MatTooltipModule,
+  MatListModule,
 } from '@angular/material';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -59,6 +60,7 @@ const routes: Routes = [
     path: '',
     component: SettingsComponent,
     children: [
+      { path: '', component: GeneralComponent },
       { path: 'general', component: GeneralComponent },
       { path: 'network', component: NetworkComponent },
       { path: 'about', component: AboutComponent },
@@ -105,6 +107,7 @@ const routes: Routes = [
     MatDividerModule,
     MatStepperModule,
     MatTooltipModule,
+    MatListModule,
   ],
   declarations: [
     SettingsComponent,

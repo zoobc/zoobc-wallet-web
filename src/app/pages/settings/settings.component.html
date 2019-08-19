@@ -1,14 +1,12 @@
 <div class="settings-container">
-  <div class="row">
-    <div class="col-4 ">
-      <ul class="list-menu">
-        <li><a routerLink="general">General</a></li>
-        <li><a routerLink="network">Network</a></li>
-        <li><a routerLink="about">About</a></li>
-      </ul>
-    </div>
-    <div class="col-8">
-      <router-outlet></router-outlet>
-    </div>
+  <div class="list-menu" *ngIf="!showSubPage || largeScreen">
+    <ul>
+      <li><a routerLink="general">General</a></li>
+      <li><a routerLink="network">Network</a></li>
+      <li><a routerLink="about">About</a></li>
+    </ul>
+  </div>
+  <div class="subpage-container" *ngIf="showSubPage || largeScreen">
+    <router-outlet></router-outlet>
   </div>
 </div>

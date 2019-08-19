@@ -1,12 +1,19 @@
-<div>
-  <img src="/assets/img/zbc-color-text.svg" alt="" width="180" />
-  <p>ZooBC Web Wallet 0.1.0</p>
+<div class="about-container">
+  <img src="/assets/img/zbc-color-text.svg" />
+  <div class="version-text">ZooBC Web Wallet 0.1.0</div>
 
-  <a routerLink="privacy-policy">{{ 'Privacy Policy' | translate }}</a>
-  <br />
-  <a routerLink="term-of-use">{{ 'Term of Use' | translate }}</a>
-  <br />
-  <a routerLink="faq">{{ 'FAQ' | translate }}</a>
-  <br />
-  <a [routerLink]="['/feedback']">{{ 'Feedback' | translate }}</a>
+  <div class="link-group">
+    <div class="link">
+      <a routerLink="privacy-policy">{{ 'Privacy Policy' | translate }}</a>
+    </div>
+    <div class="link">
+      <a routerLink="term-of-use">{{ 'Term of Use' | translate }}</a>
+    </div>
+    <div class="link">
+      <a routerLink="faq">{{ 'FAQ' | translate }}</a>
+    </div>
+    <div class="link">
+      <a [routerLink]="['/feedback']">{{ 'Feedback' | translate }}</a>
+    </div>
+  </div>
 </div>

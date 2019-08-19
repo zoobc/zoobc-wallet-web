@@ -1,5 +1,39 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
 .settings-container {
-  border-right: 1px solid grey;
+  height: calc(100% - 24px);
+  display: flex;
   .list-menu {
+    padding-right: 16px;
+    width: 160px;
+    border-right: 1px solid #ddd;
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      li {
+        border-bottom: 1px solid #ddd;
+        a {
+          display: block;
+          padding: 12px 8px;
+          color: $black2;
+          font-size: 14px;
+        }
+        &:hover {
+          @include transition(0.3s ease-in all);
+          background-color: #ddd;
+        }
+      }
+    }
+    @media #{$small-and-down} {
+      width: 100%;
+      padding-right: 0px;
+      border-right: 0px;
+    }
+  }
+  .subpage-container {
+    width: calc(100% - 160px);
+    padding-left: 16px;
   }
 }
