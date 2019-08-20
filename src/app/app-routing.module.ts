@@ -16,6 +16,7 @@ import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.co
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
+import { FaqComponent } from './faq/faq.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -47,6 +48,7 @@ const routes: Routes = [
       { path: 'restore', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
       { path: 'feedback', component: ContactUsComponent },
+      { path: 'faq', component: FaqComponent },
     ],
   },
 ];

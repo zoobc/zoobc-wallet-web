@@ -10,10 +10,12 @@
       <a routerLink="term-of-use">{{ 'Term of Use' | translate }}</a>
     </div>
     <div class="link">
-      <a routerLink="faq">{{ 'FAQ' | translate }}</a>
+      <a [routerLink]="['/faq']" target="_blank">{{ 'FAQ' | translate }}</a>
     </div>
     <div class="link">
-      <a [routerLink]="['/feedback']">{{ 'Feedback' | translate }}</a>
+      <a [routerLink]="['/feedback']" target="_blank">
+        {{ 'Feedback' | translate }}
+      </a>
     </div>
   </div>
 </div>
