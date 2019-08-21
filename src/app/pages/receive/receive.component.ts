@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import * as CryptoJS from 'crypto-js';
 import { AuthService } from 'src/app/services/auth.service';
+import { toBase64Url } from 'src/helpers/converters';
 
 @Component({
   selector: 'app-receive',
@@ -11,14 +13,14 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ReceiveComponent implements OnInit {
   // value for QR Code
   address: string = '';
-  urlReqCoin: string;
+  qrCode: string;
+  url: string;
 
   formRequest: FormGroup;
   amountField = new FormControl('', Validators.required);
 
   constructor(private authServ: AuthService, private snackBar: MatSnackBar) {
     this.address = this.authServ.currAddress;
-    this.urlReqCoin = `${window.location.origin}/request/${this.address}/10`;
 
     this.formRequest = new FormGroup({
       amount: this.amountField,
@@ -45,8 +47,10 @@ export class ReceiveComponent implements OnInit {
 
   onChangeAmount() {
     if (this.formRequest.valid) {
-      const amount = this.amountField.value;
-      this.urlReqCoin = `${window.location.origin}/request/${this.address}/${amount}`;
+      const request = `${this.address}/${this.amountField.value}`;
+      this.qrCode = CryptoJS.AES.encrypt(request, 'ZBC').toString();
+      this.qrCode = toBase64Url(this.qrCode);
+      this.url = `${window.location.origin}/request/${this.qrCode}`;
     }
   }
 }

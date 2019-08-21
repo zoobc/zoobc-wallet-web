@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import * as CryptoJS from 'crypto-js';
 
 import { TransactionService } from '../../services/transaction.service';
 import { AccountService } from '../../services/account.service';
@@ -8,6 +9,7 @@ import {
   bigintToByteArray,
   BigInt,
   addressToPublicKey,
+  fromBase64Url,
 } from '../../../helpers/converters';
 import { transactionByte } from '../../../helpers/transactionByteTemplate';
 import { KeyringService } from 'src/app/services/keyring.service';
@@ -35,7 +37,7 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
 
   constructor(
-    private activRoute: ActivatedRoute,
+    private activeRoute: ActivatedRoute,
     private transactionServ: TransactionService,
     private accServ: AccountService,
     private authServ: AuthService,
@@ -53,10 +55,20 @@ export class SendmoneyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.formSend.patchValue({
-      recipient: this.activRoute.snapshot.params['recipient'] || '',
-      amount: this.activRoute.snapshot.params['amount'] || '',
-    });
+    // if users pasting request url
+    let encToken: string = this.activeRoute.snapshot.params['token'];
+    if (encToken) {
+      encToken = fromBase64Url(encToken);
+      let token = CryptoJS.AES.decrypt(encToken, 'ZBC').toString(
+        CryptoJS.enc.Utf8
+      );
+      let request = token.split('/');
+
+      this.formSend.patchValue({
+        recipient: request[0] || '',
+        amount: request[1] || '',
+      });
+    }
 
     this.contacts = this.contactServ.getContactList();
   }
