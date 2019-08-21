@@ -31,7 +31,10 @@ const routes: Routes = [
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
-      { path: 'request/:recipient/:amount', component: SendmoneyComponent },
+      {
+        path: 'request/:recipient/:amount/:fee',
+        component: SendmoneyComponent,
+      },
     ],
   },
   {

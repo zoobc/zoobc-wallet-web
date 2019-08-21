@@ -56,6 +56,7 @@ export class SendmoneyComponent implements OnInit {
     this.formSend.patchValue({
       recipient: this.activRoute.snapshot.params['recipient'] || '',
       amount: this.activRoute.snapshot.params['amount'] || '',
+      fee: this.activRoute.snapshot.params['fee'] || '',
     });
 
     this.contacts = this.contactServ.getContactList();

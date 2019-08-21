@@ -31,6 +31,14 @@
         </mat-error>
       </mat-form-field>
 
+      <label>{{'Fee' | translate}}</label>
+      <mat-form-field appearance="outline">
+        <input matInput type="number" formControlName="fee" placeholder="{{'Fee' | translate}}" />
+        <mat-error *ngIf="feeForm.touched">
+          <span *ngIf="feeForm.hasError('required')">{{'Fee is required' | translate}}</span>
+        </mat-error>
+      </mat-form-field>
+
       <button mat-flat-button color="primary" type="submit" [disabled]="formSend.invalid || isFormSendLoading">
         <span *ngIf="isFormSendLoading"><i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
         <span>{{ 'Send' | translate }}</span>
