@@ -11,10 +11,12 @@ import {
 } from '../../../helpers/converters';
 import { transactionByte } from '../../../helpers/transactionByteTemplate';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { ContactService } from 'src/app/services/contact.service';
+import { ContactService, Contact } from 'src/app/services/contact.service';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const coin = 'ZBC';
 
@@ -24,8 +26,9 @@ const coin = 'ZBC';
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
-  contacts;
-  keyword = 'alias';
+  contacts: Contact[];
+  filteredContacts: Observable<Contact[]>;
+
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', Validators.required);
@@ -59,6 +62,18 @@ export class SendmoneyComponent implements OnInit {
     });
 
     this.contacts = this.contactServ.getContactList();
+    // set filtered contacts function
+    this.filteredContacts = this.recipientForm.valueChanges.pipe(
+      startWith(''),
+      map(value => this.filterContacts(value))
+    );
+  }
+
+  filterContacts(value: string) {
+    const filterValue = value.toLowerCase();
+    return this.contacts.filter((contact: Contact) =>
+      contact.alias.toLowerCase().includes(filterValue)
+    );
   }
 
   async onSendMoney() {
