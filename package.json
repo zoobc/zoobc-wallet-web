@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "git submodule update --init --recursive && cd externals/bip32 && npm install --ignore-scripts"
+    "postinstall": "git submodule update --init --recursive && cd externals/bip32 && npm install --ignore-scripts",
+    "compile-proto": "sh compile-proto.sh"
   },
   "private": true,
   "dependencies": {

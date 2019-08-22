@@ -13,5 +13,5 @@ var global = Function('return this')();
 
 var model_accountBalance_pb = require('../model/accountBalance_pb.js');
 goog.object.extend(proto, model_accountBalance_pb);
-var model_empty_pb = require('../model/empty_pb.js');
-goog.object.extend(proto, model_empty_pb);
+var google_api_annotations_pb = require('../google/api/annotations_pb.js');
+goog.object.extend(proto, google_api_annotations_pb);

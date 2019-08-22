@@ -1,14 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar, MatDialog } from '@angular/material';
 
-import { AccountService, Account } from '../../services/account.service';
-import { TransactionService } from '../../services/transaction.service';
+import { AccountService } from '../../services/account.service';
+import {
+  TransactionService,
+  Transaction,
+} from '../../services/transaction.service';
 import {
   Currency,
   CurrencyRateService,
 } from 'src/app/services/currency-rate.service';
-import { MatSnackBar, MatDialog } from '@angular/material';
-import { ReceiveComponent } from '../receive/receive.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { ReceiveComponent } from '../receive/receive.component';
+import {
+  GetAccountBalanceResponse,
+  AccountBalance as AB,
+} from 'src/app/grpc/model/accountBalance_pb';
+
+type AccountBalance = AB.AsObject;
+type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 
 @Component({
   selector: 'app-dashboard',
@@ -16,23 +26,21 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  accountBalance: Account;
+  accountBalance: AccountBalance;
   showSpinnerBalance: boolean = true;
   showSpinnerRecentTx: boolean = true;
 
-  accountBalanceServ: any;
-  getAccountBalanceReq: any;
-  recentTx: any[];
+  recentTx: Transaction[];
 
   currencyRate: Currency = {
     name: '',
     value: 0,
   };
+  currencyRates: Currency[];
 
   account: SavedAccount;
   address: string;
 
-  currencyRates: Currency[];
   zbcPriceInUsd: number = 10;
 
   constructor(
@@ -50,16 +58,17 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
 
-    this.accountServ.getAccountBalance().then((data: Account) => {
-      this.accountBalance = data;
+    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
+      this.accountBalance = data.accountbalance;
       this.showSpinnerBalance = false;
     });
 
-    this.transactionServ.getAccountTransaction().then((res: any) => {
-      this.recentTx = res.transactionsList;
-      this.recentTx = this.recentTx.slice(0, 5);
-      this.showSpinnerRecentTx = false;
-    });
+    this.transactionServ
+      .getAccountTransaction(1, 5)
+      .then((res: Transaction[]) => {
+        this.recentTx = res;
+        this.showSpinnerRecentTx = false;
+      });
 
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;

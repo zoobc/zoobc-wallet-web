@@ -1,30 +1,21 @@
 import { Injectable } from '@angular/core';
 
-import { AccountBalancesServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
+import { AccountBalanceServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
 import {
   GetAccountBalanceRequest,
-  AccountBalance,
+  GetAccountBalanceResponse,
 } from '../grpc/model/accountBalance_pb';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-
-export interface Account {
-  balance: number;
-  forgedbalance: number;
-  height: number;
-  id: number;
-  publickey: string;
-  unconfirmedbalance: number;
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private accBalanceServ: AccountBalancesServiceClient;
+  private accBalanceServ: AccountBalanceServiceClient;
 
   constructor(private authServ: AuthService) {
-    this.accBalanceServ = new AccountBalancesServiceClient(
+    this.accBalanceServ = new AccountBalanceServiceClient(
       environment.grpcUrl,
       null,
       null
@@ -32,16 +23,31 @@ export class AccountService {
   }
 
   getAccountBalance() {
-    let publicKey = this.authServ.currPublicKey;
+    const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
-      request.setPublickey(publicKey);
+
+      request.setAccountaddress(address);
 
       this.accBalanceServ.getAccountBalance(
         request,
         null,
-        (err, response: AccountBalance) => {
-          if (err) return reject(err);
+        (err, response: GetAccountBalanceResponse) => {
+          if (err) {
+            if (err.code != 2) return reject(err);
+            // if (err) return reject(err);
+
+            if (err.code == 2) {
+              const firstValue = {
+                accountbalance: {
+                  spendablebalance: 0,
+                  balance: 0,
+                },
+              };
+              return resolve(firstValue);
+            }
+          }
+
           resolve(response.toObject());
         }
       );
