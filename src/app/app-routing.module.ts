@@ -17,6 +17,8 @@ import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { FaqComponent } from './faq/faq.component';
+import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -49,6 +51,8 @@ const routes: Routes = [
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
       { path: 'feedback', component: ContactUsComponent },
       { path: 'faq', component: FaqComponent },
+      { path: 'terms-of-use', component: TermsOfUseComponent },
+      { path: 'privacy-policy', component: PrivacyPolicyComponent },
     ],
   },
 ];
