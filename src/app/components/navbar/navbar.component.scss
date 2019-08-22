@@ -52,4 +52,9 @@
     margin-right: 8px;
     color: $black3;
   }
+  .account-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 150px;
+  }
 }

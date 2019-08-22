@@ -1,5 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NodeAdminAttribute, NodeAdminService } from 'src/app/services/node-admin.service';
+import {
+  NodeAdminAttribute,
+  NodeAdminService,
+} from 'src/app/services/node-admin.service';
+import { ReceiveComponent } from 'src/app/pages/receive/receive.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,18 +15,26 @@ export class SidebarComponent implements OnInit {
   @Input() menu: string;
 
   nodeAdminAttribute: NodeAdminAttribute = {
-    ipAddress: ''
+    ipAddress: '',
   };
   nodeAdminAttributes: NodeAdminAttribute;
 
   constructor(
-    private nodeAdminServ: NodeAdminService
+    private nodeAdminServ: NodeAdminService,
+    private dialog: MatDialog
   ) {
-    this.nodeAdminServ.nodeAdminAttribute.subscribe((attribute: NodeAdminAttribute) => {
-      this.nodeAdminAttributes = attribute;
-    });
+    this.nodeAdminServ.nodeAdminAttribute.subscribe(
+      (attribute: NodeAdminAttribute) => {
+        this.nodeAdminAttributes = attribute;
+      }
+    );
   }
 
+  ngOnInit() {}
 
-  ngOnInit() { }
+  openReceiveForm() {
+    this.dialog.open(ReceiveComponent, {
+      width: '480px',
+    });
+  }
 }

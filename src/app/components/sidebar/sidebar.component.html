@@ -3,14 +3,14 @@
     <li [ngClass]="menu == 'dashboard' && 'active'">
       <a routerLink="/dashboard">
         <i class="fa fa-home"></i>
-        <span>{{"Dashboard" | translate}}</span>
+        <span>{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
     <ng-template [ngIf]="nodeAdminAttributes">
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
         <a routerLink="/nodeadmin">
           <i class="fa fa-desktop"></i>
-          <span>{{"Node Admin" | translate}}</span>
+          <span>{{ 'Node Admin' | translate }}</span>
         </a>
       </li>
     </ng-template>
@@ -18,31 +18,31 @@
     <li [ngClass]="menu == 'transferhistory' && 'active'">
       <a routerLink="/transferhistory">
         <i class="fa fa-receipt"></i>
-        <span>{{"History" | translate}}</span>
+        <span>{{ 'History' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'sendmoney' && 'active'">
       <a routerLink="/sendmoney">
         <i class="fa fa-paper-plane"></i>
-        <span>{{"Send" | translate}}</span>
+        <span>{{ 'Send' | translate }}</span>
       </a>
     </li>
-    <!-- <li [ngClass]="menu == 'receive' && 'active'">
-      <a routerLink="/receive">
+    <li [ngClass]="menu == 'receive' && 'active'">
+      <a (click)="openReceiveForm()">
         <i class="fa fa-hand-holding-usd"></i>
         <span>Receive</span>
       </a>
-    </li> -->
+    </li>
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list">
         <i class="fa fa-address-book"></i>
-        <span>{{"Contacts" | translate}}</span>
+        <span>{{ 'Contacts' | translate }}</span>
       </a>
     </li>
-    <li [ngClass]="menu == 'feedback' && 'active'">
-      <a routerLink="/feedback">
-        <i class="fa fa-comment"></i>
-        <span>{{"Feedback" | translate}}</span>
+    <li [ngClass]="menu == 'settings' && 'active'">
+      <a routerLink="/settings">
+        <i class="fa fa-cog"></i>
+        <span>{{ 'Settings' | translate }}</span>
       </a>
     </li>
   </ul>
