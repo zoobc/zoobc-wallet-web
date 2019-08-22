@@ -16,8 +16,13 @@
   <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
     <mat-form-field appearance="outline">
       <input matInput type="text" placeholder="{{'Coin amount' | translate}}..." formControlName="amount"
-        (keyup)="onChangeAmount()" type="number">
+        (keyup)="onChangeAmount()" (change)="onChangeAmount()" type="number" min="0">
       <mat-error *ngIf="amountField.hasError('required')">{{"Amount is required" | translate}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <input matInput type="text" placeholder="{{'Fee' | translate}}..." formControlName="fee"
+        (change)="onChangeAmount()" (keyup)="onChangeAmount()" type="number" min="0.01" step="0.01">
+      <mat-error *ngIf="feeField.hasError('required')">{{'Fee is required' | translate}}</mat-error>
     </mat-form-field>
   </form>
 </div>
