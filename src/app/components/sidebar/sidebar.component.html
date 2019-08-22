@@ -30,7 +30,7 @@
     <li [ngClass]="menu == 'receive' && 'active'">
       <a (click)="openReceiveForm()">
         <i class="fa fa-hand-holding-usd"></i>
-        <span>Receive</span>
+        <span>{{ 'Request' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'contact-list' && 'active'">
