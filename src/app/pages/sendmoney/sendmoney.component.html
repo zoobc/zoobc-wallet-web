@@ -2,35 +2,52 @@
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onSendMoney()">
-      <label>{{"From" | translate}}</label>
+      <label>{{ 'From' | translate }}</label>
       <div class="from-account">
-        <div class="name">{{account.name}}</div>
+        <div class="name">{{ account.name }}</div>
         <div class="balance">100 ZBC</div>
       </div>
 
       <label>{{ 'Recepient address' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="State"
-          [matAutocomplete]="auto" formControlName="recipient">
+        <input
+          matInput
+          placeholder="{{ 'Recepient address' | translate }}..."
+          aria-label="contacts"
+          [matAutocomplete]="auto"
+          formControlName="recipient"
+        />
         <mat-error *ngIf="recipientForm.touched">
-          <span *ngIf="recipientForm.hasError('required')">{{"Recepient is required" | translate}}</span>
+          <span *ngIf="recipientForm.hasError('required')">{{
+            'Recepient is required' | translate
+          }}</span>
         </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let contact of contacts" [value]="contact.address">
-            <span>{{contact.alias}}</span> |
-            <small>{{contact.address}}</small>
+          <mat-option
+            *ngFor="let contact of filteredContacts | async"
+            [value]="contact.address"
+          >
+            <span>{{ contact.alias }}</span> |
+            <small>{{ contact.address }}</small>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
 
       <label>{{ 'Coin amount' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}" />
+        <input
+          matInput
+          type="number"
+          formControlName="amount"
+          placeholder="{{ 'Coin Amount' | translate }}"
+        />
         <mat-error *ngIf="amountForm.touched">
-          <span *ngIf="amountForm.hasError('required')">{{"Amount is required" | translate}}</span>
+          <span *ngIf="amountForm.hasError('required')">{{
+            'Amount is required' | translate
+          }}</span>
         </mat-error>
       </mat-form-field>
-
+      
       <label>{{'Fee' | translate}}</label>
       <mat-form-field appearance="outline">
         <input matInput type="number" formControlName="fee" placeholder="{{'Fee' | translate}}" />
@@ -39,8 +56,15 @@
         </mat-error>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" type="submit" [disabled]="formSend.invalid || isFormSendLoading">
-        <span *ngIf="isFormSendLoading"><i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="formSend.invalid || isFormSendLoading"
+      >
+        <span *ngIf="isFormSendLoading">
+          <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+        </span>
         <span>{{ 'Send' | translate }}</span>
       </button>
     </form>

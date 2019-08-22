@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { AddcontactComponent } from '../addcontact/addcontact.component';
 import { EditcontactComponent } from '../editcontact/editcontact.component';
 import Swal from 'sweetalert2';
-import { ContactService } from 'src/app/services/contact.service';
+import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -12,17 +12,23 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./contactlist.component.scss'],
 })
 export class ContactlistComponent implements OnInit {
-  contacts;
+  contacts: Contact[];
 
-  constructor(private contactServ: ContactService, private dialog: MatDialog, private translate: TranslateService) { }
+  constructor(
+    private contactServ: ContactService,
+    private dialog: MatDialog,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.contacts = this.contactServ.getContactList();
   }
 
   deleteContact(contact) {
-    let sentence: string
-    this.translate.get('Are you sure want to delete?', { alias: contact.alias }).subscribe(res => sentence = res)
+    let sentence: string;
+    this.translate
+      .get('Are you sure want to delete?', { alias: contact.alias })
+      .subscribe(res => (sentence = res));
     Swal.fire({
       title: sentence,
       showCancelButton: true,
