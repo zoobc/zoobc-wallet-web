@@ -14,10 +14,10 @@
     </div>
     <div style="margin-bottom:8px;text-align: center">
       <mat-error *ngIf="confirmForm.invalid">
-        Please fill all of the passphrase
+        {{ 'Please fill all of the passphrase' | translate }}
       </mat-error>
       <mat-error *ngIf="!isMatched">
-        The passphrase is not matched
+        {{ 'The passphrase is not matched' | translate }}
       </mat-error>
     </div>
     <button
