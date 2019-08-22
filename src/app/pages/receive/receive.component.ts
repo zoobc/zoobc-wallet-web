@@ -15,13 +15,15 @@ export class ReceiveComponent implements OnInit {
 
   formRequest: FormGroup;
   amountField = new FormControl('', Validators.required);
+  feeField = new FormControl('', Validators.required);
 
   constructor(private authServ: AuthService, private snackBar: MatSnackBar) {
     this.address = this.authServ.currAddress;
-    this.urlReqCoin = `${window.location.origin}/request/${this.address}/10`;
+    this.urlReqCoin = `${window.location.origin}/request/${this.address}/10/10`;
 
     this.formRequest = new FormGroup({
       amount: this.amountField,
+      fee: this.feeField,
     });
   }
 
@@ -46,7 +48,8 @@ export class ReceiveComponent implements OnInit {
   onChangeAmount() {
     if (this.formRequest.valid) {
       const amount = this.amountField.value;
-      this.urlReqCoin = `${window.location.origin}/request/${this.address}/${amount}`;
+      const fee = this.feeField.value;
+      this.urlReqCoin = `${window.location.origin}/request/${this.address}/${amount}/${fee}`;
     }
   }
 }
