@@ -25,23 +25,16 @@ import { MatDialog } from '@angular/material';
 
 const coin = 'ZBC';
 
-export interface SendMoney {
-  type: string;
-  detail: string;
-}
-
 @Component({
   selector: 'app-sendmoney',
   templateUrl: './sendmoney.component.html',
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
-  displayedColumns: string[] = ['type', 'detail'];
   contacts: Contact[];
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
-  @ViewChild('popupSendMoneySuccess') popupSendMoneySuccess: TemplateRef<any>;
   currencyRate: Currency = {
     name: '',
     value: 0,
@@ -90,7 +83,6 @@ export class SendmoneyComponent implements OnInit {
     );
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-      console.log(this.currencyRate.value);
     });
   }
 
@@ -185,7 +177,7 @@ export class SendmoneyComponent implements OnInit {
             'to this <b>' +
             this.recipientForm.value +
             '</b> address',
-            'success',
+          'success'
         );
         // else Swal.fire({ html: res.message, type: 'error' });
         this.isFormSendLoading = false;
