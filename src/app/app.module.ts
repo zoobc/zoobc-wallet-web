@@ -171,6 +171,7 @@ export function getLanguage(languageServ: LanguageService) {
     PinSetupDialogComponent,
     AddNodeAdminComponent,
     ChangeIpAddressComponent,
+    SendmoneyComponent,
   ],
 })
 export class AppModule {}

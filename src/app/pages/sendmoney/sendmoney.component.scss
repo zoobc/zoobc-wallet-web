@@ -29,3 +29,53 @@
     }
   }
 }
+// Table
+.popup {
+  margin-bottom: 10px !important;
+}
+.divTable {
+  display: table;
+  width: 100%;
+  border-spacing: 5px;
+}
+.divTableRow {
+  display: table-row;
+}
+
+.divTableCell-1 {
+  background-color: #eee;
+  border: 1px solid #999999;
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableCell {
+  border: 1px solid #999999;
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableBody {
+  display: table-row-group;
+}
+
+.sub-title {
+  margin-top: 10px !important;
+  font-size: 17px;
+  text-align: center;
+  font-weight: bold;
+  color: $black1;
+}
+
+.content {
+  margin-top: 10px !important;
+  font-size: 16px;
+  text-align: center;
+  color: $black1;
+}
+
+#icon-success {
+  color: blue;
+  display: block;
+  text-shadow: 1px 1px 1px #ccc;
+  font-size: 5.5em;
+  text-align: center;
+}

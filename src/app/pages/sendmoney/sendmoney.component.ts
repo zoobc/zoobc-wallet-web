@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 
@@ -17,8 +17,18 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import {
+  CurrencyRateService,
+  Currency,
+} from 'src/app/services/currency-rate.service';
+import { MatDialog } from '@angular/material';
 
 const coin = 'ZBC';
+
+export interface SendMoney {
+  type: string;
+  detail: string;
+}
 
 @Component({
   selector: 'app-sendmoney',
@@ -26,14 +36,23 @@ const coin = 'ZBC';
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
+  displayedColumns: string[] = ['type', 'detail'];
   contacts: Contact[];
   filteredContacts: Observable<Contact[]>;
 
+  @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
+  @ViewChild('popupSendMoneySuccess') popupSendMoneySuccess: TemplateRef<any>;
+  currencyRate: Currency = {
+    name: '',
+    value: 0,
+  };
+  keyword = 'alias';
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', Validators.required);
   feeForm = new FormControl('0', Validators.required);
   isFormSendLoading = false;
+  address = this.authServ.currAddress;
 
   account: SavedAccount;
 
@@ -43,8 +62,10 @@ export class SendmoneyComponent implements OnInit {
     private accServ: AccountService,
     private authServ: AuthService,
     private keyringServ: KeyringService,
+    private currencyServ: CurrencyRateService,
     private contactServ: ContactService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public dialog: MatDialog
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -59,7 +80,6 @@ export class SendmoneyComponent implements OnInit {
     this.formSend.patchValue({
       recipient: this.activRoute.snapshot.params['recipient'] || '',
       amount: this.activRoute.snapshot.params['amount'] || '',
-      fee: this.activRoute.snapshot.params['fee'] || '',
     });
 
     this.contacts = this.contactServ.getContactList();
@@ -68,13 +88,31 @@ export class SendmoneyComponent implements OnInit {
       startWith(''),
       map(value => this.filterContacts(value))
     );
+    this.currencyServ.currencyRate.subscribe((rate: Currency) => {
+      this.currencyRate = rate;
+      console.log(this.currencyRate.value);
+    });
   }
 
   filterContacts(value: string) {
-    const filterValue = value.toLowerCase();
-    return this.contacts.filter((contact: Contact) =>
-      contact.alias.toLowerCase().includes(filterValue)
-    );
+    if (value) {
+      const filterValue = value.toLowerCase();
+      return this.contacts.filter((contact: Contact) =>
+        contact.alias.toLowerCase().includes(filterValue)
+      );
+    }
+  }
+
+  onOpenDialogDetailSendMoney() {
+    this.dialog.open(this.popupDetailSendMoney, {
+      width: '600px',
+      data: this.formSend.value,
+    });
+    console.log(this.formSend.value);
+  }
+
+  closeDialog() {
+    this.dialog.closeAll();
   }
 
   async onSendMoney() {
@@ -92,10 +130,10 @@ export class SendmoneyComponent implements OnInit {
       const address = this.authServ.currAddress;
 
       // if using balance validation
-      let balance = await this.accServ.getAccountBalance().then((data: any) => {
-        this.isFormSendLoading = false;
-        return data.balance;
-      });
+      // let balance = await this.accServ.getAccountBalance().then((data: any) => {
+      //   this.isFormSendLoading = false;
+      //   return data.balance;
+      // });
 
       if (/*balance / 1e8 > */ this.amountForm.value + this.feeForm.value) {
         // const recepients =
@@ -108,7 +146,6 @@ export class SendmoneyComponent implements OnInit {
           senderPublicKey: childSeed.publicKey,
           timestamp: Math.trunc(Date.now() / 1000),
         };
-
         // template bytes
         let txBytes = transactionByte;
         // set signature bytes to 0
@@ -127,54 +164,37 @@ export class SendmoneyComponent implements OnInit {
 
         let signature = childSeed.sign(txBytes);
         console.log('txSignature:', signature);
+        const rateFixed = this.currencyRate.value.toFixed(2);
 
         // set signature to bytes
         txBytes.set(signature, 123);
         console.log('signedTxBytes:', txBytes);
-
-        let sendMoneySentence: string;
-        this.translate
-          .get('Are you sure want to send money?')
-          .subscribe(res => (sendMoneySentence = res));
-        Swal.fire({
-          title: sendMoneySentence,
-          showCancelButton: true,
-          showLoaderOnConfirm: true,
-          preConfirm: () => {
-            this.isFormSendLoading = true;
-            return this.transactionServ
-              .postTransaction(txBytes)
-              .then((res: any) => {
-                let sentSentence: string;
-                this.translate
-                  .get('Money sent')
-                  .subscribe(res => (sentSentence = res));
-                if (res.isvalid) Swal.fire(sentSentence);
-                else Swal.fire({ html: res.message, type: 'error' });
-
-                this.isFormSendLoading = false;
-
-                this.formSend.reset();
-                Object.keys(this.formSend.controls).forEach(key => {
-                  this.formSend.controls[key].setErrors(null);
-                });
-                return false;
-              })
-              .catch(err => {
-                console.log(err);
-                Swal.fire({ html: err.error.error, type: 'error' });
-                this.isFormSendLoading = false;
-                return false;
-              });
-          },
-        });
-      } else {
-        let balanceNotEnoughSentence: string;
-        this.translate
-          .get('Balance is not enough')
-          .subscribe(res => (balanceNotEnoughSentence = res));
-        Swal.fire({ html: balanceNotEnoughSentence, type: 'error' });
+        // this.transactionServ.postTransaction(txBytes).then((res: any) => {
+        //   this.isFormSendLoading = true;
+        //   if (res.isvalid)
+        Swal.fire(
+          '<b>Your transaction is on the way !</b>',
+          'You send <b>' +
+            (this.amountForm.value + this.feeForm.value) +
+            '</b> coins (' +
+            (this.amountForm.value + this.feeForm.value) *
+              parseFloat(rateFixed) +
+            ' ' +
+            this.currencyRate.name +
+            ') ' +
+            'to this <b>' +
+            this.recipientForm.value +
+            '</b> address',
+            'success',
+        );
+        // else Swal.fire({ html: res.message, type: 'error' });
         this.isFormSendLoading = false;
+        this.formSend.reset();
+        Object.keys(this.formSend.controls).forEach(key => {
+          this.formSend.controls[key].setErrors(null);
+        });
+        this.closeDialog();
+        // });
       }
     }
   }
