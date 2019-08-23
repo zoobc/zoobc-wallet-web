@@ -15,6 +15,13 @@ export class ContactService {
     return JSON.parse(localStorage.getItem('CONTACT_LIST'));
   }
 
+  getContact(address: string) {
+    const contacts: Contact[] = JSON.parse(
+      localStorage.getItem('CONTACT_LIST')
+    );
+    return contacts.find(c => c.address == address);
+  }
+
   addContact(newContact) {
     let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
     contact = contact || [];

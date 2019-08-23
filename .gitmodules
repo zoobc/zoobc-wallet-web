@@ -10,3 +10,7 @@
 	path = src/assets/languages
 	url = https://github.com/zoobc/zoobc-language-files
 	branch = master
+[submodule "proto"]
+	path = externals/proto
+	url = https://github.com/zoobc/zoobc-schema
+	branch = develop

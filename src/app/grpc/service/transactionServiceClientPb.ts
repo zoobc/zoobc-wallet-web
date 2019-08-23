@@ -10,6 +10,7 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as model_transaction_pb from '../model/transaction_pb';
+import * as google_api_annotations_pb from '../google/api/annotations_pb';
 
 export class TransactionServiceClient {
   client_: grpcWeb.AbstractClientBase;
@@ -29,47 +30,47 @@ export class TransactionServiceClient {
     this.options_ = options;
   }
 
-  methodInfoGetTransactionsByAccountPublicKey = new grpcWeb.AbstractClientBase.MethodInfo(
+  methodInfoGetTransactions = new grpcWeb.AbstractClientBase.MethodInfo(
     model_transaction_pb.GetTransactionsResponse,
-    (request: model_transaction_pb.GetTransactionsByAccountPublicKeyRequest) => {
+    (request: model_transaction_pb.GetTransactionsRequest) => {
       return request.serializeBinary();
     },
     model_transaction_pb.GetTransactionsResponse.deserializeBinary
   );
 
-  getTransactionsByAccountPublicKey(
-    request: model_transaction_pb.GetTransactionsByAccountPublicKeyRequest,
+  getTransactions(
+    request: model_transaction_pb.GetTransactionsRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
                response: model_transaction_pb.GetTransactionsResponse) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/service.TransactionService/GetTransactionsByAccountPublicKey',
+        '/service.TransactionService/GetTransactions',
       request,
       metadata || {},
-      this.methodInfoGetTransactionsByAccountPublicKey,
+      this.methodInfoGetTransactions,
       callback);
   }
 
-  methodInfoGetTransactionsByBlockID = new grpcWeb.AbstractClientBase.MethodInfo(
-    model_transaction_pb.GetTransactionsResponse,
-    (request: model_transaction_pb.GetTransactionsByBlockIDRequest) => {
+  methodInfoGetTransaction = new grpcWeb.AbstractClientBase.MethodInfo(
+    model_transaction_pb.Transaction,
+    (request: model_transaction_pb.GetTransactionRequest) => {
       return request.serializeBinary();
     },
-    model_transaction_pb.GetTransactionsResponse.deserializeBinary
+    model_transaction_pb.Transaction.deserializeBinary
   );
 
-  getTransactionsByBlockID(
-    request: model_transaction_pb.GetTransactionsByBlockIDRequest,
+  getTransaction(
+    request: model_transaction_pb.GetTransactionRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
-               response: model_transaction_pb.GetTransactionsResponse) => void) {
+               response: model_transaction_pb.Transaction) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/service.TransactionService/GetTransactionsByBlockID',
+        '/service.TransactionService/GetTransaction',
       request,
       metadata || {},
-      this.methodInfoGetTransactionsByBlockID,
+      this.methodInfoGetTransaction,
       callback);
   }
 

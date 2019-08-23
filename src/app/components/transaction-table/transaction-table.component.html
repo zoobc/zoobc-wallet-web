@@ -15,23 +15,29 @@
         *ngFor="let transaction of transactionData; let i = index"
       >
         <div class="col-7 col-sm-8">
-          <div class="name" *ngIf="i % 2 == 0">Alias</div>
-          <div class="address">{{ transaction.senderpublickey }}</div>
+          <div class="name" *ngIf="transaction.alias">
+            {{ transaction.alias }}
+          </div>
+          <div class="address">{{ transaction.address }}</div>
           <div class="date">
-            {{ transaction.timestamp | date: 'dd MMMM yyyy' }}
+            {{ transaction.timestamp | date: 'dd MMMM yyyy HH:mm:ss' }}
           </div>
         </div>
         <div class="col-5 col-sm-4 text-right">
-          <div class="amount-send" *ngIf="i % 2 == 0">
-            - {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
-          </div>
-          <div class="amount-receive" *ngIf="i % 2 == 1">
-            + {{ transaction.amountnqt / 1e8 | number: '0.1-4' }} ZBC
-          </div>
-          <div class="fee" *ngIf="i % 2 == 0">
-            - {{ transaction.feenqt / 1e8 }}
-            <small>ZBC {{ 'Fee' | translate }}</small>
-          </div>
+          <ng-container *ngIf="transaction.type == 'send'">
+            <div class="amount-send">
+              - {{ transaction.amount | number: '0.1-4' }} ZBC
+            </div>
+            <div class="fee" *ngIf="i % 2 == 0">
+              - {{ transaction.fee }}
+              <small>ZBC {{ 'Fee' | translate }}</small>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="transaction.type == 'receive'">
+            <div class="amount-receive">
+              + {{ transaction.amount | number: '0.1-4' }} ZBC
+            </div>
+          </ng-container>
         </div>
       </div>
     </ng-container>

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { TransactionService } from '../../services/transaction.service';
+import {
+  TransactionService,
+  Transaction,
+} from '../../services/transaction.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -9,9 +12,8 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./transferhistory.component.scss'],
 })
 export class TransferhistoryComponent implements OnInit {
-  accountHistory: any = [];
+  accountHistory: Transaction[] = [];
   address: string;
-  config: any;
   showSpinner: boolean = true;
 
   constructor(
@@ -19,20 +21,11 @@ export class TransferhistoryComponent implements OnInit {
     private authServ: AuthService
   ) {
     this.address = this.authServ.currAddress;
-    this.config = {
-      itemsPerPage: 5,
-      currentPage: 1,
-      totalItems: this.accountHistory.length,
-    };
-  }
-
-  pageChanged(event) {
-    this.config.currentPage = event;
   }
 
   ngOnInit() {
-    this.transactionServ.getAccountTransaction().then((res: any) => {
-      this.accountHistory = res.transactionsList;
+    this.transactionServ.getAccountTransaction(1, 10).then((res: any) => {
+      this.accountHistory = res;
       this.showSpinner = false;
     });
   }

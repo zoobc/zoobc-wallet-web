@@ -13,3 +13,5 @@ var global = Function('return this')();
 
 var model_transaction_pb = require('../model/transaction_pb.js');
 goog.object.extend(proto, model_transaction_pb);
+var google_api_annotations_pb = require('../google/api/annotations_pb.js');
+goog.object.extend(proto, google_api_annotations_pb);

@@ -20,12 +20,12 @@ export class AuthService {
   currPublicKey: Uint8Array;
   currAddress: string;
   // currSeed: string =
-  //   'e198d5f470d412f2902b50d7ba028f59f05bf51e5c1c7f23b0be8bb4cc6f5d3a9f37574f3c993c312e0b16a67b81e44e919b9c6ef3ada3f3a061c051c3db6709';
+  //   'b88ddc803c5b30918e4fd23e6c6e7a9580d267d58607569b33048925c145cecf2dfa43dca8371b4a2506c922e76d31d2e213b3c599c16bf1a853a9b2b954a9fd';
   // currPublicKey: Uint8Array = Buffer.from(
-  //   '04c92ac3fb75f8a6b91d61807d4812977d158a7a83b4a623c6a73ffb352a317f',
+  //   '9cafe8bb17430f0b898a88220c08bfcecd4ba9e37b7f966c5db16d5c6a867343',
   //   'hex'
   // );
-  // currAddress: string = 'BMkqw_t1-Ka5HWGAfUgSl30VinqDtKYjxqc_-zUqMX85';
+  // currAddress: string = 'nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd';
 
   constructor(private keyringServ: KeyringService) {}
 

@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  grpcUrl: 'http://18.139.3.139:8080',
+  grpcUrl: 'http://18.139.3.139:7001',
   mnemonicLanguage: 'english',
-  mnemonicNumWords: 24,
+  mnemonicNumWords: 12,
 };
 
 /*

@@ -10,9 +10,9 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as model_accountBalance_pb from '../model/accountBalance_pb';
-import * as model_empty_pb from '../model/empty_pb';
+import * as google_api_annotations_pb from '../google/api/annotations_pb';
 
-export class AccountBalancesServiceClient {
+export class AccountBalanceServiceClient {
   client_: grpcWeb.AbstractClientBase;
   hostname_: string;
   credentials_: null | { [index: string]: string; };
@@ -32,20 +32,20 @@ export class AccountBalancesServiceClient {
 
   methodInfoGetAccountBalances = new grpcWeb.AbstractClientBase.MethodInfo(
     model_accountBalance_pb.GetAccountBalancesResponse,
-    (request: model_empty_pb.Empty) => {
+    (request: model_accountBalance_pb.GetAccountBalancesRequest) => {
       return request.serializeBinary();
     },
     model_accountBalance_pb.GetAccountBalancesResponse.deserializeBinary
   );
 
   getAccountBalances(
-    request: model_empty_pb.Empty,
+    request: model_accountBalance_pb.GetAccountBalancesRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
                response: model_accountBalance_pb.GetAccountBalancesResponse) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/service.AccountBalancesService/GetAccountBalances',
+        '/service.AccountBalanceService/GetAccountBalances',
       request,
       metadata || {},
       this.methodInfoGetAccountBalances,
@@ -53,21 +53,21 @@ export class AccountBalancesServiceClient {
   }
 
   methodInfoGetAccountBalance = new grpcWeb.AbstractClientBase.MethodInfo(
-    model_accountBalance_pb.AccountBalance,
+    model_accountBalance_pb.GetAccountBalanceResponse,
     (request: model_accountBalance_pb.GetAccountBalanceRequest) => {
       return request.serializeBinary();
     },
-    model_accountBalance_pb.AccountBalance.deserializeBinary
+    model_accountBalance_pb.GetAccountBalanceResponse.deserializeBinary
   );
 
   getAccountBalance(
     request: model_accountBalance_pb.GetAccountBalanceRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
-               response: model_accountBalance_pb.AccountBalance) => void) {
+               response: model_accountBalance_pb.GetAccountBalanceResponse) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/service.AccountBalancesService/GetAccountBalance',
+        '/service.AccountBalanceService/GetAccountBalance',
       request,
       metadata || {},
       this.methodInfoGetAccountBalance,
