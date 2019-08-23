@@ -9,22 +9,10 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./receive.component.scss'],
 })
 export class ReceiveComponent implements OnInit {
-  // value for QR Code
   address: string = '';
-  urlReqCoin: string;
-
-  formRequest: FormGroup;
-  amountField = new FormControl('', Validators.required);
-  feeField = new FormControl('', Validators.required);
 
   constructor(private authServ: AuthService, private snackBar: MatSnackBar) {
     this.address = this.authServ.currAddress;
-    this.urlReqCoin = `${window.location.origin}/request/${this.address}/10/10`;
-
-    this.formRequest = new FormGroup({
-      amount: this.amountField,
-      fee: this.feeField,
-    });
   }
 
   copyAddress() {
@@ -44,12 +32,4 @@ export class ReceiveComponent implements OnInit {
   }
 
   ngOnInit() {}
-
-  onChangeAmount() {
-    if (this.formRequest.valid) {
-      const amount = this.amountField.value;
-      const fee = this.feeField.value;
-      this.urlReqCoin = `${window.location.origin}/request/${this.address}/${amount}/${fee}`;
-    }
-  }
 }

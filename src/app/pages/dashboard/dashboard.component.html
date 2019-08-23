@@ -31,10 +31,7 @@
 
   <mat-card class="account-card">
     <div class="summary">
-      <div>
-        <span class="name">{{ account.name }}</span>
-        <span class="detail-button">Detail</span>
-      </div>
+      <div class="name">{{ account.name }}</div>
       <div class="address" (click)="copyText(address)">{{ address }}</div>
     </div>
 
@@ -115,7 +112,7 @@
       </button>
       <button mat-flat-button (click)="openReceiveForm()">
         <i matPrefix class="fa fa-hand-holding-usd"></i>
-        <span>{{ 'Receive' | translate }}</span>
+        <span>{{ 'Request' | translate }}</span>
       </button>
     </div>
   </mat-card>
