@@ -74,27 +74,5 @@ export class NodeRegistrationServiceClient {
       callback);
   }
 
-  methodInfoUpdateNodeRegistration = new grpcWeb.AbstractClientBase.MethodInfo(
-    model_nodeRegistration_pb.NodeRegistration,
-    (request: model_nodeRegistration_pb.UpdateNodeRegistrationRequest) => {
-      return request.serializeBinary();
-    },
-    model_nodeRegistration_pb.NodeRegistration.deserializeBinary
-  );
-
-  updateNodeRegistration(
-    request: model_nodeRegistration_pb.UpdateNodeRegistrationRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.Error,
-               response: model_nodeRegistration_pb.NodeRegistration) => void) {
-    return this.client_.rpcCall(
-      this.hostname_ +
-        '/service.NodeRegistrationService/UpdateNodeRegistration',
-      request,
-      metadata || {},
-      this.methodInfoUpdateNodeRegistration,
-      callback);
-  }
-
 }
 

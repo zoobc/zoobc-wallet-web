@@ -48,12 +48,6 @@ export class TransactionService {
         (err, response: GetTransactionsResponse) => {
           if (err) return reject(err);
 
-          console.log(response.toObject());
-
-          // console.log(
-          //   Buffer.from(JSON.stringify(response.toObject().transactionsList[1]))
-          // );
-
           // filter transactions for only showing send coin type (type 1) (TEMP)
           const originTx = response.toObject().transactionsList.filter(tx => {
             if (tx.transactiontype == 1) return tx;
