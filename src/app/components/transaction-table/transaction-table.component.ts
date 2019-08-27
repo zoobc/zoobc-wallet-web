@@ -10,7 +10,5 @@ export class TransactionTableComponent implements OnInit {
   @Input() isLoading: boolean = false;
   constructor() {}
 
-  ngOnInit() {
-    console.log(this.transactionData);
-  }
+  ngOnInit() {}
 }

@@ -61,7 +61,6 @@ export class DashboardComponent implements OnInit {
     this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
       this.accountBalance = data.accountbalance;
       this.showSpinnerBalance = false;
-      console.log(this.accountBalance);
     });
 
     this.transactionServ
