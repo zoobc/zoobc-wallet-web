@@ -30,7 +30,8 @@ export class DashboardComponent implements OnInit {
   showSpinnerBalance: boolean = true;
   showSpinnerRecentTx: boolean = true;
 
-  recentTx: Transaction[];
+  recentTx: Transaction[] = [];
+  unconfirmTx: Transaction[] = [];
 
   currencyRate: Currency = {
     name: '',
@@ -68,6 +69,12 @@ export class DashboardComponent implements OnInit {
       .then((res: Transaction[]) => {
         this.recentTx = res;
         this.showSpinnerRecentTx = false;
+      });
+
+    this.transactionServ
+      .getUnconfirmTransaction()
+      .then((res: Transaction[]) => {
+        this.unconfirmTx = res;
       });
 
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {

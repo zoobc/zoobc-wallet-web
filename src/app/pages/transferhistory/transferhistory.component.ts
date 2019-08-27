@@ -13,6 +13,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class TransferhistoryComponent implements OnInit {
   accountHistory: Transaction[] = [];
+  unconfirmTx: Transaction[] = [];
+
   address: string;
   showSpinner: boolean = true;
 
@@ -28,5 +30,11 @@ export class TransferhistoryComponent implements OnInit {
       this.accountHistory = res;
       this.showSpinner = false;
     });
+
+    this.transactionServ
+      .getUnconfirmTransaction()
+      .then((res: Transaction[]) => {
+        this.unconfirmTx = res;
+      });
   }
 }
