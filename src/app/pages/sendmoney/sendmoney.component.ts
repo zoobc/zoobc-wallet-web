@@ -17,8 +17,15 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { BytesMaker } from 'src/helpers/BytesMaker';
+import {
+  GetAccountBalanceResponse,
+  AccountBalance as AB,
+} from 'src/app/grpc/model/accountBalance_pb';
+import { AccountService } from 'src/app/services/account.service';
 
 const coin = 'ZBC';
+type AccountBalance = AB.AsObject;
+type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 
 @Component({
   selector: 'app-sendmoney',
@@ -26,6 +33,7 @@ const coin = 'ZBC';
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
+  accountBalance: AccountBalance;
   contacts: Contact[];
   filteredContacts: Observable<Contact[]>;
 
@@ -39,7 +47,8 @@ export class SendmoneyComponent implements OnInit {
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('0', Validators.required);
+  amountCurrencyForm = new FormControl('', Validators.required);
+  feeForm = new FormControl('', Validators.required);
 
   formConfirmPin: FormGroup;
   pinField = new FormControl('', Validators.required);
@@ -56,7 +65,7 @@ export class SendmoneyComponent implements OnInit {
   bytes = new Uint8Array(193);
 
   constructor(
-    private activRoute: ActivatedRoute,
+    private accountServ: AccountService,
     private transactionServ: TransactionService,
     private authServ: AuthService,
     private keyringServ: KeyringService,
@@ -69,21 +78,19 @@ export class SendmoneyComponent implements OnInit {
       recipient: this.recipientForm,
       amount: this.amountForm,
       fee: this.feeForm,
+      amountCurrency: this.amountCurrencyForm,
     });
 
     this.formConfirmPin = new FormGroup({
       pin: this.pinField,
     });
-
     this.account = authServ.getCurrAccount();
   }
 
   ngOnInit() {
-    this.formSend.patchValue({
-      recipient: this.activRoute.snapshot.params['recipient'] || '',
-      amount: this.activRoute.snapshot.params['amount'] || '',
+    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
+      this.accountBalance = data.accountbalance;
     });
-
     this.contacts = this.contactServ.getContactList() || [];
     // set filtered contacts function
     this.filteredContacts = this.recipientForm.valueChanges.pipe(
@@ -92,6 +99,22 @@ export class SendmoneyComponent implements OnInit {
     );
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
+    });
+  }
+
+  onChangeAmountField() {
+    const resultAmountCurrency =
+      this.amountForm.value * this.currencyRate.value;
+    this.formSend.patchValue({
+      amountCurrency: resultAmountCurrency,
+    });
+  }
+
+  onChangeAmountCurrencyField() {
+    const resultAmount =
+      this.amountCurrencyForm.value / this.currencyRate.value;
+    this.formSend.patchValue({
+      amount: resultAmount,
     });
   }
 
