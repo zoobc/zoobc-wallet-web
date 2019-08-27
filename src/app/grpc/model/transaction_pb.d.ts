@@ -43,6 +43,9 @@ export class Transaction extends jspb.Message {
   getTransactionbodybytes_asB64(): string;
   setTransactionbodybytes(value: Uint8Array | string): void;
 
+  getTransactionindex(): number;
+  setTransactionindex(value: number): void;
+
   getEmptytransactionbody(): EmptyTransactionBody | undefined;
   setEmptytransactionbody(value?: EmptyTransactionBody): void;
   hasEmptytransactionbody(): boolean;
@@ -72,6 +75,12 @@ export class Transaction extends jspb.Message {
   hasRemovenoderegistrationtransactionbody(): boolean;
   clearRemovenoderegistrationtransactionbody(): void;
   hasRemovenoderegistrationtransactionbody(): boolean;
+
+  getClaimnoderegistrationtransactionbody(): ClaimNodeRegistrationTransactionBody | undefined;
+  setClaimnoderegistrationtransactionbody(value?: ClaimNodeRegistrationTransactionBody): void;
+  hasClaimnoderegistrationtransactionbody(): boolean;
+  clearClaimnoderegistrationtransactionbody(): void;
+  hasClaimnoderegistrationtransactionbody(): boolean;
 
   getSetupaccountdatasettransactionbody(): SetupAccountDatasetTransactionBody | undefined;
   setSetupaccountdatasettransactionbody(value?: SetupAccountDatasetTransactionBody): void;
@@ -108,23 +117,26 @@ export namespace Transaction {
     transactionhash: Uint8Array | string,
     transactionbodylength: number,
     transactionbodybytes: Uint8Array | string,
+    transactionindex: number,
     emptytransactionbody?: EmptyTransactionBody.AsObject,
     sendmoneytransactionbody?: SendMoneyTransactionBody.AsObject,
     noderegistrationtransactionbody?: NodeRegistrationTransactionBody.AsObject,
     updatenoderegistrationtransactionbody?: UpdateNodeRegistrationTransactionBody.AsObject,
     removenoderegistrationtransactionbody?: RemoveNodeRegistrationTransactionBody.AsObject,
+    claimnoderegistrationtransactionbody?: ClaimNodeRegistrationTransactionBody.AsObject,
     setupaccountdatasettransactionbody?: SetupAccountDatasetTransactionBody.AsObject,
     signature: Uint8Array | string,
   }
 
   export enum TransactionbodyCase { 
     TRANSACTIONBODY_NOT_SET = 0,
-    EMPTYTRANSACTIONBODY = 13,
-    SENDMONEYTRANSACTIONBODY = 14,
-    NODEREGISTRATIONTRANSACTIONBODY = 15,
-    UPDATENODEREGISTRATIONTRANSACTIONBODY = 16,
-    REMOVENODEREGISTRATIONTRANSACTIONBODY = 17,
-    SETUPACCOUNTDATASETTRANSACTIONBODY = 18,
+    EMPTYTRANSACTIONBODY = 14,
+    SENDMONEYTRANSACTIONBODY = 15,
+    NODEREGISTRATIONTRANSACTIONBODY = 16,
+    UPDATENODEREGISTRATIONTRANSACTIONBODY = 17,
+    REMOVENODEREGISTRATIONTRANSACTIONBODY = 18,
+    CLAIMNODEREGISTRATIONTRANSACTIONBODY = 19,
+    SETUPACCOUNTDATASETTRANSACTIONBODY = 20,
   }
 }
 
@@ -283,6 +295,36 @@ export class RemoveNodeRegistrationTransactionBody extends jspb.Message {
 export namespace RemoveNodeRegistrationTransactionBody {
   export type AsObject = {
     nodepublickey: Uint8Array | string,
+  }
+}
+
+export class ClaimNodeRegistrationTransactionBody extends jspb.Message {
+  getNodepublickey(): Uint8Array | string;
+  getNodepublickey_asU8(): Uint8Array;
+  getNodepublickey_asB64(): string;
+  setNodepublickey(value: Uint8Array | string): void;
+
+  getAccountaddress(): string;
+  setAccountaddress(value: string): void;
+
+  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
+  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
+  hasPoown(): boolean;
+  clearPoown(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ClaimNodeRegistrationTransactionBody.AsObject;
+  static toObject(includeInstance: boolean, msg: ClaimNodeRegistrationTransactionBody): ClaimNodeRegistrationTransactionBody.AsObject;
+  static serializeBinaryToWriter(message: ClaimNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ClaimNodeRegistrationTransactionBody;
+  static deserializeBinaryFromReader(message: ClaimNodeRegistrationTransactionBody, reader: jspb.BinaryReader): ClaimNodeRegistrationTransactionBody;
+}
+
+export namespace ClaimNodeRegistrationTransactionBody {
+  export type AsObject = {
+    nodepublickey: Uint8Array | string,
+    accountaddress: string,
+    poown?: model_proofOfOwnership_pb.ProofOfOwnership.AsObject,
   }
 }
 

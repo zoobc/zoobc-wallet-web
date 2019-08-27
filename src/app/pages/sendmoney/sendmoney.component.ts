@@ -4,12 +4,6 @@ import Swal from 'sweetalert2';
 
 import { TransactionService } from '../../services/transaction.service';
 import { AccountService } from '../../services/account.service';
-import {
-  bigintToByteArray,
-  BigInt,
-  addressToPublicKey,
-} from '../../../helpers/converters';
-import { transactionByte } from '../../../helpers/transactionByteTemplate';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { ActivatedRoute } from '@angular/router';
@@ -22,6 +16,7 @@ import {
   Currency,
 } from 'src/app/services/currency-rate.service';
 import { MatDialog } from '@angular/material';
+import { BytesMaker } from 'src/helpers/BytesMaker';
 
 const coin = 'ZBC';
 
@@ -49,10 +44,11 @@ export class SendmoneyComponent implements OnInit {
 
   account: SavedAccount;
 
+  bytes = new Uint8Array(193);
+
   constructor(
     private activRoute: ActivatedRoute,
     private transactionServ: TransactionService,
-    private accServ: AccountService,
     private authServ: AuthService,
     private keyringServ: KeyringService,
     private currencyServ: CurrencyRateService,
@@ -75,7 +71,7 @@ export class SendmoneyComponent implements OnInit {
       amount: this.activRoute.snapshot.params['amount'] || '',
     });
 
-    this.contacts = this.contactServ.getContactList();
+    this.contacts = this.contactServ.getContactList() || [];
     // set filtered contacts function
     this.filteredContacts = this.recipientForm.valueChanges.pipe(
       startWith(''),
@@ -119,75 +115,72 @@ export class SendmoneyComponent implements OnInit {
         coin,
         account.path
       );
-      const address = this.authServ.currAddress;
 
-      // if using balance validation
-      // let balance = await this.accServ.getAccountBalance().then((data: any) => {
-      //   this.isFormSendLoading = false;
-      //   return data.balance;
-      // });
+      const sender = Buffer.from(this.authServ.currAddress, 'utf-8');
+      const recepient = Buffer.from(this.recipientForm.value, 'utf-8');
+      const amount = this.amountForm.value;
+      const fee = this.feeForm.value;
+      const timestamp = Math.trunc(Date.now() / 1000);
 
-      if (/*balance / 1e8 > */ this.amountForm.value + this.feeForm.value) {
-        // const recepients =
-        //   typeof this.recipientForm.value === 'object' ?  this.recipientForm.value.address : this.recipientForm.value;
-        let dataForm = {
-          recipient: this.recipientForm.value,
-          amount: this.amountForm.value * 1e8,
-          fee: this.feeForm.value * 1e8,
-          from: address,
-          senderPublicKey: childSeed.publicKey,
-          timestamp: Math.trunc(Date.now() / 1000),
-        };
-        // template bytes
-        let txBytes = transactionByte;
-        // set signature bytes to 0
-        txBytes.fill(0, 123, 187);
+      let bytes = new BytesMaker(129);
+      // transaction type
+      bytes.write4bytes(1);
+      // version
+      bytes.write1Byte(1);
+      // timestamp
+      bytes.write8Bytes(timestamp);
+      // sender address length
+      bytes.write4bytes(44);
+      // sender address
+      bytes.write44Bytes(sender);
+      // recepient address length
+      bytes.write4bytes(44);
+      // recepient address
+      bytes.write44Bytes(recepient);
+      // tx fee
+      bytes.write8Bytes(fee);
+      // tx body length
+      bytes.write4bytes(8);
+      // tx body (amount)
+      bytes.write8Bytes(amount);
 
-        txBytes.set(dataForm.senderPublicKey, 11);
-        txBytes.set(addressToPublicKey(dataForm.recipient), 43);
-        txBytes.set(bigintToByteArray(BigInt(dataForm.amount)), 75);
-        txBytes.set(bigintToByteArray(BigInt(dataForm.fee)), 83);
-        let timestampsView = new DataView(
-          txBytes.buffer,
-          txBytes.byteOffset,
-          txBytes.byteLength
-        );
-        timestampsView.setUint32(3, dataForm.timestamp, true);
+      let signature = childSeed.sign(bytes.value);
+      let bytesWithSign = new BytesMaker(193);
 
-        let signature = childSeed.sign(txBytes);
-        console.log('txSignature:', signature);
-        const rateFixed = this.currencyRate.value.toFixed(2);
+      // copy to new bytes
+      bytesWithSign.write(bytes.value, 129);
+      // set signature
+      bytesWithSign.write(signature, 64);
+      console.log(bytesWithSign.value);
 
-        // set signature to bytes
-        txBytes.set(signature, 123);
-        console.log('signedTxBytes:', txBytes);
-        // this.transactionServ.postTransaction(txBytes).then((res: any) => {
-        //   this.isFormSendLoading = true;
-        //   if (res.isvalid)
-        Swal.fire(
-          '<b>Your transaction is on the way !</b>',
-          'You send <b>' +
-            (this.amountForm.value + this.feeForm.value) +
-            '</b> coins (' +
-            (this.amountForm.value + this.feeForm.value) *
-              parseFloat(rateFixed) +
-            ' ' +
-            this.currencyRate.name +
-            ') ' +
-            'to this <b>' +
-            this.recipientForm.value +
-            '</b> address',
-          'success'
-        );
-        // else Swal.fire({ html: res.message, type: 'error' });
-        this.isFormSendLoading = false;
-        this.formSend.reset();
-        Object.keys(this.formSend.controls).forEach(key => {
-          this.formSend.controls[key].setErrors(null);
-        });
-        this.closeDialog();
-        // });
-      }
+      this.transactionServ.postTransaction(bytesWithSign.value).then(
+        (res: any) => {
+          console.log(res);
+          this.isFormSendLoading = true;
+          Swal.fire(
+            '<b>Your transaction is on the way !</b>',
+            'You send <b>' +
+              (this.amountForm.value + this.feeForm.value) +
+              '</b> coins (' +
+              (this.amountForm.value + this.feeForm.value) *
+                this.currencyRate.value +
+              ' ' +
+              this.currencyRate.name +
+              ') ' +
+              'to this <b>' +
+              this.recipientForm.value +
+              '</b> address',
+            'success'
+          );
+          this.isFormSendLoading = false;
+          this.formSend.reset();
+          Object.keys(this.formSend.controls).forEach(key => {
+            this.formSend.controls[key].setErrors(null);
+          });
+          this.closeDialog();
+        },
+        err => console.log(err)
+      );
     }
   }
 }

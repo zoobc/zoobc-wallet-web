@@ -11,15 +11,16 @@ export interface Contact {
 export class ContactService {
   constructor() {}
 
-  getContactList() {
+  getContactList(): Contact[] {
     return JSON.parse(localStorage.getItem('CONTACT_LIST'));
   }
 
-  getContact(address: string) {
-    const contacts: Contact[] = JSON.parse(
-      localStorage.getItem('CONTACT_LIST')
-    );
-    return contacts.find(c => c.address == address);
+  getContact(address: string): Contact {
+    const contacts: Contact[] =
+      JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
+
+    const empty = { address: '', alias: '' };
+    return contacts.find(c => c.address == address) || empty;
   }
 
   addContact(newContact) {

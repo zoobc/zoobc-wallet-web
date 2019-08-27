@@ -2,7 +2,7 @@
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
-      <label>{{"From" | translate}}</label>
+      <label>{{ 'From' | translate }}</label>
       <div class="from-account">
         <div class="name">{{ account.name }}</div>
         <div class="balance">100 ZBC</div>
@@ -10,15 +10,23 @@
 
       <label>{{ 'Recepient address' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="contacts"
-          [matAutocomplete]="auto" formControlName="recipient" />
+        <input
+          matInput
+          placeholder="{{ 'Recepient address' | translate }}..."
+          aria-label="contacts"
+          [matAutocomplete]="auto"
+          formControlName="recipient"
+        />
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">{{
             'Recepient is required' | translate
           }}</span>
         </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
+          <mat-option
+            *ngFor="let contact of filteredContacts | async"
+            [value]="contact.address"
+          >
             <span>{{ contact.alias }}</span> |
             <small>{{ contact.address }}</small>
           </mat-option>
@@ -27,7 +35,12 @@
 
       <label>{{ 'Coin amount' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}" />
+        <input
+          matInput
+          type="number"
+          formControlName="amount"
+          placeholder="{{ 'Coin Amount' | translate }}"
+        />
         <mat-error *ngIf="amountForm.touched">
           <span *ngIf="amountForm.hasError('required')">{{
             'Amount is required' | translate
@@ -35,15 +48,27 @@
         </mat-error>
       </mat-form-field>
 
-      <label>{{'Fee' | translate}}</label>
+      <label>{{ 'Fee' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput type="number" formControlName="fee" placeholder="{{'Fee' | translate}}" />
+        <input
+          matInput
+          type="number"
+          formControlName="fee"
+          placeholder="{{ 'Fee' | translate }}"
+        />
         <mat-error *ngIf="feeForm.touched">
-          <span *ngIf="feeForm.hasError('required')">{{'Fee is required' | translate}}</span>
+          <span *ngIf="feeForm.hasError('required')">{{
+            'Fee is required' | translate
+          }}</span>
         </mat-error>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" type="submit" [disabled]="formSend.invalid || isFormSendLoading">
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="formSend.invalid || isFormSendLoading"
+      >
         <span *ngIf="isFormSendLoading">
           <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
         </span>
@@ -63,17 +88,21 @@
           <div class="divTableBody">
             <div class="divTableRow">
               <div class="divTableCell-1">From</div>
-              <div class="divTableCell">{{address}}</div>
+              <div class="divTableCell">{{ address }}</div>
             </div>
             <div class="divTableRow">
               <div class="divTableCell-1">Recepient</div>
-              <div class="divTableCell">{{recipientForm.value}}</div>
+              <div class="divTableCell">{{ recipientForm.value }}</div>
             </div>
             <div class="divTableRow">
               <div class="divTableCell-1">Total</div>
-              <div class="divTableCell">{{amountForm.value + feeForm.value}}
-                ({{(amountForm.value + feeForm.value) * (currencyRate.value | number: '0.1-2') }}
-                {{currencyRate.name}})</div>
+              <div class="divTableCell">
+                {{ amountForm.value + feeForm.value }} ({{
+                  (amountForm.value + feeForm.value) *
+                    (currencyRate.value | number: '0.1-2')
+                }}
+                {{ currencyRate.name }})
+              </div>
             </div>
           </div>
         </div>
@@ -88,4 +117,32 @@
       Confirm
     </button>
   </div>
+</ng-template>
+
+<ng-template #pinDialog>
+  <h3 class="mat-h3" id="modal-basic-title">
+    <b>{{ 'Confirm Your Pin' | translate }}</b>
+  </h3>
+  <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()">
+    <field-pins
+      formControlName="pin"
+      (change)="onResetPinValidation()"
+    ></field-pins>
+    <mat-error *ngIf="isPinMatched == false">{{
+      'Pin is not match' | translate
+    }}</mat-error>
+    <div class="text-right">
+      <button mat-flat-button color="primary" type="button" (click)="onBack()">
+        {{ 'Back' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="formConfirmPin.invalid"
+      >
+        {{ 'Confirm Pin' | translate }}
+      </button>
+    </div>
+  </form>
 </ng-template>

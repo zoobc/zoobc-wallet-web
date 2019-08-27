@@ -87,6 +87,8 @@ export class TransactionService {
   }
 
   postTransaction(txBytes) {
+    console.log(txBytes);
+
     return new Promise((resolve, reject) => {
       const request = new PostTransactionRequest();
       request.setTransactionbytes(txBytes);

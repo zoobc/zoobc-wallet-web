@@ -112,44 +112,6 @@ export namespace GetNodeRegistrationRequest {
   }
 }
 
-export class UpdateNodeRegistrationRequest extends jspb.Message {
-  getId(): Uint8Array | string;
-  getId_asU8(): Uint8Array;
-  getId_asB64(): string;
-  setId(value: Uint8Array | string): void;
-
-  getNodepublickey(): Uint8Array | string;
-  getNodepublickey_asU8(): Uint8Array;
-  getNodepublickey_asB64(): string;
-  setNodepublickey(value: Uint8Array | string): void;
-
-  getAccountaddress(): string;
-  setAccountaddress(value: string): void;
-
-  getNodeaddress(): string;
-  setNodeaddress(value: string): void;
-
-  getLockedbalance(): string;
-  setLockedbalance(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): UpdateNodeRegistrationRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: UpdateNodeRegistrationRequest): UpdateNodeRegistrationRequest.AsObject;
-  static serializeBinaryToWriter(message: UpdateNodeRegistrationRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): UpdateNodeRegistrationRequest;
-  static deserializeBinaryFromReader(message: UpdateNodeRegistrationRequest, reader: jspb.BinaryReader): UpdateNodeRegistrationRequest;
-}
-
-export namespace UpdateNodeRegistrationRequest {
-  export type AsObject = {
-    id: Uint8Array | string,
-    nodepublickey: Uint8Array | string,
-    accountaddress: string,
-    nodeaddress: string,
-    lockedbalance: string,
-  }
-}
-
 export class GetNodeRegistrationsResponse extends jspb.Message {
   getId(): Uint8Array | string;
   getId_asU8(): Uint8Array;
