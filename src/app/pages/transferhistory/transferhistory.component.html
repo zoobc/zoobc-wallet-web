@@ -1,9 +1,21 @@
 <div>
+  <ng-container *ngIf="unconfirmTx.length > 0">
+    <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+    <app-transaction-table
+      [isLoading]="showSpinnerRecentTx"
+      [transactionData]="unconfirmTx"
+    ></app-transaction-table>
+  </ng-container>
+  <br />
+
   <h2 class="mat-h2">{{ 'Latest transactions' | translate }}</h2>
   <div>
     <div *ngIf="accountHistory.length > 0">
       <loading-spinner *ngIf="showSpinner"></loading-spinner>
-      <app-transaction-table [isLoading]="showSpinner" [transactionData]="accountHistory"></app-transaction-table>
+      <app-transaction-table
+        [isLoading]="showSpinner"
+        [transactionData]="accountHistory"
+      ></app-transaction-table>
     </div>
   </div>
 </div>
