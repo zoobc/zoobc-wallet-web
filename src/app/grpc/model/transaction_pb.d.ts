@@ -88,6 +88,12 @@ export class Transaction extends jspb.Message {
   clearSetupaccountdatasettransactionbody(): void;
   hasSetupaccountdatasettransactionbody(): boolean;
 
+  getRemoveaccountdatasettransactionbody(): RemoveAccountDatasetTransactionBody | undefined;
+  setRemoveaccountdatasettransactionbody(value?: RemoveAccountDatasetTransactionBody): void;
+  hasRemoveaccountdatasettransactionbody(): boolean;
+  clearRemoveaccountdatasettransactionbody(): void;
+  hasRemoveaccountdatasettransactionbody(): boolean;
+
   getSignature(): Uint8Array | string;
   getSignature_asU8(): Uint8Array;
   getSignature_asB64(): string;
@@ -125,6 +131,7 @@ export namespace Transaction {
     removenoderegistrationtransactionbody?: RemoveNodeRegistrationTransactionBody.AsObject,
     claimnoderegistrationtransactionbody?: ClaimNodeRegistrationTransactionBody.AsObject,
     setupaccountdatasettransactionbody?: SetupAccountDatasetTransactionBody.AsObject,
+    removeaccountdatasettransactionbody?: RemoveAccountDatasetTransactionBody.AsObject,
     signature: Uint8Array | string,
   }
 
@@ -137,6 +144,7 @@ export namespace Transaction {
     REMOVENODEREGISTRATIONTRANSACTIONBODY = 18,
     CLAIMNODEREGISTRATIONTRANSACTIONBODY = 19,
     SETUPACCOUNTDATASETTRANSACTIONBODY = 20,
+    REMOVEACCOUNTDATASETTRANSACTIONBODY = 21,
   }
 }
 
@@ -244,6 +252,26 @@ export namespace UpdateNodeRegistrationTransactionBody {
   }
 }
 
+export class RemoveNodeRegistrationTransactionBody extends jspb.Message {
+  getNodepublickey(): Uint8Array | string;
+  getNodepublickey_asU8(): Uint8Array;
+  getNodepublickey_asB64(): string;
+  setNodepublickey(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RemoveNodeRegistrationTransactionBody.AsObject;
+  static toObject(includeInstance: boolean, msg: RemoveNodeRegistrationTransactionBody): RemoveNodeRegistrationTransactionBody.AsObject;
+  static serializeBinaryToWriter(message: RemoveNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RemoveNodeRegistrationTransactionBody;
+  static deserializeBinaryFromReader(message: RemoveNodeRegistrationTransactionBody, reader: jspb.BinaryReader): RemoveNodeRegistrationTransactionBody;
+}
+
+export namespace RemoveNodeRegistrationTransactionBody {
+  export type AsObject = {
+    nodepublickey: Uint8Array | string,
+  }
+}
+
 export class SetupAccountDatasetTransactionBody extends jspb.Message {
   getSetteraccountaddress(): string;
   setSetteraccountaddress(value: string): void;
@@ -278,23 +306,33 @@ export namespace SetupAccountDatasetTransactionBody {
   }
 }
 
-export class RemoveNodeRegistrationTransactionBody extends jspb.Message {
-  getNodepublickey(): Uint8Array | string;
-  getNodepublickey_asU8(): Uint8Array;
-  getNodepublickey_asB64(): string;
-  setNodepublickey(value: Uint8Array | string): void;
+export class RemoveAccountDatasetTransactionBody extends jspb.Message {
+  getSetteraccountaddress(): string;
+  setSetteraccountaddress(value: string): void;
+
+  getRecipientaccountaddress(): string;
+  setRecipientaccountaddress(value: string): void;
+
+  getProperty(): string;
+  setProperty(value: string): void;
+
+  getValue(): string;
+  setValue(value: string): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): RemoveNodeRegistrationTransactionBody.AsObject;
-  static toObject(includeInstance: boolean, msg: RemoveNodeRegistrationTransactionBody): RemoveNodeRegistrationTransactionBody.AsObject;
-  static serializeBinaryToWriter(message: RemoveNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): RemoveNodeRegistrationTransactionBody;
-  static deserializeBinaryFromReader(message: RemoveNodeRegistrationTransactionBody, reader: jspb.BinaryReader): RemoveNodeRegistrationTransactionBody;
+  toObject(includeInstance?: boolean): RemoveAccountDatasetTransactionBody.AsObject;
+  static toObject(includeInstance: boolean, msg: RemoveAccountDatasetTransactionBody): RemoveAccountDatasetTransactionBody.AsObject;
+  static serializeBinaryToWriter(message: RemoveAccountDatasetTransactionBody, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RemoveAccountDatasetTransactionBody;
+  static deserializeBinaryFromReader(message: RemoveAccountDatasetTransactionBody, reader: jspb.BinaryReader): RemoveAccountDatasetTransactionBody;
 }
 
-export namespace RemoveNodeRegistrationTransactionBody {
+export namespace RemoveAccountDatasetTransactionBody {
   export type AsObject = {
-    nodepublickey: Uint8Array | string,
+    setteraccountaddress: string,
+    recipientaccountaddress: string,
+    property: string,
+    value: string,
   }
 }
 

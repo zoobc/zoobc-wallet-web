@@ -38,7 +38,7 @@
           <div class="balance">
             <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
-              {{ accountBalance.balance / 1e8 | number: '0.1-2' }}
+              {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
             </span>
             <span> ZBC</span>
           </div>
@@ -46,7 +46,8 @@
             <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
               {{
-                (accountBalance.balance / 1e8) * currencyRate.value | number: '0.1-2'
+                (accountBalance.balance * currencyRate.value) / 1e8
+                  | number: '0.0-4'
               }}
             </span>
             <span> {{ currencyRate.name }}</span>
@@ -63,7 +64,7 @@
           <div class="balance">
             <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
-              {{ (accountBalance.spendablebalance / 1e8) | number: '0.1-2' }}
+              {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
             </span>
             <span> ZBC</span>
           </div>
@@ -71,8 +72,8 @@
             <i class="fas fa-circle-notch fa-spin" *ngIf="showSpinnerBalance"></i>
             <span *ngIf="!showSpinnerBalance">
               {{
-                (accountBalance.spendablebalance / 1e8) * currencyRate.value
-                  | number: '0.1-2'
+                (accountBalance.spendablebalance * currencyRate.value) / 1e8
+                  | number: '0.0-4'
               }}
             </span>
             <span> {{ currencyRate.name }}</span>

@@ -20,16 +20,16 @@
         <div class="col-5 col-sm-4 text-right">
           <ng-container *ngIf="transaction.type == 'send'">
             <div class="amount-send">
-              - {{ (transaction.amount / 1e8) | number: '0.1-4' }} ZBC
+              - {{ transaction.amount / 1e8 | number: '0.0-4' }} ZBC
             </div>
-            <div class="fee" *ngIf="transaction.fee">
-              - {{ (transaction.fee / 1e8) | number: '0.1-4' }}
+            <div class="fee" *ngIf="transaction.type == 'send'">
+              - {{ transaction.fee / 1e8 | number: '0.0-4' }}
               <small>ZBC {{ 'Fee' | translate }}</small>
             </div>
           </ng-container>
           <ng-container *ngIf="transaction.type == 'receive'">
             <div class="amount-receive">
-              + {{ (transaction.amount / 1e8) | number: '0.1-4' }} ZBC
+              + {{ transaction.amount / 1e8 | number: '0.0-4' }} ZBC
             </div>
           </ng-container>
         </div>

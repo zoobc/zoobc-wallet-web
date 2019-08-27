@@ -52,6 +52,13 @@ export class AddcontactComponent implements OnInit {
           this.contactServ.addContact(newContact);
           this.dialogRef.close(this.contacts);
         }
+      } else {
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: 'The address you entered is invalid',
+        });
+        this.dialogRef.close(this.contacts);
       }
     }
   }

@@ -113,7 +113,7 @@
     <button mat-raised-button color="warn" (click)="closeDialog()">
       Cancel
     </button>
-    <button mat-raised-button color="primary" (click)="onSendMoney()">
+    <button mat-raised-button color="primary" (click)="onOpenPinDialog()">
       Confirm
     </button>
   </div>
@@ -123,26 +123,17 @@
   <h3 class="mat-h3" id="modal-basic-title">
     <b>{{ 'Confirm Your Pin' | translate }}</b>
   </h3>
-  <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()">
-    <field-pins
-      formControlName="pin"
-      (change)="onResetPinValidation()"
-    ></field-pins>
-    <mat-error *ngIf="isPinMatched == false">{{
-      'Pin is not match' | translate
-    }}</mat-error>
-    <div class="text-right">
-      <button mat-flat-button color="primary" type="button" (click)="onBack()">
-        {{ 'Back' | translate }}
-      </button>
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        [disabled]="formConfirmPin.invalid"
-      >
-        {{ 'Confirm Pin' | translate }}
-      </button>
+  <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()" class="form-pin">
+    <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
+    <div class="text-center">
+      <mat-error *ngIf="formConfirmPin.hasError('invalid')">
+        {{ 'Pin is not match' | translate }}
+      </mat-error>
+      <i
+        matPrefix
+        class="fas fa-circle-notch fa-spin"
+        *ngIf="isConfirmPinLoading"
+      ></i>
     </div>
   </form>
 </ng-template>
