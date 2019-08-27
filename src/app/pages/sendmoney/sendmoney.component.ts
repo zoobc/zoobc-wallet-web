@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import * as CryptoJS from 'crypto-js';
 
 import { TransactionService } from '../../services/transaction.service';
-import { AccountService } from '../../services/account.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { ActivatedRoute } from '@angular/router';
@@ -15,7 +15,7 @@ import {
   CurrencyRateService,
   Currency,
 } from 'src/app/services/currency-rate.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { BytesMaker } from 'src/helpers/BytesMaker';
 
 const coin = 'ZBC';
@@ -30,6 +30,7 @@ export class SendmoneyComponent implements OnInit {
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
+  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   currencyRate: Currency = {
     name: '',
     value: 0,
@@ -39,7 +40,15 @@ export class SendmoneyComponent implements OnInit {
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', Validators.required);
   feeForm = new FormControl('0', Validators.required);
+
+  formConfirmPin: FormGroup;
+  pinField = new FormControl('', Validators.required);
+
+  pinRefDialog: MatDialogRef<any>;
+  sendMoneyRefDialog: MatDialogRef<any>;
+
   isFormSendLoading = false;
+  isConfirmPinLoading = false;
   address = this.authServ.currAddress;
 
   account: SavedAccount;
@@ -60,6 +69,10 @@ export class SendmoneyComponent implements OnInit {
       recipient: this.recipientForm,
       amount: this.amountForm,
       fee: this.feeForm,
+    });
+
+    this.formConfirmPin = new FormGroup({
+      pin: this.pinField,
     });
 
     this.account = authServ.getCurrAccount();
@@ -92,20 +105,60 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onOpenDialogDetailSendMoney() {
-    this.dialog.open(this.popupDetailSendMoney, {
+    this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
       width: '600px',
       data: this.formSend.value,
     });
-    console.log(this.formSend.value);
+  }
+
+  onOpenPinDialog() {
+    this.pinRefDialog = this.dialog.open(this.pinDialog, {
+      width: '400px',
+    });
+
+    this.pinRefDialog.afterClosed().subscribe(res => {
+      if (res.pinValid) this.onSendMoney();
+    });
+  }
+
+  onTypePin() {
+    if (this.pinField.value.length == 6) {
+      this.isConfirmPinLoading = true;
+
+      const pin = this.pinField.value;
+      const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+
+      // give some delay so that the dom have time to render the spinner
+      setTimeout(() => {
+        const key = CryptoJS.PBKDF2(pin, 'salt', {
+          keySize: 8,
+          iterations: 10000,
+        }).toString();
+
+        try {
+          const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
+            CryptoJS.enc.Utf8
+          );
+          if (!seed) throw 'not match';
+
+          this.pinRefDialog.close({ pinValid: true });
+          this.sendMoneyRefDialog.close();
+        } catch (e) {
+          this.formConfirmPin.setErrors({ invalid: true });
+        } finally {
+          this.isConfirmPinLoading = false;
+        }
+      }, 50);
+    }
   }
 
   closeDialog() {
-    this.dialog.closeAll();
+    this.sendMoneyRefDialog.close();
   }
 
   async onSendMoney() {
     if (this.formSend.valid) {
-      this.isFormSendLoading = false;
+      this.isFormSendLoading = true;
 
       const account = this.account;
       const seed = Buffer.from(this.authServ.currSeed, 'hex');
@@ -118,8 +171,8 @@ export class SendmoneyComponent implements OnInit {
 
       const sender = Buffer.from(this.authServ.currAddress, 'utf-8');
       const recepient = Buffer.from(this.recipientForm.value, 'utf-8');
-      const amount = this.amountForm.value;
-      const fee = this.feeForm.value;
+      const amount = this.amountForm.value * 1e8;
+      const fee = this.feeForm.value * 1e8;
       const timestamp = Math.trunc(Date.now() / 1000);
 
       let bytes = new BytesMaker(129);
@@ -151,12 +204,10 @@ export class SendmoneyComponent implements OnInit {
       bytesWithSign.write(bytes.value, 129);
       // set signature
       bytesWithSign.write(signature, 64);
-      console.log(bytesWithSign.value);
 
       this.transactionServ.postTransaction(bytesWithSign.value).then(
         (res: any) => {
-          console.log(res);
-          this.isFormSendLoading = true;
+          this.isFormSendLoading = false;
           Swal.fire(
             '<b>Your transaction is on the way !</b>',
             'You send <b>' +
@@ -172,7 +223,6 @@ export class SendmoneyComponent implements OnInit {
               '</b> address',
             'success'
           );
-          this.isFormSendLoading = false;
           this.formSend.reset();
           Object.keys(this.formSend.controls).forEach(key => {
             this.formSend.controls[key].setErrors(null);

@@ -48,7 +48,7 @@
               *ngIf="showSpinnerBalance"
             ></i>
             <span *ngIf="!showSpinnerBalance">
-              {{ accountBalance.balance | number: '0.1-2' }}
+              {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
             </span>
             <span> ZBC</span>
           </div>
@@ -59,7 +59,8 @@
             ></i>
             <span *ngIf="!showSpinnerBalance">
               {{
-                accountBalance.balance * currencyRate.value | number: '0.1-2'
+                (accountBalance.balance * currencyRate.value) / 1e8
+                  | number: '0.0-4'
               }}
             </span>
             <span> {{ currencyRate.name }}</span>
@@ -79,7 +80,7 @@
               *ngIf="showSpinnerBalance"
             ></i>
             <span *ngIf="!showSpinnerBalance">
-              {{ accountBalance.spendablebalance | number: '0.1-2' }}
+              {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
             </span>
             <span> ZBC</span>
           </div>
@@ -90,8 +91,8 @@
             ></i>
             <span *ngIf="!showSpinnerBalance">
               {{
-                accountBalance.spendablebalance * currencyRate.value
-                  | number: '0.1-2'
+                (accountBalance.spendablebalance * currencyRate.value) / 1e8
+                  | number: '0.0-4'
               }}
             </span>
             <span> {{ currencyRate.name }}</span>
