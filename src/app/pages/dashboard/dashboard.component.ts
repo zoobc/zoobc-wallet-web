@@ -5,6 +5,7 @@ import { AccountService } from '../../services/account.service';
 import {
   TransactionService,
   Transaction,
+  Transactions,
 } from '../../services/transaction.service';
 import {
   Currency,
@@ -30,8 +31,8 @@ export class DashboardComponent implements OnInit {
   showSpinnerBalance: boolean = true;
   showSpinnerRecentTx: boolean = true;
 
-  recentTx: Transaction[] = [];
-  unconfirmTx: Transaction[] = [];
+  recentTx: Transaction[];
+  unconfirmTx: Transaction[];
 
   currencyRate: Currency = {
     name: '',
@@ -66,8 +67,8 @@ export class DashboardComponent implements OnInit {
 
     this.transactionServ
       .getAccountTransaction(1, 5)
-      .then((res: Transaction[]) => {
-        this.recentTx = res;
+      .then((res: Transactions) => {
+        this.recentTx = res.transactions;
         this.showSpinnerRecentTx = false;
       });
 

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Transaction } from 'src/app/grpc/model/transaction_pb';
 
 @Component({
   selector: 'app-transaction-table',
@@ -6,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./transaction-table.component.scss'],
 })
 export class TransactionTableComponent implements OnInit {
-  @Input() transactionData: [];
+  @Input() transactionData: Transaction[];
   @Input() isLoading: boolean = false;
   constructor() {}
 

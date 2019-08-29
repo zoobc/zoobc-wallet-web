@@ -27,6 +27,11 @@ export interface Transaction {
   amount: number;
 }
 
+export interface Transactions {
+  total: number;
+  transactions: Transaction[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -92,7 +97,10 @@ export class TransactionService {
             };
           });
 
-          resolve(transactions);
+          resolve({
+            total: response.toObject().total,
+            transactions: transactions,
+          });
         }
       );
     });

@@ -3,6 +3,8 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { sign as naclSign } from 'tweetnacl';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -121,6 +123,7 @@ export function getLanguage(languageServ: LanguageService) {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    InfiniteScrollModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -175,3 +178,4 @@ export function getLanguage(languageServ: LanguageService) {
   ],
 })
 export class AppModule {}
+platformBrowserDynamic().bootstrapModule(AppModule);
