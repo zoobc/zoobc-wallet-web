@@ -22,6 +22,7 @@ import {
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AccountService } from 'src/app/services/account.service';
+import { base64ToByteArray } from 'src/helpers/converters';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -127,6 +128,12 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
+  onChangeRecipient() {
+    let addressBytes = base64ToByteArray(this.recipientForm.value);
+    if (addressBytes.length != 33)
+      this.recipientForm.setErrors({ invalidAddress: true });
+  }
+
   onOpenDialogDetailSendMoney() {
     this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
       width: '600px',
@@ -139,8 +146,8 @@ export class SendmoneyComponent implements OnInit {
       width: '400px',
     });
 
-    this.pinRefDialog.afterClosed().subscribe(res => {
-      if (res.pinValid) this.onSendMoney();
+    this.pinRefDialog.afterClosed().subscribe(isPinValid => {
+      if (isPinValid) this.onSendMoney();
     });
   }
 
@@ -164,7 +171,7 @@ export class SendmoneyComponent implements OnInit {
           );
           if (!seed) throw 'not match';
 
-          this.pinRefDialog.close({ pinValid: true });
+          this.pinRefDialog.close(true);
           this.sendMoneyRefDialog.close();
         } catch (e) {
           this.formConfirmPin.setErrors({ invalid: true });
