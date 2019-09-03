@@ -19,6 +19,8 @@ import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-p
 import { FaqComponent } from './faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
+import { UpdateNodeComponent } from './pages/node-admin/update-node/update-node.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -31,6 +33,8 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'transferhistory', component: TransferhistoryComponent },
       { path: 'nodeadmin', component: NodeAdminComponent },
+      { path: 'nodeadmin/register', component: RegisterNodeComponent },
+      { path: 'nodeadmin/updatenode', component: UpdateNodeComponent },
       { path: 'receive', component: ReceiveComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
