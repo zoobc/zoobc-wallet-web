@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { NodeHardwareServiceClient } from '../grpc/service/nodeHardwareServiceClientPb';
 import { environment } from 'src/environments/environment';
-import { GetNodeHardwareRequest } from '../grpc/model/nodeHardware_pb';
+import {
+  GetNodeHardwareRequest,
+  GetNodeHardwareResponse,
+} from '../grpc/model/nodeHardware_pb';
 import { bigintToByteArray, BigInt } from 'src/helpers/converters';
 import { AuthService } from './auth.service';
 import { KeyringService } from './keyring.service';
+import { NodeHardwareService } from '../grpc/service/nodeHardware_pb_service';
+import { grpc } from '@improbable-eng/grpc-web';
+import { RequestType } from '../grpc/model/auth_pb';
 
 export interface NodeAdminAttribute {
   ipAddress: string;
@@ -16,8 +21,6 @@ export interface NodeAdminAttribute {
   providedIn: 'root',
 })
 export class NodeAdminService {
-  nodeAdminServ: NodeHardwareServiceClient;
-
   private sourceCurrencyNodeAdminAttribue = new BehaviorSubject({});
   nodeAdminAttribute = this.sourceCurrencyNodeAdminAttribue.asObservable();
   attribute: NodeAdminAttribute;
@@ -36,7 +39,7 @@ export class NodeAdminService {
   }
 
   getNodeHardwareInfo() {
-    return new Promise((resolve, reject) => {
+    return new Observable(observer => {
       const account = this.authServ.getCurrAccount();
       const seed = Buffer.from(this.authServ.currSeed, 'hex');
 
@@ -47,35 +50,51 @@ export class NodeAdminService {
       );
 
       let bytes = new Buffer(12);
-      bytes.set(bigintToByteArray(BigInt(Math.trunc(Date.now() / 1000))), 0);
-      bytes.writeInt32LE(1, 8);
+      bytes.writeInt32LE(RequestType.GETNODEHARDWARE, 0);
+      bytes.set(bigintToByteArray(BigInt(Math.trunc(Date.now() / 1000))), 4);
 
-      let bytesWithSign = new Buffer(76);
+      let bytesWithSign = new Buffer(80);
       let signature = childSeed.sign(bytes);
       bytesWithSign.set(bytes, 0);
-      bytesWithSign.set(signature, 12);
-      console.log(bytesWithSign.toString('base64'));
+      bytesWithSign.writeInt32LE(0, 12);
+      bytesWithSign.set(signature, 16);
+      // console.log(bytesWithSign);
 
-      let node: NodeHardwareServiceClient = new NodeHardwareServiceClient(
-        environment.grpcUrl,
-        { authorization: bytesWithSign.toString('base64') },
-        null
+      const request = new GetNodeHardwareRequest();
+
+      const client = grpc.client(NodeHardwareService.GetNodeHardware, {
+        host: environment.grpcUrl,
+      });
+      client.onHeaders((headers: grpc.Metadata) => {
+        // console.log('onHeaders', headers);
+      });
+      client.onMessage((message: GetNodeHardwareResponse) => {
+        // console.log('onMessage', message.toObject());
+        observer.next(message.toObject());
+      });
+      client.onEnd(
+        (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
+          // console.log('onEnd', status, statusMessage, trailers);
+        }
       );
-      console.log(node);
 
-      // const request = new GetNodeHardwareRequest();
-
-      // node.client
+      client.start(
+        new grpc.Metadata({ authorization: bytesWithSign.toString('base64') })
+      );
+      client.send(request);
+      client.finishSend();
     });
   }
 
   getNodeAdminList() {
     return JSON.parse(localStorage.getItem('Node_Admin'));
   }
+
   addNodeAdmin(attribute: NodeAdminAttribute) {
     this.sourceCurrencyNodeAdminAttribue.next(attribute);
     localStorage.setItem('Node_Admin', JSON.stringify(attribute));
   }
+
   updateIPAddress(oldIPAddress, newIPAddress) {
     let nodeAdminIP = JSON.parse(localStorage.getItem('Node_Admin'));
     if (nodeAdminIP.ipAddress == oldIPAddress.ipAddress) {

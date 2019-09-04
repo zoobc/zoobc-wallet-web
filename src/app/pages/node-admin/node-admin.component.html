@@ -1,4 +1,4 @@
-<div class="node-admin-container">
+<div class="node-admin-container" *ngIf="hwInfo">
   <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
   <div class="row">
     <div class="col-12 col-sm-6">
@@ -42,16 +42,19 @@
   <h2 class="mat-h2">CPU</h2>
   <mat-card>
     <div class="row">
-      <div class="col-6 col-sm-3 cpu-usage" *ngFor="let i of [0, 1, 2, 3]">
+      <div
+        class="col-6 col-sm-3 cpu-usage"
+        *ngFor="let cpu of hwInfo.cpuinformationList"
+      >
         <div class="percentage">
           <mat-progress-spinner
-            value="60"
+            [value]="cpu.usedpercent"
             diameter="80"
             color="primary"
           ></mat-progress-spinner>
-          <div class="label">60%</div>
+          <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
         </div>
-        <div class="cpu-number">CPU 1</div>
+        <div class="cpu-number">CPU {{ cpu.coreid }}</div>
       </div>
     </div>
     <br /><br />
@@ -59,27 +62,27 @@
     <div class="row node-spec">
       <div class="col-12 col-sm-6">
         <p class="label">CPU index number:</p>
-        <p class="value">0</p>
+        <p class="value">{{ hwInfo.cpuinformationList[0].cpuindex }}</p>
         <p class="label">VendorID:</p>
-        <p class="value">GenuineIntelFamily</p>
+        <p class="value">{{ hwInfo.cpuinformationList[0].vendorid }}</p>
         <p class="label">{{ 'Number of cores' | translate }}:</p>
-        <p class="value">2</p>
+        <p class="value">{{ hwInfo.cpuinformationList.length }}</p>
         <p class="label">{{ 'Model Name' | translate }}:</p>
-        <p class="value">Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz</p>
+        <p class="value">{{ hwInfo.cpuinformationList[0].modelname }}</p>
         <p class="label">{{ 'Speed' | translate }}:</p>
-        <p class="value">3292.00 MHz</p>
+        <p class="value">{{ hwInfo.cpuinformationList[0].mhz }} MHz</p>
       </div>
       <div class="col-12 col-sm-6">
         <p class="label">Hostname:</p>
-        <p class="value">Sweets-Mac-Pro</p>
+        <p class="value">{{ hwInfo.hostinformation.hostname }}</p>
         <p class="label">{{ 'Number of processes running' | translate }}:</p>
-        <p class="value">211</p>
+        <p class="value">{{ hwInfo.hostinformation.numberofrunningprocess }}</p>
         <p class="label">OS:</p>
-        <p class="value">darwin</p>
+        <p class="value">{{ hwInfo.hostinformation.os }}</p>
         <p class="label">Platform:</p>
-        <p class="value">darwin</p>
+        <p class="value">{{ hwInfo.hostinformation.platform }}</p>
         <p class="label">Host ID(uuid):</p>
-        <p class="value">FE3619E6-270B-34A6-BBD7-BED74EC32693</p>
+        <p class="value">{{ hwInfo.hostinformation.hostid }}</p>
       </div>
     </div> </mat-card
   ><br />
@@ -90,7 +93,15 @@
       <mat-card>
         <div class="memory-usage">
           <div class="label">{{ 'Usage' | translate }}</div>
-          <div class="usage">8GB / 16GB (50%)</div>
+          <div class="usage">
+            <span>
+              {{ hwInfo.memoryinformation.used / mbToB | number: '0.0-0' }}MB/
+            </span>
+            <span>
+              {{ hwInfo.memoryinformation.total / mbToB | number: '0.0-0' }}MB
+            </span>
+            <span>({{ hwInfo.memoryinformation.usedpercent | percent }})</span>
+          </div>
           <div class="persentage-container">
             <div class="percentage" style="width: 60%"></div>
           </div>

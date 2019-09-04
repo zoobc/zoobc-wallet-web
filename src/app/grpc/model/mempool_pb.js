@@ -11,6 +11,8 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
 
+var model_pagination_pb = require('../model/pagination_pb.js');
+goog.object.extend(proto, model_pagination_pb);
 goog.exportSymbol('proto.model.GetMempoolTransactionRequest', null, global);
 goog.exportSymbol('proto.model.GetMempoolTransactionResponse', null, global);
 goog.exportSymbol('proto.model.GetMempoolTransactionsRequest', null, global);
@@ -716,8 +718,7 @@ proto.model.GetMempoolTransactionsRequest.toObject = function(includeInstance, m
     timestampstart: jspb.Message.getFieldWithDefault(msg, 1, "0"),
     timestampend: jspb.Message.getFieldWithDefault(msg, 2, "0"),
     address: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    limit: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    page: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    pagination: (f = msg.getPagination()) && model_pagination_pb.Pagination.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -767,12 +768,9 @@ proto.model.GetMempoolTransactionsRequest.deserializeBinaryFromReader = function
       msg.setAddress(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readUint32());
-      msg.setLimit(value);
-      break;
-    case 5:
-      var value = /** @type {number} */ (reader.readUint32());
-      msg.setPage(value);
+      var value = new model_pagination_pb.Pagination;
+      reader.readMessage(value,model_pagination_pb.Pagination.deserializeBinaryFromReader);
+      msg.setPagination(value);
       break;
     default:
       reader.skipField();
@@ -824,18 +822,12 @@ proto.model.GetMempoolTransactionsRequest.serializeBinaryToWriter = function(mes
       f
     );
   }
-  f = message.getLimit();
-  if (f !== 0) {
-    writer.writeUint32(
+  f = message.getPagination();
+  if (f != null) {
+    writer.writeMessage(
       4,
-      f
-    );
-  }
-  f = message.getPage();
-  if (f !== 0) {
-    writer.writeUint32(
-      5,
-      f
+      f,
+      model_pagination_pb.Pagination.serializeBinaryToWriter
     );
   }
 };
@@ -887,32 +879,35 @@ proto.model.GetMempoolTransactionsRequest.prototype.setAddress = function(value)
 
 
 /**
- * optional uint32 Limit = 4;
- * @return {number}
+ * optional Pagination Pagination = 4;
+ * @return {?proto.model.Pagination}
  */
-proto.model.GetMempoolTransactionsRequest.prototype.getLimit = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+proto.model.GetMempoolTransactionsRequest.prototype.getPagination = function() {
+  return /** @type{?proto.model.Pagination} */ (
+    jspb.Message.getWrapperField(this, model_pagination_pb.Pagination, 4));
 };
 
 
-/** @param {number} value */
-proto.model.GetMempoolTransactionsRequest.prototype.setLimit = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+/** @param {?proto.model.Pagination|undefined} value */
+proto.model.GetMempoolTransactionsRequest.prototype.setPagination = function(value) {
+  jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
- * optional uint32 Page = 5;
- * @return {number}
+ * Clears the message field making it undefined.
  */
-proto.model.GetMempoolTransactionsRequest.prototype.getPage = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+proto.model.GetMempoolTransactionsRequest.prototype.clearPagination = function() {
+  this.setPagination(undefined);
 };
 
 
-/** @param {number} value */
-proto.model.GetMempoolTransactionsRequest.prototype.setPage = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.GetMempoolTransactionsRequest.prototype.hasPagination = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 

@@ -1,56 +1,47 @@
 import { Injectable } from '@angular/core';
 
-import { AccountBalanceServiceClient } from '../grpc/service/accountBalanceServiceClientPb';
+import { AccountBalanceService } from '../grpc/service/accountBalance_pb_service';
 import {
   GetAccountBalanceRequest,
   GetAccountBalanceResponse,
 } from '../grpc/model/accountBalance_pb';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
+import { grpc } from '@improbable-eng/grpc-web';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private accBalanceServ: AccountBalanceServiceClient;
-
-  constructor(private authServ: AuthService) {
-    this.accBalanceServ = new AccountBalanceServiceClient(
-      environment.grpcUrl,
-      null,
-      null
-    );
-  }
+  constructor(private authServ: AuthService) {}
 
   getAccountBalance() {
     const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
-
       request.setAccountaddress(address);
-
-      this.accBalanceServ.getAccountBalance(
-        request,
-        null,
-        (err, response: GetAccountBalanceResponse) => {
-          if (err) {
-            if (err.code != 2) return reject(err);
-            // if (err) return reject(err);
-
-            if (err.code == 2) {
-              const firstValue = {
-                accountbalance: {
-                  spendablebalance: 0,
-                  balance: 0,
-                },
-              };
-              return resolve(firstValue);
-            }
-          }
-
-          resolve(response.toObject());
-        }
-      );
+      grpc.invoke(AccountBalanceService.GetAccountBalance, {
+        request: request,
+        host: environment.grpcUrl,
+        onMessage: (message: GetAccountBalanceResponse) => {
+          resolve(message.toObject());
+        },
+        onEnd: (
+          code: grpc.Code,
+          msg: string | undefined,
+          trailers: grpc.Metadata
+        ) => {
+          if (code == grpc.Code.Unknown) {
+            const firstValue = {
+              accountbalance: {
+                spendablebalance: 0,
+                balance: 0,
+              },
+            };
+            return resolve(firstValue);
+          } else if (code != grpc.Code.OK) reject(msg);
+        },
+      });
     });
   }
 }

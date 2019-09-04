@@ -516,9 +516,7 @@ proto.model.GetProofOfOwnershipRequest.prototype.toObject = function(opt_include
  */
 proto.model.GetProofOfOwnershipRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountaddress: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    timestamp: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    signature: msg.getSignature_asB64()
+
   };
 
   if (includeInstance) {
@@ -555,18 +553,6 @@ proto.model.GetProofOfOwnershipRequest.deserializeBinaryFromReader = function(ms
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setAccountaddress(value);
-      break;
-    case 2:
-      var value = /** @type {number} */ (reader.readInt64());
-      msg.setTimestamp(value);
-      break;
-    case 3:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setSignature(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -596,96 +582,6 @@ proto.model.GetProofOfOwnershipRequest.prototype.serializeBinary = function() {
  */
 proto.model.GetProofOfOwnershipRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getAccountaddress();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getTimestamp();
-  if (f !== 0) {
-    writer.writeInt64(
-      2,
-      f
-    );
-  }
-  f = message.getSignature_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
-      3,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string AccountAddress = 1;
- * @return {string}
- */
-proto.model.GetProofOfOwnershipRequest.prototype.getAccountaddress = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/** @param {string} value */
-proto.model.GetProofOfOwnershipRequest.prototype.setAccountaddress = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional int64 Timestamp = 2;
- * @return {number}
- */
-proto.model.GetProofOfOwnershipRequest.prototype.getTimestamp = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
-};
-
-
-/** @param {number} value */
-proto.model.GetProofOfOwnershipRequest.prototype.setTimestamp = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
-};
-
-
-/**
- * optional bytes Signature = 3;
- * @return {!(string|Uint8Array)}
- */
-proto.model.GetProofOfOwnershipRequest.prototype.getSignature = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * optional bytes Signature = 3;
- * This is a type-conversion wrapper around `getSignature()`
- * @return {string}
- */
-proto.model.GetProofOfOwnershipRequest.prototype.getSignature_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getSignature()));
-};
-
-
-/**
- * optional bytes Signature = 3;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getSignature()`
- * @return {!Uint8Array}
- */
-proto.model.GetProofOfOwnershipRequest.prototype.getSignature_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getSignature()));
-};
-
-
-/** @param {!(string|Uint8Array)} value */
-proto.model.GetProofOfOwnershipRequest.prototype.setSignature = function(value) {
-  jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 

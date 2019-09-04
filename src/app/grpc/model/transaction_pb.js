@@ -13,6 +13,8 @@ var global = Function('return this')();
 
 var model_proofOfOwnership_pb = require('../model/proofOfOwnership_pb.js');
 goog.object.extend(proto, model_proofOfOwnership_pb);
+var model_pagination_pb = require('../model/pagination_pb.js');
+goog.object.extend(proto, model_pagination_pb);
 goog.exportSymbol('proto.model.ClaimNodeRegistrationTransactionBody', null, global);
 goog.exportSymbol('proto.model.EmptyTransactionBody', null, global);
 goog.exportSymbol('proto.model.GetTransactionRequest', null, global);
@@ -3038,9 +3040,10 @@ proto.model.GetTransactionsRequest.prototype.toObject = function(opt_includeInst
  */
 proto.model.GetTransactionsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    limit: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    page: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    accountaddress: jspb.Message.getFieldWithDefault(msg, 3, "")
+    accountaddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    timestampstart: jspb.Message.getFieldWithDefault(msg, 4, "0"),
+    timestampend: jspb.Message.getFieldWithDefault(msg, 5, "0"),
+    pagination: (f = msg.getPagination()) && model_pagination_pb.Pagination.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3077,17 +3080,22 @@ proto.model.GetTransactionsRequest.deserializeBinaryFromReader = function(msg, r
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {number} */ (reader.readUint32());
-      msg.setLimit(value);
-      break;
-    case 2:
-      var value = /** @type {number} */ (reader.readUint32());
-      msg.setPage(value);
-      break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setAccountaddress(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readInt64String());
+      msg.setTimestampstart(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readInt64String());
+      msg.setTimestampend(value);
+      break;
+    case 6:
+      var value = new model_pagination_pb.Pagination;
+      reader.readMessage(value,model_pagination_pb.Pagination.deserializeBinaryFromReader);
+      msg.setPagination(value);
       break;
     default:
       reader.skipField();
@@ -3118,20 +3126,6 @@ proto.model.GetTransactionsRequest.prototype.serializeBinary = function() {
  */
 proto.model.GetTransactionsRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getLimit();
-  if (f !== 0) {
-    writer.writeUint32(
-      1,
-      f
-    );
-  }
-  f = message.getPage();
-  if (f !== 0) {
-    writer.writeUint32(
-      2,
-      f
-    );
-  }
   f = message.getAccountaddress();
   if (f.length > 0) {
     writer.writeString(
@@ -3139,36 +3133,28 @@ proto.model.GetTransactionsRequest.serializeBinaryToWriter = function(message, w
       f
     );
   }
-};
-
-
-/**
- * optional uint32 Limit = 1;
- * @return {number}
- */
-proto.model.GetTransactionsRequest.prototype.getLimit = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/** @param {number} value */
-proto.model.GetTransactionsRequest.prototype.setLimit = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
-};
-
-
-/**
- * optional uint32 Page = 2;
- * @return {number}
- */
-proto.model.GetTransactionsRequest.prototype.getPage = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
-};
-
-
-/** @param {number} value */
-proto.model.GetTransactionsRequest.prototype.setPage = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  f = message.getTimestampstart();
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
+      4,
+      f
+    );
+  }
+  f = message.getTimestampend();
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
+      5,
+      f
+    );
+  }
+  f = message.getPagination();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      model_pagination_pb.Pagination.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -3184,6 +3170,69 @@ proto.model.GetTransactionsRequest.prototype.getAccountaddress = function() {
 /** @param {string} value */
 proto.model.GetTransactionsRequest.prototype.setAccountaddress = function(value) {
   jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional int64 TimestampStart = 4;
+ * @return {string}
+ */
+proto.model.GetTransactionsRequest.prototype.getTimestampstart = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
+};
+
+
+/** @param {string} value */
+proto.model.GetTransactionsRequest.prototype.setTimestampstart = function(value) {
+  jspb.Message.setProto3StringIntField(this, 4, value);
+};
+
+
+/**
+ * optional int64 TimestampEnd = 5;
+ * @return {string}
+ */
+proto.model.GetTransactionsRequest.prototype.getTimestampend = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, "0"));
+};
+
+
+/** @param {string} value */
+proto.model.GetTransactionsRequest.prototype.setTimestampend = function(value) {
+  jspb.Message.setProto3StringIntField(this, 5, value);
+};
+
+
+/**
+ * optional Pagination Pagination = 6;
+ * @return {?proto.model.Pagination}
+ */
+proto.model.GetTransactionsRequest.prototype.getPagination = function() {
+  return /** @type{?proto.model.Pagination} */ (
+    jspb.Message.getWrapperField(this, model_pagination_pb.Pagination, 6));
+};
+
+
+/** @param {?proto.model.Pagination|undefined} value */
+proto.model.GetTransactionsRequest.prototype.setPagination = function(value) {
+  jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ */
+proto.model.GetTransactionsRequest.prototype.clearPagination = function() {
+  this.setPagination(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.GetTransactionsRequest.prototype.hasPagination = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

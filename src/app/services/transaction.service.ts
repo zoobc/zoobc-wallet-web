@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
+import { grpc } from '@improbable-eng/grpc-web';
 
-import { TransactionServiceClient } from '../grpc/service/transactionServiceClientPb';
 import {
   GetTransactionsRequest,
   GetTransactionsResponse,
   PostTransactionRequest,
   PostTransactionResponse,
 } from '../grpc/model/transaction_pb';
-import { MempoolServiceClient } from '../grpc/service/mempoolServiceClientPb';
 import {
   GetMempoolTransactionsRequest,
   GetMempoolTransactionsResponse,
 } from '../grpc/model/mempool_pb';
+import { TransactionService as TransactionServ } from '../grpc/service/transaction_pb_service';
+import { MempoolService } from '../grpc/service/mempool_pb_service';
 
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 import { readInt64 } from 'src/helpers/converters';
-import { Contact, ContactService } from './contact.service';
+import { AuthService } from './auth.service';
+import { ContactService } from './contact.service';
+import { Pagination, OrderBy } from '../grpc/model/pagination_pb';
 
 export interface Transaction {
   alias: string;
@@ -36,37 +38,28 @@ export interface Transactions {
   providedIn: 'root',
 })
 export class TransactionService {
-  txServ: TransactionServiceClient;
-  memPoolServ: MempoolServiceClient;
-
   constructor(
     private authServ: AuthService,
     private contactServ: ContactService
-  ) {
-    this.txServ = new TransactionServiceClient(environment.grpcUrl, null, null);
-    this.memPoolServ = new MempoolServiceClient(
-      environment.grpcUrl,
-      null,
-      null
-    );
-  }
+  ) {}
 
   getAccountTransaction(page: number, limit: number) {
     const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetTransactionsRequest();
+      const pagination = new Pagination();
+      pagination.setLimit(limit);
+      pagination.setPage(page);
+      pagination.setOrderby(OrderBy.DESC);
       request.setAccountaddress(address);
-      request.setLimit(limit);
-      request.setPage(page);
+      request.setPagination(pagination);
 
-      this.txServ.getTransactions(
-        request,
-        null,
-        (err, response: GetTransactionsResponse) => {
-          if (err) return reject(err);
-
+      grpc.invoke(TransactionServ.GetTransactions, {
+        request: request,
+        host: environment.grpcUrl,
+        onMessage: (message: GetTransactionsResponse) => {
           // filter transactions for only showing send coin type (type 1) (TEMP)
-          const originTx = response.toObject().transactionsList.filter(tx => {
+          const originTx = message.toObject().transactionsList.filter(tx => {
             if (tx.transactiontype == 1) return tx;
             else return false;
           });
@@ -98,11 +91,18 @@ export class TransactionService {
           });
 
           resolve({
-            total: response.toObject().total,
+            total: message.toObject().total,
             transactions: transactions,
           });
-        }
-      );
+        },
+        onEnd: (
+          code: grpc.Code,
+          msg: string | undefined,
+          trailers: grpc.Metadata
+        ) => {
+          if (code != grpc.Code.OK) reject(msg);
+        },
+      });
     });
   }
 
@@ -110,16 +110,17 @@ export class TransactionService {
     const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetMempoolTransactionsRequest();
+      const pagination = new Pagination();
+      pagination.setOrderby(OrderBy.DESC);
       request.setAddress(address);
+      request.setPagination(pagination);
 
-      this.memPoolServ.getMempoolTransactions(
-        request,
-        null,
-        (err, response: GetMempoolTransactionsResponse) => {
-          if (err) return reject(err);
-
+      grpc.invoke(MempoolService.GetMempoolTransactions, {
+        request: request,
+        host: environment.grpcUrl,
+        onMessage: (message: GetMempoolTransactionsResponse) => {
           // recreate list of transactions
-          let transactions = response
+          let transactions = message
             .toObject()
             .mempooltransactionsList.map(tx => {
               const bytes = Buffer.from(
@@ -150,8 +151,15 @@ export class TransactionService {
             });
 
           resolve(transactions);
-        }
-      );
+        },
+        onEnd: (
+          code: grpc.Code,
+          msg: string | undefined,
+          trailers: grpc.Metadata
+        ) => {
+          if (code != grpc.Code.OK) reject(msg);
+        },
+      });
     });
   }
 
@@ -160,14 +168,20 @@ export class TransactionService {
       const request = new PostTransactionRequest();
       request.setTransactionbytes(txBytes);
 
-      this.txServ.postTransaction(
-        request,
-        null,
-        (err, response: PostTransactionResponse) => {
-          if (err) return reject(err);
-          resolve(response.toObject());
-        }
-      );
+      grpc.invoke(TransactionServ.PostTransaction, {
+        request: request,
+        host: environment.grpcUrl,
+        onMessage: (message: PostTransactionResponse) => {
+          resolve(message.toObject());
+        },
+        onEnd: (
+          code: grpc.Code,
+          msg: string | undefined,
+          trailers: grpc.Metadata
+        ) => {
+          if (code != grpc.Code.OK) reject(msg);
+        },
+      });
     });
   }
 }

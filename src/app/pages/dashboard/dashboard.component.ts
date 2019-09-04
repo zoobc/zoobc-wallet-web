@@ -74,9 +74,7 @@ export class DashboardComponent implements OnInit {
 
     this.transactionServ
       .getUnconfirmTransaction()
-      .then((res: Transaction[]) => {
-        this.unconfirmTx = res;
-      });
+      .then((res: Transaction[]) => (this.unconfirmTx = res));
 
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;

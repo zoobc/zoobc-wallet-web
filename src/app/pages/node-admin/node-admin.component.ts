@@ -5,6 +5,13 @@ import {
 } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
 import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
+import {
+  NodeHardware as NH,
+  GetNodeHardwareResponse,
+} from 'src/app/grpc/model/nodeHardware_pb';
+
+type NodeHardware = NH.AsObject;
+type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
 
 @Component({
   selector: 'app-node-admin',
@@ -20,6 +27,9 @@ export class NodeAdminComponent implements OnInit {
   };
   nodeAdminAttributes: NodeAdminAttribute;
 
+  hwInfo: NodeHardware;
+  mbToB = Math.pow(1024, 2);
+
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog
@@ -29,11 +39,18 @@ export class NodeAdminComponent implements OnInit {
         this.nodeAdminAttributes = attribute;
       }
     );
+
+    nodeAdminServ
+      .getNodeHardwareInfo()
+      .subscribe((res: NodeHardwareResponse) => {
+        this.hwInfo = res.nodehardware;
+      });
   }
 
   ngOnInit() {
     this.nodeAdminIPAddress = this.nodeAdminServ.getNodeAdminList();
   }
+
   onOpenChangeIPAddress(nodeAdminAttributes) {
     const dialog = this.dialog.open(ChangeIpAddressComponent, {
       width: '460px',

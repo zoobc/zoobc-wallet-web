@@ -16,7 +16,9 @@ goog.exportSymbol('proto.model.RequestType', null, global);
  * @enum {number}
  */
 proto.model.RequestType = {
-  GETNODEHARDWARE: 0
+  GETNODEHARDWARE: 0,
+  GETPROOFOFOWNERSHIP: 1,
+  GENERATETNODEKEY: 2
 };
 
 goog.object.extend(exports, proto.model);
