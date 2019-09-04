@@ -23,6 +23,7 @@ import {
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AccountService } from 'src/app/services/account.service';
 import { base64ToByteArray } from 'src/helpers/converters';
+import { AddcontactComponent } from '../list-contact/addcontact/addcontact.component';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -40,6 +41,7 @@ export class SendmoneyComponent implements OnInit {
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
+  @ViewChild('addContactDialog') addContactDialog: TemplateRef<any>;
   currencyRate: Currency = {
     name: '',
     value: 0,
@@ -56,6 +58,7 @@ export class SendmoneyComponent implements OnInit {
 
   pinRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
+  addNewContactRefDialog: MatDialogRef<any>;
 
   isFormSendLoading = false;
   isConfirmPinLoading = false;
@@ -64,6 +67,11 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
 
   bytes = new Uint8Array(193);
+
+  //for add new address to contact list
+  addForm: FormGroup;
+  aliasField = new FormControl('', Validators.required);
+  addressField = new FormControl('', Validators.required);
 
   constructor(
     private accountServ: AccountService,
@@ -75,6 +83,11 @@ export class SendmoneyComponent implements OnInit {
     private translate: TranslateService,
     public dialog: MatDialog
   ) {
+    this.addForm = new FormGroup({
+      alias: this.aliasField,
+      address: this.addressField,
+    });
+
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
       amount: this.amountForm,
@@ -134,11 +147,48 @@ export class SendmoneyComponent implements OnInit {
       this.recipientForm.setErrors({ invalidAddress: true });
   }
 
-  onOpenDialogDetailSendMoney() {
-    this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+  onOpenDialogAddToContact() {
+    this.addNewContactRefDialog = this.dialog.open(this.addContactDialog, {
       width: '600px',
-      data: this.formSend.value,
     });
+    this.addForm.patchValue({
+      address: this.recipientForm.value
+    })
+  }
+
+  onOpenDialogDetailSendMoney() {
+    const contact = this.contacts.some(
+      contacts => contacts.address === this.recipientForm.value
+    );
+    if (!contact) {
+      Swal.fire({
+        title: 'New Address Found',
+        text: 'Do you want to add it to your contact list ?',
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, add it!',
+        cancelButtonText: 'Proceed to detail send money'
+      }).then(result => {
+        if (result.value) {
+          this.onOpenDialogAddToContact();
+        }
+        else if (
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+            width: '600px',
+            data: this.formSend.value,
+          });
+        }
+      });
+    } else {
+      this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+        width: '600px',
+        data: this.formSend.value,
+      });
+    }
   }
 
   onOpenPinDialog() {
@@ -243,16 +293,16 @@ export class SendmoneyComponent implements OnInit {
           Swal.fire(
             '<b>Your transaction is on the way !</b>',
             'You send <b>' +
-              (this.amountForm.value + this.feeForm.value) +
-              '</b> coins (' +
-              (this.amountForm.value + this.feeForm.value) *
-                this.currencyRate.value +
-              ' ' +
-              this.currencyRate.name +
-              ') ' +
-              'to this <b>' +
-              this.recipientForm.value +
-              '</b> address',
+            (this.amountForm.value + this.feeForm.value) +
+            '</b> coins (' +
+            (this.amountForm.value + this.feeForm.value) *
+            this.currencyRate.value +
+            ' ' +
+            this.currencyRate.name +
+            ') ' +
+            'to this <b>' +
+            this.recipientForm.value +
+            '</b> address',
             'success'
           );
           this.formSend.reset();
@@ -263,6 +313,27 @@ export class SendmoneyComponent implements OnInit {
         },
         err => console.log(err)
       );
+    }
+  }
+
+  onSubmit() {
+    if (this.addForm.valid) {
+      const newContact = this.addForm.value;
+      this.contacts.push(newContact);
+      this.contactServ.addContact(newContact);
+      this.addNewContactRefDialog.close();
+      Swal.fire({
+        type: 'success',
+        title: 'Your new contact has been saved',
+        confirmButtonText: 'Proceed to detail send money',
+      }).then(result => {
+        if (result.value) {
+          this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+            width: '600px',
+            data: this.formSend.value,
+          });
+        }
+      });
     }
   }
 }
