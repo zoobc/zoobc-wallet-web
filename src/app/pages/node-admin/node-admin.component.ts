@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   NodeAdminAttribute,
   NodeAdminService,
@@ -9,6 +10,7 @@ import {
   NodeHardware as NH,
   GetNodeHardwareResponse,
 } from 'src/app/grpc/model/nodeHardware_pb';
+// import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -19,7 +21,6 @@ type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
   styleUrls: ['./node-admin.component.scss'],
 })
 export class NodeAdminComponent implements OnInit {
-  nodeAdminIPAddress;
   public doughnutChartData = [70, 30];
   public doughnutChartType = 'doughnut';
   nodeAdminAttribute: NodeAdminAttribute = {
@@ -32,7 +33,8 @@ export class NodeAdminComponent implements OnInit {
 
   constructor(
     private nodeAdminServ: NodeAdminService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this.nodeAdminServ.nodeAdminAttribute.subscribe(
       (attribute: NodeAdminAttribute) => {
@@ -47,19 +49,11 @@ export class NodeAdminComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
-    this.nodeAdminIPAddress = this.nodeAdminServ.getNodeAdminList();
+  ngOnInit() {}
+  openRegisterNodeForm() {
+    this.router.navigateByUrl('nodeadmin/register');
   }
-
-  onOpenChangeIPAddress(nodeAdminAttributes) {
-    const dialog = this.dialog.open(ChangeIpAddressComponent, {
-      width: '460px',
-      data: nodeAdminAttributes,
-    });
-
-    dialog.afterClosed().subscribe(nodeAdminAttributes => {
-      if (nodeAdminAttributes) this.nodeAdminIPAddress = nodeAdminAttributes;
-    });
-    console.log(nodeAdminAttributes);
+  openUpdateNodeForm() {
+    this.router.navigateByUrl('nodeadmin/updatenode');
   }
 }

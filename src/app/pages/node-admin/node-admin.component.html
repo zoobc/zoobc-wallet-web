@@ -1,5 +1,36 @@
-<div class="node-admin-container" *ngIf="hwInfo">
-  <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
+<div class="node-admin-container">
+  <div class="row">
+    <div class="col-8">
+      <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
+    </div>
+    <div class="col-4 text-right icon-ellipsis menu">
+      <button mat-icon-button class="nodeadmin-dropdown" [matMenuTriggerFor]="nodeadminMenu">
+        <i class="fas fa-ellipsis-h"></i>
+      </button>
+      <mat-menu #nodeadminMenu="matMenu">
+        <div class="nodeadmin-dropdown-list">
+          <div class="nodeadmin-menu-container">
+            <button mat-menu-item (click)="openRegisterNodeForm()">
+              <i class="fas fa-plus"></i>
+              <span>{{'Register Node' | translate}}</span>
+            </button>
+            <button mat-menu-item (click)="openUpdateNodeForm()">
+              <i class="far fa-edit"></i>
+              <span>{{'Update Node' | translate}}</span>
+            </button>
+            <button mat-menu-item>
+              <i class="fas fa-minus-square"></i>
+              <span>{{'Delete Node' | translate}}</span>
+            </button>
+            <button mat-menu-item>
+              <i class="fas fa-exclamation-circle"></i>
+              <span>{{'Claim Node' | translate}}</span>
+            </button>
+          </div>
+        </div>
+      </mat-menu>
+    </div>
+  </div>
   <div class="row">
     <div class="col-12 col-sm-6">
       <mat-card class="status-card">
@@ -11,10 +42,7 @@
           <div class="label">{{ 'IP Address' | translate }}</div>
           <div class="value">
             {{ nodeAdminAttributes.ipAddress }}
-            <i
-              class="far fa-edit"
-              (click)="onOpenChangeIPAddress(nodeAdminAttributes)"
-            ></i>
+
           </div>
           <button mat-flat-button>
             {{ 'Change Private Key' | translate }}
@@ -84,8 +112,8 @@
         <p class="label">Host ID(uuid):</p>
         <p class="value">{{ hwInfo.hostinformation.hostid }}</p>
       </div>
-    </div> </mat-card
-  ><br />
+    </div>
+  </mat-card><br />
 
   <div class="row">
     <div class="col-12 col-sm-6">
@@ -105,8 +133,8 @@
           <div class="persentage-container">
             <div class="percentage" style="width: 60%"></div>
           </div>
-        </div> </mat-card
-      ><br />
+        </div>
+      </mat-card><br />
     </div>
 
     <div class="col-12 col-sm-6">

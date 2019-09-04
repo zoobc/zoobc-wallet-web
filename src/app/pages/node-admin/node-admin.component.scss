@@ -1,6 +1,18 @@
 @import '../../../styles/variables';
 
 .node-admin-container {
+  .menu {
+    width: calc(100% - #{$brand-width});
+    text-align: right;
+    .nodeadmin-dropdown i {
+      font-size: 28px;
+    }
+  }
+
+  .icon-ellipsis {
+    margin-top: 10px;
+    flex: 0 0 32.333333% !important;
+  }
   .status-card {
     display: flex;
     background: linear-gradient(45deg, #0288d1, #26c6da) !important;
@@ -141,5 +153,17 @@
       height: 8px;
       border-radius: 6px;
     }
+  }
+}
+
+.nodeadmin-dropdown-list {
+  button i {
+    margin-right: 8px;
+    color: $black3;
+  }
+  .nodeadmin-menu-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 150px;
   }
 }
