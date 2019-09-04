@@ -1,14 +1,19 @@
-import * as jspb from "google-protobuf"
+// package: model
+// file: model/nodeHardware.proto
+
+import * as jspb from "google-protobuf";
 
 export class GetNodeHardwareResponse extends jspb.Message {
-  getNodehardware(): NodeHardware | undefined;
-  setNodehardware(value?: NodeHardware): void;
   hasNodehardware(): boolean;
   clearNodehardware(): void;
+  getNodehardware(): NodeHardware | undefined;
+  setNodehardware(value?: NodeHardware): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetNodeHardwareResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetNodeHardwareResponse): GetNodeHardwareResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetNodeHardwareResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetNodeHardwareResponse;
   static deserializeBinaryFromReader(message: GetNodeHardwareResponse, reader: jspb.BinaryReader): GetNodeHardwareResponse;
@@ -24,6 +29,8 @@ export class GetNodeHardwareRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetNodeHardwareRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetNodeHardwareRequest): GetNodeHardwareRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetNodeHardwareRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetNodeHardwareRequest;
   static deserializeBinaryFromReader(message: GetNodeHardwareRequest, reader: jspb.BinaryReader): GetNodeHardwareRequest;
@@ -35,29 +42,31 @@ export namespace GetNodeHardwareRequest {
 }
 
 export class NodeHardware extends jspb.Message {
+  clearCpuinformationList(): void;
   getCpuinformationList(): Array<CPUInformation>;
   setCpuinformationList(value: Array<CPUInformation>): void;
-  clearCpuinformationList(): void;
   addCpuinformation(value?: CPUInformation, index?: number): CPUInformation;
 
-  getMemoryinformation(): MemoryInformation | undefined;
-  setMemoryinformation(value?: MemoryInformation): void;
   hasMemoryinformation(): boolean;
   clearMemoryinformation(): void;
+  getMemoryinformation(): MemoryInformation | undefined;
+  setMemoryinformation(value?: MemoryInformation): void;
 
-  getStorageinformation(): StorageInformation | undefined;
-  setStorageinformation(value?: StorageInformation): void;
   hasStorageinformation(): boolean;
   clearStorageinformation(): void;
+  getStorageinformation(): StorageInformation | undefined;
+  setStorageinformation(value?: StorageInformation): void;
 
-  getHostinformation(): HostInformation | undefined;
-  setHostinformation(value?: HostInformation): void;
   hasHostinformation(): boolean;
   clearHostinformation(): void;
+  getHostinformation(): HostInformation | undefined;
+  setHostinformation(value?: HostInformation): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): NodeHardware.AsObject;
   static toObject(includeInstance: boolean, msg: NodeHardware): NodeHardware.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: NodeHardware, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): NodeHardware;
   static deserializeBinaryFromReader(message: NodeHardware, reader: jspb.BinaryReader): NodeHardware;
@@ -106,6 +115,8 @@ export class CPUInformation extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CPUInformation.AsObject;
   static toObject(includeInstance: boolean, msg: CPUInformation): CPUInformation.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: CPUInformation, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): CPUInformation;
   static deserializeBinaryFromReader(message: CPUInformation, reader: jspb.BinaryReader): CPUInformation;
@@ -154,6 +165,8 @@ export class HostInformation extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): HostInformation.AsObject;
   static toObject(includeInstance: boolean, msg: HostInformation): HostInformation.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: HostInformation, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): HostInformation;
   static deserializeBinaryFromReader(message: HostInformation, reader: jspb.BinaryReader): HostInformation;
@@ -191,6 +204,8 @@ export class MemoryInformation extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MemoryInformation.AsObject;
   static toObject(includeInstance: boolean, msg: MemoryInformation): MemoryInformation.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: MemoryInformation, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): MemoryInformation;
   static deserializeBinaryFromReader(message: MemoryInformation, reader: jspb.BinaryReader): MemoryInformation;
@@ -225,6 +240,8 @@ export class StorageInformation extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): StorageInformation.AsObject;
   static toObject(includeInstance: boolean, msg: StorageInformation): StorageInformation.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: StorageInformation, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): StorageInformation;
   static deserializeBinaryFromReader(message: StorageInformation, reader: jspb.BinaryReader): StorageInformation;

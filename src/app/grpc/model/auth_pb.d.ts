@@ -1,5 +1,13 @@
-import * as jspb from "google-protobuf"
+// package: model
+// file: model/auth.proto
 
-export enum RequestType { 
-  GetNodeHardware = 0,
+import * as jspb from "google-protobuf";
+
+export interface RequestTypeMap {
+  GETNODEHARDWARE: 0;
+  GETPROOFOFOWNERSHIP: 1;
+  GENERATETNODEKEY: 2;
 }
+
+export const RequestType: RequestTypeMap;
+

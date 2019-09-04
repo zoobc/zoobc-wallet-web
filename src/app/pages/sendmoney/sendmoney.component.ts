@@ -228,10 +228,12 @@ export class SendmoneyComponent implements OnInit {
       bytes.write8Bytes(amount);
 
       let signature = childSeed.sign(bytes.value);
-      let bytesWithSign = new BytesMaker(193);
+      let bytesWithSign = new BytesMaker(197);
 
       // copy to new bytes
       bytesWithSign.write(bytes.value, 129);
+      // set signature type
+      bytesWithSign.write4bytes(0);
       // set signature
       bytesWithSign.write(signature, 64);
 

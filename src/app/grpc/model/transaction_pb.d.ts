@@ -1,6 +1,9 @@
-import * as jspb from "google-protobuf"
+// package: model
+// file: model/transaction.proto
 
-import * as model_proofOfOwnership_pb from '../model/proofOfOwnership_pb';
+import * as jspb from "google-protobuf";
+import * as model_proofOfOwnership_pb from "../model/proofOfOwnership_pb";
+import * as model_pagination_pb from "../model/pagination_pb";
 
 export class Transaction extends jspb.Message {
   getVersion(): number;
@@ -46,53 +49,45 @@ export class Transaction extends jspb.Message {
   getTransactionindex(): number;
   setTransactionindex(value: number): void;
 
-  getEmptytransactionbody(): EmptyTransactionBody | undefined;
-  setEmptytransactionbody(value?: EmptyTransactionBody): void;
   hasEmptytransactionbody(): boolean;
   clearEmptytransactionbody(): void;
-  hasEmptytransactionbody(): boolean;
+  getEmptytransactionbody(): EmptyTransactionBody | undefined;
+  setEmptytransactionbody(value?: EmptyTransactionBody): void;
 
-  getSendmoneytransactionbody(): SendMoneyTransactionBody | undefined;
-  setSendmoneytransactionbody(value?: SendMoneyTransactionBody): void;
   hasSendmoneytransactionbody(): boolean;
   clearSendmoneytransactionbody(): void;
-  hasSendmoneytransactionbody(): boolean;
+  getSendmoneytransactionbody(): SendMoneyTransactionBody | undefined;
+  setSendmoneytransactionbody(value?: SendMoneyTransactionBody): void;
 
-  getNoderegistrationtransactionbody(): NodeRegistrationTransactionBody | undefined;
-  setNoderegistrationtransactionbody(value?: NodeRegistrationTransactionBody): void;
   hasNoderegistrationtransactionbody(): boolean;
   clearNoderegistrationtransactionbody(): void;
-  hasNoderegistrationtransactionbody(): boolean;
+  getNoderegistrationtransactionbody(): NodeRegistrationTransactionBody | undefined;
+  setNoderegistrationtransactionbody(value?: NodeRegistrationTransactionBody): void;
 
-  getUpdatenoderegistrationtransactionbody(): UpdateNodeRegistrationTransactionBody | undefined;
-  setUpdatenoderegistrationtransactionbody(value?: UpdateNodeRegistrationTransactionBody): void;
   hasUpdatenoderegistrationtransactionbody(): boolean;
   clearUpdatenoderegistrationtransactionbody(): void;
-  hasUpdatenoderegistrationtransactionbody(): boolean;
+  getUpdatenoderegistrationtransactionbody(): UpdateNodeRegistrationTransactionBody | undefined;
+  setUpdatenoderegistrationtransactionbody(value?: UpdateNodeRegistrationTransactionBody): void;
 
-  getRemovenoderegistrationtransactionbody(): RemoveNodeRegistrationTransactionBody | undefined;
-  setRemovenoderegistrationtransactionbody(value?: RemoveNodeRegistrationTransactionBody): void;
   hasRemovenoderegistrationtransactionbody(): boolean;
   clearRemovenoderegistrationtransactionbody(): void;
-  hasRemovenoderegistrationtransactionbody(): boolean;
+  getRemovenoderegistrationtransactionbody(): RemoveNodeRegistrationTransactionBody | undefined;
+  setRemovenoderegistrationtransactionbody(value?: RemoveNodeRegistrationTransactionBody): void;
 
-  getClaimnoderegistrationtransactionbody(): ClaimNodeRegistrationTransactionBody | undefined;
-  setClaimnoderegistrationtransactionbody(value?: ClaimNodeRegistrationTransactionBody): void;
   hasClaimnoderegistrationtransactionbody(): boolean;
   clearClaimnoderegistrationtransactionbody(): void;
-  hasClaimnoderegistrationtransactionbody(): boolean;
+  getClaimnoderegistrationtransactionbody(): ClaimNodeRegistrationTransactionBody | undefined;
+  setClaimnoderegistrationtransactionbody(value?: ClaimNodeRegistrationTransactionBody): void;
 
-  getSetupaccountdatasettransactionbody(): SetupAccountDatasetTransactionBody | undefined;
-  setSetupaccountdatasettransactionbody(value?: SetupAccountDatasetTransactionBody): void;
   hasSetupaccountdatasettransactionbody(): boolean;
   clearSetupaccountdatasettransactionbody(): void;
-  hasSetupaccountdatasettransactionbody(): boolean;
+  getSetupaccountdatasettransactionbody(): SetupAccountDatasetTransactionBody | undefined;
+  setSetupaccountdatasettransactionbody(value?: SetupAccountDatasetTransactionBody): void;
 
-  getRemoveaccountdatasettransactionbody(): RemoveAccountDatasetTransactionBody | undefined;
-  setRemoveaccountdatasettransactionbody(value?: RemoveAccountDatasetTransactionBody): void;
   hasRemoveaccountdatasettransactionbody(): boolean;
   clearRemoveaccountdatasettransactionbody(): void;
-  hasRemoveaccountdatasettransactionbody(): boolean;
+  getRemoveaccountdatasettransactionbody(): RemoveAccountDatasetTransactionBody | undefined;
+  setRemoveaccountdatasettransactionbody(value?: RemoveAccountDatasetTransactionBody): void;
 
   getSignature(): Uint8Array | string;
   getSignature_asU8(): Uint8Array;
@@ -100,10 +95,11 @@ export class Transaction extends jspb.Message {
   setSignature(value: Uint8Array | string): void;
 
   getTransactionbodyCase(): Transaction.TransactionbodyCase;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Transaction.AsObject;
   static toObject(includeInstance: boolean, msg: Transaction): Transaction.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Transaction, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Transaction;
   static deserializeBinaryFromReader(message: Transaction, reader: jspb.BinaryReader): Transaction;
@@ -135,7 +131,7 @@ export namespace Transaction {
     signature: Uint8Array | string,
   }
 
-  export enum TransactionbodyCase { 
+  export enum TransactionbodyCase {
     TRANSACTIONBODY_NOT_SET = 0,
     EMPTYTRANSACTIONBODY = 14,
     SENDMONEYTRANSACTIONBODY = 15,
@@ -152,6 +148,8 @@ export class EmptyTransactionBody extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): EmptyTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: EmptyTransactionBody): EmptyTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: EmptyTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): EmptyTransactionBody;
   static deserializeBinaryFromReader(message: EmptyTransactionBody, reader: jspb.BinaryReader): EmptyTransactionBody;
@@ -169,6 +167,8 @@ export class SendMoneyTransactionBody extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SendMoneyTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: SendMoneyTransactionBody): SendMoneyTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SendMoneyTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SendMoneyTransactionBody;
   static deserializeBinaryFromReader(message: SendMoneyTransactionBody, reader: jspb.BinaryReader): SendMoneyTransactionBody;
@@ -195,14 +195,16 @@ export class NodeRegistrationTransactionBody extends jspb.Message {
   getLockedbalance(): string;
   setLockedbalance(value: string): void;
 
-  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
-  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
   hasPoown(): boolean;
   clearPoown(): void;
+  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
+  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): NodeRegistrationTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: NodeRegistrationTransactionBody): NodeRegistrationTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: NodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): NodeRegistrationTransactionBody;
   static deserializeBinaryFromReader(message: NodeRegistrationTransactionBody, reader: jspb.BinaryReader): NodeRegistrationTransactionBody;
@@ -230,14 +232,16 @@ export class UpdateNodeRegistrationTransactionBody extends jspb.Message {
   getLockedbalance(): string;
   setLockedbalance(value: string): void;
 
-  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
-  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
   hasPoown(): boolean;
   clearPoown(): void;
+  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
+  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpdateNodeRegistrationTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: UpdateNodeRegistrationTransactionBody): UpdateNodeRegistrationTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: UpdateNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): UpdateNodeRegistrationTransactionBody;
   static deserializeBinaryFromReader(message: UpdateNodeRegistrationTransactionBody, reader: jspb.BinaryReader): UpdateNodeRegistrationTransactionBody;
@@ -261,6 +265,8 @@ export class RemoveNodeRegistrationTransactionBody extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RemoveNodeRegistrationTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: RemoveNodeRegistrationTransactionBody): RemoveNodeRegistrationTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: RemoveNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): RemoveNodeRegistrationTransactionBody;
   static deserializeBinaryFromReader(message: RemoveNodeRegistrationTransactionBody, reader: jspb.BinaryReader): RemoveNodeRegistrationTransactionBody;
@@ -291,6 +297,8 @@ export class SetupAccountDatasetTransactionBody extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SetupAccountDatasetTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: SetupAccountDatasetTransactionBody): SetupAccountDatasetTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SetupAccountDatasetTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SetupAccountDatasetTransactionBody;
   static deserializeBinaryFromReader(message: SetupAccountDatasetTransactionBody, reader: jspb.BinaryReader): SetupAccountDatasetTransactionBody;
@@ -322,6 +330,8 @@ export class RemoveAccountDatasetTransactionBody extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RemoveAccountDatasetTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: RemoveAccountDatasetTransactionBody): RemoveAccountDatasetTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: RemoveAccountDatasetTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): RemoveAccountDatasetTransactionBody;
   static deserializeBinaryFromReader(message: RemoveAccountDatasetTransactionBody, reader: jspb.BinaryReader): RemoveAccountDatasetTransactionBody;
@@ -345,14 +355,16 @@ export class ClaimNodeRegistrationTransactionBody extends jspb.Message {
   getAccountaddress(): string;
   setAccountaddress(value: string): void;
 
-  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
-  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
   hasPoown(): boolean;
   clearPoown(): void;
+  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
+  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ClaimNodeRegistrationTransactionBody.AsObject;
   static toObject(includeInstance: boolean, msg: ClaimNodeRegistrationTransactionBody): ClaimNodeRegistrationTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ClaimNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ClaimNodeRegistrationTransactionBody;
   static deserializeBinaryFromReader(message: ClaimNodeRegistrationTransactionBody, reader: jspb.BinaryReader): ClaimNodeRegistrationTransactionBody;
@@ -373,6 +385,8 @@ export class GetTransactionRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetTransactionRequest): GetTransactionRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetTransactionRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetTransactionRequest;
   static deserializeBinaryFromReader(message: GetTransactionRequest, reader: jspb.BinaryReader): GetTransactionRequest;
@@ -385,18 +399,25 @@ export namespace GetTransactionRequest {
 }
 
 export class GetTransactionsRequest extends jspb.Message {
-  getLimit(): number;
-  setLimit(value: number): void;
-
-  getPage(): number;
-  setPage(value: number): void;
-
   getAccountaddress(): string;
   setAccountaddress(value: string): void;
+
+  getTimestampstart(): string;
+  setTimestampstart(value: string): void;
+
+  getTimestampend(): string;
+  setTimestampend(value: string): void;
+
+  hasPagination(): boolean;
+  clearPagination(): void;
+  getPagination(): model_pagination_pb.Pagination | undefined;
+  setPagination(value?: model_pagination_pb.Pagination): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionsRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetTransactionsRequest): GetTransactionsRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetTransactionsRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetTransactionsRequest;
   static deserializeBinaryFromReader(message: GetTransactionsRequest, reader: jspb.BinaryReader): GetTransactionsRequest;
@@ -404,9 +425,10 @@ export class GetTransactionsRequest extends jspb.Message {
 
 export namespace GetTransactionsRequest {
   export type AsObject = {
-    limit: number,
-    page: number,
     accountaddress: string,
+    timestampstart: string,
+    timestampend: string,
+    pagination?: model_pagination_pb.Pagination.AsObject,
   }
 }
 
@@ -414,14 +436,16 @@ export class GetTransactionsResponse extends jspb.Message {
   getTotal(): string;
   setTotal(value: string): void;
 
+  clearTransactionsList(): void;
   getTransactionsList(): Array<Transaction>;
   setTransactionsList(value: Array<Transaction>): void;
-  clearTransactionsList(): void;
   addTransactions(value?: Transaction, index?: number): Transaction;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetTransactionsResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetTransactionsResponse): GetTransactionsResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetTransactionsResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetTransactionsResponse;
   static deserializeBinaryFromReader(message: GetTransactionsResponse, reader: jspb.BinaryReader): GetTransactionsResponse;
@@ -443,6 +467,8 @@ export class PostTransactionRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PostTransactionRequest.AsObject;
   static toObject(includeInstance: boolean, msg: PostTransactionRequest): PostTransactionRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: PostTransactionRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): PostTransactionRequest;
   static deserializeBinaryFromReader(message: PostTransactionRequest, reader: jspb.BinaryReader): PostTransactionRequest;
@@ -455,14 +481,16 @@ export namespace PostTransactionRequest {
 }
 
 export class PostTransactionResponse extends jspb.Message {
-  getTransaction(): Transaction | undefined;
-  setTransaction(value?: Transaction): void;
   hasTransaction(): boolean;
   clearTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PostTransactionResponse.AsObject;
   static toObject(includeInstance: boolean, msg: PostTransactionResponse): PostTransactionResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: PostTransactionResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): PostTransactionResponse;
   static deserializeBinaryFromReader(message: PostTransactionResponse, reader: jspb.BinaryReader): PostTransactionResponse;
@@ -483,6 +511,8 @@ export class SendTransactionRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SendTransactionRequest.AsObject;
   static toObject(includeInstance: boolean, msg: SendTransactionRequest): SendTransactionRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SendTransactionRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SendTransactionRequest;
   static deserializeBinaryFromReader(message: SendTransactionRequest, reader: jspb.BinaryReader): SendTransactionRequest;

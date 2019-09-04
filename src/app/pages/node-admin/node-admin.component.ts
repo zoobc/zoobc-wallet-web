@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   NodeAdminAttribute,
   NodeAdminService,
 } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
+import {
+  NodeHardware as NH,
+  GetNodeHardwareResponse,
+} from 'src/app/grpc/model/nodeHardware_pb';
 // import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
+
+type NodeHardware = NH.AsObject;
+type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
 
 @Component({
   selector: 'app-node-admin',
@@ -20,6 +28,9 @@ export class NodeAdminComponent implements OnInit {
   };
   nodeAdminAttributes: NodeAdminAttribute;
 
+  hwInfo: NodeHardware;
+  mbToB = Math.pow(1024, 2);
+
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
@@ -30,6 +41,12 @@ export class NodeAdminComponent implements OnInit {
         this.nodeAdminAttributes = attribute;
       }
     );
+
+    nodeAdminServ
+      .getNodeHardwareInfo()
+      .subscribe((res: NodeHardwareResponse) => {
+        this.hwInfo = res.nodehardware;
+      });
   }
 
   ngOnInit() {}

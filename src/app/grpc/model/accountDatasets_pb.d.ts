@@ -1,4 +1,7 @@
-import * as jspb from "google-protobuf"
+// package: model
+// file: model/accountDatasets.proto
+
+import * as jspb from "google-protobuf";
 
 export class AccountDataset extends jspb.Message {
   getSetteraccountaddress(): string;
@@ -28,6 +31,8 @@ export class AccountDataset extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AccountDataset.AsObject;
   static toObject(includeInstance: boolean, msg: AccountDataset): AccountDataset.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: AccountDataset, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AccountDataset;
   static deserializeBinaryFromReader(message: AccountDataset, reader: jspb.BinaryReader): AccountDataset;
