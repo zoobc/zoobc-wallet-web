@@ -68,6 +68,8 @@ import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-p
 import { FaqComponent } from './faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
+import { UpdateNodeComponent } from './pages/node-admin/update-node/update-node.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -113,6 +115,8 @@ export function getLanguage(languageServ: LanguageService) {
     FaqComponent,
     TermsOfUseComponent,
     PrivacyPolicyComponent,
+    RegisterNodeComponent,
+    UpdateNodeComponent,
   ],
   imports: [
     BrowserModule,
