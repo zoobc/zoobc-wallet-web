@@ -6,6 +6,7 @@ import { KeyringService } from 'src/app/services/keyring.service';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
+import { MnemonicsService } from 'src/app/services/mnemonics.service';
 
 const coin = 'ZBC';
 
@@ -24,7 +25,8 @@ export class RestoreWalletComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private authServ: AuthService,
-    private keyringServ: KeyringService
+    private keyringServ: KeyringService,
+    private mnemonicServ: MnemonicsService
   ) {
     this.restoreForm = new FormGroup({
       passphrase: this.passphraseField,
@@ -32,6 +34,13 @@ export class RestoreWalletComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  onChangeMnemonic() {
+    const valid = this.mnemonicServ.validateMnemonic(
+      this.passphraseField.value
+    );
+    if (!valid) this.passphraseField.setErrors({ mnemonic: true });
+  }
 
   onRestore() {
     if (this.restoreForm.valid) {
