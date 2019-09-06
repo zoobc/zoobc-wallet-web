@@ -22,7 +22,7 @@
       </a>
     </li>
     <li>
-      <a href="">
+      <a href="#" (click)="onToggle()">
         <img
           matPrefix
           src="../../../assets/img/zbc-black.png"
@@ -39,13 +39,13 @@
       </a>
     </li>
     <li [ngClass]="menu == 'receive' && 'active'">
-      <a (click)="openReceiveForm()" (click)="onToggle()">
+      <a (click)="openReceiveForm()">
         <i class="fa fa-hand-holding-usd"></i>
         <span>{{ 'Request' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'contact-list' && 'active'">
-      <a routerLink="/contact-list">
+      <a routerLink="/contact-list" (click)="onToggle()">
         <i class="fa fa-address-book"></i>
         <span>{{ 'Contacts' | translate }}</span>
       </a>
