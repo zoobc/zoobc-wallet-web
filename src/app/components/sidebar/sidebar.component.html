@@ -21,6 +21,18 @@
         <span>{{ 'History' | translate }}</span>
       </a>
     </li>
+    <li [ngClass]="menu == 'contact-list' && 'active'">
+      <a routerLink="/contact-list">
+        <i class="fa fa-address-book"></i>
+        <span>{{ 'Contacts' | translate }}</span>
+      </a>
+    </li>
+    <li>
+      <a href="">
+        <img matPrefix src="../../../assets/img/zbc-black.png" width="28" class="icon-image" />
+        <span>{{ 'Deposit' | translate }}</span>
+      </a>
+    </li>
     <li [ngClass]="menu == 'sendmoney' && 'active'">
       <a routerLink="/sendmoney">
         <i class="fa fa-paper-plane"></i>
@@ -31,18 +43,6 @@
       <a (click)="openReceiveForm()">
         <i class="fa fa-hand-holding-usd"></i>
         <span>{{ 'Request' | translate }}</span>
-      </a>
-    </li>
-    <li [ngClass]="menu == 'contact-list' && 'active'">
-      <a routerLink="/contact-list">
-        <i class="fa fa-address-book"></i>
-        <span>{{ 'Contacts' | translate }}</span>
-      </a>
-    </li>
-    <li [ngClass]="menu == 'settings' && 'active'">
-      <a routerLink="/settings">
-        <i class="fa fa-cog"></i>
-        <span>{{ 'Settings' | translate }}</span>
       </a>
     </li>
   </ul>

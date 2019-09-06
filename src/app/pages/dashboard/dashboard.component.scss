@@ -16,6 +16,9 @@
     margin-bottom: 24px;
     .summary {
       margin-bottom: 24px;
+      button i {
+        margin-left: 8px;
+      }
       .name {
         text-transform: uppercase;
         font-size: 16px;
@@ -101,5 +104,17 @@
         margin-right: 8px;
       }
     }
+  }
+}
+
+.account-dropdown-list {
+  button i {
+    margin-right: 8px;
+    color: $black2
+  }
+  .account-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 150px;
   }
 }

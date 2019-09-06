@@ -17,6 +17,8 @@ import {
   GetAccountBalanceResponse,
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
+import { Router } from '@angular/router';
+import { AddAccountComponent } from '../add-account/add-account.component';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -40,7 +42,8 @@ export class DashboardComponent implements OnInit {
   };
   currencyRates: Currency[];
 
-  account: SavedAccount;
+  currAcc: SavedAccount;
+  accounts: [SavedAccount];
   address: string;
 
   zbcPriceInUsd: number = 10;
@@ -51,10 +54,11 @@ export class DashboardComponent implements OnInit {
     private transactionServ: TransactionService,
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
-    this.account = this.authServ.getCurrAccount();
+    this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
+    this.accounts = this.authServ.getAllAccount();
   }
 
   ngOnInit() {
@@ -109,6 +113,32 @@ export class DashboardComponent implements OnInit {
     this.currencyRate = rate;
   }
 
+
+  onSwitchAccount(account: SavedAccount) {
+    this.authServ.switchAccount(account);
+    this.currAcc = this.authServ.getCurrAccount();
+    this.address = this.authServ.currAddress;
+    this.showSpinnerBalance = true;
+    this.showSpinnerRecentTx = true;
+
+    // reload data balance, transaction, and unconfirm transaction
+    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
+      this.accountBalance = data.accountbalance;
+      this.showSpinnerBalance = false;
+    });
+
+    this.transactionServ
+      .getAccountTransaction(1, 5)
+      .then((res: Transactions) => {
+        this.recentTx = res.transactions;
+        this.showSpinnerRecentTx = false;
+      });
+
+    this.transactionServ
+      .getUnconfirmTransaction()
+      .then((res: Transaction[]) => (this.unconfirmTx = res));
+  }
+
   copyText(text) {
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -125,6 +155,11 @@ export class DashboardComponent implements OnInit {
   openReceiveForm() {
     this.dialog.open(ReceiveComponent, {
       width: '480px',
+    });
+  }
+  onOpenAddAccount() {
+    this.dialog.open(AddAccountComponent, {
+      width: '360px',
     });
   }
 }
