@@ -14,22 +14,32 @@
       padding: 0 16px;
     }
     .brand {
-      width: $brand-width;
-      display: contents;
-      color: white;
+      width: 40%;
+      display: flex;
       text-decoration: none;
+      .hamburger {
+        margin-right: 8px;
+        @media #{$medium-and-up} {
+          display: none;
+        }
+      }
       img {
         width: 40px;
       }
       h3 {
         margin: 0;
+        color: white;
         padding-left: 16px;
         font-weight: 200;
         font-size: 22px;
+        align-self: center;
+        @media #{$small-and-down} {
+          display: none;
+        }
       }
     }
     .menu {
-      width: calc(100% - #{$brand-width});
+      width: 60%;
       text-align: right;
       .account-dropdown i {
         font-size: 28px;

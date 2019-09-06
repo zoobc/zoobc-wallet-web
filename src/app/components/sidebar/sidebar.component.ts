@@ -5,6 +5,7 @@ import {
 } from 'src/app/services/node-admin.service';
 import { ReceiveComponent } from 'src/app/pages/receive/receive.component';
 import { MatDialog } from '@angular/material';
+import { AppService } from 'src/app/app.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,7 +22,8 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private nodeAdminServ: NodeAdminService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private appServ: AppService
   ) {
     this.nodeAdminServ.nodeAdminAttribute.subscribe(
       (attribute: NodeAdminAttribute) => {

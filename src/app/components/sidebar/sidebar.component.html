@@ -1,14 +1,14 @@
 <div class="sidenav-container">
   <ul class="sidenav-menu">
     <li [ngClass]="menu == 'dashboard' && 'active'">
-      <a routerLink="/dashboard">
+      <a routerLink="/dashboard" (click)="appServ.toggle()">
         <i class="fa fa-home"></i>
         <span>{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
     <ng-template [ngIf]="nodeAdminAttributes">
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
-        <a routerLink="/nodeadmin">
+        <a routerLink="/nodeadmin" (click)="appServ.toggle()">
           <i class="fa fa-desktop"></i>
           <span>{{ 'Node Admin' | translate }}</span>
         </a>
@@ -16,31 +16,31 @@
     </ng-template>
 
     <li [ngClass]="menu == 'transferhistory' && 'active'">
-      <a routerLink="/transferhistory">
+      <a routerLink="/transferhistory" (click)="appServ.toggle()">
         <i class="fa fa-receipt"></i>
         <span>{{ 'History' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'sendmoney' && 'active'">
-      <a routerLink="/sendmoney">
+      <a routerLink="/sendmoney" (click)="appServ.toggle()">
         <i class="fa fa-paper-plane"></i>
         <span>{{ 'Send' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'receive' && 'active'">
-      <a (click)="openReceiveForm()">
+      <a (click)="openReceiveForm()" (click)="appServ.toggle()">
         <i class="fa fa-hand-holding-usd"></i>
         <span>{{ 'Request' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'contact-list' && 'active'">
-      <a routerLink="/contact-list">
+      <a routerLink="/contact-list" (click)="appServ.toggle()">
         <i class="fa fa-address-book"></i>
         <span>{{ 'Contacts' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'settings' && 'active'">
-      <a routerLink="/settings">
+      <a routerLink="/settings" (click)="appServ.toggle()">
         <i class="fa fa-cog"></i>
         <span>{{ 'Settings' | translate }}</span>
       </a>

@@ -21,7 +21,7 @@
           aria-label="contacts"
           [matAutocomplete]="auto"
           formControlName="recipient"
-          (blur)="onChangeRecipient()"
+          (keyup)="onChangeRecipient()"
         />
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">
@@ -53,9 +53,9 @@
           (keyup)="onChangeAmountField()"
         />
         <mat-error *ngIf="amountForm.touched">
-          <span *ngIf="amountForm.hasError('required')">{{
-            'Amount is required' | translate
-          }}</span>
+          <span *ngIf="amountForm.hasError('required')">
+            {{ 'Amount is required' | translate }}
+          </span>
         </mat-error>
       </mat-form-field>
 
@@ -70,9 +70,9 @@
           (keyup)="onChangeAmountCurrencyField()"
         />
         <mat-error *ngIf="amountCurrencyForm.touched">
-          <span *ngIf="amountCurrencyForm.hasError('required')">{{
-            'Amount is required' | translate
-          }}</span>
+          <span *ngIf="amountCurrencyForm.hasError('required')">
+            {{ 'Amount is required' | translate }}
+          </span>
         </mat-error>
       </mat-form-field>
 
@@ -85,9 +85,9 @@
           placeholder="{{ 'Fee' | translate }}"
         />
         <mat-error *ngIf="feeForm.touched">
-          <span *ngIf="feeForm.hasError('required')">{{
-            'Fee is required' | translate
-          }}</span>
+          <span *ngIf="feeForm.hasError('required')">
+            {{ 'Fee is required' | translate }}
+          </span>
         </mat-error>
       </mat-form-field>
 

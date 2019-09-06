@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from 'src/app/app.service';
+import { MatSidenav } from '@angular/material';
 
 @Component({
   selector: 'app-parent',
@@ -8,7 +9,8 @@ import { AppService } from 'src/app/app.service';
   styleUrls: ['./parent.component.scss'],
 })
 export class ParentComponent implements OnInit {
-  largeScreen = window.innerWidth >= 500 ? true : false;
+  @ViewChild('sidenav') public sidenav: MatSidenav;
+  largeScreen = window.innerWidth >= 576 ? true : false;
   routerEvent: any;
   menu: string = '';
 
@@ -20,7 +22,7 @@ export class ParentComponent implements OnInit {
     private appServ: AppService
   ) {
     window.onresize = () => {
-      this.largeScreen = window.innerWidth >= 500 ? true : false;
+      this.largeScreen = window.innerWidth >= 576 ? true : false;
     };
 
     this.routerEvent = this.router.events.subscribe(res => {
@@ -32,7 +34,9 @@ export class ParentComponent implements OnInit {
     this.isLogin = this.appServ.isLoggedIn();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.appServ.setSidenav(this.sidenav);
+  }
 
   ngOnDestroy() {
     this.routerEvent.unsubscribe();
