@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { LanguageService } from 'src/app/services/language.service';
-import { LANGUAGES } from 'src/app/app.service';
+import { LANGUAGES, AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
 import { AddAccountComponent } from 'src/app/pages/add-account/add-account.component';
 import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
@@ -29,7 +29,8 @@ export class NavbarComponent implements OnInit {
     private langServ: LanguageService,
     private authServ: AuthService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private appServ: AppService
   ) {
     this.isLoggedIn = this.authServ.currPublicKey ? true : false;
   }
@@ -39,6 +40,10 @@ export class NavbarComponent implements OnInit {
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
     this.accounts = this.authServ.getAllAccount();
     this.currAcc = this.authServ.getCurrAccount();
+  }
+
+  onToggle() {
+    this.appServ.toggle();
   }
 
   onSwitchAccount(account: SavedAccount) {

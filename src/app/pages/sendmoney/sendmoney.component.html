@@ -15,8 +15,14 @@
 
       <label>{{ 'Recepient address' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="contacts"
-          [matAutocomplete]="auto" formControlName="recipient" (blur)="onChangeRecipient()" />
+        <input
+          matInput
+          placeholder="{{ 'Recepient address' | translate }}..."
+          aria-label="contacts"
+          [matAutocomplete]="auto"
+          formControlName="recipient"
+          (keyup)="onChangeRecipient()"
+        />
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">
             {{ 'Recepient is required' | translate }}
@@ -38,9 +44,9 @@
         <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}"
           (change)="onChangeAmountField()" (keyup)="onChangeAmountField()" />
         <mat-error *ngIf="amountForm.touched">
-          <span *ngIf="amountForm.hasError('required')">{{
-            'Amount is required' | translate
-          }}</span>
+          <span *ngIf="amountForm.hasError('required')">
+            {{ 'Amount is required' | translate }}
+          </span>
         </mat-error>
       </mat-form-field>
 
@@ -50,9 +56,9 @@
           placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}" (change)="onChangeAmountCurrencyField()"
           (keyup)="onChangeAmountCurrencyField()" />
         <mat-error *ngIf="amountCurrencyForm.touched">
-          <span *ngIf="amountCurrencyForm.hasError('required')">{{
-            'Amount is required' | translate
-          }}</span>
+          <span *ngIf="amountCurrencyForm.hasError('required')">
+            {{ 'Amount is required' | translate }}
+          </span>
         </mat-error>
       </mat-form-field>
 
@@ -60,9 +66,9 @@
       <mat-form-field appearance="outline">
         <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}" />
         <mat-error *ngIf="feeForm.touched">
-          <span *ngIf="feeForm.hasError('required')">{{
-            'Fee is required' | translate
-          }}</span>
+          <span *ngIf="feeForm.hasError('required')">
+            {{ 'Fee is required' | translate }}
+          </span>
         </mat-error>
       </mat-form-field>
 

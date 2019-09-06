@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { MatSidenav } from '@angular/material';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService implements CanActivate {
+  private sidenav: MatSidenav;
+
   constructor(private router: Router, private authServ: AuthService) {}
 
   isLoggedIn() {
@@ -17,6 +20,14 @@ export class AppService implements CanActivate {
 
     this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
     return false;
+  }
+
+  // SIDENAV FUNCTION
+  public setSidenav(sidenav: MatSidenav) {
+    this.sidenav = sidenav;
+  }
+  public toggle() {
+    this.sidenav.toggle();
   }
 }
 

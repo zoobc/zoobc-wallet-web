@@ -49,9 +49,15 @@ export class SendmoneyComponent implements OnInit {
   keyword = 'alias';
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
-  amountForm = new FormControl('', Validators.required);
+  amountForm = new FormControl('', [
+    Validators.required,
+    Validators.min(0.001),
+  ]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('', Validators.required);
+  feeForm = new FormControl(0.001, [
+    Validators.required,
+    Validators.min(0.001),
+  ]);
 
   formConfirmPin: FormGroup;
   pinField = new FormControl('', Validators.required);
@@ -138,7 +144,7 @@ export class SendmoneyComponent implements OnInit {
       return this.contacts.filter((contact: Contact) =>
         contact.alias.toLowerCase().includes(filterValue)
       );
-    }
+    } else if (value == '') return this.contacts;
   }
 
   onChangeRecipient() {
