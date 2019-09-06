@@ -27,6 +27,7 @@ export class AppService implements CanActivate {
     this.sidenav = sidenav;
   }
   public toggle() {
+    console.log(this.sidenav.disableClose);
     if (!this.sidenav.disableClose) this.sidenav.toggle();
   }
 }
