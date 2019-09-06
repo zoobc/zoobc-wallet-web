@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 import { LanguageService } from 'src/app/services/language.service';
 import { LANGUAGES, AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
-import { AddAccountComponent } from 'src/app/pages/add-account/add-account.component';
 import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
-import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,8 +19,6 @@ export class NavbarComponent implements OnInit {
   languages = [];
   activeLanguage = 'en';
 
-  accounts: [SavedAccount];
-  currAcc: SavedAccount;
 
   isLoggedIn: boolean = false;
 
@@ -38,29 +35,15 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
-    this.accounts = this.authServ.getAllAccount();
-    this.currAcc = this.authServ.getCurrAccount();
   }
 
   onToggle() {
     this.appServ.toggle();
   }
 
-  onSwitchAccount(account: SavedAccount) {
-    this.authServ.switchAccount(account);
-    this.currAcc = this.authServ.getCurrAccount();
-    this.router.navigateByUrl('/');
-  }
-
   selectActiveLanguage(lang) {
     this.langServ.setLanguage(lang);
     this.activeLanguage = lang;
-  }
-
-  onOpenAddAccount() {
-    this.dialog.open(AddAccountComponent, {
-      width: '360px',
-    });
   }
 
   onOpenAddNodeAdmin() {
