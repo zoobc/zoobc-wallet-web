@@ -408,6 +408,9 @@ export class GetTransactionsRequest extends jspb.Message {
   getTimestampend(): string;
   setTimestampend(value: string): void;
 
+  getTransactiontype(): number;
+  setTransactiontype(value: number): void;
+
   hasPagination(): boolean;
   clearPagination(): void;
   getPagination(): model_pagination_pb.Pagination | undefined;
@@ -428,6 +431,7 @@ export namespace GetTransactionsRequest {
     accountaddress: string,
     timestampstart: string,
     timestampend: string,
+    transactiontype: number,
     pagination?: model_pagination_pb.Pagination.AsObject,
   }
 }

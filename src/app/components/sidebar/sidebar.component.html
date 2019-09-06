@@ -1,14 +1,14 @@
 <div class="sidenav-container">
   <ul class="sidenav-menu">
     <li [ngClass]="menu == 'dashboard' && 'active'">
-      <a routerLink="/dashboard" (click)="appServ.toggle()">
+      <a routerLink="/dashboard" (click)="onToggle()">
         <i class="fa fa-home"></i>
         <span>{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
     <ng-template [ngIf]="nodeAdminAttributes">
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
-        <a routerLink="/nodeadmin" (click)="appServ.toggle()">
+        <a routerLink="/nodeadmin" (click)="onToggle()">
           <i class="fa fa-desktop"></i>
           <span>{{ 'Node Admin' | translate }}</span>
         </a>
@@ -16,25 +16,30 @@
     </ng-template>
 
     <li [ngClass]="menu == 'transferhistory' && 'active'">
-      <a routerLink="/transferhistory" (click)="appServ.toggle()">
+      <a routerLink="/transferhistory" (click)="onToggle()">
         <i class="fa fa-receipt"></i>
         <span>{{ 'History' | translate }}</span>
       </a>
     </li>
     <li>
       <a href="">
-        <img matPrefix src="../../../assets/img/zbc-black.png" width="28" class="icon-image" />
+        <img
+          matPrefix
+          src="../../../assets/img/zbc-black.png"
+          width="28"
+          class="icon-image"
+        />
         <span>{{ 'Deposit' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'sendmoney' && 'active'">
-      <a routerLink="/sendmoney" (click)="appServ.toggle()">
+      <a routerLink="/sendmoney" (click)="onToggle()">
         <i class="fa fa-paper-plane"></i>
         <span>{{ 'Send' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'receive' && 'active'">
-      <a (click)="openReceiveForm()" (click)="appServ.toggle()">
+      <a (click)="openReceiveForm()" (click)="onToggle()">
         <i class="fa fa-hand-holding-usd"></i>
         <span>{{ 'Request' | translate }}</span>
       </a>
