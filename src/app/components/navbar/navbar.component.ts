@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { LanguageService } from 'src/app/services/language.service';
-import { LANGUAGES } from 'src/app/app.service';
+import { LANGUAGES, AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
 import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -26,7 +26,8 @@ export class NavbarComponent implements OnInit {
     private langServ: LanguageService,
     private authServ: AuthService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private appServ: AppService
   ) {
     this.isLoggedIn = this.authServ.currPublicKey ? true : false;
   }
@@ -36,6 +37,9 @@ export class NavbarComponent implements OnInit {
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
   }
 
+  onToggle() {
+    this.appServ.toggle();
+  }
 
   selectActiveLanguage(lang) {
     this.langServ.setLanguage(lang);
