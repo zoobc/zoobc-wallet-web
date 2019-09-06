@@ -32,10 +32,7 @@
           </span>
         </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            *ngFor="let contact of filteredContacts | async"
-            [value]="contact.address"
-          >
+          <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
             <span>{{ contact.alias }}</span> |
             <small>{{ contact.address }}</small>
           </mat-option>
@@ -44,14 +41,8 @@
 
       <label>{{ 'Coin amount' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="number"
-          formControlName="amount"
-          placeholder="{{ 'Coin Amount' | translate }}"
-          (change)="onChangeAmountField()"
-          (keyup)="onChangeAmountField()"
-        />
+        <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}"
+          (change)="onChangeAmountField()" (keyup)="onChangeAmountField()" />
         <mat-error *ngIf="amountForm.touched">
           <span *ngIf="amountForm.hasError('required')">
             {{ 'Amount is required' | translate }}
@@ -61,14 +52,9 @@
 
       <label>{{ currencyRate.name }} {{ 'amount' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="number"
-          formControlName="amountCurrency"
-          placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}"
-          (change)="onChangeAmountCurrencyField()"
-          (keyup)="onChangeAmountCurrencyField()"
-        />
+        <input matInput type="number" formControlName="amountCurrency"
+          placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}" (change)="onChangeAmountCurrencyField()"
+          (keyup)="onChangeAmountCurrencyField()" />
         <mat-error *ngIf="amountCurrencyForm.touched">
           <span *ngIf="amountCurrencyForm.hasError('required')">
             {{ 'Amount is required' | translate }}
@@ -78,12 +64,7 @@
 
       <label>{{ 'Fee' | translate }}</label>
       <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="number"
-          formControlName="fee"
-          placeholder="{{ 'Fee' | translate }}"
-        />
+        <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}" />
         <mat-error *ngIf="feeForm.touched">
           <span *ngIf="feeForm.hasError('required')">
             {{ 'Fee is required' | translate }}
@@ -91,12 +72,7 @@
         </mat-error>
       </mat-form-field>
 
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        [disabled]="formSend.invalid || isFormSendLoading"
-      >
+      <button mat-flat-button color="primary" type="submit" [disabled]="formSend.invalid || isFormSendLoading">
         <span *ngIf="isFormSendLoading">
           <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
         </span>
@@ -157,11 +133,24 @@
       <mat-error *ngIf="formConfirmPin.hasError('invalid')">
         {{ 'Pin is not match' | translate }}
       </mat-error>
-      <i
-        matPrefix
-        class="fas fa-circle-notch fa-spin"
-        *ngIf="isConfirmPinLoading"
-      ></i>
+      <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isConfirmPinLoading"></i>
     </div>
   </form>
+</ng-template>
+
+<ng-template #addContactDialog>
+  <div class="addcontact-container">
+    <h2 class="mat-h2">{{ 'New Contact' | translate }}</h2>
+    <form [formGroup]="addForm" (submit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="alias" placeholder="{{'Alias' | translate}}" />
+        <mat-error *ngIf="aliasField.hasError('required')">{{"Alias is required" | translate}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="address" placeholder="{{'Address' | translate}}" />
+        <mat-error *ngIf="addressField.hasError('required')">{{"Address is required" | translate}}</mat-error>
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit">{{ 'Save' | translate }}</button>
+    </form>
+  </div>
 </ng-template>
