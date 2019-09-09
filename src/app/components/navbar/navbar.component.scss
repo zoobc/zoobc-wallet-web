@@ -17,6 +17,12 @@
       width: 40%;
       display: flex;
       text-decoration: none;
+      .brand-text {
+        display: inherit;
+        &:hover {
+          opacity: 1;
+        }
+      }
       .hamburger {
         margin-right: 8px;
         @media #{$medium-and-up} {

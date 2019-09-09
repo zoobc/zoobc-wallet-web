@@ -34,6 +34,10 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit() {}
 
+  onToggle() {
+    this.appServ.toggle();
+  }
+
   openReceiveForm() {
     this.dialog.open(ReceiveComponent, {
       width: '480px',

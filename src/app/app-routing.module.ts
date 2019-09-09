@@ -21,6 +21,10 @@ import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
 import { UpdateNodeComponent } from './pages/node-admin/update-node/update-node.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { GeneralComponent } from './pages/settings/general/general.component';
+import { NetworkComponent } from './pages/settings/network/network.component';
+import { AboutComponent } from './pages/settings/about/about.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -40,7 +44,13 @@ const routes: Routes = [
       { path: 'contact-list', component: ContactlistComponent },
       {
         path: 'settings',
-        loadChildren: './pages/settings/settings.module#SettingsModule',
+        component: SettingsComponent,
+        children: [
+          { path: '', component: GeneralComponent },
+          { path: 'general', component: GeneralComponent },
+          { path: 'network', component: NetworkComponent },
+          { path: 'about', component: AboutComponent },
+        ],
       },
       { path: 'request/:recipient/:amount', component: SendmoneyComponent },
     ],

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from 'src/app/app.service';
 import { MatSidenav } from '@angular/material';
@@ -21,10 +21,6 @@ export class ParentComponent implements OnInit {
     private route: ActivatedRoute,
     private appServ: AppService
   ) {
-    window.onresize = () => {
-      this.largeScreen = window.innerWidth >= 576 ? true : false;
-    };
-
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
         this.menu = this.route.snapshot.firstChild.url[0].path;
@@ -32,6 +28,10 @@ export class ParentComponent implements OnInit {
     });
 
     this.isLogin = this.appServ.isLoggedIn();
+  }
+
+  @HostListener('window:resize', ['$event']) onResize(event) {
+    this.largeScreen = event.target.innerWidth >= 576 ? true : false;
   }
 
   ngOnInit() {

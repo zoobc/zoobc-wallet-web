@@ -70,6 +70,10 @@ import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
 import { UpdateNodeComponent } from './pages/node-admin/update-node/update-node.component';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { AboutComponent } from './pages/settings/about/about.component';
+import { GeneralComponent } from './pages/settings/general/general.component';
+import { NetworkComponent } from './pages/settings/network/network.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -117,6 +121,10 @@ export function getLanguage(languageServ: LanguageService) {
     PrivacyPolicyComponent,
     RegisterNodeComponent,
     UpdateNodeComponent,
+    SettingsComponent,
+    AboutComponent,
+    GeneralComponent,
+    NetworkComponent,
   ],
   imports: [
     BrowserModule,

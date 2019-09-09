@@ -3043,6 +3043,7 @@ proto.model.GetTransactionsRequest.toObject = function(includeInstance, msg) {
     accountaddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
     timestampstart: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     timestampend: jspb.Message.getFieldWithDefault(msg, 5, "0"),
+    transactiontype: jspb.Message.getFieldWithDefault(msg, 6, 0),
     pagination: (f = msg.getPagination()) && model_pagination_pb.Pagination.toObject(includeInstance, f)
   };
 
@@ -3093,6 +3094,10 @@ proto.model.GetTransactionsRequest.deserializeBinaryFromReader = function(msg, r
       msg.setTimestampend(value);
       break;
     case 6:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setTransactiontype(value);
+      break;
+    case 7:
       var value = new model_pagination_pb.Pagination;
       reader.readMessage(value,model_pagination_pb.Pagination.deserializeBinaryFromReader);
       msg.setPagination(value);
@@ -3147,10 +3152,17 @@ proto.model.GetTransactionsRequest.serializeBinaryToWriter = function(message, w
       f
     );
   }
+  f = message.getTransactiontype();
+  if (f !== 0) {
+    writer.writeUint32(
+      6,
+      f
+    );
+  }
   f = message.getPagination();
   if (f != null) {
     writer.writeMessage(
-      6,
+      7,
       f,
       model_pagination_pb.Pagination.serializeBinaryToWriter
     );
@@ -3204,18 +3216,33 @@ proto.model.GetTransactionsRequest.prototype.setTimestampend = function(value) {
 
 
 /**
- * optional Pagination Pagination = 6;
+ * optional uint32 TransactionType = 6;
+ * @return {number}
+ */
+proto.model.GetTransactionsRequest.prototype.getTransactiontype = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/** @param {number} value */
+proto.model.GetTransactionsRequest.prototype.setTransactiontype = function(value) {
+  jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional Pagination Pagination = 7;
  * @return {?proto.model.Pagination}
  */
 proto.model.GetTransactionsRequest.prototype.getPagination = function() {
   return /** @type{?proto.model.Pagination} */ (
-    jspb.Message.getWrapperField(this, model_pagination_pb.Pagination, 6));
+    jspb.Message.getWrapperField(this, model_pagination_pb.Pagination, 7));
 };
 
 
 /** @param {?proto.model.Pagination|undefined} value */
 proto.model.GetTransactionsRequest.prototype.setPagination = function(value) {
-  jspb.Message.setWrapperField(this, 6, value);
+  jspb.Message.setWrapperField(this, 7, value);
 };
 
 
@@ -3232,7 +3259,7 @@ proto.model.GetTransactionsRequest.prototype.clearPagination = function() {
  * @return {boolean}
  */
 proto.model.GetTransactionsRequest.prototype.hasPagination = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
