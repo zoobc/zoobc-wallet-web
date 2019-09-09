@@ -16,8 +16,12 @@
     margin-bottom: 24px;
     .summary {
       margin-bottom: 24px;
-      button i {
-        margin-left: 8px;
+      .account-dropdown{
+        cursor: pointer;
+        i {
+          margin-left: 8px;
+          
+        }  
       }
       .name {
         text-transform: uppercase;
@@ -113,8 +117,7 @@
     color: $black2
   }
   .account-container {
-    overflow-y: scroll;
     overflow-x: hidden;
-    max-height: 150px;
+    max-height: 400px;
   }
 }

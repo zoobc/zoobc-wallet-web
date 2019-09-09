@@ -24,10 +24,10 @@
 
   <mat-card class="account-card">
     <div class="summary">
-      <button mat-icon-button [matMenuTriggerFor]="account">
+      <div class="account-dropdown" [matMenuTriggerFor]="account">
         <span class="name">{{currAcc.name}}</span>
         <i class="fa fa-caret-down"></i>
-      </button>
+      </div>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
           <div class="account-container">
@@ -35,6 +35,7 @@
               <i class="fas fa-plus"></i>
               <span>{{ 'Add New Account' | translate }}</span>
             </button>
+            <mat-divider></mat-divider>
             <button *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)" mat-menu-item>
               <i class="fas fa-user" *ngIf="acc.path != undefined && acc.path != currAcc.path"></i>
               <i class="fas fa-check" *ngIf="acc.path != undefined && acc.path == currAcc.path"></i>
