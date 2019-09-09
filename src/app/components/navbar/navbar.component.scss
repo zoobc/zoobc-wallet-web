@@ -48,7 +48,7 @@
       width: 60%;
       text-align: right;
       .account-dropdown i {
-        font-size: 28px;
+        font-size: 22px;
       }
 
       .language-dropdown {
@@ -67,6 +67,8 @@
   button i {
     margin-right: 8px;
     color: $black3;
+    width: 18px;
+    text-align: center;
   }
   .account-container {
     overflow-y: scroll;

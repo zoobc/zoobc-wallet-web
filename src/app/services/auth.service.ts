@@ -16,16 +16,16 @@ const coin = 'ZBC';
   providedIn: 'root',
 })
 export class AuthService {
-  currSeed: string;
-  currPublicKey: Uint8Array;
-  currAddress: string;
-  // currSeed: string =
-  //   'b88ddc803c5b30918e4fd23e6c6e7a9580d267d58607569b33048925c145cecf2dfa43dca8371b4a2506c922e76d31d2e213b3c599c16bf1a853a9b2b954a9fd';
-  // currPublicKey: Uint8Array = Buffer.from(
-  //   '9cafe8bb17430f0b898a88220c08bfcecd4ba9e37b7f966c5db16d5c6a867343',
-  //   'hex'
-  // );
-  // currAddress: string = 'nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd';
+  // currSeed: string;
+  // currPublicKey: Uint8Array;
+  // currAddress: string;
+  currSeed: string =
+    'b88ddc803c5b30918e4fd23e6c6e7a9580d267d58607569b33048925c145cecf2dfa43dca8371b4a2506c922e76d31d2e213b3c599c16bf1a853a9b2b954a9fd';
+  currPublicKey: Uint8Array = Buffer.from(
+    '9cafe8bb17430f0b898a88220c08bfcecd4ba9e37b7f966c5db16d5c6a867343',
+    'hex'
+  );
+  currAddress: string = 'nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd';
 
   constructor(private keyringServ: KeyringService) {}
 
