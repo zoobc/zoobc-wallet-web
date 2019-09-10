@@ -44,9 +44,9 @@
         </mat-checkbox>
       </div>
       <div>
-        <mat-checkbox formControlName="isAgree">{{
-          'I Approve Terms & Conditions' | translate
-        }}</mat-checkbox>
+        <mat-checkbox formControlName="isAgree">
+          <span [innerHTML]="'I Approve Terms & Conditions' | translate"></span>
+        </mat-checkbox>
       </div>
     </div>
 

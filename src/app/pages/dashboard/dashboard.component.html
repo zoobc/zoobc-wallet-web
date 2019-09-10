@@ -31,10 +31,11 @@
 
   <mat-card class="account-card">
     <div class="summary">
-      <div class="account-dropdown" [matMenuTriggerFor]="account">
+      <span class="account-dropdown" [matMenuTriggerFor]="account">
         <span class="name">{{ currAcc.name }}</span>
         <i class="fa fa-caret-down"></i>
-      </div>
+      </span>
+      <br />
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
           <div class="account-container">
@@ -70,9 +71,9 @@
           </div>
         </div>
       </mat-menu>
-      <div class="address" (click)="copyText(address)">
+      <span class="address" (click)="copyText(address)">
         <wallet-address [value]="address"></wallet-address>
-      </div>
+      </span>
     </div>
 
     <div class="row">

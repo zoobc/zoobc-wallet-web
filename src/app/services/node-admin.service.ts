@@ -66,15 +66,15 @@ export class NodeAdminService {
         host: environment.grpcUrl,
       });
       client.onHeaders((headers: grpc.Metadata) => {
-        // console.log('onHeaders', headers);
+        console.log('onHeaders', headers);
       });
       client.onMessage((message: GetNodeHardwareResponse) => {
-        // console.log('onMessage', message.toObject());
+        console.log('onMessage', message.toObject());
         observer.next(message.toObject());
       });
       client.onEnd(
         (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
-          // console.log('onEnd', status, statusMessage, trailers);
+          console.log('onEnd', status, statusMessage, trailers);
         }
       );
 

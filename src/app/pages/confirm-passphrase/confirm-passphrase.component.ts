@@ -53,7 +53,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     // removing half of the passphrase
     this.prefillPassphrase = this.passphrase;
     // let totalWordRemoved = 1;
-    let totalWordRemoved = Math.round(this.mnemonicNumWords / 2);
+    let totalWordRemoved = Math.round(this.mnemonicNumWords / 6);
 
     for (let i = 0; i < totalWordRemoved; i++) {
       let lenWords = this.prefillPassphrase.length;
