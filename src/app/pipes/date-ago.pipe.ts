@@ -1,12 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
   name: 'dateAgo',
   pure: true
 })
 export class DateAgoPipe implements PipeTransform {
-  private translate: TranslateService
   transform(value: any, args?: any): any {
     if (value) {
       const seconds = Math.floor((+new Date() - +new Date(value)) / 1000);
