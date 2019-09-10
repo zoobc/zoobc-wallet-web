@@ -1,0 +1,21 @@
+.address-template {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  .start {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
+  }
+  .end {
+    white-space: nowrap;
+    flex-basis: content;
+    flex-grow: 0;
+    flex-shrink: 1;
+    text-align: right;
+    overflow: hidden;
+    direction: rtl;
+  }
+}
