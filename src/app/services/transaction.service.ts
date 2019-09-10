@@ -41,7 +41,67 @@ export class TransactionService {
   constructor(
     private authServ: AuthService,
     private contactServ: ContactService
-  ) {}
+  ) { }
+
+  getAllAcountTransaction() {
+    const address = this.authServ.currAddress;
+    return new Promise((resolve, reject) => {
+      const request = new GetTransactionsRequest();
+      const pagination = new Pagination();
+      pagination.setOrderby(OrderBy.DESC);
+      request.setAccountaddress(address);
+
+      grpc.invoke(TransactionServ.GetTransactions, {
+        request: request,
+        host: environment.grpcUrl,
+        onMessage: (message: GetTransactionsResponse) => {
+          // filter transactions for only showing send coin type (type 1) (TEMP)
+          const originTx = message.toObject().transactionsList.filter(tx => {
+            if (tx.transactiontype == 1) return tx;
+            else return false;
+          });
+
+          // recreate list of transactions
+          let transactions: Transaction[] = originTx.map(tx => {
+            const bytes = Buffer.from(
+              tx.transactionbodybytes.toString(),
+              'base64'
+            );
+            const amount = readInt64(bytes, 0);
+            const friendAddress =
+              tx.senderaccountaddress == address
+                ? tx.recipientaccountaddress
+                : tx.senderaccountaddress;
+            const type =
+              tx.senderaccountaddress == address ? 'send' : 'receive';
+            const alias =
+              this.contactServ.getContact(friendAddress).alias || '';
+
+            return {
+              alias: alias,
+              address: friendAddress,
+              type: type,
+              timestamp: parseInt(tx.timestamp) * 1000,
+              fee: parseInt(tx.fee),
+              amount: amount,
+            };
+          });
+
+          resolve({
+            total: message.toObject().total,
+            transactions: transactions,
+          });
+        },
+        onEnd: (
+          code: grpc.Code,
+          msg: string | undefined,
+          trailers: grpc.Metadata
+        ) => {
+          if (code != grpc.Code.OK) reject(msg);
+        },
+      });
+    });
+  }
 
   getAccountTransaction(page: number, limit: number) {
     const address = this.authServ.currAddress;

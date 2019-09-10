@@ -6,17 +6,14 @@
         <span class="message">{{ 'No Transaction Record' | translate }}</span>
       </div>
 
-      <div
-        class="transaction-item row"
-        *ngFor="let transaction of transactionData; let i = index"
-      >
+      <div class="transaction-item row" *ngFor="let transaction of transactionData; let i = index">
         <div class="col-7 col-sm-8">
           <div class="name" *ngIf="transaction.alias">
             {{ transaction.alias }}
           </div>
           <div class="address">{{ transaction.address }}</div>
           <div class="date">
-            {{ transaction.timestamp | date: 'dd MMMM yyyy HH:mm:ss' }}
+            {{ transaction.timestamp | dateAgo }}
           </div>
         </div>
         <div class="col-5 col-sm-4 text-right">
@@ -39,10 +36,7 @@
     </ng-container>
 
     <ng-container *ngIf="isLoading">
-      <div
-        class="transaction-item row skeleton"
-        *ngFor="let i of [0, 1, 2, 3, 4, 5]"
-      >
+      <div class="transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
         <div class="col-7 col-sm-8">
           <div class="skeleton-text" style="width:50%;"></div>
           <div class="skeleton-text small" style="width:75%;"></div>

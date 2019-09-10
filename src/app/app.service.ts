@@ -9,7 +9,7 @@ import { MatSidenav } from '@angular/material';
 export class AppService implements CanActivate {
   private sidenav: MatSidenav;
 
-  constructor(private router: Router, private authServ: AuthService) {}
+  constructor(private router: Router, private authServ: AuthService) { }
 
   isLoggedIn() {
     return this.authServ.currPublicKey ? true : false;
@@ -27,7 +27,6 @@ export class AppService implements CanActivate {
     this.sidenav = sidenav;
   }
   public toggle() {
-    console.log(this.sidenav.disableClose);
     if (!this.sidenav.disableClose) this.sidenav.toggle();
   }
 }

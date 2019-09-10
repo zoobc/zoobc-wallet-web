@@ -61,7 +61,7 @@ const routes: Routes = [
     children: [
       { path: 'signup', component: SignupComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'restore', component: RestoreWalletComponent },
+      { path: 'open-wallet', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
       { path: 'feedback', component: ContactUsComponent },
       { path: 'faq', component: FaqComponent },
@@ -75,4 +75,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
