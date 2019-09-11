@@ -41,14 +41,14 @@
     </li>
     <li [ngClass]="menu == 'receive' && 'active'">
       <a (click)="openReceiveForm()">
-        <i class="fa fa-hand-holding-usd"></i>
-        <span>{{ 'Request' | translate }}</span>
+        <i class="fas fa-money-bill"></i>
+        <span>{{ 'Receive' | translate }}</span>
       </a>
     </li>
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list" (click)="onToggle()">
         <i class="fa fa-address-book"></i>
-        <span>{{ 'Contacts' | translate }}</span>
+        <span>{{'Address Book' | translate}}</span>
       </a>
     </li>
   </ul>

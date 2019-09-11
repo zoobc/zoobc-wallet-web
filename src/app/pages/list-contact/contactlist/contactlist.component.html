@@ -1,5 +1,5 @@
 <div class="contacts-container">
-  <h2 class="mat-h2">{{ 'Contact List' | translate }}</h2>
+  <h2 class="mat-h2">{{'Address Book' | translate}}</h2>
   <div class="text-right" style="margin-bottom: 8px">
     <button
       mat-flat-button
@@ -14,7 +14,7 @@
   <mat-card>
     <div class="no-content" *ngIf="!contacts || contacts.length <= 0">
       <i matPrefix class="fa fa-address-book"></i>
-      <span class="message">{{ 'No Contact Available' | translate }}</span>
+      <span class="message">{{'No Address Available' | translate}}</span>
     </div>
 
     <ng-container *ngIf="contacts && contacts.length > 0">

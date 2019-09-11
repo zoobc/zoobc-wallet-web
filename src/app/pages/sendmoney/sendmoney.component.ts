@@ -297,7 +297,7 @@ export class SendmoneyComponent implements OnInit {
         (res: any) => {
           this.isFormSendLoading = false;
           Swal.fire(
-            '<b>Your transaction is on the way !</b>',
+            '<b>Your Transaction is processing</b>',
             'You send <b>' +
               this.amountForm.value +
               '</b> coins (' +

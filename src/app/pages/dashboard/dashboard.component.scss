@@ -2,6 +2,16 @@
 @import '../../../styles/mixins';
 
 .dashboard-container {
+  .btn-view-all {
+    color: #fff;
+    background: linear-gradient(90deg, #0288d1, #26c6da) !important;
+    border-radius: 4.5em;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    width: 23%;
+    height: 42px;
+  }
   .rates-dropdown {
     font-size: 14px;
     color: $black1;

@@ -1,25 +1,13 @@
 <div>
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
     <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
-    <app-transaction-table
-      [transactionData]="unconfirmTx"
-    ></app-transaction-table>
+    <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
     <br />
   </ng-container>
 
-  <h2 class="mat-h2">{{ 'Latest transactions' | translate }}</h2>
-  <div
-    infiniteScroll
-    [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="50"
-    (scrolled)="onScroll()"
-    [scrollWindow]="false"
-    [infiniteScrollContainer]="'.main-container'"
-    [fromRoot]="true"
-  >
-    <app-transaction-table
-      [transactionData]="accountHistory"
-      [isLoading]="showSpinner"
-    ></app-transaction-table>
+  <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
+  <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
+    [scrollWindow]="false" [infiniteScrollContainer]="'.main-container'" [fromRoot]="true">
+    <app-transaction-table [transactionData]="accountHistory" [isLoading]="showSpinner"></app-transaction-table>
   </div>
 </div>

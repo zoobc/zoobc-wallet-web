@@ -201,3 +201,20 @@ label {
     background-position: 200px;
   }
 }
+
+// ================== DATA NOT AVAILABLE =============== //
+.data-unavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $black3;
+  padding: 2rem;
+  i {
+    font-size: 3rem;
+    margin: 1rem 0;
+  }
+  .message {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+}

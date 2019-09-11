@@ -75,6 +75,7 @@ import { AboutComponent } from './pages/settings/about/about.component';
 import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
 import { AddressComponent } from './components/address/address.component';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -127,6 +128,7 @@ export function getLanguage(languageServ: LanguageService) {
     GeneralComponent,
     NetworkComponent,
     AddressComponent,
+    DateAgoPipe,
   ],
   imports: [
     BrowserModule,
