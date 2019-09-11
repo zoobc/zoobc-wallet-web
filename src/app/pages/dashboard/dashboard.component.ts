@@ -33,6 +33,7 @@ export class DashboardComponent implements OnInit {
   showSpinnerBalance: boolean = true;
   showSpinnerRecentTx: boolean = true;
 
+  allTx: Transaction[] = [];
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
 
@@ -55,6 +56,7 @@ export class DashboardComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private router: Router,
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
@@ -83,6 +85,10 @@ export class DashboardComponent implements OnInit {
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
     });
+
+    this.transactionServ.getAllAcountTransaction().then((res: Transactions) => {
+      this.allTx = res.transactions;
+    })
 
     this.getCurrencyRates();
     this.currencyRate = this.currencyServ.rate;
@@ -161,5 +167,8 @@ export class DashboardComponent implements OnInit {
     this.dialog.open(AddAccountComponent, {
       width: '360px',
     });
+  }
+  goToHistory() {
+    this.router.navigateByUrl('/transferhistory')
   }
 }

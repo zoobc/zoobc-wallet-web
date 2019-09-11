@@ -297,12 +297,12 @@ export class SendmoneyComponent implements OnInit {
         (res: any) => {
           this.isFormSendLoading = false;
           Swal.fire(
-            '<b>Your transaction is on the way !</b>',
+            '<b>Your Transaction is processing</b>',
             'You send <b>' +
-            (this.amountForm.value + this.feeForm.value) +
+            this.amountForm.value +
             '</b> coins (' +
-            (this.amountForm.value + this.feeForm.value) *
-            this.currencyRate.value +
+            (this.amountForm.value *
+              this.currencyRate.value) +
             ' ' +
             this.currencyRate.name +
             ') ' +
