@@ -6,8 +6,8 @@
 @import './styles/grid.css';
 
 @include mat-core();
-$app-primary: mat-palette($mat-blue);
-$app-accent: mat-palette($mat-blue, 800);
+$app-primary: mat-palette($primary-pallete, 500);
+$app-accent: mat-palette($secondary-pallete, 500);
 $app-theme: mat-light-theme($app-primary, $app-accent);
 
 @include angular-material-theme($app-theme);

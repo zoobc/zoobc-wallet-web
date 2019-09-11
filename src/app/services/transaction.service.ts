@@ -6,6 +6,8 @@ import {
   GetTransactionsResponse,
   PostTransactionRequest,
   PostTransactionResponse,
+  GetTransactionRequest,
+  Transaction as TransactionResponse,
 } from '../grpc/model/transaction_pb';
 import {
   GetMempoolTransactionsRequest,
@@ -21,12 +23,18 @@ import { ContactService } from './contact.service';
 import { Pagination, OrderBy } from '../grpc/model/pagination_pb';
 
 export interface Transaction {
+  id: string;
   alias: string;
   address: string;
+  sender: string;
+  recipient: string;
   timestamp: number;
   fee: number;
   type: string;
   amount: number;
+  blockId: string;
+  height: number;
+  transactionIndex: number;
 }
 
 export interface Transactions {
@@ -41,7 +49,7 @@ export class TransactionService {
   constructor(
     private authServ: AuthService,
     private contactServ: ContactService
-  ) { }
+  ) {}
 
   getAllAcountTransaction() {
     const address = this.authServ.currAddress;
@@ -77,13 +85,27 @@ export class TransactionService {
             const alias =
               this.contactServ.getContact(friendAddress).alias || '';
 
+            // return {
+            //   alias: alias,
+            //   address: friendAddress,
+            //   type: type,
+            //   timestamp: parseInt(tx.timestamp) * 1000,
+            //   fee: parseInt(tx.fee),
+            //   amount: amount,
+            // };
             return {
+              id: tx.id,
               alias: alias,
               address: friendAddress,
               type: type,
               timestamp: parseInt(tx.timestamp) * 1000,
               fee: parseInt(tx.fee),
               amount: amount,
+              blockId: tx.blockid,
+              height: tx.height,
+              transactionIndex: tx.transactionindex,
+              sender: '',
+              recipient: '',
             };
           });
 
@@ -141,18 +163,68 @@ export class TransactionService {
               this.contactServ.getContact(friendAddress).alias || '';
 
             return {
+              id: tx.id,
               alias: alias,
               address: friendAddress,
               type: type,
               timestamp: parseInt(tx.timestamp) * 1000,
               fee: parseInt(tx.fee),
               amount: amount,
+              blockId: tx.blockid,
+              height: tx.height,
+              transactionIndex: tx.transactionindex,
+              sender: '',
+              recipient: '',
             };
           });
 
           resolve({
             total: message.toObject().total,
             transactions: transactions,
+          });
+        },
+        onEnd: (
+          code: grpc.Code,
+          msg: string | undefined,
+          trailers: grpc.Metadata
+        ) => {
+          if (code != grpc.Code.OK) reject(msg);
+        },
+      });
+    });
+  }
+
+  getTransaction(id) {
+    return new Promise((resolve, reject) => {
+      const request = new GetTransactionRequest();
+      request.setId(id);
+
+      grpc.invoke(TransactionServ.GetTransaction, {
+        request: request,
+        host: environment.grpcUrl,
+        onMessage: (message: TransactionResponse) => {
+          console.log(message.toObject());
+          let tx = message.toObject();
+
+          const bytes = Buffer.from(
+            tx.transactionbodybytes.toString(),
+            'base64'
+          );
+          const amount = readInt64(bytes, 0);
+
+          resolve({
+            id: tx.id,
+            alias: '',
+            address: '',
+            type: '',
+            timestamp: parseInt(tx.timestamp) * 1000,
+            fee: parseInt(tx.fee),
+            amount: amount,
+            blockId: tx.blockid,
+            height: tx.height,
+            transactionIndex: tx.transactionindex,
+            sender: tx.senderaccountaddress,
+            recipient: tx.recipientaccountaddress,
           });
         },
         onEnd: (
@@ -244,4 +316,6 @@ export class TransactionService {
       });
     });
   }
+
+  convertTransaction() {}
 }

@@ -25,7 +25,8 @@ $medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
 $medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
 
 // colors
-$primary-color: #2196f3;
+$primary-color: #01aad8;
+// $primary-color: #3885bd;
 
 // black
 $black1: rgba(
@@ -57,4 +58,46 @@ $white2: rgba(
 $white3: rgba(
   $color: white,
   $alpha: 0.4,
+);
+
+$primary-pallete: (
+  100: #cff5ff,
+  200: #92e7fe,
+  300: #55dafe,
+  400: #18cdfe,
+  500: #01aad8,
+  600: #3885bd,
+  700: #2c6996,
+  800: #214e6e,
+  contrast: (
+    100: $black1,
+    200: $black1,
+    300: $black1,
+    400: $black1,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+  ),
+);
+
+$secondary-pallete: (
+  100: #f3dced,
+  200: #e4afd5,
+  300: #d581be,
+  400: #c553a6,
+  500: #a43786,
+  600: #81207f,
+  700: #581657,
+  800: #2f0c2f,
+  contrast: (
+    100: $black1,
+    200: $black1,
+    300: $black1,
+    400: $black1,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+  ),
 );

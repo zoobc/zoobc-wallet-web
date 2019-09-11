@@ -16,7 +16,7 @@ import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.co
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { FaqComponent } from './faq/faq.component';
+import { FaqComponent } from './pages/faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';

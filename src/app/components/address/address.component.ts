@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { onCopyText } from 'src/helpers/utils';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'wallet-address',
@@ -7,7 +9,15 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class AddressComponent implements OnInit {
   @Input() value: string;
-  constructor() {}
+  @Input() copyButton: boolean = false;
+  constructor(private snackbar: MatSnackBar) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.copyButton);
+  }
+
+  onCopyText() {
+    onCopyText(this.value);
+    this.snackbar.open('Copied to clipboard', null, { duration: 3000 });
+  }
 }
