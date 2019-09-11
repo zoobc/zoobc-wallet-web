@@ -12,3 +12,10 @@
   font-weight: 700;
   color: $black2;
 }
+
+.mat-card {
+  box-shadow: none !important;
+  border: 1px solid #ddd;
+  // padding: 0;
+  // background: transparent;
+}

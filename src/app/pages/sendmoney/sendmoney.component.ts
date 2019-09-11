@@ -158,8 +158,8 @@ export class SendmoneyComponent implements OnInit {
       width: '600px',
     });
     this.addForm.patchValue({
-      address: this.recipientForm.value
-    })
+      address: this.recipientForm.value,
+    });
   }
 
   onOpenDialogDetailSendMoney() {
@@ -175,18 +175,18 @@ export class SendmoneyComponent implements OnInit {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, add it!',
-        cancelButtonText: 'Proceed to detail send money'
+        cancelButtonText: 'Proceed to detail send money',
       }).then(result => {
         if (result.value) {
           this.onOpenDialogAddToContact();
-        }
-        else if (
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-            width: '600px',
-            data: this.formSend.value,
-          });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          this.sendMoneyRefDialog = this.dialog.open(
+            this.popupDetailSendMoney,
+            {
+              width: '600px',
+              data: this.formSend.value,
+            }
+          );
         }
       });
     } else {
@@ -299,16 +299,15 @@ export class SendmoneyComponent implements OnInit {
           Swal.fire(
             '<b>Your Transaction is processing</b>',
             'You send <b>' +
-            this.amountForm.value +
-            '</b> coins (' +
-            (this.amountForm.value *
-              this.currencyRate.value) +
-            ' ' +
-            this.currencyRate.name +
-            ') ' +
-            'to this <b>' +
-            this.recipientForm.value +
-            '</b> address',
+              this.amountForm.value +
+              '</b> coins (' +
+              this.amountForm.value * this.currencyRate.value +
+              ' ' +
+              this.currencyRate.name +
+              ') ' +
+              'to this <b>' +
+              this.recipientForm.value +
+              '</b> address',
             'success'
           );
           this.formSend.reset();
@@ -334,10 +333,13 @@ export class SendmoneyComponent implements OnInit {
         confirmButtonText: 'Proceed to detail send money',
       }).then(result => {
         if (result.value) {
-          this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-            width: '600px',
-            data: this.formSend.value,
-          });
+          this.sendMoneyRefDialog = this.dialog.open(
+            this.popupDetailSendMoney,
+            {
+              width: '600px',
+              data: this.formSend.value,
+            }
+          );
         }
       });
     }

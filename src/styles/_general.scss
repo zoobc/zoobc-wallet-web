@@ -15,6 +15,22 @@ a:not([href='']) {
   }
 }
 
+.no-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $black3;
+  padding: 2rem;
+  i {
+    font-size: 3rem;
+    margin: 1rem 0;
+  }
+  .message {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+}
+
 // ==================== CARD ========================
 .mat-card {
   box-shadow: 0 0 10px rgba(52, 61, 72, 0.2) !important;
@@ -53,6 +69,9 @@ button[mat-flat-button] {
   border-radius: 4px;
   *[matPrefix] {
     margin-right: 12px;
+  }
+  &.block {
+    width: 100%;
   }
 }
 
@@ -109,6 +128,14 @@ label {
   .mat-select-arrow-wrapper {
     transform: none !important;
   }
+
+  &.block {
+    width: 100%;
+  }
+}
+
+.mat-error {
+  font-size: 14px;
 }
 
 // ============================ SWAL CUSTOM STYLE ========================

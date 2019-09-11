@@ -74,6 +74,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { AboutComponent } from './pages/settings/about/about.component';
 import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
+import { AddressComponent } from './components/address/address.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 
 // AoT requires an exported function for factories
@@ -126,6 +127,7 @@ export function getLanguage(languageServ: LanguageService) {
     AboutComponent,
     GeneralComponent,
     NetworkComponent,
+    AddressComponent,
     DateAgoPipe,
   ],
   imports: [

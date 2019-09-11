@@ -6,17 +6,22 @@
         <span class="message">{{ 'No Transaction Record' | translate }}</span>
       </div>
 
-      <div class="transaction-item row" *ngFor="let transaction of transactionData; let i = index">
-        <div class="col-7 col-sm-8">
+      <div
+        class="transaction-item row"
+        *ngFor="let transaction of transactionData; let i = index"
+      >
+        <div class="col-12 col-sm-8">
           <div class="name" *ngIf="transaction.alias">
             {{ transaction.alias }}
           </div>
-          <div class="address">{{ transaction.address }}</div>
+          <div class="address">
+            <wallet-address [value]="transaction.address"></wallet-address>
+          </div>
           <div class="date">
             {{ transaction.timestamp | dateAgo }}
           </div>
         </div>
-        <div class="col-5 col-sm-4 text-right">
+        <div class="col-12 col-sm-4 text-right">
           <ng-container *ngIf="transaction.type == 'send'">
             <div class="amount-send">
               - {{ transaction.amount / 1e8 | number: '0.0-4' }} ZBC

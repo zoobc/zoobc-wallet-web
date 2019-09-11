@@ -47,7 +47,7 @@ export class RestoreWalletComponent implements OnInit {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
         Swal.fire({
           title: 'Your old wallet will be removed from this device',
-          confirmButtonText: 'Continue?',
+          confirmButtonText: 'Continue',
           showCancelButton: true,
           showLoaderOnConfirm: true,
           preConfirm: () => {
