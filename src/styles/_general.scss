@@ -31,6 +31,11 @@ a:not([href='']) {
   }
 }
 
+// ==================== DIALOG =====================
+.mat-dialog-container {
+  padding: 24px 16px !important;
+}
+
 // ==================== CARD ========================
 .mat-card {
   box-shadow: 0 0 10px rgba(52, 61, 72, 0.2) !important;
