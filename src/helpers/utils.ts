@@ -1,4 +1,5 @@
 import { toBase64Url } from '../helpers/converters';
+import { MatSnackBar } from '@angular/material';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
@@ -25,4 +26,16 @@ export function GetChecksumByte(bytes): any {
   }
   const res = new Uint8Array([a]);
   return res;
+}
+
+export function onCopyText(text: string) {
+  let selBox = document.createElement('textarea');
+  selBox.style.position = 'fixed';
+  selBox.style.opacity = '0';
+  selBox.value = text;
+  document.body.appendChild(selBox);
+  selBox.focus();
+  selBox.select();
+  document.execCommand('copy');
+  document.body.removeChild(selBox);
 }

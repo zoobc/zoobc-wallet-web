@@ -152,10 +152,16 @@
   </ng-container>
 
   <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
-  <app-transaction-table [isLoading]="showSpinnerRecentTx" [transactionData]="recentTx"></app-transaction-table>
+  <app-transaction-table
+    [withDetail]="true"
+    [isLoading]="showSpinnerRecentTx"
+    [transactionData]="recentTx"
+  ></app-transaction-table>
   <ng-container *ngIf="allTx.length > 5">
     <div class="text-right">
-      <button mat-button class="btn-view-all" (click)="goToHistory()">{{'View All' | translate}}</button>
+      <button mat-button class="btn-view-all" (click)="goToHistory()">
+        {{ 'View All' | translate }}
+      </button>
     </div>
   </ng-container>
 </div>

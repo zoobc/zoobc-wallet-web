@@ -52,7 +52,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PinsComponent } from './components/pins/pins.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LoadingSpinnerComponent } from './ui/loading-spinner/loading-spinner.component';
 import { AddAccountComponent } from './pages/add-account/add-account.component';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
@@ -65,7 +64,7 @@ import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
 import { ChangeIpAddressComponent } from './pages/change-ip-address/change-ip-address.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { FaqComponent } from './faq/faq.component';
+import { FaqComponent } from './pages/faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
@@ -76,6 +75,7 @@ import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
 import { AddressComponent } from './components/address/address.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -105,7 +105,6 @@ export function getLanguage(languageServ: LanguageService) {
     SignupComponent,
     SidebarComponent,
     PinsComponent,
-    LoadingSpinnerComponent,
     AddAccountComponent,
     ContactlistComponent,
     AddcontactComponent,
@@ -129,6 +128,7 @@ export function getLanguage(languageServ: LanguageService) {
     NetworkComponent,
     AddressComponent,
     DateAgoPipe,
+    TransactionDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -191,6 +191,7 @@ export function getLanguage(languageServ: LanguageService) {
     AddNodeAdminComponent,
     ChangeIpAddressComponent,
     SendmoneyComponent,
+    TransactionDetailComponent,
   ],
 })
 export class AppModule {}

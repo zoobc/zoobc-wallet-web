@@ -1,5 +1,5 @@
 <div class="transaction-table">
-  <mat-card style="padding: 0 16px">
+  <mat-card style="padding: 0">
     <ng-container *ngIf="transactionData">
       <div class="no-content" *ngIf="transactionData.length <= 0">
         <i matPrefix class="fa fa-receipt"></i>
@@ -7,8 +7,11 @@
       </div>
 
       <div
-        class="transaction-item row"
+        [className]="
+          withDetail ? 'transaction-item hover row' : 'transaction-item row'
+        "
         *ngFor="let transaction of transactionData; let i = index"
+        (click)="openDetail(transaction.id)"
       >
         <div class="col-12 col-sm-8">
           <div class="name" *ngIf="transaction.alias">
@@ -41,7 +44,10 @@
     </ng-container>
 
     <ng-container *ngIf="isLoading">
-      <div class="transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+      <div
+        class="transaction-item row skeleton"
+        *ngFor="let i of [0, 1, 2, 3, 4, 5]"
+      >
         <div class="col-7 col-sm-8">
           <div class="skeleton-text" style="width:50%;"></div>
           <div class="skeleton-text small" style="width:75%;"></div>
