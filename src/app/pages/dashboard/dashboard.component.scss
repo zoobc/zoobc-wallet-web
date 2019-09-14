@@ -26,12 +26,11 @@
     margin-bottom: 24px;
     .summary {
       margin-bottom: 24px;
-      .account-dropdown{
+      .account-dropdown {
         cursor: pointer;
         i {
           margin-left: 8px;
-          
-        }  
+        }
       }
       .name {
         text-transform: uppercase;
@@ -122,6 +121,17 @@
 }
 
 .account-dropdown-list {
+  .account {
+    line-height: 20px;
+    height: 60px;
+    padding: 12px 16px;
+    .balance {
+      margin-left: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      color: $black2;
+    }
+  }
   button i {
     margin-right: 8px;
     color: $black2;
