@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.transactionServ
-      .getAccountTransaction(this.address, 1, 5)
+      .getAccountTransaction(1, 5)
       .then((res: Transactions) => {
         this.allTx = res.total;
         this.recentTx = res.transactions;
@@ -130,7 +130,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.transactionServ
-      .getAccountTransaction(this.address, 1, 5)
+      .getAccountTransaction(1, 5)
       .then((res: Transactions) => {
         this.allTx = res.total;
         this.recentTx = res.transactions;

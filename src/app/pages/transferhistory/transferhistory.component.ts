@@ -43,7 +43,7 @@ export class TransferhistoryComponent implements OnInit {
   getTx() {
     this.showSpinner = true;
     this.transactionServ
-      .getAccountTransaction(this.address, this.page, 10)
+      .getAccountTransaction(this.page, 10)
       .then((res: Transactions) => {
         if (this.accountHistory)
           this.accountHistory = this.accountHistory.concat(res.transactions);

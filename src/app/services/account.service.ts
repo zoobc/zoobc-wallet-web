@@ -61,7 +61,7 @@ export class AccountService {
       );
       acc.address = GetAddressFromPublicKey(childSeed.publicKey);
       await this.transactionServ
-        .getAccountTransaction(acc.address, 1, 1)
+        .getAccountTransaction(1, 1, acc.address)
         .then((res: Transactions) => {
           acc.lastTx = res.transactions;
         });

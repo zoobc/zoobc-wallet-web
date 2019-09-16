@@ -52,9 +52,9 @@ export class TransactionService {
   ) {}
 
   getAccountTransaction(
-    address: string = this.authServ.currAddress,
     page: number,
-    limit: number
+    limit: number,
+    address: string = this.authServ.currAddress,
   ) {
     // const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
