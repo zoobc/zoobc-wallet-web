@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router,
+    private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
@@ -66,14 +66,13 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
 
-
     this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
       this.accountBalance = data.accountbalance;
       this.showSpinnerBalance = false;
     });
 
     this.transactionServ
-      .getAccountTransaction(1, 5)
+      .getAccountTransaction(this.address, 1, 5)
       .then((res: Transactions) => {
         this.allTx = res.total;
         this.recentTx = res.transactions;
@@ -117,7 +116,6 @@ export class DashboardComponent implements OnInit {
     this.currencyRate = rate;
   }
 
-
   onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
     this.currAcc = this.authServ.getCurrAccount();
@@ -132,7 +130,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.transactionServ
-      .getAccountTransaction(1, 5)
+      .getAccountTransaction(this.address, 1, 5)
       .then((res: Transactions) => {
         this.allTx = res.total;
         this.recentTx = res.transactions;
@@ -168,6 +166,6 @@ export class DashboardComponent implements OnInit {
     });
   }
   goToHistory() {
-    this.router.navigateByUrl('/transferhistory')
+    this.router.navigateByUrl('/transferhistory');
   }
 }

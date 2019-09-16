@@ -188,11 +188,18 @@
           <div class="address">
             <wallet-address [value]="acc.address"></wallet-address>
           </div>
-          <div class="last-tx">A day ago</div>
+          <div class="last-tx" *ngIf="acc.lastTx.length === 0; else hasTransaction"> Last Transaction: None
+          </div>
+          <ng-template #hasTransaction>
+            <div class="last-tx">Last Transaction :
+              {{acc.lastTx['0'].timestamp | dateAgo}}
+            </div>
+          </ng-template>
         </div>
         <div class="col-12 text-right">
           <div class="balance">{{ acc.balance / 1e8 }} <small>ZBC</small></div>
-          <div class="balance-in-currency">0 <small>IDR</small></div>
+          <div class="balance-in-currency">{{(acc.balance / 1e8 ) * currencyRate.value  | number: '0.0-4'}}
+            <small>{{currencyRate.name}}</small></div>
         </div>
       </div>
     </mat-card>

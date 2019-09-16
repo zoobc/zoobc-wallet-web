@@ -10,6 +10,7 @@ import { AuthService, SavedAccount } from './auth.service';
 import { grpc } from '@improbable-eng/grpc-web';
 import { GetAddressFromPublicKey } from 'src/helpers/utils';
 import { KeyringService } from './keyring.service';
+import { TransactionService, Transactions } from './transaction.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,8 @@ import { KeyringService } from './keyring.service';
 export class AccountService {
   constructor(
     private authServ: AuthService,
-    private keyringServ: KeyringService
+    private keyringServ: KeyringService,
+    private transactionServ: TransactionService
   ) {}
 
   getAccountBalance(address: string = this.authServ.currAddress) {
@@ -58,6 +60,11 @@ export class AccountService {
         acc.path
       );
       acc.address = GetAddressFromPublicKey(childSeed.publicKey);
+      await this.transactionServ
+        .getAccountTransaction(acc.address, 1, 1)
+        .then((res: Transactions) => {
+          acc.lastTx = res.transactions;
+        });
       await this.getAccountBalance(acc.address).then((res: any) => {
         acc.balance = res.accountbalance.spendablebalance;
       });
