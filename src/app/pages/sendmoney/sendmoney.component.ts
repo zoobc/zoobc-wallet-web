@@ -6,7 +6,6 @@ import * as CryptoJS from 'crypto-js';
 import { TransactionService } from '../../services/transaction.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
@@ -23,7 +22,6 @@ import {
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AccountService } from 'src/app/services/account.service';
 import { base64ToByteArray } from 'src/helpers/converters';
-import { AddcontactComponent } from '../list-contact/addcontact/addcontact.component';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -42,7 +40,6 @@ export class SendmoneyComponent implements OnInit {
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
-  @ViewChild('addContactDialog') addContactDialog: TemplateRef<any>;
   currencyRate: Currency = {
     name: '',
     value: 0,
@@ -55,7 +52,11 @@ export class SendmoneyComponent implements OnInit {
     Validators.min(0.001),
   ]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(0.001, [
+  feeForm = new FormControl('', [
+    Validators.required,
+    Validators.min(0.001),
+  ]);
+  feeFormCurr = new FormControl('', [
     Validators.required,
     Validators.min(0.001),
   ]);
@@ -76,11 +77,12 @@ export class SendmoneyComponent implements OnInit {
   accounts: any;
 
   bytes = new Uint8Array(193);
+  typeCoin = 'ZBC'
+  typeFee = 'ZBC'
 
   //for add new address to contact list
-  addForm: FormGroup;
-  aliasField = new FormControl('', Validators.required);
-  addressField = new FormControl('', Validators.required);
+  aliasField = new FormControl('');
+  saveToAddreesBook = new FormControl(false, Validators.required);
 
   constructor(
     private accountServ: AccountService,
@@ -92,16 +94,15 @@ export class SendmoneyComponent implements OnInit {
     private translate: TranslateService,
     public dialog: MatDialog
   ) {
-    this.addForm = new FormGroup({
-      alias: this.aliasField,
-      address: this.addressField,
-    });
 
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
       amount: this.amountForm,
       fee: this.feeForm,
       amountCurrency: this.amountCurrencyForm,
+      feeCurr: this.feeFormCurr,
+      saveAddress: this.saveToAddreesBook,
+      alias: this.aliasField,
     });
 
     this.formConfirmPin = new FormGroup({
@@ -165,6 +166,22 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
+  onChangeFeeField() {
+    const resultFeeCurrency =
+      this.feeForm.value * this.currencyRate.value;
+    this.formSend.patchValue({
+      feeCurr: resultFeeCurrency,
+    });
+  }
+
+  onChangeFeeCurrencyField() {
+    const resultFee =
+      this.feeFormCurr.value / this.currencyRate.value;
+    this.formSend.patchValue({
+      fee: resultFee,
+    });
+  }
+
   filterContacts(value: string) {
     if (value) {
       const filterValue = value.toLowerCase();
@@ -180,48 +197,11 @@ export class SendmoneyComponent implements OnInit {
       this.recipientForm.setErrors({ invalidAddress: true });
   }
 
-  onOpenDialogAddToContact() {
-    this.addNewContactRefDialog = this.dialog.open(this.addContactDialog, {
-      width: '600px',
-    });
-    this.addForm.patchValue({
-      address: this.recipientForm.value,
-    });
-  }
-
   onOpenDialogDetailSendMoney() {
-    const contact = this.contacts.some(
-      contacts => contacts.address === this.recipientForm.value
-    );
-    if (!contact) {
-      Swal.fire({
-        title: 'New Address Found',
-        text: 'Do you want to add it to your contact list ?',
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, add it!',
-        cancelButtonText: 'Proceed to detail send money',
-      }).then(result => {
-        if (result.value) {
-          this.onOpenDialogAddToContact();
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          this.sendMoneyRefDialog = this.dialog.open(
-            this.popupDetailSendMoney,
-            {
-              width: '600px',
-              data: this.formSend.value,
-            }
-          );
-        }
-      });
-    } else {
-      this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-        width: '600px',
-        data: this.formSend.value,
-      });
-    }
+    this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+      width: '600px',
+      data: this.formSend.value,
+    });
   }
 
   onOpenPinDialog() {
@@ -326,17 +306,22 @@ export class SendmoneyComponent implements OnInit {
           Swal.fire(
             '<b>Your Transaction is processing</b>',
             'You send <b>' +
-              this.amountForm.value +
-              '</b> coins (' +
-              this.amountForm.value * this.currencyRate.value +
-              ' ' +
-              this.currencyRate.name +
-              ') ' +
-              'to this <b>' +
-              this.recipientForm.value +
-              '</b> address',
+            this.amountForm.value +
+            '</b> coins (' +
+            this.amountForm.value * this.currencyRate.value +
+            ' ' +
+            this.currencyRate.name +
+            ') ' +
+            'to this <b>' +
+            this.recipientForm.value +
+            '</b> address',
             'success'
           );
+          if (this.saveToAddreesBook.value === true) {
+            const newContact = { alias: this.aliasField.value, address: this.recipientForm.value }
+            this.contacts.push(newContact);
+            this.contactServ.addContact(newContact);
+          }
           this.formSend.reset();
           Object.keys(this.formSend.controls).forEach(key => {
             this.formSend.controls[key].setErrors(null);
@@ -348,27 +333,4 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (this.addForm.valid) {
-      const newContact = this.addForm.value;
-      this.contacts.push(newContact);
-      this.contactServ.addContact(newContact);
-      this.addNewContactRefDialog.close();
-      Swal.fire({
-        type: 'success',
-        title: 'Your new contact has been saved',
-        confirmButtonText: 'Proceed to detail send money',
-      }).then(result => {
-        if (result.value) {
-          this.sendMoneyRefDialog = this.dialog.open(
-            this.popupDetailSendMoney,
-            {
-              width: '600px',
-              data: this.formSend.value,
-            }
-          );
-        }
-      });
-    }
-  }
 }

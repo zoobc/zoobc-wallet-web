@@ -17,14 +17,8 @@
 
       <label>{{ 'Recepient address' | translate }}</label>
       <mat-form-field appearance="outline" class="block">
-        <input
-          matInput
-          placeholder="{{ 'Recepient address' | translate }}..."
-          aria-label="contacts"
-          [matAutocomplete]="auto"
-          formControlName="recipient"
-          (keyup)="onChangeRecipient()"
-        />
+        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="contacts"
+          [matAutocomplete]="auto" formControlName="recipient" (keyup)="onChangeRecipient()" />
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">
             {{ 'Recepient is required' | translate }}
@@ -34,72 +28,88 @@
           </span>
         </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            *ngFor="let contact of filteredContacts | async"
-            [value]="contact.address"
-          >
+          <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
             <span>{{ contact.alias }}</span> |
             <small>{{ contact.address }}</small>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+      <section class="section-save-addres">
+        <mat-checkbox class="checkbox-margin" formControlName="saveAddress">
+          Save to Address Book
+        </mat-checkbox>
+      </section>
+      <mat-form-field appearance="outline" class="block" *ngIf="saveToAddreesBook.value === true">
+        <input matInput type="text" formControlName="alias" placeholder="{{ 'Alias' | translate }}" />
+      </mat-form-field>
 
       <label>{{ 'Coin amount' | translate }}</label>
-      <mat-form-field appearance="outline" class="block">
-        <input
-          matInput
-          type="number"
-          formControlName="amount"
-          placeholder="{{ 'Coin Amount' | translate }}"
-          (change)="onChangeAmountField()"
-          (keyup)="onChangeAmountField()"
-        />
-        <mat-error *ngIf="amountForm.touched">
-          <span *ngIf="amountForm.hasError('required')">
-            {{ 'Amount is required' | translate }}
-          </span>
-        </mat-error>
-      </mat-form-field>
-
-      <label>{{ currencyRate.name }} {{ 'amount' | translate }}</label>
-      <mat-form-field appearance="outline" class="block">
-        <input
-          matInput
-          type="number"
-          formControlName="amountCurrency"
-          placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}"
-          (change)="onChangeAmountCurrencyField()"
-          (keyup)="onChangeAmountCurrencyField()"
-        />
-        <mat-error *ngIf="amountCurrencyForm.touched">
-          <span *ngIf="amountCurrencyForm.hasError('required')">
-            {{ 'Amount is required' | translate }}
-          </span>
-        </mat-error>
-      </mat-form-field>
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="block">
+            <mat-select [(value)]="typeCoin">
+              <mat-option value="ZBC">ZBC</mat-option>
+              <mat-option value="Fiat">{{currencyRate.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-9">
+          <mat-form-field appearance="outline" class="block" *ngIf="typeCoin === 'ZBC'">
+            <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}"
+              (change)="onChangeAmountField()" (keyup)="onChangeAmountField()" />
+            <mat-error *ngIf="amountForm.touched">
+              <span *ngIf="amountForm.hasError('required')">
+                {{ 'Amount is required' | translate }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field *ngIf="typeCoin === 'Fiat'" appearance="outline" class="block">
+            <input matInput type="number" formControlName="amountCurrency"
+              placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}" (change)="onChangeAmountCurrencyField()"
+              (keyup)="onChangeAmountCurrencyField()" />
+            <mat-error *ngIf="amountCurrencyForm.touched">
+              <span *ngIf="amountCurrencyForm.hasError('required')">
+                {{ 'Amount is required' | translate }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
 
       <label>{{ 'Fee' | translate }}</label>
-      <mat-form-field appearance="outline" class="block">
-        <input
-          matInput
-          type="number"
-          formControlName="fee"
-          placeholder="{{ 'Fee' | translate }}"
-        />
-        <mat-error *ngIf="feeForm.touched">
-          <span *ngIf="feeForm.hasError('required')">
-            {{ 'Fee is required' | translate }}
-          </span>
-        </mat-error>
-      </mat-form-field>
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="block">
+            <mat-select [(value)]="typeFee">
+              <mat-option value="ZBC">ZBC</mat-option>
+              <mat-option value="Fiat">{{currencyRate.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-9">
+          <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'ZBC'">
+            <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}"
+              (change)="onChangeFeeField()" (keyup)="onChangeFeeField()" />
+            <mat-error *ngIf="feeForm.touched">
+              <span *ngIf="feeForm.hasError('required')">
+                {{ 'Fee is required' | translate }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'Fiat'">
+            <input matInput type="number" formControlName="feeCurr" placeholder="{{ 'Fee' | translate }}"
+              (change)="onChangeFeeCurrencyField()" (keyup)="onChangeFeeCurrencyField()" />
+            <mat-error *ngIf="feeFormCurr.touched">
+              <span *ngIf="feeFormCurr.hasError('required')">
+                {{ 'Fee is required' | translate }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
 
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        class="block"
-        [disabled]="formSend.invalid || isFormSendLoading"
-      >
+      <button mat-flat-button color="primary" type="submit" class="block"
+        [disabled]="formSend.invalid || isFormSendLoading">
         <span *ngIf="isFormSendLoading">
           <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
         </span>
@@ -160,46 +170,9 @@
       <mat-error *ngIf="formConfirmPin.hasError('invalid')">
         {{ 'Pin is not match' | translate }}
       </mat-error>
-      <i
-        matPrefix
-        class="fas fa-circle-notch fa-spin"
-        *ngIf="isConfirmPinLoading"
-      ></i>
+      <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isConfirmPinLoading"></i>
     </div>
   </form>
-</ng-template>
-
-<ng-template #addContactDialog>
-  <div class="addcontact-container">
-    <h2 class="mat-h2">{{ 'New Contact' | translate }}</h2>
-    <form [formGroup]="addForm" (submit)="onSubmit()">
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="text"
-          formControlName="alias"
-          placeholder="{{ 'Alias' | translate }}"
-        />
-        <mat-error *ngIf="aliasField.hasError('required')">
-          {{ 'Alias is required' | translate }}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="text"
-          formControlName="address"
-          placeholder="{{ 'Address' | translate }}"
-        />
-        <mat-error *ngIf="addressField.hasError('required')">
-          {{ 'Address is required' | translate }}
-        </mat-error>
-      </mat-form-field>
-      <button mat-flat-button color="primary" type="submit">
-        {{ 'Save' | translate }}
-      </button>
-    </form>
-  </div>
 </ng-template>
 
 <ng-template #accountDialog>
@@ -208,15 +181,8 @@
   </h3>
 
   <div class="account-list" *ngIf="accounts">
-    <mat-card
-      *ngFor="let acc of accounts"
-      class="account-card"
-      (click)="onSwitchAccount(acc)"
-    >
-      <div
-        class="row"
-        [ngClass]="account.path == acc.path ? 'row active' : 'row'"
-      >
+    <mat-card *ngFor="let acc of accounts" class="account-card" (click)="onSwitchAccount(acc)">
+      <div class="row" [ngClass]="account.path == acc.path ? 'row active' : 'row'">
         <div class="col-12">
           <div class="name">{{ acc.name }}</div>
           <div class="address">

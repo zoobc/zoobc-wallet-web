@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   showSpinnerBalance: boolean = true;
   showSpinnerRecentTx: boolean = true;
 
-  allTx: Transaction[] = [];
+  allTx: number = 0;
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
 
@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
 
+
     this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
       this.accountBalance = data.accountbalance;
       this.showSpinnerBalance = false;
@@ -74,6 +75,7 @@ export class DashboardComponent implements OnInit {
     this.transactionServ
       .getAccountTransaction(1, 5)
       .then((res: Transactions) => {
+        this.allTx = res.total;
         this.recentTx = res.transactions;
         this.showSpinnerRecentTx = false;
       });
@@ -85,10 +87,6 @@ export class DashboardComponent implements OnInit {
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
     });
-
-    this.transactionServ.getAllAcountTransaction().then((res: Transactions) => {
-      this.allTx = res.transactions;
-    })
 
     this.getCurrencyRates();
     this.currencyRate = this.currencyServ.rate;
@@ -136,6 +134,7 @@ export class DashboardComponent implements OnInit {
     this.transactionServ
       .getAccountTransaction(1, 5)
       .then((res: Transactions) => {
+        this.allTx = res.total;
         this.recentTx = res.transactions;
         this.showSpinnerRecentTx = false;
       });

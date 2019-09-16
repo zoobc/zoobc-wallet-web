@@ -12,9 +12,7 @@ export class AddressComponent implements OnInit {
   @Input() copyButton: boolean = false;
   constructor(private snackbar: MatSnackBar) {}
 
-  ngOnInit() {
-    console.log(this.copyButton);
-  }
+  ngOnInit() {}
 
   onCopyText() {
     onCopyText(this.value);
