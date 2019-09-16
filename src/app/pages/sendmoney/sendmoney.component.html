@@ -3,7 +3,7 @@
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
-      <div class="from-account">
+      <div class="from-account" (click)="openAccountList()">
         <div class="name">
           {{ account.name }}
           <small>
@@ -173,4 +173,28 @@
       <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isConfirmPinLoading"></i>
     </div>
   </form>
+</ng-template>
+
+<ng-template #accountDialog>
+  <h3 class="mat-h3" id="modal-basic-title">
+    <b>{{ 'Accounts' | translate }}</b>
+  </h3>
+
+  <div class="account-list" *ngIf="accounts">
+    <mat-card *ngFor="let acc of accounts" class="account-card" (click)="onSwitchAccount(acc)">
+      <div class="row" [ngClass]="account.path == acc.path ? 'row active' : 'row'">
+        <div class="col-12">
+          <div class="name">{{ acc.name }}</div>
+          <div class="address">
+            <wallet-address [value]="acc.address"></wallet-address>
+          </div>
+          <div class="last-tx">A day ago</div>
+        </div>
+        <div class="col-12 text-right">
+          <div class="balance">{{ acc.balance / 1e8 }} <small>ZBC</small></div>
+          <div class="balance-in-currency">0 <small>IDR</small></div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
 </ng-template>
