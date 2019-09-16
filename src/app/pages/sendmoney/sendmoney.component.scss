@@ -14,6 +14,10 @@
       color: $black2;
       margin-top: 4px;
       margin-bottom: 16px;
+      &:hover {
+        cursor: pointer;
+        background-color: #eee;
+      }
       .name {
         width: 70%;
         font-weight: bold;
@@ -90,5 +94,51 @@
 .addcontact-container {
   form {
     display: grid;
+  }
+}
+
+.account-list {
+  .account-card {
+    margin-bottom: 8px;
+    padding: 0 8px;
+    &:hover {
+      cursor: pointer;
+    }
+    .row {
+      border-radius: 6px;
+      padding: 12px 8px;
+      color: $black1;
+      font-size: 14px;
+      background-color: white;
+      &.active {
+        background-color: $primary-color;
+        color: white;
+        .balance,
+        .balance-in-currency,
+        .name {
+          color: white;
+        }
+      }
+      .balance,
+      .balance-in-currency {
+        color: $black2;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .balance-in-currency {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      .name {
+        font-weight: bold;
+        color: $black2;
+        margin-bottom: 4px;
+      }
+      .address,
+      .last-tx {
+        margin-bottom: 4px;
+        font-size: 12px;
+      }
+    }
   }
 }

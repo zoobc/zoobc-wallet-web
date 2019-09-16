@@ -41,6 +41,7 @@ export class SendmoneyComponent implements OnInit {
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
+  @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
   @ViewChild('addContactDialog') addContactDialog: TemplateRef<any>;
   currencyRate: Currency = {
     name: '',
@@ -63,6 +64,7 @@ export class SendmoneyComponent implements OnInit {
   pinField = new FormControl('', Validators.required);
 
   pinRefDialog: MatDialogRef<any>;
+  accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
   addNewContactRefDialog: MatDialogRef<any>;
 
@@ -71,6 +73,7 @@ export class SendmoneyComponent implements OnInit {
   address = this.authServ.currAddress;
 
   account: SavedAccount;
+  accounts: any;
 
   bytes = new Uint8Array(193);
 
@@ -120,6 +123,30 @@ export class SendmoneyComponent implements OnInit {
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
     });
+
+    this.getAccounts();
+  }
+
+  openAccountList() {
+    this.accountRefDialog = this.dialog.open(this.accountDialog, {
+      width: '320px',
+      height: '400px',
+    });
+
+    // this.accountRefDialog.afterClosed().subscribe(isPinValid => {
+    //   if (isPinValid) this.onSendMoney();
+    // });
+  }
+
+  getAccounts() {
+    this.accounts = this.accountServ.getAllAccount();
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.authServ.switchAccount(account);
+    this.account = this.authServ.getCurrAccount();
+    this.address = this.authServ.currAddress;
+    this.accountRefDialog.close();
   }
 
   onChangeAmountField() {
