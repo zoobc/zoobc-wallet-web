@@ -3040,10 +3040,11 @@ proto.model.GetTransactionsRequest.prototype.toObject = function(opt_includeInst
  */
 proto.model.GetTransactionsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountaddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    timestampstart: jspb.Message.getFieldWithDefault(msg, 4, "0"),
-    timestampend: jspb.Message.getFieldWithDefault(msg, 5, "0"),
-    transactiontype: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    accountaddress: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    height: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    timestampstart: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+    timestampend: jspb.Message.getFieldWithDefault(msg, 4, "0"),
+    transactiontype: jspb.Message.getFieldWithDefault(msg, 5, 0),
     pagination: (f = msg.getPagination()) && model_pagination_pb.Pagination.toObject(includeInstance, f)
   };
 
@@ -3081,23 +3082,27 @@ proto.model.GetTransactionsRequest.deserializeBinaryFromReader = function(msg, r
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 3:
+    case 1:
       var value = /** @type {string} */ (reader.readString());
       msg.setAccountaddress(value);
       break;
-    case 4:
+    case 2:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setHeight(value);
+      break;
+    case 3:
       var value = /** @type {string} */ (reader.readInt64String());
       msg.setTimestampstart(value);
       break;
-    case 5:
+    case 4:
       var value = /** @type {string} */ (reader.readInt64String());
       msg.setTimestampend(value);
       break;
-    case 6:
+    case 5:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setTransactiontype(value);
       break;
-    case 7:
+    case 6:
       var value = new model_pagination_pb.Pagination;
       reader.readMessage(value,model_pagination_pb.Pagination.deserializeBinaryFromReader);
       msg.setPagination(value);
@@ -3134,35 +3139,42 @@ proto.model.GetTransactionsRequest.serializeBinaryToWriter = function(message, w
   f = message.getAccountaddress();
   if (f.length > 0) {
     writer.writeString(
-      3,
+      1,
+      f
+    );
+  }
+  f = message.getHeight();
+  if (f !== 0) {
+    writer.writeUint32(
+      2,
       f
     );
   }
   f = message.getTimestampstart();
   if (parseInt(f, 10) !== 0) {
     writer.writeInt64String(
-      4,
+      3,
       f
     );
   }
   f = message.getTimestampend();
   if (parseInt(f, 10) !== 0) {
     writer.writeInt64String(
-      5,
+      4,
       f
     );
   }
   f = message.getTransactiontype();
   if (f !== 0) {
     writer.writeUint32(
-      6,
+      5,
       f
     );
   }
   f = message.getPagination();
   if (f != null) {
     writer.writeMessage(
-      7,
+      6,
       f,
       model_pagination_pb.Pagination.serializeBinaryToWriter
     );
@@ -3171,78 +3183,93 @@ proto.model.GetTransactionsRequest.serializeBinaryToWriter = function(message, w
 
 
 /**
- * optional string AccountAddress = 3;
+ * optional string AccountAddress = 1;
  * @return {string}
  */
 proto.model.GetTransactionsRequest.prototype.getAccountaddress = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
 proto.model.GetTransactionsRequest.prototype.setAccountaddress = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional int64 TimestampStart = 4;
+ * optional uint32 Height = 2;
+ * @return {number}
+ */
+proto.model.GetTransactionsRequest.prototype.getHeight = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.model.GetTransactionsRequest.prototype.setHeight = function(value) {
+  jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional int64 TimestampStart = 3;
  * @return {string}
  */
 proto.model.GetTransactionsRequest.prototype.getTimestampstart = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /** @param {string} value */
 proto.model.GetTransactionsRequest.prototype.setTimestampstart = function(value) {
-  jspb.Message.setProto3StringIntField(this, 4, value);
+  jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
 /**
- * optional int64 TimestampEnd = 5;
+ * optional int64 TimestampEnd = 4;
  * @return {string}
  */
 proto.model.GetTransactionsRequest.prototype.getTimestampend = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, "0"));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
 };
 
 
 /** @param {string} value */
 proto.model.GetTransactionsRequest.prototype.setTimestampend = function(value) {
-  jspb.Message.setProto3StringIntField(this, 5, value);
+  jspb.Message.setProto3StringIntField(this, 4, value);
 };
 
 
 /**
- * optional uint32 TransactionType = 6;
+ * optional uint32 TransactionType = 5;
  * @return {number}
  */
 proto.model.GetTransactionsRequest.prototype.getTransactiontype = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /** @param {number} value */
 proto.model.GetTransactionsRequest.prototype.setTransactiontype = function(value) {
-  jspb.Message.setProto3IntField(this, 6, value);
+  jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
 /**
- * optional Pagination Pagination = 7;
+ * optional Pagination Pagination = 6;
  * @return {?proto.model.Pagination}
  */
 proto.model.GetTransactionsRequest.prototype.getPagination = function() {
   return /** @type{?proto.model.Pagination} */ (
-    jspb.Message.getWrapperField(this, model_pagination_pb.Pagination, 7));
+    jspb.Message.getWrapperField(this, model_pagination_pb.Pagination, 6));
 };
 
 
 /** @param {?proto.model.Pagination|undefined} value */
 proto.model.GetTransactionsRequest.prototype.setPagination = function(value) {
-  jspb.Message.setWrapperField(this, 7, value);
+  jspb.Message.setWrapperField(this, 6, value);
 };
 
 
@@ -3259,7 +3286,7 @@ proto.model.GetTransactionsRequest.prototype.clearPagination = function() {
  * @return {boolean}
  */
 proto.model.GetTransactionsRequest.prototype.hasPagination = function() {
-  return jspb.Message.getField(this, 7) != null;
+  return jspb.Message.getField(this, 6) != null;
 };
 
 
@@ -3776,7 +3803,9 @@ proto.model.SendTransactionRequest.prototype.toObject = function(opt_includeInst
  */
 proto.model.SendTransactionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    transactionbytes: msg.getTransactionbytes_asB64()
+    transactionbytes: msg.getTransactionbytes_asB64(),
+    chaintype: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    senderpublickey: msg.getSenderpublickey_asB64()
   };
 
   if (includeInstance) {
@@ -3817,6 +3846,14 @@ proto.model.SendTransactionRequest.deserializeBinaryFromReader = function(msg, r
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setTransactionbytes(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setChaintype(value);
+      break;
+    case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setSenderpublickey(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3850,6 +3887,20 @@ proto.model.SendTransactionRequest.serializeBinaryToWriter = function(message, w
   if (f.length > 0) {
     writer.writeBytes(
       1,
+      f
+    );
+  }
+  f = message.getChaintype();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
+      f
+    );
+  }
+  f = message.getSenderpublickey_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      3,
       f
     );
   }
@@ -3892,6 +3943,60 @@ proto.model.SendTransactionRequest.prototype.getTransactionbytes_asU8 = function
 /** @param {!(string|Uint8Array)} value */
 proto.model.SendTransactionRequest.prototype.setTransactionbytes = function(value) {
   jspb.Message.setProto3BytesField(this, 1, value);
+};
+
+
+/**
+ * optional int32 ChainType = 2;
+ * @return {number}
+ */
+proto.model.SendTransactionRequest.prototype.getChaintype = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.model.SendTransactionRequest.prototype.setChaintype = function(value) {
+  jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional bytes SenderPublicKey = 3;
+ * @return {!(string|Uint8Array)}
+ */
+proto.model.SendTransactionRequest.prototype.getSenderpublickey = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * optional bytes SenderPublicKey = 3;
+ * This is a type-conversion wrapper around `getSenderpublickey()`
+ * @return {string}
+ */
+proto.model.SendTransactionRequest.prototype.getSenderpublickey_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getSenderpublickey()));
+};
+
+
+/**
+ * optional bytes SenderPublicKey = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getSenderpublickey()`
+ * @return {!Uint8Array}
+ */
+proto.model.SendTransactionRequest.prototype.getSenderpublickey_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getSenderpublickey()));
+};
+
+
+/** @param {!(string|Uint8Array)} value */
+proto.model.SendTransactionRequest.prototype.setSenderpublickey = function(value) {
+  jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 

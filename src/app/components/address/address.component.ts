@@ -14,7 +14,8 @@ export class AddressComponent implements OnInit {
 
   ngOnInit() {}
 
-  onCopyText() {
+  onCopyText(e) {
+    e.stopPropagation();
     onCopyText(this.value);
     this.snackbar.open('Copied to clipboard', null, { duration: 3000 });
   }

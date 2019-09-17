@@ -84,21 +84,15 @@
         <div class="balance-detail">
           <div class="label">{{ 'Balance' | translate }}</div>
           <div class="balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
+            <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
+            <span *ngIf="!isLoadingBalance">
               {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
             </span>
             <span> ZBC</span>
           </div>
           <div class="converted-balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
+            <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
+            <span *ngIf="!isLoadingBalance">
               {{
                 (accountBalance.balance / 1e8) * currencyRate.value
                   | number: '0.0-4'
@@ -116,21 +110,15 @@
         <div class="balance-detail">
           <div class="label">{{ 'Spendable Balance' | translate }}</div>
           <div class="balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
+            <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
+            <span *ngIf="!isLoadingBalance">
               {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
             </span>
             <span> ZBC</span>
           </div>
           <div class="converted-balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
+            <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
+            <span *ngIf="!isLoadingBalance">
               {{
                 (accountBalance.spendablebalance / 1e8) * currencyRate.value
                   | number: '0.0-4'
@@ -154,15 +142,15 @@
   <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
   <app-transaction-table
     [withDetail]="true"
-    [isLoading]="showSpinnerRecentTx"
+    [isLoading]="isLoadingRecentTx"
     [transactionData]="recentTx"
   >
   </app-transaction-table>
-  <ng-container *ngIf="allTx.length > 5">
-    <div class="text-right">
-      <button mat-button class="btn-view-all" (click)="goToHistory()">
+  <ng-container *ngIf="totalTx > 5">
+    <div class="text-center">
+      <a routerLink="/transferhistory" mat-flat-button class="btn-view-all">
         {{ 'View All' | translate }}
-      </button>
+      </a>
     </div>
   </ng-container>
 </div>

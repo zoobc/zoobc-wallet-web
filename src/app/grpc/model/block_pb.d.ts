@@ -35,8 +35,10 @@ export class Block extends jspb.Message {
   getSmithscale(): string;
   setSmithscale(value: string): void;
 
-  getBlocksmithaddress(): string;
-  setBlocksmithaddress(value: string): void;
+  getBlocksmithpublickey(): Uint8Array | string;
+  getBlocksmithpublickey_asU8(): Uint8Array;
+  getBlocksmithpublickey_asB64(): string;
+  setBlocksmithpublickey(value: Uint8Array | string): void;
 
   getTotalamount(): string;
   setTotalamount(value: string): void;
@@ -83,7 +85,7 @@ export namespace Block {
     blocksignature: Uint8Array | string,
     cumulativedifficulty: string,
     smithscale: string,
-    blocksmithaddress: string,
+    blocksmithpublickey: Uint8Array | string,
     totalamount: string,
     totalfee: string,
     totalcoinbase: string,
@@ -283,6 +285,38 @@ export class BlocksData extends jspb.Message {
 export namespace BlocksData {
   export type AsObject = {
     nextblocksList: Array<Block.AsObject>,
+  }
+}
+
+export class SendBlockRequest extends jspb.Message {
+  hasBlock(): boolean;
+  clearBlock(): void;
+  getBlock(): Block | undefined;
+  setBlock(value?: Block): void;
+
+  getChaintype(): number;
+  setChaintype(value: number): void;
+
+  getSenderpublickey(): Uint8Array | string;
+  getSenderpublickey_asU8(): Uint8Array;
+  getSenderpublickey_asB64(): string;
+  setSenderpublickey(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SendBlockRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SendBlockRequest): SendBlockRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SendBlockRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SendBlockRequest;
+  static deserializeBinaryFromReader(message: SendBlockRequest, reader: jspb.BinaryReader): SendBlockRequest;
+}
+
+export namespace SendBlockRequest {
+  export type AsObject = {
+    block?: Block.AsObject,
+    chaintype: number,
+    senderpublickey: Uint8Array | string,
   }
 }
 
