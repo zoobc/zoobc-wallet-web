@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppService } from 'src/app/app.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav, MatDrawerContent } from '@angular/material';
+import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-parent',
@@ -10,6 +11,7 @@ import { MatSidenav } from '@angular/material';
 })
 export class ParentComponent implements OnInit {
   @ViewChild('sidenav') public sidenav: MatSidenav;
+  @ViewChild('mainContainer') private mainContainer: MatDrawerContent;
   largeScreen = window.innerWidth >= 576 ? true : false;
   routerEvent: any;
   menu: string = '';
@@ -24,6 +26,9 @@ export class ParentComponent implements OnInit {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
         this.menu = this.route.snapshot.firstChild.url[0].path;
+
+        const opt: ExtendedScrollToOptions = { top: 0 };
+        this.mainContainer.scrollTo(opt);
       }
     });
 
