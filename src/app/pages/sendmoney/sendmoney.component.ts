@@ -3,7 +3,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import * as CryptoJS from 'crypto-js';
 
-import { TransactionService } from '../../services/transaction.service';
+import {
+  TransactionService,
+  Transactions,
+} from '../../services/transaction.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -52,10 +55,7 @@ export class SendmoneyComponent implements OnInit {
     Validators.min(0.001),
   ]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('', [
-    Validators.required,
-    Validators.min(0.001),
-  ]);
+  feeForm = new FormControl('', [Validators.required, Validators.min(0.001)]);
   feeFormCurr = new FormControl('', [
     Validators.required,
     Validators.min(0.001),
@@ -76,9 +76,10 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
   accounts: any;
 
+  lastTx: any;
   bytes = new Uint8Array(193);
-  typeCoin = 'ZBC'
-  typeFee = 'ZBC'
+  typeCoin = 'ZBC';
+  typeFee = 'ZBC';
 
   //for add new address to contact list
   aliasField = new FormControl('');
@@ -94,7 +95,6 @@ export class SendmoneyComponent implements OnInit {
     private translate: TranslateService,
     public dialog: MatDialog
   ) {
-
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
       amount: this.amountForm,
@@ -167,16 +167,14 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeFeeField() {
-    const resultFeeCurrency =
-      this.feeForm.value * this.currencyRate.value;
+    const resultFeeCurrency = this.feeForm.value * this.currencyRate.value;
     this.formSend.patchValue({
       feeCurr: resultFeeCurrency,
     });
   }
 
   onChangeFeeCurrencyField() {
-    const resultFee =
-      this.feeFormCurr.value / this.currencyRate.value;
+    const resultFee = this.feeFormCurr.value / this.currencyRate.value;
     this.formSend.patchValue({
       fee: resultFee,
     });
@@ -306,19 +304,22 @@ export class SendmoneyComponent implements OnInit {
           Swal.fire(
             '<b>Your Transaction is processing</b>',
             'You send <b>' +
-            this.amountForm.value +
-            '</b> coins (' +
-            this.amountForm.value * this.currencyRate.value +
-            ' ' +
-            this.currencyRate.name +
-            ') ' +
-            'to this <b>' +
-            this.recipientForm.value +
-            '</b> address',
+              this.amountForm.value +
+              '</b> coins (' +
+              this.amountForm.value * this.currencyRate.value +
+              ' ' +
+              this.currencyRate.name +
+              ') ' +
+              'to this <b>' +
+              this.recipientForm.value +
+              '</b> address',
             'success'
           );
           if (this.saveToAddreesBook.value === true) {
-            const newContact = { alias: this.aliasField.value, address: this.recipientForm.value }
+            const newContact = {
+              alias: this.aliasField.value,
+              address: this.recipientForm.value,
+            };
             this.contacts.push(newContact);
             this.contactServ.addContact(newContact);
           }
@@ -332,5 +333,4 @@ export class SendmoneyComponent implements OnInit {
       );
     }
   }
-
 }

@@ -43,7 +43,7 @@ export class AddcontactComponent implements OnInit {
           Swal.fire({
             type: 'error',
             title: 'Oops...',
-            text: 'The address you entered is already in your contact list',
+            text: 'The address you entered is already in your Address Book',
           });
           this.dialogRef.close(this.contacts);
         } else {

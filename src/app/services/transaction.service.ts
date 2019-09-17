@@ -51,8 +51,12 @@ export class TransactionService {
     private contactServ: ContactService
   ) {}
 
-  getAccountTransaction(page: number, limit: number) {
-    const address = this.authServ.currAddress;
+  getAccountTransaction(
+    page: number,
+    limit: number,
+    address: string = this.authServ.currAddress,
+  ) {
+    // const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetTransactionsRequest();
       const pagination = new Pagination();
