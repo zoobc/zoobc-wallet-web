@@ -5,12 +5,10 @@
   .btn-view-all {
     color: #fff;
     background: linear-gradient(90deg, #0288d1, #26c6da) !important;
-    border-radius: 4.5em;
-    margin-top: 10px;
+    margin-top: 16px;
     text-align: center;
     text-decoration: none;
-    width: 23%;
-    height: 42px;
+    width: 150px;
   }
   .rates-dropdown {
     font-size: 14px;
@@ -26,12 +24,11 @@
     margin-bottom: 24px;
     .summary {
       margin-bottom: 24px;
-      .account-dropdown{
+      .account-dropdown {
         cursor: pointer;
         i {
           margin-left: 8px;
-          
-        }  
+        }
       }
       .name {
         text-transform: uppercase;

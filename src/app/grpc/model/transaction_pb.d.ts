@@ -402,6 +402,9 @@ export class GetTransactionsRequest extends jspb.Message {
   getAccountaddress(): string;
   setAccountaddress(value: string): void;
 
+  getHeight(): number;
+  setHeight(value: number): void;
+
   getTimestampstart(): string;
   setTimestampstart(value: string): void;
 
@@ -429,6 +432,7 @@ export class GetTransactionsRequest extends jspb.Message {
 export namespace GetTransactionsRequest {
   export type AsObject = {
     accountaddress: string,
+    height: number,
     timestampstart: string,
     timestampend: string,
     transactiontype: number,
@@ -512,6 +516,14 @@ export class SendTransactionRequest extends jspb.Message {
   getTransactionbytes_asB64(): string;
   setTransactionbytes(value: Uint8Array | string): void;
 
+  getChaintype(): number;
+  setChaintype(value: number): void;
+
+  getSenderpublickey(): Uint8Array | string;
+  getSenderpublickey_asU8(): Uint8Array;
+  getSenderpublickey_asB64(): string;
+  setSenderpublickey(value: Uint8Array | string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SendTransactionRequest.AsObject;
   static toObject(includeInstance: boolean, msg: SendTransactionRequest): SendTransactionRequest.AsObject;
@@ -525,6 +537,8 @@ export class SendTransactionRequest extends jspb.Message {
 export namespace SendTransactionRequest {
   export type AsObject = {
     transactionbytes: Uint8Array | string,
+    chaintype: number,
+    senderpublickey: Uint8Array | string,
   }
 }
 

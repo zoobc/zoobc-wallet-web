@@ -30,10 +30,10 @@ type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 })
 export class DashboardComponent implements OnInit {
   accountBalance: AccountBalance;
-  showSpinnerBalance: boolean = true;
-  showSpinnerRecentTx: boolean = true;
+  isLoadingBalance: boolean = false;
+  isLoadingRecentTx: boolean = false;
 
-  allTx: number = 0;
+  totalTx: number = 0;
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
 
@@ -66,29 +66,34 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     window.scroll(0, 0);
 
+    this.getBalance();
+    this.getTransactions();
+
+    this.getCurrencyRates();
+    this.currencyRate = this.currencyServ.rate;
+  }
+
+  getBalance() {
+    this.isLoadingBalance = true;
     this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
       this.accountBalance = data.accountbalance;
-      this.showSpinnerBalance = false;
+      this.isLoadingBalance = false;
     });
+  }
 
+  getTransactions() {
+    this.isLoadingRecentTx = true;
     this.transactionServ
       .getAccountTransaction(1, 5)
       .then((res: Transactions) => {
-        this.allTx = res.total;
+        this.totalTx = res.total;
         this.recentTx = res.transactions;
-        this.showSpinnerRecentTx = false;
+        this.isLoadingRecentTx = false;
       });
 
     this.transactionServ
       .getUnconfirmTransaction()
       .then((res: Transaction[]) => (this.unconfirmTx = res));
-
-    this.currencyServ.currencyRate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-    });
-
-    this.getCurrencyRates();
-    this.currencyRate = this.currencyServ.rate;
   }
 
   getCurrencyRates() {
@@ -120,26 +125,12 @@ export class DashboardComponent implements OnInit {
     this.authServ.switchAccount(account);
     this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
-    this.showSpinnerBalance = true;
-    this.showSpinnerRecentTx = true;
+    this.isLoadingBalance = true;
+    this.isLoadingRecentTx = true;
 
     // reload data balance, transaction, and unconfirm transaction
-    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
-      this.accountBalance = data.accountbalance;
-      this.showSpinnerBalance = false;
-    });
-
-    this.transactionServ
-      .getAccountTransaction(1, 5)
-      .then((res: Transactions) => {
-        this.allTx = res.total;
-        this.recentTx = res.transactions;
-        this.showSpinnerRecentTx = false;
-      });
-
-    this.transactionServ
-      .getUnconfirmTransaction()
-      .then((res: Transaction[]) => (this.unconfirmTx = res));
+    this.getBalance();
+    this.getTransactions();
   }
 
   copyText(text) {
@@ -155,16 +146,12 @@ export class DashboardComponent implements OnInit {
     this.snackBar.open('Address Copied', null, { duration: 5000 });
   }
 
-  openReceiveForm() {
-    this.dialog.open(ReceiveComponent, {
-      width: '480px',
-    });
-  }
   onOpenAddAccount() {
     this.dialog.open(AddAccountComponent, {
       width: '360px',
     });
   }
+
   goToHistory() {
     this.router.navigateByUrl('/transferhistory');
   }
