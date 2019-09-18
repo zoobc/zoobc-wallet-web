@@ -1,6 +1,6 @@
 <div class="confirm-passphrase-container">
   <h2 class="mat-h2">{{ 'Confirm Your Passphrase' | translate }}</h2>
-  <form [formGroup]="confirmForm" (submit)="onConfirm()">
+  <form [formGroup]="confirmForm" (submit)="openCreatePin()">
     <div class="row" formArrayName="words">
       <div
         class="col-6 col-sm-4"
@@ -8,15 +8,15 @@
       >
         <mat-form-field class="passphrase-input" [formGroupName]="i">
           <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
-          <input matInput formControlName="word" />
+          <input matInput formControlName="word" (keyup)="isValid()" />
         </mat-form-field>
       </div>
     </div>
-    <div style="margin-bottom:8px;text-align: center">
-      <mat-error *ngIf="confirmForm.invalid">
+    <div class="text-center" style="margin-bottom:8px;">
+      <mat-error *ngIf="confirmForm.hasError('required')">
         {{ 'Please fill all of the passphrase' | translate }}
       </mat-error>
-      <mat-error *ngIf="!isMatched">
+      <mat-error *ngIf="confirmForm.hasError('mnemonic')">
         {{ 'The passphrase is not matched' | translate }}
       </mat-error>
     </div>

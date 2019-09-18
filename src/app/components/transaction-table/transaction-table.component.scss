@@ -4,7 +4,7 @@
 .transaction-table {
   .transaction-item {
     border-bottom: 1px solid #ddd;
-    padding: 16px 4px;
+    padding: 16px 6px;
     margin: 0;
     align-items: center;
     @include transition(0.3s ease-in all);
@@ -20,7 +20,7 @@
       word-break: break-all;
       color: $black1;
       font-size: 13px;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
     .date {
       color: $black2;

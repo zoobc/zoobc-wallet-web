@@ -1,5 +1,4 @@
 import { toBase64Url } from '../helpers/converters';
-import { MatSnackBar } from '@angular/material';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey: Uint8Array): string {

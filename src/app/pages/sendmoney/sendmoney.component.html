@@ -17,8 +17,14 @@
 
       <label>{{ 'Recepient address' | translate }}</label>
       <mat-form-field appearance="outline" class="block">
-        <input matInput placeholder="{{ 'Recepient address' | translate }}..." aria-label="contacts"
-          [matAutocomplete]="auto" formControlName="recipient" (keyup)="onChangeRecipient()" />
+        <input
+          matInput
+          placeholder="{{ 'Recepient address' | translate }}..."
+          aria-label="contacts"
+          [matAutocomplete]="auto"
+          formControlName="recipient"
+          (keyup)="onChangeRecipient()"
+        />
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">
             {{ 'Recepient is required' | translate }}
@@ -28,7 +34,10 @@
           </span>
         </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
+          <mat-option
+            *ngFor="let contact of filteredContacts | async"
+            [value]="contact.address"
+          >
             <span>{{ contact.alias }}</span> |
             <small>{{ contact.address }}</small>
           </mat-option>
@@ -39,8 +48,17 @@
           Save to Address Book
         </mat-checkbox>
       </section>
-      <mat-form-field appearance="outline" class="block" *ngIf="saveToAddreesBook.value === true">
-        <input matInput type="text" formControlName="alias" placeholder="{{ 'Alias' | translate }}" />
+      <mat-form-field
+        appearance="outline"
+        class="block"
+        *ngIf="saveToAddreesBook.value === true"
+      >
+        <input
+          matInput
+          type="text"
+          formControlName="alias"
+          placeholder="{{ 'Alias' | translate }}"
+        />
       </mat-form-field>
 
       <label>{{ 'Coin amount' | translate }}</label>
@@ -49,24 +67,43 @@
           <mat-form-field appearance="outline" class="block">
             <mat-select [(value)]="typeCoin">
               <mat-option value="ZBC">ZBC</mat-option>
-              <mat-option value="Fiat">{{currencyRate.name}}</mat-option>
+              <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div class="col-9">
-          <mat-form-field appearance="outline" class="block" *ngIf="typeCoin === 'ZBC'">
-            <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}"
-              (change)="onChangeAmountField()" (keyup)="onChangeAmountField()" />
+          <mat-form-field
+            appearance="outline"
+            class="block"
+            *ngIf="typeCoin === 'ZBC'"
+          >
+            <input
+              matInput
+              type="number"
+              formControlName="amount"
+              placeholder="{{ 'Coin Amount' | translate }}"
+              (change)="onChangeAmountField()"
+              (keyup)="onChangeAmountField()"
+            />
             <mat-error *ngIf="amountForm.touched">
               <span *ngIf="amountForm.hasError('required')">
                 {{ 'Amount is required' | translate }}
               </span>
             </mat-error>
           </mat-form-field>
-          <mat-form-field *ngIf="typeCoin === 'Fiat'" appearance="outline" class="block">
-            <input matInput type="number" formControlName="amountCurrency"
-              placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}" (change)="onChangeAmountCurrencyField()"
-              (keyup)="onChangeAmountCurrencyField()" />
+          <mat-form-field
+            *ngIf="typeCoin === 'Fiat'"
+            appearance="outline"
+            class="block"
+          >
+            <input
+              matInput
+              type="number"
+              formControlName="amountCurrency"
+              placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}"
+              (change)="onChangeAmountCurrencyField()"
+              (keyup)="onChangeAmountCurrencyField()"
+            />
             <mat-error *ngIf="amountCurrencyForm.touched">
               <span *ngIf="amountCurrencyForm.hasError('required')">
                 {{ 'Amount is required' | translate }}
@@ -82,23 +119,43 @@
           <mat-form-field appearance="outline" class="block">
             <mat-select [(value)]="typeFee">
               <mat-option value="ZBC">ZBC</mat-option>
-              <mat-option value="Fiat">{{currencyRate.name}}</mat-option>
+              <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
         <div class="col-9">
-          <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'ZBC'">
-            <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}"
-              (change)="onChangeFeeField()" (keyup)="onChangeFeeField()" />
+          <mat-form-field
+            appearance="outline"
+            class="block"
+            *ngIf="typeFee === 'ZBC'"
+          >
+            <input
+              matInput
+              type="number"
+              formControlName="fee"
+              placeholder="{{ 'Fee' | translate }}"
+              (change)="onChangeFeeField()"
+              (keyup)="onChangeFeeField()"
+            />
             <mat-error *ngIf="feeForm.touched">
               <span *ngIf="feeForm.hasError('required')">
                 {{ 'Fee is required' | translate }}
               </span>
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'Fiat'">
-            <input matInput type="number" formControlName="feeCurr" placeholder="{{ 'Fee' | translate }}"
-              (change)="onChangeFeeCurrencyField()" (keyup)="onChangeFeeCurrencyField()" />
+          <mat-form-field
+            appearance="outline"
+            class="block"
+            *ngIf="typeFee === 'Fiat'"
+          >
+            <input
+              matInput
+              type="number"
+              formControlName="feeCurr"
+              placeholder="{{ 'Fee' | translate }}"
+              (change)="onChangeFeeCurrencyField()"
+              (keyup)="onChangeFeeCurrencyField()"
+            />
             <mat-error *ngIf="feeFormCurr.touched">
               <span *ngIf="feeFormCurr.hasError('required')">
                 {{ 'Fee is required' | translate }}
@@ -108,8 +165,13 @@
         </div>
       </div>
 
-      <button mat-flat-button color="primary" type="submit" class="block"
-        [disabled]="formSend.invalid || isFormSendLoading">
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        class="block"
+        [disabled]="formSend.invalid || isFormSendLoading"
+      >
         <span *ngIf="isFormSendLoading">
           <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
         </span>
@@ -170,38 +232,63 @@
       <mat-error *ngIf="formConfirmPin.hasError('invalid')">
         {{ 'Pin is not match' | translate }}
       </mat-error>
-      <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isConfirmPinLoading"></i>
+      <i
+        matPrefix
+        class="fas fa-circle-notch fa-spin"
+        *ngIf="isConfirmPinLoading"
+      ></i>
     </div>
   </form>
 </ng-template>
 
 <ng-template #accountDialog>
-  <h3 class="mat-h3" id="modal-basic-title">
-    <b>{{ 'Accounts' | translate }}</b>
-  </h3>
+  <div style="max-height: 400px">
+    <h3 class="mat-h3" id="modal-basic-title">
+      <b>{{ 'Your Accounts' | translate }}</b>
+    </h3>
 
-  <div class="account-list" *ngIf="accounts">
-    <mat-card *ngFor="let acc of accounts" class="account-card" (click)="onSwitchAccount(acc)">
-      <div class="row" [ngClass]="account.path == acc.path ? 'row active' : 'row'">
-        <div class="col-12">
-          <div class="name">{{ acc.name }}</div>
-          <div class="address">
-            <wallet-address [value]="acc.address"></wallet-address>
-          </div>
-          <div class="last-tx" *ngIf="acc.lastTx.length === 0; else hasTransaction"> Last Transaction: None
-          </div>
-          <ng-template #hasTransaction>
-            <div class="last-tx">Last Transaction :
-              {{acc.lastTx['0'].timestamp | dateAgo}}
+    <div class="account-list" *ngIf="accounts">
+      <mat-card
+        *ngFor="let acc of accounts"
+        class="account-card"
+        (click)="onSwitchAccount(acc)"
+      >
+        <div
+          class="row"
+          [ngClass]="account.path == acc.path ? 'row active' : 'row'"
+        >
+          <div class="col-12">
+            <div class="name">{{ acc.name }}</div>
+            <div class="address">
+              <wallet-address
+                [value]="acc.address"
+                [copyButton]="true"
+              ></wallet-address>
             </div>
-          </ng-template>
+            <div
+              class="last-tx"
+              *ngIf="acc.lastTx.length === 0; else hasTransaction"
+            >
+              Last Transaction: None
+            </div>
+            <ng-template #hasTransaction>
+              <div class="last-tx">
+                Last Transaction :
+                {{ acc.lastTx['0'].timestamp | dateAgo }}
+              </div>
+            </ng-template>
+          </div>
+          <div class="col-12 text-right">
+            <div class="balance">
+              {{ acc.balance / 1e8 }} <small>ZBC</small>
+            </div>
+            <div class="balance-in-currency">
+              {{ (acc.balance / 1e8) * currencyRate.value | number: '0.0-4' }}
+              <small>{{ currencyRate.name }}</small>
+            </div>
+          </div>
         </div>
-        <div class="col-12 text-right">
-          <div class="balance">{{ acc.balance / 1e8 }} <small>ZBC</small></div>
-          <div class="balance-in-currency">{{(acc.balance / 1e8 ) * currencyRate.value  | number: '0.0-4'}}
-            <small>{{currencyRate.name}}</small></div>
-        </div>
-      </div>
-    </mat-card>
+      </mat-card>
+    </div>
   </div>
 </ng-template>
