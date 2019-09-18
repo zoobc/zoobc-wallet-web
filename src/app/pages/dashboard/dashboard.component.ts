@@ -64,8 +64,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    window.scroll(0, 0);
-
     this.getBalance();
     this.getTransactions();
 
