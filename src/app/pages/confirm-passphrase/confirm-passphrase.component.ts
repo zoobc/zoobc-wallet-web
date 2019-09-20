@@ -25,11 +25,9 @@ export class ConfirmPassphraseComponent implements OnInit {
   masterSeed: string;
 
   confirmForm: FormGroup;
-  passphraseField = new FormControl('', Validators.required);
+  wordField: FormArray;
 
   mnemonicNumWords = environment.mnemonicNumWords;
-
-  isMatched: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -73,38 +71,38 @@ export class ConfirmPassphraseComponent implements OnInit {
     // fill the form with the prefilled passphrase
     const prefill = this.prefillPassphrase;
     for (let i = 0; i < this.mnemonicNumWords; i++) {
-      const wordField = <FormArray>this.confirmForm.controls['words'];
-      wordField.push(
+      this.wordField = <FormArray>this.confirmForm.controls['words'];
+      this.wordField.push(
         this.fb.group({ word: [prefill[i], Validators.required] })
       );
     }
   }
 
-  onConfirm() {
-    if (this.confirmForm.valid) {
+  isValid() {
+    if (this.wordField.valid) {
       let passphraseField: string = this.confirmForm.value.words
         .map(form => form.word)
         .join(' ')
         .replace(/\s\s+/g, ' ');
 
-      if (passphraseField == this.words) {
-        this.isMatched = true;
-        this.openCreatePin();
-      } else {
-        this.isMatched = false;
-      }
+      if (passphraseField != this.words)
+        this.confirmForm.setErrors({ mnemonic: true });
+    } else {
+      this.confirmForm.setErrors({ required: true });
     }
   }
 
   openCreatePin() {
-    let pinDialog = this.dialog.open(PinSetupDialogComponent, {
-      width: '400px',
-      disableClose: true,
-    });
-    pinDialog.afterClosed().subscribe((key: string) => {
-      this.saveNewAccount(key);
-      this.router.navigateByUrl('/dashboard');
-    });
+    if (this.confirmForm.valid) {
+      let pinDialog = this.dialog.open(PinSetupDialogComponent, {
+        width: '400px',
+        disableClose: true,
+      });
+      pinDialog.afterClosed().subscribe((key: string) => {
+        this.saveNewAccount(key);
+        this.router.navigateByUrl('/dashboard');
+      });
+    }
   }
 
   saveNewAccount(key: string) {

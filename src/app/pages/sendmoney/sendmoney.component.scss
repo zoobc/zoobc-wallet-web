@@ -129,25 +129,26 @@
           color: white;
         }
       }
-      .balance,
-      .balance-in-currency {
-        color: $black2;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .balance-in-currency {
-        font-size: 14px;
-        margin-bottom: 8px;
-      }
       .name {
         font-weight: bold;
         color: $black2;
         margin-bottom: 4px;
       }
-      .address,
-      .last-tx {
+      .address {
         margin-bottom: 4px;
+      }
+      .last-tx {
+        margin-bottom: 12px;
         font-size: 12px;
+      }
+      .balance {
+        color: $black2;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .balance-in-currency {
+        color: $black3;
+        margin-bottom: 8px;
       }
     }
   }

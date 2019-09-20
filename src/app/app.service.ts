@@ -9,7 +9,7 @@ import { MatSidenav } from '@angular/material';
 export class AppService implements CanActivate {
   private sidenav: MatSidenav;
 
-  constructor(private router: Router, private authServ: AuthService) { }
+  constructor(private router: Router, private authServ: AuthService) {}
 
   isLoggedIn() {
     return this.authServ.currPublicKey ? true : false;
@@ -18,7 +18,8 @@ export class AppService implements CanActivate {
   canActivate(): boolean {
     if (this.authServ.currPublicKey) return true;
 
-    this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
+    // this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
+    this.router.navigateByUrl(`/login`);
     return false;
   }
 

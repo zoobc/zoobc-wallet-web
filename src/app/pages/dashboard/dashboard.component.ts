@@ -19,6 +19,7 @@ import {
 } from 'src/app/grpc/model/accountBalance_pb';
 import { Router } from '@angular/router';
 import { AddAccountComponent } from '../add-account/add-account.component';
+import { onCopyText } from 'src/helpers/utils';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -132,15 +133,7 @@ export class DashboardComponent implements OnInit {
   }
 
   copyText(text) {
-    let selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.opacity = '0';
-    selBox.value = text;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
+    onCopyText(text);
     this.snackBar.open('Address Copied', null, { duration: 5000 });
   }
 
@@ -148,9 +141,5 @@ export class DashboardComponent implements OnInit {
     this.dialog.open(AddAccountComponent, {
       width: '360px',
     });
-  }
-
-  goToHistory() {
-    this.router.navigateByUrl('/transferhistory');
   }
 }
