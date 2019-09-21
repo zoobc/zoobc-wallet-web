@@ -59,7 +59,6 @@ export class RegisterNodeComponent implements OnInit {
       account.path
     );
     const sender = Buffer.from(this.authServ.currAddress, 'utf-8');
-    console.log(this.authServ.currAddress);
 
     const nodeAddress = Buffer.from(
       'mToyyAc9bOXMMMeRFWN9SzEtdmHbUPL0ZIaQ9iWQ1Yc=',
@@ -101,7 +100,7 @@ export class RegisterNodeComponent implements OnInit {
       213,
       135,
     ];
-    let bytes = new BytesMaker(389);
+    let bytes = new BytesMaker(437);
     // transaction type
     bytes.write4bytes(2);
     // version
@@ -115,28 +114,29 @@ export class RegisterNodeComponent implements OnInit {
     // recepient address length
     bytes.write4bytes(0);
     // recepient address
-    // bytes.write44Bytes(0);
+    bytes.write44Bytes(new Uint8Array(44));
     // tx fee
     bytes.write8Bytes(fee);
     // tx body length
-    bytes.write4bytes(312);
+    bytes.write4bytes(316);
     // tx body (node pub key)
     bytes.write(pubKey, 32);
     // tx body (account address)
+    bytes.write4bytes(44);
     bytes.write44Bytes(sender);
     // tx body (node address)
     bytes.write4bytes(44);
     bytes.write44Bytes(nodeAddress);
     // tx locked balance
-    bytes.write8Bytes(20);
+    bytes.write8Bytes(200);
     // tx poown
-    console.log('node address', nodeAddress);
+    console.log('poown', this.poown);
 
     bytes.write(this.poown, 180);
     let signature = childSeed.sign(bytes.value);
-    let bytesWithSign = new BytesMaker(458);
+    let bytesWithSign = new BytesMaker(505);
     // copy to new bytes
-    bytesWithSign.write(bytes.value, 389);
+    bytesWithSign.write(bytes.value, 437);
     // set signature type
     bytesWithSign.write4bytes(0);
     // set signature
