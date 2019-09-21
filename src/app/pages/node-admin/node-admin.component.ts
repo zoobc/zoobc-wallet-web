@@ -5,12 +5,12 @@ import {
   NodeAdminService,
 } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
-import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
 import {
   NodeHardware as NH,
   GetNodeHardwareResponse,
 } from 'src/app/grpc/model/nodeHardware_pb';
-// import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
+import { Subscription } from 'rxjs';
+import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -30,11 +30,15 @@ export class NodeAdminComponent implements OnInit {
 
   hwInfo: NodeHardware;
   mbToB = Math.pow(1024, 2);
+  gbToB = Math.pow(1024, 3);
+
+  info: Subscription;
 
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private nodeServ: NodeRegistrationService
   ) {
     this.nodeAdminServ.nodeAdminAttribute.subscribe(
       (attribute: NodeAdminAttribute) => {
@@ -43,13 +47,17 @@ export class NodeAdminComponent implements OnInit {
     );
 
     nodeAdminServ
-      .getNodeHardwareInfo()
+      .streamNodeHardwareInfo()
       .subscribe((res: NodeHardwareResponse) => {
         this.hwInfo = res.nodehardware;
       });
   }
 
   ngOnInit() {}
+
+  ngOnDestroy() {
+    this.nodeAdminServ.stopNodeHardwareInfo();
+  }
   openRegisterNodeForm() {
     this.router.navigateByUrl('nodeadmin/register');
   }
