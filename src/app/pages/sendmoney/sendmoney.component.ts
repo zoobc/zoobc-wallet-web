@@ -25,6 +25,7 @@ import {
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AccountService } from 'src/app/services/account.service';
 import { base64ToByteArray } from 'src/helpers/converters';
+import { environment } from 'src/environments/environment';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -81,9 +82,16 @@ export class SendmoneyComponent implements OnInit {
   typeCoin = 'ZBC';
   typeFee = 'ZBC';
 
+  feeFast = environment.feeFast;
+  feeMedium = environment.feeMedium;
+  feeSlow = environment.feeSlow;
+  activeButton: number;
+  kindFee: string;
+
   //for add new address to contact list
   aliasField = new FormControl('');
   saveToAddreesBook = new FormControl(false, Validators.required);
+  customFee = new FormControl(false, Validators.required);
 
   constructor(
     private accountServ: AccountService,
@@ -103,6 +111,7 @@ export class SendmoneyComponent implements OnInit {
       feeCurr: this.feeFormCurr,
       saveAddress: this.saveToAddreesBook,
       alias: this.aliasField,
+      customFees: this.customFee,
     });
 
     this.formConfirmPin = new FormGroup({
@@ -207,6 +216,43 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
+  removeActive() {
+    this.formSend.patchValue({
+      fee: '',
+      feeCurr: '',
+    });
+    this.activeButton = 0;
+    this.kindFee = 'Custom';
+  }
+
+  onFeeChoose(value) {
+    if (value === 1) {
+      const resultFeeCurrency = this.feeSlow * this.currencyRate.value;
+      this.formSend.patchValue({
+        fee: this.feeSlow,
+        feeCurr: resultFeeCurrency,
+      });
+      this.activeButton = value;
+      this.kindFee = 'Slow';
+    } else if (value === 2) {
+      const resultFeeCurrency = this.feeMedium * this.currencyRate.value;
+      this.formSend.patchValue({
+        fee: this.feeMedium,
+        feeCurr: resultFeeCurrency,
+      });
+      this.activeButton = value;
+      this.kindFee = 'Medium';
+    } else {
+      const resultFeeCurrency = this.feeFast * this.currencyRate.value;
+      this.formSend.patchValue({
+        fee: this.feeFast,
+        feeCurr: resultFeeCurrency,
+      });
+      this.activeButton = value;
+      this.kindFee = 'Fast';
+    }
+  }
+
   onTypePin() {
     if (this.pinField.value.length == 6) {
       this.isConfirmPinLoading = true;
@@ -239,6 +285,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   closeDialog() {
+    this.activeButton = 0;
     this.sendMoneyRefDialog.close();
   }
 
