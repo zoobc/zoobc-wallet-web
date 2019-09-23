@@ -32,16 +32,18 @@
         font-weight: bold;
         line-height: 16px;
         padding-bottom: 4px;
+        @media (max-width: 600px) {
+          font-size: 12px;
+        }
       }
-      .zbc-currency {
-        font-size: smaller;
-        line-height: 12px;
-        padding-bottom: 2px;
-      }
+      .zbc-currency,
       .fiat-currency {
         font-size: smaller;
         line-height: 12px;
         padding-bottom: 2px;
+        @media (max-width: 600px) {
+          font-size: 10px;
+        }
       }
     }
   }
