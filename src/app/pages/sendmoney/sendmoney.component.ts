@@ -130,13 +130,8 @@ export class SendmoneyComponent implements OnInit {
 
   openAccountList() {
     this.accountRefDialog = this.dialog.open(this.accountDialog, {
-      width: '320px',
-      height: '400px',
+      width: '360px',
     });
-
-    // this.accountRefDialog.afterClosed().subscribe(isPinValid => {
-    //   if (isPinValid) this.onSendMoney();
-    // });
   }
 
   getAccounts() {
