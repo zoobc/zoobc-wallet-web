@@ -59,5 +59,15 @@
         </div>
       </div>
     </ng-container>
+
+    <div class="no-content" *ngIf="isError">
+      <i matPrefix class="fa fa-exclamation-triangle"></i>
+      <span class="message">
+        {{ 'An error occurred while processing your request' | translate }}
+      </span>
+      <button mat-flat-button color="primary" (click)="onRefresh()">
+        {{ 'Try Again' | translate }}
+      </button>
+    </div>
   </mat-card>
 </div>

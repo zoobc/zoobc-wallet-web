@@ -34,6 +34,9 @@ export class DashboardComponent implements OnInit {
   isLoadingBalance: boolean = false;
   isLoadingRecentTx: boolean = false;
 
+  isErrorBalance: boolean = false;
+  isErrorRecentTx: boolean = false;
+
   totalTx: number = 0;
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
@@ -74,10 +77,16 @@ export class DashboardComponent implements OnInit {
 
   getBalance() {
     this.isLoadingBalance = true;
-    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
-      this.accountBalance = data.accountbalance;
-      this.isLoadingBalance = false;
-    });
+    this.accountServ
+      .getAccountBalance()
+      .then((data: AccountBalanceList) => {
+        this.accountBalance = data.accountbalance;
+        this.isLoadingBalance = false;
+      })
+      .catch(() => {
+        this.isErrorBalance = true;
+        this.isLoadingBalance = false;
+      });
   }
 
   getTransactions() {
@@ -87,6 +96,10 @@ export class DashboardComponent implements OnInit {
       .then((res: Transactions) => {
         this.totalTx = res.total;
         this.recentTx = res.transactions;
+        this.isLoadingRecentTx = false;
+      })
+      .catch(() => {
+        this.isErrorRecentTx = true;
         this.isLoadingRecentTx = false;
       });
 

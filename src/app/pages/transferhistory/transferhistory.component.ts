@@ -21,7 +21,8 @@ export class TransferhistoryComponent implements OnInit {
   finished: boolean = false;
 
   address: string;
-  showSpinner: boolean = false;
+  isLoading: boolean = false;
+  isError: boolean = false;
 
   constructor(
     private transactionServ: TransactionService,
@@ -31,7 +32,7 @@ export class TransferhistoryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getTx();
+    this.getTx(true);
 
     this.transactionServ
       .getUnconfirmTransaction()
@@ -40,16 +41,20 @@ export class TransferhistoryComponent implements OnInit {
       });
   }
 
-  getTx() {
-    this.showSpinner = true;
+  getTx(reload: boolean = false) {
+    this.isLoading = true;
     this.transactionServ
       .getAccountTransaction(this.page, 10)
       .then((res: Transactions) => {
-        if (this.accountHistory)
+        if (!reload)
           this.accountHistory = this.accountHistory.concat(res.transactions);
         else this.accountHistory = res.transactions;
         this.total = res.total;
-        this.showSpinner = false;
+        this.isLoading = false;
+      })
+      .catch(() => {
+        this.isLoading = false;
+        this.isError = true;
       });
   }
 
