@@ -50,16 +50,16 @@ export class PoownService {
       });
 
       client.onHeaders((headers: grpc.Metadata) => {
-        // console.log('onHeaders', headers);
+        console.log('onHeaders', headers);
       });
       client.onMessage((message: ProofOfOwnership) => {
-        // console.log('onMessage', message.toObject());
-        console.log(
-          Buffer.from(message.toObject().messagebytes.toString(), 'base64')
-        );
-        console.log(
-          Buffer.from(message.toObject().signature.toString(), 'base64')
-        );
+        console.log('onMessage', message.toObject());
+        // console.log(
+        //   Buffer.from(message.toObject().messagebytes.toString(), 'base64')
+        // );
+        // console.log(
+        //   Buffer.from(message.toObject().signature.toString(), 'base64')
+        // );
 
         let bytes = new Uint8Array(180);
         bytes.set(
@@ -70,7 +70,9 @@ export class PoownService {
           Buffer.from(message.toObject().signature.toString(), 'base64'),
           112
         );
+
         resolve(bytes);
+
         // console.log(message.toObject().messagebytes.toString());
 
         // let bytes = Buffer.from(

@@ -112,7 +112,7 @@ export class RegisterNodeComponent implements OnInit {
     // sender address
     bytes.write44Bytes(sender);
     // recepient address length
-    bytes.write4bytes(0);
+    bytes.write4bytes(44);
     // recepient address
     bytes.write44Bytes(new Uint8Array(44));
     // tx fee
@@ -141,7 +141,7 @@ export class RegisterNodeComponent implements OnInit {
     bytesWithSign.write4bytes(0);
     // set signature
     bytesWithSign.write(signature, 64);
-    console.log(bytesWithSign.value);
+    console.log(bytesWithSign.value.join(', '));
 
     this.transactionServ.postTransaction(bytesWithSign.value).then(
       (res: any) => {

@@ -75,13 +75,16 @@ export class NodeRegistrationService {
         request: request,
         onMessage: (message: GetNodeRegistrationsResponse) => {
           resolve(message.toObject());
-          console.log(message.toObject());
+          // console.log(message.toObject());
+          // console.log('message', message);
         },
         onEnd: (
           code: grpc.Code,
           msg: string | undefined,
           trailers: grpc.Metadata
         ) => {
+          console.log('msg', msg);
+
           if (code != grpc.Code.OK) reject(msg);
         },
       });
