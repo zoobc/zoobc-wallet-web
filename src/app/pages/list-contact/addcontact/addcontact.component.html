@@ -8,10 +8,12 @@
         formControlName="alias"
         placeholder="{{ 'Alias' | translate }}"
       />
+    </mat-form-field>
+    <section class="error-text" *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">{{
         'Alias is required' | translate
       }}</mat-error>
-    </mat-form-field>
+    </section>
     <mat-form-field appearance="outline">
       <input
         matInput
@@ -19,10 +21,12 @@
         formControlName="address"
         placeholder="{{ 'Address' | translate }}"
       />
+    </mat-form-field>
+    <section class="error-text" *ngIf="addressField.touched">
       <mat-error *ngIf="addressField.hasError('required')">{{
         'Address is required' | translate
       }}</mat-error>
-    </mat-form-field>
+    </section>
 
     <button mat-flat-button color="primary" type="submit">
       {{ 'Save' | translate }}

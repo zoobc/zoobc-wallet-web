@@ -52,6 +52,9 @@
     margin: 0 auto;
   }
   form {
+    .error-text {
+      margin-bottom: 8px;
+    }
     .from-account {
       display: flex;
       border: 1px solid #ccc;
@@ -79,18 +82,16 @@
   }
 }
 
-.mat-divider.mat-divider-inset {
-  margin-top: 10px;
-  margin-left: 155px;
-  margin-bottom: 10px;
-  width: 394px;
-}
-
 .form-pin {
   i.fas {
     font-size: 24px;
     color: $primary-color;
   }
+}
+
+.mat-divider.mat-divider-inset {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 // popup detail send money
@@ -117,7 +118,9 @@
   .content-popup {
     margin-top: 10px;
     word-break: break-all;
+    margin-bottom: 10px;
     .label-popup {
+      font-size: 14px;
       color: $black1;
       font-weight: bold;
     }
@@ -125,6 +128,13 @@
     .amount,
     .fee {
       margin-bottom: 10px;
+    }
+    .address,
+    .recepient,
+    .amount,
+    .fee,
+    .total {
+      font-size: 12px;
     }
   }
 }
