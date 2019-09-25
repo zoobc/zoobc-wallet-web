@@ -145,11 +145,13 @@ label {
 }
 
 .mat-form-field-appearance-outline .mat-form-field-wrapper {
-  padding-bottom: 8px !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 8px !important;
 }
 
 .mat-error {
   font-size: 14px;
+  margin-bottom: 8px;
 }
 
 // ============================ SWAL CUSTOM STYLE ========================

@@ -2,8 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { ContactService } from 'src/app/services/contact.service';
-import { base64ToByteArray } from 'src/helpers/converters';
 import Swal from 'sweetalert2';
+import { addressValidation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-addcontact',
@@ -31,33 +31,30 @@ export class AddcontactComponent implements OnInit {
 
   ngOnInit() {}
 
+  onAddressValidation() {
+    const validation = addressValidation(this.addressField.value);
+    if (validation) {
+      this.addressField.setErrors({ invalidAddress: true });
+    }
+  }
+
   onSubmit() {
     if (this.addForm.valid) {
-      const validation = base64ToByteArray(this.addressField.value);
-      if (validation.byteLength === 33) {
-        if (
-          this.contacts.some(
-            contacts => contacts.address === this.addressField.value
-          )
-        ) {
-          Swal.fire({
-            type: 'error',
-            title: 'Oops...',
-            text: 'The address you entered is already in your Address Book',
-          });
-          this.dialogRef.close(this.contacts);
-        } else {
-          const newContact = this.addForm.value;
-          this.contacts.push(newContact);
-          this.contactServ.addContact(newContact);
-          this.dialogRef.close(this.contacts);
-        }
-      } else {
+      if (
+        this.contacts.some(
+          contacts => contacts.address === this.addressField.value
+        )
+      ) {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
-          text: 'The address you entered is invalid',
+          text: 'The address you entered is already in your Address Book',
         });
+        this.dialogRef.close(this.contacts);
+      } else {
+        const newContact = this.addForm.value;
+        this.contacts.push(newContact);
+        this.contactServ.addContact(newContact);
         this.dialogRef.close(this.contacts);
       }
     }

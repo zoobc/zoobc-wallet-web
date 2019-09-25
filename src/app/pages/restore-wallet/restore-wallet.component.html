@@ -10,14 +10,14 @@
         (keyup)="onChangeMnemonic()"
       ></textarea>
     </mat-form-field>
-    <section class="error-text" *ngIf="passphraseField.touched">
-      <mat-error *ngIf="passphraseField.hasError('required')">
-        {{ 'Passphrase is required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="passphraseField.hasError('mnemonic')">
-        {{ 'Passphrase is invalid' | translate }}
-      </mat-error>
-    </section>
+    <mat-error *ngIf="passphraseField.touched">
+      <span *ngIf="passphraseField.hasError('required')">{{
+        'Passphrase is required' | translate
+      }}</span>
+      <span *ngIf="passphraseField.hasError('mnemonic')"
+        >{{ 'Passphrase is invalid' | translate }}
+      </span>
+    </mat-error>
     <button
       mat-flat-button
       color="primary"
