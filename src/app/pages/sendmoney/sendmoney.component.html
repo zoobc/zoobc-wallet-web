@@ -25,14 +25,6 @@
           formControlName="recipient"
           (keyup)="onChangeRecipient()"
         />
-        <mat-error *ngIf="recipientForm.touched">
-          <span *ngIf="recipientForm.hasError('required')">
-            {{ 'Recepient is required' | translate }}
-          </span>
-          <span *ngIf="recipientForm.hasError('invalidAddress')">
-            {{ 'ZBC Address is invalid' | translate }}
-          </span>
-        </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
             *ngFor="let contact of filteredContacts | async"
@@ -43,23 +35,45 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+      <section class="error-text">
+        <mat-error *ngIf="recipientForm.touched">
+          <span *ngIf="recipientForm.hasError('required')">
+            {{ 'Recepient is required' | translate }}
+          </span>
+          <span *ngIf="recipientForm.hasError('invalidAddress')">
+            {{ 'ZBC Address is invalid' | translate }}
+          </span>
+        </mat-error>
+      </section>
       <section class="section-save-addres">
         <mat-checkbox class="checkbox-margin" formControlName="saveAddress">
-          Save to Address Book
+          {{ 'Save to Address Book' | translate }}
         </mat-checkbox>
       </section>
-      <mat-form-field
-        appearance="outline"
-        class="block"
-        *ngIf="saveToAddreesBook.value === true"
-      >
-        <input
-          matInput
-          type="text"
-          formControlName="alias"
-          placeholder="{{ 'Alias' | translate }}"
-        />
-      </mat-form-field>
+      <div *ngIf="saveToAddreesBook.value === true">
+      <label>{{'Alias' | translate}}</label>
+        <mat-form-field
+          appearance="outline"
+          class="block"
+        >
+          <input
+            matInput
+            type="text"
+            formControlName="alias"
+            placeholder="{{ 'Alias' | translate }}"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="zbc-form-item">
+        <div class="amount text-right">
+          <div class="primary-amount">{{ amountForm.value }} ZBC</div>
+          <div class="secondary-amount">
+            {{ amountCurrencyForm.value | number: '0.0-4' }}
+            {{ currencyRate.name }}
+          </div>
+        </div>
+      </div>
 
       <label>{{ 'Coin amount' | translate }}</label>
       <div class="row">
@@ -85,12 +99,14 @@
               (change)="onChangeAmountField()"
               (keyup)="onChangeAmountField()"
             />
-            <mat-error *ngIf="amountForm.touched">
-              <span *ngIf="amountForm.hasError('required')">
-                {{ 'Amount is required' | translate }}
-              </span>
-            </mat-error>
           </mat-form-field>
+          <section class="error-text" *ngIf="typeCoin === 'ZBC'">
+          <mat-error *ngIf="amountForm.touched">
+            <span *ngIf="amountForm.hasError('required')">
+              {{ 'Amount is required' | translate }}
+            </span>
+          </mat-error>
+        </section>
           <mat-form-field
             *ngIf="typeCoin === 'Fiat'"
             appearance="outline"
@@ -104,16 +120,61 @@
               (change)="onChangeAmountCurrencyField()"
               (keyup)="onChangeAmountCurrencyField()"
             />
+          </mat-form-field>
+          <section class="error-text" *ngIf="typeCoin === 'Fiat'">
             <mat-error *ngIf="amountCurrencyForm.touched">
               <span *ngIf="amountCurrencyForm.hasError('required')">
                 {{ 'Amount is required' | translate }}
               </span>
             </mat-error>
-          </mat-form-field>
+          </section>
         </div>
       </div>
 
-      <label>{{ 'Fee' | translate }}</label>
+      <div class="row">
+        <div class="col-3">
+            <label>{{ 'Fee' | translate }}</label>
+        </div>
+      <div class="col-9">
+        <div class="choose-fee">
+          <button mat-stroked-button type="button" [disabled]="customFee.value" (click)="onFeeChoose(1)" [class.fee-choosen]="activeButton === 1">
+            <div class="fee-button">
+              <div class="label">Slow</div>
+              <div class="zbc-currency">{{feeSlow}} ZBC</div>
+              <div class="fiat-currency">{{(feeSlow * currencyRate.value) | number:'0.0-4'}} {{currencyRate.name}}</div>
+            </div>
+          </button>
+          <button mat-stroked-button type="button" [disabled]="customFee.value" (click)="onFeeChoose(2)" [class.fee-choosen]="activeButton === 2">
+              <div class="fee-button">
+                <div class="label">Medium</div>
+                <div class="zbc-currency">{{feeMedium}} ZBC</div>
+                <div class="fiat-currency">{{(feeMedium * currencyRate.value) | number:'0.0-4'}} {{currencyRate.name}}</div>
+              </div>
+            </button>
+            <button mat-stroked-button type="button" [disabled]="customFee.value" (click)="onFeeChoose(3)" [class.fee-choosen]="activeButton === 3">
+                <div class="fee-button">
+                  <div class="label">Fast</div>
+                  <div class="zbc-currency">{{feeFast}} ZBC</div>
+                  <div class="fiat-currency">{{(feeFast * currencyRate.value) | number:'0.0-4'}} {{currencyRate.name}}</div>
+                </div>
+              </button>
+          </div>
+        </div>
+      </div>
+      <section class="section-save-addres">
+          <mat-checkbox class="checkbox-margin" formControlName="customFees" (click)="removeActive()">
+            {{ 'Custom Fee' | translate }}
+          </mat-checkbox>
+        </section>
+
+      <div class="zbc-form-item" *ngIf="customFee.value === true">
+        <div class="amount text-right">
+           <div class="primary-amount">{{ feeForm.value }} ZBC</div>
+              <div class="secondary-amount">
+                {{ feeFormCurr.value | number: '0.0-4' }} {{ currencyRate.name }}
+          </div>
+        </div>
+      <label>{{ 'Custom Fee' | translate }}</label>
       <div class="row">
         <div class="col-3">
           <mat-form-field appearance="outline" class="block">
@@ -137,12 +198,14 @@
               (change)="onChangeFeeField()"
               (keyup)="onChangeFeeField()"
             />
-            <mat-error *ngIf="feeForm.touched">
-              <span *ngIf="feeForm.hasError('required')">
-                {{ 'Fee is required' | translate }}
-              </span>
-            </mat-error>
           </mat-form-field>
+          <section class="error-text" *ngIf="typeFee === 'ZBC'">
+          <mat-error *ngIf="feeForm.touched">
+            <span *ngIf="feeForm.hasError('required')">
+              {{ 'Fee is required' | translate }}
+            </span>
+          </mat-error>
+          </section>
           <mat-form-field
             appearance="outline"
             class="block"
@@ -156,13 +219,16 @@
               (change)="onChangeFeeCurrencyField()"
               (keyup)="onChangeFeeCurrencyField()"
             />
+          </mat-form-field>
+          <section class="error-text" *ngIf="typeFee === 'Fiat'">
             <mat-error *ngIf="feeFormCurr.touched">
               <span *ngIf="feeFormCurr.hasError('required')">
                 {{ 'Fee is required' | translate }}
               </span>
             </mat-error>
-          </mat-form-field>
+          </section>
         </div>
+      </div>
       </div>
 
       <button
@@ -182,36 +248,52 @@
 </div>
 
 <ng-template #popupDetailSendMoney>
-  <mat-card-title>Confirm Send Money</mat-card-title>
-  <mat-card class="popup">
-    <mat-card-content>
-      <div>
-        <p>Transaction Details</p>
-        <div class="divTable">
-          <div class="divTableBody">
-            <div class="divTableRow">
-              <div class="divTableCell-1">From</div>
-              <div class="divTableCell">{{ address }}</div>
+  <div class="popup">
+      <div class="row">
+        <div class="col-4">
+            <label class="title">Confirm Send Money</label>
+        </div>
+        <div class="col-8 text-right">
+            <a class="brand">
+              <label class="title-wallet">
+              <img src="../../../assets/img/zbc-color.svg" alt="" />
+              ZooBC Wallet
+            </label>
+            </a>
+        </div>
+      </div>
+      <mat-divider [inset]="true"></mat-divider>
+      <div class="content-popup">
+        <div class="row">
+          <div class="col-6 test">
+            <label class="label-popup">From:</label>
+            <div class="address">{{ address }}</div>
+            <label class="label-popup">Recepient:</label>
+            <div class="recepient">{{ recipientForm.value }}</div>
+          </div>
+          <div class="col-6 text-right">
+            <label class="label-popup">Amount:</label>
+            <div class="amount">
+              {{ amountForm.value }} ZBC ({{
+                amountCurrencyForm.value | number: '0.0-4'
+              }}
+              {{ currencyRate.name }})
             </div>
-            <div class="divTableRow">
-              <div class="divTableCell-1">Recepient</div>
-              <div class="divTableCell">{{ recipientForm.value }}</div>
+            <label class="label-popup">Fee - {{kindFee}}:</label>
+            <div class="fee">
+              {{ feeForm.value }} ZBC ({{ feeFormCurr.value | number: '0.0-4' }}
+              {{ currencyRate.name }})
             </div>
-            <div class="divTableRow">
-              <div class="divTableCell-1">Total</div>
-              <div class="divTableCell">
-                {{ amountForm.value + feeForm.value }} ({{
-                  (amountForm.value + feeForm.value) * currencyRate.value
-                    | number: '0.0-4'
-                }}
-                {{ currencyRate.name }})
-              </div>
+            <label class="label-popup">Total :</label>
+            <div class="total">
+              {{ amountForm.value + feeForm.value }} ZBC ({{
+                amountCurrencyForm.value + feeFormCurr.value | number: '0.0-4'
+              }}
+              {{ currencyRate.name }})
             </div>
           </div>
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
   <div mat-dialog-actions align="end">
     <button mat-raised-button color="warn" (click)="closeDialog()">
       Cancel
@@ -219,6 +301,7 @@
     <button mat-raised-button color="primary" (click)="onOpenPinDialog()">
       Confirm
     </button>
+  </div>
   </div>
 </ng-template>
 

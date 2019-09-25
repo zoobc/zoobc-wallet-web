@@ -1,5 +1,8 @@
 .editcontact-container {
   form {
+    .error-text {
+      margin-bottom: 8px;
+    }
     display: grid;
   }
 }

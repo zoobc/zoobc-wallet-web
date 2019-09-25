@@ -1,38 +1,76 @@
 <div class="feedback-container">
-  <h2 class="mat-h2">{{"Feedback" | translate}}</h2>
+  <h2 class="mat-h2">{{ 'Feedback' | translate }}</h2>
   <mat-card>
-    <form [formGroup]="contactForm" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
+    <form
+      [formGroup]="contactForm"
+      #formDirective="ngForm"
+      (ngSubmit)="onSubmit(formDirective)"
+    >
       <!-- Email -->
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
-        <mat-error *ngIf="emailField.hasError('required')">{{"Email is required" | translate}}</mat-error>
-        <mat-error *ngIf="emailField.hasError('email')">{{"Incorrect email format" | translate}}</mat-error>
       </mat-form-field>
+      <section class="error-text" *ngIf="emailField.touched">
+        <mat-error *ngIf="emailField.hasError('required')">{{
+          'Email is required' | translate
+        }}</mat-error>
+        <mat-error *ngIf="emailField.hasError('email')">{{
+          'Incorrect email format' | translate
+        }}</mat-error>
+      </section>
       <!-- Subject -->
       <mat-form-field appearance="outline">
-        <mat-label>{{"Subject" | translate}}</mat-label>
+        <mat-label>{{ 'Subject' | translate }}</mat-label>
         <input matInput type="text" formControlName="subject" />
-        <mat-error *ngIf="subjectField.hasError('required')">{{"Subject is required" | translate}}</mat-error>
       </mat-form-field>
+      <section class="error-text" *ngIf="subjectField.touched">
+        <mat-error *ngIf="subjectField.hasError('required')">{{
+          'Subject is required' | translate
+        }}</mat-error>
+      </section>
       <!-- Message -->
       <mat-form-field appearance="outline">
-        <mat-label>{{"Message" | translate}}</mat-label>
+        <mat-label>{{ 'Message' | translate }}</mat-label>
         <textarea matInput formControlName="message" rows="5"></textarea>
-        <mat-error *ngIf="messageField.hasError('required')">{{"Message is required" | translate}}</mat-error>
       </mat-form-field>
+      <section class="error-text" *ngIf="messageField.touched">
+        <mat-error *ngIf="messageField.hasError('required')">{{
+          'Message is required' | translate
+        }}</mat-error>
+      </section>
       <!--File Upload-->
       <div>
-        <input formControlName="file" #fileInput type="file" (change)="onFileChange($event)" style="display: none" />
-        <button mat-flat-button color="primary" type="button"
-          (click)="openFile()">{{"Upload image" | translate}}</button>
-        <span class="mat-body-1">{{filename}}</span>
+        <input
+          formControlName="file"
+          #fileInput
+          type="file"
+          (change)="onFileChange($event)"
+          style="display: none"
+        />
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="openFile()"
+        >
+          {{ 'Upload image' | translate }}
+        </button>
+        <span class="mat-body-1">{{ filename }}</span>
       </div>
       <!-- Copy -->
-      <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0">Send me a copy of this message</mat-checkbox>
+      <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0"
+        >Send me a copy of this message</mat-checkbox
+      >
       <!-- Send button -->
-      <button mat-flat-button color="primary" type="submit"
-        [disabled]="contactForm.invalid">{{"Send" | translate}}</button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="contactForm.invalid"
+      >
+        {{ 'Send' | translate }}
+      </button>
     </form>
   </mat-card>
 </div>

@@ -6,7 +6,7 @@
       {{ 'Create New Wallet' | translate }}
     </a>
     <a routerLink="/open-wallet" mat-flat-button color="primary">
-      {{'Open Wallet' | translate}}
+      {{ 'Open Wallet' | translate }}
     </a>
   </ng-container>
 
@@ -15,7 +15,7 @@
       <mat-label>{{ 'Please Enter Your Pin' | translate }}</mat-label>
       <br />
       <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
-      <mat-error *ngIf="pinForm.hasError('invalid')">
+      <mat-error class="error-text" *ngIf="pinForm.hasError('invalid')">
         {{ 'Pin invalid' | translate }}
       </mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
@@ -26,7 +26,7 @@
 
       <div style="margin-top: 8px">
         <a routerLink="/open-wallet">
-          {{'Open Wallet' | translate}}
+          {{ 'Open Wallet' | translate }}
         </a>
       </div>
     </form>

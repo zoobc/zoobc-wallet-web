@@ -5,6 +5,9 @@
     margin: 0 auto;
   }
   form {
+    .error-text {
+      margin-bottom: 8px;
+    }
     display: grid;
   }
 }

@@ -1,11 +1,60 @@
 @import '../../../styles/variables';
 
 .sendmoney-container {
+  .zbc-form-item {
+    .amount {
+      .primary-amount {
+        font-size: 1.3rem;
+        margin-bottom: 0.2rem;
+      }
+      .secondary-amount {
+        font-size: 0.8rem;
+        margin-bottom: 0.2rem;
+      }
+    }
+  }
+
+  .choose-fee {
+    .fee-choosen {
+      color: white;
+      background-color: $primary-color;
+    }
+    display: flex;
+    justify-content: stretch;
+    height: 54px;
+    .fee-button {
+      display: flex;
+      flex-flow: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      .label {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 16px;
+        padding-bottom: 4px;
+        @media (max-width: 600px) {
+          font-size: 12px;
+        }
+      }
+      .zbc-currency,
+      .fiat-currency {
+        font-size: smaller;
+        line-height: 12px;
+        padding-bottom: 2px;
+        @media (max-width: 600px) {
+          font-size: 10px;
+        }
+      }
+    }
+  }
   .mat-card {
     max-width: 400px;
     margin: 0 auto;
   }
   form {
+    .error-text {
+      margin-bottom: 8px;
+    }
     .from-account {
       display: flex;
       border: 1px solid #ccc;
@@ -40,32 +89,54 @@
   }
 }
 
-// Table
-.popup {
-  margin-bottom: 10px !important;
-}
-.divTable {
-  display: table;
-  width: 100%;
-  border-spacing: 5px;
-}
-.divTableRow {
-  display: table-row;
+.mat-divider.mat-divider-inset {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.divTableCell-1 {
-  background-color: #eee;
-  border: 1px solid #999999;
-  display: table-cell;
-  padding: 3px 10px;
-}
-.divTableCell {
-  border: 1px solid #999999;
-  display: table-cell;
-  padding: 3px 10px;
-}
-.divTableBody {
-  display: table-row-group;
+// popup detail send money
+.popup {
+  margin-bottom: 10px !important;
+  .brand {
+    .title-wallet {
+      background: -webkit-linear-gradient($primary-color, rgb(155, 66, 149));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 16px !important;
+      margin-right: 10px;
+    }
+    img {
+      float: right;
+      width: 20px;
+    }
+  }
+  .title {
+    color: $black1;
+    font-size: 16px !important;
+    font-weight: bold;
+  }
+  .content-popup {
+    margin-top: 10px;
+    word-break: break-all;
+    margin-bottom: 10px;
+    .label-popup {
+      font-size: 14px;
+      color: $black1;
+      font-weight: bold;
+    }
+    .address,
+    .amount,
+    .fee {
+      margin-bottom: 10px;
+    }
+    .address,
+    .recepient,
+    .amount,
+    .fee,
+    .total {
+      font-size: 12px;
+    }
+  }
 }
 
 .sub-title {
