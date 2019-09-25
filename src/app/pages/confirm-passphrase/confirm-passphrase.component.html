@@ -6,7 +6,11 @@
         class="col-6 col-sm-4"
         *ngFor="let word of prefillPassphrase; let i = index"
       >
-        <mat-form-field class="passphrase-input" [formGroupName]="i">
+        <mat-form-field
+          class="passphrase-input"
+          [formGroupName]="i"
+          appearance="outline"
+        >
           <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
           <input matInput formControlName="word" (keyup)="isValid()" />
         </mat-form-field>

@@ -114,6 +114,10 @@ label {
 }
 
 .mat-form-field {
+  .mat-form-field-prefix {
+    top: 0px !important;
+    padding: 12px 0 !important;
+  }
   .mat-form-field-infix {
     padding: 12px 0 !important;
     border: 0 !important;
