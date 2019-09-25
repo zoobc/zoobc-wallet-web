@@ -2,6 +2,7 @@
   <h2 class="mat-h2">{{ 'New Address' | translate }}</h2>
   <form [formGroup]="addForm" (submit)="onSubmit()">
     <mat-form-field appearance="outline">
+      <mat-label>{{ 'Alias' | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -15,6 +16,7 @@
       }}</mat-error>
     </section>
     <mat-form-field appearance="outline">
+      <mat-label>{{ 'Address' | translate }}</mat-label>
       <input
         matInput
         type="text"

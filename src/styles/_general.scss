@@ -136,7 +136,7 @@ label {
   &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
     .mat-form-field-label {
     margin-top: 4px !important;
-    transform: translateY(-1.59373em) scale(0.7) !important;
+    transform: translateY(-1.59373em) scale(0.8) !important;
   }
 
   .mat-select-arrow-wrapper {
@@ -164,6 +164,9 @@ label {
 }
 .swal2-confirm {
   background: linear-gradient(45deg, #0288d1 30%, #26c6da 90%) !important;
+}
+.swal2-cancel {
+  background: linear-gradient(45deg, #e53935 30%, #ef5350 90%) !important;
 }
 .swal2-title {
   font-size: 24px !important;
