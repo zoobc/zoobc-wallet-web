@@ -200,10 +200,19 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onOpenDialogDetailSendMoney() {
-    this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-      width: '600px',
-      data: this.formSend.value,
-    });
+    const total = this.amountForm.value + this.feeForm.value;
+    if (parseInt(this.accountBalance.spendablebalance) / 1e8 >= total) {
+      this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+        width: '600px',
+        data: this.formSend.value,
+      });
+    } else {
+      Swal.fire({
+        type: 'error',
+        title: 'Oops...',
+        text: 'Your balances are not enough for this transaction',
+      });
+    }
   }
 
   onOpenPinDialog() {

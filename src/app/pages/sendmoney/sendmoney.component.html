@@ -25,14 +25,6 @@
           formControlName="recipient"
           (keyup)="onChangeRecipient()"
         />
-        <mat-error *ngIf="recipientForm.touched">
-          <span *ngIf="recipientForm.hasError('required')">
-            {{ 'Recepient is required' | translate }}
-          </span>
-          <span *ngIf="recipientForm.hasError('invalidAddress')">
-            {{ 'ZBC Address is invalid' | translate }}
-          </span>
-        </mat-error>
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
             *ngFor="let contact of filteredContacts | async"
@@ -43,6 +35,16 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+      <section class="error-text">
+        <mat-error *ngIf="recipientForm.touched">
+          <span *ngIf="recipientForm.hasError('required')">
+            {{ 'Recepient is required' | translate }}
+          </span>
+          <span *ngIf="recipientForm.hasError('invalidAddress')">
+            {{ 'ZBC Address is invalid' | translate }}
+          </span>
+        </mat-error>
+      </section>
       <section class="section-save-addres">
         <mat-checkbox class="checkbox-margin" formControlName="saveAddress">
           {{ 'Save to Address Book' | translate }}
@@ -97,12 +99,14 @@
               (change)="onChangeAmountField()"
               (keyup)="onChangeAmountField()"
             />
-            <mat-error *ngIf="amountForm.touched">
-              <span *ngIf="amountForm.hasError('required')">
-                {{ 'Amount is required' | translate }}
-              </span>
-            </mat-error>
           </mat-form-field>
+          <section class="error-text" *ngIf="typeCoin === 'ZBC'">
+          <mat-error *ngIf="amountForm.touched">
+            <span *ngIf="amountForm.hasError('required')">
+              {{ 'Amount is required' | translate }}
+            </span>
+          </mat-error>
+        </section>
           <mat-form-field
             *ngIf="typeCoin === 'Fiat'"
             appearance="outline"
@@ -116,12 +120,14 @@
               (change)="onChangeAmountCurrencyField()"
               (keyup)="onChangeAmountCurrencyField()"
             />
+          </mat-form-field>
+          <section class="error-text" *ngIf="typeCoin === 'Fiat'">
             <mat-error *ngIf="amountCurrencyForm.touched">
               <span *ngIf="amountCurrencyForm.hasError('required')">
                 {{ 'Amount is required' | translate }}
               </span>
             </mat-error>
-          </mat-form-field>
+          </section>
         </div>
       </div>
 
@@ -192,12 +198,14 @@
               (change)="onChangeFeeField()"
               (keyup)="onChangeFeeField()"
             />
-            <mat-error *ngIf="feeForm.touched">
-              <span *ngIf="feeForm.hasError('required')">
-                {{ 'Fee is required' | translate }}
-              </span>
-            </mat-error>
           </mat-form-field>
+          <section class="error-text" *ngIf="typeFee === 'ZBC'">
+          <mat-error *ngIf="feeForm.touched">
+            <span *ngIf="feeForm.hasError('required')">
+              {{ 'Fee is required' | translate }}
+            </span>
+          </mat-error>
+          </section>
           <mat-form-field
             appearance="outline"
             class="block"
@@ -211,12 +219,14 @@
               (change)="onChangeFeeCurrencyField()"
               (keyup)="onChangeFeeCurrencyField()"
             />
+          </mat-form-field>
+          <section class="error-text" *ngIf="typeFee === 'Fiat'">
             <mat-error *ngIf="feeFormCurr.touched">
               <span *ngIf="feeFormCurr.hasError('required')">
                 {{ 'Fee is required' | translate }}
               </span>
             </mat-error>
-          </mat-form-field>
+          </section>
         </div>
       </div>
       </div>
@@ -238,8 +248,7 @@
 </div>
 
 <ng-template #popupDetailSendMoney>
-  <mat-card class="popup">
-    <mat-card-content>
+  <div class="popup">
       <div class="row">
         <div class="col-4">
             <label class="title">Confirm Send Money</label>
@@ -285,8 +294,6 @@
           </div>
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
   <div mat-dialog-actions align="end">
     <button mat-raised-button color="warn" (click)="closeDialog()">
       Cancel
@@ -294,6 +301,7 @@
     <button mat-raised-button color="primary" (click)="onOpenPinDialog()">
       Confirm
     </button>
+  </div>
   </div>
 </ng-template>
 

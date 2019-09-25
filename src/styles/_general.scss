@@ -144,6 +144,10 @@ label {
   }
 }
 
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  padding-bottom: 8px !important;
+}
+
 .mat-error {
   font-size: 14px;
 }
