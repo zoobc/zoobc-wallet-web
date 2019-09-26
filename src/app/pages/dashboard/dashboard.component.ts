@@ -12,12 +12,10 @@ import {
   CurrencyRateService,
 } from 'src/app/services/currency-rate.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { ReceiveComponent } from '../receive/receive.component';
 import {
   GetAccountBalanceResponse,
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
-import { Router } from '@angular/router';
 import { AddAccountComponent } from '../add-account/add-account.component';
 import { onCopyText } from 'src/helpers/utils';
 
@@ -59,8 +57,7 @@ export class DashboardComponent implements OnInit {
     private transactionServ: TransactionService,
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private router: Router
+    private dialog: MatDialog
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
@@ -76,36 +73,47 @@ export class DashboardComponent implements OnInit {
   }
 
   getBalance() {
-    this.isLoadingBalance = true;
-    this.accountServ
-      .getAccountBalance()
-      .then((data: AccountBalanceList) => {
-        this.accountBalance = data.accountbalance;
-        this.isLoadingBalance = false;
-      })
-      .catch(() => {
-        this.isErrorBalance = true;
-        this.isLoadingBalance = false;
-      });
+    if (!this.isLoadingBalance) {
+      this.isLoadingBalance = true;
+      this.isErrorBalance = false;
+
+      this.accountServ
+        .getAccountBalance()
+        .then((data: AccountBalanceList) => {
+          this.accountBalance = data.accountbalance;
+          this.isLoadingBalance = false;
+        })
+        .catch(() => {
+          this.isErrorBalance = true;
+          this.isLoadingBalance = false;
+        });
+    }
   }
 
   getTransactions() {
-    this.isLoadingRecentTx = true;
-    this.transactionServ
-      .getAccountTransaction(1, 5)
-      .then((res: Transactions) => {
-        this.totalTx = res.total;
-        this.recentTx = res.transactions;
-        this.isLoadingRecentTx = false;
-      })
-      .catch(() => {
-        this.isErrorRecentTx = true;
-        this.isLoadingRecentTx = false;
-      });
+    if (!this.isLoadingRecentTx) {
+      this.isLoadingRecentTx = true;
+      this.isErrorRecentTx = false;
 
-    this.transactionServ
-      .getUnconfirmTransaction()
-      .then((res: Transaction[]) => (this.unconfirmTx = res));
+      this.transactionServ
+        .getAccountTransaction(1, 5)
+        .then((res: Transactions) => {
+          this.totalTx = res.total;
+          this.recentTx = res.transactions;
+          this.isLoadingRecentTx = false;
+        })
+        .then(() => {
+          this.transactionServ
+            .getUnconfirmTransaction()
+            .then((res: Transaction[]) => {
+              this.unconfirmTx = res;
+            });
+        })
+        .catch(() => {
+          this.isErrorRecentTx = true;
+          this.isLoadingRecentTx = false;
+        });
+    }
   }
 
   getCurrencyRates() {
@@ -137,8 +145,6 @@ export class DashboardComponent implements OnInit {
     this.authServ.switchAccount(account);
     this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
-    this.isLoadingBalance = true;
-    this.isLoadingRecentTx = true;
 
     // reload data balance, transaction, and unconfirm transaction
     this.getBalance();

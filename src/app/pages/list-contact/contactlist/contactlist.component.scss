@@ -3,12 +3,11 @@
 .contacts-container {
   .contacts-list {
     border-bottom: 1px solid #ccc;
-    padding: 16px 12px;
+    padding: 16px;
     .alias {
-      font-size: 14px;
+      font-size: 16px;
       margin: 0 0 4px;
       color: $black1;
-      font-weight: bold;
     }
     .address {
       font-size: 13px;
