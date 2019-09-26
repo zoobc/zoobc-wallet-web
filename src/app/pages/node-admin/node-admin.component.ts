@@ -11,6 +11,8 @@ import {
 } from 'src/app/grpc/model/nodeHardware_pb';
 import { Subscription } from 'rxjs';
 import { NodeRegistrationService } from 'src/app/services/node-registration.service';
+import { RegisterNodeComponent } from './register-node/register-node.component';
+import { UpdateNodeComponent } from './update-node/update-node.component';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -46,6 +48,10 @@ export class NodeAdminComponent implements OnInit {
       }
     );
 
+    nodeServ.getRegisteredNode().then(res => {
+      console.log(res);
+    });
+
     nodeAdminServ
       .streamNodeHardwareInfo()
       .subscribe((res: NodeHardwareResponse) => {
@@ -58,10 +64,18 @@ export class NodeAdminComponent implements OnInit {
   ngOnDestroy() {
     this.nodeAdminServ.stopNodeHardwareInfo();
   }
-  openRegisterNodeForm() {
-    this.router.navigateByUrl('nodeadmin/register');
+  openRegisterNode() {
+    const dialog = this.dialog.open(RegisterNodeComponent, {
+      width: '460px',
+    });
+
+    // dialog.afterClosed().subscribe(contacts => {
+    //   if (contacts) this.contacts = contacts;
+    // });
   }
-  openUpdateNodeForm() {
-    this.router.navigateByUrl('nodeadmin/updatenode');
+  openUpdateNode() {
+    const dialog = this.dialog.open(UpdateNodeComponent, {
+      width: '460px',
+    });
   }
 }

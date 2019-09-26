@@ -8,5 +8,5 @@ import * as model_empty_pb from "../model/empty_pb";
 import * as model_block_pb from "../model/block_pb";
 import * as model_blockchain_pb from "../model/blockchain_pb";
 import * as model_transaction_pb from "../model/transaction_pb";
-import * as model_receipt_pb from "../model/receipt_pb";
+import * as model_batchReceipt_pb from "../model/batchReceipt_pb";
 

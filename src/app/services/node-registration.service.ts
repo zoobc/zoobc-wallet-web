@@ -15,6 +15,9 @@ import { bigintToByteArray, BigInt } from 'src/helpers/converters';
 import {
   GetNodeRegistrationsRequest,
   GetNodeRegistrationsResponse,
+  GetNodeRegistrationRequest,
+  GetNodeRegistrationResponse,
+  NodeRegistration,
 } from '../grpc/model/nodeRegistration_pb';
 import { transactionByte } from 'src/helpers/transactionByteTemplate';
 import { BytesMaker } from 'src/helpers/BytesMaker';
@@ -30,8 +33,8 @@ export class NodeRegistrationService {
 
   getRegisteredNode() {
     return new Promise((resolve, reject) => {
-      const request = new GetNodeRegistrationsRequest();
-      request.setAccountaddress(this.authServ.currAddress);
+      const request = new GetNodeRegistrationRequest();
+      request.setAccountaddress('BCZEGOb3WNx3fDOVf9ZS4EjvOIv_UeW4TVBQJ_6tHKlE');
       request.setRegistrationheight(0);
       request.setNodepublickey(
         new Uint8Array([
@@ -70,10 +73,10 @@ export class NodeRegistrationService {
         ])
       );
 
-      let client = grpc.invoke(NodeRegistrationServ.GetNodeRegistrations, {
+      let client = grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: environment.grpcUrl,
         request: request,
-        onMessage: (message: GetNodeRegistrationsResponse) => {
+        onMessage: (message: GetNodeRegistrationResponse) => {
           resolve(message.toObject());
           // console.log(message.toObject());
           // console.log('message', message);

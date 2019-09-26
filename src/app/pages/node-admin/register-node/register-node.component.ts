@@ -42,9 +42,11 @@ export class RegisterNodeComponent implements OnInit {
 
   ngOnInit() {
     this.poownServ.get().then(res => {
+      console.log(res);
+
       this.poown = res;
       if (res) {
-        this.onRegisterNode();
+        // this.onRegisterNode();
       }
     });
     // this.nodeServ.getRegisteredNode().then(res => {});
@@ -100,7 +102,7 @@ export class RegisterNodeComponent implements OnInit {
       213,
       135,
     ];
-    let bytes = new BytesMaker(437);
+    let bytes = new BytesMaker(401);
     // transaction type
     bytes.write4bytes(2);
     // version
@@ -118,7 +120,7 @@ export class RegisterNodeComponent implements OnInit {
     // tx fee
     bytes.write8Bytes(fee);
     // tx body length
-    bytes.write4bytes(316);
+    bytes.write4bytes(280);
     // tx body (node pub key)
     bytes.write(pubKey, 32);
     // tx body (account address)
@@ -132,11 +134,11 @@ export class RegisterNodeComponent implements OnInit {
     // tx poown
     console.log('poown', this.poown);
 
-    bytes.write(this.poown, 180);
+    bytes.write(this.poown, 144);
     let signature = childSeed.sign(bytes.value);
-    let bytesWithSign = new BytesMaker(505);
+    let bytesWithSign = new BytesMaker(469);
     // copy to new bytes
-    bytesWithSign.write(bytes.value, 437);
+    bytesWithSign.write(bytes.value, 401);
     // set signature type
     bytesWithSign.write4bytes(0);
     // set signature

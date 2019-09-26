@@ -20,7 +20,7 @@ type BlockServiceGetBlock = {
   readonly requestStream: false;
   readonly responseStream: false;
   readonly requestType: typeof model_block_pb.GetBlockRequest;
-  readonly responseType: typeof model_block_pb.Block;
+  readonly responseType: typeof model_block_pb.BlockExtendedInfo;
 };
 
 export class BlockService {
@@ -73,11 +73,11 @@ export class BlockServiceClient {
   getBlock(
     requestMessage: model_block_pb.GetBlockRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: model_block_pb.Block|null) => void
+    callback: (error: ServiceError|null, responseMessage: model_block_pb.BlockExtendedInfo|null) => void
   ): UnaryResponse;
   getBlock(
     requestMessage: model_block_pb.GetBlockRequest,
-    callback: (error: ServiceError|null, responseMessage: model_block_pb.Block|null) => void
+    callback: (error: ServiceError|null, responseMessage: model_block_pb.BlockExtendedInfo|null) => void
   ): UnaryResponse;
 }
 

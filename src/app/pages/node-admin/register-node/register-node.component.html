@@ -1,91 +1,89 @@
 <div class="register-node-container">
   <h2 class="mat-h2">{{ 'Register Node' | translate }}</h2>
-  <mat-card>
-    <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()">
-      <label>{{ 'Owner' | translate }}</label>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="text"
-          placeholder="{{ 'Owner' | translate }}"
-          formControlName="owner"
-        />
-      </mat-form-field>
-      <section class="error-text">
-        <mat-error *ngIf="ownerForm.touched">
-          <span *ngIf="ownerForm.hasError('required')">{{
-            'Owner is required' | translate
-          }}</span>
-        </mat-error>
-      </section>
-      <label>{{ 'IP Address' | translate }}</label>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="text"
-          placeholder="{{ 'IP Address' | translate }}"
-          formControlName="ipAddress"
-        />
-      </mat-form-field>
-      <section class="error-text">
-        <mat-error *ngIf="ipAddressForm.touched">
-          <span *ngIf="ipAddressForm.hasError('required')">{{
-            'IP Address is required' | translate
-          }}</span>
-        </mat-error>
-      </section>
-      <label>{{ 'Locked Amount' | translate }}</label>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="number"
-          placeholder="{{ 'Locked Amount' | translate }}"
-          formControlName="lockedAmount"
-        />
-      </mat-form-field>
-      <section class="error-text">
-        <mat-error *ngIf="lockedAmountForm.touched">
-          <span *ngIf="lockedAmountForm.hasError('required')">{{
-            'Locked Amount is required' | translate
-          }}</span>
-        </mat-error>
-      </section>
-      <label>{{ 'Fee' | translate }}</label>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="number"
-          formControlName="fee"
-          placeholder="{{ 'Fee' | translate }}"
-        />
-      </mat-form-field>
-      <section class="error-text">
-        <mat-error *ngIf="feeForm.touched">
-          <span *ngIf="feeForm.hasError('required')">{{
-            'Fee is required' | translate
-          }}</span>
-        </mat-error>
-      </section>
-      <label>{{ 'Node Public Key' | translate }}</label>
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          type="text"
-          placeholder="{{ 'Node Public Key' | translate }}"
-          formControlName="nodePublicKey"
-        />
-      </mat-form-field>
-      <section class="error-text">
-        <mat-error *ngIf="nodePublicKeyForm.touched">
-          <span *ngIf="nodePublicKeyForm.hasError('required')">{{
-            'Node Public Key is required' | translate
-          }}</span>
-        </mat-error>
-      </section>
-      <br />
-      <button mat-flat-button color="primary" type="submit">
-        {{ 'Save' | translate }}
-      </button>
-    </form>
-  </mat-card>
+  <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()">
+    <label>{{ 'Owner' | translate }}</label>
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="text"
+        placeholder="{{ 'Owner' | translate }}"
+        formControlName="owner"
+      />
+    </mat-form-field>
+    <section class="error-text">
+      <mat-error *ngIf="ownerForm.touched">
+        <span *ngIf="ownerForm.hasError('required')">{{
+          'Owner is required' | translate
+        }}</span>
+      </mat-error>
+    </section>
+    <label>{{ 'IP Address' | translate }}</label>
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="text"
+        placeholder="{{ 'IP Address' | translate }}"
+        formControlName="ipAddress"
+      />
+    </mat-form-field>
+    <section class="error-text">
+      <mat-error *ngIf="ipAddressForm.touched">
+        <span *ngIf="ipAddressForm.hasError('required')">{{
+          'IP Address is required' | translate
+        }}</span>
+      </mat-error>
+    </section>
+    <label>{{ 'Locked Amount' | translate }}</label>
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="number"
+        placeholder="{{ 'Locked Amount' | translate }}"
+        formControlName="lockedAmount"
+      />
+    </mat-form-field>
+    <section class="error-text">
+      <mat-error *ngIf="lockedAmountForm.touched">
+        <span *ngIf="lockedAmountForm.hasError('required')">{{
+          'Locked Amount is required' | translate
+        }}</span>
+      </mat-error>
+    </section>
+    <label>{{ 'Fee' | translate }}</label>
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="number"
+        formControlName="fee"
+        placeholder="{{ 'Fee' | translate }}"
+      />
+    </mat-form-field>
+    <section class="error-text">
+      <mat-error *ngIf="feeForm.touched">
+        <span *ngIf="feeForm.hasError('required')">{{
+          'Fee is required' | translate
+        }}</span>
+      </mat-error>
+    </section>
+    <label>{{ 'Node Public Key' | translate }}</label>
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        type="text"
+        placeholder="{{ 'Node Public Key' | translate }}"
+        formControlName="nodePublicKey"
+      />
+    </mat-form-field>
+    <section class="error-text">
+      <mat-error *ngIf="nodePublicKeyForm.touched">
+        <span *ngIf="nodePublicKeyForm.hasError('required')">{{
+          'Node Public Key is required' | translate
+        }}</span>
+      </mat-error>
+    </section>
+    <br />
+    <button mat-flat-button color="primary" type="submit">
+      {{ 'Save' | translate }}
+    </button>
+  </form>
 </div>

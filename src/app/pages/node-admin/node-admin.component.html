@@ -1,36 +1,5 @@
 <div class="node-admin-container">
-  <div class="row">
-    <div class="col-8">
-      <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
-    </div>
-    <div class="col-4 text-right icon-ellipsis menu">
-      <button mat-icon-button class="nodeadmin-dropdown" [matMenuTriggerFor]="nodeadminMenu">
-        <i class="fas fa-ellipsis-h"></i>
-      </button>
-      <mat-menu #nodeadminMenu="matMenu">
-        <div class="nodeadmin-dropdown-list">
-          <div class="nodeadmin-menu-container">
-            <button mat-menu-item (click)="openRegisterNodeForm()">
-              <i class="fas fa-plus"></i>
-              <span>{{ 'Register Node' | translate }}</span>
-            </button>
-            <button mat-menu-item (click)="openUpdateNodeForm()">
-              <i class="far fa-edit"></i>
-              <span>{{ 'Update Node' | translate }}</span>
-            </button>
-            <button mat-menu-item>
-              <i class="fas fa-minus-square"></i>
-              <span>{{ 'Delete Node' | translate }}</span>
-            </button>
-            <button mat-menu-item>
-              <i class="fas fa-exclamation-circle"></i>
-              <span>{{ 'Claim Node' | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </mat-menu>
-    </div>
-  </div>
+  <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
   <div class="row">
     <div class="col-12 col-sm-6">
       <mat-card class="status-card">
@@ -43,9 +12,6 @@
           <div class="value">
             {{ nodeAdminAttributes.ipAddress }}
           </div>
-          <button mat-flat-button>
-            {{ 'Change Private Key' | translate }}
-          </button>
         </div>
       </mat-card>
     </div>
@@ -66,12 +32,83 @@
     </div>
   </div>
 
-  <h2 class="mat-h2">CPU</h2>
-  <mat-card *ngIf="hwInfo">
+  <h2 class="mat-h2">{{ 'Registered Node' | translate }}</h2>
+  <mat-card class="registered-node">
     <div class="row">
-      <div class="col-6 col-sm-3 cpu-usage" *ngFor="let cpu of hwInfo.cpuinformationList">
+      <div class="col-12 col-sm-6">
+        <div class="label">Account Address</div>
+        <div class="value">
+          <wallet-address
+            value="BCZEGOb3WNx3fDOVf9ZS4EjvOIv_UeW4TVBQJ_6tHKlE"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+        <div class="label">Node Public Key</div>
+        <div class="value">
+          <wallet-address
+            value="mToyyAc9bOXMMMeRFWN9SzEtdmHbUPL0ZIaQ9iWQ1Yc="
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6">
+        <div class="label">Locked Funds</div>
+        <div class="value big">100 ZBC</div>
+        <div class="label">Height</div>
+        <div class="value big">7267</div>
+        <div class="label">Registration Height</div>
+        <div class="value big">3874</div>
+      </div>
+    </div>
+    <div class="text-right">
+      <button
+        mat-flat-button
+        color="primary"
+        style="margin-right: 8px"
+        (click)="openUpdateNode()"
+      >
+        Update
+      </button>
+      <button mat-flat-button color="warn">Remove</button>
+    </div>
+  </mat-card>
+  <br />
+
+  <mat-card>
+    <div class="not-registered-node">
+      <i matPrefix class="fa fa-desktop"></i>
+      <span class="message">
+        {{ 'Your node is not registered yet' | translate }}
+      </span>
+      <div class="text-center">
+        <button
+          mat-flat-button
+          color="primary"
+          style="margin-right: 8px"
+          (click)="openRegisterNode()"
+        >
+          Register Your Node
+        </button>
+        <button mat-flat-button color="accent">Claim Your Node</button>
+      </div>
+    </div>
+  </mat-card>
+  <br /><br />
+
+  <h2 class="mat-h2">{{ 'Node Usage' | translate }}</h2>
+  <mat-card *ngIf="hwInfo">
+    <h2 class="mat-h2">{{ 'CPU' | translate }}</h2>
+    <div class="row">
+      <div
+        class="col-6 col-sm-3 cpu-usage"
+        *ngFor="let cpu of hwInfo.cpuinformationList"
+      >
         <div class="percentage">
-          <mat-progress-spinner [value]="cpu.usedpercent" diameter="80" color="primary"></mat-progress-spinner>
+          <mat-progress-spinner
+            [value]="cpu.usedpercent"
+            diameter="80"
+            color="primary"
+          ></mat-progress-spinner>
           <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
         </div>
         <div class="cpu-number">CPU {{ cpu.coreid }}</div>
@@ -105,12 +142,11 @@
         <p class="value">{{ hwInfo.hostinformation.hostid }}</p>
       </div>
     </div>
-  </mat-card><br />
+    <br /><br />
 
-  <div class="row" *ngIf="hwInfo">
-    <div class="col-12 col-sm-6">
-      <h2 class="mat-h2">{{ 'Memory' | translate }}</h2>
-      <mat-card>
+    <div class="row" *ngIf="hwInfo">
+      <div class="col-12 col-sm-6">
+        <h2 class="mat-h2">{{ 'Memory' | translate }}</h2>
         <div class="memory-usage">
           <div class="label">{{ 'Usage' | translate }}</div>
           <div class="usage">
@@ -125,16 +161,17 @@
             </span>
           </div>
           <div class="persentage-container">
-            <div class="percentage" [ngStyle]="{ 'width.%': hwInfo.memoryinformation.usedpercent }"></div>
+            <div
+              class="percentage"
+              [ngStyle]="{ 'width.%': hwInfo.memoryinformation.usedpercent }"
+            ></div>
           </div>
         </div>
-      </mat-card>
-      <br />
-    </div>
+        <br />
+      </div>
 
-    <div class="col-12 col-sm-6">
-      <h2 class="mat-h2">{{ 'Storage' | translate }}</h2>
-      <mat-card class="memory-container">
+      <div class="col-12 col-sm-6">
+        <h2 class="mat-h2">{{ 'Storage' | translate }}</h2>
         <div class="memory-usage">
           <div class="label">{{ 'Usage' | translate }}</div>
           <div class="usage">
@@ -146,10 +183,14 @@
             </span>
           </div>
           <div class="persentage-container">
-            <div class="percentage" [ngStyle]="{ 'width.%': hwInfo.storageinformation.usedpercent }"></div>
+            <div
+              class="percentage"
+              [ngStyle]="{ 'width.%': hwInfo.storageinformation.usedpercent }"
+            ></div>
           </div>
         </div>
-      </mat-card>
+      </div>
     </div>
-  </div>
+  </mat-card>
+  <br />
 </div>

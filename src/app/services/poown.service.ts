@@ -35,13 +35,14 @@ export class PoownService {
       let timestamp = BigInt(Math.trunc(Date.now() / 1000));
       bytes.set(bigintToByteArray(timestamp), 0);
       bytes.writeInt32LE(RequestType.GETPROOFOFOWNERSHIP, 8);
+      console.log(bytes);
 
       let bytesWithSign = new Buffer(80);
       let signature = childSeed.sign(bytes);
       bytesWithSign.set(bytes, 0);
       bytesWithSign.writeInt32LE(0, 12);
       bytesWithSign.set(signature, 16);
-      // console.log(bytesWithSign);
+      console.log(bytesWithSign);
 
       const request = new GetProofOfOwnershipRequest();
 
@@ -61,14 +62,14 @@ export class PoownService {
         //   Buffer.from(message.toObject().signature.toString(), 'base64')
         // );
 
-        let bytes = new Uint8Array(180);
+        let bytes = new Uint8Array(144);
         bytes.set(
           Buffer.from(message.toObject().messagebytes.toString(), 'base64'),
           0
         );
         bytes.set(
           Buffer.from(message.toObject().signature.toString(), 'base64'),
-          112
+          80
         );
 
         resolve(bytes);
