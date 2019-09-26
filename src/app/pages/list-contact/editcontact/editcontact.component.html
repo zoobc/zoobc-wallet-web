@@ -21,7 +21,7 @@
         type="text"
         formControlName="address"
         placeholder="{{ 'Address' | translate }}"
-        (change)="onAddressValidation()"
+        (keyup)="onAddressValidation()"
       />
     </mat-form-field>
     <mat-error *ngIf="addressField.touched">
