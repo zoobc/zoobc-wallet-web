@@ -195,7 +195,7 @@ export class SendmoneyComponent implements OnInit {
 
   onChangeRecipient() {
     let validation = addressValidation(this.recipientForm.value);
-    if (validation) this.recipientForm.setErrors({ invalidAddress: true });
+    if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
   onOpenDialogDetailSendMoney() {

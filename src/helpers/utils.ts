@@ -40,7 +40,8 @@ export function onCopyText(text: string) {
 }
 
 export function addressValidation(address: string) {
-  const addressBytes = base64ToByteArray(address);
+  const addressBase64 = toBase64Url(address)
+  const addressBytes = base64ToByteArray(addressBase64);
   if (addressBytes.length == 33 && address.length == 44) {
     return address;
   }
