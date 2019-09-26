@@ -33,7 +33,7 @@ export class AddcontactComponent implements OnInit {
 
   onAddressValidation() {
     const validation = addressValidation(this.addressField.value);
-    if (validation) {
+    if (!validation) {
       this.addressField.setErrors({ invalidAddress: true });
     }
   }
