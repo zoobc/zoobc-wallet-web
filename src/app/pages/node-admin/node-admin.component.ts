@@ -64,15 +64,13 @@ export class NodeAdminComponent implements OnInit {
   ngOnDestroy() {
     this.nodeAdminServ.stopNodeHardwareInfo();
   }
+
   openRegisterNode() {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '460px',
     });
-
-    // dialog.afterClosed().subscribe(contacts => {
-    //   if (contacts) this.contacts = contacts;
-    // });
   }
+
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '460px',
