@@ -1,4 +1,4 @@
-import { toBase64Url } from '../helpers/converters';
+import { toBase64Url, base64ToByteArray } from '../helpers/converters';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
@@ -37,4 +37,12 @@ export function onCopyText(text: string) {
   selBox.select();
   document.execCommand('copy');
   document.body.removeChild(selBox);
+}
+
+export function addressValidation(address: string) {
+  const addressBase64 = toBase64Url(address)
+  const addressBytes = base64ToByteArray(addressBase64);
+  if (addressBytes.length == 33 && address.length == 44) {
+    return address;
+  }
 }

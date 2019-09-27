@@ -12,14 +12,16 @@
         </mat-form-field>
       </div>
     </div>
-    <div class="text-center" style="margin-bottom:8px;">
-      <mat-error *ngIf="confirmForm.hasError('required')">
+    <mat-error *ngIf="confirmForm.hasError('required')">
+      <span class="text-center">
         {{ 'Please fill all of the passphrase' | translate }}
-      </mat-error>
-      <mat-error *ngIf="confirmForm.hasError('mnemonic')">
+      </span>
+    </mat-error>
+    <mat-error *ngIf="confirmForm.hasError('mnemonic')">
+      <span class="text-center">
         {{ 'The passphrase is not matched' | translate }}
-      </mat-error>
-    </div>
+      </span>
+    </mat-error>
     <button
       mat-flat-button
       color="primary"

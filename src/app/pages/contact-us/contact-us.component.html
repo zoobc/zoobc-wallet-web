@@ -11,34 +11,34 @@
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
       </mat-form-field>
-      <section class="error-text" *ngIf="emailField.touched">
-        <mat-error *ngIf="emailField.hasError('required')">{{
-          'Email is required' | translate
-        }}</mat-error>
-        <mat-error *ngIf="emailField.hasError('email')">{{
-          'Incorrect email format' | translate
-        }}</mat-error>
-      </section>
+      <mat-error *ngIf="emailField.touched">
+        <span *ngIf="emailField.hasError('required')"
+          >{{ 'Email is required' | translate }}
+        </span>
+        <span *ngIf="emailField.hasError('email')">
+          {{ 'Incorrect email format' | translate }}
+        </span>
+      </mat-error>
       <!-- Subject -->
       <mat-form-field appearance="outline">
         <mat-label>{{ 'Subject' | translate }}</mat-label>
         <input matInput type="text" formControlName="subject" />
       </mat-form-field>
-      <section class="error-text" *ngIf="subjectField.touched">
-        <mat-error *ngIf="subjectField.hasError('required')">{{
+      <mat-error *ngIf="subjectField.touched">
+        <span *ngIf="subjectField.hasError('required')">{{
           'Subject is required' | translate
-        }}</mat-error>
-      </section>
+        }}</span>
+      </mat-error>
       <!-- Message -->
       <mat-form-field appearance="outline">
         <mat-label>{{ 'Message' | translate }}</mat-label>
         <textarea matInput formControlName="message" rows="5"></textarea>
       </mat-form-field>
-      <section class="error-text" *ngIf="messageField.touched">
-        <mat-error *ngIf="messageField.hasError('required')">{{
-          'Message is required' | translate
-        }}</mat-error>
-      </section>
+      <mat-error *ngIf="messageField.touched">
+        <span *ngIf="messageField.hasError('required')"
+          >{{ 'Message is required' | translate }}
+        </span>
+      </mat-error>
       <!--File Upload-->
       <div>
         <input

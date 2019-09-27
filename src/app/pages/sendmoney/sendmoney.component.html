@@ -35,7 +35,6 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <section class="error-text">
         <mat-error *ngIf="recipientForm.touched">
           <span *ngIf="recipientForm.hasError('required')">
             {{ 'Recepient is required' | translate }}
@@ -44,7 +43,6 @@
             {{ 'ZBC Address is invalid' | translate }}
           </span>
         </mat-error>
-      </section>
       <section class="section-save-addres">
         <mat-checkbox class="checkbox-margin" formControlName="saveAddress">
           {{ 'Save to Address Book' | translate }}
@@ -100,13 +98,11 @@
               (keyup)="onChangeAmountField()"
             />
           </mat-form-field>
-          <section class="error-text" *ngIf="typeCoin === 'ZBC'">
-          <mat-error *ngIf="amountForm.touched">
+          <mat-error *ngIf="amountForm.touched && typeCoin === 'ZBC'">
             <span *ngIf="amountForm.hasError('required')">
               {{ 'Amount is required' | translate }}
             </span>
           </mat-error>
-        </section>
           <mat-form-field
             *ngIf="typeCoin === 'Fiat'"
             appearance="outline"
@@ -121,13 +117,11 @@
               (keyup)="onChangeAmountCurrencyField()"
             />
           </mat-form-field>
-          <section class="error-text" *ngIf="typeCoin === 'Fiat'">
-            <mat-error *ngIf="amountCurrencyForm.touched">
+            <mat-error *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
               <span *ngIf="amountCurrencyForm.hasError('required')">
                 {{ 'Amount is required' | translate }}
               </span>
             </mat-error>
-          </section>
         </div>
       </div>
 
@@ -199,13 +193,11 @@
               (keyup)="onChangeFeeField()"
             />
           </mat-form-field>
-          <section class="error-text" *ngIf="typeFee === 'ZBC'">
-          <mat-error *ngIf="feeForm.touched">
+          <mat-error *ngIf="feeForm.touched && typeFee === 'ZBC'">
             <span *ngIf="feeForm.hasError('required')">
               {{ 'Fee is required' | translate }}
             </span>
           </mat-error>
-          </section>
           <mat-form-field
             appearance="outline"
             class="block"
@@ -220,13 +212,11 @@
               (keyup)="onChangeFeeCurrencyField()"
             />
           </mat-form-field>
-          <section class="error-text" *ngIf="typeFee === 'Fiat'">
-            <mat-error *ngIf="feeFormCurr.touched">
+            <mat-error *ngIf="feeFormCurr.touched && typeFee === 'Fiat'">
               <span *ngIf="feeFormCurr.hasError('required')">
                 {{ 'Fee is required' | translate }}
               </span>
             </mat-error>
-          </section>
         </div>
       </div>
       </div>
@@ -311,16 +301,14 @@
   </h3>
   <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()" class="form-pin">
     <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
-    <div class="text-center">
       <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-        {{ 'Pin is not match' | translate }}
+        <span class="text-center">{{ 'Pin is not match' | translate }}</span>
       </mat-error>
       <i
         matPrefix
         class="fas fa-circle-notch fa-spin"
         *ngIf="isConfirmPinLoading"
       ></i>
-    </div>
   </form>
 </ng-template>
 

@@ -24,8 +24,8 @@ import {
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AccountService } from 'src/app/services/account.service';
-import { base64ToByteArray } from 'src/helpers/converters';
 import { environment } from 'src/environments/environment';
+import { addressValidation } from 'src/helpers/utils';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -194,9 +194,8 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeRecipient() {
-    let addressBytes = base64ToByteArray(this.recipientForm.value);
-    if (addressBytes.length != 33)
-      this.recipientForm.setErrors({ invalidAddress: true });
+    let validation = addressValidation(this.recipientForm.value);
+    if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
   onOpenDialogDetailSendMoney() {
