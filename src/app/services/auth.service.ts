@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 
 import { GetAddressFromPublicKey } from '../../helpers/utils';
-import { byteArrayToHex } from '../../helpers/converters';
 import { KeyringService } from './keyring.service';
 
 export interface SavedAccount {
   path: number;
   name: string;
+  nodeIP: string;
 }
 
 const coin = 'ZBC';
@@ -62,10 +62,9 @@ export class AuthService {
     seed = seedHex;
     publicKey = childSeed.publicKey;
     address = GetAddressFromPublicKey(publicKey);
-    console.log('seed', seed);
-    console.log('pubkey', byteArrayToHex(publicKey));
-    console.log('address', address);
-    console.log('pubkey bytes', publicKey);
+    // console.log('seed', seed);
+    // console.log('pubkey', byteArrayToHex(publicKey));
+    // console.log('address', address);
 
     this.currSeed = seed;
     this.currPublicKey = publicKey;

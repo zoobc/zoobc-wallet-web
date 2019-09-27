@@ -48,11 +48,13 @@
       </button>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
-          <button mat-menu-item (click)="onOpenAddNodeAdmin()">
-            <i class="fas fa-plus"></i>
-            <span>{{ 'Add Node Admin' | translate }}</span>
-          </button>
-          <mat-divider></mat-divider>
+          <ng-container *ngIf="!node">
+            <button mat-menu-item (click)="onOpenAddNodeAdmin()">
+              <i class="fas fa-plus"></i>
+              <span>{{ 'Add Node Admin' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+          </ng-container>
           <button mat-menu-item routerLink="/settings/about">
             <i class="fas fa-info"></i>
             {{ 'About' | translate }}

@@ -1,11 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {
-  NodeAdminAttribute,
-  NodeAdminService,
-} from 'src/app/services/node-admin.service';
 import { ReceiveComponent } from 'src/app/pages/receive/receive.component';
 import { MatDialog } from '@angular/material';
 import { AppService } from 'src/app/app.service';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,24 +14,28 @@ import { AppService } from 'src/app/app.service';
 export class SidebarComponent implements OnInit {
   @Input() menu: string;
 
-  nodeAdminAttribute: NodeAdminAttribute = {
-    ipAddress: '',
-  };
-  nodeAdminAttributes: NodeAdminAttribute;
+  routerEvent: Subscription;
+
+  account: SavedAccount;
 
   constructor(
-    private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
-    private appServ: AppService
+    private appServ: AppService,
+    private authServ: AuthService,
+    private router: Router
   ) {
-    this.nodeAdminServ.nodeAdminAttribute.subscribe(
-      (attribute: NodeAdminAttribute) => {
-        this.nodeAdminAttributes = attribute;
+    this.routerEvent = this.router.events.subscribe(res => {
+      if (res instanceof NavigationEnd) {
+        this.account = authServ.getCurrAccount();
       }
-    );
+    });
   }
 
   ngOnInit() {}
+
+  ngOnDestroy() {
+    this.routerEvent.unsubscribe();
+  }
 
   onToggle() {
     this.appServ.toggle();
