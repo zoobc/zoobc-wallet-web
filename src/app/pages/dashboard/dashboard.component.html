@@ -77,22 +77,19 @@
         </span>
       </div>
       <div class="col-2 text-right">
-        <button mat-icon-button class="reload-button">
-          <i class="fa fa-redo-alt" (click)="getBalance()"></i>
+        <button mat-icon-button class="reload-button" (click)="getBalance()">
+          <i class="fa fa-redo-alt"></i>
         </button>
       </div>
     </div>
 
     <div class="error-message" *ngIf="isErrorBalance">
-      <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}
       </span>
-      <div class="button-group">
-        <button mat-flat-button color="primary" (click)="onRefresh()">
-          {{ 'Try Again' | translate }}
-        </button>
-      </div>
+      <button mat-flat-button color="primary" (click)="getBalance()">
+        {{ 'Try Again' | translate }}
+      </button>
     </div>
 
     <ng-container *ngIf="!isErrorBalance">
@@ -165,7 +162,20 @@
   </mat-card>
 
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
-    <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+    <div class="row">
+      <div class="col-10">
+        <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+      </div>
+      <div class="col-2 text-right">
+        <button
+          mat-icon-button
+          class="reload-button"
+          (click)="getTransactions()"
+        >
+          <i class="fa fa-redo-alt"></i>
+        </button>
+      </div>
+    </div>
     <app-transaction-table
       [transactionData]="unconfirmTx"
     ></app-transaction-table>
@@ -177,8 +187,8 @@
       <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
     </div>
     <div class="col-2 text-right">
-      <button mat-icon-button class="reload-button">
-        <i class="fa fa-redo-alt" (click)="getTransactions()"></i>
+      <button mat-icon-button class="reload-button" (click)="getTransactions()">
+        <i class="fa fa-redo-alt"></i>
       </button>
     </div>
   </div>

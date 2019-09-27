@@ -15,7 +15,7 @@
       <mat-label>{{ 'Please Enter Your Pin' | translate }}</mat-label>
       <br />
       <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
-      <mat-error class="error-text" *ngIf="pinForm.hasError('invalid')">
+      <mat-error *ngIf="pinForm.hasError('invalid')">
         {{ 'Pin invalid' | translate }}
       </mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">

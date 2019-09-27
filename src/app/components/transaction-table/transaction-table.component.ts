@@ -13,14 +13,14 @@ export class TransactionTableComponent implements OnInit {
   @Input() isLoading: boolean = false;
   @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;
-  @Output() refresh: EventEmitter<any> = new EventEmitter();
+  @Output() refresh: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private dialog: MatDialog) {}
 
   ngOnInit() {}
 
   onRefresh() {
-    this.refresh.emit();
+    this.refresh.emit(true);
   }
 
   openDetail(id) {

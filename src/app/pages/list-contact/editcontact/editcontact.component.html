@@ -2,6 +2,7 @@
   <h2 class="mat-h2">{{ 'Edit Address' | translate }}</h2>
   <form [formGroup]="editForm" (submit)="onSubmit()">
     <mat-form-field appearance="outline">
+      <mat-label>{{ 'Alias' | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -9,24 +10,30 @@
         placeholder="{{ 'Alias' | translate }}"
       />
     </mat-form-field>
-    <section class="error-text" *ngIf="aliasField.touched">
-      <mat-error *ngIf="aliasField.hasError('required')">{{
-        'Alias is required' | translate
-      }}</mat-error>
-    </section>
+    <mat-error *ngIf="aliasField.touched">
+      <span *ngIf="aliasField.hasError('required')"
+        >{{ 'Alias is required' | translate }}
+      </span>
+    </mat-error>
+
     <mat-form-field appearance="outline">
+      <mat-label>{{ 'Address' | translate }}</mat-label>
       <input
         matInput
         type="text"
         formControlName="address"
         placeholder="{{ 'Address' | translate }}"
+        (keyup)="onAddressValidation()"
       />
     </mat-form-field>
-    <section class="error-text" *ngIf="addressField.touched">
-      <mat-error *ngIf="addressField.hasError('required')">{{
-        'Address is required' | translate
-      }}</mat-error>
-    </section>
+    <mat-error *ngIf="addressField.touched">
+      <span *ngIf="addressField.hasError('required')"
+        >{{ 'Address is required' | translate }}
+      </span>
+      <span *ngIf="addressField.hasError('invalidAddress')">
+        {{ 'ZBC Address is invalid' | translate }}
+      </span>
+    </mat-error>
 
     <button mat-flat-button color="primary" type="submit">
       {{ 'Save' | translate }}
