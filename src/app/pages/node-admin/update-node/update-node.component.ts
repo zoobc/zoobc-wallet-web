@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PoownService } from 'src/app/services/poown.service';
 
 @Component({
   selector: 'app-update-node',
@@ -13,7 +14,10 @@ export class UpdateNodeComponent implements OnInit {
   lockedAmountForm = new FormControl('', Validators.required);
   feeForm = new FormControl('', Validators.required);
   nodePublicKeyForm = new FormControl('', Validators.required);
-  constructor() {
+
+  poown: any;
+
+  constructor(private poownServ: PoownService) {
     this.formUpdateNode = new FormGroup({
       owner: this.ownerForm,
       ipAddress: this.ipAddressForm,
@@ -23,7 +27,17 @@ export class UpdateNodeComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.poownServ.get().then(res => {
+      console.log(res);
+
+      this.poown = res;
+      if (res) {
+        // this.onRegisterNode();
+      }
+    });
+    // this.nodeServ.getRegisteredNode().then(res => {});
+  }
 
   onUpdateNode() {}
 }

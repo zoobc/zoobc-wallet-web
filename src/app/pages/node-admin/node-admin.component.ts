@@ -5,12 +5,14 @@ import {
   NodeAdminService,
 } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
-import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
 import {
   NodeHardware as NH,
   GetNodeHardwareResponse,
 } from 'src/app/grpc/model/nodeHardware_pb';
-// import { ChangeIpAddressComponent } from '../change-ip-address/change-ip-address.component';
+import { Subscription } from 'rxjs';
+import { NodeRegistrationService } from 'src/app/services/node-registration.service';
+import { RegisterNodeComponent } from './register-node/register-node.component';
+import { UpdateNodeComponent } from './update-node/update-node.component';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -30,11 +32,15 @@ export class NodeAdminComponent implements OnInit {
 
   hwInfo: NodeHardware;
   mbToB = Math.pow(1024, 2);
+  gbToB = Math.pow(1024, 3);
+
+  info: Subscription;
 
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private nodeServ: NodeRegistrationService
   ) {
     this.nodeAdminServ.nodeAdminAttribute.subscribe(
       (attribute: NodeAdminAttribute) => {
@@ -42,18 +48,32 @@ export class NodeAdminComponent implements OnInit {
       }
     );
 
+    nodeServ.getRegisteredNode().then(res => {
+      console.log(res);
+    });
+
     nodeAdminServ
-      .getNodeHardwareInfo()
+      .streamNodeHardwareInfo()
       .subscribe((res: NodeHardwareResponse) => {
         this.hwInfo = res.nodehardware;
       });
   }
 
   ngOnInit() {}
-  openRegisterNodeForm() {
-    this.router.navigateByUrl('nodeadmin/register');
+
+  ngOnDestroy() {
+    this.nodeAdminServ.stopNodeHardwareInfo();
   }
-  openUpdateNodeForm() {
-    this.router.navigateByUrl('nodeadmin/updatenode');
+
+  openRegisterNode() {
+    const dialog = this.dialog.open(RegisterNodeComponent, {
+      width: '460px',
+    });
+  }
+
+  openUpdateNode() {
+    const dialog = this.dialog.open(UpdateNodeComponent, {
+      width: '460px',
+    });
   }
 }

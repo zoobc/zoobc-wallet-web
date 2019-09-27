@@ -20,7 +20,7 @@ type NodeRegistrationServiceGetNodeRegistration = {
   readonly requestStream: false;
   readonly responseStream: false;
   readonly requestType: typeof model_nodeRegistration_pb.GetNodeRegistrationRequest;
-  readonly responseType: typeof model_nodeRegistration_pb.NodeRegistration;
+  readonly responseType: typeof model_nodeRegistration_pb.GetNodeRegistrationResponse;
 };
 
 export class NodeRegistrationService {
@@ -73,11 +73,11 @@ export class NodeRegistrationServiceClient {
   getNodeRegistration(
     requestMessage: model_nodeRegistration_pb.GetNodeRegistrationRequest,
     metadata: grpc.Metadata,
-    callback: (error: ServiceError|null, responseMessage: model_nodeRegistration_pb.NodeRegistration|null) => void
+    callback: (error: ServiceError|null, responseMessage: model_nodeRegistration_pb.GetNodeRegistrationResponse|null) => void
   ): UnaryResponse;
   getNodeRegistration(
     requestMessage: model_nodeRegistration_pb.GetNodeRegistrationRequest,
-    callback: (error: ServiceError|null, responseMessage: model_nodeRegistration_pb.NodeRegistration|null) => void
+    callback: (error: ServiceError|null, responseMessage: model_nodeRegistration_pb.GetNodeRegistrationResponse|null) => void
   ): UnaryResponse;
 }
 

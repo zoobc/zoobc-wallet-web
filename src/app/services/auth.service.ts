@@ -65,6 +65,7 @@ export class AuthService {
     console.log('seed', seed);
     console.log('pubkey', byteArrayToHex(publicKey));
     console.log('address', address);
+    console.log('pubkey bytes', publicKey);
 
     this.currSeed = seed;
     this.currPublicKey = publicKey;

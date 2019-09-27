@@ -25,6 +25,8 @@ export class NodeAdminService {
   nodeAdminAttribute = this.sourceCurrencyNodeAdminAttribue.asObservable();
   attribute: NodeAdminAttribute;
 
+  nodeAdminClient: grpc.Client<grpc.ProtobufMessage, grpc.ProtobufMessage>;
+
   constructor(
     private http: HttpClient,
     private authServ: AuthService,
@@ -38,7 +40,7 @@ export class NodeAdminService {
     );
   }
 
-  getNodeHardwareInfo() {
+  streamNodeHardwareInfo() {
     return new Observable(observer => {
       const account = this.authServ.getCurrAccount();
       const seed = Buffer.from(this.authServ.currSeed, 'hex');
@@ -50,8 +52,8 @@ export class NodeAdminService {
       );
 
       let bytes = new Buffer(12);
-      bytes.writeInt32LE(RequestType.GETNODEHARDWARE, 0);
-      bytes.set(bigintToByteArray(BigInt(Math.trunc(Date.now() / 1000))), 4);
+      bytes.set(bigintToByteArray(BigInt(Math.trunc(Date.now() / 1000))), 0);
+      bytes.writeInt32LE(RequestType.GETNODEHARDWARE, 8);
 
       let bytesWithSign = new Buffer(80);
       let signature = childSeed.sign(bytes);
@@ -62,28 +64,32 @@ export class NodeAdminService {
 
       const request = new GetNodeHardwareRequest();
 
-      const client = grpc.client(NodeHardwareService.GetNodeHardware, {
+      this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
         host: environment.grpcUrl,
       });
-      client.onHeaders((headers: grpc.Metadata) => {
+      this.nodeAdminClient.onHeaders((headers: grpc.Metadata) => {
         console.log('onHeaders', headers);
       });
-      client.onMessage((message: GetNodeHardwareResponse) => {
-        console.log('onMessage', message.toObject());
+      this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
+        // console.log('onMessage', message.toObject());
         observer.next(message.toObject());
       });
-      client.onEnd(
+      this.nodeAdminClient.onEnd(
         (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
           console.log('onEnd', status, statusMessage, trailers);
         }
       );
 
-      client.start(
+      this.nodeAdminClient.start(
         new grpc.Metadata({ authorization: bytesWithSign.toString('base64') })
       );
-      client.send(request);
-      client.finishSend();
+      this.nodeAdminClient.send(request);
+      this.nodeAdminClient.finishSend();
     });
+  }
+
+  stopNodeHardwareInfo() {
+    this.nodeAdminClient.close();
   }
 
   getNodeAdminList() {

@@ -4,6 +4,7 @@
 import * as jspb from "google-protobuf";
 import * as model_proofOfOwnership_pb from "../model/proofOfOwnership_pb";
 import * as model_pagination_pb from "../model/pagination_pb";
+import * as model_batchReceipt_pb from "../model/batchReceipt_pb";
 
 export class Transaction extends jspb.Message {
   getVersion(): number;
@@ -541,4 +542,39 @@ export namespace SendTransactionRequest {
     senderpublickey: Uint8Array | string,
   }
 }
+
+export class SendTransactionResponse extends jspb.Message {
+  hasBatchreceipt(): boolean;
+  clearBatchreceipt(): void;
+  getBatchreceipt(): model_batchReceipt_pb.BatchReceipt | undefined;
+  setBatchreceipt(value?: model_batchReceipt_pb.BatchReceipt): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SendTransactionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SendTransactionResponse): SendTransactionResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SendTransactionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SendTransactionResponse;
+  static deserializeBinaryFromReader(message: SendTransactionResponse, reader: jspb.BinaryReader): SendTransactionResponse;
+}
+
+export namespace SendTransactionResponse {
+  export type AsObject = {
+    batchreceipt?: model_batchReceipt_pb.BatchReceipt.AsObject,
+  }
+}
+
+export interface TransactionTypeMap {
+  EMPTYTRANSACTION: 0;
+  SENDMONEYTRANSACTION: 1;
+  NODEREGISTRATIONTRANSACTION: 2;
+  UPDATENODEREGISTRATIONTRANSACTION: 258;
+  REMOVENODEREGISTRATIONTRANSACTION: 514;
+  CLAIMNODEREGISTRATIONTRANSACTION: 770;
+  SETUPACCOUNTDATASETTRANSACTION: 3;
+  REMOVEACCOUNTDATASETTRANSACTION: 259;
+}
+
+export const TransactionType: TransactionTypeMap;
 
