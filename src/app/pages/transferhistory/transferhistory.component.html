@@ -1,6 +1,15 @@
 <div>
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
-    <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+    <div class="row">
+      <div class="col-10">
+        <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+      </div>
+      <div class="col-2 text-right">
+        <button mat-icon-button class="reload-button" (click)="getTx(true)">
+          <i class="fa fa-redo-alt"></i>
+        </button>
+      </div>
+    </div>
     <app-transaction-table
       [transactionData]="unconfirmTx"
     ></app-transaction-table>
@@ -12,8 +21,8 @@
       <h2 class="mat-h2">{{ 'Transactions History' | translate }}</h2>
     </div>
     <div class="col-2 text-right">
-      <button mat-icon-button class="reload-button">
-        <i class="fa fa-redo-alt" (click)="getTx(true)"></i>
+      <button mat-icon-button class="reload-button" (click)="getTx(true)">
+        <i class="fa fa-redo-alt"></i>
       </button>
     </div>
   </div>
@@ -31,7 +40,7 @@
       [transactionData]="accountHistory"
       [isLoading]="isLoading"
       [isError]="isError"
-      (refresh)="getTx()"
+      (refresh)="getTx($event)"
     ></app-transaction-table>
   </div>
 </div>
