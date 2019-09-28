@@ -40,17 +40,15 @@ export class AddcontactComponent implements OnInit {
 
   onSubmit() {
     if (this.addForm.valid) {
-      if (
-        this.contacts.some(
-          contacts => contacts.address === this.addressField.value
-        )
-      ) {
+      const isDuplicate = this.contacts.some(
+        c => c.address === this.addressField.value
+      );
+      if (isDuplicate) {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'The address you entered is already in your Address Book',
         });
-        this.dialogRef.close(this.contacts);
       } else {
         const newContact = this.addForm.value;
         this.contacts.push(newContact);
