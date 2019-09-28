@@ -1,7 +1,11 @@
 <div class="restore-wallet-container">
   <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
   <form [formGroup]="restoreForm" (submit)="onRestore()">
-    <mat-form-field class="passphrase-input" appearance="outline">
+    <mat-form-field
+      class="passphrase-input"
+      appearance="outline"
+      color="accent"
+    >
       <textarea
         formControlName="passphrase"
         matInput
