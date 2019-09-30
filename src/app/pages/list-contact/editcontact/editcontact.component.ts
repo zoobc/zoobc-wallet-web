@@ -46,11 +46,13 @@ export class EditcontactComponent implements OnInit {
 
   onSubmit() {
     if (this.editForm.valid) {
-      if (
-        this.contacts.some(
-          contacts => contacts.address === this.addressField.value
-        )
-      ) {
+      const isDuplicate = this.contacts.some(
+        c => c.address === this.addressField.value
+      );
+      let isChanged = false;
+      if (this.addressField.value != this.contact.address) isChanged = true;
+
+      if (isDuplicate && isChanged) {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
