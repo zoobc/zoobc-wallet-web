@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
         this.account = authServ.getCurrAccount();
-        this.node = this.account.nodeIP;
+        this.node = this.account ? this.account.nodeIP : null;
       }
     });
   }

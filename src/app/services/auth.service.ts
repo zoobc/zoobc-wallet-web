@@ -111,6 +111,7 @@ export class AuthService {
 
   saveMasterSeed(seedBase58: string, key: string) {
     const encSeed = CryptoJS.AES.encrypt(seedBase58, key).toString();
+    this.currSeed = seedBase58;
     localStorage.setItem('ENC_MASTER_SEED', encSeed);
   }
 }

@@ -6,7 +6,7 @@
         <span>{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
-    <ng-template [ngIf]="account.nodeIP">
+    <ng-template [ngIf]="account && account.nodeIP">
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
         <a routerLink="/nodeadmin" (click)="onToggle()">
           <i class="fa fa-desktop"></i>
