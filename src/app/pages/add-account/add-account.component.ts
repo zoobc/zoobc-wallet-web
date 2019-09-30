@@ -36,6 +36,7 @@ export class AddAccountComponent implements OnInit {
       const account: SavedAccount = {
         name: this.accountNameField.value,
         path,
+        nodeIP: null,
       };
 
       this.authServ.addAccount(account);

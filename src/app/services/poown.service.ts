@@ -20,7 +20,7 @@ export class PoownService {
     private keyringServ: KeyringService
   ) {}
 
-  get() {
+  get(ip: string = environment.grpcUrl) {
     return new Promise((resolve, reject) => {
       const account = this.authServ.getCurrAccount();
       const seed = Buffer.from(this.authServ.currSeed, 'hex');
@@ -35,23 +35,21 @@ export class PoownService {
       let timestamp = BigInt(Math.trunc(Date.now() / 1000));
       bytes.set(bigintToByteArray(timestamp), 0);
       bytes.writeInt32LE(RequestType.GETPROOFOFOWNERSHIP, 8);
-      console.log(bytes);
 
       let bytesWithSign = new Buffer(80);
       let signature = childSeed.sign(bytes);
       bytesWithSign.set(bytes, 0);
       bytesWithSign.writeInt32LE(0, 12);
       bytesWithSign.set(signature, 16);
-      console.log(bytesWithSign);
 
       const request = new GetProofOfOwnershipRequest();
 
       let client = grpc.client(NodeAdminService.GetProofOfOwnership, {
-        host: environment.grpcUrl,
+        host: ip,
       });
 
       client.onHeaders((headers: grpc.Metadata) => {
-        console.log('onHeaders', headers);
+        // console.log('onHeaders', headers);
       });
       client.onMessage((message: ProofOfOwnership) => {
         console.log('onMessage', message.toObject());
@@ -73,20 +71,13 @@ export class PoownService {
         );
 
         resolve(bytes);
-
-        // console.log(message.toObject().messagebytes.toString());
-
-        // let bytes = Buffer.from(
-        //   message.toObject().messagebytes.toString(),
-        //   'base64'
-        // );
-        // console.log(bytes);
-
-        // console.log(bytes.readInt32LE(64));
       });
       client.onEnd(
         (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
           // console.log('onEnd', status, statusMessage, trailers);
+          // console.log(status);
+
+          if (status != grpc.Code.OK) reject(statusMessage);
         }
       );
 

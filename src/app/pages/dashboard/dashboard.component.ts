@@ -18,6 +18,7 @@ import {
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AddAccountComponent } from '../add-account/add-account.component';
 import { onCopyText } from 'src/helpers/utils';
+import { Router } from '@angular/router';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -57,7 +58,8 @@ export class DashboardComponent implements OnInit {
     private transactionServ: TransactionService,
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.address = this.authServ.currAddress;
@@ -143,12 +145,14 @@ export class DashboardComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
-    this.currAcc = this.authServ.getCurrAccount();
-    this.address = this.authServ.currAddress;
+    // this.currAcc = this.authServ.getCurrAccount();
+    // this.address = this.authServ.currAddress;
 
     // reload data balance, transaction, and unconfirm transaction
-    this.getBalance();
-    this.getTransactions();
+    // this.getBalance();
+    // this.getTransactions();
+
+    this.router.navigateByUrl('/');
   }
 
   copyText(text) {

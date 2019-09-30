@@ -85,6 +85,7 @@ export class RestoreWalletComponent implements OnInit {
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,
+      nodeIP: null,
     };
 
     this.authServ.saveMasterSeed(masterSeed, key);

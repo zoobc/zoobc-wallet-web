@@ -6,7 +6,7 @@
         <span>{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
-    <ng-template [ngIf]="nodeAdminAttributes">
+    <ng-template [ngIf]="account && account.nodeIP">
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
         <a routerLink="/nodeadmin" (click)="onToggle()">
           <i class="fa fa-desktop"></i>
@@ -48,7 +48,7 @@
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list" (click)="onToggle()">
         <i class="fa fa-address-book"></i>
-        <span>{{'Address Book' | translate}}</span>
+        <span>{{ 'Address Book' | translate }}</span>
       </a>
     </li>
   </ul>

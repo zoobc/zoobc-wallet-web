@@ -110,6 +110,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     const account: SavedAccount = {
       path: 0,
       name: 'Account 1',
+      nodeIP: null,
     };
     this.authServ.addAccount(account);
     this.authServ.login(account, key);
