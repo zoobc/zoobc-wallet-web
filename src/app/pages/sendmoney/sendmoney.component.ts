@@ -204,13 +204,16 @@ export class SendmoneyComponent implements OnInit {
 
   toggleCustomFee() {
     this.customFee = !this.customFee;
+    if (!this.customFee) {
+      this.onFeeChoose(this.activeButton);
+    }
   }
 
   onOpenDialogDetailSendMoney() {
     const total = this.amountForm.value + this.feeForm.value;
     if (parseInt(this.accountBalance.spendablebalance) / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-        width: '400px',
+        width: '500px',
         data: this.formSend.value,
       });
     } else {
