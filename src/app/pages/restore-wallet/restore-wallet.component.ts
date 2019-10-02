@@ -7,6 +7,11 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { MnemonicsService } from 'src/app/services/mnemonics.service';
+import {
+  TransactionService,
+  Transactions,
+} from 'src/app/services/transaction.service';
+import { GetAddressFromPublicKey } from 'src/helpers/utils';
 
 const coin = 'ZBC';
 
@@ -17,6 +22,9 @@ const coin = 'ZBC';
 })
 export class RestoreWalletComponent implements OnInit {
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
+  listAccount = [];
+  listAccountTemp = [];
+  totalTx: number = 0;
 
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
@@ -26,7 +34,8 @@ export class RestoreWalletComponent implements OnInit {
     private router: Router,
     private authServ: AuthService,
     private keyringServ: KeyringService,
-    private mnemonicServ: MnemonicsService
+    private mnemonicServ: MnemonicsService,
+    private transactionServ: TransactionService
   ) {
     this.restoreForm = new FormGroup({
       passphrase: this.passphraseField,
@@ -72,7 +81,17 @@ export class RestoreWalletComponent implements OnInit {
     });
   }
 
-  saveNewAccount(key: string) {
+  arrayUnique(array) {
+    let newArray = array.concat();
+    for (let i = 0; i < newArray.length; ++i) {
+      for (let j = i + 1; j < newArray.length; ++j) {
+        if (newArray[i] === newArray[j]) newArray.splice(j--, 1);
+      }
+    }
+    return newArray;
+  }
+
+  async saveNewAccount(key: string) {
     const passphrase = this.passphraseField.value;
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
@@ -81,15 +100,64 @@ export class RestoreWalletComponent implements OnInit {
       'p4ssphr4se'
     );
     let masterSeed = seed;
+    let accountName: string = 'Account ';
+    let accountNo: number = 1;
+    let accountPath: number = 0;
+    let publicKey: Uint8Array;
+    let address: string;
 
-    const account: SavedAccount = {
-      name: 'Account 1',
-      path: 0,
-      nodeIP: null,
-    };
+    let counter: number = 0;
 
+    while (counter < 20) {
+      const listAccounts = {
+        name: accountName + accountNo,
+        path: accountPath,
+        nodeIP: null,
+      };
+
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        accountPath
+      );
+
+      publicKey = childSeed.publicKey;
+      address = GetAddressFromPublicKey(publicKey);
+
+      let checkHasTransaction = await this.transactionServ
+        .getAccountTransaction(1, 1, address)
+        .then((res: Transactions) => {
+          this.totalTx = res.total;
+          this.listAccountTemp.push(listAccounts);
+          if (this.totalTx > 0) {
+            this.listAccount.push(listAccounts);
+            Array.prototype.push.apply(this.listAccount, this.listAccountTemp);
+            const resultListAccount = this.arrayUnique(
+              this.listAccount.sort(function(a, b) {
+                return a.path - b.path;
+              })
+            );
+            this.authServ.restoreAccount(resultListAccount);
+            this.listAccountTemp = [];
+            counter = 0;
+          }
+        });
+
+      accountPath++;
+      accountNo++;
+      counter++;
+    }
+    // if account dont have any transaction yet
+    if (this.listAccount.length === 0) {
+      localStorage.removeItem('ACCOUNT');
+      localStorage.removeItem('CURR_ACCOUNT');
+      const account: SavedAccount = {
+        name: 'Account 1',
+        path: 0,
+        nodeIP: null,
+      };
+      this.authServ.addAccount(account);
+    }
     this.authServ.saveMasterSeed(masterSeed, key);
-    this.authServ.addAccount(account);
     this.router.navigateByUrl('/dashboard');
   }
 }
