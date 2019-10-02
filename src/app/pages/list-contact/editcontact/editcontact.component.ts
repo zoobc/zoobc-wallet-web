@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ContactService } from 'src/app/services/contact.service';
+import { ContactService, Contact } from 'src/app/services/contact.service';
 import { addressValidation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
 
@@ -11,8 +11,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./editcontact.component.scss'],
 })
 export class EditcontactComponent implements OnInit {
-  contacts = [];
-
   editForm: FormGroup;
   aliasField: FormControl;
   addressField: FormControl;
@@ -41,16 +39,13 @@ export class EditcontactComponent implements OnInit {
       alias: this.aliasField,
       address: this.addressField,
     });
-    this.contacts = this.contactServ.getContactList() || [];
   }
 
   onSubmit() {
     if (this.editForm.valid) {
-      const isDuplicate = this.contacts.some(
-        c => c.address === this.addressField.value
-      );
-      let isChanged = false;
-      if (this.addressField.value != this.contact.address) isChanged = true;
+      const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
+      const isChanged =
+        this.addressField.value != this.contact.address ? true : false;
 
       if (isDuplicate && isChanged) {
         Swal.fire({
@@ -59,9 +54,9 @@ export class EditcontactComponent implements OnInit {
           text: 'The address you entered is already in your Address Book',
         });
       } else {
-        let contacts = this.contactServ.updateContact(
-          this.contact,
-          this.editForm.value
+        const contacts: Contact[] = this.contactServ.updateContact(
+          this.editForm.value,
+          this.contact.address
         );
         this.dialogRef.close(contacts);
       }
