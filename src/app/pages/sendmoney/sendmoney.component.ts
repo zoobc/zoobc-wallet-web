@@ -36,6 +36,7 @@ type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 export class SendmoneyComponent implements OnInit {
   accountBalance: AccountBalance;
   contacts: Contact[];
+  contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
@@ -92,6 +93,7 @@ export class SendmoneyComponent implements OnInit {
   typeFee = 'ZBC';
 
   saveAddress: boolean = false;
+  showSaveAddressBtn: boolean = true;
   customFee: boolean = false;
 
   constructor(
@@ -190,6 +192,23 @@ export class SendmoneyComponent implements OnInit {
   onChangeRecipient() {
     let validation = addressValidation(this.recipientForm.value);
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
+  }
+
+  isAddressSaved() {
+    const isAddressInContacts = this.contacts.some(c => {
+      if (c.address == this.recipientForm.value) {
+        this.contact = c;
+        return true;
+      } else return false;
+    });
+
+    if (isAddressInContacts) {
+      this.aliasField.disable();
+      this.saveAddress = false;
+      this.showSaveAddressBtn = false;
+    } else {
+      this.showSaveAddressBtn = true;
+    }
   }
 
   toggleSaveAddress() {

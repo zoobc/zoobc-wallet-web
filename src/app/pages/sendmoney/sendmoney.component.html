@@ -24,6 +24,7 @@
           [matAutocomplete]="auto"
           formControlName="recipient"
           (keyup)="onChangeRecipient()"
+          (blur)="isAddressSaved()"
         />
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
@@ -43,7 +44,8 @@
           {{ 'ZBC Address is invalid' | translate }}
         </span>
       </mat-error>
-      <div style="margin-bottom: 8px;">
+      <div *ngIf="!showSaveAddressBtn">Address: {{contact.alias}}</div>
+      <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
         <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
           {{ 'Save to Address Book' | translate }}
         </mat-checkbox>
@@ -68,7 +70,9 @@
 
       <div class="zbc-form-item">
         <div class="amount text-right">
-          <div class="primary-amount">{{ amountForm.value | number:'0.0-4' }} ZBC</div>
+          <div class="primary-amount">
+            {{ amountForm.value | number: '0.0-4' }} ZBC
+          </div>
           <div class="secondary-amount">
             {{ amountCurrencyForm.value | number: '0.0-4' }}
             {{ currencyRate.name }}
@@ -145,7 +149,7 @@
         >
           <div class="fee-button">
             <div class="label">Slow</div>
-            <div class="zbc-currency">{{ feeSlow | number:'0.0-4' }} ZBC</div>
+            <div class="zbc-currency">{{ feeSlow | number: '0.0-4' }} ZBC</div>
             <div class="fiat-currency">
               {{ feeSlow * currencyRate.value | number: '0.0-4' }}
               {{ currencyRate.name }}
