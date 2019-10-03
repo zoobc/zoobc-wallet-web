@@ -38,7 +38,7 @@ export class AccountService {
           msg: string | undefined,
           trailers: grpc.Metadata
         ) => {
-          if (code == grpc.Code.Unknown) {
+          if (code == grpc.Code.NotFound) {
             const firstValue = {
               accountbalance: {
                 spendablebalance: 0,

@@ -13,9 +13,15 @@ import { Subscription } from 'rxjs';
 import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
+import {
+  GetNodeRegistrationResponse,
+  NodeRegistration,
+} from 'src/app/grpc/model/nodeRegistration_pb';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
+type RegisteredNodeResponse = GetNodeRegistrationResponse.AsObject;
+type RegisteredNode = NodeRegistration.AsObject;
 
 @Component({
   selector: 'app-node-admin',
@@ -36,6 +42,8 @@ export class NodeAdminComponent implements OnInit {
 
   info: Subscription;
 
+  registeredNode: RegisteredNode;
+
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
@@ -48,8 +56,9 @@ export class NodeAdminComponent implements OnInit {
       }
     );
 
-    nodeServ.getRegisteredNode().then(res => {
+    nodeServ.getRegisteredNode().then((res: RegisteredNodeResponse) => {
       console.log(res);
+      this.registeredNode = res.noderegistration;
     });
 
     nodeAdminServ

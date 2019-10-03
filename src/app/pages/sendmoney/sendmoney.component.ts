@@ -3,10 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import * as CryptoJS from 'crypto-js';
 
-import {
-  TransactionService,
-  Transactions,
-} from '../../services/transaction.service';
+import { TransactionService } from '../../services/transaction.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,6 +23,7 @@ import {
 import { AccountService } from 'src/app/services/account.service';
 import { environment } from 'src/environments/environment';
 import { addressValidation } from 'src/helpers/utils';
+import { Router } from '@angular/router';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -39,28 +37,43 @@ type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 export class SendmoneyComponent implements OnInit {
   accountBalance: AccountBalance;
   contacts: Contact[];
+  contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
+
   currencyRate: Currency = {
     name: '',
     value: 0,
   };
-  keyword = 'alias';
+
+  feeFast = environment.feeFast;
+  feeMedium = environment.feeMedium;
+  feeSlow = environment.feeSlow;
+  activeButton: number = 2;
+  kindFee: string;
+
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [
     Validators.required,
-    Validators.min(0.001),
+    Validators.min(1 / 1e8),
   ]);
-  amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('', [Validators.required, Validators.min(0.001)]);
+  amountCurrencyForm = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  feeForm = new FormControl(this.feeMedium, [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
   feeFormCurr = new FormControl('', [
     Validators.required,
-    Validators.min(0.001),
+    Validators.min(1 / 1e8),
   ]);
+  aliasField = new FormControl('', Validators.required);
 
   formConfirmPin: FormGroup;
   pinField = new FormControl('', Validators.required);
@@ -68,30 +81,21 @@ export class SendmoneyComponent implements OnInit {
   pinRefDialog: MatDialogRef<any>;
   accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
-  addNewContactRefDialog: MatDialogRef<any>;
 
   isFormSendLoading = false;
   isConfirmPinLoading = false;
-  address = this.authServ.currAddress;
 
   account: SavedAccount;
   accounts: any;
+  address = this.authServ.currAddress;
 
-  lastTx: any;
   bytes = new Uint8Array(193);
   typeCoin = 'ZBC';
   typeFee = 'ZBC';
 
-  feeFast = environment.feeFast;
-  feeMedium = environment.feeMedium;
-  feeSlow = environment.feeSlow;
-  activeButton: number;
-  kindFee: string;
-
-  //for add new address to contact list
-  aliasField = new FormControl('');
-  saveToAddreesBook = new FormControl(false, Validators.required);
-  customFee = new FormControl(false, Validators.required);
+  saveAddress: boolean = false;
+  showSaveAddressBtn: boolean = true;
+  customFee: boolean = false;
 
   constructor(
     private accountServ: AccountService,
@@ -101,22 +105,24 @@ export class SendmoneyComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private contactServ: ContactService,
     private translate: TranslateService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
       amount: this.amountForm,
-      fee: this.feeForm,
       amountCurrency: this.amountCurrencyForm,
-      feeCurr: this.feeFormCurr,
-      saveAddress: this.saveToAddreesBook,
       alias: this.aliasField,
-      customFees: this.customFee,
+      fee: this.feeForm,
+      feeCurr: this.feeFormCurr,
     });
+    // disable alias field (saveAddress = false)
+    this.aliasField.disable();
 
     this.formConfirmPin = new FormGroup({
       pin: this.pinField,
     });
+
     this.account = authServ.getCurrAccount();
   }
 
@@ -125,26 +131,28 @@ export class SendmoneyComponent implements OnInit {
       this.accountBalance = data.accountbalance;
     });
     this.contacts = this.contactServ.getContactList() || [];
+
     // set filtered contacts function
     this.filteredContacts = this.recipientForm.valueChanges.pipe(
       startWith(''),
       map(value => this.filterContacts(value))
     );
+
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
+      // set default fee to medium
+      this.onChangeFeeField();
+      // convert fee to current currency
+      this.onFeeChoose(2);
     });
 
-    this.getAccounts();
+    this.accounts = this.accountServ.getAllAccount();
   }
 
   openAccountList() {
     this.accountRefDialog = this.dialog.open(this.accountDialog, {
       width: '360px',
     });
-  }
-
-  getAccounts() {
-    this.accounts = this.accountServ.getAllAccount();
   }
 
   onSwitchAccount(account: SavedAccount) {
@@ -155,33 +163,23 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeAmountField() {
-    const resultAmountCurrency =
-      this.amountForm.value * this.currencyRate.value;
-    this.formSend.patchValue({
-      amountCurrency: resultAmountCurrency,
-    });
+    const amountCurrency = this.amountForm.value * this.currencyRate.value;
+    this.amountCurrencyForm.patchValue(amountCurrency);
   }
 
   onChangeAmountCurrencyField() {
-    const resultAmount =
-      this.amountCurrencyForm.value / this.currencyRate.value;
-    this.formSend.patchValue({
-      amount: resultAmount,
-    });
+    const amount = this.amountCurrencyForm.value / this.currencyRate.value;
+    this.amountForm.patchValue(amount);
   }
 
   onChangeFeeField() {
-    const resultFeeCurrency = this.feeForm.value * this.currencyRate.value;
-    this.formSend.patchValue({
-      feeCurr: resultFeeCurrency,
-    });
+    const feeCurrency = this.feeForm.value * this.currencyRate.value;
+    this.feeFormCurr.patchValue(feeCurrency);
   }
 
   onChangeFeeCurrencyField() {
-    const resultFee = this.feeFormCurr.value / this.currencyRate.value;
-    this.formSend.patchValue({
-      fee: resultFee,
-    });
+    const fee = this.feeFormCurr.value / this.currencyRate.value;
+    this.feeForm.patchValue(fee);
   }
 
   filterContacts(value: string) {
@@ -198,11 +196,45 @@ export class SendmoneyComponent implements OnInit {
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
+  isAddressInContacts() {
+    const isAddressInContacts = this.contacts.some(c => {
+      if (c.address == this.recipientForm.value) {
+        this.contact = c;
+        return true;
+      } else return false;
+    });
+
+    if (isAddressInContacts) {
+      this.aliasField.disable();
+      this.saveAddress = false;
+      this.showSaveAddressBtn = false;
+    } else {
+      this.showSaveAddressBtn = true;
+    }
+  }
+
+  toggleSaveAddress() {
+    if (this.saveAddress) {
+      this.aliasField.disable();
+      this.saveAddress = false;
+    } else {
+      this.aliasField.enable();
+      this.saveAddress = true;
+    }
+  }
+
+  toggleCustomFee() {
+    this.customFee = !this.customFee;
+    if (!this.customFee) {
+      this.onFeeChoose(this.activeButton);
+    }
+  }
+
   onOpenDialogDetailSendMoney() {
     const total = this.amountForm.value + this.feeForm.value;
     if (parseInt(this.accountBalance.spendablebalance) / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-        width: '600px',
+        width: '500px',
         data: this.formSend.value,
       });
     } else {
@@ -224,41 +256,25 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  removeActive() {
-    this.formSend.patchValue({
-      fee: '',
-      feeCurr: '',
-    });
-    this.activeButton = 0;
-    this.kindFee = 'Custom';
-  }
-
   onFeeChoose(value) {
+    let fee: number = 0;
     if (value === 1) {
-      const resultFeeCurrency = this.feeSlow * this.currencyRate.value;
-      this.formSend.patchValue({
-        fee: this.feeSlow,
-        feeCurr: resultFeeCurrency,
-      });
-      this.activeButton = value;
+      fee = this.feeSlow;
       this.kindFee = 'Slow';
     } else if (value === 2) {
-      const resultFeeCurrency = this.feeMedium * this.currencyRate.value;
-      this.formSend.patchValue({
-        fee: this.feeMedium,
-        feeCurr: resultFeeCurrency,
-      });
-      this.activeButton = value;
+      fee = this.feeMedium;
       this.kindFee = 'Medium';
     } else {
-      const resultFeeCurrency = this.feeFast * this.currencyRate.value;
-      this.formSend.patchValue({
-        fee: this.feeFast,
-        feeCurr: resultFeeCurrency,
-      });
-      this.activeButton = value;
+      fee = this.feeFast;
       this.kindFee = 'Fast';
     }
+
+    const feeCurrency = fee * this.currencyRate.value;
+    this.formSend.patchValue({
+      fee: fee,
+      feeCurr: feeCurrency,
+    });
+    this.activeButton = value;
   }
 
   onTypePin() {
@@ -293,7 +309,6 @@ export class SendmoneyComponent implements OnInit {
   }
 
   closeDialog() {
-    this.activeButton = 0;
     this.sendMoneyRefDialog.close();
   }
 
@@ -365,21 +380,31 @@ export class SendmoneyComponent implements OnInit {
               '</b> address',
             'success'
           );
-          if (this.saveToAddreesBook.value === true) {
+
+          // save address
+          if (this.saveAddress) {
             const newContact = {
               alias: this.aliasField.value,
               address: this.recipientForm.value,
             };
-            this.contacts.push(newContact);
-            this.contactServ.addContact(newContact);
+            this.contacts = this.contactServ.addContact(newContact);
           }
+
+          // reset the form
           this.formSend.reset();
           Object.keys(this.formSend.controls).forEach(key => {
             this.formSend.controls[key].setErrors(null);
           });
-          this.closeDialog();
+          this.router.navigateByUrl('/dashboard');
         },
-        err => console.log(err)
+        err => {
+          this.isFormSendLoading = false;
+          Swal.fire(
+            'Opps...',
+            'An error occurred while processing your request',
+            'error'
+          );
+        }
       );
     }
   }

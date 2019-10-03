@@ -15,7 +15,7 @@
   }
   .status-card {
     display: flex;
-    background: linear-gradient(45deg, #0288d1, #26c6da) !important;
+    background: $primary-gradient !important;
     color: white;
     margin-bottom: 16px;
     .icon {
@@ -168,7 +168,7 @@
     border-radius: 6px;
     background-color: #ccc;
     .percentage {
-      background-color: $primary-color;
+      background-color: map-get($primary, 500);
       height: 8px;
       border-radius: 6px;
     }

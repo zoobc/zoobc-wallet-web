@@ -7,6 +7,12 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { MnemonicsService } from 'src/app/services/mnemonics.service';
+import {
+  TransactionService,
+  Transactions,
+} from 'src/app/services/transaction.service';
+import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { environment } from 'src/environments/environment';
 
 const coin = 'ZBC';
 
@@ -17,6 +23,10 @@ const coin = 'ZBC';
 })
 export class RestoreWalletComponent implements OnInit {
   @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
+  listAccount = [];
+  listAccountTemp = [];
+  totalTx: number = 0;
+  mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
 
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
@@ -26,7 +36,8 @@ export class RestoreWalletComponent implements OnInit {
     private router: Router,
     private authServ: AuthService,
     private keyringServ: KeyringService,
-    private mnemonicServ: MnemonicsService
+    private mnemonicServ: MnemonicsService,
+    private transactionServ: TransactionService
   ) {
     this.restoreForm = new FormGroup({
       passphrase: this.passphraseField,
@@ -39,6 +50,10 @@ export class RestoreWalletComponent implements OnInit {
     const valid = this.mnemonicServ.validateMnemonic(
       this.passphraseField.value
     );
+    const mnemonicNumLength = this.passphraseField.value.split(' ').length;
+    if (mnemonicNumLength != this.mnemonicWordLengtEnv) {
+      this.passphraseField.setErrors({ lengthMnemonic: true });
+    }
     if (!valid) this.passphraseField.setErrors({ mnemonic: true });
   }
 
@@ -72,7 +87,7 @@ export class RestoreWalletComponent implements OnInit {
     });
   }
 
-  saveNewAccount(key: string) {
+  async saveNewAccount(key: string) {
     const passphrase = this.passphraseField.value;
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
@@ -81,14 +96,67 @@ export class RestoreWalletComponent implements OnInit {
       'p4ssphr4se'
     );
     let masterSeed = seed;
+    let accountName: string = 'Account ';
+    let accountNo: number = 1;
+    let accountPath: number = 0;
+    let publicKey: Uint8Array;
+    let address: string;
 
-    const account: SavedAccount = {
-      name: 'Account 1',
-      path: 0,
-    };
+    let counter: number = 0;
 
+    while (counter < 20) {
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        accountPath
+      );
+
+      publicKey = childSeed.publicKey;
+      address = GetAddressFromPublicKey(publicKey);
+
+      const listAccounts = {
+        name: accountName + accountNo,
+        path: accountPath,
+        nodeIP: null,
+        address: address,
+      };
+
+      let checkHasTransaction = await this.transactionServ
+        .getAccountTransaction(1, 1, address)
+        .then((res: Transactions) => {
+          this.totalTx = res.total;
+          this.listAccountTemp.push(listAccounts);
+          if (this.totalTx > 0) {
+            Array.prototype.push.apply(this.listAccount, this.listAccountTemp);
+            this.authServ.restoreAccount(this.listAccount);
+            this.listAccountTemp = [];
+            counter = 0;
+          }
+        });
+
+      accountPath++;
+      accountNo++;
+      counter++;
+    }
+    // if account dont have any transaction yet
+    if (this.listAccount.length === 0) {
+      localStorage.removeItem('ACCOUNT');
+      localStorage.removeItem('CURR_ACCOUNT');
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        accountPath
+      );
+
+      publicKey = childSeed.publicKey;
+      address = GetAddressFromPublicKey(publicKey);
+      const account: SavedAccount = {
+        name: 'Account 1',
+        path: 0,
+        nodeIP: null,
+        address: address,
+      };
+      this.authServ.addAccount(account);
+    }
     this.authServ.saveMasterSeed(masterSeed, key);
-    this.authServ.addAccount(account);
     this.router.navigateByUrl('/dashboard');
   }
 }

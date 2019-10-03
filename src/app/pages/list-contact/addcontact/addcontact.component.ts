@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import { ContactService } from 'src/app/services/contact.service';
+import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { addressValidation } from 'src/helpers/utils';
 
@@ -11,8 +11,6 @@ import { addressValidation } from 'src/helpers/utils';
   styleUrls: ['./addcontact.component.scss'],
 })
 export class AddcontactComponent implements OnInit {
-  contacts = [];
-
   addForm: FormGroup;
   aliasField = new FormControl('', Validators.required);
   addressField = new FormControl('', Validators.required);
@@ -25,8 +23,6 @@ export class AddcontactComponent implements OnInit {
       alias: this.aliasField,
       address: this.addressField,
     });
-
-    this.contacts = this.contactServ.getContactList() || [];
   }
 
   ngOnInit() {}
@@ -40,22 +36,18 @@ export class AddcontactComponent implements OnInit {
 
   onSubmit() {
     if (this.addForm.valid) {
-      if (
-        this.contacts.some(
-          contacts => contacts.address === this.addressField.value
-        )
-      ) {
+      const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
+      if (isDuplicate) {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'The address you entered is already in your Address Book',
         });
-        this.dialogRef.close(this.contacts);
       } else {
-        const newContact = this.addForm.value;
-        this.contacts.push(newContact);
-        this.contactServ.addContact(newContact);
-        this.dialogRef.close(this.contacts);
+        const contacts: Contact[] = this.contactServ.addContact(
+          this.addForm.value
+        );
+        this.dialogRef.close(contacts);
       }
     }
   }

@@ -2,15 +2,24 @@
   <h2 class="mat-h2 text-center">{{ 'Add Node Admin' | translate }}</h2>
   <form [formGroup]="formAddNodeAdmin" (submit)="onAddNodeAdmin()">
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>Node's IP Address</mat-label>
       <input
         matInput
         type="text"
-        placeholder="{{ 'IP Address' | translate }}"
+        placeholder="http://192.168.43.1:7001"
         formControlName="ipAddress"
       />
     </mat-form-field>
-    <button mat-flat-button color="primary" type="submit">
-      {{ 'Add' | translate }}
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="isLoading || formAddNodeAdmin.invalid"
+    >
+      <span *ngIf="isLoading">
+        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+      </span>
+      <span>{{ 'Add' | translate }}</span>
     </button>
   </form>
 </div>

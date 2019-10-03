@@ -7,7 +7,7 @@ import {
   GetNodeHardwareResponse,
 } from '../grpc/model/nodeHardware_pb';
 import { bigintToByteArray, BigInt } from 'src/helpers/converters';
-import { AuthService } from './auth.service';
+import { AuthService, SavedAccount } from './auth.service';
 import { KeyringService } from './keyring.service';
 import { NodeHardwareService } from '../grpc/service/nodeHardware_pb_service';
 import { grpc } from '@improbable-eng/grpc-web';
@@ -96,9 +96,18 @@ export class NodeAdminService {
     return JSON.parse(localStorage.getItem('Node_Admin'));
   }
 
-  addNodeAdmin(attribute: NodeAdminAttribute) {
-    this.sourceCurrencyNodeAdminAttribue.next(attribute);
-    localStorage.setItem('Node_Admin', JSON.stringify(attribute));
+  addNodeAdmin(ip: string) {
+    let account: SavedAccount = this.authServ.getCurrAccount();
+    let accounts: SavedAccount[] = this.authServ.getAllAccount();
+
+    account.nodeIP = ip;
+    accounts = accounts.map((acc: SavedAccount) => {
+      if (acc.path == account.path) acc = account;
+      return acc;
+    });
+
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
   }
 
   updateIPAddress(oldIPAddress, newIPAddress) {

@@ -1,35 +1,17 @@
 import { Injectable } from '@angular/core';
-import {
-  GetProofOfOwnershipRequest,
-  ProofOfOwnershipMessage,
-  ProofOfOwnership,
-} from '../grpc/model/proofOfOwnership_pb';
 import { grpc } from '@improbable-eng/grpc-web';
 import { environment } from 'src/environments/environment';
-import { NodeAdminService } from '../grpc/service/proofOfOwnership_pb_service';
 import { NodeRegistrationService as NodeRegistrationServ } from '../grpc/service/nodeRegistration_pb_service';
-import { AuthService } from './auth.service';
-import { KeyringService } from './keyring.service';
-import { RequestType } from '../grpc/model/auth_pb';
-import { bigintToByteArray, BigInt } from 'src/helpers/converters';
 import {
-  GetNodeRegistrationsRequest,
-  GetNodeRegistrationsResponse,
   GetNodeRegistrationRequest,
   GetNodeRegistrationResponse,
-  NodeRegistration,
 } from '../grpc/model/nodeRegistration_pb';
-import { transactionByte } from 'src/helpers/transactionByteTemplate';
-import { BytesMaker } from 'src/helpers/BytesMaker';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NodeRegistrationService {
-  constructor(
-    private authServ: AuthService,
-    private keyringServ: KeyringService
-  ) {}
+  constructor() {}
 
   getRegisteredNode() {
     return new Promise((resolve, reject) => {

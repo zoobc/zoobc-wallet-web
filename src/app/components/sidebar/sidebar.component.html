@@ -6,7 +6,7 @@
         <span>{{ 'Dashboard' | translate }}</span>
       </a>
     </li>
-    <ng-template [ngIf]="nodeAdminAttributes">
+    <ng-template [ngIf]="account && account.nodeIP">
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
         <a routerLink="/nodeadmin" (click)="onToggle()">
           <i class="fa fa-desktop"></i>
@@ -21,18 +21,18 @@
         <span>{{ 'History' | translate }}</span>
       </a>
     </li>
-    <li>
+    <!-- <li>
       <a routerLink="/#" (click)="onToggle()">
-        <!-- <img
+        <img
           matPrefix
           src="../../../assets/img/zbc-black.png"
           width="28"
           class="icon-image"
-        /> -->
+        />
         <i class="fa fa-donate"></i>
         <span>{{ 'Deposit' | translate }}</span>
       </a>
-    </li>
+    </li> -->
     <li [ngClass]="menu == 'sendmoney' && 'active'">
       <a routerLink="/sendmoney" (click)="onToggle()">
         <i class="fa fa-paper-plane"></i>
@@ -48,7 +48,7 @@
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list" (click)="onToggle()">
         <i class="fa fa-address-book"></i>
-        <span>{{'Address Book' | translate}}</span>
+        <span>{{ 'Address Book' | translate }}</span>
       </a>
     </li>
   </ul>
