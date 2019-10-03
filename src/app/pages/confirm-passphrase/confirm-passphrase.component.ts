@@ -110,20 +110,15 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
-    let publicKey: Uint8Array;
-    let accountAddress: string;
-    const newAccountPath = 0;
     const childSeed = this.keyringServ.calcForDerivationPathForCoin(
       coin,
-      newAccountPath
+      0
     );
-    publicKey = childSeed.publicKey;
-    accountAddress = GetAddressFromPublicKey(publicKey);
-
+    const accountAddress = GetAddressFromPublicKey(childSeed.publicKey);
     this.authServ.saveMasterSeed(this.masterSeed, key);
     const account: SavedAccount = {
       name: 'Account 1',
-      path: newAccountPath,
+      path: 0,
       nodeIP: null,
       address: accountAddress,
     };
