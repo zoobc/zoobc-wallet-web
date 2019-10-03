@@ -24,7 +24,7 @@
           [matAutocomplete]="auto"
           formControlName="recipient"
           (keyup)="onChangeRecipient()"
-          (blur)="isAddressSaved()"
+          (blur)="isAddressInContacts()"
         />
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
@@ -44,7 +44,10 @@
           {{ 'ZBC Address is invalid' | translate }}
         </span>
       </mat-error>
-      <div *ngIf="!showSaveAddressBtn">Address: {{contact.alias}}</div>
+      <div class="address-alias" *ngIf="!showSaveAddressBtn">
+        <span>{{'Address' | translate}}: </span>
+        <b>{{contact.alias}}</b>
+      </div>
       <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
         <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
           {{ 'Save to Address Book' | translate }}

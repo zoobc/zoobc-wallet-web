@@ -23,6 +23,7 @@ import {
 import { AccountService } from 'src/app/services/account.service';
 import { environment } from 'src/environments/environment';
 import { addressValidation } from 'src/helpers/utils';
+import { Router } from '@angular/router';
 
 const coin = 'ZBC';
 type AccountBalance = AB.AsObject;
@@ -104,7 +105,8 @@ export class SendmoneyComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private contactServ: ContactService,
     private translate: TranslateService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -194,7 +196,7 @@ export class SendmoneyComponent implements OnInit {
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
-  isAddressSaved() {
+  isAddressInContacts() {
     const isAddressInContacts = this.contacts.some(c => {
       if (c.address == this.recipientForm.value) {
         this.contact = c;
@@ -379,22 +381,30 @@ export class SendmoneyComponent implements OnInit {
             'success'
           );
 
+          // save address
           if (this.saveAddress) {
             const newContact = {
               alias: this.aliasField.value,
               address: this.recipientForm.value,
             };
-            this.contacts.push(newContact);
-            this.contactServ.addContact(newContact);
+            this.contacts = this.contactServ.addContact(newContact);
           }
 
+          // reset the form
           this.formSend.reset();
           Object.keys(this.formSend.controls).forEach(key => {
             this.formSend.controls[key].setErrors(null);
           });
-          this.closeDialog();
+          this.router.navigateByUrl('/dashboard');
         },
-        err => console.log(err)
+        err => {
+          this.isFormSendLoading = false;
+          Swal.fire(
+            'Opps...',
+            'An error occurred while processing your request',
+            'error'
+          );
+        }
       );
     }
   }
