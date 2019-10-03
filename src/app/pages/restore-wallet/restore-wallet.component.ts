@@ -87,16 +87,6 @@ export class RestoreWalletComponent implements OnInit {
     });
   }
 
-  arrayUnique(array) {
-    let newArray = array.concat();
-    for (let i = 0; i < newArray.length; ++i) {
-      for (let j = i + 1; j < newArray.length; ++j) {
-        if (newArray[i] === newArray[j]) newArray.splice(j--, 1);
-      }
-    }
-    return newArray;
-  }
-
   async saveNewAccount(key: string) {
     const passphrase = this.passphraseField.value;
 
@@ -135,14 +125,8 @@ export class RestoreWalletComponent implements OnInit {
           this.totalTx = res.total;
           this.listAccountTemp.push(listAccounts);
           if (this.totalTx > 0) {
-            this.listAccount.push(listAccounts);
             Array.prototype.push.apply(this.listAccount, this.listAccountTemp);
-            const resultListAccount = this.arrayUnique(
-              this.listAccount.sort(function(a, b) {
-                return a.path - b.path;
-              })
-            );
-            this.authServ.restoreAccount(resultListAccount);
+            this.authServ.restoreAccount(this.listAccount);
             this.listAccountTemp = [];
             counter = 0;
           }
