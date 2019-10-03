@@ -12,6 +12,7 @@ import {
   Transactions,
 } from 'src/app/services/transaction.service';
 import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { environment } from 'src/environments/environment';
 
 const coin = 'ZBC';
 
@@ -25,6 +26,7 @@ export class RestoreWalletComponent implements OnInit {
   listAccount = [];
   listAccountTemp = [];
   totalTx: number = 0;
+  mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
 
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
@@ -48,6 +50,10 @@ export class RestoreWalletComponent implements OnInit {
     const valid = this.mnemonicServ.validateMnemonic(
       this.passphraseField.value
     );
+    const mnemonicNumLength = this.passphraseField.value.split(' ').length;
+    if (mnemonicNumLength != this.mnemonicWordLengtEnv) {
+      this.passphraseField.setErrors({ lengthMnemonic: true });
+    }
     if (!valid) this.passphraseField.setErrors({ mnemonic: true });
   }
 
