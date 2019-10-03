@@ -8,6 +8,7 @@ export interface SavedAccount {
   path: number;
   name: string;
   nodeIP: string;
+  address: string;
 }
 
 const coin = 'ZBC';
@@ -107,6 +108,11 @@ export class AuthService {
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.switchAccount(account);
     }
+  }
+
+  restoreAccount(account) {
+    localStorage.setItem('ACCOUNT', JSON.stringify(account));
+    this.switchAccount(account[0]);
   }
 
   saveMasterSeed(seedBase58: string, key: string) {

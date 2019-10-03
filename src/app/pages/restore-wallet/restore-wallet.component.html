@@ -17,6 +17,10 @@
       <span *ngIf="passphraseField.hasError('mnemonic')"
         >{{ 'Passphrase is invalid' | translate }}
       </span>
+      <span *ngIf="passphraseField.hasError('lengthMnemonic')"
+        >{{ 'Please use your' | translate }} {{ mnemonicWordLengtEnv }}
+        {{ 'passphrase words' | translate }}
+      </span>
     </mat-error>
     <button
       mat-flat-button
