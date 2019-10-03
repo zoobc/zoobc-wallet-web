@@ -15,43 +15,57 @@
   }
 
   .choose-fee {
-    .fee-choosen {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 4px 0 8px 0;
+    button {
+      border-radius: 0;
+      margin-left: -1px;
+      border-left: 1px solid #ddd;
+      width: calc(33.33333333% + 2px);
+      text-transform: none;
+      padding: 8px 8px;
+      .fee-button {
+        display: flex;
+        flex-flow: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        .label {
+          font-size: 14px;
+          font-weight: bold;
+          line-height: 16px;
+          margin-bottom: 4px;
+          color: $black2;
+        }
+        .zbc-currency,
+        .fiat-currency {
+          font-size: 12px;
+          line-height: 14px;
+        }
+      }
+    }
+    .fee-choosen:enabled {
       color: white;
       background-color: $primary-color;
+      .label {
+        color: white !important;
+      }
     }
     display: flex;
     justify-content: stretch;
-    height: 54px;
-    .fee-button {
-      display: flex;
-      flex-flow: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-      .label {
-        font-size: 14px;
-        font-weight: bold;
-        line-height: 16px;
-        padding-bottom: 4px;
-        @media (max-width: 600px) {
-          font-size: 12px;
-        }
-      }
-      .zbc-currency,
-      .fiat-currency {
-        font-size: smaller;
-        line-height: 12px;
-        padding-bottom: 2px;
-        @media (max-width: 600px) {
-          font-size: 10px;
-        }
-      }
-    }
   }
   .mat-card {
     max-width: 400px;
     margin: 0 auto;
   }
   form {
+    .row {
+      margin: 0 -4px;
+      [class^='col'] {
+        padding: 0 4px;
+      }
+    }
     .from-account {
       display: flex;
       border: 1px solid #ccc;
@@ -76,6 +90,9 @@
         color: $black2;
       }
     }
+    .address-alias {
+      color: $black2;
+    }
   }
 }
 
@@ -92,88 +109,114 @@
 }
 
 // popup detail send money
-.popup {
-  margin-bottom: 10px !important;
+.confirmation-dialog {
   .brand {
     .title-wallet {
       background: -webkit-linear-gradient($primary-color, rgb(155, 66, 149));
       -webkit-background-clip: text;
+      -moz-background-clip: text;
+      -o-background-clip: text;
+      -ms-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-size: 16px !important;
+      -moz-text-fill-color: transparent;
+      -o-text-fill-color: transparent;
+      -ms-text-fill-color: transparent;
+      font-size: 16px;
       margin-right: 10px;
-    }
-    img {
-      float: right;
-      width: 20px;
+      display: inline-flex;
+      .text {
+        margin: 0 8px 0 0;
+        line-height: 28px;
+      }
+      img {
+        width: 24px;
+        margin-bottom: 8px;
+      }
     }
   }
   .title {
-    color: $black1;
+    color: $black2;
     font-size: 16px !important;
     font-weight: bold;
+    margin-bottom: 8px;
   }
-  .content-popup {
+  .content {
     margin-top: 10px;
     word-break: break-all;
     margin-bottom: 10px;
-    .label-popup {
+    .label {
       font-size: 14px;
-      color: $black1;
+      color: $black3;
       font-weight: bold;
+      margin-bottom: 4px;
     }
     .address,
     .amount,
-    .fee {
-      margin-bottom: 10px;
-    }
-    .address,
-    .recepient,
-    .amount,
-    .fee,
     .total {
-      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .amount {
+      .zbc {
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+      .currency {
+        font-size: 14px;
+      }
+    }
+    .total {
+      color: #4caf50;
+      font-weight: bold;
+      .zbc {
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+      .currency {
+        font-size: 16px;
+      }
     }
   }
 }
 
-.sub-title {
-  margin-top: 10px !important;
-  font-size: 17px;
-  text-align: center;
-  font-weight: bold;
-  color: $black1;
-}
+// .sub-title {
+//   margin-top: 10px !important;
+//   font-size: 17px;
+//   text-align: center;
+//   font-weight: bold;
+//   color: $black1;
+// }
 
-.content {
-  margin-top: 10px !important;
-  font-size: 16px;
-  text-align: center;
-  color: $black1;
-}
+// .content {
+//   margin-top: 10px !important;
+//   font-size: 16px;
+//   text-align: center;
+//   color: $black1;
+// }
 
-#icon-success {
-  color: blue;
-  display: block;
-  text-shadow: 1px 1px 1px #ccc;
-  font-size: 5.5em;
-  text-align: center;
-}
+// #icon-success {
+//   color: blue;
+//   display: block;
+//   text-shadow: 1px 1px 1px #ccc;
+//   font-size: 5.5em;
+//   text-align: center;
+// }
 
-.addcontact-container {
-  form {
-    display: grid;
-  }
-}
+// .addcontact-container {
+//   form {
+//     display: grid;
+//   }
+// }
 
-.section-save-addres {
-  display: flex;
-  align-content: center;
-  align-items: center;
-}
+// .section-save-addres {
+//   display: flex;
+//   align-content: center;
+//   align-items: center;
+// }
 
-.checkbox-margin {
-  margin: 0 10px;
-}
+// .checkbox-margin {
+//   margin: 0 10px;
+// }
 
 .account-list {
   .account-card {
