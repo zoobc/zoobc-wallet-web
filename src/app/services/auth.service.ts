@@ -110,9 +110,6 @@ export class AuthService {
   }
 
   restoreAccount(account) {
-    let listAccount = JSON.parse(localStorage.getItem('ACCOUNT'));
-    listAccount = listAccount || [];
-    listAccount.push(account);
     localStorage.setItem('ACCOUNT', JSON.stringify(account));
     this.switchAccount(account[0]);
   }
