@@ -105,12 +105,6 @@ export class RestoreWalletComponent implements OnInit {
     let counter: number = 0;
 
     while (counter < 20) {
-      const listAccounts = {
-        name: accountName + accountNo,
-        path: accountPath,
-        nodeIP: null,
-      };
-
       const childSeed = this.keyringServ.calcForDerivationPathForCoin(
         coin,
         accountPath
@@ -118,6 +112,13 @@ export class RestoreWalletComponent implements OnInit {
 
       publicKey = childSeed.publicKey;
       address = GetAddressFromPublicKey(publicKey);
+
+      const listAccounts = {
+        name: accountName + accountNo,
+        path: accountPath,
+        nodeIP: null,
+        address: address,
+      };
 
       let checkHasTransaction = await this.transactionServ
         .getAccountTransaction(1, 1, address)
@@ -140,10 +141,18 @@ export class RestoreWalletComponent implements OnInit {
     if (this.listAccount.length === 0) {
       localStorage.removeItem('ACCOUNT');
       localStorage.removeItem('CURR_ACCOUNT');
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        accountPath
+      );
+
+      publicKey = childSeed.publicKey;
+      address = GetAddressFromPublicKey(publicKey);
       const account: SavedAccount = {
         name: 'Account 1',
         path: 0,
         nodeIP: null,
+        address: address,
       };
       this.authServ.addAccount(account);
     }

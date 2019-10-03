@@ -3,7 +3,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { KeyringService } from 'src/app/services/keyring.service';
+import { GetAddressFromPublicKey } from 'src/helpers/utils';
 
+const coin = 'ZBC';
 @Component({
   selector: 'app-add-new-account',
   templateUrl: './add-account.component.html',
@@ -21,6 +24,7 @@ export class AddAccountComponent implements OnInit {
   constructor(
     private authServ: AuthService,
     private router: Router,
+    private keyringServ: KeyringService,
     private dialogRef: MatDialogRef<AddAccountComponent>
   ) {
     this.formAddAccount = new FormGroup({
@@ -32,11 +36,21 @@ export class AddAccountComponent implements OnInit {
 
   onAddAccount() {
     if (this.formAddAccount.valid) {
+      let publicKey: Uint8Array;
+      let accountAddress: string;
+
       const path = this.authServ.generateDerivationPath();
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        path
+      );
+      publicKey = childSeed.publicKey;
+      accountAddress = GetAddressFromPublicKey(publicKey);
       const account: SavedAccount = {
         name: this.accountNameField.value,
         path,
         nodeIP: null,
+        address: accountAddress,
       };
 
       this.authServ.addAccount(account);

@@ -11,7 +11,10 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { KeyringService } from 'src/app/services/keyring.service';
+import { GetAddressFromPublicKey } from 'src/helpers/utils';
 
+const coin = 'ZBC';
 @Component({
   selector: 'app-confirm-passphrase',
   templateUrl: './confirm-passphrase.component.html',
@@ -33,6 +36,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private authServ: AuthService,
+    private keyringServ: KeyringService,
     private router: Router
   ) {
     if (!history.state.passphrase) router.navigateByUrl('/signup');
@@ -106,11 +110,22 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
+    let publicKey: Uint8Array;
+    let accountAddress: string;
+    const newAccountPath = 0;
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+      coin,
+      newAccountPath
+    );
+    publicKey = childSeed.publicKey;
+    accountAddress = GetAddressFromPublicKey(publicKey);
+
     this.authServ.saveMasterSeed(this.masterSeed, key);
     const account: SavedAccount = {
-      path: 0,
       name: 'Account 1',
+      path: newAccountPath,
       nodeIP: null,
+      address: accountAddress,
     };
     this.authServ.addAccount(account);
     this.authServ.login(account, key);

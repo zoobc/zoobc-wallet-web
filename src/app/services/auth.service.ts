@@ -8,6 +8,7 @@ export interface SavedAccount {
   path: number;
   name: string;
   nodeIP: string;
+  address: string;
 }
 
 const coin = 'ZBC';
