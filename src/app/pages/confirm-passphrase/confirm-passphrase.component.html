@@ -10,6 +10,7 @@
           class="passphrase-input"
           [formGroupName]="i"
           appearance="outline"
+          color="accent"
         >
           <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
           <input matInput formControlName="word" (keyup)="isValid()" />

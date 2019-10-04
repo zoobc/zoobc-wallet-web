@@ -1,7 +1,7 @@
 <div class="addcontact-container">
   <h2 class="mat-h2">{{ 'New Address' | translate }}</h2>
   <form [formGroup]="addForm" (submit)="onSubmit()">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Alias' | translate }}</mat-label>
       <input
         matInput
@@ -15,7 +15,7 @@
         >{{ 'Alias is required' | translate }}
       </span>
     </mat-error>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Address' | translate }}</mat-label>
       <input
         matInput

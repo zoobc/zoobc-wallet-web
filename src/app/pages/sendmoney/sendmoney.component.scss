@@ -47,7 +47,7 @@
     }
     .fee-choosen:enabled {
       color: white;
-      background-color: $primary-color;
+      background-color: map-get($primary, 500);
       .label {
         color: white !important;
       }
@@ -99,7 +99,7 @@
 .form-pin {
   i.fas {
     font-size: 24px;
-    color: $primary-color;
+    color: map-get($primary, 500);
   }
 }
 
@@ -112,7 +112,10 @@
 .confirmation-dialog {
   .brand {
     .title-wallet {
-      background: -webkit-linear-gradient($primary-color, rgb(155, 66, 149));
+      background: -webkit-linear-gradient(
+        map-get($primary, 500),
+        rgb(155, 66, 149)
+      );
       -webkit-background-clip: text;
       -moz-background-clip: text;
       -o-background-clip: text;
@@ -232,7 +235,7 @@
       font-size: 14px;
       background-color: white;
       &.active {
-        background-color: $primary-color;
+        background: $primary-gradient;
         color: white;
         .balance,
         .balance-in-currency,

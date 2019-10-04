@@ -1,7 +1,7 @@
 <div class="editcontact-container">
   <h2 class="mat-h2">{{ 'Edit Address' | translate }}</h2>
   <form [formGroup]="editForm" (submit)="onSubmit()">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Alias' | translate }}</mat-label>
       <input
         matInput
@@ -16,7 +16,7 @@
       </span>
     </mat-error>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Address' | translate }}</mat-label>
       <input
         matInput

@@ -16,7 +16,7 @@
       </div>
 
       <label>{{ 'Recepient address' | translate }}</label>
-      <mat-form-field appearance="outline" class="block">
+      <mat-form-field appearance="outline" class="block" color="accent">
         <input
           matInput
           placeholder="{{ 'Recepient address' | translate }}..."
@@ -56,7 +56,7 @@
 
       <ng-container *ngIf="saveAddress">
         <label>{{ 'Alias' | translate }}</label>
-        <mat-form-field appearance="outline" class="block">
+        <mat-form-field appearance="outline" color="accent" class="block">
           <input
             matInput
             type="text"
@@ -86,7 +86,7 @@
       <label>{{ 'Coin amount' | translate }}</label>
       <div class="row">
         <div class="col-4 col-sm-3">
-          <mat-form-field appearance="outline" class="block">
+          <mat-form-field appearance="outline" color="accent" class="block">
             <mat-select [(value)]="typeCoin">
               <mat-option value="ZBC">ZBC</mat-option>
               <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
@@ -98,6 +98,7 @@
             appearance="outline"
             class="block"
             *ngIf="typeCoin === 'ZBC'"
+            color="accent"
           >
             <input
               matInput
@@ -120,6 +121,7 @@
             *ngIf="typeCoin === 'Fiat'"
             appearance="outline"
             class="block"
+            color="accent"
           >
             <input
               matInput
@@ -208,7 +210,7 @@
         <label>{{ 'Custom Fee' | translate }}</label>
         <div class="row">
           <div class="col-4 col-sm-3">
-            <mat-form-field appearance="outline" class="block">
+            <mat-form-field appearance="outline" color="accent" class="block">
               <mat-select [(value)]="typeFee">
                 <mat-option value="ZBC">ZBC</mat-option>
                 <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
@@ -220,6 +222,7 @@
               appearance="outline"
               class="block"
               *ngIf="typeFee === 'ZBC'"
+              color="accent"
             >
               <input
                 matInput
@@ -242,6 +245,7 @@
               appearance="outline"
               class="block"
               *ngIf="typeFee === 'Fiat'"
+              color="accent"
             >
               <input
                 matInput

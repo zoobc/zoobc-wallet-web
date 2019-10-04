@@ -7,7 +7,7 @@
       (ngSubmit)="onSubmit(formDirective)"
     >
       <!-- Email -->
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" color="accent">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
       </mat-form-field>
@@ -20,7 +20,7 @@
         </span>
       </mat-error>
       <!-- Subject -->
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" color="accent">
         <mat-label>{{ 'Subject' | translate }}</mat-label>
         <input matInput type="text" formControlName="subject" />
       </mat-form-field>
@@ -30,7 +30,7 @@
         }}</span>
       </mat-error>
       <!-- Message -->
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" color="accent">
         <mat-label>{{ 'Message' | translate }}</mat-label>
         <textarea matInput formControlName="message" rows="5"></textarea>
       </mat-form-field>
