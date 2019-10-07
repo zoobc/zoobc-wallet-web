@@ -115,6 +115,7 @@ label {
 }
 
 .mat-form-field {
+  margin-bottom: 8px;
   .mat-form-field-prefix {
     top: 0px !important;
     padding: 12px 0 !important;
@@ -147,11 +148,15 @@ label {
   &.block {
     width: 100%;
   }
+
+  // if mat-error exactly on bottom
+  & ~ .mat-error {
+    margin-top: -8px;
+  }
 }
 
 .mat-form-field-appearance-outline .mat-form-field-wrapper {
   padding-bottom: 0 !important;
-  margin-bottom: 8px !important;
 }
 
 .mat-error {

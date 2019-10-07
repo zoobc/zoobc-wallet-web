@@ -36,14 +36,14 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <mat-error *ngIf="recipientForm.touched">
-        <span *ngIf="recipientForm.hasError('required')">
+      <ng-container *ngIf="recipientForm.touched">
+        <mat-error *ngIf="recipientForm.hasError('required')">
           {{ 'Recepient is required' | translate }}
-        </span>
-        <span *ngIf="recipientForm.hasError('invalidAddress')">
+        </mat-error>
+        <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
           {{ 'ZBC Address is invalid' | translate }}
-        </span>
-      </mat-error>
+        </mat-error>
+      </ng-container>
       <div class="address-alias" *ngIf="!showSaveAddressBtn">
         <span>{{'Address' | translate}}: </span>
         <b>{{contact.alias}}</b>
@@ -109,14 +109,14 @@
               (keyup)="onChangeAmountField()"
             />
           </mat-form-field>
-          <mat-error *ngIf="amountForm.touched && typeCoin === 'ZBC'">
-            <span *ngIf="amountForm.hasError('required')">
+          <ng-container *ngIf="amountForm.touched && typeCoin === 'ZBC'">
+            <mat-error *ngIf="amountForm.hasError('required')">
               {{ 'Amount is required' | translate }}
-            </span>
-            <span *ngIf="amountForm.hasError('min')">
+            </mat-error>
+            <mat-error *ngIf="amountForm.hasError('min')">
               {{ 'Minimum amount is 0.00000001' | translate }}
-            </span>
-          </mat-error>
+            </mat-error>
+          </ng-container>
           <mat-form-field
             *ngIf="typeCoin === 'Fiat'"
             appearance="outline"
@@ -132,14 +132,14 @@
               (keyup)="onChangeAmountCurrencyField()"
             />
           </mat-form-field>
-          <mat-error *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
-            <span *ngIf="amountCurrencyForm.hasError('required')">
+          <ng-container *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
+            <mat-error *ngIf="amountCurrencyForm.hasError('required')">
               {{ 'Amount is required' | translate }}
-            </span>
-            <span *ngIf="amountCurrencyForm.hasError('min')">
+            </mat-error>
+            <mat-error *ngIf="amountCurrencyForm.hasError('min')">
               {{ 'Minimum amount is 0.00000001' | translate }}
-            </span>
-          </mat-error>
+            </mat-error>
+          </ng-container>
         </div>
       </div>
 
@@ -233,14 +233,14 @@
                 (keyup)="onChangeFeeField()"
               />
             </mat-form-field>
-            <mat-error *ngIf="feeForm.touched && typeFee === 'ZBC'">
-              <span *ngIf="feeForm.hasError('required')">
+            <ng-container *ngIf="feeForm.touched && typeFee === 'ZBC'">
+              <mat-error *ngIf="feeForm.hasError('required')">
                 {{ 'Fee is required' | translate }}
-              </span>
-              <span *ngIf="feeForm.hasError('min')">
+              </mat-error>
+              <mat-error *ngIf="feeForm.hasError('min')">
                 {{ 'Minimum fee is 0.00000001' | translate }}
-              </span>
-            </mat-error>
+              </mat-error>
+            </ng-container>
             <mat-form-field
               appearance="outline"
               class="block"
@@ -256,14 +256,14 @@
                 (keyup)="onChangeFeeCurrencyField()"
               />
             </mat-form-field>
-            <mat-error *ngIf="feeFormCurr.touched && typeFee === 'Fiat'">
-              <span *ngIf="feeFormCurr.hasError('required')">
+            <ng-container *ngIf="feeFormCurr.touched && typeFee === 'Fiat'">
+              <mat-error *ngIf="feeFormCurr.hasError('required')">
                 {{ 'Fee is required' | translate }}
-              </span>
-              <span *ngIf="feeFormCurr.hasError('min')">
+              </mat-error>
+              <mat-error *ngIf="feeFormCurr.hasError('min')">
                 {{ 'Minimum fee is 0.00000001' | translate }}
-              </span>
-            </mat-error>
+              </mat-error>
+            </ng-container>
           </div>
         </div>
       </div>

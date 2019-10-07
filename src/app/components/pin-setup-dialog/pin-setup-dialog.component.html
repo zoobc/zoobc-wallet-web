@@ -26,16 +26,11 @@
         formControlName="pin"
         (change)="onResetPinValidation()"
       ></field-pins>
-      <mat-error *ngIf="isPinMatched == false">{{
-        'Pin is not match' | translate
-      }}</mat-error>
+      <mat-error *ngIf="isPinMatched == false">
+        {{ 'Pin is not match' | translate }}
+      </mat-error>
       <div class="text-right">
-        <button
-          mat-flat-button
-          color="primary"
-          type="button"
-          (click)="onBack()"
-        >
+        <button mat-flat-button color="warn" type="button" (click)="onBack()">
           {{ 'Back' | translate }}
         </button>
         <button

@@ -11,34 +11,34 @@
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" />
       </mat-form-field>
-      <mat-error *ngIf="emailField.touched">
-        <span *ngIf="emailField.hasError('required')"
-          >{{ 'Email is required' | translate }}
-        </span>
-        <span *ngIf="emailField.hasError('email')">
+      <ng-container *ngIf="emailField.touched">
+        <mat-error *ngIf="emailField.hasError('required')">
+          {{ 'Email is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="emailField.hasError('email')">
           {{ 'Incorrect email format' | translate }}
-        </span>
-      </mat-error>
+        </mat-error>
+      </ng-container>
       <!-- Subject -->
       <mat-form-field appearance="outline" color="accent">
         <mat-label>{{ 'Subject' | translate }}</mat-label>
         <input matInput type="text" formControlName="subject" />
       </mat-form-field>
-      <mat-error *ngIf="subjectField.touched">
-        <span *ngIf="subjectField.hasError('required')">{{
-          'Subject is required' | translate
-        }}</span>
-      </mat-error>
+      <ng-container *ngIf="subjectField.touched">
+        <mat-error *ngIf="subjectField.hasError('required')">
+          {{ 'Subject is required' | translate }}
+        </mat-error>
+      </ng-container>
       <!-- Message -->
       <mat-form-field appearance="outline" color="accent">
         <mat-label>{{ 'Message' | translate }}</mat-label>
         <textarea matInput formControlName="message" rows="5"></textarea>
       </mat-form-field>
-      <mat-error *ngIf="messageField.touched">
-        <span *ngIf="messageField.hasError('required')"
-          >{{ 'Message is required' | translate }}
-        </span>
-      </mat-error>
+      <ng-container *ngIf="messageField.touched">
+        <mat-error *ngIf="messageField.hasError('required')">
+          {{ 'Message is required' | translate }}
+        </mat-error>
+      </ng-container>
       <!--File Upload-->
       <div>
         <input
@@ -59,9 +59,9 @@
         <span class="mat-body-1">{{ filename }}</span>
       </div>
       <!-- Copy -->
-      <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0"
-        >Send me a copy of this message</mat-checkbox
-      >
+      <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0">
+        Send me a copy of this message
+      </mat-checkbox>
       <!-- Send button -->
       <button
         mat-flat-button
