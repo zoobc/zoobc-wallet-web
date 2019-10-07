@@ -17,6 +17,7 @@ import {
   GetNodeRegistrationResponse,
   NodeRegistration,
 } from 'src/app/grpc/model/nodeRegistration_pb';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -29,43 +30,46 @@ type RegisteredNode = NodeRegistration.AsObject;
   styleUrls: ['./node-admin.component.scss'],
 })
 export class NodeAdminComponent implements OnInit {
-  public doughnutChartData = [70, 30];
-  public doughnutChartType = 'doughnut';
-  nodeAdminAttribute: NodeAdminAttribute = {
-    ipAddress: '',
-  };
-  nodeAdminAttributes: NodeAdminAttribute;
+  account: SavedAccount;
 
   hwInfo: NodeHardware;
   mbToB = Math.pow(1024, 2);
   gbToB = Math.pow(1024, 3);
 
-  info: Subscription;
-
   registeredNode: RegisteredNode;
+
+  isNodeHardwareLoading: boolean = false;
+  isNodeHardwareError: boolean = false;
+  isRegisteredNodeLoading: boolean = false;
+  isRegisteredNodeError: boolean = false;
 
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
     private router: Router,
-    private nodeServ: NodeRegistrationService
+    private nodeServ: NodeRegistrationService,
+    private authServ: AuthService
   ) {
-    this.nodeAdminServ.nodeAdminAttribute.subscribe(
-      (attribute: NodeAdminAttribute) => {
-        this.nodeAdminAttributes = attribute;
-      }
-    );
+    this.account = authServ.getCurrAccount();
 
     nodeServ.getRegisteredNode().then((res: RegisteredNodeResponse) => {
-      console.log(res);
       this.registeredNode = res.noderegistration;
     });
 
-    nodeAdminServ
-      .streamNodeHardwareInfo()
-      .subscribe((res: NodeHardwareResponse) => {
+    this.isNodeHardwareLoading = true;
+    this.isNodeHardwareError = false;
+    nodeAdminServ.streamNodeHardwareInfo().subscribe(
+      (res: NodeHardwareResponse) => {
+        this.isNodeHardwareLoading = false;
+        console.log(res);
+
         this.hwInfo = res.nodehardware;
-      });
+      },
+      err => {
+        this.isNodeHardwareLoading = false;
+        this.isNodeHardwareError = true;
+      }
+    );
   }
 
   ngOnInit() {}

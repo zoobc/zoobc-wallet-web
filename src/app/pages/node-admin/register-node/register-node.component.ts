@@ -67,7 +67,7 @@ export class RegisterNodeComponent implements OnInit {
       'utf-8'
     );
     const fee = 0.001 * 1e8;
-    const timestamp = Math.trunc(Date.now() / 1000);
+    const timestamp = Date.now();
     const pubKey = [
       153,
       58,

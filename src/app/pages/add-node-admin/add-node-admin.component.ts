@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PoownService } from 'src/app/services/poown.service';
 import { ProofOfOwnership } from 'src/app/grpc/model/proofOfOwnership_pb';
+import { GenerateNodeKeyResponse } from '../../grpc/model/node_pb';
 
 @Component({
   selector: 'app-add-node-admin',
@@ -40,8 +41,18 @@ export class AddNodeAdminComponent implements OnInit {
       this.isLoading = true;
       this.poownServ
         .get(this.ipAddressField.value)
-        .then((res: ProofOfOwnership) => {
+        .then(async (res: ProofOfOwnership) => {
+          let promise: Promise<any>;
+          await setTimeout(() => {
+            promise = this.nodeAdminServ.generateNodeKey(
+              this.ipAddressField.value
+            );
+          }, 1000);
+          return promise;
+        })
+        .then((res: GenerateNodeKeyResponse.AsObject) => {
           this.isLoading = false;
+          this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
 
           let nodeAdded: string;
           this.translate
@@ -55,11 +66,13 @@ export class AddNodeAdminComponent implements OnInit {
             nodeAdded,
             `${nodeAddedMessage} : ${this.ipAddressField.value}`,
             'success'
-          );
-
-          this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
-          this.dialogRef.close();
-          this.router.navigateByUrl('/nodeadmin');
+          ).then(() => {
+            this.dialogRef.close();
+            // delaying the redirect so the timestamp of poown not in the past
+            setTimeout(() => {
+              this.router.navigateByUrl('/nodeadmin');
+            }, 400);
+          });
         })
         .catch(err => {
           console.log(err);

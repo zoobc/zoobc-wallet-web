@@ -16,44 +16,9 @@ export class NodeRegistrationService {
   getRegisteredNode() {
     return new Promise((resolve, reject) => {
       const request = new GetNodeRegistrationRequest();
-      request.setAccountaddress('BCZEGOb3WNx3fDOVf9ZS4EjvOIv_UeW4TVBQJ_6tHKlE');
+      request.setAccountaddress('nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd');
       request.setRegistrationheight(0);
-      request.setNodepublickey(
-        new Uint8Array([
-          153,
-          58,
-          50,
-          200,
-          7,
-          61,
-          108,
-          229,
-          204,
-          48,
-          199,
-          145,
-          21,
-          99,
-          125,
-          75,
-          49,
-          45,
-          118,
-          97,
-          219,
-          80,
-          242,
-          244,
-          100,
-          134,
-          144,
-          246,
-          37,
-          144,
-          213,
-          135,
-        ])
-      );
+      request.setNodepublickey('Keu41kYXmVloKfr4MwdFWeq1ZKMtRZhGNMmTRgbyNNw=');
 
       let client = grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: environment.grpcUrl,

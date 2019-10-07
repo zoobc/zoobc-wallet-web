@@ -7,11 +7,9 @@
           <i class="fa fa-plug"></i>
           <div class="label">Online</div>
         </div>
-        <div class="status" *ngIf="nodeAdminAttributes">
+        <div class="status" *ngIf="account.nodeIP">
           <div class="label">{{ 'IP Address' | translate }}</div>
-          <div class="value">
-            {{ nodeAdminAttributes.ipAddress }}
-          </div>
+          <div class="value">{{ account.nodeIP }}</div>
         </div>
       </mat-card>
     </div>
@@ -98,101 +96,114 @@
   <br /><br />
 
   <h2 class="mat-h2">{{ 'Node Usage' | translate }}</h2>
-  <mat-card *ngIf="hwInfo">
-    <h2 class="mat-h2">{{ 'CPU' | translate }}</h2>
-    <div class="row">
-      <div
-        class="col-6 col-sm-3 cpu-usage"
-        *ngFor="let cpu of hwInfo.cpuinformationList"
-      >
-        <div class="percentage">
-          <mat-progress-spinner
-            [value]="cpu.usedpercent"
-            diameter="80"
-            color="primary"
-          ></mat-progress-spinner>
-          <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
-        </div>
-        <div class="cpu-number">CPU {{ cpu.coreid }}</div>
-      </div>
+  <mat-card>
+    <div class="no-content" *ngIf="isNodeHardwareError">
+      <i matPrefix class="fa fa-exclamation-triangle"></i>
+      <span class="message">
+        {{ 'An error occurred while processing your request' | translate }}
+      </span>
+      <button mat-flat-button color="primary" (click)="onRefresh()">
+        {{ 'Try Again' | translate }}
+      </button>
     </div>
-    <br /><br />
 
-    <div class="row node-spec">
-      <div class="col-12 col-sm-6">
-        <p class="label">CPU index number:</p>
-        <p class="value">{{ hwInfo.cpuinformationList[0].cpuindex }}</p>
-        <p class="label">VendorID:</p>
-        <p class="value">{{ hwInfo.cpuinformationList[0].vendorid }}</p>
-        <p class="label">{{ 'Number of cores' | translate }}:</p>
-        <p class="value">{{ hwInfo.cpuinformationList.length }}</p>
-        <p class="label">{{ 'Model Name' | translate }}:</p>
-        <p class="value">{{ hwInfo.cpuinformationList[0].modelname }}</p>
-        <p class="label">{{ 'Speed' | translate }}:</p>
-        <p class="value">{{ hwInfo.cpuinformationList[0].mhz }} MHz</p>
-      </div>
-      <div class="col-12 col-sm-6">
-        <p class="label">Hostname:</p>
-        <p class="value">{{ hwInfo.hostinformation.hostname }}</p>
-        <p class="label">{{ 'Number of processes running' | translate }}:</p>
-        <p class="value">{{ hwInfo.hostinformation.numberofrunningprocess }}</p>
-        <p class="label">OS:</p>
-        <p class="value">{{ hwInfo.hostinformation.os }}</p>
-        <p class="label">Platform:</p>
-        <p class="value">{{ hwInfo.hostinformation.platform }}</p>
-        <p class="label">Host ID(uuid):</p>
-        <p class="value">{{ hwInfo.hostinformation.hostid }}</p>
-      </div>
-    </div>
-    <br /><br />
-
-    <div class="row" *ngIf="hwInfo">
-      <div class="col-12 col-sm-6">
-        <h2 class="mat-h2">{{ 'Memory' | translate }}</h2>
-        <div class="memory-usage">
-          <div class="label">{{ 'Usage' | translate }}</div>
-          <div class="usage">
-            <span>
-              {{ hwInfo.memoryinformation.used / gbToB | number: '0.0-2' }}GB/
-            </span>
-            <span>
-              {{ hwInfo.memoryinformation.total / gbToB | number: '0.0-2' }}GB
-            </span>
-            <span>
-              ({{ hwInfo.memoryinformation.usedpercent | number: '0.0-2' }}%)
-            </span>
+    <ng-container *ngIf="hwInfo">
+      <h2 class="mat-h2">{{ 'CPU' | translate }}</h2>
+      <div class="row">
+        <div
+          class="col-6 col-sm-3 cpu-usage"
+          *ngFor="let cpu of hwInfo.cpuinformationList"
+        >
+          <div class="percentage">
+            <mat-progress-spinner
+              [value]="cpu.usedpercent"
+              diameter="80"
+              color="primary"
+            ></mat-progress-spinner>
+            <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
           </div>
-          <div class="persentage-container">
-            <div
-              class="percentage"
-              [ngStyle]="{ 'width.%': hwInfo.memoryinformation.usedpercent }"
-            ></div>
-          </div>
-        </div>
-        <br />
-      </div>
-
-      <div class="col-12 col-sm-6">
-        <h2 class="mat-h2">{{ 'Storage' | translate }}</h2>
-        <div class="memory-usage">
-          <div class="label">{{ 'Usage' | translate }}</div>
-          <div class="usage">
-            <span>
-              {{ hwInfo.storageinformation.used / gbToB | number: '0.0-2' }}GB/
-            </span>
-            <span>
-              {{ hwInfo.storageinformation.total / gbToB | number: '0.0-2' }}GB
-            </span>
-          </div>
-          <div class="persentage-container">
-            <div
-              class="percentage"
-              [ngStyle]="{ 'width.%': hwInfo.storageinformation.usedpercent }"
-            ></div>
-          </div>
+          <div class="cpu-number">CPU {{ cpu.coreid }}</div>
         </div>
       </div>
-    </div>
+      <br /><br />
+
+      <div class="row node-spec">
+        <div class="col-12 col-sm-6">
+          <p class="label">CPU index number:</p>
+          <p class="value">{{ hwInfo.cpuinformationList[0].cpuindex }}</p>
+          <p class="label">VendorID:</p>
+          <p class="value">{{ hwInfo.cpuinformationList[0].vendorid }}</p>
+          <p class="label">{{ 'Number of cores' | translate }}:</p>
+          <p class="value">{{ hwInfo.cpuinformationList.length }}</p>
+          <p class="label">{{ 'Model Name' | translate }}:</p>
+          <p class="value">{{ hwInfo.cpuinformationList[0].modelname }}</p>
+          <p class="label">{{ 'Speed' | translate }}:</p>
+          <p class="value">{{ hwInfo.cpuinformationList[0].mhz }} MHz</p>
+        </div>
+        <div class="col-12 col-sm-6">
+          <p class="label">Hostname:</p>
+          <p class="value">{{ hwInfo.hostinformation.hostname }}</p>
+          <p class="label">{{ 'Number of processes running' | translate }}:</p>
+          <p class="value">{{ hwInfo.hostinformation.numberofrunningprocess }}</p>
+          <p class="label">OS:</p>
+          <p class="value">{{ hwInfo.hostinformation.os }}</p>
+          <p class="label">Platform:</p>
+          <p class="value">{{ hwInfo.hostinformation.platform }}</p>
+          <p class="label">Host ID(uuid):</p>
+          <p class="value">{{ hwInfo.hostinformation.hostid }}</p>
+        </div>
+      </div>
+      <br /><br />
+
+      <div class="row">
+        <div class="col-12 col-sm-6">
+          <h2 class="mat-h2">{{ 'Memory' | translate }}</h2>
+          <div class="memory-usage">
+            <div class="label">{{ 'Usage' | translate }}</div>
+            <div class="usage">
+              <span>
+                {{ hwInfo.memoryinformation.used / gbToB | number: '0.0-2' }}GB/
+              </span>
+              <span>
+                {{ hwInfo.memoryinformation.total / gbToB | number: '0.0-2' }}GB
+              </span>
+              <span>
+                ({{ hwInfo.memoryinformation.usedpercent | number: '0.0-2' }}%)
+              </span>
+            </div>
+            <div class="persentage-container">
+              <div
+                class="percentage"
+                [ngStyle]="{ 'width.%': hwInfo.memoryinformation.usedpercent }"
+              ></div>
+            </div>
+          </div>
+          <br />
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <h2 class="mat-h2">{{ 'Storage' | translate }}</h2>
+          <div class="memory-usage">
+            <div class="label">{{ 'Usage' | translate }}</div>
+            <div class="usage">
+              <span>
+                {{ hwInfo.storageinformation.used / gbToB | number: '0.0-2' }}GB/
+              </span>
+              <span>
+                {{ hwInfo.storageinformation.total / gbToB | number: '0.0-2' }}GB
+              </span>
+            </div>
+            <div class="persentage-container">
+              <div
+                class="percentage"
+                [ngStyle]="{ 'width.%': hwInfo.storageinformation.usedpercent }"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
   </mat-card>
   <br />
 </div>

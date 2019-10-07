@@ -32,7 +32,7 @@ export class PoownService {
       );
 
       let bytes = new Buffer(12);
-      let timestamp = BigInt(Math.trunc(Date.now() / 1000));
+      let timestamp = BigInt(Date.now());
       bytes.set(bigintToByteArray(timestamp), 0);
       bytes.writeInt32LE(RequestType.GETPROOFOFOWNERSHIP, 8);
 

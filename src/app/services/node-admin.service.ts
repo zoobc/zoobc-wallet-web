@@ -10,8 +10,14 @@ import { bigintToByteArray, BigInt } from 'src/helpers/converters';
 import { AuthService, SavedAccount } from './auth.service';
 import { KeyringService } from './keyring.service';
 import { NodeHardwareService } from '../grpc/service/nodeHardware_pb_service';
+import { NodeAdminService as NodeAdminServ } from '../grpc/service/nodeAdmin_pb_service';
 import { grpc } from '@improbable-eng/grpc-web';
 import { RequestType } from '../grpc/model/auth_pb';
+import { NodeAdminServiceClient } from '../grpc/service/nodeAdmin_pb_service';
+import {
+  GenerateNodeKeyRequest,
+  GenerateNodeKeyResponse,
+} from '../grpc/model/node_pb';
 
 export interface NodeAdminAttribute {
   ipAddress: string;
@@ -52,7 +58,7 @@ export class NodeAdminService {
       );
 
       let bytes = new Buffer(12);
-      bytes.set(bigintToByteArray(BigInt(Math.trunc(Date.now() / 1000))), 0);
+      bytes.set(bigintToByteArray(BigInt(Date.now())), 0);
       bytes.writeInt32LE(RequestType.GETNODEHARDWARE, 8);
 
       let bytesWithSign = new Buffer(80);
@@ -65,18 +71,19 @@ export class NodeAdminService {
       const request = new GetNodeHardwareRequest();
 
       this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
-        host: environment.grpcUrl,
+        host: account.nodeIP,
       });
       this.nodeAdminClient.onHeaders((headers: grpc.Metadata) => {
         console.log('onHeaders', headers);
       });
       this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
-        // console.log('onMessage', message.toObject());
+        console.log('onMessage', message.toObject());
         observer.next(message.toObject());
       });
       this.nodeAdminClient.onEnd(
         (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
           console.log('onEnd', status, statusMessage, trailers);
+          if (status != grpc.Code.OK) observer.error(statusMessage);
         }
       );
 
@@ -90,6 +97,56 @@ export class NodeAdminService {
 
   stopNodeHardwareInfo() {
     this.nodeAdminClient.close();
+  }
+
+  generateNodeKey(nodeIP: string) {
+    return new Promise((resolve, reject) => {
+      const account = this.authServ.getCurrAccount();
+      const seed = Buffer.from(this.authServ.currSeed, 'hex');
+
+      this.keyringServ.calcBip32RootKeyFromSeed('ZBC', seed);
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        'ZBC',
+        account.path
+      );
+
+      let bytes = new Buffer(12);
+      bytes.set(bigintToByteArray(BigInt(Date.now())), 0);
+      bytes.writeInt32LE(RequestType.GENERATETNODEKEY, 8);
+      console.log(bytes);
+
+      let bytesWithSign = new Buffer(80);
+      let signature = childSeed.sign(bytes);
+      bytesWithSign.set(bytes, 0);
+      bytesWithSign.writeInt32LE(0, 12);
+      bytesWithSign.set(signature, 16);
+
+      const request = new GenerateNodeKeyRequest();
+
+      let client = grpc.client(NodeAdminServ.GenerateNodeKey, {
+        host: nodeIP,
+      });
+
+      client.onHeaders((headers: grpc.Metadata) => {
+        console.log('onHeaders', headers);
+      });
+      client.onMessage((message: GenerateNodeKeyResponse) => {
+        // console.log('onMessage', message.toObject());
+        resolve(message.toObject());
+      });
+      client.onEnd(
+        (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
+          console.log('onEnd', status, statusMessage, trailers);
+          if (status != grpc.Code.OK) reject(statusMessage);
+        }
+      );
+
+      client.start(
+        new grpc.Metadata({ authorization: bytesWithSign.toString('base64') })
+      );
+      client.send(request);
+      client.finishSend();
+    });
   }
 
   getNodeAdminList() {
