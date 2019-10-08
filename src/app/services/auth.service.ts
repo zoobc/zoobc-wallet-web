@@ -39,7 +39,7 @@ export class AuthService {
   ) {}
 
   generateDerivationPath(): number {
-    const accounts: [SavedAccount] =
+    const accounts: SavedAccount[] =
       JSON.parse(localStorage.getItem('ACCOUNT')) || [];
 
     // find length of not imported account. the result is the new derivation path

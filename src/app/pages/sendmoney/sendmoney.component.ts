@@ -14,12 +14,10 @@ import {
   Currency,
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { BytesMaker } from 'src/helpers/BytesMaker';
 import { environment } from 'src/environments/environment';
 import { addressValidation, generateEncKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
-
-const coin = 'ZBC';
+import { SendMoney } from 'src/helpers/transaction-builder/send-money';
 
 @Component({
   selector: 'app-sendmoney',
@@ -289,54 +287,17 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isFormSendLoading = true;
 
-      const account = this.account;
-      const seed = Buffer.from(this.authServ.currSeed, 'hex');
+      const txBytes = new SendMoney();
+      txBytes.authServ = this.authServ;
+      txBytes.keyringServ = this.keyringServ;
 
-      this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        coin,
-        account.path
-      );
+      txBytes.sender = this.account.address;
+      txBytes.recipient = this.recipientForm.value;
+      txBytes.fee = this.feeForm.value;
+      txBytes.amount = this.amountForm.value;
+      txBytes.sign();
 
-      const sender = Buffer.from(this.account.address, 'utf-8');
-      const recepient = Buffer.from(this.recipientForm.value, 'utf-8');
-      const amount = this.amountForm.value * 1e8;
-      const fee = this.feeForm.value * 1e8;
-      const timestamp = Math.trunc(Date.now() / 1000);
-
-      let bytes = new BytesMaker(129);
-      // transaction type
-      bytes.write4bytes(1);
-      // version
-      bytes.write1Byte(1);
-      // timestamp
-      bytes.write8Bytes(timestamp);
-      // sender address length
-      bytes.write4bytes(44);
-      // sender address
-      bytes.write44Bytes(sender);
-      // recepient address length
-      bytes.write4bytes(44);
-      // recepient address
-      bytes.write44Bytes(recepient);
-      // tx fee
-      bytes.write8Bytes(fee);
-      // tx body length
-      bytes.write4bytes(8);
-      // tx body (amount)
-      bytes.write8Bytes(amount);
-
-      let signature = childSeed.sign(bytes.value);
-      let bytesWithSign = new BytesMaker(197);
-
-      // copy to new bytes
-      bytesWithSign.write(bytes.value, 129);
-      // set signature type
-      bytesWithSign.write4bytes(0);
-      // set signature
-      bytesWithSign.write(signature, 64);
-
-      this.transactionServ.postTransaction(bytesWithSign.value).then(
+      this.transactionServ.postTransaction(txBytes.value).then(
         (res: any) => {
           this.isFormSendLoading = false;
           Swal.fire(
