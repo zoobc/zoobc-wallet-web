@@ -7,11 +7,11 @@
         <div class="name">
           {{ account.name }}
           <small>
-            <wallet-address [value]="address"></wallet-address>
+            <wallet-address [value]="account.address"></wallet-address>
           </small>
         </div>
-        <div class="balance" *ngIf="accountBalance">
-          {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }} ZBC
+        <div class="balance">
+          {{ account.balance / 1e8 | number: '0.0-4' }} ZBC
         </div>
       </div>
 
@@ -306,7 +306,7 @@
           <div class="label">From:</div>
           <div class="address">
             <wallet-address
-              [value]="address"
+              [value]="account.address"
               [copyButton]="true"
             ></wallet-address>
           </div>
@@ -375,14 +375,16 @@
   </h3>
   <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()" class="form-pin">
     <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
-    <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-      <span class="text-center">{{ 'Pin is not match' | translate }}</span>
-    </mat-error>
-    <i
-      matPrefix
-      class="fas fa-circle-notch fa-spin"
-      *ngIf="isConfirmPinLoading"
-    ></i>
+    <div class="text-center">
+      <mat-error *ngIf="formConfirmPin.hasError('invalid')">
+        <span class="text-center">{{ 'Pin is not match' | translate }}</span>
+      </mat-error>
+      <i
+        matPrefix
+        class="fas fa-circle-notch fa-spin"
+        *ngIf="isConfirmPinLoading"
+      ></i>
+    </div>
   </form>
 </ng-template>
 
@@ -410,18 +412,11 @@
                 [copyButton]="true"
               ></wallet-address>
             </div>
-            <div
-              class="last-tx"
-              *ngIf="acc.lastTx.length === 0; else hasTransaction"
-            >
-              Last Transaction: None
+            <div class="last-tx">
+              <span>Last Transaction:&nbsp;</span> 
+              <span *ngIf="acc.lastTx">{{ acc.lastTx | dateAgo }}</span>
+              <span *ngIf="!acc.lastTx">{{ 'None' | translate }}</span>
             </div>
-            <ng-template #hasTransaction>
-              <div class="last-tx">
-                Last Transaction :
-                {{ acc.lastTx['0'].timestamp | dateAgo }}
-              </div>
-            </ng-template>
           </div>
           <div class="col-12 text-right">
             <div class="balance">

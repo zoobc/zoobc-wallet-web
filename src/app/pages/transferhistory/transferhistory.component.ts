@@ -46,7 +46,7 @@ export class TransferhistoryComponent implements OnInit {
       this.isError = false;
 
       this.transactionServ
-        .getAccountTransaction(this.page, this.perPage)
+        .getAccountTransaction(this.page, this.perPage, this.address)
         .then((res: Transactions) => {
           if (!reload)
             this.accountHistory = this.accountHistory.concat(res.transactions);
@@ -58,7 +58,7 @@ export class TransferhistoryComponent implements OnInit {
           // if relaad button pressed app will req unconfirmed tx too
           if (reload) {
             this.transactionServ
-              .getUnconfirmTransaction()
+              .getUnconfirmTransaction(this.address)
               .then((res: Transaction[]) => {
                 this.unconfirmTx = res;
               });

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import * as CryptoJS from 'crypto-js';
 
 import { TransactionService } from '../../services/transaction.service';
 import { KeyringService } from 'src/app/services/keyring.service';
@@ -16,18 +15,11 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { BytesMaker } from 'src/helpers/BytesMaker';
-import {
-  GetAccountBalanceResponse,
-  AccountBalance as AB,
-} from 'src/app/grpc/model/accountBalance_pb';
-import { AccountService } from 'src/app/services/account.service';
 import { environment } from 'src/environments/environment';
-import { addressValidation } from 'src/helpers/utils';
+import { addressValidation, generateEncKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 
 const coin = 'ZBC';
-type AccountBalance = AB.AsObject;
-type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 
 @Component({
   selector: 'app-sendmoney',
@@ -35,7 +27,6 @@ type AccountBalanceList = GetAccountBalanceResponse.AsObject;
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
-  accountBalance: AccountBalance;
   contacts: Contact[];
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
@@ -86,8 +77,7 @@ export class SendmoneyComponent implements OnInit {
   isConfirmPinLoading = false;
 
   account: SavedAccount;
-  accounts: any;
-  address = this.authServ.currAddress;
+  accounts: SavedAccount[];
 
   bytes = new Uint8Array(193);
   typeCoin = 'ZBC';
@@ -98,7 +88,6 @@ export class SendmoneyComponent implements OnInit {
   customFee: boolean = false;
 
   constructor(
-    private accountServ: AccountService,
     private transactionServ: TransactionService,
     private authServ: AuthService,
     private keyringServ: KeyringService,
@@ -122,14 +111,9 @@ export class SendmoneyComponent implements OnInit {
     this.formConfirmPin = new FormGroup({
       pin: this.pinField,
     });
-
-    this.account = authServ.getCurrAccount();
   }
 
   ngOnInit() {
-    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
-      this.accountBalance = data.accountbalance;
-    });
     this.contacts = this.contactServ.getContactList() || [];
 
     // set filtered contacts function
@@ -146,7 +130,9 @@ export class SendmoneyComponent implements OnInit {
       this.onFeeChoose(2);
     });
 
-    this.accounts = this.accountServ.getAllAccount();
+    this.account = this.authServ.getCurrAccount();
+    this.accounts = this.authServ.getAllAccount(true);
+    this.account = this.accounts.find(acc => this.account.path == acc.path);
   }
 
   openAccountList() {
@@ -157,8 +143,7 @@ export class SendmoneyComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
-    this.account = this.authServ.getCurrAccount();
-    this.address = this.authServ.currAddress;
+    this.account = account;
     this.accountRefDialog.close();
   }
 
@@ -232,7 +217,7 @@ export class SendmoneyComponent implements OnInit {
 
   onOpenDialogDetailSendMoney() {
     const total = this.amountForm.value + this.feeForm.value;
-    if (parseInt(this.accountBalance.spendablebalance) / 1e8 >= total) {
+    if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
         width: '500px',
         data: this.formSend.value,
@@ -281,29 +266,17 @@ export class SendmoneyComponent implements OnInit {
     if (this.pinField.value.length == 6) {
       this.isConfirmPinLoading = true;
 
-      const pin = this.pinField.value;
-      const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
-        const key = CryptoJS.PBKDF2(pin, 'salt', {
-          keySize: 8,
-          iterations: 10000,
-        }).toString();
-
-        try {
-          const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
-            CryptoJS.enc.Utf8
-          );
-          if (!seed) throw 'not match';
-
+        const key = generateEncKey(this.pinField.value);
+        const isPinValid = this.authServ.isPinValid(key);
+        if (isPinValid) {
           this.pinRefDialog.close(true);
           this.sendMoneyRefDialog.close();
-        } catch (e) {
+        } else {
           this.formConfirmPin.setErrors({ invalid: true });
-        } finally {
-          this.isConfirmPinLoading = false;
         }
+        this.isConfirmPinLoading = false;
       }, 50);
     }
   }
@@ -325,7 +298,7 @@ export class SendmoneyComponent implements OnInit {
         account.path
       );
 
-      const sender = Buffer.from(this.authServ.currAddress, 'utf-8');
+      const sender = Buffer.from(this.account.address, 'utf-8');
       const recepient = Buffer.from(this.recipientForm.value, 'utf-8');
       const amount = this.amountForm.value * 1e8;
       const fee = this.feeForm.value * 1e8;
