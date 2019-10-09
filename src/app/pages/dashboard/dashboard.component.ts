@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   currencyRates: Currency[];
 
   currAcc: SavedAccount;
-  accounts: [SavedAccount];
+  accounts: SavedAccount[];
   address: string;
 
   zbcPriceInUsd: number = 10;
@@ -80,7 +80,7 @@ export class DashboardComponent implements OnInit {
       this.isErrorBalance = false;
 
       this.accountServ
-        .getAccountBalance()
+        .getAccountBalance(this.address)
         .then((data: AccountBalanceList) => {
           this.accountBalance = data.accountbalance;
           this.isLoadingBalance = false;
@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
       this.isErrorRecentTx = false;
 
       this.transactionServ
-        .getAccountTransaction(1, 5)
+        .getAccountTransaction(1, 5, this.address)
         .then((res: Transactions) => {
           this.totalTx = res.total;
           this.recentTx = res.transactions;
@@ -106,7 +106,7 @@ export class DashboardComponent implements OnInit {
         })
         .then(() => {
           this.transactionServ
-            .getUnconfirmTransaction()
+            .getUnconfirmTransaction(this.address)
             .then((res: Transaction[]) => {
               this.unconfirmTx = res;
             });
@@ -145,13 +145,6 @@ export class DashboardComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
-    // this.currAcc = this.authServ.getCurrAccount();
-    // this.address = this.authServ.currAddress;
-
-    // reload data balance, transaction, and unconfirm transaction
-    // this.getBalance();
-    // this.getTransactions();
-
     this.router.navigateByUrl('/');
   }
 

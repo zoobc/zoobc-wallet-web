@@ -18,7 +18,6 @@ import { MempoolService } from '../grpc/service/mempool_pb_service';
 
 import { environment } from '../../environments/environment';
 import { readInt64 } from 'src/helpers/converters';
-import { AuthService } from './auth.service';
 import { ContactService } from './contact.service';
 import { Pagination, OrderBy } from '../grpc/model/pagination_pb';
 
@@ -46,16 +45,13 @@ export interface Transactions {
   providedIn: 'root',
 })
 export class TransactionService {
-  constructor(
-    private authServ: AuthService,
-    private contactServ: ContactService
-  ) {}
+  constructor(private contactServ: ContactService) {}
 
   getAccountTransaction(
     page: number,
     limit: number,
-    address: string = this.authServ.currAddress
-  ) {
+    address: string
+  ): Promise<Transactions> {
     // const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetTransactionsRequest();
@@ -106,7 +102,7 @@ export class TransactionService {
             });
 
           resolve({
-            total: message.toObject().total,
+            total: parseInt(message.toObject().total),
             transactions: transactions,
           });
         },
@@ -121,7 +117,7 @@ export class TransactionService {
     });
   }
 
-  getTransaction(id) {
+  getTransaction(id: string): Promise<Transaction> {
     return new Promise((resolve, reject) => {
       const request = new GetTransactionRequest();
       request.setId(id);
@@ -164,8 +160,7 @@ export class TransactionService {
     });
   }
 
-  getUnconfirmTransaction() {
-    const address = this.authServ.currAddress;
+  getUnconfirmTransaction(address: string) {
     return new Promise((resolve, reject) => {
       const request = new GetMempoolTransactionsRequest();
       const pagination = new Pagination();
@@ -242,6 +237,4 @@ export class TransactionService {
       });
     });
   }
-
-  convertTransaction() {}
 }

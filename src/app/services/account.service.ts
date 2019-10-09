@@ -6,24 +6,15 @@ import {
   GetAccountBalanceResponse,
 } from '../grpc/model/accountBalance_pb';
 import { environment } from '../../environments/environment';
-import { AuthService, SavedAccount } from './auth.service';
 import { grpc } from '@improbable-eng/grpc-web';
-import { GetAddressFromPublicKey } from 'src/helpers/utils';
-import { KeyringService } from './keyring.service';
-import { TransactionService, Transactions } from './transaction.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  constructor(
-    private authServ: AuthService,
-    private keyringServ: KeyringService,
-    private transactionServ: TransactionService
-  ) {}
+  constructor() {}
 
-  getAccountBalance(address: string = this.authServ.currAddress) {
-    // const address = this.authServ.currAddress;
+  getAccountBalance(address: string) {
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
       request.setAccountaddress(address);
@@ -50,27 +41,5 @@ export class AccountService {
         },
       });
     });
-  }
-
-  getAllAccount() {
-    let accounts: any[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
-    accounts.map(async acc => {
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        'ZBC',
-        acc.path
-      );
-      acc.address = GetAddressFromPublicKey(childSeed.publicKey);
-      await this.transactionServ
-        .getAccountTransaction(1, 1, acc.address)
-        .then((res: Transactions) => {
-          acc.lastTx = res.transactions;
-        });
-      await this.getAccountBalance(acc.address).then((res: any) => {
-        acc.balance = res.accountbalance.spendablebalance;
-      });
-      return acc;
-    });
-
-    return accounts;
   }
 }

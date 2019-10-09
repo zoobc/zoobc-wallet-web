@@ -7,26 +7,24 @@
         *ngFor="let word of prefillPassphrase; let i = index"
       >
         <mat-form-field
-          class="passphrase-input"
           [formGroupName]="i"
           appearance="outline"
           color="accent"
+          class="block"
         >
           <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
           <input matInput formControlName="word" (keyup)="isValid()" />
         </mat-form-field>
       </div>
     </div>
-    <mat-error *ngIf="confirmForm.hasError('required')">
-      <span class="text-center">
+    <div style="height: 25px" class="text-center">
+      <mat-error *ngIf="confirmForm.hasError('required')">
         {{ 'Please fill all of the passphrase' | translate }}
-      </span>
-    </mat-error>
-    <mat-error *ngIf="confirmForm.hasError('mnemonic')">
-      <span class="text-center">
+      </mat-error>
+      <mat-error *ngIf="confirmForm.hasError('mnemonic')">
         {{ 'The passphrase is not matched' | translate }}
-      </span>
-    </mat-error>
+      </mat-error>
+    </div>
     <button
       mat-flat-button
       color="primary"

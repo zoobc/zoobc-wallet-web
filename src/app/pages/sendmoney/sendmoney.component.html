@@ -7,11 +7,11 @@
         <div class="name">
           {{ account.name }}
           <small>
-            <wallet-address [value]="address"></wallet-address>
+            <wallet-address [value]="account.address"></wallet-address>
           </small>
         </div>
-        <div class="balance" *ngIf="accountBalance">
-          {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }} ZBC
+        <div class="balance">
+          {{ account.balance / 1e8 | number: '0.0-4' }} ZBC
         </div>
       </div>
 
@@ -36,14 +36,14 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <mat-error *ngIf="recipientForm.touched">
-        <span *ngIf="recipientForm.hasError('required')">
+      <ng-container *ngIf="recipientForm.touched">
+        <mat-error *ngIf="recipientForm.hasError('required')">
           {{ 'Recepient is required' | translate }}
-        </span>
-        <span *ngIf="recipientForm.hasError('invalidAddress')">
+        </mat-error>
+        <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
           {{ 'ZBC Address is invalid' | translate }}
-        </span>
-      </mat-error>
+        </mat-error>
+      </ng-container>
       <div class="address-alias" *ngIf="!showSaveAddressBtn">
         <span>{{'Address' | translate}}: </span>
         <b>{{contact.alias}}</b>
@@ -109,14 +109,14 @@
               (keyup)="onChangeAmountField()"
             />
           </mat-form-field>
-          <mat-error *ngIf="amountForm.touched && typeCoin === 'ZBC'">
-            <span *ngIf="amountForm.hasError('required')">
+          <ng-container *ngIf="amountForm.touched && typeCoin === 'ZBC'">
+            <mat-error *ngIf="amountForm.hasError('required')">
               {{ 'Amount is required' | translate }}
-            </span>
-            <span *ngIf="amountForm.hasError('min')">
+            </mat-error>
+            <mat-error *ngIf="amountForm.hasError('min')">
               {{ 'Minimum amount is 0.00000001' | translate }}
-            </span>
-          </mat-error>
+            </mat-error>
+          </ng-container>
           <mat-form-field
             *ngIf="typeCoin === 'Fiat'"
             appearance="outline"
@@ -132,14 +132,14 @@
               (keyup)="onChangeAmountCurrencyField()"
             />
           </mat-form-field>
-          <mat-error *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
-            <span *ngIf="amountCurrencyForm.hasError('required')">
+          <ng-container *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
+            <mat-error *ngIf="amountCurrencyForm.hasError('required')">
               {{ 'Amount is required' | translate }}
-            </span>
-            <span *ngIf="amountCurrencyForm.hasError('min')">
+            </mat-error>
+            <mat-error *ngIf="amountCurrencyForm.hasError('min')">
               {{ 'Minimum amount is 0.00000001' | translate }}
-            </span>
-          </mat-error>
+            </mat-error>
+          </ng-container>
         </div>
       </div>
 
@@ -233,14 +233,14 @@
                 (keyup)="onChangeFeeField()"
               />
             </mat-form-field>
-            <mat-error *ngIf="feeForm.touched && typeFee === 'ZBC'">
-              <span *ngIf="feeForm.hasError('required')">
+            <ng-container *ngIf="feeForm.touched && typeFee === 'ZBC'">
+              <mat-error *ngIf="feeForm.hasError('required')">
                 {{ 'Fee is required' | translate }}
-              </span>
-              <span *ngIf="feeForm.hasError('min')">
+              </mat-error>
+              <mat-error *ngIf="feeForm.hasError('min')">
                 {{ 'Minimum fee is 0.00000001' | translate }}
-              </span>
-            </mat-error>
+              </mat-error>
+            </ng-container>
             <mat-form-field
               appearance="outline"
               class="block"
@@ -256,14 +256,14 @@
                 (keyup)="onChangeFeeCurrencyField()"
               />
             </mat-form-field>
-            <mat-error *ngIf="feeFormCurr.touched && typeFee === 'Fiat'">
-              <span *ngIf="feeFormCurr.hasError('required')">
+            <ng-container *ngIf="feeFormCurr.touched && typeFee === 'Fiat'">
+              <mat-error *ngIf="feeFormCurr.hasError('required')">
                 {{ 'Fee is required' | translate }}
-              </span>
-              <span *ngIf="feeFormCurr.hasError('min')">
+              </mat-error>
+              <mat-error *ngIf="feeFormCurr.hasError('min')">
                 {{ 'Minimum fee is 0.00000001' | translate }}
-              </span>
-            </mat-error>
+              </mat-error>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -306,7 +306,7 @@
           <div class="label">From:</div>
           <div class="address">
             <wallet-address
-              [value]="address"
+              [value]="account.address"
               [copyButton]="true"
             ></wallet-address>
           </div>
@@ -375,14 +375,16 @@
   </h3>
   <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()" class="form-pin">
     <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
-    <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-      <span class="text-center">{{ 'Pin is not match' | translate }}</span>
-    </mat-error>
-    <i
-      matPrefix
-      class="fas fa-circle-notch fa-spin"
-      *ngIf="isConfirmPinLoading"
-    ></i>
+    <div class="text-center">
+      <mat-error *ngIf="formConfirmPin.hasError('invalid')">
+        <span class="text-center">{{ 'Pin is not match' | translate }}</span>
+      </mat-error>
+      <i
+        matPrefix
+        class="fas fa-circle-notch fa-spin"
+        *ngIf="isConfirmPinLoading"
+      ></i>
+    </div>
   </form>
 </ng-template>
 
@@ -410,18 +412,11 @@
                 [copyButton]="true"
               ></wallet-address>
             </div>
-            <div
-              class="last-tx"
-              *ngIf="acc.lastTx.length === 0; else hasTransaction"
-            >
-              Last Transaction: None
+            <div class="last-tx">
+              <span>Last Transaction:&nbsp;</span> 
+              <span *ngIf="acc.lastTx">{{ acc.lastTx | dateAgo }}</span>
+              <span *ngIf="!acc.lastTx">{{ 'None' | translate }}</span>
             </div>
-            <ng-template #hasTransaction>
-              <div class="last-tx">
-                Last Transaction :
-                {{ acc.lastTx['0'].timestamp | dateAgo }}
-              </div>
-            </ng-template>
           </div>
           <div class="col-12 text-right">
             <div class="balance">

@@ -1,11 +1,7 @@
 <div class="restore-wallet-container">
   <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
   <form [formGroup]="restoreForm" (submit)="onRestore()">
-    <mat-form-field
-      class="passphrase-input"
-      appearance="outline"
-      color="accent"
-    >
+    <mat-form-field appearance="outline" color="accent" class="block">
       <textarea
         formControlName="passphrase"
         matInput
@@ -14,18 +10,18 @@
         (keyup)="onChangeMnemonic()"
       ></textarea>
     </mat-form-field>
-    <mat-error *ngIf="passphraseField.touched">
-      <span *ngIf="passphraseField.hasError('required')">{{
-        'Passphrase is required' | translate
-      }}</span>
-      <span *ngIf="passphraseField.hasError('mnemonic')"
-        >{{ 'Passphrase is invalid' | translate }}
-      </span>
-      <span *ngIf="passphraseField.hasError('lengthMnemonic')"
-        >{{ 'Please use your' | translate }} {{ mnemonicWordLengtEnv }}
+    <ng-container *ngIf="passphraseField.touched">
+      <mat-error *ngIf="passphraseField.hasError('required')">
+        {{ 'Passphrase is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="passphraseField.hasError('mnemonic')">
+        {{ 'Passphrase is invalid' | translate }}
+      </mat-error>
+      <mat-error *ngIf="passphraseField.hasError('lengthMnemonic')">
+        {{ 'Please use your' | translate }} {{ mnemonicWordLengtEnv }}
         {{ 'passphrase words' | translate }}
-      </span>
-    </mat-error>
+      </mat-error>
+    </ng-container>
     <button
       mat-flat-button
       color="primary"
