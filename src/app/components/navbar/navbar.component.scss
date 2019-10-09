@@ -1,4 +1,5 @@
 @import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .header {
   height: $header-height-offset;
@@ -74,5 +75,33 @@
     overflow-y: scroll;
     overflow-x: hidden;
     max-height: 150px;
+  }
+}
+
+.container {
+  .warning-box {
+    background-color: #fff176;
+    color: $black2;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  .phrase-text {
+    text-align: center;
+    background-color: map-get($accent, 400);
+    color: white;
+    word-break: break-all;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 14px;
+    @include transition(0.3s ease-in all);
+    &:hover {
+      background-color: map-get($accent, 300);
+      cursor: pointer;
+    }
+  }
+  .result {
+    width: 100%;
+    padding: 4px 4px;
   }
 }

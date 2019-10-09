@@ -43,7 +43,6 @@ export class ConfirmPassphraseComponent implements OnInit {
 
     this.words = history.state.passphrase.join(' ');
     this.passphrase = Object.assign([], history.state.passphrase);
-
     this.masterSeed = history.state.masterSeed;
   }
 
@@ -110,12 +109,10 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
-    const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-      coin,
-      0
-    );
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
     const accountAddress = GetAddressFromPublicKey(childSeed.publicKey);
     this.authServ.saveMasterSeed(this.masterSeed, key);
+    this.authServ.savePassphraseSeed(this.words, key);
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,
