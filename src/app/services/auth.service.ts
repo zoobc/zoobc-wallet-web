@@ -3,12 +3,16 @@ import * as CryptoJS from 'crypto-js';
 
 import { GetAddressFromPublicKey } from '../../helpers/utils';
 import { KeyringService } from './keyring.service';
+import { TransactionService, Transactions } from './transaction.service';
+import { AccountService } from './account.service';
 
 export interface SavedAccount {
   path: number;
   name: string;
   nodeIP: string;
   address: string;
+  balance?: number;
+  lastTx?: number;
 }
 
 const coin = 'ZBC';
@@ -28,14 +32,34 @@ export class AuthService {
   // );
   // currAddress: string = 'nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd';
 
-  constructor(private keyringServ: KeyringService) {}
+  constructor(
+    private keyringServ: KeyringService,
+    private transactionServ: TransactionService,
+    private accServ: AccountService
+  ) {}
 
   generateDerivationPath(): number {
-    const accounts: [SavedAccount] =
+    const accounts: SavedAccount[] =
       JSON.parse(localStorage.getItem('ACCOUNT')) || [];
 
     // find length of not imported account. the result is the new derivation path
     return accounts.length;
+  }
+
+  isPinValid(key: string): boolean {
+    const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+    let isPinValid = false;
+    try {
+      const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
+        CryptoJS.enc.Utf8
+      );
+      if (!seed) throw 'not match';
+      isPinValid = true;
+    } catch (e) {
+      isPinValid = false;
+    }
+
+    return isPinValid;
   }
 
   login(account: SavedAccount, key: string) {
@@ -63,9 +87,6 @@ export class AuthService {
     seed = seedHex;
     publicKey = childSeed.publicKey;
     address = GetAddressFromPublicKey(publicKey);
-    // console.log('seed', seed);
-    // console.log('pubkey', byteArrayToHex(publicKey));
-    // console.log('address', address);
 
     this.currSeed = seed;
     this.currPublicKey = publicKey;
@@ -91,8 +112,27 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }
 
-  getAllAccount() {
-    return JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+  getAllAccount(fullProperties = false): SavedAccount[] {
+    let accounts: SavedAccount[] =
+      JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+
+    if (fullProperties) {
+      accounts.map(async acc => {
+        await this.transactionServ
+          .getAccountTransaction(1, 1, acc.address)
+          .then((res: Transactions) => {
+            if (res.transactions.length > 0)
+              acc.lastTx = res.transactions[0].timestamp;
+            else acc.lastTx = null;
+          });
+        await this.accServ.getAccountBalance(acc.address).then((res: any) => {
+          acc.balance = parseInt(res.accountbalance.spendablebalance);
+        });
+        return acc;
+      });
+    }
+
+    return accounts;
   }
 
   addAccount(account: SavedAccount) {

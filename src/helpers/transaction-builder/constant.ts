@@ -1,0 +1,10 @@
+export const ADDRESS_LENGTH = 44;
+export const TRANSACTION_TYPE_OFFSET = 0;
+export const VERSION_OFFSET = 4;
+export const TIMESTAMP_OFFSET = 5;
+export const SENDER_LENGTH_OFFSET = 13;
+export const SENDER_OFFSET = 17;
+export const RECIPIENT_LENGTH_OFFSET = 61;
+export const RECIPIENT_OFFSET = 65;
+export const FEE_OFFSET = 109;
+export const BODY_LENGTH_OFFSET = 117;

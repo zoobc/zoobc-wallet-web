@@ -12,13 +12,13 @@
     text-align: center;
     padding: 0;
     margin: 0;
-    .icon-image{
+    .icon-image {
       margin: 0 0 7px 17px;
     }
     li {
       padding: 12px 0;
       &.active a {
-        color: $primary-color;
+        color: map-get($accent, 500);
         font-weight: bold;
       }
     }
@@ -30,7 +30,7 @@
       cursor: pointer;
       @include transition(0.3s ease-in all);
       &:hover {
-        color: $primary-color;
+        color: map-get($accent, 500);
       }
       i {
         font-size: 24px;

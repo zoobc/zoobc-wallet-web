@@ -1,4 +1,5 @@
 import { toBase64Url, base64ToByteArray } from '../helpers/converters';
+import * as CryptoJS from 'crypto-js';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
@@ -27,6 +28,13 @@ export function GetChecksumByte(bytes): any {
   return res;
 }
 
+export function generateEncKey(pin: string): string {
+  return CryptoJS.PBKDF2(pin, 'salt', {
+    keySize: 8,
+    iterations: 10000,
+  }).toString();
+}
+
 export function onCopyText(text: string) {
   let selBox = document.createElement('textarea');
   selBox.style.position = 'fixed';
@@ -40,7 +48,7 @@ export function onCopyText(text: string) {
 }
 
 export function addressValidation(address: string) {
-  const addressBase64 = toBase64Url(address)
+  const addressBase64 = toBase64Url(address);
   const addressBytes = base64ToByteArray(addressBase64);
   if (addressBytes.length == 33 && address.length == 44) {
     return address;
