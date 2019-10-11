@@ -24,6 +24,7 @@ export class AuthService {
   currSeed: string;
   currPublicKey: Uint8Array;
   currAddress: string;
+  seedPhrase: string;
   // currSeed: string =
   //   'b88ddc803c5b30918e4fd23e6c6e7a9580d267d58607569b33048925c145cecf2dfa43dca8371b4a2506c922e76d31d2e213b3c599c16bf1a853a9b2b954a9fd';
   // currPublicKey: Uint8Array = Buffer.from(
@@ -46,19 +47,18 @@ export class AuthService {
     return accounts.length;
   }
 
-  isPinValid(key: string): boolean {
-    const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+  isPinValid(encSeed: string, key: string): boolean {
     let isPinValid = false;
     try {
       const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
         CryptoJS.enc.Utf8
       );
+      this.seedPhrase = seed;
       if (!seed) throw 'not match';
       isPinValid = true;
     } catch (e) {
       isPinValid = false;
     }
-
     return isPinValid;
   }
 
@@ -159,5 +159,10 @@ export class AuthService {
     const encSeed = CryptoJS.AES.encrypt(seedBase58, key).toString();
     this.currSeed = seedBase58;
     localStorage.setItem('ENC_MASTER_SEED', encSeed);
+  }
+
+  savePassphraseSeed(passphrase: string, key: string) {
+    const encPassphraseSeed = CryptoJS.AES.encrypt(passphrase, key).toString();
+    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphraseSeed);
   }
 }
