@@ -67,14 +67,15 @@
         style="margin-right: 8px"
         (click)="openUpdateNode()"
       >
-        Update
+        Update Node
       </button>
-      <button mat-flat-button color="warn">Remove</button>
+      <button mat-flat-button color="warn" (click)="removeNode()">
+        Remove Node
+      </button>
     </div>
   </mat-card>
-  <br />
 
-  <mat-card>
+  <mat-card *ngIf="!registeredNode">
     <div class="not-registered-node">
       <i matPrefix class="fa fa-desktop"></i>
       <span class="message">
@@ -89,7 +90,9 @@
         >
           Register Your Node
         </button>
-        <button mat-flat-button color="accent">Claim Your Node</button>
+        <button mat-flat-button color="accent" (click)="openClaimNode()">
+          Claim Your Node
+        </button>
       </div>
     </div>
   </mat-card>
@@ -102,7 +105,7 @@
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}
       </span>
-      <button mat-flat-button color="primary" (click)="onRefresh()">
+      <button mat-flat-button color="primary" (click)="streamNodeHardwareInfo()">
         {{ 'Try Again' | translate }}
       </button>
     </div>
@@ -144,7 +147,9 @@
           <p class="label">Hostname:</p>
           <p class="value">{{ hwInfo.hostinformation.hostname }}</p>
           <p class="label">{{ 'Number of processes running' | translate }}:</p>
-          <p class="value">{{ hwInfo.hostinformation.numberofrunningprocess }}</p>
+          <p class="value">
+            {{ hwInfo.hostinformation.numberofrunningprocess }}
+          </p>
           <p class="label">OS:</p>
           <p class="value">{{ hwInfo.hostinformation.os }}</p>
           <p class="label">Platform:</p>
@@ -187,10 +192,14 @@
             <div class="label">{{ 'Usage' | translate }}</div>
             <div class="usage">
               <span>
-                {{ hwInfo.storageinformation.used / gbToB | number: '0.0-2' }}GB/
+                {{
+                  hwInfo.storageinformation.used / gbToB | number: '0.0-2'
+                }}GB/
               </span>
               <span>
-                {{ hwInfo.storageinformation.total / gbToB | number: '0.0-2' }}GB
+                {{
+                  hwInfo.storageinformation.total / gbToB | number: '0.0-2'
+                }}GB
               </span>
             </div>
             <div class="persentage-container">
@@ -202,7 +211,6 @@
           </div>
         </div>
       </div>
-
     </ng-container>
   </mat-card>
   <br />

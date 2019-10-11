@@ -23,5 +23,3 @@ var model_blockchain_pb = require('../model/blockchain_pb.js');
 goog.object.extend(proto, model_blockchain_pb);
 var model_transaction_pb = require('../model/transaction_pb.js');
 goog.object.extend(proto, model_transaction_pb);
-var model_batchReceipt_pb = require('../model/batchReceipt_pb.js');
-goog.object.extend(proto, model_batchReceipt_pb);

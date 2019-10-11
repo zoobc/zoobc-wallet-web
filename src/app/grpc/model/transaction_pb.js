@@ -17,6 +17,8 @@ var model_pagination_pb = require('../model/pagination_pb.js');
 goog.object.extend(proto, model_pagination_pb);
 var model_batchReceipt_pb = require('../model/batchReceipt_pb.js');
 goog.object.extend(proto, model_batchReceipt_pb);
+var model_nodeRegistration_pb = require('../model/nodeRegistration_pb.js');
+goog.object.extend(proto, model_nodeRegistration_pb);
 goog.exportSymbol('proto.model.ClaimNodeRegistrationTransactionBody', null, global);
 goog.exportSymbol('proto.model.EmptyTransactionBody', null, global);
 goog.exportSymbol('proto.model.GetTransactionRequest', null, global);
@@ -1590,7 +1592,7 @@ proto.model.NodeRegistrationTransactionBody.toObject = function(includeInstance,
   var f, obj = {
     nodepublickey: msg.getNodepublickey_asB64(),
     accountaddress: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    nodeaddress: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    nodeaddress: (f = msg.getNodeaddress()) && model_nodeRegistration_pb.NodeAddress.toObject(includeInstance, f),
     lockedbalance: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     poown: (f = msg.getPoown()) && model_proofOfOwnership_pb.ProofOfOwnership.toObject(includeInstance, f)
   };
@@ -1638,7 +1640,8 @@ proto.model.NodeRegistrationTransactionBody.deserializeBinaryFromReader = functi
       msg.setAccountaddress(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = new model_nodeRegistration_pb.NodeAddress;
+      reader.readMessage(value,model_nodeRegistration_pb.NodeAddress.deserializeBinaryFromReader);
       msg.setNodeaddress(value);
       break;
     case 4:
@@ -1694,10 +1697,11 @@ proto.model.NodeRegistrationTransactionBody.serializeBinaryToWriter = function(m
     );
   }
   f = message.getNodeaddress();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f != null) {
+    writer.writeMessage(
       3,
-      f
+      f,
+      model_nodeRegistration_pb.NodeAddress.serializeBinaryToWriter
     );
   }
   f = message.getLockedbalance();
@@ -1773,17 +1777,35 @@ proto.model.NodeRegistrationTransactionBody.prototype.setAccountaddress = functi
 
 
 /**
- * optional string NodeAddress = 3;
- * @return {string}
+ * optional NodeAddress NodeAddress = 3;
+ * @return {?proto.model.NodeAddress}
  */
 proto.model.NodeRegistrationTransactionBody.prototype.getNodeaddress = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+  return /** @type{?proto.model.NodeAddress} */ (
+    jspb.Message.getWrapperField(this, model_nodeRegistration_pb.NodeAddress, 3));
 };
 
 
-/** @param {string} value */
+/** @param {?proto.model.NodeAddress|undefined} value */
 proto.model.NodeRegistrationTransactionBody.prototype.setNodeaddress = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ */
+proto.model.NodeRegistrationTransactionBody.prototype.clearNodeaddress = function() {
+  this.setNodeaddress(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.NodeRegistrationTransactionBody.prototype.hasNodeaddress = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -1868,7 +1890,7 @@ proto.model.UpdateNodeRegistrationTransactionBody.prototype.toObject = function(
 proto.model.UpdateNodeRegistrationTransactionBody.toObject = function(includeInstance, msg) {
   var f, obj = {
     nodepublickey: msg.getNodepublickey_asB64(),
-    nodeaddress: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    nodeaddress: (f = msg.getNodeaddress()) && model_nodeRegistration_pb.NodeAddress.toObject(includeInstance, f),
     lockedbalance: jspb.Message.getFieldWithDefault(msg, 3, "0"),
     poown: (f = msg.getPoown()) && model_proofOfOwnership_pb.ProofOfOwnership.toObject(includeInstance, f)
   };
@@ -1912,7 +1934,8 @@ proto.model.UpdateNodeRegistrationTransactionBody.deserializeBinaryFromReader = 
       msg.setNodepublickey(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = new model_nodeRegistration_pb.NodeAddress;
+      reader.readMessage(value,model_nodeRegistration_pb.NodeAddress.deserializeBinaryFromReader);
       msg.setNodeaddress(value);
       break;
     case 3:
@@ -1961,10 +1984,11 @@ proto.model.UpdateNodeRegistrationTransactionBody.serializeBinaryToWriter = func
     );
   }
   f = message.getNodeaddress();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f != null) {
+    writer.writeMessage(
       2,
-      f
+      f,
+      model_nodeRegistration_pb.NodeAddress.serializeBinaryToWriter
     );
   }
   f = message.getLockedbalance();
@@ -2025,17 +2049,35 @@ proto.model.UpdateNodeRegistrationTransactionBody.prototype.setNodepublickey = f
 
 
 /**
- * optional string NodeAddress = 2;
- * @return {string}
+ * optional NodeAddress NodeAddress = 2;
+ * @return {?proto.model.NodeAddress}
  */
 proto.model.UpdateNodeRegistrationTransactionBody.prototype.getNodeaddress = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type{?proto.model.NodeAddress} */ (
+    jspb.Message.getWrapperField(this, model_nodeRegistration_pb.NodeAddress, 2));
 };
 
 
-/** @param {string} value */
+/** @param {?proto.model.NodeAddress|undefined} value */
 proto.model.UpdateNodeRegistrationTransactionBody.prototype.setNodeaddress = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ */
+proto.model.UpdateNodeRegistrationTransactionBody.prototype.clearNodeaddress = function() {
+  this.setNodeaddress(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.UpdateNodeRegistrationTransactionBody.prototype.hasNodeaddress = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 

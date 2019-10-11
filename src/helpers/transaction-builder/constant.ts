@@ -1,4 +1,5 @@
 export const ADDRESS_LENGTH = 44;
+export const VERSION = new Buffer([1]);
 export const TRANSACTION_TYPE_OFFSET = 0;
 export const VERSION_OFFSET = 4;
 export const TIMESTAMP_OFFSET = 5;

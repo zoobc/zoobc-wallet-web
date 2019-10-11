@@ -1,4 +1,8 @@
-import { toBase64Url, base64ToByteArray } from '../helpers/converters';
+import {
+  toBase64Url,
+  base64ToByteArray,
+  fromBase64Url,
+} from '../helpers/converters';
 import * as CryptoJS from 'crypto-js';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
@@ -48,9 +52,16 @@ export function onCopyText(text: string) {
 }
 
 export function addressValidation(address: string) {
-  const addressBase64 = toBase64Url(address);
+  const addressBase64 = fromBase64Url(address);
   const addressBytes = base64ToByteArray(addressBase64);
-  if (addressBytes.length == 33 && address.length == 44) {
-    return address;
-  }
+  if (addressBytes.length == 33 && addressBase64.length == 44) {
+    return true;
+  } else return false;
+}
+
+export function isPubKeyValid(pubkey: string) {
+  const addressBytes = base64ToByteArray(pubkey);
+  if (addressBytes.length == 32 && pubkey.length == 44) {
+    return true;
+  } else return false;
 }

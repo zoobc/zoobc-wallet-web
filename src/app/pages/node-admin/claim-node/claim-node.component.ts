@@ -1,34 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 import { PoownService } from 'src/app/services/poown.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { MatDialog } from '@angular/material';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { MatDialog } from '@angular/material';
 import Swal from 'sweetalert2';
 import {
-  registerNodeBuilder,
-  RegisterNodeInterface,
-} from 'src/helpers/transaction-builder/register-node';
+  ClaimNodeInterface,
+  clamNodeBuilder,
+} from 'src/helpers/transaction-builder/claim-node';
 
 @Component({
-  selector: 'app-register-node',
-  templateUrl: './register-node.component.html',
-  styleUrls: ['./register-node.component.scss'],
+  selector: 'app-claim-node',
+  templateUrl: './claim-node.component.html',
+  styleUrls: ['./claim-node.component.scss'],
 })
-export class RegisterNodeComponent implements OnInit {
-  formRegisterNode: FormGroup;
-  ownerForm = new FormControl('', Validators.required);
-  ipAddressForm = new FormControl('', Validators.required);
-  lockedAmountForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+export class ClaimNodeComponent implements OnInit {
+  formClaimNode: FormGroup;
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
+
   account: SavedAccount;
   poown: Buffer;
 
@@ -38,15 +32,11 @@ export class RegisterNodeComponent implements OnInit {
   constructor(
     private authServ: AuthService,
     private keyringServ: KeyringService,
-    private nodeServ: NodeRegistrationService,
     private poownServ: PoownService,
     private transactionServ: TransactionService,
     private dialog: MatDialog
   ) {
-    this.formRegisterNode = new FormGroup({
-      owner: this.ownerForm,
-      ipAddress: this.ipAddressForm,
-      lockedAmount: this.lockedAmountForm,
+    this.formClaimNode = new FormGroup({
       fee: this.feeForm,
       nodePublicKey: this.nodePublicKeyForm,
     });
@@ -56,23 +46,22 @@ export class RegisterNodeComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.formRegisterNode.disable();
+    this.formClaimNode.disable();
     this.poownServ.get(this.account.nodeIP).then(
       res => {
         this.isLoading = false;
         this.poown = res;
         let address = res.toString('utf-8', 0, 44);
         if (this.account.address == address) {
-          this.formRegisterNode.enable();
-          this.ipAddressForm.patchValue(this.account.nodeIP);
+          this.formClaimNode.enable();
         } else {
           this.isError = true;
-          this.formRegisterNode.disable();
+          this.formClaimNode.disable();
         }
       },
       err => {
         this.isError = true;
-        this.formRegisterNode.disable();
+        this.formClaimNode.disable();
         console.log(err);
       }
     );
@@ -83,8 +72,9 @@ export class RegisterNodeComponent implements OnInit {
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
-  onRegisterNode() {
-    if (this.formRegisterNode.valid) {
+  onClaimNode(e) {
+    e.preventDefault();
+    if (this.formClaimNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
       });
@@ -94,18 +84,18 @@ export class RegisterNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          let data: RegisterNodeInterface = {
+          let data: ClaimNodeInterface = {
             accountAddress: this.account.address,
             nodePublicKey: this.nodePublicKeyForm.value,
-            nodeAddress: this.ipAddressForm.value,
             fee: this.feeForm.value,
-            funds: this.lockedAmountForm.value,
             poown: this.poown,
           };
-          let byte = registerNodeBuilder(data, this.keyringServ);
 
-          this.transactionServ.postTransaction(byte).then(
+          let bytes = clamNodeBuilder(data, this.keyringServ);
+
+          this.transactionServ.postTransaction(bytes).then(
             (res: any) => {
+              console.log(res);
               Swal.fire('Success', 'success', 'success');
               this.isLoading = false;
             },

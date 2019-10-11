@@ -5,7 +5,9 @@ import { NodeRegistrationService as NodeRegistrationServ } from '../grpc/service
 import {
   GetNodeRegistrationRequest,
   GetNodeRegistrationResponse,
+  NodeAddress,
 } from '../grpc/model/nodeRegistration_pb';
+import { SavedAccount } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,20 +15,21 @@ import {
 export class NodeRegistrationService {
   constructor() {}
 
-  getRegisteredNode() {
+  getRegisteredNode(account: SavedAccount) {
     return new Promise((resolve, reject) => {
-      const request = new GetNodeRegistrationRequest();
-      request.setAccountaddress('nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd');
-      request.setRegistrationheight(0);
-      request.setNodepublickey('Keu41kYXmVloKfr4MwdFWeq1ZKMtRZhGNMmTRgbyNNw=');
+      const nodeAddress = new NodeAddress();
+      nodeAddress.setAddress('18.139.3.139');
+      // nodeAddress.setPort(5001);
 
-      let client = grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
+      const request = new GetNodeRegistrationRequest();
+      request.setAccountaddress(account.address);
+      request.setNodeaddress(nodeAddress);
+
+      grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: environment.grpcUrl,
         request: request,
         onMessage: (message: GetNodeRegistrationResponse) => {
           resolve(message.toObject());
-          // console.log(message.toObject());
-          // console.log('message', message);
         },
         onEnd: (
           code: grpc.Code,
@@ -34,7 +37,6 @@ export class NodeRegistrationService {
           trailers: grpc.Metadata
         ) => {
           console.log('msg', msg);
-
           if (code != grpc.Code.OK) reject(msg);
         },
       });

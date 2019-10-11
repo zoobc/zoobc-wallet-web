@@ -22,6 +22,7 @@
         type="text"
         placeholder="{{ 'IP Address' | translate }}"
         formControlName="ipAddress"
+        readonly
       />
     </mat-form-field>
     <ng-container *ngIf="ipAddressForm.touched">
@@ -64,16 +65,20 @@
         type="text"
         placeholder="{{ 'Node Public Key' | translate }}"
         formControlName="nodePublicKey"
+        (keyup)="onChangeRecipient()"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">
       <mat-error *ngIf="nodePublicKeyForm.hasError('required')">
         {{ 'Node Public Key is required' | translate }}
       </mat-error>
+      <mat-error *ngIf="nodePublicKeyForm.hasError('invalidAddress')">
+        {{ 'ZBC Address is invalid' | translate }}
+      </mat-error>
     </ng-container>
     <br />
     <button mat-flat-button color="primary" type="submit">
-      {{ 'Save' | translate }}
+      {{ 'Register' | translate }}
     </button>
   </form>
 </div>

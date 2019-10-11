@@ -71,18 +71,18 @@ export class NodeAdminService {
       const request = new GetNodeHardwareRequest();
 
       this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
-        host: account.nodeIP,
+        host: `http://${account.nodeIP}`,
       });
       this.nodeAdminClient.onHeaders((headers: grpc.Metadata) => {
-        console.log('onHeaders', headers);
+        // console.log('onHeaders', headers);
       });
       this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
-        console.log('onMessage', message.toObject());
+        // console.log('onMessage', message.toObject());
         observer.next(message.toObject());
       });
       this.nodeAdminClient.onEnd(
         (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
-          console.log('onEnd', status, statusMessage, trailers);
+          // console.log('onEnd', status, statusMessage, trailers);
           if (status != grpc.Code.OK) observer.error(statusMessage);
         }
       );
@@ -96,10 +96,12 @@ export class NodeAdminService {
   }
 
   stopNodeHardwareInfo() {
-    this.nodeAdminClient.close();
+    this.nodeAdminClient && this.nodeAdminClient.close();
   }
 
   generateNodeKey(nodeIP: string) {
+    nodeIP = `http://${nodeIP}`;
+
     return new Promise((resolve, reject) => {
       const account = this.authServ.getCurrAccount();
       const seed = Buffer.from(this.authServ.currSeed, 'hex');

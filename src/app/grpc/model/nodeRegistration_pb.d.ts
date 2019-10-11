@@ -4,6 +4,30 @@
 import * as jspb from "google-protobuf";
 import * as model_pagination_pb from "../model/pagination_pb";
 
+export class NodeAddress extends jspb.Message {
+  getAddress(): string;
+  setAddress(value: string): void;
+
+  getPort(): number;
+  setPort(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): NodeAddress.AsObject;
+  static toObject(includeInstance: boolean, msg: NodeAddress): NodeAddress.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: NodeAddress, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): NodeAddress;
+  static deserializeBinaryFromReader(message: NodeAddress, reader: jspb.BinaryReader): NodeAddress;
+}
+
+export namespace NodeAddress {
+  export type AsObject = {
+    address: string,
+    port: number,
+  }
+}
+
 export class NodeRegistration extends jspb.Message {
   getNodeid(): string;
   setNodeid(value: string): void;
@@ -19,8 +43,10 @@ export class NodeRegistration extends jspb.Message {
   getRegistrationheight(): number;
   setRegistrationheight(value: number): void;
 
-  getNodeaddress(): string;
-  setNodeaddress(value: string): void;
+  hasNodeaddress(): boolean;
+  clearNodeaddress(): void;
+  getNodeaddress(): NodeAddress | undefined;
+  setNodeaddress(value?: NodeAddress): void;
 
   getLockedbalance(): string;
   setLockedbalance(value: string): void;
@@ -50,7 +76,7 @@ export namespace NodeRegistration {
     nodepublickey: Uint8Array | string,
     accountaddress: string,
     registrationheight: number,
-    nodeaddress: string,
+    nodeaddress?: NodeAddress.AsObject,
     lockedbalance: string,
     queued: boolean,
     latest: boolean,
@@ -130,8 +156,10 @@ export class GetNodeRegistrationRequest extends jspb.Message {
   getRegistrationheight(): number;
   setRegistrationheight(value: number): void;
 
-  getNodeaddress(): string;
-  setNodeaddress(value: string): void;
+  hasNodeaddress(): boolean;
+  clearNodeaddress(): void;
+  getNodeaddress(): NodeAddress | undefined;
+  setNodeaddress(value?: NodeAddress): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetNodeRegistrationRequest.AsObject;
@@ -148,7 +176,7 @@ export namespace GetNodeRegistrationRequest {
     nodepublickey: Uint8Array | string,
     accountaddress: string,
     registrationheight: number,
-    nodeaddress: string,
+    nodeaddress?: NodeAddress.AsObject,
   }
 }
 

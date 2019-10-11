@@ -76,6 +76,8 @@ import { NetworkComponent } from './pages/settings/network/network.component';
 import { AddressComponent } from './components/address/address.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
+import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
+import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -129,6 +131,8 @@ export function getLanguage(languageServ: LanguageService) {
     AddressComponent,
     DateAgoPipe,
     TransactionDetailComponent,
+    PinConfirmationComponent,
+    ClaimNodeComponent,
   ],
   imports: [
     BrowserModule,
@@ -192,6 +196,8 @@ export function getLanguage(languageServ: LanguageService) {
     ChangeIpAddressComponent,
     SendmoneyComponent,
     TransactionDetailComponent,
+    PinConfirmationComponent,
+    ClaimNodeComponent,
   ],
 })
 export class AppModule {}

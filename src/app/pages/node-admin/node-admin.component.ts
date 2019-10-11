@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  NodeAdminAttribute,
-  NodeAdminService,
-} from 'src/app/services/node-admin.service';
+import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
 import {
   NodeHardware as NH,
   GetNodeHardwareResponse,
 } from 'src/app/grpc/model/nodeHardware_pb';
-import { Subscription } from 'rxjs';
 import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
@@ -18,10 +14,19 @@ import {
   NodeRegistration,
 } from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
+import { TransactionService } from 'src/app/services/transaction.service';
+import {
+  RemoveNodeInterface,
+  removeNodeBuilder,
+} from 'src/helpers/transaction-builder/remove-node';
+import { KeyringService } from 'src/app/services/keyring.service';
+import { ClaimNodeComponent } from './claim-node/claim-node.component';
+import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
-type RegisteredNodeResponse = GetNodeRegistrationResponse.AsObject;
+type RegisteredNodeR = GetNodeRegistrationResponse.AsObject;
 type RegisteredNode = NodeRegistration.AsObject;
 
 @Component({
@@ -48,21 +53,40 @@ export class NodeAdminComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private nodeServ: NodeRegistrationService,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private transactionServ: TransactionService,
+    private keyringServ: KeyringService
   ) {
     this.account = authServ.getCurrAccount();
+  }
 
-    nodeServ.getRegisteredNode().then((res: RegisteredNodeResponse) => {
-      this.registeredNode = res.noderegistration;
-    });
+  ngOnInit() {
+    this.getRegisteredNode();
+    this.streamNodeHardwareInfo();
+  }
 
+  ngOnDestroy() {
+    this.nodeAdminServ.stopNodeHardwareInfo();
+  }
+
+  getRegisteredNode() {
+    this.nodeServ.getRegisteredNode(this.account).then(
+      (res: RegisteredNodeR) => {
+        console.log(res);
+        this.registeredNode = res.noderegistration;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    nodeAdminServ.streamNodeHardwareInfo().subscribe(
+    this.nodeAdminServ.streamNodeHardwareInfo().subscribe(
       (res: NodeHardwareResponse) => {
         this.isNodeHardwareLoading = false;
-        console.log(res);
-
         this.hwInfo = res.nodehardware;
       },
       err => {
@@ -72,21 +96,49 @@ export class NodeAdminComponent implements OnInit {
     );
   }
 
-  ngOnInit() {}
-
-  ngOnDestroy() {
-    this.nodeAdminServ.stopNodeHardwareInfo();
-  }
-
   openRegisterNode() {
     const dialog = this.dialog.open(RegisterNodeComponent, {
-      width: '460px',
+      width: '420px',
     });
   }
 
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
-      width: '460px',
+      width: '420px',
+    });
+  }
+
+  openClaimNode() {
+    const dialog = this.dialog.open(ClaimNodeComponent, {
+      width: '420px',
+    });
+  }
+
+  removeNode() {
+    Swal.fire({
+      title: `Are you sure want to remove this node?`,
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        let data: RemoveNodeInterface = {
+          accountAddress: this.account.address,
+          nodePublicKey: this.registeredNode.nodepublickey.toString(),
+          fee: environment.feeSlow,
+        };
+        let bytes = removeNodeBuilder(data, this.keyringServ);
+
+        this.transactionServ.postTransaction(bytes).then(
+          (res: any) => {
+            console.log(res);
+            Swal.fire('Success', 'success', 'success');
+          },
+          err => {
+            console.log(err);
+            Swal.fire('Error', err, 'error');
+          }
+        );
+        return true;
+      },
     });
   }
 }

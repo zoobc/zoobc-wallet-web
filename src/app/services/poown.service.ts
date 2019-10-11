@@ -20,7 +20,9 @@ export class PoownService {
     private keyringServ: KeyringService
   ) {}
 
-  get(ip: string = environment.grpcUrl) {
+  get(ip: string = environment.grpcUrl): Promise<Buffer> {
+    ip = ip.startsWith('http://') ? ip : `http://${ip}`;
+
     return new Promise((resolve, reject) => {
       const account = this.authServ.getCurrAccount();
       const seed = Buffer.from(this.authServ.currSeed, 'hex');
@@ -52,7 +54,7 @@ export class PoownService {
         // console.log('onHeaders', headers);
       });
       client.onMessage((message: ProofOfOwnership) => {
-        console.log('onMessage', message.toObject());
+        // console.log('onMessage', message.toObject());
         // console.log(
         //   Buffer.from(message.toObject().messagebytes.toString(), 'base64')
         // );
@@ -60,7 +62,7 @@ export class PoownService {
         //   Buffer.from(message.toObject().signature.toString(), 'base64')
         // );
 
-        let bytes = new Uint8Array(144);
+        let bytes = new Buffer(144);
         bytes.set(
           Buffer.from(message.toObject().messagebytes.toString(), 'base64'),
           0
