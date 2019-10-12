@@ -95,7 +95,6 @@ export class ClaimNodeComponent implements OnInit {
 
           this.transactionServ.postTransaction(bytes).then(
             (res: any) => {
-              console.log(res);
               Swal.fire('Success', 'success', 'success');
               this.isLoading = false;
             },

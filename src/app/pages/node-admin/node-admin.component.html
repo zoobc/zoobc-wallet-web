@@ -30,53 +30,79 @@
     </div>
   </div>
 
+  <!-- REGISTERED NODE -->
   <h2 class="mat-h2">{{ 'Registered Node' | translate }}</h2>
-  <mat-card class="registered-node" *ngIf="registeredNode">
-    <div class="row">
-      <div class="col-12 col-sm-6">
-        <div class="label">Account Address</div>
-        <div class="value">
-          <wallet-address
-            [value]="registeredNode.accountaddress"
-            [copyButton]="true"
-          ></wallet-address>
+  <mat-card class="registered-node">
+    <!-- REGISTERED NODE LOADED -->
+    <ng-container *ngIf="registeredNode">
+      <div class="row">
+        <div class="col-12 col-sm-6">
+          <div class="label">Account Address</div>
+          <div class="value">
+            <wallet-address
+              [value]="registeredNode.accountaddress"
+              [copyButton]="true"
+            ></wallet-address>
+          </div>
+          <div class="label">Node Public Key</div>
+          <div class="value">
+            <wallet-address
+              [value]="registeredNode.nodepublickey"
+              [copyButton]="true"
+            ></wallet-address>
+          </div>
         </div>
-        <div class="label">Node Public Key</div>
-        <div class="value">
-          <wallet-address
-            [value]="registeredNode.nodepublickey"
-            [copyButton]="true"
-          ></wallet-address>
+        <div class="col-12 col-sm-6">
+          <div class="label">Locked Funds</div>
+          <div class="value big">
+            {{ registeredNode.lockedbalance / 1e8 | number: '0.0-4' }} ZBC
+          </div>
+          <div class="label">Height</div>
+          <div class="value big">{{ registeredNode.height }}</div>
+          <div class="label">Registration Height</div>
+          <div class="value big">{{ registeredNode.registrationheight }}</div>
         </div>
       </div>
-      <div class="col-12 col-sm-6">
-        <div class="label">Locked Funds</div>
-        <div class="value big">
-          {{ registeredNode.lockedbalance / 1e8 | number: '0.0-4' }} ZBC
-        </div>
-        <div class="label">Height</div>
-        <div class="value big">{{ registeredNode.height }}</div>
-        <div class="label">Registration Height</div>
-        <div class="value big">{{ registeredNode.registrationheight }}</div>
+      <div class="text-right">
+        <button
+          mat-flat-button
+          color="primary"
+          style="margin-right: 8px"
+          (click)="openUpdateNode()"
+        >
+          Update Node
+        </button>
+        <button mat-flat-button color="warn" (click)="removeNode()">
+          Remove Node
+        </button>
       </div>
-    </div>
-    <div class="text-right">
-      <button
-        mat-flat-button
-        color="primary"
-        style="margin-right: 8px"
-        (click)="openUpdateNode()"
-      >
-        Update Node
-      </button>
-      <button mat-flat-button color="warn" (click)="removeNode()">
-        Remove Node
-      </button>
-    </div>
-  </mat-card>
+    </ng-container>
 
-  <mat-card *ngIf="!registeredNode">
-    <div class="not-registered-node">
+    <!-- REGISTERED NODE LOADING -->
+    <ng-container *ngIf="isNodeLoading">
+      <div class="row skeleton">
+        <div class="col-12 col-sm-6">
+          <div class="skeleton-text small" style="width:60%;"></div>
+          <div class="skeleton-text margin-16" style="width:100%;"></div>
+          <div class="skeleton-text small" style="width:60%;"></div>
+          <div class="skeleton-text margin-16" style="width:100%;"></div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="skeleton-text small" style="width:60%;"></div>
+          <div class="skeleton-text margin-16" style="width:30%;"></div>
+          <div class="skeleton-text small" style="width:30%;"></div>
+          <div class="skeleton-text margin-16" style="width:20%;"></div>
+          <div class="skeleton-text small" style="width:60%;"></div>
+          <div class="skeleton-text margin-16" style="width:20%;"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- NODE NOT REGISTERED -->
+    <div
+      class="not-registered-node"
+      *ngIf="!registeredNode && !isNodeLoading && !isNodeError"
+    >
       <i matPrefix class="fa fa-desktop"></i>
       <span class="message">
         {{ 'Your node is not registered yet' | translate }}
@@ -95,22 +121,40 @@
         </button>
       </div>
     </div>
+
+    <!-- NODE REGISTRATION ERROR -->
+    <div class="no-content" *ngIf="isNodeError">
+      <i matPrefix class="fa fa-exclamation-triangle"></i>
+      <span class="message">
+        {{ 'An error occurred while processing your request' | translate }}
+      </span>
+      <button mat-flat-button color="primary" (click)="getRegisteredNode()">
+        {{ 'Try Again' | translate }}
+      </button>
+    </div>
   </mat-card>
   <br /><br />
 
+  <!-- NODE USAGE -->
   <h2 class="mat-h2">{{ 'Node Usage' | translate }}</h2>
   <mat-card>
+    <!-- NODE USAGE ERROR -->
     <div class="no-content" *ngIf="isNodeHardwareError">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}
       </span>
-      <button mat-flat-button color="primary" (click)="streamNodeHardwareInfo()">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="streamNodeHardwareInfo()"
+      >
         {{ 'Try Again' | translate }}
       </button>
     </div>
 
-    <ng-container *ngIf="hwInfo">
+    <!-- NODE USAGE LOADED -->
+    <ng-container *ngIf="hwInfo && !isNodeHardwareError">
       <h2 class="mat-h2">{{ 'CPU' | translate }}</h2>
       <div class="row">
         <div
@@ -212,6 +256,19 @@
         </div>
       </div>
     </ng-container>
+
+    <!-- NODE USAGE LOADING -->
+    <div *ngIf="isNodeHardwareLoading" class="skeleton">
+      <div class="skeleton-text margin-24" style="width:30%;"></div>
+      <div class="row">
+        <div class="col-12 col-sm-6" *ngFor="let i of [0, 1]">
+          <ng-container *ngFor="let i of [0, 1, 2, 3, 4]">
+            <div class="skeleton-text small" style="width:40%;"></div>
+            <div class="skeleton-text margin-16" style="width:80%;"></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
   </mat-card>
   <br />
 </div>

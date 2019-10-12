@@ -160,12 +160,12 @@ export function bigintToByteArray(bn: BN): Buffer {
   return bn.toArrayLike(Buffer, 'le', 8);
 }
 
-export function intToInt64Buffer(number: number, base?, endian?): Buffer {
+export function intToInt64Bytes(number: number, base?, endian?): Buffer {
   let bn = new BN(number, base, endian);
   return bn.toArrayLike(Buffer, 'le', 8);
 }
 
-export function readInt64(buff, offset) {
+export function readInt64(buff, offset): number {
   var buff1 = buff.readUInt32LE(offset);
   var buff2 = buff.readUInt32LE(offset + 4);
   if (!(buff2 & 0x80000000)) return buff1 + 0x100000000 * buff2;

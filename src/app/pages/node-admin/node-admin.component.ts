@@ -45,8 +45,8 @@ export class NodeAdminComponent implements OnInit {
 
   isNodeHardwareLoading: boolean = false;
   isNodeHardwareError: boolean = false;
-  isRegisteredNodeLoading: boolean = false;
-  isRegisteredNodeError: boolean = false;
+  isNodeLoading: boolean = false;
+  isNodeError: boolean = false;
 
   constructor(
     private nodeAdminServ: NodeAdminService,
@@ -70,13 +70,17 @@ export class NodeAdminComponent implements OnInit {
   }
 
   getRegisteredNode() {
+    this.isNodeLoading = true;
+    this.isNodeError = false;
     this.nodeServ.getRegisteredNode(this.account).then(
       (res: RegisteredNodeR) => {
-        console.log(res);
+        this.isNodeLoading = false;
         this.registeredNode = res.noderegistration;
       },
       err => {
         console.log(err);
+        this.isNodeLoading = false;
+        this.isNodeError = true;
       }
     );
   }
@@ -129,7 +133,6 @@ export class NodeAdminComponent implements OnInit {
 
         this.transactionServ.postTransaction(bytes).then(
           (res: any) => {
-            console.log(res);
             Swal.fire('Success', 'success', 'success');
           },
           err => {

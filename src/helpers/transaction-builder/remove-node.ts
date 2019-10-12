@@ -1,7 +1,7 @@
 import {
   base64ToByteArray,
   int32ToBytes,
-  intToInt64Buffer,
+  intToInt64Bytes,
 } from '../converters';
 import { SavedAccount } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
@@ -21,11 +21,11 @@ export function removeNodeBuilder(
 ): Buffer {
   let bytes: Buffer;
 
-  const timestamp = intToInt64Buffer(Math.trunc(Date.now() / 1000));
+  const timestamp = intToInt64Bytes(Math.trunc(Date.now() / 1000));
   const accountAddress = Buffer.from(data.accountAddress, 'utf-8');
   const recipient = new Buffer(ADDRESS_LENGTH);
   const addressLength = int32ToBytes(ADDRESS_LENGTH);
-  const fee = intToInt64Buffer(data.fee * 1e8);
+  const fee = intToInt64Bytes(data.fee * 1e8);
 
   const nodePublicKey = base64ToByteArray(data.nodePublicKey);
   const bodyLength = int32ToBytes(nodePublicKey.length);

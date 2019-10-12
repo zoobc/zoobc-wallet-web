@@ -36,7 +36,6 @@ export class NodeRegistrationService {
           msg: string | undefined,
           trailers: grpc.Metadata
         ) => {
-          console.log('msg', msg);
           if (code != grpc.Code.OK) reject(msg);
         },
       });

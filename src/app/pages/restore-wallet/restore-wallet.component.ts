@@ -156,6 +156,7 @@ export class RestoreWalletComponent implements OnInit {
       };
       this.authServ.addAccount(account);
     }
+    this.authServ.savePassphraseSeed(passphrase, key);
     this.authServ.saveMasterSeed(masterSeed, key);
     this.router.navigateByUrl('/dashboard');
   }

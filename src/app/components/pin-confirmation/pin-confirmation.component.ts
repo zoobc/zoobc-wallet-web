@@ -34,7 +34,8 @@ export class PinConfirmationComponent implements OnInit {
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
         const key = generateEncKey(this.pinField.value);
-        const isPinValid = this.authServ.isPinValid(key);
+        const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+        const isPinValid = this.authServ.isPinValid(encSeed, key);
         if (isPinValid) this.dialogRef.close(true);
         else this.formConfirmPin.setErrors({ invalid: true });
         this.isConfirmPinLoading = false;

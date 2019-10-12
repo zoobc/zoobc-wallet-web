@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   grpcUrl: 'http://18.139.3.139:5001',
   mnemonicLanguage: 'english',
-  mnemonicNumWords: 24,
+  mnemonicNumWords: 12,
   feeFast: 0.01,
   feeMedium: 0.005,
   feeSlow: 0.001,

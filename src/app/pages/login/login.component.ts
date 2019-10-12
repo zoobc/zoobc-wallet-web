@@ -71,7 +71,8 @@ export class LoginComponent implements OnInit {
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
         const key = generateEncKey(this.pinForm.value);
-        const isPinValid = this.authServ.isPinValid(key);
+        const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+        const isPinValid = this.authServ.isPinValid(encSeed, key);
         if (isPinValid) {
           let account = this.authServ.getCurrAccount();
           this.authServ.login(account, key);

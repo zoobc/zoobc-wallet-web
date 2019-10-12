@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PoownService } from 'src/app/services/poown.service';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { BytesMaker } from 'src/helpers/BytesMaker';
 import { TransactionService } from 'src/app/services/transaction.service';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
@@ -99,7 +98,6 @@ export class UpdateNodeComponent implements OnInit {
             poown: this.poown,
           };
           let bytes = updateNodeBuilder(data, this.keyringServ);
-          console.log(bytes);
 
           this.transactionServ.postTransaction(bytes).then(
             (res: any) => {

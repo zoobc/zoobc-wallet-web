@@ -62,7 +62,6 @@ import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
-import { ChangeIpAddressComponent } from './pages/change-ip-address/change-ip-address.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { FaqComponent } from './pages/faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
@@ -117,7 +116,6 @@ export function getLanguage(languageServ: LanguageService) {
     PinSetupDialogComponent,
     ContactUsComponent,
     AddNodeAdminComponent,
-    ChangeIpAddressComponent,
     ConfirmPassphraseComponent,
     FaqComponent,
     TermsOfUseComponent,
@@ -193,7 +191,6 @@ export function getLanguage(languageServ: LanguageService) {
     EditcontactComponent,
     PinSetupDialogComponent,
     AddNodeAdminComponent,
-    ChangeIpAddressComponent,
     SendmoneyComponent,
     TransactionDetailComponent,
     PinConfirmationComponent,

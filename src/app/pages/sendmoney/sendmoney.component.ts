@@ -269,7 +269,6 @@ export class SendmoneyComponent implements OnInit {
         amount: this.amountForm.value,
       };
       const txBytes = sendMoneyBuilder(data, this.keyringServ);
-      console.log(txBytes);
 
       this.transactionServ.postTransaction(txBytes).then(
         (res: any) => {

@@ -172,8 +172,6 @@ export class TransactionService {
         request: request,
         host: environment.grpcUrl,
         onMessage: (message: GetMempoolTransactionsResponse) => {
-          console.log(message.toObject());
-
           // recreate list of transactions
           let transactions = message
             .toObject()
