@@ -94,6 +94,7 @@ export class DashboardComponent implements OnInit {
 
   getTransactions() {
     if (!this.isLoadingRecentTx) {
+      this.recentTx = null;
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
 

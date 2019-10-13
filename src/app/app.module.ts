@@ -38,17 +38,14 @@ import { LanguageService } from './services/language.service';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SendmoneyComponent } from './pages/sendmoney/sendmoney.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { SendmessageComponent } from './pages/sendmessage/sendmessage.component';
 import { LoginComponent } from './pages/login/login.component';
 import { TransferhistoryComponent } from './pages/transferhistory/transferhistory.component';
-import { MessagehistoryComponent } from './pages/messagehistory/messagehistory.component';
 import { ReceiveComponent } from './pages/receive/receive.component';
 import { ParentComponent } from './components/parent/parent.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { PinsComponent } from './components/pins/pins.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -97,11 +94,9 @@ export function getLanguage(languageServ: LanguageService) {
     DashboardComponent,
     SendmoneyComponent,
     NavbarComponent,
-    SendmessageComponent,
     LoginComponent,
     TransferhistoryComponent,
     ReceiveComponent,
-    MessagehistoryComponent,
     ParentComponent,
     SignupComponent,
     SidebarComponent,
@@ -137,7 +132,6 @@ export function getLanguage(languageServ: LanguageService) {
     BrowserAnimationsModule,
     NgxQRCodeModule,
     HttpClientModule,
-    NgxPaginationModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
@@ -195,7 +189,10 @@ export function getLanguage(languageServ: LanguageService) {
     TransactionDetailComponent,
     PinConfirmationComponent,
     ClaimNodeComponent,
+    ReceiveComponent,
+    RegisterNodeComponent,
+    UpdateNodeComponent,
   ],
 })
 export class AppModule {}
-platformBrowserDynamic().bootstrapModule(AppModule);
+// platformBrowserDynamic().bootstrapModule(AppModule);
