@@ -32,6 +32,7 @@ export class AuthService {
   //   'hex'
   // );
   // currAddress: string = 'nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd';
+  // seedPhrase: string = 'sasdasda';
 
   constructor(
     private keyringServ: KeyringService,

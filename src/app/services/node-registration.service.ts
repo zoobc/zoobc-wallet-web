@@ -5,7 +5,9 @@ import { NodeRegistrationService as NodeRegistrationServ } from '../grpc/service
 import {
   GetNodeRegistrationRequest,
   GetNodeRegistrationResponse,
+  NodeAddress,
 } from '../grpc/model/nodeRegistration_pb';
+import { SavedAccount } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,64 +15,29 @@ import {
 export class NodeRegistrationService {
   constructor() {}
 
-  getRegisteredNode() {
+  getRegisteredNode(account: SavedAccount) {
     return new Promise((resolve, reject) => {
-      const request = new GetNodeRegistrationRequest();
-      request.setAccountaddress('BCZEGOb3WNx3fDOVf9ZS4EjvOIv_UeW4TVBQJ_6tHKlE');
-      request.setRegistrationheight(0);
-      request.setNodepublickey(
-        new Uint8Array([
-          153,
-          58,
-          50,
-          200,
-          7,
-          61,
-          108,
-          229,
-          204,
-          48,
-          199,
-          145,
-          21,
-          99,
-          125,
-          75,
-          49,
-          45,
-          118,
-          97,
-          219,
-          80,
-          242,
-          244,
-          100,
-          134,
-          144,
-          246,
-          37,
-          144,
-          213,
-          135,
-        ])
-      );
+      const nodeAddress = new NodeAddress();
+      nodeAddress.setAddress('18.139.3.139');
+      // nodeAddress.setPort(5001);
 
-      let client = grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
+      const request = new GetNodeRegistrationRequest();
+      request.setAccountaddress(account.address);
+      request.setNodeaddress(nodeAddress);
+
+      grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: environment.grpcUrl,
         request: request,
         onMessage: (message: GetNodeRegistrationResponse) => {
           resolve(message.toObject());
-          // console.log(message.toObject());
-          // console.log('message', message);
         },
         onEnd: (
           code: grpc.Code,
           msg: string | undefined,
           trailers: grpc.Metadata
         ) => {
-          console.log('msg', msg);
-
-          if (code != grpc.Code.OK) reject(msg);
+          if (code == grpc.Code.Internal) resolve({ noderegistration: null });
+          else if (code != grpc.Code.OK) reject(msg);
         },
       });
     });

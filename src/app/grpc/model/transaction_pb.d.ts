@@ -5,6 +5,7 @@ import * as jspb from "google-protobuf";
 import * as model_proofOfOwnership_pb from "../model/proofOfOwnership_pb";
 import * as model_pagination_pb from "../model/pagination_pb";
 import * as model_batchReceipt_pb from "../model/batchReceipt_pb";
+import * as model_nodeRegistration_pb from "../model/nodeRegistration_pb";
 
 export class Transaction extends jspb.Message {
   getVersion(): number;
@@ -190,8 +191,10 @@ export class NodeRegistrationTransactionBody extends jspb.Message {
   getAccountaddress(): string;
   setAccountaddress(value: string): void;
 
-  getNodeaddress(): string;
-  setNodeaddress(value: string): void;
+  hasNodeaddress(): boolean;
+  clearNodeaddress(): void;
+  getNodeaddress(): model_nodeRegistration_pb.NodeAddress | undefined;
+  setNodeaddress(value?: model_nodeRegistration_pb.NodeAddress): void;
 
   getLockedbalance(): string;
   setLockedbalance(value: string): void;
@@ -215,7 +218,7 @@ export namespace NodeRegistrationTransactionBody {
   export type AsObject = {
     nodepublickey: Uint8Array | string,
     accountaddress: string,
-    nodeaddress: string,
+    nodeaddress?: model_nodeRegistration_pb.NodeAddress.AsObject,
     lockedbalance: string,
     poown?: model_proofOfOwnership_pb.ProofOfOwnership.AsObject,
   }
@@ -227,8 +230,10 @@ export class UpdateNodeRegistrationTransactionBody extends jspb.Message {
   getNodepublickey_asB64(): string;
   setNodepublickey(value: Uint8Array | string): void;
 
-  getNodeaddress(): string;
-  setNodeaddress(value: string): void;
+  hasNodeaddress(): boolean;
+  clearNodeaddress(): void;
+  getNodeaddress(): model_nodeRegistration_pb.NodeAddress | undefined;
+  setNodeaddress(value?: model_nodeRegistration_pb.NodeAddress): void;
 
   getLockedbalance(): string;
   setLockedbalance(value: string): void;
@@ -251,7 +256,7 @@ export class UpdateNodeRegistrationTransactionBody extends jspb.Message {
 export namespace UpdateNodeRegistrationTransactionBody {
   export type AsObject = {
     nodepublickey: Uint8Array | string,
-    nodeaddress: string,
+    nodeaddress?: model_nodeRegistration_pb.NodeAddress.AsObject,
     lockedbalance: string,
     poown?: model_proofOfOwnership_pb.ProofOfOwnership.AsObject,
   }

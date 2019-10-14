@@ -62,7 +62,6 @@ import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
-import { ChangeIpAddressComponent } from './pages/change-ip-address/change-ip-address.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { FaqComponent } from './pages/faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
@@ -76,6 +75,8 @@ import { NetworkComponent } from './pages/settings/network/network.component';
 import { AddressComponent } from './components/address/address.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
+import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
+import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -115,7 +116,6 @@ export function getLanguage(languageServ: LanguageService) {
     PinSetupDialogComponent,
     ContactUsComponent,
     AddNodeAdminComponent,
-    ChangeIpAddressComponent,
     ConfirmPassphraseComponent,
     FaqComponent,
     TermsOfUseComponent,
@@ -129,6 +129,8 @@ export function getLanguage(languageServ: LanguageService) {
     AddressComponent,
     DateAgoPipe,
     TransactionDetailComponent,
+    PinConfirmationComponent,
+    ClaimNodeComponent,
   ],
   imports: [
     BrowserModule,
@@ -189,9 +191,10 @@ export function getLanguage(languageServ: LanguageService) {
     EditcontactComponent,
     PinSetupDialogComponent,
     AddNodeAdminComponent,
-    ChangeIpAddressComponent,
     SendmoneyComponent,
     TransactionDetailComponent,
+    PinConfirmationComponent,
+    ClaimNodeComponent,
   ],
 })
 export class AppModule {}

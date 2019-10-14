@@ -17,7 +17,11 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
 import { addressValidation, generateEncKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
-import { SendMoney } from 'src/helpers/transaction-builder/send-money';
+import {
+  sendMoneyBuilder,
+  SendMoneyInterface,
+} from 'src/helpers/transaction-builder/send-money';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 
 @Component({
   selector: 'app-sendmoney',
@@ -30,7 +34,6 @@ export class SendmoneyComponent implements OnInit {
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
-  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
 
   currencyRate: Currency = {
@@ -64,15 +67,10 @@ export class SendmoneyComponent implements OnInit {
   ]);
   aliasField = new FormControl('', Validators.required);
 
-  formConfirmPin: FormGroup;
-  pinField = new FormControl('', Validators.required);
-
-  pinRefDialog: MatDialogRef<any>;
   accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
 
   isFormSendLoading = false;
-  isConfirmPinLoading = false;
 
   account: SavedAccount;
   accounts: SavedAccount[];
@@ -105,10 +103,6 @@ export class SendmoneyComponent implements OnInit {
     });
     // disable alias field (saveAddress = false)
     this.aliasField.disable();
-
-    this.formConfirmPin = new FormGroup({
-      pin: this.pinField,
-    });
   }
 
   ngOnInit() {
@@ -230,11 +224,11 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onOpenPinDialog() {
-    this.pinRefDialog = this.dialog.open(this.pinDialog, {
+    let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
     });
 
-    this.pinRefDialog.afterClosed().subscribe(isPinValid => {
+    pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) this.onSendMoney();
     });
   }
@@ -260,26 +254,6 @@ export class SendmoneyComponent implements OnInit {
     this.activeButton = value;
   }
 
-  onTypePin() {
-    if (this.pinField.value.length == 6) {
-      this.isConfirmPinLoading = true;
-
-      // give some delay so that the dom have time to render the spinner
-      setTimeout(() => {
-        const key = generateEncKey(this.pinField.value);
-        const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-        const isPinValid = this.authServ.isPinValid(encSeed, key);
-        if (isPinValid) {
-          this.pinRefDialog.close(true);
-          this.sendMoneyRefDialog.close();
-        } else {
-          this.formConfirmPin.setErrors({ invalid: true });
-        }
-        this.isConfirmPinLoading = false;
-      }, 50);
-    }
-  }
-
   closeDialog() {
     this.sendMoneyRefDialog.close();
   }
@@ -288,17 +262,15 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isFormSendLoading = true;
 
-      const txBytes = new SendMoney();
-      txBytes.authServ = this.authServ;
-      txBytes.keyringServ = this.keyringServ;
+      let data: SendMoneyInterface = {
+        sender: this.account.address,
+        recipient: this.recipientForm.value,
+        fee: this.feeForm.value,
+        amount: this.amountForm.value,
+      };
+      const txBytes = sendMoneyBuilder(data, this.keyringServ);
 
-      txBytes.sender = this.account.address;
-      txBytes.recipient = this.recipientForm.value;
-      txBytes.fee = this.feeForm.value;
-      txBytes.amount = this.amountForm.value;
-      txBytes.sign();
-
-      this.transactionServ.postTransaction(txBytes.value).then(
+      this.transactionServ.postTransaction(txBytes).then(
         (res: any) => {
           this.isFormSendLoading = false;
           Swal.fire(

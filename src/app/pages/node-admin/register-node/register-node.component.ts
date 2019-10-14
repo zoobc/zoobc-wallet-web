@@ -2,10 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { BytesMaker } from 'src/helpers/BytesMaker';
 import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 import { PoownService } from 'src/app/services/poown.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { isPubKeyValid } from 'src/helpers/utils';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
+import { MatDialog } from '@angular/material';
+import Swal from 'sweetalert2';
+import {
+  registerNodeBuilder,
+  RegisterNodeInterface,
+} from 'src/helpers/transaction-builder/register-node';
 
 @Component({
   selector: 'app-register-node',
@@ -16,18 +23,25 @@ export class RegisterNodeComponent implements OnInit {
   formRegisterNode: FormGroup;
   ownerForm = new FormControl('', Validators.required);
   ipAddressForm = new FormControl('', Validators.required);
-  lockedAmountForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('', Validators.required);
+  lockedAmountForm = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
   account: SavedAccount;
-  poown: any;
+  poown: Buffer;
+
+  isLoading: boolean = false;
+  isError: boolean = false;
 
   constructor(
     private authServ: AuthService,
     private keyringServ: KeyringService,
     private nodeServ: NodeRegistrationService,
     private poownServ: PoownService,
-    private transactionServ: TransactionService
+    private transactionServ: TransactionService,
+    private dialog: MatDialog
   ) {
     this.formRegisterNode = new FormGroup({
       owner: this.ownerForm,
@@ -41,115 +55,69 @@ export class RegisterNodeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.poownServ.get().then(res => {
-      console.log(res);
-
-      this.poown = res;
-      if (res) {
-        // this.onRegisterNode();
+    this.isLoading = true;
+    this.formRegisterNode.disable();
+    this.poownServ.get(this.account.nodeIP).then(
+      res => {
+        this.isLoading = false;
+        this.poown = res;
+        let address = res.toString('utf-8', 0, 44);
+        if (this.account.address == address) {
+          this.formRegisterNode.enable();
+          this.ipAddressForm.patchValue(this.account.nodeIP);
+        } else {
+          this.isError = true;
+          this.formRegisterNode.disable();
+        }
+      },
+      err => {
+        this.isError = true;
+        this.formRegisterNode.disable();
+        console.log(err);
       }
-    });
-    // this.nodeServ.getRegisteredNode().then(res => {});
+    );
+  }
+
+  onChangeRecipient() {
+    let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
+    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
   onRegisterNode() {
-    const account = this.account;
-    const seed = Buffer.from(this.authServ.currSeed, 'hex');
-    this.keyringServ.calcBip32RootKeyFromSeed('ZBC', seed);
-    const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-      'ZBC',
-      account.path
-    );
-    const sender = Buffer.from(this.authServ.currAddress, 'utf-8');
+    if (this.formRegisterNode.valid) {
+      let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
+        width: '400px',
+      });
 
-    const nodeAddress = Buffer.from(
-      'mToyyAc9bOXMMMeRFWN9SzEtdmHbUPL0ZIaQ9iWQ1Yc=',
-      'utf-8'
-    );
-    const fee = 0.001 * 1e8;
-    const timestamp = Math.trunc(Date.now() / 1000);
-    const pubKey = [
-      153,
-      58,
-      50,
-      200,
-      7,
-      61,
-      108,
-      229,
-      204,
-      48,
-      199,
-      145,
-      21,
-      99,
-      125,
-      75,
-      49,
-      45,
-      118,
-      97,
-      219,
-      80,
-      242,
-      244,
-      100,
-      134,
-      144,
-      246,
-      37,
-      144,
-      213,
-      135,
-    ];
-    let bytes = new BytesMaker(401);
-    // transaction type
-    bytes.write4bytes(2);
-    // version
-    bytes.write1Byte(1);
-    // timestamp
-    bytes.write8Bytes(timestamp);
-    // sender address length
-    bytes.write4bytes(44);
-    // sender address
-    bytes.write44Bytes(sender);
-    // recepient address length
-    bytes.write4bytes(44);
-    // recepient address
-    bytes.write44Bytes(new Uint8Array(44));
-    // tx fee
-    bytes.write8Bytes(fee);
-    // tx body length
-    bytes.write4bytes(280);
-    // tx body (node pub key)
-    bytes.write(pubKey, 32);
-    // tx body (account address)
-    bytes.write4bytes(44);
-    bytes.write44Bytes(sender);
-    // tx body (node address)
-    bytes.write4bytes(44);
-    bytes.write44Bytes(nodeAddress);
-    // tx locked balance
-    bytes.write8Bytes(200);
-    // tx poown
-    console.log('poown', this.poown);
+      pinRefDialog.afterClosed().subscribe(isPinValid => {
+        if (isPinValid) {
+          this.isLoading = true;
+          this.isError = false;
 
-    bytes.write(this.poown, 144);
-    let signature = childSeed.sign(bytes.value);
-    let bytesWithSign = new BytesMaker(469);
-    // copy to new bytes
-    bytesWithSign.write(bytes.value, 401);
-    // set signature type
-    bytesWithSign.write4bytes(0);
-    // set signature
-    bytesWithSign.write(signature, 64);
-    console.log(bytesWithSign.value.join(', '));
+          let data: RegisterNodeInterface = {
+            accountAddress: this.account.address,
+            nodePublicKey: this.nodePublicKeyForm.value,
+            nodeAddress: this.ipAddressForm.value,
+            fee: this.feeForm.value,
+            funds: this.lockedAmountForm.value,
+            poown: this.poown,
+          };
+          let byte = registerNodeBuilder(data, this.keyringServ);
 
-    this.transactionServ.postTransaction(bytesWithSign.value).then(
-      (res: any) => {
-        console.log(res);
-      },
-      err => console.log(err)
-    );
+          this.transactionServ.postTransaction(byte).then(
+            (res: any) => {
+              Swal.fire('Success', 'success', 'success');
+              this.isLoading = false;
+            },
+            err => {
+              console.log(err);
+              Swal.fire('Error', err, 'error');
+              this.isLoading = false;
+              this.isError = true;
+            }
+          );
+        }
+      });
+    }
   }
 }

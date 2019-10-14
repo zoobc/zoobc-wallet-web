@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { PoownService } from 'src/app/services/poown.service';
-import { ProofOfOwnership } from 'src/app/grpc/model/proofOfOwnership_pb';
 
 @Component({
   selector: 'app-add-node-admin',
@@ -19,7 +18,9 @@ export class AddNodeAdminComponent implements OnInit {
   formAddNodeAdmin: FormGroup;
   ipAddressField = new FormControl('', [
     Validators.required,
-    Validators.pattern('^(https?://.*):(\\d*)*$'),
+    Validators.pattern(
+      '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]+$'
+    ),
   ]);
   constructor(
     private dialogRef: MatDialogRef<AddNodeAdminComponent>,
@@ -40,8 +41,9 @@ export class AddNodeAdminComponent implements OnInit {
       this.isLoading = true;
       this.poownServ
         .get(this.ipAddressField.value)
-        .then((res: ProofOfOwnership) => {
+        .then(async () => {
           this.isLoading = false;
+          this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
 
           let nodeAdded: string;
           this.translate
@@ -55,11 +57,13 @@ export class AddNodeAdminComponent implements OnInit {
             nodeAdded,
             `${nodeAddedMessage} : ${this.ipAddressField.value}`,
             'success'
-          );
-
-          this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
-          this.dialogRef.close();
-          this.router.navigateByUrl('/nodeadmin');
+          ).then(() => {
+            this.dialogRef.close();
+            // delaying the redirect so the timestamp of poown not in the past
+            setTimeout(() => {
+              this.router.navigateByUrl('/nodeadmin');
+            }, 400);
+          });
         })
         .catch(err => {
           console.log(err);

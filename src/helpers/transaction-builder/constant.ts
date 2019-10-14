@@ -1,10 +1,7 @@
 export const ADDRESS_LENGTH = 44;
-export const TRANSACTION_TYPE_OFFSET = 0;
-export const VERSION_OFFSET = 4;
-export const TIMESTAMP_OFFSET = 5;
-export const SENDER_LENGTH_OFFSET = 13;
-export const SENDER_OFFSET = 17;
-export const RECIPIENT_LENGTH_OFFSET = 61;
-export const RECIPIENT_OFFSET = 65;
-export const FEE_OFFSET = 109;
-export const BODY_LENGTH_OFFSET = 117;
+export const VERSION = new Buffer([1]);
+export const SEND_MONEY_TYPE = 1;
+export const REGISTER_NODE_TYPE = 2;
+export const UPDATE_NODE_TYPE = 258;
+export const REMOVE_NODE_TYPE = 514;
+export const CLAIM_NODE_TYPE = 770;

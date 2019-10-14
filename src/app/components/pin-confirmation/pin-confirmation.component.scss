@@ -1,0 +1,8 @@
+@import '../../../styles/variables';
+
+.form-pin-confirmation {
+  i.fas {
+    font-size: 24px;
+    color: map-get($primary, 500);
+  }
+}

@@ -1,51 +1,42 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PoownService } from 'src/app/services/poown.service';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
+import { PoownService } from 'src/app/services/poown.service';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { MatDialog } from '@angular/material';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import {
-  UpdateNodeInterface,
-  updateNodeBuilder,
-} from 'src/helpers/transaction-builder/update-node';
 import Swal from 'sweetalert2';
+import {
+  ClaimNodeInterface,
+  clamNodeBuilder,
+} from 'src/helpers/transaction-builder/claim-node';
 
 @Component({
-  selector: 'app-update-node',
-  templateUrl: './update-node.component.html',
-  styleUrls: ['./update-node.component.scss'],
+  selector: 'app-claim-node',
+  templateUrl: './claim-node.component.html',
+  styleUrls: ['./claim-node.component.scss'],
 })
-export class UpdateNodeComponent implements OnInit {
-  formUpdateNode: FormGroup;
-  ipAddressForm = new FormControl('', Validators.required);
-  lockedAmountForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+export class ClaimNodeComponent implements OnInit {
+  formClaimNode: FormGroup;
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
 
-  poown: Buffer;
-
   account: SavedAccount;
+  poown: Buffer;
 
   isLoading: boolean = false;
   isError: boolean = false;
 
   constructor(
-    private poownServ: PoownService,
     private authServ: AuthService,
     private keyringServ: KeyringService,
+    private poownServ: PoownService,
     private transactionServ: TransactionService,
-    private dialog: MatDialog,
-    public dialogRef: MatDialogRef<UpdateNodeComponent>
+    private dialog: MatDialog
   ) {
-    this.formUpdateNode = new FormGroup({
-      ipAddress: this.ipAddressForm,
-      lockedAmount: this.lockedAmountForm,
+    this.formClaimNode = new FormGroup({
       fee: this.feeForm,
       nodePublicKey: this.nodePublicKeyForm,
     });
@@ -55,23 +46,22 @@ export class UpdateNodeComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    this.formUpdateNode.disable();
+    this.formClaimNode.disable();
     this.poownServ.get(this.account.nodeIP).then(
-      (res: Buffer) => {
+      res => {
         this.isLoading = false;
         this.poown = res;
         let address = res.toString('utf-8', 0, 44);
         if (this.account.address == address) {
-          this.formUpdateNode.enable();
-          this.ipAddressForm.patchValue(this.account.nodeIP);
+          this.formClaimNode.enable();
         } else {
           this.isError = true;
-          this.formUpdateNode.disable();
+          this.formClaimNode.disable();
         }
       },
       err => {
         this.isError = true;
-        this.formUpdateNode.disable();
+        this.formClaimNode.disable();
         console.log(err);
       }
     );
@@ -82,8 +72,9 @@ export class UpdateNodeComponent implements OnInit {
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
-  onUpdateNode() {
-    if (this.formUpdateNode.valid) {
+  onClaimNode(e) {
+    e.preventDefault();
+    if (this.formClaimNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
       });
@@ -93,21 +84,19 @@ export class UpdateNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          let data: UpdateNodeInterface = {
+          let data: ClaimNodeInterface = {
             accountAddress: this.account.address,
             nodePublicKey: this.nodePublicKeyForm.value,
-            nodeAddress: this.ipAddressForm.value,
             fee: this.feeForm.value,
-            funds: this.lockedAmountForm.value,
             poown: this.poown,
           };
-          let bytes = updateNodeBuilder(data, this.keyringServ);
+
+          let bytes = clamNodeBuilder(data, this.keyringServ);
 
           this.transactionServ.postTransaction(bytes).then(
             (res: any) => {
               Swal.fire('Success', 'success', 'success');
               this.isLoading = false;
-              this.dialogRef.close(true);
             },
             err => {
               console.log(err);

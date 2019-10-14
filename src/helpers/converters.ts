@@ -47,9 +47,9 @@ export function byteArrayToString(
   return decoder.decode(byteArray);
 }
 
-export function base64ToByteArray(base64Str: string): Uint8Array {
+export function base64ToByteArray(base64Str: string): Buffer {
   const buf = new Buffer(base64Str, 'base64');
-  return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+  return new Buffer(buf.buffer, buf.byteOffset, buf.byteLength);
 }
 
 export function byteArrayToBase64(
@@ -64,12 +64,28 @@ export function byteArrayToBase64(
   return buf.toString('base64');
 }
 
+export function base64UrlToBuffer(base64Url: string): Buffer {
+  return base64ToByteArray(fromBase64Url(base64Url));
+}
+
 export function toBase64Url(base64Str: string): string {
-  return base64Str.replace(/\+/g, '-').replace(/\//g, '_');
+  return base64Str
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/\=/g, '');
 }
 
 export function fromBase64Url(base64Str: string): string {
-  return base64Str.replace(/\-/g, '+').replace(/\_/g, '/');
+  let base64 = base64Str.replace(/\-/g, '+').replace(/\_/g, '/');
+  var pad = base64.length % 4;
+  if (pad) {
+    if (pad === 1)
+      throw new Error(
+        'InvalidLengthError: Input base64url string is the wrong length to determine padding'
+      );
+    base64 += new Array(5 - pad).join('=');
+  }
+  return base64;
 }
 
 export function mergeByteArrays(
@@ -140,13 +156,24 @@ export function BigInt(number: number, base?, endian?): BN {
   return new BN(number, base, endian);
 }
 
-export function bigintToByteArray(bn: BN): Uint8Array {
-  return bn.toArrayLike(Uint8Array, 'le', 8);
+export function bigintToByteArray(bn: BN): Buffer {
+  return bn.toArrayLike(Buffer, 'le', 8);
 }
 
-export function readInt64(buff, offset) {
+export function intToInt64Bytes(number: number, base?, endian?): Buffer {
+  let bn = new BN(number, base, endian);
+  return bn.toArrayLike(Buffer, 'le', 8);
+}
+
+export function readInt64(buff, offset): number {
   var buff1 = buff.readUInt32LE(offset);
   var buff2 = buff.readUInt32LE(offset + 4);
   if (!(buff2 & 0x80000000)) return buff1 + 0x100000000 * buff2;
   return -((~buff2 >>> 0) * 0x100000000 + (~buff1 >>> 0) + 1);
+}
+
+export function int32ToBytes(number: number): Buffer {
+  let byte = new Buffer(4);
+  byte.writeUInt32LE(number, 0);
+  return byte;
 }
