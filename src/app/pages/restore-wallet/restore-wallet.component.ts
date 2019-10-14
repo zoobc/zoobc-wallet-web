@@ -30,6 +30,8 @@ export class RestoreWalletComponent implements OnInit {
 
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
+  errorOpenWallet: boolean = false;
+  private key: string;
 
   constructor(
     private dialog: MatDialog,
@@ -82,12 +84,20 @@ export class RestoreWalletComponent implements OnInit {
       disableClose: true,
     });
     pinDialog.afterClosed().subscribe((key: string) => {
-      this.saveNewAccount(key);
-      this.router.navigateByUrl('/dashboard');
+      Swal.fire({
+        allowOutsideClick: false,
+        background: '#00000000',
+        onBeforeOpen: () => {
+          Swal.showLoading();
+          this.saveNewAccount(key);
+        },
+      });
+      this.key = key;
     });
   }
 
   async saveNewAccount(key: string) {
+    this.errorOpenWallet = false;
     const passphrase = this.passphraseField.value;
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
@@ -131,8 +141,29 @@ export class RestoreWalletComponent implements OnInit {
             this.listAccountTemp = [];
             counter = 0;
           }
+        })
+        .catch(() => {
+          counter = 20;
+          this.errorOpenWallet = true;
+          Swal.fire({
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            type: 'error',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Try Again',
+          }).then(result => {
+            if (result.value == true) {
+              Swal.fire({
+                allowOutsideClick: false,
+                background: '#00000000',
+                onBeforeOpen: () => {
+                  Swal.showLoading();
+                  this.saveNewAccount(this.key);
+                },
+              });
+            }
+          });
         });
-
       accountPath++;
       accountNo++;
       counter++;
@@ -154,10 +185,19 @@ export class RestoreWalletComponent implements OnInit {
         nodeIP: null,
         address: address,
       };
-      this.authServ.addAccount(account);
+      const openWalletInValid = this.errorOpenWallet == false;
+      if (openWalletInValid) {
+        this.authServ.addAccount(account);
+        Swal.close(); // for closing sweetalert loader
+        this.router.navigateByUrl('/dashboard');
+      }
     }
-    this.authServ.savePassphraseSeed(passphrase, key);
-    this.authServ.saveMasterSeed(masterSeed, key);
-    this.router.navigateByUrl('/dashboard');
+    const openWalletInValid = this.errorOpenWallet == false;
+    if (openWalletInValid) {
+      this.authServ.savePassphraseSeed(passphrase, key);
+      this.authServ.saveMasterSeed(masterSeed, key);
+      Swal.close(); // for closing sweetalert loader
+      this.router.navigateByUrl('/dashboard');
+    }
   }
 }
