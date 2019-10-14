@@ -36,7 +36,8 @@ export class NodeRegistrationService {
           msg: string | undefined,
           trailers: grpc.Metadata
         ) => {
-          if (code != grpc.Code.OK) reject(msg);
+          if (code == grpc.Code.Internal) resolve({ noderegistration: null });
+          else if (code != grpc.Code.OK) reject(msg);
         },
       });
     });

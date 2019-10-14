@@ -6,7 +6,7 @@ import { KeyringService } from 'src/app/services/keyring.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import {
   UpdateNodeInterface,
   updateNodeBuilder,
@@ -21,11 +21,14 @@ import Swal from 'sweetalert2';
 export class UpdateNodeComponent implements OnInit {
   formUpdateNode: FormGroup;
   ipAddressForm = new FormControl('', Validators.required);
-  lockedAmountForm = new FormControl('', Validators.required);
-  feeForm = new FormControl('', Validators.required);
+  lockedAmountForm = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
 
-  poown: any;
+  poown: Buffer;
 
   account: SavedAccount;
 
@@ -37,7 +40,8 @@ export class UpdateNodeComponent implements OnInit {
     private authServ: AuthService,
     private keyringServ: KeyringService,
     private transactionServ: TransactionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<UpdateNodeComponent>
   ) {
     this.formUpdateNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -53,7 +57,7 @@ export class UpdateNodeComponent implements OnInit {
     this.isLoading = true;
     this.formUpdateNode.disable();
     this.poownServ.get(this.account.nodeIP).then(
-      res => {
+      (res: Buffer) => {
         this.isLoading = false;
         this.poown = res;
         let address = res.toString('utf-8', 0, 44);
@@ -103,6 +107,7 @@ export class UpdateNodeComponent implements OnInit {
             (res: any) => {
               Swal.fire('Success', 'success', 'success');
               this.isLoading = false;
+              this.dialogRef.close(true);
             },
             err => {
               console.log(err);

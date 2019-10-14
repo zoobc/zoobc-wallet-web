@@ -173,35 +173,41 @@ export class TransactionService {
         host: environment.grpcUrl,
         onMessage: (message: GetMempoolTransactionsResponse) => {
           // recreate list of transactions
-          let transactions = message
+          let transactions: any = message
             .toObject()
-            .mempooltransactionsList.map(tx => {
+            .mempooltransactionsList.filter(tx => {
               const bytes = Buffer.from(
                 tx.transactionbytes.toString(),
                 'base64'
               );
 
-              const amount = readInt64(bytes, 121);
-              const fee = readInt64(bytes, 109);
-
-              const friendAddress =
-                tx.senderaccountaddress == address
-                  ? tx.recipientaccountaddress
-                  : tx.senderaccountaddress;
-              const type =
-                tx.senderaccountaddress == address ? 'send' : 'receive';
-              const alias =
-                this.contactServ.getContact(friendAddress).alias || '';
-
-              return {
-                alias: alias,
-                address: friendAddress,
-                type: type,
-                timestamp: parseInt(tx.arrivaltimestamp) * 1000,
-                fee: fee,
-                amount: amount,
-              };
+              // tx type must be 1 (send money type code)
+              if (bytes.readInt32LE(0) == 1) return tx;
             });
+
+          transactions = transactions.map(tx => {
+            const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+
+            const amount = readInt64(bytes, 121);
+            const fee = readInt64(bytes, 109);
+            const friendAddress =
+              tx.senderaccountaddress == address
+                ? tx.recipientaccountaddress
+                : tx.senderaccountaddress;
+            const type =
+              tx.senderaccountaddress == address ? 'send' : 'receive';
+            const alias =
+              this.contactServ.getContact(friendAddress).alias || '';
+
+            return {
+              alias: alias,
+              address: friendAddress,
+              type: type,
+              timestamp: parseInt(tx.arrivaltimestamp) * 1000,
+              fee: fee,
+              amount: amount,
+            };
+          });
 
           resolve(transactions);
         },

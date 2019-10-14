@@ -41,7 +41,10 @@
     </mat-form-field>
     <ng-container *ngIf="lockedAmountForm.touched">
       <mat-error *ngIf="lockedAmountForm.hasError('required')">
-        {{ 'Locked Amount is required' | translate }}
+        {{ 'Locked Balance is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="lockedAmountForm.hasError('min')">
+        {{ 'Minimum Locked Balance is 0.00000001' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Fee' | translate }}</label>
@@ -56,6 +59,9 @@
     <ng-container *ngIf="feeForm.touched">
       <mat-error *ngIf="feeForm.hasError('required')">
         {{ 'Fee is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="feeForm.hasError('min')">
+        {{ 'Minimum fee is 0.00000001' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Node Public Key' | translate }}</label>

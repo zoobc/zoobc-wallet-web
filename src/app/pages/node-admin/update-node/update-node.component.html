@@ -15,7 +15,7 @@
         {{ 'IP Address is required' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'Locked Amount' | translate }}</label>
+    <label>{{ 'Locked Balance' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input
         matInput
@@ -26,7 +26,10 @@
     </mat-form-field>
     <ng-container *ngIf="lockedAmountForm.touched">
       <mat-error *ngIf="lockedAmountForm.hasError('required')">
-        {{ 'Locked Amount is required' | translate }}
+        {{ 'Locked Balance is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="lockedAmountForm.hasError('min')">
+        {{ 'Minimum Locked Balance is 0.00000001' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Fee' | translate }}</label>
@@ -41,6 +44,9 @@
     <ng-container *ngIf="feeForm.touched">
       <mat-error *ngIf="feeForm.hasError('required')">
         {{ 'Fee is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="feeForm.hasError('min')">
+        {{ 'Minimum fee is 0.00000001' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Node Public Key' | translate }}</label>
@@ -58,8 +64,16 @@
       </mat-error>
     </ng-container>
     <br />
-    <button mat-flat-button color="primary" type="submit">
-      {{ 'Save' | translate }}
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="formUpdateNode.invalid || isLoading"
+    >
+      <span *ngIf="isLoading">
+        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+      </span>
+      <span>{{ 'Update Node' | translate }}</span>
     </button>
   </form>
 </div>
