@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material';
 export class AddressComponent implements OnInit {
   @Input() value: string;
   @Input() copyButton: boolean = false;
+  @Input() center: boolean = false;
   constructor(private snackbar: MatSnackBar) {}
 
   ngOnInit() {}

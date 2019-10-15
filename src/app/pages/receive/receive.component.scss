@@ -11,11 +11,6 @@
     border-radius: 8px;
     padding: 8px;
     font-size: 14px;
-    @include transition(0.3s ease-in all);
-    &:hover {
-      background-color: map-get($accent, 300);
-      cursor: pointer;
-    }
   }
   .qrcode-container {
     width: 100%;

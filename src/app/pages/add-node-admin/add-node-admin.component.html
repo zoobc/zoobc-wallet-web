@@ -6,10 +6,15 @@
       <input
         matInput
         type="text"
-        placeholder="http://192.168.43.1:7001"
+        placeholder="192.168.43.1:7001"
         formControlName="ipAddress"
       />
     </mat-form-field>
+    <ng-container *ngIf="ipAddressField.touched">
+      <mat-error *ngIf="ipAddressField.hasError('pattern')">
+        {{ 'Invalid IP address format' | translate }}
+      </mat-error>
+    </ng-container>
     <button
       mat-flat-button
       color="primary"

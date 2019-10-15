@@ -1,4 +1,5 @@
 @import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .sendmoney-container {
   .zbc-form-item {
@@ -74,6 +75,7 @@
       color: $black2;
       margin-top: 4px;
       margin-bottom: 16px;
+      @include transition(0.3s ease-in all);
       &:hover {
         cursor: pointer;
         background-color: #eee;
@@ -181,45 +183,6 @@
     }
   }
 }
-
-// .sub-title {
-//   margin-top: 10px !important;
-//   font-size: 17px;
-//   text-align: center;
-//   font-weight: bold;
-//   color: $black1;
-// }
-
-// .content {
-//   margin-top: 10px !important;
-//   font-size: 16px;
-//   text-align: center;
-//   color: $black1;
-// }
-
-// #icon-success {
-//   color: blue;
-//   display: block;
-//   text-shadow: 1px 1px 1px #ccc;
-//   font-size: 5.5em;
-//   text-align: center;
-// }
-
-// .addcontact-container {
-//   form {
-//     display: grid;
-//   }
-// }
-
-// .section-save-addres {
-//   display: flex;
-//   align-content: center;
-//   align-items: center;
-// }
-
-// .checkbox-margin {
-//   margin: 0 10px;
-// }
 
 .account-list {
   .account-card {
