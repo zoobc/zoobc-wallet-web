@@ -78,13 +78,7 @@ export function toBase64Url(base64Str: string): string {
 export function fromBase64Url(base64Str: string): string {
   let base64 = base64Str.replace(/\-/g, '+').replace(/\_/g, '/');
   var pad = base64.length % 4;
-  if (pad) {
-    if (pad === 1)
-      throw new Error(
-        'InvalidLengthError: Input base64url string is the wrong length to determine padding'
-      );
-    base64 += new Array(5 - pad).join('=');
-  }
+  if (pad) base64 += new Array(5 - pad).join('=');
   return base64;
 }
 

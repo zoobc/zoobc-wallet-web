@@ -1,11 +1,7 @@
 <h3 class="mat-h3">
   <b>{{ 'Confirm Your Pin' | translate }}</b>
 </h3>
-<form
-  [formGroup]="formConfirmPin"
-  (submit)="onConfirmPin()"
-  class="form-pin-confirmation"
->
+<form [formGroup]="formConfirmPin" class="form-pin-confirmation">
   <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
   <div class="text-center">
     <mat-error *ngIf="formConfirmPin.hasError('invalid')">

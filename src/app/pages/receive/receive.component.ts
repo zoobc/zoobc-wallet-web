@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
-import { onCopyText } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-receive',
@@ -11,14 +9,9 @@ import { onCopyText } from 'src/helpers/utils';
 export class ReceiveComponent implements OnInit {
   address: string = '';
 
-  constructor(private authServ: AuthService, private snackBar: MatSnackBar) {
+  constructor(private authServ: AuthService) {
     this.address = this.authServ.currAddress;
   }
 
   ngOnInit() {}
-
-  copyAddress() {
-    onCopyText(this.address);
-    this.snackBar.open('Address copied', null, { duration: 3000 });
-  }
 }

@@ -75,7 +75,6 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  bytes = new Uint8Array(193);
   typeCoin = 'ZBC';
   typeFee = 'ZBC';
 
@@ -297,11 +296,7 @@ export class SendmoneyComponent implements OnInit {
             this.contacts = this.contactServ.addContact(newContact);
           }
 
-          // reset the form
-          this.formSend.reset();
-          Object.keys(this.formSend.controls).forEach(key => {
-            this.formSend.controls[key].setErrors(null);
-          });
+          this.sendMoneyRefDialog.close();
           this.router.navigateByUrl('/dashboard');
         },
         err => {

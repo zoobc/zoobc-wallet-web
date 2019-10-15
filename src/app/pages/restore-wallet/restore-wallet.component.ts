@@ -172,10 +172,7 @@ export class RestoreWalletComponent implements OnInit {
     if (this.listAccount.length === 0) {
       localStorage.removeItem('ACCOUNT');
       localStorage.removeItem('CURR_ACCOUNT');
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        coin,
-        accountPath
-      );
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
 
       publicKey = childSeed.publicKey;
       address = GetAddressFromPublicKey(publicKey);
