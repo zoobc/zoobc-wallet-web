@@ -49,10 +49,16 @@
                 *ngFor="let acc of accounts"
                 (click)="onSwitchAccount(acc)"
                 mat-menu-item
+                class="account"
               >
-                <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
-                <i class="fas fa-check" *ngIf="acc.path == currAcc.path"></i>
-                <span>{{ acc.name }}</span>
+                <div>
+                  <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
+                  <i class="fas fa-check" *ngIf="acc.path == currAcc.path"></i>
+                  <span>{{ acc.name }}</span>
+                </div>
+                <div class="balance">
+                  {{ acc.balance / 1e8 | number: '0.0-2' }} ZBC
+                </div>
               </button>
             </div>
           </div>
