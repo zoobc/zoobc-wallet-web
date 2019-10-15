@@ -65,3 +65,7 @@ export function isPubKeyValid(pubkey: string) {
     return true;
   } else return false;
 }
+
+export function truncate(num: number, places: number): number {
+  return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+}

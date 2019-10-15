@@ -70,14 +70,9 @@ export class AuthService {
 
     // get master seed to create child seed
     const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-    const seedHex = CryptoJS.AES.decrypt(encSeed, key).toString(
-      CryptoJS.enc.Utf8
-    );
+    seed = CryptoJS.AES.decrypt(encSeed, key).toString(CryptoJS.enc.Utf8);
 
-    this.keyringServ.calcBip32RootKeyFromSeed(
-      coin,
-      Buffer.from(seedHex, 'hex')
-    );
+    this.keyringServ.calcBip32RootKeyFromSeed(coin, Buffer.from(seed, 'hex'));
 
     // create child seed with derivation path to generate pubkey and address
     const childSeed = this.keyringServ.calcForDerivationPathForCoin(
@@ -85,7 +80,6 @@ export class AuthService {
       account.path
     );
 
-    seed = seedHex;
     publicKey = childSeed.publicKey;
     address = GetAddressFromPublicKey(publicKey);
 
@@ -113,11 +107,11 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }
 
-  getAllAccount(fullProperties = false): SavedAccount[] {
+  getAllAccount(fullProps = false): SavedAccount[] {
     let accounts: SavedAccount[] =
       JSON.parse(localStorage.getItem('ACCOUNT')) || [];
 
-    if (fullProperties) {
+    if (fullProps) {
       accounts.map(async acc => {
         await this.transactionServ
           .getAccountTransaction(1, 1, acc.address)

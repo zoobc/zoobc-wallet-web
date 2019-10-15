@@ -15,7 +15,7 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { addressValidation, generateEncKey } from 'src/helpers/utils';
+import { addressValidation, truncate } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import {
   sendMoneyBuilder,
@@ -139,23 +139,27 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeAmountField() {
-    const amountCurrency = this.amountForm.value * this.currencyRate.value;
+    const amount = truncate(this.amountForm.value, 8);
+    const amountCurrency = amount * this.currencyRate.value;
     this.amountCurrencyForm.patchValue(amountCurrency);
   }
 
   onChangeAmountCurrencyField() {
     const amount = this.amountCurrencyForm.value / this.currencyRate.value;
-    this.amountForm.patchValue(amount);
+    const amountTrunc = truncate(amount, 8);
+    this.amountForm.patchValue(amountTrunc);
   }
 
   onChangeFeeField() {
-    const feeCurrency = this.feeForm.value * this.currencyRate.value;
+    const fee = truncate(this.feeForm.value, 8);
+    const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
   onChangeFeeCurrencyField() {
     const fee = this.feeFormCurr.value / this.currencyRate.value;
-    this.feeForm.patchValue(fee);
+    const feeTrunc = truncate(fee, 8);
+    this.feeForm.patchValue(feeTrunc);
   }
 
   filterContacts(value: string) {
