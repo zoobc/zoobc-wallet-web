@@ -24,8 +24,9 @@ export class ParentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private appServ: AppService // private keyringServ: KeyringService,
-  ) // private authServ: AuthService
+    private appServ: AppService
+  ) // private keyringServ: KeyringService,
+  // private authServ: AuthService
   {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -46,7 +47,8 @@ export class ParentComponent implements OnInit {
 
   ngOnInit() {
     this.appServ.setSidenav(this.sidenav);
-    // const seed = this.authServ.currSeed;
+    // const seed =
+    //   'c0a6e8e22681e240fb6af88a03ed9b9cfab7d35145f59ce1e578d214e863820e44b0c12e3688129f7235ea6972b1ef6f381756517c6703802e74479a1ea5e7f6';
     // this.keyringServ.calcBip32RootKeyFromSeed('ZBC', Buffer.from(seed, 'hex'));
   }
 

@@ -22,6 +22,7 @@ const coin = 'ZBC';
   providedIn: 'root',
 })
 export class AuthService {
+  // private loggedIn: boolean = true;
   private loggedIn: boolean = false;
 
   constructor(
