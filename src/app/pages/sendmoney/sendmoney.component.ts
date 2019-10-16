@@ -53,18 +53,12 @@ export class SendmoneyComponent implements OnInit {
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
-  amountCurrencyForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.feeMedium, [
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
-  feeFormCurr = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
 
   accountRefDialog: MatDialogRef<any>;
@@ -119,6 +113,10 @@ export class SendmoneyComponent implements OnInit {
       this.onChangeFeeField();
       // convert fee to current currency
       this.onFeeChoose(2);
+
+      const minCurrency = truncate((1 / 1e8) * rate.value, 8);
+      this.feeFormCurr.setValidators(Validators.min(minCurrency));
+      this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
 
     this.account = this.authServ.getCurrAccount();

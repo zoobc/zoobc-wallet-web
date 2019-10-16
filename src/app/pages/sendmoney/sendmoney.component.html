@@ -137,7 +137,7 @@
               {{ 'Amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{ 'Minimum amount is 0.00000001' | translate }}
+              {{ 'Minimum amount in ZBC must be 0.00000001 ZBC' | translate }}
             </mat-error>
           </ng-container>
         </div>
@@ -261,7 +261,7 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeFormCurr.hasError('min')">
-                {{ 'Minimum fee is 0.00000001' | translate }}
+                {{ 'Minimum amount in ZBC must be 0.00000001 ZBC' | translate }}
               </mat-error>
             </ng-container>
           </div>
