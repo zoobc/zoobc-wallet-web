@@ -48,7 +48,6 @@ export class DashboardComponent implements OnInit {
 
   currAcc: SavedAccount;
   accounts: SavedAccount[];
-  address: string;
 
   zbcPriceInUsd: number = 10;
 
@@ -62,8 +61,7 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
-    this.address = this.authServ.currAddress;
-    this.accounts = this.authServ.getAllAccount();
+    this.accounts = this.authServ.getAllAccount(true);
   }
 
   ngOnInit() {
@@ -80,7 +78,7 @@ export class DashboardComponent implements OnInit {
       this.isErrorBalance = false;
 
       this.accountServ
-        .getAccountBalance(this.address)
+        .getAccountBalance(this.currAcc.address)
         .then((data: AccountBalanceList) => {
           this.accountBalance = data.accountbalance;
           this.isLoadingBalance = false;
@@ -95,27 +93,24 @@ export class DashboardComponent implements OnInit {
   getTransactions() {
     if (!this.isLoadingRecentTx) {
       this.recentTx = null;
+      this.unconfirmTx = null;
+      this.totalTx = 0;
+
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
 
       this.transactionServ
-        .getAccountTransaction(1, 5, this.address)
+        .getAccountTransaction(1, 5, this.currAcc.address)
         .then((res: Transactions) => {
           this.totalTx = res.total;
           this.recentTx = res.transactions;
-          this.isLoadingRecentTx = false;
+          return this.transactionServ.getUnconfirmTransaction(
+            this.currAcc.address
+          );
         })
-        .then(() => {
-          this.transactionServ
-            .getUnconfirmTransaction(this.address)
-            .then((res: Transaction[]) => {
-              this.unconfirmTx = res;
-            });
-        })
-        .catch(() => {
-          this.isErrorRecentTx = true;
-          this.isLoadingRecentTx = false;
-        });
+        .then((unconfirmTx: Transaction[]) => (this.unconfirmTx = unconfirmTx))
+        .catch(() => (this.isErrorRecentTx = true))
+        .finally(() => (this.isLoadingRecentTx = false));
     }
   }
 
@@ -155,8 +150,6 @@ export class DashboardComponent implements OnInit {
   }
 
   onOpenAddAccount() {
-    this.dialog.open(AddAccountComponent, {
-      width: '360px',
-    });
+    this.dialog.open(AddAccountComponent, { width: '360px' });
   }
 }

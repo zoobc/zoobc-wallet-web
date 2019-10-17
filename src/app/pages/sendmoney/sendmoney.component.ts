@@ -15,7 +15,7 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { addressValidation, generateEncKey } from 'src/helpers/utils';
+import { addressValidation, truncate } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import {
   sendMoneyBuilder,
@@ -53,18 +53,12 @@ export class SendmoneyComponent implements OnInit {
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
-  amountCurrencyForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.feeMedium, [
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
-  feeFormCurr = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
 
   accountRefDialog: MatDialogRef<any>;
@@ -119,6 +113,10 @@ export class SendmoneyComponent implements OnInit {
       this.onChangeFeeField();
       // convert fee to current currency
       this.onFeeChoose(2);
+
+      const minCurrency = truncate((1 / 1e8) * rate.value, 8);
+      this.feeFormCurr.setValidators(Validators.min(minCurrency));
+      this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
 
     this.account = this.authServ.getCurrAccount();
@@ -139,23 +137,27 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeAmountField() {
-    const amountCurrency = this.amountForm.value * this.currencyRate.value;
+    const amount = truncate(this.amountForm.value, 8);
+    const amountCurrency = amount * this.currencyRate.value;
     this.amountCurrencyForm.patchValue(amountCurrency);
   }
 
   onChangeAmountCurrencyField() {
     const amount = this.amountCurrencyForm.value / this.currencyRate.value;
-    this.amountForm.patchValue(amount);
+    const amountTrunc = truncate(amount, 8);
+    this.amountForm.patchValue(amountTrunc);
   }
 
   onChangeFeeField() {
-    const feeCurrency = this.feeForm.value * this.currencyRate.value;
+    const fee = truncate(this.feeForm.value, 8);
+    const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
   onChangeFeeCurrencyField() {
     const fee = this.feeFormCurr.value / this.currencyRate.value;
-    this.feeForm.patchValue(fee);
+    const feeTrunc = truncate(fee, 8);
+    this.feeForm.patchValue(feeTrunc);
   }
 
   filterContacts(value: string) {

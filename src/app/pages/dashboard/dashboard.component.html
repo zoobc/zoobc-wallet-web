@@ -6,7 +6,7 @@
     <div class="col-8 text-right">
       <button mat-button class="rates-dropdown" [matMenuTriggerFor]="rate">
         <span>
-          1 ZBC = {{ currencyRate.value | number: '0.1-2' }}
+          1 ZBC = {{ currencyRate.value | number: '0.0-2' }}
           {{ currencyRate.name }}
         </span>
         <i class="fa fa-caret-down"></i>
@@ -22,7 +22,7 @@
               class="fas fa-check fa-sm"
               *ngIf="currencyRate.name == rate.name"
             ></i>
-            <span>{{ rate.value | number: '0.1-2' }} {{ rate.name }}</span>
+            <span>{{ rate.value | number: '0.0-2' }} {{ rate.name }}</span>
           </button>
         </div>
       </mat-menu>
@@ -49,25 +49,16 @@
                 *ngFor="let acc of accounts"
                 (click)="onSwitchAccount(acc)"
                 mat-menu-item
+                class="account"
               >
-                <i
-                  class="fas fa-user"
-                  *ngIf="acc.path != undefined && acc.path != currAcc.path"
-                ></i>
-                <i
-                  class="fas fa-check"
-                  *ngIf="acc.path != undefined && acc.path == currAcc.path"
-                ></i>
-                <i
-                  class="fas fa-user"
-                  *ngIf="acc.secret && acc.secret != currAcc.secret"
-                ></i>
-                <i
-                  class="fas fa-check"
-                  *ngIf="acc.secret && acc.secret == currAcc.secret"
-                ></i>
-                <span>{{ acc.name }}</span>
-                <span *ngIf="acc.imported">(Imported)</span>
+                <div>
+                  <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
+                  <i class="fas fa-check" *ngIf="acc.path == currAcc.path"></i>
+                  <span>{{ acc.name }}</span>
+                </div>
+                <div class="balance">
+                  {{ acc.balance / 1e8 | number: '0.0-2' }} ZBC
+                </div>
               </button>
             </div>
           </div>
@@ -118,7 +109,7 @@
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
                 {{
                   (accountBalance.balance / 1e8) * currencyRate.value
-                    | number: '0.0-4'
+                    | number: '0.0-2'
                 }}
               </span>
               <span> {{ currencyRate.name }}</span>
@@ -150,7 +141,7 @@
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
                 {{
                   (accountBalance.spendablebalance / 1e8) * currencyRate.value
-                    | number: '0.0-4'
+                    | number: '0.0-2'
                 }}
               </span>
               <span> {{ currencyRate.name }}</span>

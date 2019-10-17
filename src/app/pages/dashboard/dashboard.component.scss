@@ -77,7 +77,7 @@
           font-weight: bold;
         }
         .balance {
-          font-size: 24px;
+          font-size: 20px;
           line-height: 32px;
         }
         .converted-balance {
@@ -122,6 +122,17 @@
 }
 
 .account-dropdown-list {
+  .account {
+    line-height: 20px;
+    height: 60px;
+    padding: 12px 16px;
+    .balance {
+      margin-left: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      color: $black2;
+    }
+  }
   button i {
     margin-right: 8px;
     color: $black2;

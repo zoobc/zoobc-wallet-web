@@ -11,7 +11,7 @@
           </small>
         </div>
         <div class="balance">
-          {{ account.balance / 1e8 | number: '0.0-4' }} ZBC
+          {{ account.balance / 1e8 | number: '0.0-8' }} ZBC
         </div>
       </div>
 
@@ -74,10 +74,10 @@
       <div class="zbc-form-item">
         <div class="amount text-right">
           <div class="primary-amount">
-            {{ amountForm.value | number: '0.0-4' }} ZBC
+            {{ amountForm.value | number: '0.0-8' }} ZBC
           </div>
           <div class="secondary-amount">
-            {{ amountCurrencyForm.value | number: '0.0-4' }}
+            {{ amountCurrencyForm.value | number: '0.0-2' }}
             {{ currencyRate.name }}
           </div>
         </div>
@@ -137,7 +137,7 @@
               {{ 'Amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{ 'Minimum amount is 0.00000001' | translate }}
+              {{ 'Minimum amount in ZBC must be 0.00000001 ZBC' | translate }}
             </mat-error>
           </ng-container>
         </div>
@@ -154,9 +154,9 @@
         >
           <div class="fee-button">
             <div class="label">Slow</div>
-            <div class="zbc-currency">{{ feeSlow | number: '0.0-4' }} ZBC</div>
+            <div class="zbc-currency">{{ feeSlow }} ZBC</div>
             <div class="fiat-currency">
-              {{ feeSlow * currencyRate.value | number: '0.0-4' }}
+              {{ feeSlow * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -172,7 +172,7 @@
             <div class="label">Medium</div>
             <div class="zbc-currency">{{ feeMedium }} ZBC</div>
             <div class="fiat-currency">
-              {{ feeMedium * currencyRate.value | number: '0.0-4' }}
+              {{ feeMedium * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -188,7 +188,7 @@
             <div class="label">Fast</div>
             <div class="zbc-currency">{{ feeFast }} ZBC</div>
             <div class="fiat-currency">
-              {{ feeFast * currencyRate.value | number: '0.0-4' }}
+              {{ feeFast * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -202,9 +202,9 @@
 
       <div class="zbc-form-item" *ngIf="customFee">
         <div class="amount text-right">
-          <div class="primary-amount">{{ feeForm.value }} ZBC</div>
+          <div class="primary-amount">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
           <div class="secondary-amount">
-            {{ feeFormCurr.value | number: '0.0-4' }} {{ currencyRate.name }}
+            {{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}
           </div>
         </div>
         <label>{{ 'Custom Fee' | translate }}</label>
@@ -261,7 +261,7 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeFormCurr.hasError('min')">
-                {{ 'Minimum fee is 0.00000001' | translate }}
+                {{ 'Minimum amount in ZBC must be 0.00000001 ZBC' | translate }}
               </mat-error>
             </ng-container>
           </div>
@@ -321,9 +321,9 @@
         <div class="col-12 col-sm-6 text-right">
           <div class="label">Amount:</div>
           <div class="amount">
-            <div class="zbc">{{ amountForm.value }} ZBC</div>
+            <div class="zbc">{{ amountForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ amountCurrencyForm.value | number: '0.0-4' }}
+              {{ amountCurrencyForm.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -333,17 +333,17 @@
             <span>:</span>
           </div>
           <div class="amount">
-            <div class="zbc">{{ feeForm.value }} ZBC</div>
+            <div class="zbc">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ feeFormCurr.value | number: '0.0-4' }} {{ currencyRate.name }}
+              {{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}
             </div>
           </div>
           <div class="label">Total :</div>
           <div class="total">
-            <div class="zbc">{{ amountForm.value + feeForm.value }} ZBC</div>
+            <div class="zbc">{{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
               {{
-                amountCurrencyForm.value + feeFormCurr.value | number: '0.0-4'
+                amountCurrencyForm.value + feeFormCurr.value | number: '0.0-2'
               }}
               {{ currencyRate.name }}
             </div>
@@ -367,25 +367,6 @@
       </button>
     </div>
   </div>
-</ng-template>
-
-<ng-template #pinDialog>
-  <h3 class="mat-h3" id="modal-basic-title">
-    <b>{{ 'Confirm Your Pin' | translate }}</b>
-  </h3>
-  <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()" class="form-pin">
-    <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
-    <div class="text-center">
-      <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-        <span class="text-center">{{ 'Pin is not match' | translate }}</span>
-      </mat-error>
-      <i
-        matPrefix
-        class="fas fa-circle-notch fa-spin"
-        *ngIf="isConfirmPinLoading"
-      ></i>
-    </div>
-  </form>
 </ng-template>
 
 <ng-template #accountDialog>
@@ -420,10 +401,10 @@
           </div>
           <div class="col-12 text-right">
             <div class="balance">
-              {{ acc.balance / 1e8 }} <small>ZBC</small>
+              {{ acc.balance / 1e8 | number: '0.0-8' }} <small>ZBC</small>
             </div>
             <div class="balance-in-currency">
-              {{ (acc.balance / 1e8) * currencyRate.value | number: '0.0-4' }}
+              {{ (acc.balance / 1e8) * currencyRate.value | number: '0.0-2' }}
               <small>{{ currencyRate.name }}</small>
             </div>
           </div>
