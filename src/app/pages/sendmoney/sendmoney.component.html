@@ -3,7 +3,7 @@
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
-      <div class="from-account" (click)="openAccountList()">
+      <div class="from-account" (click)="openAccountList()" *ngIf="accounts">
         <div class="name">
           {{ account.name }}
           <small>
@@ -12,6 +12,25 @@
         </div>
         <div class="balance">
           {{ account.balance / 1e8 | number: '0.0-8' }} ZBC
+        </div>
+      </div>
+
+      <div class="from-account" *ngIf="isLoading">
+        <div style="vertical-align: middle">
+          <i class="fas fa-circle-notch fa-spin" style="font-size: 16px"></i
+          >&nbsp;
+          <span>{{ 'Getting your accounts...' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="from-account" *ngIf="isError">
+        <div class="text-center" style="width: 100%;">
+          <div style="margin-bottom: 8px;">
+            {{ 'An error occurred while processing your request' | translate }}
+          </div>
+          <button mat-flat-button class="small" color="primary" (click)="getAccounts()">
+            {{ 'Try Again' | translate }}
+          </button>
         </div>
       </div>
 
@@ -45,8 +64,8 @@
         </mat-error>
       </ng-container>
       <div class="address-alias" *ngIf="!showSaveAddressBtn">
-        <span>{{'Address' | translate}}: </span>
-        <b>{{contact.alias}}</b>
+        <span>{{ 'Address' | translate }}: </span>
+        <b>{{ contact.alias }}</b>
       </div>
       <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
         <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
@@ -132,7 +151,9 @@
               (keyup)="onChangeAmountCurrencyField()"
             />
           </mat-form-field>
-          <ng-container *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
+          <ng-container
+            *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'"
+          >
             <mat-error *ngIf="amountCurrencyForm.hasError('required')">
               {{ 'Amount is required' | translate }}
             </mat-error>
@@ -202,7 +223,9 @@
 
       <div class="zbc-form-item" *ngIf="customFee">
         <div class="amount text-right">
-          <div class="primary-amount">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
+          <div class="primary-amount">
+            {{ feeForm.value | number: '0.0-8' }} ZBC
+          </div>
           <div class="secondary-amount">
             {{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}
           </div>
@@ -273,9 +296,9 @@
         color="primary"
         type="submit"
         class="block"
-        [disabled]="formSend.invalid || isFormSendLoading"
+        [disabled]="formSend.invalid || isLoading || isError"
       >
-        <span *ngIf="isFormSendLoading">
+        <span *ngIf="isLoading">
           <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
         </span>
         <span>{{ 'Send' | translate }}</span>
@@ -340,7 +363,9 @@
           </div>
           <div class="label">Total :</div>
           <div class="total">
-            <div class="zbc">{{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC</div>
+            <div class="zbc">
+              {{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC
+            </div>
             <div class="currency">
               {{
                 amountCurrencyForm.value + feeFormCurr.value | number: '0.0-2'
@@ -394,7 +419,7 @@
               ></wallet-address>
             </div>
             <div class="last-tx">
-              <span>Last Transaction:&nbsp;</span> 
+              <span>Last Transaction:&nbsp;</span>
               <span *ngIf="acc.lastTx">{{ acc.lastTx | dateAgo }}</span>
               <span *ngIf="!acc.lastTx">{{ 'None' | translate }}</span>
             </div>

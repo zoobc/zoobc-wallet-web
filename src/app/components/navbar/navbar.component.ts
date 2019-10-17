@@ -52,7 +52,7 @@ export class NavbarComponent implements OnInit {
     private appServ: AppService,
     private snackBar: MatSnackBar
   ) {
-    this.isLoggedIn = this.authServ.currPublicKey ? true : false;
+    this.isLoggedIn = this.authServ.currSeed ? true : false;
 
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -102,8 +102,6 @@ export class NavbarComponent implements OnInit {
       showLoaderOnConfirm: true,
       preConfirm: () => {
         this.authServ.currSeed = null;
-        this.authServ.currPublicKey = null;
-        this.authServ.currAddress = null;
 
         this.router.navigateByUrl('/');
         return true;

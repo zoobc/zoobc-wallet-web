@@ -84,6 +84,11 @@ button[mat-flat-button] {
   &.block {
     width: 100%;
   }
+  &.small {
+    height: 32px;
+    font-size: 12px;
+    line-height: 12px;
+  }
 }
 
 // ====================== TEXT ALIGNMENT ======================

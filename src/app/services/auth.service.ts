@@ -5,6 +5,9 @@ import { GetAddressFromPublicKey } from '../../helpers/utils';
 import { KeyringService } from './keyring.service';
 import { TransactionService, Transactions } from './transaction.service';
 import { AccountService } from './account.service';
+import { GetAccountBalanceResponse } from '../grpc/model/accountBalance_pb';
+
+type AccountBalance = GetAccountBalanceResponse.AsObject;
 
 export interface SavedAccount {
   path: number;
@@ -22,16 +25,9 @@ const coin = 'ZBC';
 })
 export class AuthService {
   currSeed: string;
-  currPublicKey: Uint8Array;
-  currAddress: string;
   seedPhrase: string;
   // currSeed: string =
   //   'b88ddc803c5b30918e4fd23e6c6e7a9580d267d58607569b33048925c145cecf2dfa43dca8371b4a2506c922e76d31d2e213b3c599c16bf1a853a9b2b954a9fd';
-  // currPublicKey: Uint8Array = Buffer.from(
-  //   '9cafe8bb17430f0b898a88220c08bfcecd4ba9e37b7f966c5db16d5c6a867343',
-  //   'hex'
-  // );
-  // currAddress: string = 'nK_ouxdDDwuJiogiDAi_zs1LqeN7f5ZsXbFtXGqGc0Pd';
   // seedPhrase: string = 'sasdasda';
 
   constructor(
@@ -84,22 +80,11 @@ export class AuthService {
     address = GetAddressFromPublicKey(publicKey);
 
     this.currSeed = seed;
-    this.currPublicKey = publicKey;
-    this.currAddress = address;
 
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
   }
 
   switchAccount(account: SavedAccount) {
-    // create child seed with derivation path to generate pubkey and address
-    const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-      coin,
-      account.path
-    );
-
-    this.currPublicKey = childSeed.publicKey;
-    this.currAddress = GetAddressFromPublicKey(this.currPublicKey);
-
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
   }
 
@@ -107,27 +92,36 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }
 
-  getAllAccount(fullProps = false): SavedAccount[] {
-    let accounts: SavedAccount[] =
-      JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+  getAllAccount(): SavedAccount[] {
+    return JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+  }
 
-    if (fullProps) {
-      accounts.map(async acc => {
+  getAccountsWithBalance(): Promise<SavedAccount[]> {
+    return new Promise(async (resolve, reject) => {
+      let accounts: SavedAccount[] =
+        JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+
+      let error = false;
+      for (let i = 0; i < accounts.length; i++) {
         await this.transactionServ
-          .getAccountTransaction(1, 1, acc.address)
+          .getAccountTransaction(1, 1, accounts[i].address)
           .then((res: Transactions) => {
             if (res.transactions.length > 0)
-              acc.lastTx = res.transactions[0].timestamp;
-            else acc.lastTx = null;
+              accounts[i].lastTx = res.transactions[0].timestamp;
+            else accounts[i].lastTx = null;
+            return this.accServ.getAccountBalance(accounts[i].address);
+          })
+          .then((res: AccountBalance) => {
+            accounts[i].balance = parseInt(res.accountbalance.spendablebalance);
+          })
+          .catch(err => {
+            error = true;
+            reject(err);
           });
-        await this.accServ.getAccountBalance(acc.address).then((res: any) => {
-          acc.balance = parseInt(res.accountbalance.spendablebalance);
-        });
-        return acc;
-      });
-    }
-
-    return accounts;
+        if (error) break;
+      }
+      if (!error) resolve(accounts);
+    });
   }
 
   addAccount(account: SavedAccount) {

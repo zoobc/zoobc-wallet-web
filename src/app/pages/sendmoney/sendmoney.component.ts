@@ -64,7 +64,8 @@ export class SendmoneyComponent implements OnInit {
   accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
 
-  isFormSendLoading = false;
+  isLoading = false;
+  isError = false;
 
   account: SavedAccount;
   accounts: SavedAccount[];
@@ -120,8 +121,22 @@ export class SendmoneyComponent implements OnInit {
     });
 
     this.account = this.authServ.getCurrAccount();
-    this.accounts = this.authServ.getAllAccount(true);
-    this.account = this.accounts.find(acc => this.account.path == acc.path);
+    this.getAccounts();
+  }
+
+  getAccounts() {
+    this.formSend.disable();
+    this.isLoading = true;
+    this.isError = false;
+    this.authServ
+      .getAccountsWithBalance()
+      .then((res: SavedAccount[]) => {
+        this.accounts = res;
+        this.account = this.accounts.find(acc => this.account.path == acc.path);
+        this.formSend.enable();
+      })
+      .catch(() => (this.isError = true))
+      .finally(() => (this.isLoading = false));
   }
 
   openAccountList() {
@@ -160,7 +175,7 @@ export class SendmoneyComponent implements OnInit {
     this.feeForm.patchValue(feeTrunc);
   }
 
-  filterContacts(value: string) {
+  filterContacts(value: string): Contact[] {
     if (value) {
       const filterValue = value.toLowerCase();
       return this.contacts.filter((contact: Contact) =>
@@ -203,9 +218,7 @@ export class SendmoneyComponent implements OnInit {
 
   toggleCustomFee() {
     this.customFee = !this.customFee;
-    if (!this.customFee) {
-      this.onFeeChoose(this.activeButton);
-    }
+    if (!this.customFee) this.onFeeChoose(this.activeButton);
   }
 
   onOpenDialogDetailSendMoney() {
@@ -261,7 +274,7 @@ export class SendmoneyComponent implements OnInit {
 
   async onSendMoney() {
     if (this.formSend.valid) {
-      this.isFormSendLoading = true;
+      this.isLoading = true;
 
       let data: SendMoneyInterface = {
         sender: this.account.address,
@@ -273,7 +286,7 @@ export class SendmoneyComponent implements OnInit {
 
       this.transactionServ.postTransaction(txBytes).then(
         (res: any) => {
-          this.isFormSendLoading = false;
+          this.isLoading = false;
           Swal.fire(
             '<b>Your Transaction is processing</b>',
             'You send <b>' +
@@ -302,7 +315,7 @@ export class SendmoneyComponent implements OnInit {
           this.router.navigateByUrl('/dashboard');
         },
         err => {
-          this.isFormSendLoading = false;
+          this.isLoading = false;
           Swal.fire(
             'Opps...',
             'An error occurred while processing your request',
