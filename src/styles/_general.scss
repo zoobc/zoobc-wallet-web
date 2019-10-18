@@ -171,6 +171,12 @@ label {
 
 // ============================ SWAL CUSTOM STYLE ========================
 
+.swal2-content {
+  .loader {
+    font-size: 48px;
+    color: white;
+  }
+}
 .swal2-styled {
   border-radius: 8px !important;
   font-weight: bold !important;
