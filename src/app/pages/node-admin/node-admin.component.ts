@@ -42,6 +42,7 @@ export class NodeAdminComponent implements OnInit {
   gbToB = Math.pow(1024, 3);
 
   registeredNode: RegisteredNode;
+  pendingNodeTx = null;
 
   isNodeHardwareLoading: boolean = false;
   isNodeHardwareError: boolean = false;
@@ -61,6 +62,15 @@ export class NodeAdminComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.nodeServ
+      .getUnconfirmTransaction(this.account.address)
+      .then(res => {
+        console.log(res);
+        this.pendingNodeTx = res;
+      })
+      .catch(err => {
+        console.log(err);
+      });
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
   }
@@ -83,6 +93,25 @@ export class NodeAdminComponent implements OnInit {
         this.isNodeError = true;
       }
     );
+  }
+
+  generateNewPubKey() {
+    Swal.fire({
+      title: 'Are you sure want to generate new node public key?',
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        this.nodeAdminServ
+          .generateNodeKey(this.account.nodeIP)
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        return true;
+      },
+    });
   }
 
   streamNodeHardwareInfo() {

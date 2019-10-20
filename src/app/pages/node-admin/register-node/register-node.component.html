@@ -1,20 +1,6 @@
 <div class="register-node-container">
   <h2 class="mat-h2">{{ 'Register Node' | translate }}</h2>
   <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()">
-    <label>{{ 'Owner' | translate }}</label>
-    <mat-form-field appearance="outline" color="accent">
-      <input
-        matInput
-        type="text"
-        placeholder="{{ 'Owner' | translate }}"
-        formControlName="owner"
-      />
-    </mat-form-field>
-    <ng-container *ngIf="ownerForm.touched">
-      <mat-error *ngIf="ownerForm.hasError('required')">
-        {{ 'Owner is required' | translate }}
-      </mat-error>
-    </ng-container>
     <label>{{ 'IP Address' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input
@@ -30,20 +16,20 @@
         {{ 'IP Address is required' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'Locked Amount' | translate }}</label>
+    <label>{{ 'Locked Balance' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input
         matInput
         type="number"
-        placeholder="{{ 'Locked Amount' | translate }}"
-        formControlName="lockedAmount"
+        placeholder="{{ 'Locked Balance' | translate }}"
+        formControlName="lockedBalance"
       />
     </mat-form-field>
-    <ng-container *ngIf="lockedAmountForm.touched">
-      <mat-error *ngIf="lockedAmountForm.hasError('required')">
+    <ng-container *ngIf="lockedBalanceForm.touched">
+      <mat-error *ngIf="lockedBalanceForm.hasError('required')">
         {{ 'Locked Balance is required' | translate }}
       </mat-error>
-      <mat-error *ngIf="lockedAmountForm.hasError('min')">
+      <mat-error *ngIf="lockedBalanceForm.hasError('min')">
         {{ 'Minimum Locked Balance is 0.00000001' | translate }}
       </mat-error>
     </ng-container>
@@ -83,7 +69,12 @@
       </mat-error>
     </ng-container>
     <br />
-    <button mat-flat-button color="primary" type="submit">
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="formRegisterNode.invalid || isLoading"
+    >
       {{ 'Register' | translate }}
     </button>
   </form>

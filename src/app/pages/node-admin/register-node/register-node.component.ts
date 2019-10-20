@@ -21,9 +21,8 @@ import {
 })
 export class RegisterNodeComponent implements OnInit {
   formRegisterNode: FormGroup;
-  ownerForm = new FormControl('', Validators.required);
   ipAddressForm = new FormControl('', Validators.required);
-  lockedAmountForm = new FormControl('', [
+  lockedBalanceForm = new FormControl('', [
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
@@ -44,39 +43,17 @@ export class RegisterNodeComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.formRegisterNode = new FormGroup({
-      owner: this.ownerForm,
       ipAddress: this.ipAddressForm,
-      lockedAmount: this.lockedAmountForm,
+      lockedBalance: this.lockedBalanceForm,
       fee: this.feeForm,
       nodePublicKey: this.nodePublicKeyForm,
     });
 
     this.account = authServ.getCurrAccount();
+    this.ipAddressForm.patchValue(this.account.nodeIP);
   }
 
-  ngOnInit() {
-    this.isLoading = true;
-    this.formRegisterNode.disable();
-    this.poownServ.get(this.account.nodeIP).then(
-      res => {
-        this.isLoading = false;
-        this.poown = res;
-        let address = res.toString('utf-8', 0, 44);
-        if (this.account.address == address) {
-          this.formRegisterNode.enable();
-          this.ipAddressForm.patchValue(this.account.nodeIP);
-        } else {
-          this.isError = true;
-          this.formRegisterNode.disable();
-        }
-      },
-      err => {
-        this.isError = true;
-        this.formRegisterNode.disable();
-        console.log(err);
-      }
-    );
-  }
+  ngOnInit() {}
 
   onChangeRecipient() {
     let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
@@ -94,28 +71,29 @@ export class RegisterNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          let data: RegisterNodeInterface = {
-            accountAddress: this.account.address,
-            nodePublicKey: this.nodePublicKeyForm.value,
-            nodeAddress: this.ipAddressForm.value,
-            fee: this.feeForm.value,
-            funds: this.lockedAmountForm.value,
-            poown: this.poown,
-          };
-          let byte = registerNodeBuilder(data, this.keyringServ);
+          this.poownServ
+            .get(this.account.nodeIP)
+            .then((poown: Buffer) => {
+              let data: RegisterNodeInterface = {
+                accountAddress: this.account.address,
+                nodePublicKey: this.nodePublicKeyForm.value,
+                nodeAddress: this.ipAddressForm.value,
+                fee: this.feeForm.value,
+                funds: this.lockedBalanceForm.value,
+                poown: poown,
+              };
+              let byte = registerNodeBuilder(data, this.keyringServ);
+              console.log(byte);
 
-          this.transactionServ.postTransaction(byte).then(
-            (res: any) => {
-              Swal.fire('Success', 'success', 'success');
-              this.isLoading = false;
-            },
-            err => {
+              return this.transactionServ.postTransaction(byte);
+            })
+            .then(res => Swal.fire('Success', 'success', 'success'))
+            .catch(err => {
               console.log(err);
               Swal.fire('Error', err, 'error');
-              this.isLoading = false;
               this.isError = true;
-            }
-          );
+            })
+            .finally(() => (this.isLoading = false));
         }
       });
     }

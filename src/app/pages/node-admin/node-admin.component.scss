@@ -73,6 +73,14 @@
     .value.big {
       font-size: 16px;
     }
+    .pending-label {
+      background-color: map-get($accent, 500);
+      border-radius: 16px;
+      color: white;
+      padding: 8px 16px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
   }
 }
 
