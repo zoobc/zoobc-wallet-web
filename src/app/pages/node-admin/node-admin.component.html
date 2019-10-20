@@ -67,8 +67,8 @@
         </div>
       </div>
       <div class="text-right">
-        <span class="pending-label">Pending: Update Node</span>
-        <!-- <ng-container *ngIf="!pendingNodeTx">
+        <!-- <span class="pending-label">Pending: Update Node</span> -->
+        <ng-container *ngIf="!pendingNodeTx">
           <button
             mat-flat-button
             color="primary"
@@ -82,8 +82,10 @@
           </button>
         </ng-container>
         <ng-container *ngIf="pendingNodeTx">
-          <div class="pending-label">Pending: {{ pendingNodeTx.type }}</div>
-        </ng-container> -->
+          <span class="pending-label">
+            Pending: <b>{{ pendingNodeTx.type }}</b>
+          </span>
+        </ng-container>
       </div>
     </ng-container>
 

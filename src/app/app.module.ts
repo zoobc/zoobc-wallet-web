@@ -74,6 +74,7 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
 import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
+import { RemoveNodeComponent } from './pages/node-admin/remove-node/remove-node.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -126,6 +127,7 @@ export function getLanguage(languageServ: LanguageService) {
     TransactionDetailComponent,
     PinConfirmationComponent,
     ClaimNodeComponent,
+    RemoveNodeComponent,
   ],
   imports: [
     BrowserModule,
