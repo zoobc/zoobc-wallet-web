@@ -68,10 +68,9 @@
       }
     }
     .from-account {
-      display: flex;
       border: 1px solid #ccc;
       border-radius: 6px;
-      padding: 16px;
+      padding: 12px;
       color: $black2;
       margin-top: 4px;
       margin-bottom: 16px;
@@ -81,12 +80,11 @@
         background-color: #eee;
       }
       .name {
-        width: 70%;
         font-weight: bold;
         font-size: 14px;
+        margin-bottom: 8px;
       }
       .balance {
-        width: 30%;
         text-align: right;
         font-size: 13px;
         color: $black2;
