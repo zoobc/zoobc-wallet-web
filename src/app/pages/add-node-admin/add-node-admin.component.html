@@ -11,6 +11,9 @@
       />
     </mat-form-field>
     <ng-container *ngIf="ipAddressField.touched">
+      <mat-error *ngIf="ipAddressField.hasError('required')">
+        {{ 'IP address is required' | translate }}
+      </mat-error>
       <mat-error *ngIf="ipAddressField.hasError('pattern')">
         {{ 'Invalid IP address format' | translate }}
       </mat-error>
