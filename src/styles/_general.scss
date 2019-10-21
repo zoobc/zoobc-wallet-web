@@ -84,6 +84,11 @@ button[mat-flat-button] {
   &.block {
     width: 100%;
   }
+  &.small {
+    height: 32px;
+    font-size: 12px;
+    line-height: 12px;
+  }
 }
 
 // ====================== TEXT ALIGNMENT ======================
@@ -166,6 +171,12 @@ label {
 
 // ============================ SWAL CUSTOM STYLE ========================
 
+.swal2-content {
+  .loader {
+    font-size: 48px;
+    color: white;
+  }
+}
 .swal2-styled {
   border-radius: 8px !important;
   font-weight: bold !important;

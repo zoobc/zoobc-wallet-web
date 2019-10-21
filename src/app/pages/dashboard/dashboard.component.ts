@@ -36,7 +36,6 @@ export class DashboardComponent implements OnInit {
   isErrorBalance: boolean = false;
   isErrorRecentTx: boolean = false;
 
-  totalTx: number = 0;
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
 
@@ -61,7 +60,6 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
-    this.accounts = this.authServ.getAllAccount(true);
   }
 
   ngOnInit() {
@@ -81,12 +79,11 @@ export class DashboardComponent implements OnInit {
         .getAccountBalance(this.currAcc.address)
         .then((data: AccountBalanceList) => {
           this.accountBalance = data.accountbalance;
-          this.isLoadingBalance = false;
+          return this.authServ.getAccountsWithBalance();
         })
-        .catch(() => {
-          this.isErrorBalance = true;
-          this.isLoadingBalance = false;
-        });
+        .then((res: SavedAccount[]) => (this.accounts = res))
+        .catch(() => (this.isErrorBalance = true))
+        .finally(() => (this.isLoadingBalance = false));
     }
   }
 
@@ -94,7 +91,6 @@ export class DashboardComponent implements OnInit {
     if (!this.isLoadingRecentTx) {
       this.recentTx = null;
       this.unconfirmTx = null;
-      this.totalTx = 0;
 
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
@@ -102,7 +98,6 @@ export class DashboardComponent implements OnInit {
       this.transactionServ
         .getAccountTransaction(1, 5, this.currAcc.address)
         .then((res: Transactions) => {
-          this.totalTx = res.total;
           this.recentTx = res.transactions;
           return this.transactionServ.getUnconfirmTransaction(
             this.currAcc.address

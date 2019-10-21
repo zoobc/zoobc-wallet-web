@@ -31,7 +31,6 @@ export class RestoreWalletComponent implements OnInit {
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
   errorOpenWallet: boolean = false;
-  private key: string;
 
   constructor(
     private dialog: MatDialog,
@@ -53,9 +52,8 @@ export class RestoreWalletComponent implements OnInit {
       this.passphraseField.value
     );
     const mnemonicNumLength = this.passphraseField.value.split(' ').length;
-    if (mnemonicNumLength != this.mnemonicWordLengtEnv) {
+    if (mnemonicNumLength != this.mnemonicWordLengtEnv)
       this.passphraseField.setErrors({ lengthMnemonic: true });
-    }
     if (!valid) this.passphraseField.setErrors({ mnemonic: true });
   }
 
@@ -87,12 +85,10 @@ export class RestoreWalletComponent implements OnInit {
       Swal.fire({
         allowOutsideClick: false,
         background: '#00000000',
-        onBeforeOpen: () => {
-          Swal.showLoading();
-          this.saveNewAccount(key);
-        },
+        html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
+        showConfirmButton: false,
+        onBeforeOpen: () => this.saveNewAccount(key),
       });
-      this.key = key;
     });
   }
 
@@ -130,7 +126,7 @@ export class RestoreWalletComponent implements OnInit {
         address: address,
       };
 
-      let checkHasTransaction = await this.transactionServ
+      await this.transactionServ
         .getAccountTransaction(1, 1, address)
         .then((res: Transactions) => {
           this.totalTx = res.total;
@@ -158,7 +154,7 @@ export class RestoreWalletComponent implements OnInit {
                 background: '#00000000',
                 onBeforeOpen: () => {
                   Swal.showLoading();
-                  this.saveNewAccount(this.key);
+                  this.saveNewAccount(key);
                 },
               });
             }

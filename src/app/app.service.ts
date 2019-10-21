@@ -11,12 +11,12 @@ export class AppService implements CanActivate {
 
   constructor(private router: Router, private authServ: AuthService) {}
 
-  isLoggedIn() {
-    return this.authServ.currPublicKey ? true : false;
+  isLoggedIn(): boolean {
+    return this.authServ.currSeed ? true : false;
   }
 
   canActivate(): boolean {
-    if (this.authServ.currPublicKey) return true;
+    if (this.authServ.currSeed) return true;
 
     // this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
     this.router.navigateByUrl(`/login`);
