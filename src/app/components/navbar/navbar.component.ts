@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { onCopyText, generateEncKey } from 'src/helpers/utils';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-navbar',
@@ -32,7 +33,7 @@ export class NavbarComponent implements OnInit {
   pinField = new FormControl('', Validators.required);
   isConfirmPinLoading = false;
   pinValid: boolean = false;
-  phrase: any;
+  private phrase: string;
 
   languages = [];
   activeLanguage = 'en';
@@ -119,7 +120,10 @@ export class NavbarComponent implements OnInit {
         const isPinValid = this.authServ.isPinValid(encSeed, key);
         if (isPinValid) {
           this.pinValid = true;
-          this.phrase = this.authServ.seedPhrase;
+          const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
+            CryptoJS.enc.Utf8
+          );
+          this.phrase = seed;
         } else {
           this.formConfirmPin.setErrors({ invalid: true });
         }

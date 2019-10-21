@@ -114,22 +114,11 @@
 .confirmation-dialog {
   .brand {
     .title-wallet {
-      background: -webkit-linear-gradient(
-        map-get($primary, 500),
-        rgb(155, 66, 149)
-      );
-      -webkit-background-clip: text;
-      -moz-background-clip: text;
-      -o-background-clip: text;
-      -ms-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      -moz-text-fill-color: transparent;
-      -o-text-fill-color: transparent;
-      -ms-text-fill-color: transparent;
       font-size: 16px;
       margin-right: 10px;
       display: inline-flex;
+      // for webkit only
+      display: -webkit-inline-box;
       .text {
         margin: 0 8px 0 0;
         line-height: 28px;
