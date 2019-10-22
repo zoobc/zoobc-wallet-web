@@ -23,7 +23,7 @@ export class RegisterNodeComponent implements OnInit {
   formRegisterNode: FormGroup;
   ownerForm = new FormControl('', Validators.required);
   ipAddressForm = new FormControl('', Validators.required);
-  lockedAmountForm = new FormControl('', [
+  lockedBalanceForm = new FormControl('', [
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
@@ -46,7 +46,7 @@ export class RegisterNodeComponent implements OnInit {
     this.formRegisterNode = new FormGroup({
       owner: this.ownerForm,
       ipAddress: this.ipAddressForm,
-      lockedAmount: this.lockedAmountForm,
+      lockedBalance: this.lockedBalanceForm,
       fee: this.feeForm,
       nodePublicKey: this.nodePublicKeyForm,
     });
@@ -99,7 +99,7 @@ export class RegisterNodeComponent implements OnInit {
             nodePublicKey: this.nodePublicKeyForm.value,
             nodeAddress: this.ipAddressForm.value,
             fee: this.feeForm.value,
-            funds: this.lockedAmountForm.value,
+            funds: this.lockedBalanceForm.value,
             poown: this.poown,
           };
           let byte = registerNodeBuilder(data, this.keyringServ);

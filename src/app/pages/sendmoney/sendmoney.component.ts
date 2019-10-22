@@ -219,7 +219,7 @@ export class SendmoneyComponent implements OnInit {
     if (!this.customFee) this.onFeeChoose(this.activeButton);
   }
 
-  onOpenDialogDetailSendMoney() {
+  async onOpenDialogDetailSendMoney() {
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
@@ -227,11 +227,12 @@ export class SendmoneyComponent implements OnInit {
         data: this.formSend.value,
       });
     } else {
-      Swal.fire({
-        type: 'error',
-        title: 'Oops...',
-        text: 'Your balances are not enough for this transaction',
-      });
+      let message: string;
+      await this.translate
+        .get('Your balances are not enough for this transaction')
+        .toPromise()
+        .then(res => (message = res));
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
@@ -255,7 +256,7 @@ export class SendmoneyComponent implements OnInit {
       this.kindFee = 'Slow';
     } else if (value === 2) {
       fee = this.feeMedium;
-      this.kindFee = 'Medium';
+      this.kindFee = 'Average';
     } else {
       fee = this.feeFast;
       this.kindFee = 'Fast';
@@ -286,22 +287,25 @@ export class SendmoneyComponent implements OnInit {
       const txBytes = sendMoneyBuilder(data, this.keyringServ);
 
       this.transactionServ.postTransaction(txBytes).then(
-        (res: any) => {
+        async (res: any) => {
           this.isLoading = false;
-          Swal.fire(
-            '<b>Your Transaction is processing</b>',
-            'You send <b>' +
-              this.amountForm.value +
-              '</b> coins (' +
-              this.amountForm.value * this.currencyRate.value +
-              ' ' +
-              this.currencyRate.name +
-              ') ' +
-              'to this <b>' +
-              this.recipientForm.value +
-              '</b> address',
-            'success'
-          );
+          let message: string;
+          await this.translate
+            .get('Your Transaction is processing')
+            .toPromise()
+            .then(res => (message = res));
+          let subMessage: string;
+          await this.translate
+            .get('You send coins to this address', {
+              amount: data.amount,
+              currencyValue: data.amount * this.currencyRate.value,
+              currencyName: this.currencyRate.name,
+              recipient: data.recipient,
+            })
+            .toPromise()
+            .then(res => (message = res));
+
+          Swal.fire(`<b>${message}</b>`, subMessage, 'success');
 
           // save address
           if (this.saveAddress) {
@@ -315,13 +319,15 @@ export class SendmoneyComponent implements OnInit {
           this.sendMoneyRefDialog.close();
           this.router.navigateByUrl('/dashboard');
         },
-        err => {
+        async err => {
           this.isLoading = false;
-          Swal.fire(
-            'Opps...',
-            'An error occurred while processing your request',
-            'error'
-          );
+
+          let message: string;
+          await this.translate
+            .get('An error occurred while processing your request')
+            .toPromise()
+            .then(res => (message = res));
+          Swal.fire('Opps...', message, 'error');
         }
       );
     }

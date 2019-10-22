@@ -19,6 +19,8 @@ import {
 import { AddAccountComponent } from '../add-account/add-account.component';
 import { onCopyText } from 'src/helpers/utils';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import Swal from 'sweetalert2';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -58,7 +60,8 @@ export class DashboardComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
   }
@@ -141,9 +144,16 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
-  copyText(text) {
+  async copyText(text) {
     onCopyText(text);
-    this.snackBar.open('Address Copied', null, { duration: 5000 });
+
+    let message: string;
+    await this.translate
+      .get('Address copied to clipboard')
+      .toPromise()
+      .then(res => (message = res));
+    Swal.fire('', message, 'success');
+    this.snackBar.open(message, null, { duration: 5000 });
   }
 
   onOpenAddAccount() {

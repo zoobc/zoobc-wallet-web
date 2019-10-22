@@ -11,10 +11,7 @@
       </button>
       <a routerLink="/" class="brand-text">
         <img src="/assets/img/zbc-white.png" alt="" />
-        <h3>
-          <b>ZooBC</b>
-          Wallet
-        </h3>
+        <h3><b>ZooBC</b> Wallet</h3>
       </a>
     </div>
     <div class="menu">
@@ -57,7 +54,7 @@
           </ng-container>
           <button mat-menu-item routerLink="/settings/about">
             <i class="fas fa-info"></i>
-            {{ 'About' | translate }}
+            {{ 'Info & Help' | translate }}
           </button>
           <!-- <button mat-menu-item routerLink="/settings">
             <i class="fa fa-cog"></i>
@@ -124,7 +121,7 @@
         style="margin-right: 8px"
         (click)="closeDialog()"
       >
-        Cancel
+        {{ 'Cancel' | translate }}
       </button>
       <button
         mat-flat-button
@@ -137,7 +134,7 @@
           class="fas fa-circle-notch fa-spin"
           *ngIf="isConfirmPinLoading"
         ></i>
-        <span *ngIf="!isConfirmPinLoading">Confirm</span>
+        <span *ngIf="!isConfirmPinLoading">{{ 'Confirm' | translate }}</span>
       </button>
     </div>
     <div *ngIf="pinValid === true">
@@ -147,7 +144,7 @@
         color="primary"
         (click)="closeDialog()"
       >
-        Done
+        {{ 'Done' | translate }}
       </button>
     </div>
   </div>

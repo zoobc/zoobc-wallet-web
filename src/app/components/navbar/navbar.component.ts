@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { onCopyText, generateEncKey } from 'src/helpers/utils';
 import * as CryptoJS from 'crypto-js';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navbar',
@@ -51,7 +52,8 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private appServ: AppService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private translate: TranslateService
   ) {
     this.isLoggedIn = this.authServ.currSeed ? true : false;
 
@@ -96,9 +98,15 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  onLogout() {
+  async onLogout() {
+    let message: string;
+    await this.translate
+      .get('Are you sure want to logout?')
+      .toPromise()
+      .then(res => (message = res));
+
     Swal.fire({
-      title: 'Are you sure want to logout?',
+      title: message,
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -139,8 +147,14 @@ export class NavbarComponent implements OnInit {
     this.revealPassphraseDialog.close();
   }
 
-  copyPhrase() {
+  async copyPhrase() {
     onCopyText(this.phrase);
-    this.snackBar.open('Passphrase Copied', null, { duration: 3000 });
+
+    let message: string;
+    await this.translate
+      .get('Passphrase Copied')
+      .toPromise()
+      .then(res => (message = res));
+    this.snackBar.open(message, null, { duration: 3000 });
   }
 }
