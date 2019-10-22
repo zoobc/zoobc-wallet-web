@@ -143,7 +143,7 @@ export class RestoreWalletComponent implements OnInit {
           this.errorOpenWallet = true;
           Swal.fire({
             title: 'Oops...',
-            text: 'Something went wrong!',
+            text: 'An error occurred while processing your request',
             type: 'error',
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Try Again',
@@ -152,10 +152,9 @@ export class RestoreWalletComponent implements OnInit {
               Swal.fire({
                 allowOutsideClick: false,
                 background: '#00000000',
-                onBeforeOpen: () => {
-                  Swal.showLoading();
-                  this.saveNewAccount(key);
-                },
+                html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
+                showConfirmButton: false,
+                onBeforeOpen: () => this.saveNewAccount(key),
               });
             }
           });
