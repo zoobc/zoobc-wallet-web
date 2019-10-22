@@ -24,6 +24,7 @@
 
       <div class="from-account" *ngIf="isError">
         <div class="text-center" style="width: 100%;">
+            <i matPrefix class="fa fa-exclamation-triangle"></i>
           <div style="margin-bottom: 8px;">
             {{ 'An error occurred while processing your request' | translate }}
           </div>
@@ -283,7 +284,7 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeFormCurr.hasError('min')">
-                {{ 'Minimum amount in ZBC must be 0.00000001 ZBC' | translate }}
+                {{ 'Minimum amount of fee in ZBC must be 0.00000001 ZBC' | translate }}
               </mat-error>
             </ng-container>
           </div>
