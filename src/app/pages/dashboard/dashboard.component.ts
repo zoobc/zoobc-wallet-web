@@ -36,6 +36,7 @@ export class DashboardComponent implements OnInit {
   isErrorBalance: boolean = false;
   isErrorRecentTx: boolean = false;
 
+  totalTx: number;
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
 
@@ -99,6 +100,7 @@ export class DashboardComponent implements OnInit {
         .getAccountTransaction(1, 5, this.currAcc.address)
         .then((res: Transactions) => {
           this.recentTx = res.transactions;
+          this.totalTx = res.total;
           return this.transactionServ.getUnconfirmTransaction(
             this.currAcc.address
           );

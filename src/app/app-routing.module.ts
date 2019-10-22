@@ -55,7 +55,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'open-wallet', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
-      { path: 'feedback', component: ContactUsComponent },
+      // { path: 'feedback', component: ContactUsComponent },
       { path: 'faq', component: FaqComponent },
       { path: 'terms-of-use', component: TermsOfUseComponent },
       { path: 'privacy-policy', component: PrivacyPolicyComponent },

@@ -15,6 +15,7 @@ export class ParentComponent implements OnInit {
   @ViewChild('sidenav') public sidenav: MatSidenav;
   @ViewChild('mainContainer') private mainContainer: MatDrawerContent;
   largeScreen = window.innerWidth >= 576 ? true : false;
+  height = window.innerHeight - 64;
   routerEvent: any;
   menu: string = '';
 
@@ -23,9 +24,8 @@ export class ParentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private appServ: AppService
-  ) // private keyringServ: KeyringService,
-  // private authServ: AuthService
+    private appServ: AppService // private keyringServ: KeyringService,
+  ) // private authServ: AuthService
   {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -41,6 +41,7 @@ export class ParentComponent implements OnInit {
 
   @HostListener('window:resize', ['$event']) onResize(event) {
     this.largeScreen = event.target.innerWidth >= 576 ? true : false;
+    this.height = window.innerHeight - 64;
   }
 
   ngOnInit() {

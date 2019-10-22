@@ -125,7 +125,6 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getAccounts() {
-    this.formSend.disable();
     this.isLoading = true;
     this.isError = false;
     this.authServ
@@ -133,7 +132,6 @@ export class SendmoneyComponent implements OnInit {
       .then((res: SavedAccount[]) => {
         this.accounts = res;
         this.account = this.accounts.find(acc => this.account.path == acc.path);
-        this.formSend.enable();
       })
       .catch(() => (this.isError = true))
       .finally(() => (this.isLoading = false));
@@ -243,7 +241,10 @@ export class SendmoneyComponent implements OnInit {
     });
 
     pinRefDialog.afterClosed().subscribe(isPinValid => {
-      if (isPinValid) this.onSendMoney();
+      if (isPinValid) {
+        this.sendMoneyRefDialog.close();
+        this.onSendMoney();
+      }
     });
   }
 
