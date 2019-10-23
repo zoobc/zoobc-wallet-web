@@ -17,18 +17,24 @@
 
       <div class="from-account" *ngIf="isLoading">
         <div style="vertical-align: middle">
-          <i class="fas fa-circle-notch fa-spin" style="font-size: 16px"></i>&nbsp;
+          <i class="fas fa-circle-notch fa-spin" style="font-size: 16px"></i
+          >&nbsp;
           <span>{{ 'Getting your accounts...' | translate }}</span>
         </div>
       </div>
 
       <div class="from-account" *ngIf="isError">
         <div class="text-center" style="width: 100%;">
-            <i matPrefix class="fa fa-exclamation-triangle"></i>
+          <i matPrefix class="fa fa-exclamation-triangle"></i>
           <div style="margin-bottom: 8px;">
             {{ 'An error occurred while processing your request' | translate }}
           </div>
-          <button mat-flat-button class="small" color="primary" (click)="getAccounts()">
+          <button
+            mat-flat-button
+            class="small"
+            color="primary"
+            (click)="getAccounts()"
+          >
             {{ 'Try Again' | translate }}
           </button>
         </div>
@@ -133,7 +139,7 @@
               {{ 'Amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountForm.hasError('min')">
-              {{ 'Minimum amount is 0.00000001' | translate }}
+              {{ 'Minimum amount is' | translate: { val: 0.00000001 } }}
             </mat-error>
           </ng-container>
           <mat-form-field
@@ -158,7 +164,10 @@
               {{ 'Amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{ 'Minimum amount in ZBC must be 0.00000001 ZBC' | translate }}
+              {{
+                'Minimum amount in ZBC must be ZBC'
+                  | translate: { val: 0.00000001 }
+              }}
             </mat-error>
           </ng-container>
         </div>
@@ -174,7 +183,7 @@
           [class.fee-choosen]="activeButton === 1"
         >
           <div class="fee-button">
-            <div class="label">Slow</div>
+            <div class="label">{{ 'Slow' | translate }}</div>
             <div class="zbc-currency">{{ feeSlow }} ZBC</div>
             <div class="fiat-currency">
               {{ feeSlow * currencyRate.value | number: '0.0-2' }}
@@ -190,7 +199,7 @@
           [class.fee-choosen]="activeButton === 2"
         >
           <div class="fee-button">
-            <div class="label">Medium</div>
+            <div class="label">{{ 'Average' | translate }}</div>
             <div class="zbc-currency">{{ feeMedium }} ZBC</div>
             <div class="fiat-currency">
               {{ feeMedium * currencyRate.value | number: '0.0-2' }}
@@ -206,7 +215,7 @@
           [class.fee-choosen]="activeButton === 3"
         >
           <div class="fee-button">
-            <div class="label">Fast</div>
+            <div class="label">{{ 'Fast' | translate }}</div>
             <div class="zbc-currency">{{ feeFast }} ZBC</div>
             <div class="fiat-currency">
               {{ feeFast * currencyRate.value | number: '0.0-2' }}
@@ -261,7 +270,7 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeForm.hasError('min')">
-                {{ 'Minimum fee is 0.00000001' | translate }}
+                {{ 'Minimum fee is' | translate: { val: 0.00000001 } }}
               </mat-error>
             </ng-container>
             <mat-form-field
@@ -284,7 +293,10 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeFormCurr.hasError('min')">
-                {{ 'Minimum amount of fee in ZBC must be 0.00000001 ZBC' | translate }}
+                {{
+                  'Minimum amount of fee in ZBC must be ZBC'
+                    | translate:{val: 0.00000001}
+                }}
               </mat-error>
             </ng-container>
           </div>
@@ -311,7 +323,7 @@
   <div class="confirmation-dialog">
     <div class="row">
       <div class="col-12 col-sm-6">
-        <div class="title">Confirm Send Money</div>
+        <div class="title">{{'Confirm Send Money' | translate}}</div>
       </div>
       <div class="col-12 col-sm-6 text-right">
         <a class="brand">
@@ -326,14 +338,14 @@
     <div class="content">
       <div class="row">
         <div class="col-12 col-sm-6 test">
-          <div class="label">From:</div>
+          <div class="label">{{'From' | translate}}:</div>
           <div class="address">
             <wallet-address
               [value]="account.address"
               [copyButton]="true"
             ></wallet-address>
           </div>
-          <div class="label">Recepient:</div>
+          <div class="label">{{'Recepient' | translate}}:</div>
           <div class="address">
             <wallet-address
               [value]="recipientForm.value"
@@ -342,7 +354,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-6 text-right">
-          <div class="label">Amount:</div>
+          <div class="label">{{'Amount' | translate}}:</div>
           <div class="amount">
             <div class="zbc">{{ amountForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
@@ -361,7 +373,7 @@
               {{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}
             </div>
           </div>
-          <div class="label">Total :</div>
+          <div class="label">{{'Total' | translate}} :</div>
           <div class="total">
             <div class="zbc">
               {{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC
@@ -385,10 +397,10 @@
         (click)="closeDialog()"
         style="margin-right: 8px"
       >
-        Cancel
+        {{'Cancel' | translate}}
       </button>
       <button mat-flat-button color="primary" (click)="onOpenPinDialog()">
-        Confirm
+        {{'Confirm' | translate}}
       </button>
     </div>
   </div>
@@ -419,7 +431,7 @@
               ></wallet-address>
             </div>
             <div class="last-tx">
-              <span>Last Transaction:&nbsp;</span>
+              <span>{{'Last Transaction' | translate}}:&nbsp;</span>
               <span *ngIf="acc.lastTx">{{ acc.lastTx | dateAgo }}</span>
               <span *ngIf="!acc.lastTx">{{ 'None' | translate }}</span>
             </div>

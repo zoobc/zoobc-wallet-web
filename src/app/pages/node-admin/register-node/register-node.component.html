@@ -30,21 +30,21 @@
         {{ 'IP Address is required' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'Locked Amount' | translate }}</label>
+    <label>{{ 'Locked Balance' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input
         matInput
         type="number"
-        placeholder="{{ 'Locked Amount' | translate }}"
-        formControlName="lockedAmount"
+        placeholder="{{ 'Locked Balance' | translate }}"
+        formControlName="lockedBalance"
       />
     </mat-form-field>
-    <ng-container *ngIf="lockedAmountForm.touched">
-      <mat-error *ngIf="lockedAmountForm.hasError('required')">
+    <ng-container *ngIf="lockedBalanceForm.touched">
+      <mat-error *ngIf="lockedBalanceForm.hasError('required')">
         {{ 'Locked Balance is required' | translate }}
       </mat-error>
-      <mat-error *ngIf="lockedAmountForm.hasError('min')">
-        {{ 'Minimum Locked Balance is 0.00000001' | translate }}
+      <mat-error *ngIf="lockedBalanceForm.hasError('min')">
+        {{ 'Minimum Locked Balance is' | translate: { val: 0.00000001 } }}
       </mat-error>
     </ng-container>
     <label>{{ 'Fee' | translate }}</label>
@@ -61,7 +61,7 @@
         {{ 'Fee is required' | translate }}
       </mat-error>
       <mat-error *ngIf="feeForm.hasError('min')">
-        {{ 'Minimum fee is 0.00000001' | translate }}
+        {{ 'Minimum fee is' | translate: { val: 0.00000001 } }}
       </mat-error>
     </ng-container>
     <label>{{ 'Node Public Key' | translate }}</label>
@@ -84,7 +84,7 @@
     </ng-container>
     <br />
     <button mat-flat-button color="primary" type="submit">
-      {{ 'Register' | translate }}
+      {{ 'Register Node' | translate }}
     </button>
   </form>
 </div>

@@ -18,8 +18,10 @@
         {{ 'Passphrase is invalid' | translate }}
       </mat-error>
       <mat-error *ngIf="passphraseField.hasError('lengthMnemonic')">
-        {{ 'Please use your' | translate }} {{ mnemonicWordLengtEnv }}
-        {{ 'passphrase words' | translate }}
+        {{
+          'Please use your passphrase words'
+            | translate: { num: mnemonicWordLengtEnv }
+        }}
       </mat-error>
     </ng-container>
     <button

@@ -13,6 +13,7 @@ import {
 } from 'src/app/services/transaction.service';
 import { GetAddressFromPublicKey } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 const coin = 'ZBC';
 
@@ -38,7 +39,8 @@ export class RestoreWalletComponent implements OnInit {
     private authServ: AuthService,
     private keyringServ: KeyringService,
     private mnemonicServ: MnemonicsService,
-    private transactionServ: TransactionService
+    private transactionServ: TransactionService,
+    private translate: TranslateService
   ) {
     this.restoreForm = new FormGroup({
       passphrase: this.passphraseField,
@@ -57,11 +59,16 @@ export class RestoreWalletComponent implements OnInit {
     if (!valid) this.passphraseField.setErrors({ mnemonic: true });
   }
 
-  onRestore() {
+  async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
+        let message: string;
+        await this.translate
+          .get('Your old wallet will be removed from this device')
+          .toPromise()
+          .then(res => (message = res));
         Swal.fire({
-          title: 'Your old wallet will be removed from this device',
+          title: message,
           confirmButtonText: 'Continue',
           showCancelButton: true,
           showLoaderOnConfirm: true,
@@ -138,15 +145,28 @@ export class RestoreWalletComponent implements OnInit {
             counter = 0;
           }
         })
-        .catch(() => {
+        .catch(async () => {
           counter = 20;
           this.errorOpenWallet = true;
+
+          let message: string;
+          await this.translate
+            .get('An error occurred while processing your request')
+            .toPromise()
+            .then(res => (message = res));
+
+          let messageTryAgain: string;
+          await this.translate
+            .get('Try again')
+            .toPromise()
+            .then(res => (messageTryAgain = res));
+
           Swal.fire({
             title: 'Oops...',
-            text: 'An error occurred while processing your request',
+            text: message,
             type: 'error',
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Try Again',
+            confirmButtonText: messageTryAgain,
           }).then(result => {
             if (result.value == true) {
               Swal.fire({

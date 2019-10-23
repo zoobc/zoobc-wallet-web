@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { addressValidation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-editcontact',
@@ -18,7 +19,8 @@ export class EditcontactComponent implements OnInit {
   constructor(
     private contactServ: ContactService,
     public dialogRef: MatDialogRef<EditcontactComponent>,
-    @Inject(MAT_DIALOG_DATA) public contact: any
+    @Inject(MAT_DIALOG_DATA) public contact: any,
+    private translate: TranslateService
   ) {}
 
   onAddressValidation() {
@@ -41,17 +43,22 @@ export class EditcontactComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.editForm.valid) {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
       const isChanged =
         this.addressField.value != this.contact.address ? true : false;
 
       if (isDuplicate && isChanged) {
+        let message: string;
+        await this.translate
+          .get('The address you entered is already in your Address Book')
+          .toPromise()
+          .then(res => (message = res));
         Swal.fire({
           type: 'error',
           title: 'Oops...',
-          text: 'The address you entered is already in your Address Book',
+          text: message,
         });
       } else {
         const contacts: Contact[] = this.contactServ.updateContact(
