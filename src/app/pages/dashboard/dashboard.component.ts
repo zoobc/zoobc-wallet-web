@@ -152,7 +152,6 @@ export class DashboardComponent implements OnInit {
       .get('Address copied to clipboard')
       .toPromise()
       .then(res => (message = res));
-    Swal.fire('', message, 'success');
     this.snackBar.open(message, null, { duration: 5000 });
   }
 

@@ -23,7 +23,6 @@ const coin = 'ZBC';
   styleUrls: ['./restore-wallet.component.scss'],
 })
 export class RestoreWalletComponent implements OnInit {
-  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   listAccount = [];
   listAccountTemp = [];
   totalTx: number = 0;
@@ -77,9 +76,7 @@ export class RestoreWalletComponent implements OnInit {
             return true;
           },
         });
-      } else {
-        this.openPinDialog();
-      }
+      } else this.openPinDialog();
     }
   }
 

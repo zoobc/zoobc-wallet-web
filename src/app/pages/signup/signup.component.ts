@@ -1,12 +1,12 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { MatDialog } from '@angular/material';
 
 import { KeyringService } from '../../services/keyring.service';
-import { GetAddressFromPublicKey } from '../../../helpers/utils';
+import { onCopyText } from '../../../helpers/utils';
 import { AuthService } from 'src/app/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 const coin = 'ZBC';
 
@@ -16,25 +16,19 @@ const coin = 'ZBC';
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
-  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
-
   passphrase: string[];
   masterSeed: string;
-  address: string;
-  path: string;
 
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
 
-  submitted = false;
-
   constructor(
     private router: Router,
     private authServ: AuthService,
     private keyringServ: KeyringService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private snackbar: MatSnackBar,
+    private translate: TranslateService
   ) {
     this.formTerms = new FormGroup({
       isWrittenDown: this.isWrittenDown,
@@ -50,8 +44,6 @@ export class SignupComponent implements OnInit {
 
   generateNewWallet() {
     let { phrase: passphrase } = this.keyringServ.generateRandomPhrase();
-    // let passphrase =
-    //   'cause bicycle craft spike mention matter ensure fancy crisp climb lamp easily dish wedding tomorrow wing ancient flight man host river record joke cannon';
     const pass = 'p4ssphr4se';
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
@@ -60,28 +52,20 @@ export class SignupComponent implements OnInit {
       pass
     );
 
-    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
-    this.address = GetAddressFromPublicKey(childSeed.publicKey);
     this.masterSeed = seed;
     this.passphrase = passphrase.split(' ');
   }
 
-  copyPassphrase() {
+  async copyPassphrase() {
     const passphrase = this.passphrase.join(' ');
-    this.copyText(passphrase);
-  }
+    onCopyText(passphrase);
 
-  copyText(text) {
-    let selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.opacity = '0';
-    selBox.value = text;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
-    this.snackBar.open('Text Copied', null, { duration: 3000 });
+    let message: string;
+    await this.translate
+      .get('Passphrase Copied')
+      .toPromise()
+      .then(res => (message = res));
+    this.snackbar.open(message, null, { duration: 3000 });
   }
 
   goToConfirmPage() {

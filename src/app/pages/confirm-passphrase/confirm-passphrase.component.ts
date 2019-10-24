@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormBuilder,
-  FormArray,
-} from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
@@ -51,7 +45,7 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   prefillHalfPassphrase() {
-    // removing half of the passphrase
+    // removing some words of the passphrase
     this.prefillPassphrase = this.passphrase;
     // let totalWordRemoved = 1;
     let totalWordRemoved = Math.round(this.mnemonicNumWords / 6);
@@ -90,9 +84,7 @@ export class ConfirmPassphraseComponent implements OnInit {
 
       if (passphraseField != this.words)
         this.confirmForm.setErrors({ mnemonic: true });
-    } else {
-      this.confirmForm.setErrors({ required: true });
-    }
+    } else this.confirmForm.setErrors({ required: true });
   }
 
   openCreatePin() {
@@ -120,6 +112,6 @@ export class ConfirmPassphraseComponent implements OnInit {
       address: accountAddress,
     };
     this.authServ.addAccount(account);
-    this.authServ.login(account, key);
+    this.authServ.login(key);
   }
 }
