@@ -20,14 +20,12 @@ export class PoownService {
     ip = ip.startsWith('http://') ? ip : `http://${ip}`;
 
     return new Promise((resolve, reject) => {
-      let auth = poownBuilder(
+      const auth = poownBuilder(
         RequestType.GETPROOFOFOWNERSHIP,
         this.keyringServ
       );
-
       const request = new GetProofOfOwnershipRequest();
-
-      let client = grpc.client(NodeAdminService.GetProofOfOwnership, {
+      const client = grpc.client(NodeAdminService.GetProofOfOwnership, {
         host: ip,
       });
 
@@ -36,7 +34,6 @@ export class PoownService {
           Buffer.from(message.toObject().messagebytes.toString(), 'base64'),
           Buffer.from(message.toObject().signature.toString(), 'base64'),
         ]);
-
         resolve(bytes);
       });
       client.onEnd(

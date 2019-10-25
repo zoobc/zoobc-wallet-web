@@ -296,16 +296,16 @@ export class SendmoneyComponent implements OnInit {
             .then(res => (message = res));
           let subMessage: string;
           await this.translate
-            .get('You send coins to this address', {
+            .get('You send coins to', {
               amount: data.amount,
-              currencyValue: data.amount * this.currencyRate.value,
+              currencyValue: truncate(this.amountCurrencyForm.value, 2),
               currencyName: this.currencyRate.name,
               recipient: data.recipient,
             })
             .toPromise()
-            .then(res => (message = res));
+            .then(res => (subMessage = res));
 
-          Swal.fire(`<b>${message}</b>`, subMessage, 'success');
+          Swal.fire(message, subMessage, 'success');
 
           // save address
           if (this.saveAddress) {

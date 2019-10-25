@@ -61,29 +61,21 @@ export class LoginComponent implements OnInit {
   }
 
   onChangePin() {
-    if (this.pinForm.value.length == 6) this.onLoginPin();
+    if (this.pinForm.value.length == 6) this.onLogin();
   }
 
-  onLoginPin() {
+  onLogin() {
     if (this.formLoginPin.valid) {
       this.isLoading = true;
 
-      // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
         const key = generateEncKey(this.pinForm.value);
-        const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-        const isPinValid = this.authServ.isPinValid(encSeed, key);
-        if (isPinValid) {
-          let account = this.authServ.getCurrAccount();
-          this.authServ.login(account, key);
-
+        if (this.authServ.login(key)) {
           this.route.queryParams.subscribe(params => {
             const redirect = params.redirect || '/dashboard';
             this.router.navigateByUrl(redirect);
           });
-        } else {
-          this.pinForm.setErrors({ invalid: true });
-        }
+        } else this.pinForm.setErrors({ invalid: true });
         this.isLoading = false;
       }, 50);
     }

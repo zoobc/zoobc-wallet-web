@@ -15,7 +15,7 @@ export class RevealPassphraseComponent implements OnInit {
   formConfirmPin: FormGroup;
   pinField = new FormControl('', Validators.required);
   isConfirmPinLoading = false;
-  private phrase: string;
+  phrase: string;
 
   constructor(
     private authServ: AuthService,

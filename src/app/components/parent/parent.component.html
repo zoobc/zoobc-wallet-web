@@ -9,8 +9,10 @@
     >
       <app-sidebar [menu]="menu"></app-sidebar>
     </mat-drawer>
-    <mat-drawer-content #mainContainer class="main-container">
-      <router-outlet></router-outlet>
+    <mat-drawer-content #mainContainer>
+      <div class="main-container">
+        <router-outlet></router-outlet>
+      </div>
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

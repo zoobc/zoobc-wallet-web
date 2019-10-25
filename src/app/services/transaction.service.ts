@@ -47,12 +47,11 @@ export interface Transactions {
 export class TransactionService {
   constructor(private contactServ: ContactService) {}
 
-  getAccountTransaction(
+  getTransactions(
     page: number,
     limit: number,
     address: string
   ): Promise<Transactions> {
-    // const address = this.authServ.currAddress;
     return new Promise((resolve, reject) => {
       const request = new GetTransactionsRequest();
       const pagination = new Pagination();

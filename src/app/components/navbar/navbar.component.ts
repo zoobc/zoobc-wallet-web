@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
-import { LanguageService } from 'src/app/services/language.service';
-import { LANGUAGES, AppService } from 'src/app/app.service';
+import { LanguageService, LANGUAGES } from 'src/app/services/language.service';
+import { AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
 import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
     private appServ: AppService,
     private translate: TranslateService
   ) {
-    this.isLoggedIn = this.authServ.currSeed ? true : false;
+    this.isLoggedIn = this.authServ.isLoggedIn() ? true : false;
 
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -89,8 +89,7 @@ export class NavbarComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        this.authServ.currSeed = null;
-
+        this.authServ.logout();
         this.router.navigateByUrl('/');
         return true;
       },
