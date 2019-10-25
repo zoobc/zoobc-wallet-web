@@ -6,7 +6,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 
 const coin = 'ZBC';
 @Component({
@@ -102,7 +102,7 @@ export class ConfirmPassphraseComponent implements OnInit {
 
   saveNewAccount(key: string) {
     const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
-    const accountAddress = GetAddressFromPublicKey(childSeed.publicKey);
+    const accountAddress = getAddressFromPublicKey(childSeed.publicKey);
     this.authServ.saveMasterSeed(this.masterSeed, key);
     this.authServ.savePassphraseSeed(this.words, key);
     const account: SavedAccount = {

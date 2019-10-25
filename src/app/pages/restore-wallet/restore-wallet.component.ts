@@ -11,7 +11,7 @@ import {
   TransactionService,
   Transactions,
 } from 'src/app/services/transaction.service';
-import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -121,7 +121,7 @@ export class RestoreWalletComponent implements OnInit {
       );
 
       publicKey = childSeed.publicKey;
-      address = GetAddressFromPublicKey(publicKey);
+      address = getAddressFromPublicKey(publicKey);
 
       const listAccounts = {
         name: accountName + accountNo,
@@ -131,7 +131,7 @@ export class RestoreWalletComponent implements OnInit {
       };
 
       await this.transactionServ
-        .getAccountTransaction(1, 1, address)
+        .getTransactions(1, 1, address)
         .then((res: Transactions) => {
           this.totalTx = res.total;
           this.listAccountTemp.push(listAccounts);
@@ -187,7 +187,7 @@ export class RestoreWalletComponent implements OnInit {
       const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
 
       publicKey = childSeed.publicKey;
-      address = GetAddressFromPublicKey(publicKey);
+      address = getAddressFromPublicKey(publicKey);
       const account: SavedAccount = {
         name: 'Account 1',
         path: 0,

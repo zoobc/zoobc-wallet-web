@@ -93,7 +93,7 @@ export class AuthService {
       let error = false;
       for (let i = 0; i < accounts.length; i++) {
         await this.transactionServ
-          .getAccountTransaction(1, 1, accounts[i].address)
+          .getTransactions(1, 1, accounts[i].address)
           .then((res: Transactions) => {
             if (res.transactions.length > 0)
               accounts[i].lastTx = res.transactions[0].timestamp;

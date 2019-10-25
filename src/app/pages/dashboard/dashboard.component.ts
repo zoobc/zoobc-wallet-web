@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit {
       this.isErrorRecentTx = false;
 
       this.transactionServ
-        .getAccountTransaction(1, 5, this.currAcc.address)
+        .getTransactions(1, 5, this.currAcc.address)
         .then((res: Transactions) => {
           this.recentTx = res.transactions;
           this.totalTx = res.total;

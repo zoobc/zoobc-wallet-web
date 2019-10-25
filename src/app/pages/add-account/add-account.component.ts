@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 
 const coin = 'ZBC';
 @Component({
@@ -41,7 +41,7 @@ export class AddAccountComponent implements OnInit {
         coin,
         path
       );
-      const accountAddress = GetAddressFromPublicKey(childSeed.publicKey);
+      const accountAddress = getAddressFromPublicKey(childSeed.publicKey);
       const account: SavedAccount = {
         name: this.accountNameField.value,
         path,
