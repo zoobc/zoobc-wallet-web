@@ -17,40 +17,57 @@ export class TransferhistoryComponent implements OnInit {
   unconfirmTx: Transaction[];
 
   page: number = 1;
+  perPage: number = 10;
   total: number = 0;
   finished: boolean = false;
 
-  address: string;
-  showSpinner: boolean = false;
+  address: string = this.authServ.getCurrAccount().address;
+  isLoading: boolean = false;
+  isError: boolean = false;
 
   constructor(
     private transactionServ: TransactionService,
     private authServ: AuthService
-  ) {
-    this.address = this.authServ.currAddress;
-  }
+  ) {}
 
   ngOnInit() {
-    this.getTx();
-
-    this.transactionServ
-      .getUnconfirmTransaction()
-      .then((res: Transaction[]) => {
-        this.unconfirmTx = res;
-      });
+    this.getTx(true);
   }
 
-  getTx() {
-    this.showSpinner = true;
-    this.transactionServ
-      .getAccountTransaction(this.page, 10)
-      .then((res: Transactions) => {
-        if (this.accountHistory)
-          this.accountHistory = this.accountHistory.concat(res.transactions);
-        else this.accountHistory = res.transactions;
-        this.total = res.total;
-        this.showSpinner = false;
-      });
+  getTx(reload: boolean = false) {
+    if (!this.isLoading) {
+      // 72 is transaction item's height
+      const perPage = Math.ceil(window.outerHeight / 72);
+
+      if (reload) {
+        this.accountHistory = null;
+        this.page = 1;
+      }
+
+      this.isLoading = true;
+      this.isError = false;
+
+      this.transactionServ
+        .getAccountTransaction(this.page, perPage, this.address)
+        .then((res: Transactions) => {
+          this.total = res.total;
+
+          if (reload) {
+            this.accountHistory = res.transactions;
+            return this.transactionServ.getUnconfirmTransaction(this.address);
+          } else
+            this.accountHistory = this.accountHistory.concat(res.transactions);
+        })
+        .then((unconfirmTx: Transaction[]) => {
+          // if relaad button pressed app will req unconfirmed tx too
+          if (unconfirmTx) this.unconfirmTx = unconfirmTx;
+        })
+        .catch(() => {
+          this.isError = true;
+          this.unconfirmTx = null;
+        })
+        .finally(() => (this.isLoading = false));
+    }
   }
 
   onScroll() {

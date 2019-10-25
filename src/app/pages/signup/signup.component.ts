@@ -43,7 +43,6 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
-    window.scroll(0, 0);
     this.generateNewWallet();
 
     if (this.authServ.getCurrAccount()) this.router.navigateByUrl('/login');

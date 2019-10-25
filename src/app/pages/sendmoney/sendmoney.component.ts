@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import * as CryptoJS from 'crypto-js';
 
 import { TransactionService } from '../../services/transaction.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
@@ -16,18 +14,14 @@ import {
   Currency,
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { BytesMaker } from 'src/helpers/BytesMaker';
+import { environment } from 'src/environments/environment';
+import { addressValidation, truncate } from 'src/helpers/utils';
+import { Router } from '@angular/router';
 import {
-  GetAccountBalanceResponse,
-  AccountBalance as AB,
-} from 'src/app/grpc/model/accountBalance_pb';
-import { AccountService } from 'src/app/services/account.service';
-import { base64ToByteArray } from 'src/helpers/converters';
-import { AddcontactComponent } from '../list-contact/addcontact/addcontact.component';
-
-const coin = 'ZBC';
-type AccountBalance = AB.AsObject;
-type AccountBalanceList = GetAccountBalanceResponse.AsObject;
+  sendMoneyBuilder,
+  SendMoneyInterface,
+} from 'src/helpers/transaction-builder/send-money';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 
 @Component({
   selector: 'app-sendmoney',
@@ -35,110 +29,151 @@ type AccountBalanceList = GetAccountBalanceResponse.AsObject;
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
-  accountBalance: AccountBalance;
   contacts: Contact[];
+  contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
-  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
-  @ViewChild('addContactDialog') addContactDialog: TemplateRef<any>;
+  @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
+
   currencyRate: Currency = {
     name: '',
     value: 0,
   };
-  keyword = 'alias';
+
+  feeFast = environment.feeFast;
+  feeMedium = environment.feeMedium;
+  feeSlow = environment.feeSlow;
+  activeButton: number = 2;
+  kindFee: string;
+
   formSend: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [
     Validators.required,
-    Validators.min(0.001),
+    Validators.min(1 / 1e8),
   ]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(0.001, [
+  feeForm = new FormControl(this.feeMedium, [
     Validators.required,
-    Validators.min(0.001),
+    Validators.min(1 / 1e8),
   ]);
+  feeFormCurr = new FormControl('', Validators.required);
+  aliasField = new FormControl('', Validators.required);
 
-  formConfirmPin: FormGroup;
-  pinField = new FormControl('', Validators.required);
-
-  pinRefDialog: MatDialogRef<any>;
+  accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
-  addNewContactRefDialog: MatDialogRef<any>;
 
-  isFormSendLoading = false;
-  isConfirmPinLoading = false;
-  address = this.authServ.currAddress;
+  isLoading = false;
+  isError = false;
 
   account: SavedAccount;
+  accounts: SavedAccount[];
 
-  bytes = new Uint8Array(193);
+  typeCoin = 'ZBC';
+  typeFee = 'ZBC';
 
-  //for add new address to contact list
-  addForm: FormGroup;
-  aliasField = new FormControl('', Validators.required);
-  addressField = new FormControl('', Validators.required);
+  saveAddress: boolean = false;
+  showSaveAddressBtn: boolean = true;
+  customFee: boolean = false;
 
   constructor(
-    private accountServ: AccountService,
     private transactionServ: TransactionService,
     private authServ: AuthService,
     private keyringServ: KeyringService,
     private currencyServ: CurrencyRateService,
     private contactServ: ContactService,
     private translate: TranslateService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private router: Router
   ) {
-    this.addForm = new FormGroup({
-      alias: this.aliasField,
-      address: this.addressField,
-    });
-
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
       amount: this.amountForm,
-      fee: this.feeForm,
       amountCurrency: this.amountCurrencyForm,
+      alias: this.aliasField,
+      fee: this.feeForm,
+      feeCurr: this.feeFormCurr,
     });
-
-    this.formConfirmPin = new FormGroup({
-      pin: this.pinField,
-    });
-    this.account = authServ.getCurrAccount();
+    // disable alias field (saveAddress = false)
+    this.aliasField.disable();
   }
 
   ngOnInit() {
-    this.accountServ.getAccountBalance().then((data: AccountBalanceList) => {
-      this.accountBalance = data.accountbalance;
-    });
     this.contacts = this.contactServ.getContactList() || [];
+
     // set filtered contacts function
     this.filteredContacts = this.recipientForm.valueChanges.pipe(
       startWith(''),
       map(value => this.filterContacts(value))
     );
+
     this.currencyServ.currencyRate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
+      // set default fee to medium
+      this.onChangeFeeField();
+      // convert fee to current currency
+      this.onFeeChoose(2);
+
+      const minCurrency = truncate((1 / 1e8) * rate.value, 8);
+      this.feeFormCurr.setValidators(Validators.min(minCurrency));
+      this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
+
+    this.account = this.authServ.getCurrAccount();
+    this.getAccounts();
+  }
+
+  getAccounts() {
+    this.isLoading = true;
+    this.isError = false;
+    this.authServ
+      .getAccountsWithBalance()
+      .then((res: SavedAccount[]) => {
+        this.accounts = res;
+        this.account = this.accounts.find(acc => this.account.path == acc.path);
+      })
+      .catch(() => (this.isError = true))
+      .finally(() => (this.isLoading = false));
+  }
+
+  openAccountList() {
+    this.accountRefDialog = this.dialog.open(this.accountDialog, {
+      width: '360px',
+    });
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.authServ.switchAccount(account);
+    this.account = account;
+    this.accountRefDialog.close();
   }
 
   onChangeAmountField() {
-    const resultAmountCurrency =
-      this.amountForm.value * this.currencyRate.value;
-    this.formSend.patchValue({
-      amountCurrency: resultAmountCurrency,
-    });
+    const amount = truncate(this.amountForm.value, 8);
+    const amountCurrency = amount * this.currencyRate.value;
+    this.amountCurrencyForm.patchValue(amountCurrency);
   }
 
   onChangeAmountCurrencyField() {
-    const resultAmount =
-      this.amountCurrencyForm.value / this.currencyRate.value;
-    this.formSend.patchValue({
-      amount: resultAmount,
-    });
+    const amount = this.amountCurrencyForm.value / this.currencyRate.value;
+    const amountTrunc = truncate(amount, 8);
+    this.amountForm.patchValue(amountTrunc);
   }
 
-  filterContacts(value: string) {
+  onChangeFeeField() {
+    const fee = truncate(this.feeForm.value, 8);
+    const feeCurrency = fee * this.currencyRate.value;
+    this.feeFormCurr.patchValue(feeCurrency);
+  }
+
+  onChangeFeeCurrencyField() {
+    const fee = this.feeFormCurr.value / this.currencyRate.value;
+    const feeTrunc = truncate(fee, 8);
+    this.feeForm.patchValue(feeTrunc);
+  }
+
+  filterContacts(value: string): Contact[] {
     if (value) {
       const filterValue = value.toLowerCase();
       return this.contacts.filter((contact: Contact) =>
@@ -148,94 +183,91 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeRecipient() {
-    let addressBytes = base64ToByteArray(this.recipientForm.value);
-    if (addressBytes.length != 33)
-      this.recipientForm.setErrors({ invalidAddress: true });
+    let validation = addressValidation(this.recipientForm.value);
+    if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
-  onOpenDialogAddToContact() {
-    this.addNewContactRefDialog = this.dialog.open(this.addContactDialog, {
-      width: '600px',
+  isAddressInContacts() {
+    const isAddressInContacts = this.contacts.some(c => {
+      if (c.address == this.recipientForm.value) {
+        this.contact = c;
+        return true;
+      } else return false;
     });
-    this.addForm.patchValue({
-      address: this.recipientForm.value,
-    });
-  }
 
-  onOpenDialogDetailSendMoney() {
-    const contact = this.contacts.some(
-      contacts => contacts.address === this.recipientForm.value
-    );
-    if (!contact) {
-      Swal.fire({
-        title: 'New Address Found',
-        text: 'Do you want to add it to your contact list ?',
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, add it!',
-        cancelButtonText: 'Proceed to detail send money',
-      }).then(result => {
-        if (result.value) {
-          this.onOpenDialogAddToContact();
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          this.sendMoneyRefDialog = this.dialog.open(
-            this.popupDetailSendMoney,
-            {
-              width: '600px',
-              data: this.formSend.value,
-            }
-          );
-        }
-      });
+    if (isAddressInContacts) {
+      this.aliasField.disable();
+      this.saveAddress = false;
+      this.showSaveAddressBtn = false;
     } else {
+      this.showSaveAddressBtn = true;
+    }
+  }
+
+  toggleSaveAddress() {
+    if (this.saveAddress) {
+      this.aliasField.disable();
+      this.saveAddress = false;
+    } else {
+      this.aliasField.enable();
+      this.saveAddress = true;
+    }
+  }
+
+  toggleCustomFee() {
+    this.customFee = !this.customFee;
+    if (!this.customFee) this.onFeeChoose(this.activeButton);
+  }
+
+  async onOpenDialogDetailSendMoney() {
+    const total = this.amountForm.value + this.feeForm.value;
+    if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
-        width: '600px',
+        width: '500px',
         data: this.formSend.value,
       });
+    } else {
+      let message: string;
+      await this.translate
+        .get('Your balances are not enough for this transaction')
+        .toPromise()
+        .then(res => (message = res));
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
   onOpenPinDialog() {
-    this.pinRefDialog = this.dialog.open(this.pinDialog, {
+    let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
     });
 
-    this.pinRefDialog.afterClosed().subscribe(isPinValid => {
-      if (isPinValid) this.onSendMoney();
+    pinRefDialog.afterClosed().subscribe(isPinValid => {
+      if (isPinValid) {
+        this.sendMoneyRefDialog.close();
+        this.onSendMoney();
+      }
     });
   }
 
-  onTypePin() {
-    if (this.pinField.value.length == 6) {
-      this.isConfirmPinLoading = true;
-
-      const pin = this.pinField.value;
-      const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-
-      // give some delay so that the dom have time to render the spinner
-      setTimeout(() => {
-        const key = CryptoJS.PBKDF2(pin, 'salt', {
-          keySize: 8,
-          iterations: 10000,
-        }).toString();
-
-        try {
-          const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
-            CryptoJS.enc.Utf8
-          );
-          if (!seed) throw 'not match';
-
-          this.pinRefDialog.close(true);
-          this.sendMoneyRefDialog.close();
-        } catch (e) {
-          this.formConfirmPin.setErrors({ invalid: true });
-        } finally {
-          this.isConfirmPinLoading = false;
-        }
-      }, 50);
+  onFeeChoose(value) {
+    let fee: number = 0;
+    if (value === 1) {
+      fee = this.feeSlow;
+      this.kindFee = 'Slow';
+    } else if (value === 2) {
+      fee = this.feeMedium;
+      this.kindFee = 'Average';
+    } else {
+      fee = this.feeFast;
+      this.kindFee = 'Fast';
     }
+
+    const feeCurrency = fee * this.currencyRate.value;
+    this.formSend.patchValue({
+      fee: fee,
+      feeCurr: feeCurrency,
+    });
+    this.activeButton = value;
   }
 
   closeDialog() {
@@ -244,104 +276,60 @@ export class SendmoneyComponent implements OnInit {
 
   async onSendMoney() {
     if (this.formSend.valid) {
-      this.isFormSendLoading = true;
+      this.isLoading = true;
 
-      const account = this.account;
-      const seed = Buffer.from(this.authServ.currSeed, 'hex');
+      let data: SendMoneyInterface = {
+        sender: this.account.address,
+        recipient: this.recipientForm.value,
+        fee: this.feeForm.value,
+        amount: this.amountForm.value,
+      };
+      const txBytes = sendMoneyBuilder(data, this.keyringServ);
 
-      this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        coin,
-        account.path
-      );
+      this.transactionServ.postTransaction(txBytes).then(
+        async (res: any) => {
+          this.isLoading = false;
+          let message: string;
+          await this.translate
+            .get('Your Transaction is processing')
+            .toPromise()
+            .then(res => (message = res));
+          let subMessage: string;
+          await this.translate
+            .get('You send coins to this address', {
+              amount: data.amount,
+              currencyValue: data.amount * this.currencyRate.value,
+              currencyName: this.currencyRate.name,
+              recipient: data.recipient,
+            })
+            .toPromise()
+            .then(res => (message = res));
 
-      const sender = Buffer.from(this.authServ.currAddress, 'utf-8');
-      const recepient = Buffer.from(this.recipientForm.value, 'utf-8');
-      const amount = this.amountForm.value * 1e8;
-      const fee = this.feeForm.value * 1e8;
-      const timestamp = Math.trunc(Date.now() / 1000);
+          Swal.fire(`<b>${message}</b>`, subMessage, 'success');
 
-      let bytes = new BytesMaker(129);
-      // transaction type
-      bytes.write4bytes(1);
-      // version
-      bytes.write1Byte(1);
-      // timestamp
-      bytes.write8Bytes(timestamp);
-      // sender address length
-      bytes.write4bytes(44);
-      // sender address
-      bytes.write44Bytes(sender);
-      // recepient address length
-      bytes.write4bytes(44);
-      // recepient address
-      bytes.write44Bytes(recepient);
-      // tx fee
-      bytes.write8Bytes(fee);
-      // tx body length
-      bytes.write4bytes(8);
-      // tx body (amount)
-      bytes.write8Bytes(amount);
+          // save address
+          if (this.saveAddress) {
+            const newContact = {
+              alias: this.aliasField.value,
+              address: this.recipientForm.value,
+            };
+            this.contacts = this.contactServ.addContact(newContact);
+          }
 
-      let signature = childSeed.sign(bytes.value);
-      let bytesWithSign = new BytesMaker(197);
-
-      // copy to new bytes
-      bytesWithSign.write(bytes.value, 129);
-      // set signature type
-      bytesWithSign.write4bytes(0);
-      // set signature
-      bytesWithSign.write(signature, 64);
-
-      this.transactionServ.postTransaction(bytesWithSign.value).then(
-        (res: any) => {
-          this.isFormSendLoading = false;
-          Swal.fire(
-            '<b>Your Transaction is processing</b>',
-            'You send <b>' +
-              this.amountForm.value +
-              '</b> coins (' +
-              this.amountForm.value * this.currencyRate.value +
-              ' ' +
-              this.currencyRate.name +
-              ') ' +
-              'to this <b>' +
-              this.recipientForm.value +
-              '</b> address',
-            'success'
-          );
-          this.formSend.reset();
-          Object.keys(this.formSend.controls).forEach(key => {
-            this.formSend.controls[key].setErrors(null);
-          });
-          this.closeDialog();
+          this.sendMoneyRefDialog.close();
+          this.router.navigateByUrl('/dashboard');
         },
-        err => console.log(err)
-      );
-    }
-  }
+        async err => {
+          this.isLoading = false;
 
-  onSubmit() {
-    if (this.addForm.valid) {
-      const newContact = this.addForm.value;
-      this.contacts.push(newContact);
-      this.contactServ.addContact(newContact);
-      this.addNewContactRefDialog.close();
-      Swal.fire({
-        type: 'success',
-        title: 'Your new contact has been saved',
-        confirmButtonText: 'Proceed to detail send money',
-      }).then(result => {
-        if (result.value) {
-          this.sendMoneyRefDialog = this.dialog.open(
-            this.popupDetailSendMoney,
-            {
-              width: '600px',
-              data: this.formSend.value,
-            }
-          );
+          let message: string;
+          await this.translate
+            .get('An error occurred while processing your request')
+            .toPromise()
+            .then(res => (message = res));
+          Swal.fire('Opps...', message, 'error');
         }
-      });
+      );
     }
   }
 }

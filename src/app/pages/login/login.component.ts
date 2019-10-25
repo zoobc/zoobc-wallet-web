@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import * as CryptoJS from 'crypto-js';
 
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { generateEncKey } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-login',
@@ -70,17 +70,10 @@ export class LoginComponent implements OnInit {
 
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
-        const key = CryptoJS.PBKDF2(this.pinForm.value, 'salt', {
-          keySize: 8,
-          iterations: 10000,
-        }).toString();
-
-        try {
-          const seed = CryptoJS.AES.decrypt(this.encSeed, key).toString(
-            CryptoJS.enc.Utf8
-          );
-          if (!seed) throw 'not match';
-
+        const key = generateEncKey(this.pinForm.value);
+        const encSeed = localStorage.getItem('ENC_MASTER_SEED');
+        const isPinValid = this.authServ.isPinValid(encSeed, key);
+        if (isPinValid) {
           let account = this.authServ.getCurrAccount();
           this.authServ.login(account, key);
 
@@ -88,11 +81,10 @@ export class LoginComponent implements OnInit {
             const redirect = params.redirect || '/dashboard';
             this.router.navigateByUrl(redirect);
           });
-        } catch (e) {
+        } else {
           this.pinForm.setErrors({ invalid: true });
-        } finally {
-          this.isLoading = false;
         }
+        this.isLoading = false;
       }, 50);
     }
   }

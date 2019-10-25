@@ -1,8 +1,9 @@
 @import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .header {
   height: $header-height-offset;
-  background-color: #1976d2;
+  background-color: map-get($primary, 600);
   .header-container {
     margin: 0 auto;
     display: flex;
@@ -18,6 +19,7 @@
       display: flex;
       text-decoration: none;
       .brand-text {
+        height: 40px;
         display: inherit;
         &:hover {
           opacity: 1;

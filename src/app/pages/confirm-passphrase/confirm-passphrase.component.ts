@@ -11,7 +11,10 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { KeyringService } from 'src/app/services/keyring.service';
+import { GetAddressFromPublicKey } from 'src/helpers/utils';
 
+const coin = 'ZBC';
 @Component({
   selector: 'app-confirm-passphrase',
   templateUrl: './confirm-passphrase.component.html',
@@ -25,23 +28,21 @@ export class ConfirmPassphraseComponent implements OnInit {
   masterSeed: string;
 
   confirmForm: FormGroup;
-  passphraseField = new FormControl('', Validators.required);
+  wordField: FormArray;
 
   mnemonicNumWords = environment.mnemonicNumWords;
-
-  isMatched: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
     private authServ: AuthService,
+    private keyringServ: KeyringService,
     private router: Router
   ) {
     if (!history.state.passphrase) router.navigateByUrl('/signup');
 
     this.words = history.state.passphrase.join(' ');
     this.passphrase = Object.assign([], history.state.passphrase);
-
     this.masterSeed = history.state.masterSeed;
   }
 
@@ -73,45 +74,50 @@ export class ConfirmPassphraseComponent implements OnInit {
     // fill the form with the prefilled passphrase
     const prefill = this.prefillPassphrase;
     for (let i = 0; i < this.mnemonicNumWords; i++) {
-      const wordField = <FormArray>this.confirmForm.controls['words'];
-      wordField.push(
+      this.wordField = <FormArray>this.confirmForm.controls['words'];
+      this.wordField.push(
         this.fb.group({ word: [prefill[i], Validators.required] })
       );
     }
   }
 
-  onConfirm() {
-    if (this.confirmForm.valid) {
+  isValid() {
+    if (this.wordField.valid) {
       let passphraseField: string = this.confirmForm.value.words
         .map(form => form.word)
         .join(' ')
         .replace(/\s\s+/g, ' ');
 
-      if (passphraseField == this.words) {
-        this.isMatched = true;
-        this.openCreatePin();
-      } else {
-        this.isMatched = false;
-      }
+      if (passphraseField != this.words)
+        this.confirmForm.setErrors({ mnemonic: true });
+    } else {
+      this.confirmForm.setErrors({ required: true });
     }
   }
 
   openCreatePin() {
-    let pinDialog = this.dialog.open(PinSetupDialogComponent, {
-      width: '400px',
-      disableClose: true,
-    });
-    pinDialog.afterClosed().subscribe((key: string) => {
-      this.saveNewAccount(key);
-      this.router.navigateByUrl('/dashboard');
-    });
+    if (this.confirmForm.valid) {
+      let pinDialog = this.dialog.open(PinSetupDialogComponent, {
+        width: '400px',
+        disableClose: true,
+      });
+      pinDialog.afterClosed().subscribe((key: string) => {
+        this.saveNewAccount(key);
+        this.router.navigateByUrl('/dashboard');
+      });
+    }
   }
 
   saveNewAccount(key: string) {
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
+    const accountAddress = GetAddressFromPublicKey(childSeed.publicKey);
     this.authServ.saveMasterSeed(this.masterSeed, key);
+    this.authServ.savePassphraseSeed(this.words, key);
     const account: SavedAccount = {
-      path: 0,
       name: 'Account 1',
+      path: 0,
+      nodeIP: null,
+      address: accountAddress,
     };
     this.authServ.addAccount(account);
     this.authServ.login(account, key);

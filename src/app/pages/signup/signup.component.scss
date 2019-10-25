@@ -20,15 +20,15 @@
       overflow: hidden;
       font-size: 14px;
       .number {
-        background-color: #64b5f6;
+        background-color: map-get($primary, 300);
         width: 32px;
         color: white;
         text-align: center;
         padding: 8px;
       }
       .word {
-        background-color: #e3f2fd;
-        color: #448aff;
+        background-color: map-get($primary, 100);
+        color: map-get($primary, 600);
         width: calc(100% - 32px);
         text-align: center;
         padding: 8px 0px;
@@ -37,11 +37,11 @@
   }
 
   .btn-grouped {
-    margin: 32px auto;
+    margin: 16px auto;
     text-align: center;
     font-weight: bold;
     button {
-      margin: 0 4px;
+      margin: 0 4px 8px 4px;
     }
   }
 
@@ -51,26 +51,5 @@
     padding: 16px;
     border-radius: 6px;
     margin-bottom: 16px;
-  }
-
-  .public-address {
-    background-color: #e3f2fd;
-    border-radius: 6px;
-    color: #64b5f6;
-    font-weight: bold;
-    padding: 16px 16px 8px 16px;
-    display: inline-block;
-    font-size: 18px;
-    margin: 0 auto 16px auto;
-    align-content: center;
-    word-break: break-all;
-    .label {
-      font-size: 13px;
-      text-align: left;
-      margin-bottom: 4px;
-    }
-    i {
-      font-size: 18px;
-    }
   }
 }

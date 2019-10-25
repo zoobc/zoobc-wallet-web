@@ -1,18 +1,24 @@
 body {
-  height: 100vh;
-  background-color: #e3f2fd;
+  height: 100%;
+  background-color: map-get($primary, 50);
   margin: 0px;
   font-family: 'Roboto', sans-serif !important;
+  font-size: 14px;
 }
 
 a:not([href='']) {
   text-decoration: none;
   font-weight: 400;
-  color: $primary-color;
+  color: map-get($accent, 500);
   @include transition(0.3s ease-in all);
   &:hover {
     opacity: 0.7;
   }
+}
+
+.reload-button {
+  font-size: 18px !important;
+  color: $black2 !important;
 }
 
 .no-content {
@@ -29,6 +35,11 @@ a:not([href='']) {
     font-size: 1.1rem;
     margin: 0.5rem 0;
   }
+}
+
+// ==================== DIALOG =====================
+.mat-dialog-container {
+  padding: 24px 16px !important;
 }
 
 // ==================== CARD ========================
@@ -73,6 +84,11 @@ button[mat-flat-button] {
   &.block {
     width: 100%;
   }
+  &.small {
+    height: 32px;
+    font-size: 12px;
+    line-height: 12px;
+  }
 }
 
 // ====================== TEXT ALIGNMENT ======================
@@ -104,6 +120,11 @@ label {
 }
 
 .mat-form-field {
+  margin-bottom: 8px;
+  .mat-form-field-prefix {
+    top: 0px !important;
+    padding: 12px 0 !important;
+  }
   .mat-form-field-infix {
     padding: 12px 0 !important;
     border: 0 !important;
@@ -117,12 +138,12 @@ label {
   .mat-form-field-label {
     font-size: 14px !important;
     margin: 0 !important;
-    top: 27px !important;
+    top: 24px !important;
   }
   &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
     .mat-form-field-label {
     margin-top: 4px !important;
-    transform: translateY(-1.59373em) scale(0.7) !important;
+    transform: translateY(-1.49373em) scale(0.8) !important;
   }
 
   .mat-select-arrow-wrapper {
@@ -132,20 +153,39 @@ label {
   &.block {
     width: 100%;
   }
+
+  // if mat-error exactly on bottom
+  & ~ .mat-error {
+    margin-top: -8px;
+  }
+}
+
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
 }
 
 .mat-error {
   font-size: 14px;
+  margin-bottom: 8px;
 }
 
 // ============================ SWAL CUSTOM STYLE ========================
 
+.swal2-content {
+  .loader {
+    font-size: 48px;
+    color: white;
+  }
+}
 .swal2-styled {
   border-radius: 8px !important;
   font-weight: bold !important;
 }
 .swal2-confirm {
-  background: linear-gradient(45deg, #0288d1 30%, #26c6da 90%) !important;
+  background: $primary-gradient !important;
+}
+.swal2-cancel {
+  background: linear-gradient(45deg, #e53935 30%, #ef5350 90%) !important;
 }
 .swal2-title {
   font-size: 24px !important;

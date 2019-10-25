@@ -15,7 +15,7 @@
   }
   .status-card {
     display: flex;
-    background: linear-gradient(45deg, #0288d1, #26c6da) !important;
+    background: $primary-gradient !important;
     color: white;
     margin-bottom: 16px;
     .icon {
@@ -58,7 +58,8 @@
       }
     }
   }
-  .node-spec {
+  .node-spec,
+  .registered-node {
     .label {
       font-size: 13px;
       color: $black3;
@@ -69,6 +70,24 @@
       color: $black1;
       margin: 0 0 16px 0;
     }
+    .value.big {
+      font-size: 16px;
+    }
+  }
+}
+
+.not-registered-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $black3;
+  i {
+    font-size: 32px;
+    margin: 8px 0;
+  }
+  .message {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
   }
 }
 
@@ -149,7 +168,7 @@
     border-radius: 6px;
     background-color: #ccc;
     .percentage {
-      background-color: $primary-color;
+      background-color: map-get($primary, 500);
       height: 8px;
       border-radius: 6px;
     }

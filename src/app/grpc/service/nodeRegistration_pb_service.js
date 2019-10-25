@@ -26,7 +26,7 @@ NodeRegistrationService.GetNodeRegistration = {
   requestStream: false,
   responseStream: false,
   requestType: model_nodeRegistration_pb.GetNodeRegistrationRequest,
-  responseType: model_nodeRegistration_pb.NodeRegistration
+  responseType: model_nodeRegistration_pb.GetNodeRegistrationResponse
 };
 
 exports.NodeRegistrationService = NodeRegistrationService;

@@ -23,34 +23,34 @@ export class ContactService {
     return contacts.find(c => c.address == address) || empty;
   }
 
-  addContact(newContact) {
-    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
-    contact = contact || [];
-    contact.push(newContact);
-    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
+  addContact(contact: Contact): Contact[] {
+    let contacts: Contact[] =
+      JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
+    contacts.push(contact);
+    localStorage.setItem('CONTACT_LIST', JSON.stringify(contacts));
+    return contacts;
   }
 
-  deleteContact(address) {
-    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
-
-    for (let i = 0; i < contact.length; i++) {
-      if (contact[i].address == address) {
-        contact.splice(i, 1);
-      }
-    }
-    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
-    return contact;
+  deleteContact(address: string): Contact[] {
+    let contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    contacts = contacts.filter(contact => contact.address != address);
+    localStorage.setItem('CONTACT_LIST', JSON.stringify(contacts));
+    return contacts;
   }
 
-  updateContact(oldContact, newContact) {
-    let contact = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+  updateContact(newContact: Contact, oldAddress: string): Contact[] {
+    let contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST'));
+    contacts = contacts.map(contact => {
+      if (contact.address == oldAddress) return newContact;
+      return contact;
+    });
+    localStorage.setItem('CONTACT_LIST', JSON.stringify(contacts));
+    return contacts;
+  }
 
-    for (let i = 0; i < contact.length; i++) {
-      if (contact[i].address == oldContact.address) {
-        contact[i] = newContact;
-      }
-    }
-    localStorage.setItem('CONTACT_LIST', JSON.stringify(contact));
-    return contact;
+  isDuplicate(address: string): boolean {
+    const contacts: Contact[] =
+      JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
+    return contacts.some(c => c.address === address);
   }
 }

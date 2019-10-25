@@ -1,106 +1,98 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 import {
   GetNodeHardwareRequest,
   GetNodeHardwareResponse,
 } from '../grpc/model/nodeHardware_pb';
-import { bigintToByteArray, BigInt } from 'src/helpers/converters';
-import { AuthService } from './auth.service';
+import { AuthService, SavedAccount } from './auth.service';
 import { KeyringService } from './keyring.service';
 import { NodeHardwareService } from '../grpc/service/nodeHardware_pb_service';
+import { NodeAdminService as NodeAdminServ } from '../grpc/service/nodeAdmin_pb_service';
 import { grpc } from '@improbable-eng/grpc-web';
 import { RequestType } from '../grpc/model/auth_pb';
-
-export interface NodeAdminAttribute {
-  ipAddress: string;
-}
+import {
+  GenerateNodeKeyRequest,
+  GenerateNodeKeyResponse,
+} from '../grpc/model/node_pb';
+import { poownBuilder } from 'src/helpers/transaction-builder/poown';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NodeAdminService {
-  private sourceCurrencyNodeAdminAttribue = new BehaviorSubject({});
-  nodeAdminAttribute = this.sourceCurrencyNodeAdminAttribue.asObservable();
-  attribute: NodeAdminAttribute;
+  nodeAdminClient: grpc.Client<grpc.ProtobufMessage, grpc.ProtobufMessage>;
 
   constructor(
-    private http: HttpClient,
     private authServ: AuthService,
     private keyringServ: KeyringService
-  ) {
-    let attributes = JSON.parse(localStorage.getItem('Node_Admin'));
-    this.sourceCurrencyNodeAdminAttribue.next(attributes);
+  ) {}
 
-    this.nodeAdminAttribute.subscribe(
-      (res: NodeAdminAttribute) => (this.attribute = res)
-    );
-  }
-
-  getNodeHardwareInfo() {
+  streamNodeHardwareInfo() {
     return new Observable(observer => {
       const account = this.authServ.getCurrAccount();
-      const seed = Buffer.from(this.authServ.currSeed, 'hex');
 
-      this.keyringServ.calcBip32RootKeyFromSeed('ZBC', seed);
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        'ZBC',
-        account.path
-      );
-
-      let bytes = new Buffer(12);
-      bytes.writeInt32LE(RequestType.GETNODEHARDWARE, 0);
-      bytes.set(bigintToByteArray(BigInt(Math.trunc(Date.now() / 1000))), 4);
-
-      let bytesWithSign = new Buffer(80);
-      let signature = childSeed.sign(bytes);
-      bytesWithSign.set(bytes, 0);
-      bytesWithSign.writeInt32LE(0, 12);
-      bytesWithSign.set(signature, 16);
-      // console.log(bytesWithSign);
+      let auth = poownBuilder(RequestType.GETNODEHARDWARE, this.keyringServ);
 
       const request = new GetNodeHardwareRequest();
 
-      const client = grpc.client(NodeHardwareService.GetNodeHardware, {
-        host: environment.grpcUrl,
+      this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
+        host: `http://${account.nodeIP}`,
       });
-      client.onHeaders((headers: grpc.Metadata) => {
-        console.log('onHeaders', headers);
-      });
-      client.onMessage((message: GetNodeHardwareResponse) => {
-        console.log('onMessage', message.toObject());
+      this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
         observer.next(message.toObject());
       });
-      client.onEnd(
+      this.nodeAdminClient.onEnd(
         (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
-          console.log('onEnd', status, statusMessage, trailers);
+          if (status != grpc.Code.OK) observer.error(statusMessage);
         }
       );
 
-      client.start(
-        new grpc.Metadata({ authorization: bytesWithSign.toString('base64') })
+      this.nodeAdminClient.start(new grpc.Metadata({ authorization: auth }));
+      this.nodeAdminClient.send(request);
+      this.nodeAdminClient.finishSend();
+    });
+  }
+
+  stopNodeHardwareInfo() {
+    this.nodeAdminClient && this.nodeAdminClient.close();
+  }
+
+  generateNodeKey(nodeIP: string) {
+    nodeIP = `http://${nodeIP}`;
+
+    return new Promise((resolve, reject) => {
+      let auth = poownBuilder(RequestType.GENERATETNODEKEY, this.keyringServ);
+
+      const request = new GenerateNodeKeyRequest();
+
+      let client = grpc.client(NodeAdminServ.GenerateNodeKey, { host: nodeIP });
+
+      client.onMessage((message: GenerateNodeKeyResponse) => {
+        resolve(message.toObject());
+      });
+      client.onEnd(
+        (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
+          if (status != grpc.Code.OK) reject(statusMessage);
+        }
       );
+
+      client.start(new grpc.Metadata({ authorization: auth }));
       client.send(request);
       client.finishSend();
     });
   }
 
-  getNodeAdminList() {
-    return JSON.parse(localStorage.getItem('Node_Admin'));
-  }
+  addNodeAdmin(ip: string) {
+    let account: SavedAccount = this.authServ.getCurrAccount();
+    let accounts: SavedAccount[] = this.authServ.getAllAccount();
 
-  addNodeAdmin(attribute: NodeAdminAttribute) {
-    this.sourceCurrencyNodeAdminAttribue.next(attribute);
-    localStorage.setItem('Node_Admin', JSON.stringify(attribute));
-  }
+    account.nodeIP = ip;
+    accounts = accounts.map((acc: SavedAccount) => {
+      if (acc.path == account.path) acc = account;
+      return acc;
+    });
 
-  updateIPAddress(oldIPAddress, newIPAddress) {
-    let nodeAdminIP = JSON.parse(localStorage.getItem('Node_Admin'));
-    if (nodeAdminIP.ipAddress == oldIPAddress.ipAddress) {
-      nodeAdminIP = newIPAddress;
-    }
-    this.sourceCurrencyNodeAdminAttribue.next(nodeAdminIP);
-    localStorage.setItem('Node_Admin', JSON.stringify(nodeAdminIP));
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
   }
 }

@@ -43,7 +43,6 @@ export class ContactUsComponent implements OnInit {
 
   onSubmit(form: FormGroupDirective) {
     if (this.contactForm.valid) {
-      console.log(this.contactForm.value);
       this.contactForm.reset();
       form.resetForm();
       this.filename = '';

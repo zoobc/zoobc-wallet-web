@@ -3,6 +3,8 @@
 
 import * as jspb from "google-protobuf";
 import * as model_transaction_pb from "../model/transaction_pb";
+import * as model_batchReceipt_pb from "../model/batchReceipt_pb";
+import * as model_receipt_pb from "../model/receipt_pb";
 
 export class Block extends jspb.Message {
   getId(): string;
@@ -35,8 +37,10 @@ export class Block extends jspb.Message {
   getSmithscale(): string;
   setSmithscale(value: string): void;
 
-  getBlocksmithaddress(): string;
-  setBlocksmithaddress(value: string): void;
+  getBlocksmithpublickey(): Uint8Array | string;
+  getBlocksmithpublickey_asU8(): Uint8Array;
+  getBlocksmithpublickey_asB64(): string;
+  setBlocksmithpublickey(value: Uint8Array | string): void;
 
   getTotalamount(): string;
   setTotalamount(value: string): void;
@@ -63,6 +67,11 @@ export class Block extends jspb.Message {
   setTransactionsList(value: Array<model_transaction_pb.Transaction>): void;
   addTransactions(value?: model_transaction_pb.Transaction, index?: number): model_transaction_pb.Transaction;
 
+  clearBlockreceiptsList(): void;
+  getBlockreceiptsList(): Array<BlockReceipt>;
+  setBlockreceiptsList(value: Array<BlockReceipt>): void;
+  addBlockreceipts(value?: BlockReceipt, index?: number): BlockReceipt;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Block.AsObject;
   static toObject(includeInstance: boolean, msg: Block): Block.AsObject;
@@ -83,7 +92,7 @@ export namespace Block {
     blocksignature: Uint8Array | string,
     cumulativedifficulty: string,
     smithscale: string,
-    blocksmithaddress: string,
+    blocksmithpublickey: Uint8Array | string,
     totalamount: string,
     totalfee: string,
     totalcoinbase: string,
@@ -91,6 +100,75 @@ export namespace Block {
     payloadlength: number,
     payloadhash: Uint8Array | string,
     transactionsList: Array<model_transaction_pb.Transaction.AsObject>,
+    blockreceiptsList: Array<BlockReceipt.AsObject>,
+  }
+}
+
+export class BlockReceipt extends jspb.Message {
+  hasReceipt(): boolean;
+  clearReceipt(): void;
+  getReceipt(): model_receipt_pb.Receipt | undefined;
+  setReceipt(value?: model_receipt_pb.Receipt): void;
+
+  clearIntermediatehashesList(): void;
+  getIntermediatehashesList(): Array<Uint8Array | string>;
+  getIntermediatehashesList_asU8(): Array<Uint8Array>;
+  getIntermediatehashesList_asB64(): Array<string>;
+  setIntermediatehashesList(value: Array<Uint8Array | string>): void;
+  addIntermediatehashes(value: Uint8Array | string, index?: number): Uint8Array | string;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BlockReceipt.AsObject;
+  static toObject(includeInstance: boolean, msg: BlockReceipt): BlockReceipt.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: BlockReceipt, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BlockReceipt;
+  static deserializeBinaryFromReader(message: BlockReceipt, reader: jspb.BinaryReader): BlockReceipt;
+}
+
+export namespace BlockReceipt {
+  export type AsObject = {
+    receipt?: model_receipt_pb.Receipt.AsObject,
+    intermediatehashesList: Array<Uint8Array | string>,
+  }
+}
+
+export class BlockExtendedInfo extends jspb.Message {
+  hasBlock(): boolean;
+  clearBlock(): void;
+  getBlock(): Block | undefined;
+  setBlock(value?: Block): void;
+
+  getTotalreceipts(): string;
+  setTotalreceipts(value: string): void;
+
+  getReceiptvalue(): string;
+  setReceiptvalue(value: string): void;
+
+  getBlocksmithaccountaddress(): string;
+  setBlocksmithaccountaddress(value: string): void;
+
+  getPopchange(): string;
+  setPopchange(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BlockExtendedInfo.AsObject;
+  static toObject(includeInstance: boolean, msg: BlockExtendedInfo): BlockExtendedInfo.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: BlockExtendedInfo, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BlockExtendedInfo;
+  static deserializeBinaryFromReader(message: BlockExtendedInfo, reader: jspb.BinaryReader): BlockExtendedInfo;
+}
+
+export namespace BlockExtendedInfo {
+  export type AsObject = {
+    block?: Block.AsObject,
+    totalreceipts: string,
+    receiptvalue: string,
+    blocksmithaccountaddress: string,
+    popchange: string,
   }
 }
 
@@ -161,9 +239,9 @@ export class GetBlocksResponse extends jspb.Message {
   setHeight(value: number): void;
 
   clearBlocksList(): void;
-  getBlocksList(): Array<Block>;
-  setBlocksList(value: Array<Block>): void;
-  addBlocks(value?: Block, index?: number): Block;
+  getBlocksList(): Array<BlockExtendedInfo>;
+  setBlocksList(value: Array<BlockExtendedInfo>): void;
+  addBlocks(value?: BlockExtendedInfo, index?: number): BlockExtendedInfo;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetBlocksResponse.AsObject;
@@ -180,7 +258,7 @@ export namespace GetBlocksResponse {
     chaintype: number,
     count: number,
     height: number,
-    blocksList: Array<Block.AsObject>,
+    blocksList: Array<BlockExtendedInfo.AsObject>,
   }
 }
 
@@ -283,6 +361,60 @@ export class BlocksData extends jspb.Message {
 export namespace BlocksData {
   export type AsObject = {
     nextblocksList: Array<Block.AsObject>,
+  }
+}
+
+export class SendBlockRequest extends jspb.Message {
+  hasBlock(): boolean;
+  clearBlock(): void;
+  getBlock(): Block | undefined;
+  setBlock(value?: Block): void;
+
+  getChaintype(): number;
+  setChaintype(value: number): void;
+
+  getSenderpublickey(): Uint8Array | string;
+  getSenderpublickey_asU8(): Uint8Array;
+  getSenderpublickey_asB64(): string;
+  setSenderpublickey(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SendBlockRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SendBlockRequest): SendBlockRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SendBlockRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SendBlockRequest;
+  static deserializeBinaryFromReader(message: SendBlockRequest, reader: jspb.BinaryReader): SendBlockRequest;
+}
+
+export namespace SendBlockRequest {
+  export type AsObject = {
+    block?: Block.AsObject,
+    chaintype: number,
+    senderpublickey: Uint8Array | string,
+  }
+}
+
+export class SendBlockResponse extends jspb.Message {
+  hasBatchreceipt(): boolean;
+  clearBatchreceipt(): void;
+  getBatchreceipt(): model_batchReceipt_pb.BatchReceipt | undefined;
+  setBatchreceipt(value?: model_batchReceipt_pb.BatchReceipt): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SendBlockResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SendBlockResponse): SendBlockResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SendBlockResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SendBlockResponse;
+  static deserializeBinaryFromReader(message: SendBlockResponse, reader: jspb.BinaryReader): SendBlockResponse;
+}
+
+export namespace SendBlockResponse {
+  export type AsObject = {
+    batchreceipt?: model_batchReceipt_pb.BatchReceipt.AsObject,
   }
 }
 

@@ -1,0 +1,10 @@
+@import '../../../../styles/variables';
+.claim-node-container {
+  .mat-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  form {
+    display: grid;
+  }
+}

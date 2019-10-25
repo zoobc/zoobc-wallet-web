@@ -1,15 +1,15 @@
 <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
   <div class="row">
-    <div class="col-12 col-md-4">ID:</div>
+    <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
     <div class="col-12 col-md-8">{{ transaction.id }}</div>
   </div>
   <div class="row">
-    <div class="col-12 col-md-4">Block ID:</div>
+    <div class="col-12 col-md-4">{{ 'Block ID' | translate }}:</div>
     <div class="col-12 col-md-8">{{ transaction.blockId }}</div>
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Sender:</div>
+    <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
     <div class="col-12 col-md-8">
       <wallet-address
         [value]="transaction.sender"
@@ -19,7 +19,7 @@
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Reciever:</div>
+    <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
     <div class="col-12 col-md-8">
       <wallet-address
         [value]="transaction.recipient"
@@ -29,29 +29,31 @@
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Amount:</div>
+    <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
     <div class="col-12 col-md-8">
-      {{ transaction.amount / 1e8 | number }} ZBC
+      {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC
     </div>
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Fee:</div>
-    <div class="col-12 col-md-8">{{ transaction.fee / 1e8 | number }} ZBC</div>
+    <div class="col-12 col-md-4">{{ 'Fee' | translate }}:</div>
+    <div class="col-12 col-md-8">
+      {{ transaction.fee / 1e8 | number: '0.0-8' }} ZBC
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Height:</div>
+    <div class="col-12 col-md-4">{{ 'Height' | translate }}:</div>
     <div class="col-12 col-md-8">{{ transaction.height }}</div>
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Transaction Index:</div>
+    <div class="col-12 col-md-4">{{ 'Transaction Index' | translate }}:</div>
     <div class="col-12 col-md-8">{{ transaction.transactionIndex }}</div>
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4">Date:</div>
+    <div class="col-12 col-md-4">{{ 'Date' | translate }}:</div>
     <div class="col-12 col-md-8">
       {{ transaction.timestamp | date: 'dd MMMM yyyy HH:mm:ss' }}
     </div>

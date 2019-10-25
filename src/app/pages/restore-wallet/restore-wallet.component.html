@@ -1,18 +1,36 @@
 <div class="restore-wallet-container">
   <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
   <form [formGroup]="restoreForm" (submit)="onRestore()">
-    <mat-form-field class="passphrase-input" appearance="outline">
-      <textarea formControlName="passphrase" matInput placeholder="{{ 'Put your passphrase here' | translate }}..."
-        rows="9" (keyup)="onChangeMnemonic()"></textarea>
+    <mat-form-field appearance="outline" color="accent" class="block">
+      <textarea
+        formControlName="passphrase"
+        matInput
+        placeholder="{{ 'Put your passphrase here' | translate }}..."
+        rows="9"
+        (keyup)="onChangeMnemonic()"
+      ></textarea>
+    </mat-form-field>
+    <ng-container *ngIf="passphraseField.touched">
       <mat-error *ngIf="passphraseField.hasError('required')">
         {{ 'Passphrase is required' | translate }}
       </mat-error>
       <mat-error *ngIf="passphraseField.hasError('mnemonic')">
         {{ 'Passphrase is invalid' | translate }}
       </mat-error>
-    </mat-form-field>
-    <button mat-flat-button color="primary" type="submit" [disabled]="restoreForm.invalid">
-      {{'Open Wallet' | translate}}
+      <mat-error *ngIf="passphraseField.hasError('lengthMnemonic')">
+        {{
+          'Please use your passphrase words'
+            | translate: { num: mnemonicWordLengtEnv }
+        }}
+      </mat-error>
+    </ng-container>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="restoreForm.invalid"
+    >
+      {{ 'Open Wallet' | translate }}
     </button>
   </form>
 </div>

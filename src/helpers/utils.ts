@@ -1,5 +1,9 @@
-import { toBase64Url } from '../helpers/converters';
-import { MatSnackBar } from '@angular/material';
+import {
+  toBase64Url,
+  base64ToByteArray,
+  fromBase64Url,
+} from '../helpers/converters';
+import * as CryptoJS from 'crypto-js';
 
 // GetAddressFromPublicKey Get the formatted address from a raw public key
 export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
@@ -28,6 +32,13 @@ export function GetChecksumByte(bytes): any {
   return res;
 }
 
+export function generateEncKey(pin: string): string {
+  return CryptoJS.PBKDF2(pin, 'salt', {
+    keySize: 8,
+    iterations: 10000,
+  }).toString();
+}
+
 export function onCopyText(text: string) {
   let selBox = document.createElement('textarea');
   selBox.style.position = 'fixed';
@@ -38,4 +49,23 @@ export function onCopyText(text: string) {
   selBox.select();
   document.execCommand('copy');
   document.body.removeChild(selBox);
+}
+
+export function addressValidation(address: string) {
+  const addressBase64 = fromBase64Url(address);
+  const addressBytes = base64ToByteArray(addressBase64);
+  if (addressBytes.length == 33 && addressBase64.length == 44) {
+    return true;
+  } else return false;
+}
+
+export function isPubKeyValid(pubkey: string) {
+  const addressBytes = base64ToByteArray(pubkey);
+  if (addressBytes.length == 32 && pubkey.length == 44) {
+    return true;
+  } else return false;
+}
+
+export function truncate(num: number, places: number): number {
+  return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
 }

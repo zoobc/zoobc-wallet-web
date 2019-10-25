@@ -1,23 +1,46 @@
 <div class="pin-setup-container">
   <ng-container *ngIf="setPin">
-    <h3 class="mat-h3" id="modal-basic-title"><b>{{ "Set Your Pin" | translate }}</b></h3>
+    <h3 class="mat-h3" id="modal-basic-title">
+      <b>{{ 'Set Your Pin' | translate }}</b>
+    </h3>
     <form [formGroup]="formSetPin" (submit)="onSetPin()">
       <field-pins formControlName="pin"></field-pins>
       <div class="text-right">
-        <button mat-flat-button color="primary" type="submit"
-          [disabled]="formSetPin.invalid">{{"Set Pin" | translate}}</button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="formSetPin.invalid"
+        >
+          {{ 'Set Pin' | translate }}
+        </button>
       </div>
     </form>
   </ng-container>
   <ng-container *ngIf="confirmPin">
-    <h3 class="mat-h3" id="modal-basic-title"><b>{{"Confirm Your Pin" | translate}}</b></h3>
+    <h3 class="mat-h3" id="modal-basic-title">
+      <b>{{ 'Confirm Your Pin' | translate }}</b>
+    </h3>
     <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()">
-      <field-pins formControlName="pin" (change)="onResetPinValidation()"></field-pins>
-      <mat-error *ngIf="isPinMatched == false">{{"Pin is not match" | translate}}</mat-error>
+      <field-pins
+        formControlName="pin"
+        (change)="onResetPinValidation()"
+      ></field-pins>
+      <mat-error *ngIf="isPinMatched == false">
+        {{ 'Pin is not match' | translate }}
+      </mat-error>
       <div class="text-right">
-        <button mat-flat-button color="primary" type="button" (click)="onBack()">{{"Back" | translate}}</button>
-        <button mat-flat-button color="primary" type="submit"
-          [disabled]="formConfirmPin.invalid">{{"Confirm Pin" | translate}}</button>
+        <button mat-flat-button color="warn" type="button" (click)="onBack()">
+          {{ 'Back' | translate }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="formConfirmPin.invalid"
+        >
+          {{ 'Confirm Pin' | translate }}
+        </button>
       </div>
     </form>
   </ng-container>

@@ -38,17 +38,14 @@ import { LanguageService } from './services/language.service';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SendmoneyComponent } from './pages/sendmoney/sendmoney.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { SendmessageComponent } from './pages/sendmessage/sendmessage.component';
 import { LoginComponent } from './pages/login/login.component';
 import { TransferhistoryComponent } from './pages/transferhistory/transferhistory.component';
-import { MessagehistoryComponent } from './pages/messagehistory/messagehistory.component';
 import { ReceiveComponent } from './pages/receive/receive.component';
 import { ParentComponent } from './components/parent/parent.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { PinsComponent } from './components/pins/pins.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -62,7 +59,6 @@ import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
-import { ChangeIpAddressComponent } from './pages/change-ip-address/change-ip-address.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { FaqComponent } from './pages/faq/faq.component';
 import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
@@ -76,6 +72,9 @@ import { NetworkComponent } from './pages/settings/network/network.component';
 import { AddressComponent } from './components/address/address.component';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
+import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
+import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
+import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -96,11 +95,9 @@ export function getLanguage(languageServ: LanguageService) {
     DashboardComponent,
     SendmoneyComponent,
     NavbarComponent,
-    SendmessageComponent,
     LoginComponent,
     TransferhistoryComponent,
     ReceiveComponent,
-    MessagehistoryComponent,
     ParentComponent,
     SignupComponent,
     SidebarComponent,
@@ -115,7 +112,6 @@ export function getLanguage(languageServ: LanguageService) {
     PinSetupDialogComponent,
     ContactUsComponent,
     AddNodeAdminComponent,
-    ChangeIpAddressComponent,
     ConfirmPassphraseComponent,
     FaqComponent,
     TermsOfUseComponent,
@@ -129,13 +125,15 @@ export function getLanguage(languageServ: LanguageService) {
     AddressComponent,
     DateAgoPipe,
     TransactionDetailComponent,
+    PinConfirmationComponent,
+    ClaimNodeComponent,
+    RevealPassphraseComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     NgxQRCodeModule,
     HttpClientModule,
-    NgxPaginationModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
@@ -189,10 +187,15 @@ export function getLanguage(languageServ: LanguageService) {
     EditcontactComponent,
     PinSetupDialogComponent,
     AddNodeAdminComponent,
-    ChangeIpAddressComponent,
     SendmoneyComponent,
     TransactionDetailComponent,
+    PinConfirmationComponent,
+    ClaimNodeComponent,
+    ReceiveComponent,
+    RegisterNodeComponent,
+    UpdateNodeComponent,
+    RevealPassphraseComponent,
   ],
 })
 export class AppModule {}
-platformBrowserDynamic().bootstrapModule(AppModule);
+// platformBrowserDynamic().bootstrapModule(AppModule);

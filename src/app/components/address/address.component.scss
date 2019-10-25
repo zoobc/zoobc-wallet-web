@@ -1,5 +1,5 @@
-@import '../../../styles//variables';
-@import '../../../styles//mixins';
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .address-template {
   display: flex;
@@ -21,12 +21,16 @@
     overflow: hidden;
     direction: rtl;
   }
+  .blank-space {
+    font-size: 1px;
+    visibility: hidden;
+  }
   .copy-address {
     margin-left: 8px;
     font-size: 16px;
     @include transition(0.3s ease-in all);
     &:hover {
-      color: $black2;
+      opacity: 0.6;
       cursor: pointer;
     }
   }

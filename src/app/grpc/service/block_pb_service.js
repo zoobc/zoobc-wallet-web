@@ -26,7 +26,7 @@ BlockService.GetBlock = {
   requestStream: false,
   responseStream: false,
   requestType: model_block_pb.GetBlockRequest,
-  responseType: model_block_pb.Block
+  responseType: model_block_pb.BlockExtendedInfo
 };
 
 exports.BlockService = BlockService;

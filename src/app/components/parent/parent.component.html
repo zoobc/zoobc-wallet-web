@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="parent-container">
+<div class="parent-container" [ngStyle]="{ 'height.px': height }">
   <mat-drawer-container class="drawer-container" [hasBackdrop]="false">
     <mat-drawer
       #sidenav
@@ -9,7 +9,7 @@
     >
       <app-sidebar [menu]="menu"></app-sidebar>
     </mat-drawer>
-    <mat-drawer-content class="main-container">
+    <mat-drawer-content #mainContainer class="main-container">
       <router-outlet></router-outlet>
     </mat-drawer-content>
   </mat-drawer-container>

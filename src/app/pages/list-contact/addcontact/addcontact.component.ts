@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import { ContactService } from 'src/app/services/contact.service';
-import { base64ToByteArray } from 'src/helpers/converters';
+import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
+import { addressValidation } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-addcontact',
@@ -11,54 +12,49 @@ import Swal from 'sweetalert2';
   styleUrls: ['./addcontact.component.scss'],
 })
 export class AddcontactComponent implements OnInit {
-  contacts = [];
-
   addForm: FormGroup;
   aliasField = new FormControl('', Validators.required);
   addressField = new FormControl('', Validators.required);
 
   constructor(
     private contactServ: ContactService,
-    public dialogRef: MatDialogRef<AddcontactComponent>
+    public dialogRef: MatDialogRef<AddcontactComponent>,
+    private translate: TranslateService
   ) {
     this.addForm = new FormGroup({
       alias: this.aliasField,
       address: this.addressField,
     });
-
-    this.contacts = this.contactServ.getContactList() || [];
   }
 
   ngOnInit() {}
 
-  onSubmit() {
+  onAddressValidation() {
+    const validation = addressValidation(this.addressField.value);
+    if (!validation) {
+      this.addressField.setErrors({ invalidAddress: true });
+    }
+  }
+
+  async onSubmit() {
     if (this.addForm.valid) {
-      const validation = base64ToByteArray(this.addressField.value);
-      if (validation.byteLength === 33) {
-        if (
-          this.contacts.some(
-            contacts => contacts.address === this.addressField.value
-          )
-        ) {
-          Swal.fire({
-            type: 'error',
-            title: 'Oops...',
-            text: 'The address you entered is already in your contact list',
-          });
-          this.dialogRef.close(this.contacts);
-        } else {
-          const newContact = this.addForm.value;
-          this.contacts.push(newContact);
-          this.contactServ.addContact(newContact);
-          this.dialogRef.close(this.contacts);
-        }
-      } else {
+      const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
+      if (isDuplicate) {
+        let message: string;
+        await this.translate
+          .get('The address you entered is already in your Address Book')
+          .toPromise()
+          .then(res => (message = res));
         Swal.fire({
           type: 'error',
           title: 'Oops...',
-          text: 'The address you entered is invalid',
+          text: message,
         });
-        this.dialogRef.close(this.contacts);
+      } else {
+        const contacts: Contact[] = this.contactServ.addContact(
+          this.addForm.value
+        );
+        this.dialogRef.close(contacts);
       }
     }
   }

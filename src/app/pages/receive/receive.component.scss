@@ -5,17 +5,12 @@
   text-align: center;
   .address-text {
     text-align: center;
-    background-color: #64b5f6;
+    background-color: map-get($accent, 400);
     color: white;
     word-break: break-all;
     border-radius: 8px;
     padding: 8px;
     font-size: 14px;
-    @include transition(0.3s ease-in all);
-    &:hover {
-      background-color: #90caf9;
-      cursor: pointer;
-    }
   }
   .qrcode-container {
     width: 100%;

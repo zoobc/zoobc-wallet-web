@@ -48,8 +48,8 @@ P2PCommunication.SendBlock = {
   service: P2PCommunication,
   requestStream: false,
   responseStream: false,
-  requestType: model_block_pb.Block,
-  responseType: model_empty_pb.Empty
+  requestType: model_block_pb.SendBlockRequest,
+  responseType: model_block_pb.SendBlockResponse
 };
 
 P2PCommunication.SendTransaction = {
@@ -58,7 +58,7 @@ P2PCommunication.SendTransaction = {
   requestStream: false,
   responseStream: false,
   requestType: model_transaction_pb.SendTransactionRequest,
-  responseType: model_empty_pb.Empty
+  responseType: model_transaction_pb.SendTransactionResponse
 };
 
 P2PCommunication.GetCumulativeDifficulty = {

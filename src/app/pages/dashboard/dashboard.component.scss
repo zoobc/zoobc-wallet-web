@@ -4,13 +4,11 @@
 .dashboard-container {
   .btn-view-all {
     color: #fff;
-    background: linear-gradient(90deg, #0288d1, #26c6da) !important;
-    border-radius: 4.5em;
-    margin-top: 10px;
+    background: $accent-gradient !important;
+    margin-top: 16px;
     text-align: center;
     text-decoration: none;
-    width: 23%;
-    height: 42px;
+    width: 150px;
   }
   .rates-dropdown {
     font-size: 14px;
@@ -21,7 +19,7 @@
   }
 
   .account-card {
-    background: linear-gradient(90deg, #0288d1, #26c6da) !important;
+    background: $primary-gradient !important;
     color: white;
     margin-bottom: 24px;
     .summary {
@@ -59,6 +57,11 @@
       }
     }
 
+    .reload-button {
+      color: white !important;
+      margin: -24px -12px 0 0;
+    }
+
     .balance-section {
       display: flex;
       margin-bottom: 16px;
@@ -74,7 +77,7 @@
           font-weight: bold;
         }
         .balance {
-          font-size: 24px;
+          font-size: 20px;
           line-height: 32px;
         }
         .converted-balance {
@@ -84,8 +87,19 @@
       }
     }
 
-    .button-group {
-      text-align: center;
+    .error-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      i {
+        font-size: 3rem;
+        margin: 1rem 0;
+      }
+      .message {
+        margin: 8px 0;
+        font-size: 16px;
+      }
       button {
         margin: 8px 4px;
         text-transform: uppercase;
@@ -96,15 +110,6 @@
           background-color: $black3;
         }
       }
-    }
-  }
-
-  .transaction-loader {
-    text-align: center;
-    i {
-      margin: 32px auto;
-      color: $primary-color;
-      font-size: 48px;
     }
   }
 }

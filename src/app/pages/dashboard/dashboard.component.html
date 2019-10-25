@@ -6,7 +6,7 @@
     <div class="col-8 text-right">
       <button mat-button class="rates-dropdown" [matMenuTriggerFor]="rate">
         <span>
-          1 ZBC = {{ currencyRate.value | number: '0.1-2' }}
+          1 ZBC = {{ currencyRate.value | number: '0.0-2' }}
           {{ currencyRate.name }}
         </span>
         <i class="fa fa-caret-down"></i>
@@ -22,7 +22,7 @@
               class="fas fa-check fa-sm"
               *ngIf="currencyRate.name == rate.name"
             ></i>
-            <span>{{ rate.value | number: '0.1-2' }} {{ rate.name }}</span>
+            <span>{{ rate.value | number: '0.0-2' }} {{ rate.name }}</span>
           </button>
         </div>
       </mat-menu>
@@ -30,141 +30,176 @@
   </div>
 
   <mat-card class="account-card">
-    <div class="summary">
-      <span class="account-dropdown" [matMenuTriggerFor]="account">
-        <span class="name">{{ currAcc.name }}</span>
-        <i class="fa fa-caret-down"></i>
+    <div class="error-message" *ngIf="isErrorBalance">
+      <i matPrefix class="fa fa-exclamation-triangle"></i>
+      <span class="message">
+        {{ 'An error occurred while processing your request' | translate }}
       </span>
-      <br />
-      <mat-menu #account="matMenu">
-        <div class="account-dropdown-list">
-          <div class="account-container">
-            <button mat-menu-item (click)="onOpenAddAccount()">
-              <i class="fas fa-plus"></i>
-              <span>{{ 'Add New Account' | translate }}</span>
-            </button>
-            <mat-divider></mat-divider>
-            <button
-              *ngFor="let acc of accounts"
-              (click)="onSwitchAccount(acc)"
-              mat-menu-item
-              class="account"
-            >
-              <div>
-                <i
-                  class="fas fa-user"
-                  *ngIf="acc.path != undefined && acc.path != currAcc.path"
-                ></i>
-                <i
-                  class="fas fa-check"
-                  *ngIf="acc.path != undefined && acc.path == currAcc.path"
-                ></i>
-                <i
-                  class="fas fa-user"
-                  *ngIf="acc.secret && acc.secret != currAcc.secret"
-                ></i>
-                <i
-                  class="fas fa-check"
-                  *ngIf="acc.secret && acc.secret == currAcc.secret"
-                ></i>
-                <span>{{ acc.name }}</span>
+      <button mat-flat-button color="primary" (click)="getBalance()">
+        {{ 'Try Again' | translate }}
+      </button>
+    </div>
+
+    <ng-container *ngIf="!isErrorBalance">
+      <div class="summary row">
+        <div class="col-10">
+          <span class="account-dropdown" [matMenuTriggerFor]="account">
+            <span class="name">{{ currAcc.name }}</span>
+            <i class="fa fa-caret-down"></i>
+          </span>
+          <br />
+          <mat-menu #account="matMenu">
+            <div class="account-dropdown-list">
+              <div class="account-container">
+                <button mat-menu-item (click)="onOpenAddAccount()">
+                  <i class="fas fa-plus"></i>
+                  <span>{{ 'Add New Account' | translate }}</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button
+                  *ngFor="let acc of accounts"
+                  (click)="onSwitchAccount(acc)"
+                  mat-menu-item
+                  class="account"
+                >
+                  <div>
+                    <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
+                    <i
+                      class="fas fa-check"
+                      *ngIf="acc.path == currAcc.path"
+                    ></i>
+                    <span>{{ acc.name }}</span>
+                  </div>
+                  <div class="balance">
+                    {{ acc.balance / 1e8 | number: '0.0-2' }} ZBC
+                  </div>
+                </button>
               </div>
-              <div class="balance">10 ZBC</div>
-            </button>
-          </div>
+            </div>
+          </mat-menu>
+          <span class="address" (click)="copyText(currAcc.address)">
+            <wallet-address [value]="currAcc.address"></wallet-address>
+          </span>
         </div>
-      </mat-menu>
-      <span class="address" (click)="copyText(address)">
-        <wallet-address [value]="address"></wallet-address>
-      </span>
-    </div>
-
-    <div class="row">
-      <div class="col-12 col-sm-6 balance-section">
-        <div class="icon">
-          <img src="/assets/img/zbc-white.png" width="48" />
-        </div>
-        <div class="balance-detail">
-          <div class="label">{{ 'Balance' | translate }}</div>
-          <div class="balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
-              {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
-            </span>
-            <span> ZBC</span>
-          </div>
-          <div class="converted-balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
-              {{
-                (accountBalance.balance * currencyRate.value) / 1e8
-                  | number: '0.0-4'
-              }}
-            </span>
-            <span> {{ currencyRate.name }}</span>
-          </div>
+        <div class="col-2 text-right">
+          <button mat-icon-button class="reload-button" (click)="getBalance()">
+            <i class="fa fa-redo-alt"></i>
+          </button>
         </div>
       </div>
 
-      <div class="col-12 col-sm-6 balance-section">
-        <div class="icon">
-          <img src="/assets/img/zbc-white.png" width="48" />
-        </div>
-        <div class="balance-detail">
-          <div class="label">{{ 'Spendable Balance' | translate }}</div>
-          <div class="balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
-              {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
-            </span>
-            <span> ZBC</span>
+      <div class="row">
+        <div class="col-12 col-sm-6 balance-section">
+          <div class="icon">
+            <img src="/assets/img/zbc-white.png" width="48" />
           </div>
-          <div class="converted-balance">
-            <i
-              class="fas fa-circle-notch fa-spin"
-              *ngIf="showSpinnerBalance"
-            ></i>
-            <span *ngIf="!showSpinnerBalance">
-              {{
-                (accountBalance.spendablebalance * currencyRate.value) / 1e8
-                  | number: '0.0-4'
-              }}
-            </span>
-            <span> {{ currencyRate.name }}</span>
+          <div class="balance-detail">
+            <div class="label">{{ 'Balance' | translate }}</div>
+            <div class="balance">
+              <i
+                class="fas fa-circle-notch fa-spin"
+                *ngIf="isLoadingBalance"
+              ></i>
+              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+                {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
+              </span>
+              <span> ZBC</span>
+            </div>
+            <div class="converted-balance">
+              <i
+                class="fas fa-circle-notch fa-spin"
+                *ngIf="isLoadingBalance"
+              ></i>
+              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+                {{
+                  (accountBalance.balance / 1e8) * currencyRate.value
+                    | number: '0.0-2'
+                }}
+              </span>
+              <span> {{ currencyRate.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 balance-section">
+          <div class="icon">
+            <img src="/assets/img/zbc-white.png" width="48" />
+          </div>
+          <div class="balance-detail">
+            <div class="label">{{ 'Spendable Balance' | translate }}</div>
+            <div class="balance">
+              <i
+                class="fas fa-circle-notch fa-spin"
+                *ngIf="isLoadingBalance"
+              ></i>
+              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+                {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
+              </span>
+              <span> ZBC</span>
+            </div>
+            <div class="converted-balance">
+              <i
+                class="fas fa-circle-notch fa-spin"
+                *ngIf="isLoadingBalance"
+              ></i>
+              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+                {{
+                  (accountBalance.spendablebalance / 1e8) * currencyRate.value
+                    | number: '0.0-2'
+                }}
+              </span>
+              <span> {{ currencyRate.name }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </mat-card>
 
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
-    <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+    <div class="row">
+      <div class="col-10">
+        <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
+      </div>
+      <div class="col-2 text-right">
+        <button
+          mat-icon-button
+          class="reload-button"
+          (click)="getTransactions()"
+        >
+          <i class="fa fa-redo-alt"></i>
+        </button>
+      </div>
+    </div>
     <app-transaction-table
       [transactionData]="unconfirmTx"
     ></app-transaction-table>
     <br />
   </ng-container>
 
-  <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
+  <div class="row">
+    <div class="col-10">
+      <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
+    </div>
+    <div class="col-2 text-right">
+      <button mat-icon-button class="reload-button" (click)="getTransactions()">
+        <i class="fa fa-redo-alt"></i>
+      </button>
+    </div>
+  </div>
   <app-transaction-table
     [withDetail]="true"
-    [isLoading]="showSpinnerRecentTx"
+    [isLoading]="isLoadingRecentTx"
+    [isError]="isErrorRecentTx"
+    (refresh)="getTransactions()"
     [transactionData]="recentTx"
-  ></app-transaction-table>
-  <ng-container *ngIf="allTx.length > 5">
-    <div class="text-right">
-      <button mat-button class="btn-view-all" (click)="goToHistory()">
+  >
+  </app-transaction-table>
+  <ng-container *ngIf="totalTx > 5">
+    <div class="text-center">
+      <a routerLink="/transferhistory" mat-flat-button class="btn-view-all">
         {{ 'View All' | translate }}
-      </button>
+      </a>
     </div>
   </ng-container>
 </div>

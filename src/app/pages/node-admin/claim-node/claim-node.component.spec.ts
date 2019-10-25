@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChangeIpAddressComponent } from './change-ip-address.component';
+import { ClaimNodeComponent } from './claim-node.component';
 
-describe('ChangeIpAddressComponent', () => {
-  let component: ChangeIpAddressComponent;
-  let fixture: ComponentFixture<ChangeIpAddressComponent>;
+describe('ClaimNodeComponent', () => {
+  let component: ClaimNodeComponent;
+  let fixture: ComponentFixture<ClaimNodeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChangeIpAddressComponent ]
+      declarations: [ ClaimNodeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChangeIpAddressComponent);
+    fixture = TestBed.createComponent(ClaimNodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

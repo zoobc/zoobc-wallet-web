@@ -1,13 +1,20 @@
 <div class="receive-container">
   <h2 class="mat-h2 text-center">{{ 'Your ZooBC Address' | translate }}</h2>
-  <p class="address-text" (click)="copyAddress()" matTooltip="Copy to clipboard">
-    {{ address }}
-  </p>
+  <div class="address-text">
+    <wallet-address
+      [value]="address"
+      [copyButton]="true"
+      [center]="true"
+    ></wallet-address>
+  </div>
   <div class="qrcode-container">
     <ngx-qrcode qrc-element-type="canvas" [qrc-value]="address"></ngx-qrcode>
 
     <div class="instruction">
-      {{'Show this QR code to your friend to transfer money to your account' | translate }}
+      {{
+        'Show this QR code to your friend to transfer money to your account'
+          | translate
+      }}
     </div>
   </div>
 </div>

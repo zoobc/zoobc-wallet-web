@@ -5,6 +5,7 @@ import { NodeAdminService } from 'src/app/services/node-admin.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { PoownService } from 'src/app/services/poown.service';
 
 @Component({
   selector: 'app-add-node-admin',
@@ -12,13 +13,21 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./add-node-admin.component.scss'],
 })
 export class AddNodeAdminComponent implements OnInit {
+  isLoading: boolean = false;
+
   formAddNodeAdmin: FormGroup;
-  ipAddressField = new FormControl('', Validators.required);
+  ipAddressField = new FormControl('', [
+    Validators.required,
+    Validators.pattern(
+      '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]+$'
+    ),
+  ]);
   constructor(
     private dialogRef: MatDialogRef<AddNodeAdminComponent>,
     private nodeAdminServ: NodeAdminService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private poownServ: PoownService
   ) {
     this.formAddNodeAdmin = new FormGroup({
       ipAddress: this.ipAddressField,
@@ -26,25 +35,34 @@ export class AddNodeAdminComponent implements OnInit {
   }
 
   ngOnInit() {}
+
   onAddNodeAdmin() {
     if (this.formAddNodeAdmin.valid) {
-      let nodeAdded: string;
-      this.translate
-        .get('Node Admin Added!')
-        .subscribe(res => (nodeAdded = res));
-      let nodeAddedMessage: string;
-      this.translate
-        .get('Your Node Already Added with IP Address')
-        .subscribe(res => (nodeAddedMessage = res));
-      Swal.fire(
-        nodeAdded,
-        `${nodeAddedMessage} : ${this.ipAddressField.value}`,
-        'success'
-      );
-      const attribute = this.formAddNodeAdmin.value;
-      this.nodeAdminServ.addNodeAdmin(attribute);
-      this.dialogRef.close();
-      this.router.navigateByUrl('/nodeadmin');
+      this.isLoading = true;
+      this.poownServ
+        .get(this.ipAddressField.value)
+        .then(async () => {
+          this.isLoading = false;
+          this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
+
+          let message: string;
+          await this.translate
+            .get('Node Admin Added!')
+            .toPromise()
+            .then(res => (message = res));
+          Swal.fire('', message, 'success').then(() => {
+            this.dialogRef.close();
+            // delaying the redirect so the timestamp of poown not in the past
+            setTimeout(() => {
+              this.router.navigateByUrl('/nodeadmin');
+            }, 400);
+          });
+        })
+        .catch(async err => {
+          console.log(err);
+          Swal.fire('Error', err, 'error');
+          this.isLoading = false;
+        });
     }
   }
 }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MessagehistoryComponent } from './messagehistory.component';
+import { RevealPassphraseComponent } from './reveal-passphrase.component';
 
-describe('MessagehistoryComponent', () => {
-  let component: MessagehistoryComponent;
-  let fixture: ComponentFixture<MessagehistoryComponent>;
+describe('RevealPassphraseComponent', () => {
+  let component: RevealPassphraseComponent;
+  let fixture: ComponentFixture<RevealPassphraseComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessagehistoryComponent ]
+      declarations: [ RevealPassphraseComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MessagehistoryComponent);
+    fixture = TestBed.createComponent(RevealPassphraseComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SendmessageComponent } from './sendmessage.component';
+import { PinConfirmationComponent } from './pin-confirmation.component';
 
-describe('SendmessageComponent', () => {
-  let component: SendmessageComponent;
-  let fixture: ComponentFixture<SendmessageComponent>;
+describe('PinConfirmationComponent', () => {
+  let component: PinConfirmationComponent;
+  let fixture: ComponentFixture<PinConfirmationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SendmessageComponent ]
+      declarations: [ PinConfirmationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SendmessageComponent);
+    fixture = TestBed.createComponent(PinConfirmationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

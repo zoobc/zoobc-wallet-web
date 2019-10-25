@@ -6,17 +6,15 @@ import {
   GetAccountBalanceResponse,
 } from '../grpc/model/accountBalance_pb';
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 import { grpc } from '@improbable-eng/grpc-web';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  constructor(private authServ: AuthService) {}
+  constructor() {}
 
-  getAccountBalance() {
-    const address = this.authServ.currAddress;
+  getAccountBalance(address: string) {
     return new Promise((resolve, reject) => {
       const request = new GetAccountBalanceRequest();
       request.setAccountaddress(address);
@@ -31,14 +29,13 @@ export class AccountService {
           msg: string | undefined,
           trailers: grpc.Metadata
         ) => {
-          if (code == grpc.Code.Unknown) {
-            const firstValue = {
+          if (code == grpc.Code.NotFound) {
+            return resolve({
               accountbalance: {
                 spendablebalance: 0,
                 balance: 0,
               },
-            };
-            return resolve(firstValue);
+            });
           } else if (code != grpc.Code.OK) reject(msg);
         },
       });

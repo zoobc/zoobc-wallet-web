@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { ContactService } from 'src/app/services/contact.service';
+import { ContactService, Contact } from 'src/app/services/contact.service';
+import { addressValidation } from 'src/helpers/utils';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-editcontact',
@@ -9,8 +12,6 @@ import { ContactService } from 'src/app/services/contact.service';
   styleUrls: ['./editcontact.component.scss'],
 })
 export class EditcontactComponent implements OnInit {
-  contacts = [];
-
   editForm: FormGroup;
   aliasField: FormControl;
   addressField: FormControl;
@@ -18,8 +19,16 @@ export class EditcontactComponent implements OnInit {
   constructor(
     private contactServ: ContactService,
     public dialogRef: MatDialogRef<EditcontactComponent>,
-    @Inject(MAT_DIALOG_DATA) public contact: any
+    @Inject(MAT_DIALOG_DATA) public contact: any,
+    private translate: TranslateService
   ) {}
+
+  onAddressValidation() {
+    const validation = addressValidation(this.addressField.value);
+    if (!validation) {
+      this.addressField.setErrors({ invalidAddress: true });
+    }
+  }
 
   ngOnInit() {
     this.aliasField = new FormControl(this.contact.alias, Validators.required);
@@ -34,13 +43,30 @@ export class EditcontactComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.editForm.valid) {
-      let contacts = this.contactServ.updateContact(
-        this.contact,
-        this.editForm.value
-      );
-      this.dialogRef.close(contacts);
+      const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
+      const isChanged =
+        this.addressField.value != this.contact.address ? true : false;
+
+      if (isDuplicate && isChanged) {
+        let message: string;
+        await this.translate
+          .get('The address you entered is already in your Address Book')
+          .toPromise()
+          .then(res => (message = res));
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: message,
+        });
+      } else {
+        const contacts: Contact[] = this.contactServ.updateContact(
+          this.editForm.value,
+          this.contact.address
+        );
+        this.dialogRef.close(contacts);
+      }
     }
   }
 }

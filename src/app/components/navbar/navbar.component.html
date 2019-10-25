@@ -11,10 +11,7 @@
       </button>
       <a routerLink="/" class="brand-text">
         <img src="/assets/img/zbc-white.png" alt="" />
-        <h3>
-          <b>ZooBC</b>
-          Wallet
-        </h3>
+        <h3><b>ZooBC</b> Wallet</h3>
       </a>
     </div>
     <div class="menu">
@@ -48,19 +45,26 @@
       </button>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
-          <button mat-menu-item (click)="onOpenAddNodeAdmin()">
-            <i class="fas fa-plus"></i>
-            <span>{{ 'Add Node Admin' | translate }}</span>
-          </button>
-          <mat-divider></mat-divider>
+          <ng-container *ngIf="!node">
+            <button mat-menu-item (click)="onOpenAddNodeAdmin()">
+              <i class="fas fa-plus"></i>
+              <span>{{ 'Add Node Admin' | translate }}</span>
+            </button>
+            <mat-divider></mat-divider>
+          </ng-container>
           <button mat-menu-item routerLink="/settings/about">
             <i class="fas fa-info"></i>
-            {{ 'About' | translate }}
+            {{ 'Info & Help' | translate }}
           </button>
           <!-- <button mat-menu-item routerLink="/settings">
             <i class="fa fa-cog"></i>
             {{ 'Setting' | translate }}
           </button> -->
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="onOpenRevealPassphrase()">
+            <i class="fa fa-eye"></i>
+            {{ 'Reveal Passphrase' | translate }}
+          </button>
           <mat-divider></mat-divider>
           <button (click)="onLogout()" mat-menu-item>
             <i class="fas fa-sign-out-alt"></i>

@@ -1,15 +1,42 @@
 <div class="editcontact-container">
-  <h2 class="mat-h2">{{ 'Edit Contact' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'Edit Address' | translate }}</h2>
   <form [formGroup]="editForm" (submit)="onSubmit()">
-    <mat-form-field appearance="outline">
-      <input matInput type="text" formControlName="alias" placeholder="{{'Alias' | translate}}" />
-      <mat-error *ngIf="aliasField.hasError('required')">{{'Alias is required' | translate}}</mat-error>
+    <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'Alias' | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="alias"
+        placeholder="{{ 'Alias' | translate }}"
+      />
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <input matInput type="text" formControlName="address" placeholder="{{'Address' | translate}}" />
-      <mat-error *ngIf="addressField.hasError('required')">{{'Address is required' | translate}}</mat-error>
-    </mat-form-field>
+    <ng-container *ngIf="aliasField.touched">
+      <mat-error *ngIf="aliasField.hasError('required')">
+        {{ 'Alias is required' | translate }}
+      </mat-error>
+    </ng-container>
 
-    <button mat-flat-button color="primary" type="submit">{{ 'Save' | translate }}</button>
+    <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'Address' | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="address"
+        placeholder="{{ 'Address' | translate }}"
+        (keyup)="onAddressValidation()"
+      />
+    </mat-form-field>
+    <ng-container *ngIf="addressField.touched">
+      <mat-error *ngIf="addressField.hasError('required')">
+        {{ 'Address is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="addressField.hasError('invalidAddress')">
+        {{ 'ZBC Address is invalid' | translate }}
+      </mat-error>
+    </ng-container>
+
+    <button mat-flat-button color="primary" type="submit">
+      {{ 'Save' | translate }}
+    </button>
   </form>
 </div>
