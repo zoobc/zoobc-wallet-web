@@ -132,6 +132,14 @@ export class SendmoneyComponent implements OnInit {
       .then((res: SavedAccount[]) => {
         this.accounts = res;
         this.account = this.accounts.find(acc => this.account.path == acc.path);
+
+        res.forEach(account => {
+          const contact: Contact = {
+            address: account.address,
+            alias: account.name,
+          };
+          this.contacts.push(contact);
+        });
       })
       .catch(() => (this.isError = true))
       .finally(() => (this.isLoading = false));
