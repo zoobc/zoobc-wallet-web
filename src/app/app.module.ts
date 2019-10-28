@@ -75,6 +75,7 @@ import { TransactionDetailComponent } from './components/transaction-detail/tran
 import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
 import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
 import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
+import { EditAccountComponent } from './pages/edit-account/edit-account.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -128,6 +129,7 @@ export function getLanguage(languageServ: LanguageService) {
     PinConfirmationComponent,
     ClaimNodeComponent,
     RevealPassphraseComponent,
+    EditAccountComponent,
   ],
   imports: [
     BrowserModule,
@@ -195,6 +197,7 @@ export function getLanguage(languageServ: LanguageService) {
     RegisterNodeComponent,
     UpdateNodeComponent,
     RevealPassphraseComponent,
+    EditAccountComponent,
   ],
 })
 export class AppModule {}

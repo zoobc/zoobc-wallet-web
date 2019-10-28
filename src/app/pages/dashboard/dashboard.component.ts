@@ -21,6 +21,7 @@ import { onCopyText } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { EditAccountComponent } from '../edit-account/edit-account.component';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -158,5 +159,19 @@ export class DashboardComponent implements OnInit {
 
   onOpenAddAccount() {
     this.dialog.open(AddAccountComponent, { width: '360px' });
+  }
+
+  onOpenEditAccount(e, account: SavedAccount) {
+    e.stopPropagation();
+    const dialog = this.dialog.open(EditAccountComponent, {
+      width: '360px',
+      data: account,
+    });
+    dialog.afterClosed().subscribe((edited: boolean) => {
+      if (edited) {
+        this.accounts = this.authServ.getAllAccount();
+        this.currAcc = this.authServ.getCurrAccount();
+      }
+    });
   }
 }
