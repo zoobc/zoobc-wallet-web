@@ -52,6 +52,11 @@
           (blur)="isAddressInContacts()"
         />
         <mat-autocomplete #auto="matAutocomplete">
+          <mat-option disabled>
+            <span class="mat-caption">
+              {{ 'Search address from your address book or your own account' | translate }}
+            </span>
+          </mat-option>
           <mat-option
             *ngFor="let contact of filteredContacts | async"
             [value]="contact.address"
