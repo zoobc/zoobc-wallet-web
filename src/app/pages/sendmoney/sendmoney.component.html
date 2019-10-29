@@ -54,7 +54,10 @@
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option disabled>
             <span class="mat-caption">
-              {{ 'Search address from your address book or your own account' | translate }}
+              {{
+                'Search address from your address book or your own account'
+                  | translate
+              }}
             </span>
           </mat-option>
           <mat-option
@@ -231,7 +234,7 @@
       </div>
       <div style="margin-bottom: 8px;">
         <mat-checkbox class="checkbox-margin" (click)="toggleCustomFee()">
-          {{ 'Custom Fee' | translate }}
+          {{ 'Custom Fee & Advanced Menu' | translate }}
         </mat-checkbox>
       </div>
 
@@ -300,11 +303,162 @@
               <mat-error *ngIf="feeFormCurr.hasError('min')">
                 {{
                   'Minimum amount of fee in ZBC must be ZBC'
-                    | translate:{val: 0.00000001}
+                    | translate: { val: 0.00000001 }
                 }}
               </mat-error>
             </ng-container>
           </div>
+        </div>
+        <span class="sub-title" (click)="toggleAdvancedMenu()">Advanced Menu</span>
+        <div class="zbc-form-item" *ngIf="advancedMenu">
+          <label>{{ 'Approver Address' | translate }}</label>
+          <div class="row">
+            <mat-form-field appearance="outline" class="block" color="accent">
+              <input
+                matInput
+                placeholder="{{ 'Approver Address' | translate }}..."
+                aria-label="contacts"
+                [matAutocomplete]="auto"
+                formControlName="addressApprover"
+                (keyup)="onChangeAddressApprover()"
+                (blur)="isAddressInContacts()"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option disabled>
+                  <span class="mat-caption">
+                    {{
+                      'Search address from your address book or your own account'
+                        | translate
+                    }}
+                  </span>
+                </mat-option>
+                <mat-option
+                  *ngFor="let contact of filteredContacts | async"
+                  [value]="contact.address"
+                >
+                  <span>{{ contact.alias }}</span> |
+                  <small>{{ contact.address }}</small>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <ng-container *ngIf="addressApproverField.touched">
+              <mat-error *ngIf="addressApproverField.hasError('required')">
+                {{ 'Address for Approver is required' | translate }}
+              </mat-error>
+              <mat-error
+                *ngIf="addressApproverField.hasError('invalidAddress')"
+              >
+                {{ 'ZBC Address is invalid' | translate }}
+              </mat-error>
+            </ng-container>
+          </div>
+          <label>{{ 'Approver Comission' | translate }}</label>
+          <div class="row">
+            <div class="col-4 col-sm-3">
+              <mat-form-field appearance="outline" color="accent" class="block">
+                <mat-select [(value)]="typeCommission">
+                  <mat-option value="ZBC">ZBC</mat-option>
+                  <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-8 col-sm-9">
+              <mat-form-field
+                appearance="outline"
+                class="block"
+                *ngIf="typeCommission === 'ZBC'"
+                color="accent"
+              >
+                <input
+                  matInput
+                  type="number"
+                  formControlName="approverCommission"
+                  placeholder="{{ 'Approver Commission' | translate }}"
+                  (change)="onChangeCommisssionField()"
+                  (keyup)="onChangeCommisssionField()"
+                />
+              </mat-form-field>
+              <ng-container
+                *ngIf="
+                  approverCommissionField.touched && typeCommission === 'ZBC'
+                "
+              >
+                <mat-error *ngIf="approverCommissionField.hasError('required')">
+                  {{ 'Commission for approver is required' | translate }}
+                </mat-error>
+                <mat-error *ngIf="approverCommissionField.hasError('min')">
+                  {{ 'Minimum commission is' | translate: { val: 0.00000001 } }}
+                </mat-error>
+              </ng-container>
+              <mat-form-field
+                appearance="outline"
+                class="block"
+                *ngIf="typeCommission === 'Fiat'"
+                color="accent"
+              >
+                <input
+                  matInput
+                  type="number"
+                  formControlName="approverCommissionCurr"
+                  placeholder="{{ 'Commission Currency' | translate }}"
+                  (change)="onChangeCommisssionCurrField()"
+                  (keyup)="onChangeCommisssionCurrField()"
+                />
+              </mat-form-field>
+              <ng-container
+                *ngIf="
+                  approverCommissionCurrField.touched &&
+                  typeCommission === 'Fiat'
+                "
+              >
+                <mat-error
+                  *ngIf="approverCommissionCurrField.hasError('required')"
+                >
+                  {{ 'Commission for approver is required' | translate }}
+                </mat-error>
+                <mat-error *ngIf="approverCommissionCurrField.hasError('min')">
+                  {{
+                    'Minimum Commission for approver in ZBC must be ZBC'
+                      | translate: { val: 0.00000001 }
+                  }}
+                </mat-error>
+              </ng-container>
+            </div>
+          </div>
+          <label>{{ 'Timeout' | translate }}</label>
+          <mat-form-field appearance="outline" class="block" color="accent">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Choose a date"
+              formControlName="timeout"
+              [min]='minDate'
+              [max]='maxDate'
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+          </mat-form-field>
+          <ng-container *ngIf="timeoutField.touched">
+            <mat-error *ngIf="timeoutField.hasError('required')">{{
+              'Timeout is required' | translate
+            }}</mat-error>
+          </ng-container>
+          <label>{{ 'Instruction' | translate }}</label>
+          <mat-form-field appearance="outline" class="block" color="accent">
+            <textarea
+              matInput
+              placeholder="Textarea"
+              formControlName="instruction"
+            ></textarea>
+          </mat-form-field>
+          <ng-container *ngIf="instructionField.touched">
+            <mat-error *ngIf="instructionField.hasError('required')">
+              {{ 'Instruction is required' | translate }}
+            </mat-error>
+          </ng-container>
         </div>
       </div>
 
@@ -328,7 +482,7 @@
   <div class="confirmation-dialog">
     <div class="row">
       <div class="col-12 col-sm-6">
-        <div class="title">{{'Confirm Send Money' | translate}}</div>
+        <div class="title">{{ 'Confirm Send Money' | translate }}</div>
       </div>
       <div class="col-12 col-sm-6 text-right">
         <a class="brand">
@@ -343,14 +497,14 @@
     <div class="content">
       <div class="row">
         <div class="col-12 col-sm-6 test">
-          <div class="label">{{'From' | translate}}:</div>
+          <div class="label">{{ 'From' | translate }}:</div>
           <div class="address">
             <wallet-address
               [value]="account.address"
               [copyButton]="true"
             ></wallet-address>
           </div>
-          <div class="label">{{'Recepient' | translate}}:</div>
+          <div class="label">{{ 'Recepient' | translate }}:</div>
           <div class="address">
             <wallet-address
               [value]="recipientForm.value"
@@ -359,7 +513,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-6 text-right">
-          <div class="label">{{'Amount' | translate}}:</div>
+          <div class="label">{{ 'Amount' | translate }}:</div>
           <div class="amount">
             <div class="zbc">{{ amountForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
@@ -378,7 +532,7 @@
               {{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}
             </div>
           </div>
-          <div class="label">{{'Total' | translate}} :</div>
+          <div class="label">{{ 'Total' | translate }} :</div>
           <div class="total">
             <div class="zbc">
               {{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC
@@ -402,10 +556,10 @@
         (click)="closeDialog()"
         style="margin-right: 8px"
       >
-        {{'Cancel' | translate}}
+        {{ 'Cancel' | translate }}
       </button>
       <button mat-flat-button color="primary" (click)="onOpenPinDialog()">
-        {{'Confirm' | translate}}
+        {{ 'Confirm' | translate }}
       </button>
     </div>
   </div>
@@ -436,7 +590,7 @@
               ></wallet-address>
             </div>
             <div class="last-tx">
-              <span>{{'Last Transaction' | translate}}:&nbsp;</span>
+              <span>{{ 'Last Transaction' | translate }}:&nbsp;</span>
               <span *ngIf="acc.lastTx">{{ acc.lastTx | dateAgo }}</span>
               <span *ngIf="!acc.lastTx">{{ 'None' | translate }}</span>
             </div>
