@@ -3,20 +3,6 @@
 
 .sendmoney-container {
   .zbc-form-item {
-    .sub-title {
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 10px;
-      &:before,
-      &:after {
-        content: '';
-        flex: 1 1;
-        border-bottom: 2px solid #000;
-        margin: 10px;
-      }
-    }
     .amount {
       .primary-amount {
         font-size: 1.3rem;
@@ -27,6 +13,25 @@
         margin-bottom: 0.2rem;
       }
     }
+  }
+
+  .sub-title {
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    &:before,
+    &:after {
+      content: '';
+      flex: 1 1;
+      border-bottom: 2px solid #000;
+      margin: 10px;
+    }
+  }
+  .icon-dropdown {
+    margin-left: 5px !important;
+    margin-top: 2px !important;
   }
 
   .choose-fee {

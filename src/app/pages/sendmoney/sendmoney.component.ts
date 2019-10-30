@@ -270,8 +270,6 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async onOpenDialogDetailSendMoney() {
-    const a = this.timeoutField.value / 1000;
-    console.log(a);
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
@@ -338,7 +336,6 @@ export class SendmoneyComponent implements OnInit {
     this.addressApproverField.enable();
     this.approverCommissionField.enable();
     this.instructionField.enable();
-    // this.timeoutField.enable();
     this.approverCommissionCurrField.enable();
   }
 
