@@ -69,13 +69,13 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { AboutComponent } from './pages/settings/about/about.component';
 import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
-import { AddressComponent } from './components/address/address.component';
-import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
 import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
 import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
 import { EditAccountComponent } from './pages/edit-account/edit-account.component';
+import { AddressModule } from './components/address/address.module';
+import { DateAgoModule } from './pipes/date-ago.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -123,8 +123,6 @@ export function getLanguage(languageServ: LanguageService) {
     AboutComponent,
     GeneralComponent,
     NetworkComponent,
-    AddressComponent,
-    DateAgoPipe,
     TransactionDetailComponent,
     PinConfirmationComponent,
     ClaimNodeComponent,
@@ -147,6 +145,9 @@ export function getLanguage(languageServ: LanguageService) {
         deps: [HttpClient],
       },
     }),
+
+    AddressModule,
+    DateAgoModule,
 
     MatButtonModule,
     MatCheckboxModule,
