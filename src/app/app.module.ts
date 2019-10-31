@@ -76,6 +76,7 @@ import { PinConfirmationComponent } from './components/pin-confirmation/pin-conf
 import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
 import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
 import { EditAccountComponent } from './pages/edit-account/edit-account.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
 
 // AoT requires an exported function for factories
@@ -142,6 +143,8 @@ export function getLanguage(languageServ: LanguageService) {
     ReactiveFormsModule,
     FormsModule,
     InfiniteScrollModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
