@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
 import {
@@ -42,6 +41,7 @@ export class NodeAdminComponent implements OnInit {
   gbToB = Math.pow(1024, 3);
 
   registeredNode: RegisteredNode;
+  pendingNodeTx = null;
 
   isNodeHardwareLoading: boolean = false;
   isNodeHardwareError: boolean = false;
@@ -51,9 +51,8 @@ export class NodeAdminComponent implements OnInit {
   constructor(
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
-    private router: Router,
     private nodeServ: NodeRegistrationService,
-    private authServ: AuthService,
+    authServ: AuthService,
     private transactionServ: TransactionService,
     private keyringServ: KeyringService
   ) {
@@ -61,6 +60,15 @@ export class NodeAdminComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.nodeServ
+      .getUnconfirmTransaction(this.account.address)
+      .then(res => {
+        console.log(res);
+        this.pendingNodeTx = res;
+      })
+      .catch(err => {
+        console.log(err);
+      });
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
   }
@@ -72,17 +80,43 @@ export class NodeAdminComponent implements OnInit {
   getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
-    this.nodeServ.getRegisteredNode(this.account).then(
-      (res: RegisteredNodeR) => {
+    this.nodeServ
+      .getUnconfirmTransaction(this.account.address)
+      .then(res => {
+        this.pendingNodeTx = res;
+        if (res) return this.nodeServ.getRegisteredNode(this.account);
+        else this.isNodeLoading = false;
+        return false;
+      })
+      .then((res: RegisteredNodeR) => {
         this.isNodeLoading = false;
         this.registeredNode = res.noderegistration;
-      },
-      err => {
+      })
+      .catch(err => {
         console.log(err);
         this.isNodeLoading = false;
         this.isNodeError = true;
-      }
-    );
+      });
+  }
+
+  generateNewPubKey() {
+    // todo: create loader and display the result
+    Swal.fire({
+      title: 'Are you sure want to generate new node public key?',
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        this.nodeAdminServ
+          .generateNodeKey(this.account.nodeIP)
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        return true;
+      },
+    });
   }
 
   streamNodeHardwareInfo() {
@@ -104,17 +138,29 @@ export class NodeAdminComponent implements OnInit {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '420px',
     });
+
+    dialog.afterClosed().subscribe(success => {
+      if (success) this.getRegisteredNode();
+    });
   }
 
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
     });
+
+    dialog.afterClosed().subscribe(success => {
+      if (success) this.getRegisteredNode();
+    });
   }
 
   openClaimNode() {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
+    });
+
+    dialog.afterClosed().subscribe(success => {
+      if (success) this.getRegisteredNode();
     });
   }
 
@@ -134,6 +180,7 @@ export class NodeAdminComponent implements OnInit {
         this.transactionServ.postTransaction(bytes).then(
           (res: any) => {
             Swal.fire('Success', 'success', 'success');
+            setTimeout(() => this.getRegisteredNode(), 500);
           },
           err => {
             console.log(err);
