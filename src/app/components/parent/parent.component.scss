@@ -22,6 +22,7 @@
 .main-container {
   padding: 24px;
   background-color: #f9fafb;
+  height: 100%;
   @media #{$small-and-down} {
     padding: 24px 16px;
   }

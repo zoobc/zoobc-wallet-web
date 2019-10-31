@@ -1,0 +1,72 @@
+<div class="apps-container">
+  <h2 class="mat-h2">
+    {{ 'Apps' | translate }} <i>({{ 'Coming Soon' | translate }})</i>
+  </h2>
+  <div class="text-right" style="margin-bottom: 8px">
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="openAddDialog()"
+    >
+      <i matPrefix class="fa fa-plus"></i> {{ 'Add' | translate }}
+    </button>
+  </div>
+
+  <mat-card class="app-list">
+    <div class="app-item" routerLink="/apps/sell-zbc">
+      <div class="app-icon">
+        <i class="fa fa-puzzle-piece"></i>
+      </div>
+      <div class="app-title">Sell ZooBC</div>
+    </div>
+    <div class="app-item" routerLink="/apps/sell-zbc">
+      <div class="app-icon">
+        <i class="fa fa-puzzle-piece"></i>
+      </div>
+      <div class="app-title">ZooBC Cool App</div>
+    </div>
+  </mat-card>
+
+  <ng-template #appDialog>
+    <h2 class="mat-h3">
+      {{ 'Add Apps' | translate }} <i>({{ 'Coming Soon' | translate }})</i>
+    </h2>
+    <div class="add-app-list">
+      <div class="app-item">
+        <div class="row">
+          <div class="col-12 col-sm-8">
+            <div style="display: flex;">
+              <div class="app-icon">
+                <i class="fa fa-puzzle-piece"></i>
+              </div>
+              <div class="app-title">ZooBC Cool App</div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-4 text-right">
+            <div class="app-action">
+              <button mat-flat-button color="primary">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-item">
+        <div class="row">
+          <div class="col-12 col-sm-8">
+            <div style="display: flex;">
+              <div class="app-icon">
+                <i class="fa fa-puzzle-piece"></i>
+              </div>
+              <div class="app-title">ZooBC Cool App</div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-4 text-right">
+            <div class="app-action">
+              <button mat-flat-button color="primary">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

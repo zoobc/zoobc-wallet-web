@@ -37,6 +37,18 @@ a:not([href='']) {
   }
 }
 
+.breadcrumb {
+  margin-bottom: 16px;
+  a {
+    margin-right: 6px;
+    font-weight: bold;
+  }
+  i {
+    color: $black2;
+    margin-right: 6px;
+  }
+}
+
 // ==================== DIALOG =====================
 .mat-dialog-container {
   padding: 24px 16px !important;
