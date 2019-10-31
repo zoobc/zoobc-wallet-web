@@ -24,8 +24,10 @@ export class ParentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private appServ: AppService // private keyringServ: KeyringService, // private authServ: AuthService
-  ) {
+    private appServ: AppService
+  ) // private keyringServ: KeyringService,
+  // private authServ: AuthService
+  {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
         this.menu = this.route.snapshot.firstChild.url[0].path;

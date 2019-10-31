@@ -76,6 +76,8 @@ import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal
 import { EditAccountComponent } from './pages/edit-account/edit-account.component';
 import { AddressModule } from './components/address/address.module';
 import { DateAgoModule } from './pipes/date-ago.module';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -128,6 +130,7 @@ export function getLanguage(languageServ: LanguageService) {
     ClaimNodeComponent,
     RevealPassphraseComponent,
     EditAccountComponent,
+    DemoNodeAdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -138,6 +141,8 @@ export function getLanguage(languageServ: LanguageService) {
     ReactiveFormsModule,
     FormsModule,
     InfiniteScrollModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
