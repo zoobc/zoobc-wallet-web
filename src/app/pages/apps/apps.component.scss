@@ -1,0 +1,62 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.apps-container {
+  max-width: 400px;
+  margin: 0 auto;
+  .app-list {
+    padding: 0;
+    .app-item {
+      border-bottom: 1px solid #ccc;
+      padding: 16px;
+      display: flex;
+      @include transition(0.3s ease-in all);
+      &:hover {
+        background-color: #eee;
+        cursor: pointer;
+      }
+      &:focus {
+        outline: none;
+      }
+      .app-icon {
+        width: 32px;
+        i {
+          font-size: 24px;
+          color: $black2;
+          line-height: 32px;
+        }
+      }
+      .app-title {
+        padding-left: 8px;
+        align-self: center;
+      }
+    }
+  }
+}
+
+.add-app-list {
+  .app-item {
+    border-bottom: 1px solid #ccc;
+    padding: 16px;
+    @include transition(0.3s ease-in all);
+    &:hover {
+      background-color: #eee;
+    }
+    .app-icon {
+      width: 32px;
+      i {
+        font-size: 24px;
+        color: $black2;
+      }
+    }
+    .app-title {
+      padding-left: 8px;
+      align-self: center;
+    }
+    .app-action button {
+      font-size: 12px;
+      line-height: 28px;
+      min-width: 48px;
+    }
+  }
+}

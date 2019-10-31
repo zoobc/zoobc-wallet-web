@@ -51,5 +51,11 @@
         <span>{{ 'Address Book' | translate }}</span>
       </a>
     </li>
+    <li [ngClass]="menu == 'apps' && 'active'">
+      <a routerLink="/apps" (click)="onToggle()">
+        <i class="fa fa-puzzle-piece"></i>
+        <span>{{ 'Apps' | translate }}</span>
+      </a>
+    </li>
   </ul>
 </div>
