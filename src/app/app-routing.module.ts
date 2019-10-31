@@ -45,6 +45,7 @@ const routes: Routes = [
         ],
       },
       { path: 'request/:recipient/:amount', component: SendmoneyComponent },
+      { path: 'apps', loadChildren: './pages/apps/apps.module#AppsModule' },
     ],
   },
   {
