@@ -49,7 +49,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { PinsComponent } from './components/pins/pins.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AddAccountComponent } from './pages/add-account/add-account.component';
+import { AddAccountComponent } from './pages/account/add-account/add-account.component';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
@@ -57,12 +57,12 @@ import { TransactionTableComponent } from './components/transaction-table/transa
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
-import { ContactUsComponent } from './pages/contact-us/contact-us.component';
-import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
+import { ContactUsComponent } from './pages/info/contact-us/contact-us.component';
+import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { FaqComponent } from './pages/faq/faq.component';
-import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
-import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { FaqComponent } from './pages/info/faq/faq.component';
+import { TermsOfUseComponent } from './pages/info/terms-of-use/terms-of-use.component';
+import { PrivacyPolicyComponent } from './pages/info/privacy-policy/privacy-policy.component';
 import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
 import { UpdateNodeComponent } from './pages/node-admin/update-node/update-node.component';
 import { SettingsComponent } from './pages/settings/settings.component';
@@ -73,11 +73,11 @@ import { TransactionDetailComponent } from './components/transaction-detail/tran
 import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
 import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
 import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
-import { EditAccountComponent } from './pages/edit-account/edit-account.component';
+import { EditAccountComponent } from './pages/account/edit-account/edit-account.component';
 import { AddressModule } from './components/address/address.module';
 import { DateAgoModule } from './pipes/date-ago.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
+import { DemoNodeAdminComponent } from './pages/node-admin/demo-node-admin/demo-node-admin.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {

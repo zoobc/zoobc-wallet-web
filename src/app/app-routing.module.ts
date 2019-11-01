@@ -12,16 +12,16 @@ import { AppService } from './app.service';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
-import { ContactUsComponent } from './pages/contact-us/contact-us.component';
+import { ContactUsComponent } from './pages/info/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { FaqComponent } from './pages/faq/faq.component';
-import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
-import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { FaqComponent } from './pages/info/faq/faq.component';
+import { TermsOfUseComponent } from './pages/info/terms-of-use/terms-of-use.component';
+import { PrivacyPolicyComponent } from './pages/info/privacy-policy/privacy-policy.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
 import { AboutComponent } from './pages/settings/about/about.component';
-import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
+import { DemoNodeAdminComponent } from './pages/node-admin/demo-node-admin/demo-node-admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -46,7 +46,6 @@ const routes: Routes = [
           { path: 'about', component: AboutComponent },
         ],
       },
-      { path: 'request/:recipient/:amount', component: SendmoneyComponent },
       { path: 'apps', loadChildren: './pages/apps/apps.module#AppsModule' },
     ],
   },
@@ -58,7 +57,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'open-wallet', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
-      // { path: 'feedback', component: ContactUsComponent },
+      { path: 'feedback', component: ContactUsComponent },
       { path: 'faq', component: FaqComponent },
       { path: 'terms-of-use', component: TermsOfUseComponent },
       { path: 'privacy-policy', component: PrivacyPolicyComponent },
