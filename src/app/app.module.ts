@@ -78,6 +78,7 @@ import { AddressModule } from './components/address/address.module';
 import { DateAgoModule } from './pipes/date-ago.module';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { DemoNodeAdminComponent } from './pages/node-admin/demo-node-admin/demo-node-admin.component';
+import { AccountSelectorModule } from './components/account-selector/account-selector.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -153,6 +154,7 @@ export function getLanguage(languageServ: LanguageService) {
 
     AddressModule,
     DateAgoModule,
+    AccountSelectorModule,
 
     MatButtonModule,
     MatCheckboxModule,
