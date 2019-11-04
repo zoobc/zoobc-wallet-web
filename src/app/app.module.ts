@@ -64,6 +64,7 @@ import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal
 import { EditAccountComponent } from './pages/account/edit-account/edit-account.component';
 import { AddressModule } from './components/address/address.module';
 import { DateAgoModule } from './pipes/date-ago.module';
+import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { AccountSelectorModule } from './components/account-selector/account-selector.module';
 import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
@@ -108,6 +109,7 @@ export function getLanguage(languageServ: LanguageService) {
     RevealPassphraseComponent,
     EditAccountComponent,
     AddNodeAdminComponent,
+    MyTaskListComponent,
   ],
   imports: [
     BrowserModule,

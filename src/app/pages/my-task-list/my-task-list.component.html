@@ -1,0 +1,85 @@
+<div class="my-task-container">
+  <h2 class="mat-h2">
+    {{ 'My Task' | translate }} <i>( {{ 'Coming Soon' | translate }} )</i>
+  </h2>
+  <mat-card style="padding: 0">
+    <div
+      [className]="withDetail ? 'my-task-item row' : 'my-task-item hover row'"
+      (click)="onOpenDetailTask()"
+    >
+      <div class="col-12 col-sm-8">
+        <div class="title-task">Approval-Send Money</div>
+        <div class="date">{{ 1572226684000 | dateAgo }}</div>
+      </div>
+      <div class="col-12 col-sm-4 text-right">
+        <div class="commission-receive">
+          + 10 ZBC
+        </div>
+      </div>
+    </div>
+    <div
+      [className]="withDetail ? 'my-task-item row' : 'my-task-item hover row'"
+      (click)="onOpenDetailTaskComingSoon()"
+    >
+      <div class="col-12 col-sm-8">
+        <div class="title-task">Approval-Multi Signature</div>
+        <div class="date">
+          {{ 1572313084000 | dateAgo }}
+        </div>
+      </div>
+      <div class="col-12 col-sm-4 text-right">
+        <div class="commission-receive">
+          + 5 ZBC
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<ng-template #detailTask>
+  <div class="detail-task-container">
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
+      <div class="col-12 col-md-8">1335562333909324037</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        YuKTkCCWOPeGBknQSTGsNuyREB-iGhIz6ur4suM4FXMb
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Recepient' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        B9C35tu6hJCE7IrwqL5uxnh6OW77Pw99JIdrSpHMg2Ki
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
+      <div class="col-12 col-md-8">1,000 ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Commission Fee' | translate }}:</div>
+      <div class="col-12 col-md-8">10 ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Instruction' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        Please check sender balance if already get 5 bitcoin before confirm
+      </div>
+    </div>
+    <div class="text-right" style="margin-top: 8px">
+      <button
+        mat-flat-button
+        color="warn"
+        style="margin-right: 8px"
+        (click)="closeDialog()"
+      >
+        {{ 'Cancel' | translate }}
+      </button>
+      <button mat-flat-button color="primary" (click)="onConfirmDialog()">
+        {{ 'Confirm' | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>
