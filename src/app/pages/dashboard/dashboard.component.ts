@@ -16,12 +16,12 @@ import {
   GetAccountBalanceResponse,
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
-import { AddAccountComponent } from '../add-account/add-account.component';
+import { AddAccountComponent } from '../account/add-account/add-account.component';
 import { onCopyText } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
-import { EditAccountComponent } from '../edit-account/edit-account.component';
+import { EditAccountComponent } from '../account/edit-account/edit-account.component';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;

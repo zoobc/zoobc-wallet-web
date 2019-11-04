@@ -34,7 +34,6 @@ export class SendmoneyComponent implements OnInit {
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
-  @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
 
   currencyRate: Currency = {
     name: '',
@@ -66,7 +65,6 @@ export class SendmoneyComponent implements OnInit {
   instructionField = new FormControl('', Validators.required);
   timeoutField = new FormControl('', Validators.required);
 
-  accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
 
   isLoading = false;
@@ -143,36 +141,18 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getAccounts() {
-    this.isLoading = true;
-    this.isError = false;
-    this.authServ
-      .getAccountsWithBalance()
-      .then((res: SavedAccount[]) => {
-        this.accounts = res;
-        this.account = this.accounts.find(acc => this.account.path == acc.path);
-
-        res.forEach(account => {
-          const contact: Contact = {
-            address: account.address,
-            alias: account.name,
-          };
-          this.contacts.push(contact);
-        });
-      })
-      .catch(() => (this.isError = true))
-      .finally(() => (this.isLoading = false));
-  }
-
-  openAccountList() {
-    this.accountRefDialog = this.dialog.open(this.accountDialog, {
-      width: '360px',
+    this.accounts = this.authServ.getAllAccount();
+    this.accounts.forEach(account => {
+      const contact: Contact = {
+        address: account.address,
+        alias: account.name,
+      };
+      this.contacts.push(contact);
     });
   }
 
   onSwitchAccount(account: SavedAccount) {
-    this.authServ.switchAccount(account);
     this.account = account;
-    this.accountRefDialog.close();
   }
 
   onChangeAmountField() {

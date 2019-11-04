@@ -11,17 +11,8 @@ import { ParentComponent } from '../app/components/parent/parent.component';
 import { AppService } from './app.service';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
-import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { FaqComponent } from './pages/faq/faq.component';
-import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
-import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
-import { SettingsComponent } from './pages/settings/settings.component';
-import { GeneralComponent } from './pages/settings/general/general.component';
-import { NetworkComponent } from './pages/settings/network/network.component';
-import { AboutComponent } from './pages/settings/about/about.component';
-import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
 import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component';
 
 const routes: Routes = [
@@ -33,22 +24,17 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'transferhistory', component: TransferhistoryComponent },
-      { path: 'nodeadmin', component: NodeAdminComponent },
-      { path: 'demo-node-admin', component: DemoNodeAdminComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskListComponent },
       {
         path: 'settings',
-        component: SettingsComponent,
-        children: [
-          { path: '', component: GeneralComponent },
-          { path: 'general', component: GeneralComponent },
-          { path: 'network', component: NetworkComponent },
-          { path: 'about', component: AboutComponent },
-        ],
+        loadChildren: './pages/settings/settings.module#SettingsModule',
       },
-      { path: 'request/:recipient/:amount', component: SendmoneyComponent },
+      {
+        path: 'nodeadmin',
+        loadChildren: './pages/node-admin/node-admin.module#NodeAdminModule',
+      },
       { path: 'apps', loadChildren: './pages/apps/apps.module#AppsModule' },
     ],
   },
@@ -60,10 +46,8 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'open-wallet', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
-      // { path: 'feedback', component: ContactUsComponent },
-      { path: 'faq', component: FaqComponent },
-      { path: 'terms-of-use', component: TermsOfUseComponent },
-      { path: 'privacy-policy', component: PrivacyPolicyComponent },
+      { path: 'feedback', component: ContactUsComponent },
+      { path: 'info', loadChildren: './pages/info/info.module#InfoModule' },
     ],
   },
 ];
