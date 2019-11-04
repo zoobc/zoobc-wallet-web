@@ -30,7 +30,7 @@
   </div>
 
   <mat-card class="account-card">
-    <div class="error-message" *ngIf="isErrorBalance">
+    <div class="no-content" *ngIf="isErrorBalance">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}

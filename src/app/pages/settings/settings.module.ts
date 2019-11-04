@@ -26,9 +26,7 @@ import {
   MatTooltipModule,
   MatChipsModule,
   MatDividerModule,
-  MatAutocompleteModule,
 } from '@angular/material';
-import { LanguageService } from 'src/app/services/language.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
