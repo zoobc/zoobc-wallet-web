@@ -45,6 +45,12 @@
         <span>{{ 'Receive' | translate }}</span>
       </a>
     </li>
+    <li [ngClass]="menu == 'my-tasks' && 'active'">
+      <a routerLink="/my-tasks" (click)="onToggle()">
+        <i class="fas fa-tasks"></i>
+        <span>{{ 'My Task' | translate }}</span>
+      </a>
+    </li>
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list" (click)="onToggle()">
         <i class="fa fa-address-book"></i>

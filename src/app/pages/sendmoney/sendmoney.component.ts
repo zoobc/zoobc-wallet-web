@@ -336,6 +336,7 @@ export class SendmoneyComponent implements OnInit {
     this.addressApproverField.enable();
     this.approverCommissionField.enable();
     this.instructionField.enable();
+    this.timeoutField.enable();
     this.approverCommissionCurrField.enable();
   }
 

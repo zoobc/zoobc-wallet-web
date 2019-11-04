@@ -22,6 +22,7 @@ import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
 import { AboutComponent } from './pages/settings/about/about.component';
 import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
+import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -36,6 +37,7 @@ const routes: Routes = [
       { path: 'demo-node-admin', component: DemoNodeAdminComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
+      { path: 'my-tasks', component: MyTaskListComponent },
       {
         path: 'settings',
         component: SettingsComponent,
