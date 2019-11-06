@@ -8,6 +8,8 @@
         (keyup)="onChange(index, $event)"
         (focus)="$event.target.select()"
         maxlength="1"
+        pattern="[0-9]*"
+        inputmode="numeric"
       />
     </mat-form-field>
   </div>
