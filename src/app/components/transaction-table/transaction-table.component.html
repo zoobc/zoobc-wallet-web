@@ -1,7 +1,7 @@
 <div class="transaction-table">
   <mat-card style="padding: 0">
     <ng-container *ngIf="transactionData">
-      <div class="no-content" *ngIf="transactionData.length <= 0">
+      <div class="no-content padding" *ngIf="transactionData.length <= 0">
         <i matPrefix class="fa fa-receipt"></i>
         <span class="message">{{ 'No Transaction Record' | translate }}</span>
       </div>
@@ -60,7 +60,7 @@
       </div>
     </ng-container>
 
-    <div class="no-content" *ngIf="isError">
+    <div class="no-content padding" *ngIf="isError">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}

@@ -88,21 +88,27 @@ export class AuthService {
 
   getAccountsWithBalance(): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
-      let accounts: SavedAccount[] =
-        JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+      let currAddress = this.getCurrAccount().address;
+      let accounts = this.getAllAccount();
 
       let error = false;
       for (let i = 0; i < accounts.length; i++) {
+        let account = accounts[i];
         await this.transactionServ
-          .getTransactions(1, 1, accounts[i].address)
+          .getTransactions(1, 1, account.address)
           .then((res: Transactions) => {
             if (res.transactions.length > 0)
-              accounts[i].lastTx = res.transactions[0].timestamp;
-            else accounts[i].lastTx = null;
+              account.lastTx = res.transactions[0].timestamp;
+            else account.lastTx = null;
             return this.accServ.getAccountBalance(accounts[i].address);
           })
           .then((res: AccountBalance) => {
-            accounts[i].balance = parseInt(res.accountbalance.spendablebalance);
+            account.balance = parseInt(res.accountbalance.spendablebalance);
+            accounts[i] = account;
+
+            // update current account to local storage
+            if (account.address == currAddress)
+              localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
           })
           .catch(err => {
             error = true;

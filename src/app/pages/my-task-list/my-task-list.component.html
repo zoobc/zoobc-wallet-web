@@ -1,6 +1,6 @@
 <div class="my-task-container">
   <h2 class="mat-h2">
-    {{ 'My Task' | translate }} <i>( {{ 'Coming Soon' | translate }} )</i>
+    {{ 'My Task' | translate }} <i>({{ 'Coming Soon' | translate }})</i>
   </h2>
   <mat-card style="padding: 0">
     <div
@@ -45,13 +45,19 @@
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        YuKTkCCWOPeGBknQSTGsNuyREB-iGhIz6ur4suM4FXMb
+        <wallet-address
+          value="YuKTkCCWOPeGBknQSTGsNuyREB-iGhIz6ur4suM4FXMb"
+          [copyButton]="true"
+        ></wallet-address>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Recepient' | translate }}:</div>
       <div class="col-12 col-md-8">
-        B9C35tu6hJCE7IrwqL5uxnh6OW77Pw99JIdrSpHMg2Ki
+        <wallet-address
+          value="B9C35tu6hJCE7IrwqL5uxnh6OW77Pw99JIdrSpHMg2Ki"
+          [copyButton]="true"
+        ></wallet-address>
       </div>
     </div>
     <div class="row">

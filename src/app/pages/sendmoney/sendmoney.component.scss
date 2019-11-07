@@ -2,6 +2,11 @@
 @import '../../../styles/mixins';
 
 .sendmoney-container {
+  .mat-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
   .zbc-form-item {
     .amount {
       .primary-amount {
@@ -21,14 +26,16 @@
     display: flex;
     flex-direction: row;
     margin-bottom: 10px;
+    color: $black2;
     &:before,
     &:after {
       content: '';
       flex: 1 1;
-      border-bottom: 2px solid #000;
+      border-bottom: 2px solid $black2;
       margin: 10px;
     }
   }
+
   .icon-dropdown {
     margin-left: 5px !important;
     margin-top: 2px !important;
@@ -37,7 +44,6 @@
   .choose-fee {
     border: 1px solid #ddd;
     border-radius: 6px;
-    overflow: hidden;
     margin: 4px 0 8px 0;
     button {
       border-radius: 0;
@@ -75,10 +81,7 @@
     display: flex;
     justify-content: stretch;
   }
-  .mat-card {
-    max-width: 400px;
-    margin: 0 auto;
-  }
+
   form {
     .row {
       margin: 0 -4px;
@@ -86,43 +89,9 @@
         padding: 0 4px;
       }
     }
-    .from-account {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 12px;
-      color: $black2;
-      margin-top: 4px;
-      margin-bottom: 16px;
-      @include transition(0.3s ease-in all);
-      &:hover {
-        cursor: pointer;
-        background-color: #eee;
-      }
-      .name {
-        font-weight: bold;
-        font-size: 14px;
-        margin-bottom: 8px;
-      }
-      .balance {
-        text-align: right;
-        font-size: 13px;
-        color: $black2;
-      }
-      i {
-        font-size: 2rem;
-        margin: 0.5rem 0;
-      }
-    }
     .address-alias {
       color: $black2;
     }
-  }
-}
-
-.form-pin {
-  i.fas {
-    font-size: 24px;
-    color: map-get($primary, 500);
   }
 }
 
@@ -189,54 +158,6 @@
       }
       .currency {
         font-size: 16px;
-      }
-    }
-  }
-}
-
-.account-list {
-  margin-bottom: 24px;
-  .account-card {
-    margin-bottom: 8px;
-    padding: 0 8px;
-    &:hover {
-      cursor: pointer;
-    }
-    .row {
-      border-radius: 6px;
-      padding: 12px 8px;
-      color: $black1;
-      font-size: 14px;
-      background-color: white;
-      &.active {
-        background: $primary-gradient;
-        color: white;
-        .balance,
-        .balance-in-currency,
-        .name {
-          color: white;
-        }
-      }
-      .name {
-        font-weight: bold;
-        color: $black2;
-        margin-bottom: 4px;
-      }
-      .address {
-        margin-bottom: 4px;
-      }
-      .last-tx {
-        margin-bottom: 12px;
-        font-size: 12px;
-      }
-      .balance {
-        color: $black2;
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 4px;
-      }
-      .balance-in-currency {
-        color: $black3;
       }
     }
   }
