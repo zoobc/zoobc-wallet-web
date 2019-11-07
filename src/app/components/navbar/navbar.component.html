@@ -61,6 +61,11 @@
             {{ 'Setting' | translate }}
           </button> -->
           <mat-divider></mat-divider>
+          <button mat-menu-item (click)="onComingSoonPage()">
+            <i class="fab fa-usb"></i>
+            {{ 'Connect Hardware Wallet' | translate }}
+          </button>
+          <mat-divider></mat-divider>
           <button mat-menu-item (click)="onOpenRevealPassphrase()">
             <i class="fa fa-eye"></i>
             {{ 'Reveal Passphrase' | translate }}

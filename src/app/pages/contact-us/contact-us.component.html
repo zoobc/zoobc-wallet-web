@@ -1,11 +1,7 @@
 <div class="feedback-container">
   <h2 class="mat-h2">{{ 'Feedback' | translate }}</h2>
   <mat-card>
-    <form
-      [formGroup]="contactForm"
-      #formDirective="ngForm"
-      (ngSubmit)="onSubmit(formDirective)"
-    >
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
       <!-- Email -->
       <mat-form-field appearance="outline" color="accent">
         <mat-label>Email</mat-label>
@@ -42,11 +38,11 @@
       <!--File Upload-->
       <div>
         <input
-          formControlName="file"
           #fileInput
           type="file"
           (change)="onFileChange($event)"
           style="display: none"
+          accept="image/*"
         />
         <button
           mat-flat-button
@@ -56,7 +52,22 @@
         >
           {{ 'Upload image' | translate }}
         </button>
-        <span class="mat-body-1">{{ filename }}</span>
+        <ng-container *ngIf="!fileField.hasError('invalidType')">
+          <span class="mat-body-1">{{ filename }}</span>
+          <img
+            style="padding: 8px 0"
+            [src]="imgURL"
+            height="200"
+            width="300"
+            *ngIf="imgURL"
+          />
+        </ng-container>
+        <mat-error
+          style="padding: 8px 0"
+          *ngIf="fileField.hasError('invalidType')"
+        >
+          {{ 'Type upload file should be image' | translate }}
+        </mat-error>
       </div>
       <!-- Copy -->
       <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0">
