@@ -100,6 +100,11 @@
         }
       }
     }
+    @media (max-width: 600px) {
+      .message {
+        text-align: center;
+      }
+    }
   }
 }
 

@@ -76,6 +76,15 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  onComingSoonPage() {
+    Swal.fire({
+      type: 'info',
+      title: 'COMING SOON',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+
   async onLogout() {
     let message: string;
     await this.translate
