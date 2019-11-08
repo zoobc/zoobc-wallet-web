@@ -29,7 +29,7 @@
         {{ 'Locked Balance is required' | translate }}
       </mat-error>
       <mat-error *ngIf="lockedAmountForm.hasError('min')">
-        {{ 'Minimum Locked Balance is' | translate: { val: 0.00000001 } }}
+        {{ 'Minimum Locked Balance is' | translate: { val: '0.00000001' } }}
       </mat-error>
     </ng-container>
     <label>{{ 'Fee' | translate }}</label>
@@ -46,7 +46,7 @@
         {{ 'Fee is required' | translate }}
       </mat-error>
       <mat-error *ngIf="feeForm.hasError('min')">
-        {{ 'Minimum fee is' | translate: { val: 0.00000001 } }}
+        {{ 'Minimum fee is' | translate: { val: '0.00000001' } }}
       </mat-error>
     </ng-container>
     <label>{{ 'Node Public Key' | translate }}</label>

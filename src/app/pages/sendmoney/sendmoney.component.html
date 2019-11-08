@@ -112,7 +112,7 @@
               {{ 'Amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountForm.hasError('min')">
-              {{ 'Minimum amount is' | translate: { val: 0.00000001 } }}
+              {{ 'Minimum amount is' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
           <mat-form-field
@@ -139,7 +139,7 @@
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
               {{
                 'Minimum amount in ZBC must be ZBC'
-                  | translate: { val: 0.00000001 }
+                  | translate: { val: '0.00000001' }
               }}
             </mat-error>
           </ng-container>
@@ -243,7 +243,7 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeForm.hasError('min')">
-                {{ 'Minimum fee is' | translate: { val: 0.00000001 } }}
+                {{ 'Minimum fee is' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
             <mat-form-field
@@ -268,7 +268,7 @@
               <mat-error *ngIf="feeFormCurr.hasError('min')">
                 {{
                   'Minimum amount of fee in ZBC must be ZBC'
-                    | translate: { val: 0.00000001 }
+                    | translate: { val: '0.00000001' }
                 }}
               </mat-error>
             </ng-container>
@@ -356,7 +356,7 @@
                 {{ 'Commission for approver is required' | translate }}
               </mat-error>
               <mat-error *ngIf="approverCommissionField.hasError('min')">
-                {{ 'Minimum commission is' | translate: { val: 0.00000001 } }}
+                {{ 'Minimum commission is' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
             <mat-form-field
@@ -387,7 +387,7 @@
               <mat-error *ngIf="approverCommissionCurrField.hasError('min')">
                 {{
                   'Minimum Commission for approver in ZBC must be ZBC'
-                    | translate: { val: 0.00000001 }
+                    | translate: { val: '0.00000001' }
                 }}
               </mat-error>
             </ng-container>
