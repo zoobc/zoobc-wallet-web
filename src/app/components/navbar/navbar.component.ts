@@ -77,10 +77,15 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  onComingSoonPage() {
+  async onComingSoonPage() {
+    let message: string;
+    await this.translate
+      .get('Coming Soon')
+      .toPromise()
+      .then(res => (message = res));
     Swal.fire({
       type: 'info',
-      title: 'COMING SOON',
+      title: message,
       showConfirmButton: false,
       timer: 1500,
     });
