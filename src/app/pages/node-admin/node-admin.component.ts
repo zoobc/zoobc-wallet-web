@@ -60,15 +60,6 @@ export class NodeAdminComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.nodeServ
-      .getUnconfirmTransaction(this.account.address)
-      .then(res => {
-        console.log(res);
-        this.pendingNodeTx = res;
-      })
-      .catch(err => {
-        console.log(err);
-      });
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
   }
@@ -84,7 +75,7 @@ export class NodeAdminComponent implements OnInit {
       .getUnconfirmTransaction(this.account.address)
       .then(res => {
         this.pendingNodeTx = res;
-        if (res) return this.nodeServ.getRegisteredNode(this.account);
+        if (!res) return this.nodeServ.getRegisteredNode(this.account);
         else this.isNodeLoading = false;
         return false;
       })

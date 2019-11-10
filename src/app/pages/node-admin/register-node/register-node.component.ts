@@ -83,7 +83,6 @@ export class RegisterNodeComponent implements OnInit {
                 poown: poown,
               };
               let byte = registerNodeBuilder(data, this.keyringServ);
-              console.log(byte);
 
               return this.transactionServ.postTransaction(byte);
             })

@@ -32,8 +32,9 @@ export class NodeRegistrationService {
   getRegisteredNode(account: SavedAccount) {
     return new Promise((resolve, reject) => {
       const nodeAddress = new NodeAddress();
-      nodeAddress.setAddress('18.139.3.139');
-      // nodeAddress.setPort(5001);
+      const ipAddress = account.address.split(':');
+      nodeAddress.setAddress(ipAddress[0]);
+      if (ipAddress[1]) nodeAddress.setPort(parseInt(ipAddress[1]));
 
       const request = new GetNodeRegistrationRequest();
       request.setAccountaddress(account.address);
@@ -43,7 +44,11 @@ export class NodeRegistrationService {
         host: environment.grpcUrl,
         request: request,
         onMessage: (message: GetNodeRegistrationResponse) => {
-          resolve(message.toObject());
+          console.log(message.toObject());
+          const address = message.toObject().noderegistration.nodeaddress
+            .address;
+          if (address != '') resolve(message.toObject());
+          else resolve({ noderegistration: null });
         },
         onEnd: (
           code: grpc.Code,
