@@ -30,51 +30,8 @@
   </div>
 
   <mat-card class="account-card">
-    <div class="summary row">
-      <div class="col-10">
-        <span class="account-dropdown" [matMenuTriggerFor]="account">
-          <span class="name">{{ currAcc.name }}</span>
-          <i class="fa fa-caret-down"></i>
-        </span>
-        <br />
-        <mat-menu #account="matMenu">
-          <div class="account-dropdown-list">
-            <div class="account-container">
-              <button mat-menu-item (click)="onOpenAddAccount()">
-                <i class="fas fa-plus"></i>
-                <span>{{ 'Add New Account' | translate }}</span>
-              </button>
-              <mat-divider></mat-divider>
-              <button
-                *ngFor="let acc of accounts"
-                (click)="onSwitchAccount(acc)"
-                mat-menu-item
-                class="account"
-              >
-                <div>
-                  <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
-                  <i class="fas fa-check" *ngIf="acc.path == currAcc.path"></i>
-                  <span>{{ acc.name }}</span>
-                </div>
-                <div class="balance">
-                  {{ acc.balance / 1e8 | number: '0.0-2' }} ZBC
-                </div>
-              </button>
-            </div>
-          </div>
-        </mat-menu>
-        <span class="address" (click)="copyText(currAcc.address)">
-          <wallet-address [value]="currAcc.address"></wallet-address>
-        </span>
-      </div>
-      <div class="col-2 text-right">
-        <button mat-icon-button class="reload-button" (click)="getBalance()">
-          <i class="fa fa-redo-alt"></i>
-        </button>
-      </div>
-    </div>
-
     <div class="error-message" *ngIf="isErrorBalance">
+      <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}
       </span>
@@ -84,6 +41,66 @@
     </div>
 
     <ng-container *ngIf="!isErrorBalance">
+      <div class="summary row">
+        <div class="col-10">
+          <span class="account-dropdown" [matMenuTriggerFor]="account">
+            <span class="name">{{ currAcc.name }}</span>
+            <i class="fa fa-caret-down"></i>
+          </span>
+          <br />
+          <mat-menu #account="matMenu">
+            <div class="account-dropdown-list">
+              <div class="account-container">
+                <button
+                  mat-menu-item
+                  (click)="onOpenAddAccount()"
+                  class="add-account"
+                >
+                  <i class="fas fa-plus"></i>
+                  <span>{{ 'Add New Account' | translate }}</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button
+                  *ngFor="let acc of accounts"
+                  (click)="onSwitchAccount(acc)"
+                  mat-menu-item
+                  class="account"
+                >
+                  <div class="account-left">
+                    <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
+                    <i
+                      class="fas fa-check"
+                      *ngIf="acc.path == currAcc.path"
+                    ></i>
+                  </div>
+                  <div class="account-mid">
+                    <div>{{ acc.name }}</div>
+                    <div class="balance">
+                      {{ acc.balance / 1e8 | number: '0.0-2' }} ZBC
+                    </div>
+                  </div>
+                  <div
+                    class="account-right"
+                    (click)="onOpenEditAccount($event, acc)"
+                    matTooltip="Edit"
+                  >
+                    <i class="fas fa-pen"></i>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </mat-menu>
+          <span class="address" (click)="copyText(currAcc.address)">
+            <wallet-address [value]="currAcc.address"></wallet-address>
+          </span>
+        </div>
+        <div class="col-2 text-right">
+          <button mat-icon-button class="reload-button" (click)="getBalance()">
+            <i class="fa fa-redo-alt"></i>
+          </button>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-12 col-sm-6 balance-section">
           <div class="icon">

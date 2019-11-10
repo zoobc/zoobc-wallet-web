@@ -45,19 +45,12 @@ export class AddNodeAdminComponent implements OnInit {
           this.isLoading = false;
           this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
 
-          let nodeAdded: string;
-          this.translate
+          let message: string;
+          await this.translate
             .get('Node Admin Added!')
-            .subscribe(res => (nodeAdded = res));
-          let nodeAddedMessage: string;
-          this.translate
-            .get('Your Node Already Added with IP Address')
-            .subscribe(res => (nodeAddedMessage = res));
-          Swal.fire(
-            nodeAdded,
-            `${nodeAddedMessage} : ${this.ipAddressField.value}`,
-            'success'
-          ).then(() => {
+            .toPromise()
+            .then(res => (message = res));
+          Swal.fire('', message, 'success').then(() => {
             this.dialogRef.close();
             // delaying the redirect so the timestamp of poown not in the past
             setTimeout(() => {
@@ -65,7 +58,7 @@ export class AddNodeAdminComponent implements OnInit {
             }, 400);
           });
         })
-        .catch(err => {
+        .catch(async err => {
           console.log(err);
           Swal.fire('Error', err, 'error');
           this.isLoading = false;

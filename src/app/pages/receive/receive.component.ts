@@ -10,7 +10,7 @@ export class ReceiveComponent implements OnInit {
   address: string = '';
 
   constructor(private authServ: AuthService) {
-    this.address = this.authServ.currAddress;
+    this.address = this.authServ.getCurrAccount().address;
   }
 
   ngOnInit() {}

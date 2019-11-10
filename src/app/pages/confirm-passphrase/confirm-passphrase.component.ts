@@ -1,18 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormBuilder,
-  FormArray,
-} from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 
 const coin = 'ZBC';
 @Component({
@@ -51,7 +45,7 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   prefillHalfPassphrase() {
-    // removing half of the passphrase
+    // removing some words of the passphrase
     this.prefillPassphrase = this.passphrase;
     // let totalWordRemoved = 1;
     let totalWordRemoved = Math.round(this.mnemonicNumWords / 6);
@@ -90,9 +84,7 @@ export class ConfirmPassphraseComponent implements OnInit {
 
       if (passphraseField != this.words)
         this.confirmForm.setErrors({ mnemonic: true });
-    } else {
-      this.confirmForm.setErrors({ required: true });
-    }
+    } else this.confirmForm.setErrors({ required: true });
   }
 
   openCreatePin() {
@@ -110,7 +102,7 @@ export class ConfirmPassphraseComponent implements OnInit {
 
   saveNewAccount(key: string) {
     const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
-    const accountAddress = GetAddressFromPublicKey(childSeed.publicKey);
+    const accountAddress = getAddressFromPublicKey(childSeed.publicKey);
     this.authServ.saveMasterSeed(this.masterSeed, key);
     this.authServ.savePassphraseSeed(this.words, key);
     const account: SavedAccount = {
@@ -120,6 +112,6 @@ export class ConfirmPassphraseComponent implements OnInit {
       address: accountAddress,
     };
     this.authServ.addAccount(account);
-    this.authServ.login(account, key);
+    this.authServ.login(key);
   }
 }

@@ -48,7 +48,7 @@ export class TransferhistoryComponent implements OnInit {
       this.isError = false;
 
       this.transactionServ
-        .getAccountTransaction(this.page, perPage, this.address)
+        .getTransactions(this.page, perPage, this.address)
         .then((res: Transactions) => {
           this.total = res.total;
 

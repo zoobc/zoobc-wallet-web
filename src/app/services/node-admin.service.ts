@@ -30,9 +30,7 @@ export class NodeAdminService {
   streamNodeHardwareInfo() {
     return new Observable(observer => {
       const account = this.authServ.getCurrAccount();
-
-      let auth = poownBuilder(RequestType.GETNODEHARDWARE, this.keyringServ);
-
+      const auth = poownBuilder(RequestType.GETNODEHARDWARE, this.keyringServ);
       const request = new GetNodeHardwareRequest();
 
       this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
@@ -61,11 +59,11 @@ export class NodeAdminService {
     nodeIP = `http://${nodeIP}`;
 
     return new Promise((resolve, reject) => {
-      let auth = poownBuilder(RequestType.GENERATETNODEKEY, this.keyringServ);
-
+      const auth = poownBuilder(RequestType.GENERATETNODEKEY, this.keyringServ);
       const request = new GenerateNodeKeyRequest();
-
-      let client = grpc.client(NodeAdminServ.GenerateNodeKey, { host: nodeIP });
+      const client = grpc.client(NodeAdminServ.GenerateNodeKey, {
+        host: nodeIP,
+      });
 
       client.onMessage((message: GenerateNodeKeyResponse) => {
         resolve(message.toObject());

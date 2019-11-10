@@ -11,12 +11,12 @@ export class AppService implements CanActivate {
 
   constructor(private router: Router, private authServ: AuthService) {}
 
-  isLoggedIn() {
-    return this.authServ.currPublicKey ? true : false;
+  isLoggedIn(): boolean {
+    return this.authServ.isLoggedIn() ? true : false;
   }
 
   canActivate(): boolean {
-    if (this.authServ.currPublicKey) return true;
+    if (this.authServ.isLoggedIn()) return true;
 
     // this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
     this.router.navigateByUrl(`/login`);
@@ -31,19 +31,3 @@ export class AppService implements CanActivate {
     if (!this.sidenav.disableClose) this.sidenav.toggle();
   }
 }
-
-// Language
-export const LANGUAGES = [
-  {
-    country: 'English',
-    code: 'en',
-  },
-  {
-    country: 'Indonesia',
-    code: 'id',
-  },
-  {
-    country: 'Arabic',
-    code: 'ar',
-  },
-];

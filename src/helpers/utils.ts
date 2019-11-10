@@ -5,9 +5,9 @@ import {
 } from '../helpers/converters';
 import * as CryptoJS from 'crypto-js';
 
-// GetAddressFromPublicKey Get the formatted address from a raw public key
-export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
-  const checksum = GetChecksumByte(publicKey);
+// getAddressFromPublicKey Get the formatted address from a raw public key
+export function getAddressFromPublicKey(publicKey: Uint8Array): string {
+  const checksum = getChecksumByte(publicKey);
   let binary = '';
   const bytes = new Uint8Array(33);
   bytes.set(publicKey, 0);
@@ -22,7 +22,7 @@ export function GetAddressFromPublicKey(publicKey: Uint8Array): string {
   return address;
 }
 
-export function GetChecksumByte(bytes): any {
+export function getChecksumByte(bytes): any {
   let n = bytes.length;
   let a = 0;
   for (let i = 0; i < n; i++) {

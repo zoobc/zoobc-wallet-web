@@ -14,6 +14,9 @@
       <mat-error *ngIf="feeForm.hasError('required')">
         {{ 'Fee is required' | translate }}
       </mat-error>
+      <mat-error *ngIf="feeForm.hasError('min')">
+        {{ 'Minimum fee is 0.00000001' | translate }}
+      </mat-error>
     </ng-container>
     <label>{{ 'Node Public Key' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
@@ -30,7 +33,7 @@
         {{ 'Node Public Key is required' | translate }}
       </mat-error>
       <mat-error *ngIf="nodePublicKeyForm.hasError('invalidAddress')">
-        {{ 'ZBC Address is invalid' | translate }}
+        {{ 'Node Public Key is invalid' | translate }}
       </mat-error>
     </ng-container>
     <br />

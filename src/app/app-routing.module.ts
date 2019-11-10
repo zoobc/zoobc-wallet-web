@@ -21,6 +21,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { GeneralComponent } from './pages/settings/general/general.component';
 import { NetworkComponent } from './pages/settings/network/network.component';
 import { AboutComponent } from './pages/settings/about/about.component';
+import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'transferhistory', component: TransferhistoryComponent },
       { path: 'nodeadmin', component: NodeAdminComponent },
+      { path: 'demo-node-admin', component: DemoNodeAdminComponent },
       { path: 'sendmoney', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
       {
@@ -55,7 +57,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'open-wallet', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
-      { path: 'feedback', component: ContactUsComponent },
+      // { path: 'feedback', component: ContactUsComponent },
       { path: 'faq', component: FaqComponent },
       { path: 'terms-of-use', component: TermsOfUseComponent },
       { path: 'privacy-policy', component: PrivacyPolicyComponent },

@@ -11,10 +11,7 @@
       </button>
       <a routerLink="/" class="brand-text">
         <img src="/assets/img/zbc-white.png" alt="" />
-        <h3>
-          <b>ZooBC</b>
-          Wallet
-        </h3>
+        <h3><b>ZooBC</b> Wallet</h3>
       </a>
     </div>
     <div class="menu">
@@ -57,7 +54,7 @@
           </ng-container>
           <button mat-menu-item routerLink="/settings/about">
             <i class="fas fa-info"></i>
-            {{ 'About' | translate }}
+            {{ 'Info & Help' | translate }}
           </button>
           <!-- <button mat-menu-item routerLink="/settings">
             <i class="fa fa-cog"></i>
@@ -65,7 +62,7 @@
           </button> -->
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="onOpenRevealPassphrase()">
-            <i class="fa fa-exclamation-triangle"></i>
+            <i class="fa fa-eye"></i>
             {{ 'Reveal Passphrase' | translate }}
           </button>
           <mat-divider></mat-divider>
@@ -78,77 +75,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #revealPhrase>
-  <div class="container">
-    <h3 class="mat-h3" id="modal-basic-title" *ngIf="pinValid === false">
-      <b>{{ 'Confirm Your Pin' | translate }}</b>
-    </h3>
-    <h3 class="mat-h3" id="modal-basic-title" *ngIf="pinValid === true">
-      <b>{{ 'Here your Passphrase' | translate }}</b>
-    </h3>
-    <form
-      [formGroup]="formConfirmPin"
-      class="form-pin"
-      *ngIf="pinValid === false"
-    >
-      <field-pins formControlName="pin"></field-pins>
-      <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-        <span class="text-center">{{ 'Pin is not match' | translate }}</span>
-      </mat-error>
-    </form>
-
-    <div *ngIf="pinValid == true">
-      <p
-        class="phrase-text"
-        (click)="copyPhrase()"
-        matTooltip="Copy to clipboard"
-      >
-        {{ phrase }}
-      </p>
-    </div>
-
-    <div class="text-left">
-      <div
-        class="warning-box mat-body-2"
-        [innerHTML]="
-          'Remember: DO NOT share this phrase with anyone! These words can be used to steal all your accounts.'
-            | translate
-        "
-      ></div>
-    </div>
-    <div class="text-right" style="margin-top: 8px" *ngIf="pinValid === false">
-      <button
-        mat-flat-button
-        color="warn"
-        style="margin-right: 8px"
-        (click)="closeDialog()"
-      >
-        Cancel
-      </button>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="onSubmitPin()"
-        [disabled]="formConfirmPin.invalid"
-      >
-        <i
-          matPrefix
-          class="fas fa-circle-notch fa-spin"
-          *ngIf="isConfirmPinLoading"
-        ></i>
-        <span *ngIf="!isConfirmPinLoading">Confirm</span>
-      </button>
-    </div>
-    <div *ngIf="pinValid === true">
-      <button
-        class="result"
-        mat-flat-button
-        color="primary"
-        (click)="closeDialog()"
-      >
-        Done
-      </button>
-    </div>
-  </div>
-</ng-template>

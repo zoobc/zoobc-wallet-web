@@ -10,7 +10,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import Swal from 'sweetalert2';
 import {
   ClaimNodeInterface,
-  clamNodeBuilder,
+  claimNodeBuilder,
 } from 'src/helpers/transaction-builder/claim-node';
 
 @Component({
@@ -91,7 +91,7 @@ export class ClaimNodeComponent implements OnInit {
             poown: this.poown,
           };
 
-          let bytes = clamNodeBuilder(data, this.keyringServ);
+          let bytes = claimNodeBuilder(data, this.keyringServ);
 
           this.transactionServ.postTransaction(bytes).then(
             (res: any) => {

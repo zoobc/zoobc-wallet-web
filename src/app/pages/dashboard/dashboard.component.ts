@@ -19,6 +19,9 @@ import {
 import { AddAccountComponent } from '../add-account/add-account.component';
 import { onCopyText } from 'src/helpers/utils';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import Swal from 'sweetalert2';
+import { EditAccountComponent } from '../edit-account/edit-account.component';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -36,7 +39,7 @@ export class DashboardComponent implements OnInit {
   isErrorBalance: boolean = false;
   isErrorRecentTx: boolean = false;
 
-  totalTx: number = 0;
+  totalTx: number;
   recentTx: Transaction[];
   unconfirmTx: Transaction[];
 
@@ -58,10 +61,10 @@ export class DashboardComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
-    this.accounts = this.authServ.getAllAccount(true);
   }
 
   ngOnInit() {
@@ -81,12 +84,11 @@ export class DashboardComponent implements OnInit {
         .getAccountBalance(this.currAcc.address)
         .then((data: AccountBalanceList) => {
           this.accountBalance = data.accountbalance;
-          this.isLoadingBalance = false;
+          return this.authServ.getAccountsWithBalance();
         })
-        .catch(() => {
-          this.isErrorBalance = true;
-          this.isLoadingBalance = false;
-        });
+        .then((res: SavedAccount[]) => (this.accounts = res))
+        .catch(() => (this.isErrorBalance = true))
+        .finally(() => (this.isLoadingBalance = false));
     }
   }
 
@@ -94,16 +96,15 @@ export class DashboardComponent implements OnInit {
     if (!this.isLoadingRecentTx) {
       this.recentTx = null;
       this.unconfirmTx = null;
-      this.totalTx = 0;
 
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
 
       this.transactionServ
-        .getAccountTransaction(1, 5, this.currAcc.address)
+        .getTransactions(1, 5, this.currAcc.address)
         .then((res: Transactions) => {
-          this.totalTx = res.total;
           this.recentTx = res.transactions;
+          this.totalTx = res.total;
           return this.transactionServ.getUnconfirmTransaction(
             this.currAcc.address
           );
@@ -144,12 +145,32 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
-  copyText(text) {
+  async copyText(text) {
     onCopyText(text);
-    this.snackBar.open('Address Copied', null, { duration: 5000 });
+
+    let message: string;
+    await this.translate
+      .get('Address copied to clipboard')
+      .toPromise()
+      .then(res => (message = res));
+    this.snackBar.open(message, null, { duration: 5000 });
   }
 
   onOpenAddAccount() {
     this.dialog.open(AddAccountComponent, { width: '360px' });
+  }
+
+  onOpenEditAccount(e, account: SavedAccount) {
+    e.stopPropagation();
+    const dialog = this.dialog.open(EditAccountComponent, {
+      width: '360px',
+      data: account,
+    });
+    dialog.afterClosed().subscribe((edited: boolean) => {
+      if (edited) {
+        this.accounts = this.authServ.getAllAccount();
+        this.currAcc = this.authServ.getCurrAccount();
+      }
+    });
   }
 }

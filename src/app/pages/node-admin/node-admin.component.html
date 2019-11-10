@@ -40,14 +40,14 @@
     <ng-container *ngIf="registeredNode">
       <div class="row">
         <div class="col-12 col-sm-6">
-          <div class="label">Account Address</div>
+          <div class="label">{{ 'Account Address' | translate }}</div>
           <div class="value">
             <wallet-address
               [value]="registeredNode.accountaddress"
               [copyButton]="true"
             ></wallet-address>
           </div>
-          <div class="label">Node Public Key</div>
+          <div class="label">{{ 'Node Public Key' | translate }}</div>
           <div class="value">
             <wallet-address
               [value]="registeredNode.nodepublickey"
@@ -56,13 +56,13 @@
           </div>
         </div>
         <div class="col-12 col-sm-6">
-          <div class="label">Locked Funds</div>
+          <div class="label">{{ 'Locked Balance' | translate }}</div>
           <div class="value big">
             {{ registeredNode.lockedbalance / 1e8 | number: '0.0-8' }} ZBC
           </div>
-          <div class="label">Height</div>
+          <div class="label">{{ 'Height' | translate }}</div>
           <div class="value big">{{ registeredNode.height }}</div>
-          <div class="label">Registration Height</div>
+          <div class="label">{{ 'Registration Height' | translate }}</div>
           <div class="value big">{{ registeredNode.registrationheight }}</div>
         </div>
       </div>
@@ -125,10 +125,10 @@
           style="margin-right: 8px"
           (click)="openRegisterNode()"
         >
-          Register Your Node
+          {{ 'Register Your Node' | translate }}
         </button>
         <button mat-flat-button color="accent" (click)="openClaimNode()">
-          Claim Your Node
+          {{ 'Claim Your Node' | translate }}
         </button>
       </div>
     </div>
@@ -187,9 +187,9 @@
 
       <div class="row node-spec">
         <div class="col-12 col-sm-6">
-          <p class="label">CPU index number:</p>
+          <p class="label">{{ 'CPU index number' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList[0].cpuindex }}</p>
-          <p class="label">VendorID:</p>
+          <p class="label">{{ 'Vendor ID' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList[0].vendorid }}</p>
           <p class="label">{{ 'Number of cores' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList.length }}</p>
@@ -199,7 +199,7 @@
           <p class="value">{{ hwInfo.cpuinformationList[0].mhz }} MHz</p>
         </div>
         <div class="col-12 col-sm-6">
-          <p class="label">Hostname:</p>
+          <p class="label">{{ 'Hostname' | translate }}:</p>
           <p class="value">{{ hwInfo.hostinformation.hostname }}</p>
           <p class="label">{{ 'Number of processes running' | translate }}:</p>
           <p class="value">

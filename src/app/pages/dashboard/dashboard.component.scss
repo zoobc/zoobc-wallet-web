@@ -92,6 +92,10 @@
       flex-direction: column;
       align-items: center;
       color: white;
+      i {
+        font-size: 3rem;
+        margin: 1rem 0;
+      }
       .message {
         margin: 8px 0;
         font-size: 16px;
@@ -122,21 +126,40 @@
 }
 
 .account-dropdown-list {
+  .add-account i {
+    margin-right: 8px;
+  }
   .account {
     line-height: 20px;
     height: 60px;
     padding: 12px 16px;
-    .balance {
-      margin-left: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      color: $black2;
+    display: flex;
+    .account-mid {
+      flex-grow: 1;
+      .balance {
+        font-size: 12px;
+        font-weight: bold;
+        color: $black2;
+      }
+    }
+    .account-left {
+      margin-right: 8px;
+    }
+    .account-right {
+      margin-left: 8px;
+      padding: 4px 0;
+      @include transition(0.3s ease-in all);
+      &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+      }
     }
   }
+
   button i {
-    margin-right: 8px;
     color: $black2;
   }
+
   .account-container {
     overflow-x: hidden;
     max-height: 400px;

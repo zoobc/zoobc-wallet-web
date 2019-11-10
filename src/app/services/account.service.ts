@@ -30,13 +30,12 @@ export class AccountService {
           trailers: grpc.Metadata
         ) => {
           if (code == grpc.Code.NotFound) {
-            const firstValue = {
+            return resolve({
               accountbalance: {
                 spendablebalance: 0,
                 balance: 0,
               },
-            };
-            return resolve(firstValue);
+            });
           } else if (code != grpc.Code.OK) reject(msg);
         },
       });

@@ -11,8 +11,9 @@ import {
   TransactionService,
   Transactions,
 } from 'src/app/services/transaction.service';
-import { GetAddressFromPublicKey } from 'src/helpers/utils';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 const coin = 'ZBC';
 
@@ -22,7 +23,6 @@ const coin = 'ZBC';
   styleUrls: ['./restore-wallet.component.scss'],
 })
 export class RestoreWalletComponent implements OnInit {
-  @ViewChild('pinDialog') pinDialog: TemplateRef<any>;
   listAccount = [];
   listAccountTemp = [];
   totalTx: number = 0;
@@ -31,7 +31,6 @@ export class RestoreWalletComponent implements OnInit {
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
   errorOpenWallet: boolean = false;
-  private key: string;
 
   constructor(
     private dialog: MatDialog,
@@ -39,7 +38,8 @@ export class RestoreWalletComponent implements OnInit {
     private authServ: AuthService,
     private keyringServ: KeyringService,
     private mnemonicServ: MnemonicsService,
-    private transactionServ: TransactionService
+    private transactionServ: TransactionService,
+    private translate: TranslateService
   ) {
     this.restoreForm = new FormGroup({
       passphrase: this.passphraseField,
@@ -53,17 +53,21 @@ export class RestoreWalletComponent implements OnInit {
       this.passphraseField.value
     );
     const mnemonicNumLength = this.passphraseField.value.split(' ').length;
-    if (mnemonicNumLength != this.mnemonicWordLengtEnv) {
+    if (mnemonicNumLength != this.mnemonicWordLengtEnv)
       this.passphraseField.setErrors({ lengthMnemonic: true });
-    }
     if (!valid) this.passphraseField.setErrors({ mnemonic: true });
   }
 
-  onRestore() {
+  async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
+        let message: string;
+        await this.translate
+          .get('Your old wallet will be removed from this device')
+          .toPromise()
+          .then(res => (message = res));
         Swal.fire({
-          title: 'Your old wallet will be removed from this device',
+          title: message,
           confirmButtonText: 'Continue',
           showCancelButton: true,
           showLoaderOnConfirm: true,
@@ -72,9 +76,7 @@ export class RestoreWalletComponent implements OnInit {
             return true;
           },
         });
-      } else {
-        this.openPinDialog();
-      }
+      } else this.openPinDialog();
     }
   }
 
@@ -87,12 +89,10 @@ export class RestoreWalletComponent implements OnInit {
       Swal.fire({
         allowOutsideClick: false,
         background: '#00000000',
-        onBeforeOpen: () => {
-          Swal.showLoading();
-          this.saveNewAccount(key);
-        },
+        html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
+        showConfirmButton: false,
+        onBeforeOpen: () => this.saveNewAccount(key),
       });
-      this.key = key;
     });
   }
 
@@ -121,7 +121,7 @@ export class RestoreWalletComponent implements OnInit {
       );
 
       publicKey = childSeed.publicKey;
-      address = GetAddressFromPublicKey(publicKey);
+      address = getAddressFromPublicKey(publicKey);
 
       const listAccounts = {
         name: accountName + accountNo,
@@ -130,8 +130,8 @@ export class RestoreWalletComponent implements OnInit {
         address: address,
       };
 
-      let checkHasTransaction = await this.transactionServ
-        .getAccountTransaction(1, 1, address)
+      await this.transactionServ
+        .getTransactions(1, 1, address)
         .then((res: Transactions) => {
           this.totalTx = res.total;
           this.listAccountTemp.push(listAccounts);
@@ -142,24 +142,36 @@ export class RestoreWalletComponent implements OnInit {
             counter = 0;
           }
         })
-        .catch(() => {
+        .catch(async () => {
           counter = 20;
           this.errorOpenWallet = true;
+
+          let message: string;
+          await this.translate
+            .get('An error occurred while processing your request')
+            .toPromise()
+            .then(res => (message = res));
+
+          let messageTryAgain: string;
+          await this.translate
+            .get('Try again')
+            .toPromise()
+            .then(res => (messageTryAgain = res));
+
           Swal.fire({
             title: 'Oops...',
-            text: 'Something went wrong!',
+            text: message,
             type: 'error',
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Try Again',
+            confirmButtonText: messageTryAgain,
           }).then(result => {
             if (result.value == true) {
               Swal.fire({
                 allowOutsideClick: false,
                 background: '#00000000',
-                onBeforeOpen: () => {
-                  Swal.showLoading();
-                  this.saveNewAccount(this.key);
-                },
+                html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
+                showConfirmButton: false,
+                onBeforeOpen: () => this.saveNewAccount(key),
               });
             }
           });
@@ -175,7 +187,7 @@ export class RestoreWalletComponent implements OnInit {
       const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
 
       publicKey = childSeed.publicKey;
-      address = GetAddressFromPublicKey(publicKey);
+      address = getAddressFromPublicKey(publicKey);
       const account: SavedAccount = {
         name: 'Account 1',
         path: 0,

@@ -15,6 +15,7 @@ export class ParentComponent implements OnInit {
   @ViewChild('sidenav') public sidenav: MatSidenav;
   @ViewChild('mainContainer') private mainContainer: MatDrawerContent;
   largeScreen = window.innerWidth >= 576 ? true : false;
+  height = window.innerHeight - 64;
   routerEvent: any;
   menu: string = '';
 
@@ -41,11 +42,13 @@ export class ParentComponent implements OnInit {
 
   @HostListener('window:resize', ['$event']) onResize(event) {
     this.largeScreen = event.target.innerWidth >= 576 ? true : false;
+    this.height = window.innerHeight - 64;
   }
 
   ngOnInit() {
     this.appServ.setSidenav(this.sidenav);
-    // const seed = this.authServ.currSeed;
+    // const seed =
+    //   'c0a6e8e22681e240fb6af88a03ed9b9cfab7d35145f59ce1e578d214e863820e44b0c12e3688129f7235ea6972b1ef6f381756517c6703802e74479a1ea5e7f6';
     // this.keyringServ.calcBip32RootKeyFromSeed('ZBC', Buffer.from(seed, 'hex'));
   }
 

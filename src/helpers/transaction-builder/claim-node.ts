@@ -16,7 +16,7 @@ export interface ClaimNodeInterface {
   poown: Buffer;
 }
 
-export function clamNodeBuilder(
+export function claimNodeBuilder(
   data: ClaimNodeInterface,
   keyringServ: KeyringService
 ) {
