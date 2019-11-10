@@ -49,35 +49,25 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { PinsComponent } from './components/pins/pins.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AddAccountComponent } from './pages/add-account/add-account.component';
+import { AddAccountComponent } from './pages/account/add-account/add-account.component';
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
 import { TransactionTableComponent } from './components/transaction-table/transaction-table.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
-import { NodeAdminComponent } from './pages/node-admin/node-admin.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
-import { AddNodeAdminComponent } from './pages/add-node-admin/add-node-admin.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { FaqComponent } from './pages/faq/faq.component';
-import { TermsOfUseComponent } from './pages/terms-of-use/terms-of-use.component';
-import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
-import { RegisterNodeComponent } from './pages/node-admin/register-node/register-node.component';
-import { UpdateNodeComponent } from './pages/node-admin/update-node/update-node.component';
-import { SettingsComponent } from './pages/settings/settings.component';
-import { AboutComponent } from './pages/settings/about/about.component';
-import { GeneralComponent } from './pages/settings/general/general.component';
-import { NetworkComponent } from './pages/settings/network/network.component';
-import { AddressComponent } from './components/address/address.component';
-import { DateAgoPipe } from './pipes/date-ago.pipe';
 import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
-import { ClaimNodeComponent } from './pages/node-admin/claim-node/claim-node.component';
-import { RemoveNodeComponent } from './pages/node-admin/remove-node/remove-node.component';
 import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
-import { EditAccountComponent } from './pages/edit-account/edit-account.component';
-import { DemoNodeAdminComponent } from './pages/demo-node-admin/demo-node-admin.component';
+import { EditAccountComponent } from './pages/account/edit-account/edit-account.component';
+import { AddressModule } from './components/address/address.module';
+import { DateAgoModule } from './pipes/date-ago.module';
+import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { AccountSelectorModule } from './components/account-selector/account-selector.module';
+import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -111,29 +101,15 @@ export function getLanguage(languageServ: LanguageService) {
     EditcontactComponent,
     TransactionTableComponent,
     RestoreWalletComponent,
-    NodeAdminComponent,
     PinSetupDialogComponent,
     ContactUsComponent,
-    AddNodeAdminComponent,
     ConfirmPassphraseComponent,
-    FaqComponent,
-    TermsOfUseComponent,
-    PrivacyPolicyComponent,
-    RegisterNodeComponent,
-    UpdateNodeComponent,
-    SettingsComponent,
-    AboutComponent,
-    GeneralComponent,
-    NetworkComponent,
-    AddressComponent,
-    DateAgoPipe,
     TransactionDetailComponent,
     PinConfirmationComponent,
-    ClaimNodeComponent,
-    RemoveNodeComponent,
     RevealPassphraseComponent,
     EditAccountComponent,
-    DemoNodeAdminComponent,
+    AddNodeAdminComponent,
+    MyTaskListComponent,
   ],
   imports: [
     BrowserModule,
@@ -144,6 +120,8 @@ export function getLanguage(languageServ: LanguageService) {
     ReactiveFormsModule,
     FormsModule,
     InfiniteScrollModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -151,6 +129,10 @@ export function getLanguage(languageServ: LanguageService) {
         deps: [HttpClient],
       },
     }),
+
+    AddressModule,
+    DateAgoModule,
+    AccountSelectorModule,
 
     MatButtonModule,
     MatCheckboxModule,
@@ -192,16 +174,13 @@ export function getLanguage(languageServ: LanguageService) {
     AddcontactComponent,
     EditcontactComponent,
     PinSetupDialogComponent,
-    AddNodeAdminComponent,
     SendmoneyComponent,
     TransactionDetailComponent,
     PinConfirmationComponent,
-    ClaimNodeComponent,
     ReceiveComponent,
-    RegisterNodeComponent,
-    UpdateNodeComponent,
     RevealPassphraseComponent,
     EditAccountComponent,
+    AddNodeAdminComponent,
   ],
 })
 export class AppModule {}

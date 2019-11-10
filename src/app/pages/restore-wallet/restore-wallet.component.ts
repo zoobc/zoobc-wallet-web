@@ -197,6 +197,7 @@ export class RestoreWalletComponent implements OnInit {
       const openWalletInValid = this.errorOpenWallet == false;
       if (openWalletInValid) {
         this.authServ.addAccount(account);
+        this.authServ.login(key);
         Swal.close(); // for closing sweetalert loader
         this.router.navigateByUrl('/dashboard');
       }
@@ -205,6 +206,7 @@ export class RestoreWalletComponent implements OnInit {
     if (openWalletInValid) {
       this.authServ.savePassphraseSeed(passphrase, key);
       this.authServ.saveMasterSeed(masterSeed, key);
+      this.authServ.login(key);
       Swal.close(); // for closing sweetalert loader
       this.router.navigateByUrl('/dashboard');
     }

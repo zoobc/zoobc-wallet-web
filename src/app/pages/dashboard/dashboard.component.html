@@ -30,7 +30,7 @@
   </div>
 
   <mat-card class="account-card">
-    <div class="error-message" *ngIf="isErrorBalance">
+    <div class="no-content" *ngIf="isErrorBalance">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}
@@ -194,7 +194,7 @@
     <div class="col-10">
       <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
     </div>
-    <div class="col-2 text-right">
+    <div class="col-2 text-right" *ngIf="!isErrorRecentTx && !isLoadingRecentTx">
       <button mat-icon-button class="reload-button" (click)="getTransactions()">
         <i class="fa fa-redo-alt"></i>
       </button>

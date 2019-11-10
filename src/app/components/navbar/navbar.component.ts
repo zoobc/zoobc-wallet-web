@@ -4,7 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { LanguageService, LANGUAGES } from 'src/app/services/language.service';
 import { AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
-import { AddNodeAdminComponent } from 'src/app/pages/add-node-admin/add-node-admin.component';
+import { AddNodeAdminComponent } from 'src/app/pages/node-admin/add-node-admin/add-node-admin.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -74,6 +74,15 @@ export class NavbarComponent implements OnInit {
   onOpenRevealPassphrase() {
     this.dialog.open(RevealPassphraseComponent, {
       width: '420px',
+    });
+  }
+
+  onComingSoonPage() {
+    Swal.fire({
+      type: 'info',
+      title: 'COMING SOON',
+      showConfirmButton: false,
+      timer: 1500,
     });
   }
 

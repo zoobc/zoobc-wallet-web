@@ -1,0 +1,45 @@
+@import '../../../../styles/variables';
+
+.card-title {
+  font-weight: bold;
+}
+.title {
+  font-size: 17px;
+  font-weight: bold;
+  color: $black1;
+}
+.sub-title {
+  font-weight: 700;
+  color: $black2;
+}
+.table {
+  padding: 10px !important;
+  color: $black1;
+}
+.mat-card {
+  box-shadow: none !important;
+  border: 1px solid #ddd;
+  // padding: 0;
+  // background: transparent;
+}
+.content {
+  word-break: break-all;
+}
+.mat-table {
+  overflow: auto !important;
+  max-height: 500px !important;
+}
+
+@media (max-width: 600px) {
+  .table {
+    width: 100px;
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  .mat-row {
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
+  }
+}

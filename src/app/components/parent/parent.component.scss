@@ -2,7 +2,7 @@
 
 .parent-container {
   margin: calc(#{$header-height} - #{$header-height-offset}) auto 0 auto;
-  // height: calc(100vh - #{$header-height});
+  height: calc(100vh - #{$header-height});
   max-width: $parent-width;
   background-color: white;
   box-shadow: 0 0 40px rgba(52, 61, 72, 0.2);
@@ -22,6 +22,7 @@
 .main-container {
   padding: 24px;
   background-color: #f9fafb;
+  min-height: 100%;
   @media #{$small-and-down} {
     padding: 24px 16px;
   }

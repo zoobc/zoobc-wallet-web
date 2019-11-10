@@ -34,7 +34,6 @@ export class SendmoneyComponent implements OnInit {
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
-  @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
 
   currencyRate: Currency = {
     name: '',
@@ -60,8 +59,12 @@ export class SendmoneyComponent implements OnInit {
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
+  addressApproverField = new FormControl('', Validators.required);
+  approverCommissionField = new FormControl('', Validators.required);
+  approverCommissionCurrField = new FormControl('', Validators.required);
+  instructionField = new FormControl('', Validators.required);
+  timeoutField = new FormControl('', Validators.required);
 
-  accountRefDialog: MatDialogRef<any>;
   sendMoneyRefDialog: MatDialogRef<any>;
 
   isLoading = false;
@@ -72,10 +75,14 @@ export class SendmoneyComponent implements OnInit {
 
   typeCoin = 'ZBC';
   typeFee = 'ZBC';
+  typeCommission = 'ZBC';
 
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
   customFee: boolean = false;
+  advancedMenu: boolean = false;
+  minDate = new Date();
+  maxDate = new Date();
 
   constructor(
     private transactionServ: TransactionService,
@@ -94,9 +101,18 @@ export class SendmoneyComponent implements OnInit {
       alias: this.aliasField,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
+      addressApprover: this.addressApproverField,
+      approverCommission: this.approverCommissionField,
+      approverCommissionCurr: this.approverCommissionCurrField,
+      instruction: this.instructionField,
+      timeout: this.timeoutField,
     });
     // disable alias field (saveAddress = false)
     this.aliasField.disable();
+    // disable some field where (advancedMenu = false)
+    this.disableFieldAdvancedMenu();
+    // max date 10 days
+    this.maxDate.setDate(this.maxDate.getDate() + 10);
   }
 
   ngOnInit() {
@@ -125,36 +141,18 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getAccounts() {
-    this.isLoading = true;
-    this.isError = false;
-    this.authServ
-      .getAccountsWithBalance()
-      .then((res: SavedAccount[]) => {
-        this.accounts = res;
-        this.account = this.accounts.find(acc => this.account.path == acc.path);
-
-        res.forEach(account => {
-          const contact: Contact = {
-            address: account.address,
-            alias: account.name,
-          };
-          this.contacts.push(contact);
-        });
-      })
-      .catch(() => (this.isError = true))
-      .finally(() => (this.isLoading = false));
-  }
-
-  openAccountList() {
-    this.accountRefDialog = this.dialog.open(this.accountDialog, {
-      width: '360px',
+    this.accounts = this.authServ.getAllAccount();
+    this.accounts.forEach(account => {
+      const contact: Contact = {
+        address: account.address,
+        alias: account.name,
+      };
+      this.contacts.push(contact);
     });
   }
 
   onSwitchAccount(account: SavedAccount) {
-    this.authServ.switchAccount(account);
     this.account = account;
-    this.accountRefDialog.close();
   }
 
   onChangeAmountField() {
@@ -175,6 +173,18 @@ export class SendmoneyComponent implements OnInit {
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
+  onChangeCommisssionField() {
+    const commission = truncate(this.approverCommissionField.value, 8);
+    const commissionCurrency = commission * this.currencyRate.value;
+    this.approverCommissionCurrField.patchValue(commissionCurrency);
+  }
+  onChangeCommisssionCurrField() {
+    const commission =
+      this.approverCommissionCurrField.value / this.currencyRate.value;
+    const commissionTrunc = truncate(commission, 8);
+    this.approverCommissionField.patchValue(commissionTrunc);
+  }
+
   onChangeFeeCurrencyField() {
     const fee = this.feeFormCurr.value / this.currencyRate.value;
     const feeTrunc = truncate(fee, 8);
@@ -193,6 +203,12 @@ export class SendmoneyComponent implements OnInit {
   onChangeRecipient() {
     let validation = addressValidation(this.recipientForm.value);
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
+  }
+
+  onChangeAddressApprover() {
+    let validation = addressValidation(this.addressApproverField.value);
+    if (!validation)
+      this.addressApproverField.setErrors({ invalidAddress: true });
   }
 
   isAddressInContacts() {
@@ -225,6 +241,12 @@ export class SendmoneyComponent implements OnInit {
   toggleCustomFee() {
     this.customFee = !this.customFee;
     if (!this.customFee) this.onFeeChoose(this.activeButton);
+  }
+
+  toggleAdvancedMenu() {
+    this.advancedMenu = !this.advancedMenu;
+    this.enableFieldAdvancedMenu();
+    if (!this.advancedMenu) this.disableFieldAdvancedMenu();
   }
 
   async onOpenDialogDetailSendMoney() {
@@ -280,6 +302,22 @@ export class SendmoneyComponent implements OnInit {
 
   closeDialog() {
     this.sendMoneyRefDialog.close();
+  }
+
+  disableFieldAdvancedMenu() {
+    this.addressApproverField.disable();
+    this.approverCommissionField.disable();
+    this.approverCommissionCurrField.disable();
+    this.instructionField.disable();
+    this.timeoutField.disable();
+  }
+
+  enableFieldAdvancedMenu() {
+    this.addressApproverField.enable();
+    this.approverCommissionField.enable();
+    this.instructionField.enable();
+    this.timeoutField.enable();
+    this.approverCommissionCurrField.enable();
   }
 
   async onSendMoney() {

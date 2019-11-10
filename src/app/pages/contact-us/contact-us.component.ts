@@ -19,12 +19,12 @@ import {
 })
 export class ContactUsComponent implements OnInit {
   contactForm: FormGroup;
-  contactFormD: FormGroupDirective;
   emailField = new FormControl('', [Validators.required, Validators.email]);
   subjectField = new FormControl('', Validators.required);
   fileField = new FormControl(null);
   messageField = new FormControl('', Validators.required);
   sendCopyCheck = new FormControl(false);
+  imgURL: any;
 
   filename: string;
 
@@ -41,11 +41,14 @@ export class ContactUsComponent implements OnInit {
   }
   ngOnInit() {}
 
-  onSubmit(form: FormGroupDirective) {
+  onSubmit() {
     if (this.contactForm.valid) {
       this.contactForm.reset();
-      form.resetForm();
+      Object.keys(this.contactForm.controls).forEach(key => {
+        this.contactForm.controls[key].setErrors(null);
+      });
       this.filename = '';
+      this.imgURL = null;
     }
   }
 
@@ -60,16 +63,22 @@ export class ContactUsComponent implements OnInit {
       const [file] = event.target.files;
       this.filename = event.target.files[0].name;
 
-      reader.readAsDataURL(file);
+      const mimeType = event.target.files[0].type;
+      if (mimeType.match(/image\/*/) == null) {
+        this.imgURL = null;
+        this.fileField.setErrors({ invalidType: true });
+      } else {
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.contactForm.patchValue({
+            file: reader.result,
+          });
 
-      reader.onload = () => {
-        this.contactForm.patchValue({
-          contactFormFile: reader.result,
-        });
-
-        // need to run CD since file load runs outside of zone
-        this.cd.markForCheck();
-      };
+          // need to run CD since file load runs outside of zone
+          this.cd.markForCheck();
+          this.imgURL = reader.result;
+        };
+      }
     }
   }
 }
