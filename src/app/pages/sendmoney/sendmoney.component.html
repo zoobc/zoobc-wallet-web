@@ -397,14 +397,13 @@
         <mat-form-field appearance="outline" class="block" color="accent">
           <input
             matInput
-            class="timeout-input"
             [min]="minDate"
             [max]="maxDate"
             [owlDateTime]="dt8"
             [formControl]="timeoutField"
             [owlDateTimeTrigger]="dt8"
           />
-          <owl-date-time #dt8 disabled="false"></owl-date-time>
+          <owl-date-time #dt8></owl-date-time>
         </mat-form-field>
         <ng-container *ngIf="timeoutField.touched">
           <mat-error *ngIf="timeoutField.hasError('required')">{{
