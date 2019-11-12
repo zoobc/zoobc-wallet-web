@@ -59,7 +59,7 @@
         type="text"
         placeholder="{{ 'Node Public Key' | translate }}"
         formControlName="nodePublicKey"
-        (keyup)="onChangeRecipient()"
+        (keyup)="onChangeNodePublicKey()"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">

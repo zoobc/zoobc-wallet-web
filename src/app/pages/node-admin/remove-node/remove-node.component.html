@@ -1,3 +1,52 @@
-<p>
-  remove-node works!
-</p>
+<div class="remove-node-container">
+  <h2 class="mat-h2">{{ 'Remove Node' | translate }}</h2>
+  <form [formGroup]="formRemoveNode" (submit)="onRemoveNode($event)">
+    <label>{{ 'Fee' | translate }}</label>
+    <mat-form-field appearance="outline" color="accent">
+      <input
+        matInput
+        type="number"
+        formControlName="fee"
+        placeholder="{{ 'Fee' | translate }}"
+      />
+    </mat-form-field>
+    <ng-container *ngIf="feeForm.touched">
+      <mat-error *ngIf="feeForm.hasError('required')">
+        {{ 'Fee is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="feeForm.hasError('min')">
+        {{ 'Minimum fee is 0.00000001' | translate }}
+      </mat-error>
+    </ng-container>
+    <label>{{ 'Node Public Key' | translate }}</label>
+    <mat-form-field appearance="outline" color="accent">
+      <input
+        matInput
+        type="text"
+        placeholder="{{ 'Node Public Key' | translate }}"
+        formControlName="nodePublicKey"
+        (keyup)="onChangeNodePublicKey()"
+      />
+    </mat-form-field>
+    <ng-container *ngIf="nodePublicKeyForm.touched">
+      <mat-error *ngIf="nodePublicKeyForm.hasError('required')">
+        {{ 'Node Public Key is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="nodePublicKeyForm.hasError('invalidAddress')">
+        {{ 'Node Public Key is invalid' | translate }}
+      </mat-error>
+    </ng-container>
+    <br />
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="formRemoveNode.invalid || isLoading"
+    >
+      <span *ngIf="isLoading">
+        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+      </span>
+      <span>{{ 'Remove Node' | translate }}</span>
+    </button>
+  </form>
+</div>

@@ -60,7 +60,7 @@ export class RegisterNodeComponent implements OnInit {
 
   ngOnInit() {}
 
-  onChangeRecipient() {
+  onChangeNodePublicKey() {
     let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }

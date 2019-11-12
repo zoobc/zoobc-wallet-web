@@ -14,6 +14,9 @@
       <mat-error *ngIf="ipAddressForm.hasError('required')">
         {{ 'IP Address is required' | translate }}
       </mat-error>
+      <mat-error *ngIf="ipAddressForm.hasError('pattern')">
+        {{ 'Invalid IP address format' | translate }}
+      </mat-error>
     </ng-container>
     <label>{{ 'Locked Balance' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
@@ -56,6 +59,7 @@
         type="text"
         placeholder="{{ 'Node Public Key' | translate }}"
         formControlName="nodePublicKey"
+        (keyup)="onChangeNodePublicKey()"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">

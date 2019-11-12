@@ -38,6 +38,7 @@ export class NodeRegistrationService {
 
       const request = new GetNodeRegistrationRequest();
       request.setAccountaddress(account.address);
+      // request.setNodeaddress(nodeAddress);
 
       grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: environment.grpcUrl,

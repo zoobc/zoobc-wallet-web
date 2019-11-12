@@ -20,15 +20,18 @@ import Swal from 'sweetalert2';
 })
 export class UpdateNodeComponent implements OnInit {
   formUpdateNode: FormGroup;
-  ipAddressForm = new FormControl('', Validators.required);
+  ipAddressForm = new FormControl('', [
+    Validators.required,
+    Validators.pattern(
+      '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]+$'
+    ),
+  ]);
   lockedAmountForm = new FormControl('', [
     Validators.required,
     Validators.min(1 / 1e8),
   ]);
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
-
-  poown: Buffer;
 
   account: SavedAccount;
 
@@ -51,33 +54,12 @@ export class UpdateNodeComponent implements OnInit {
     });
 
     this.account = authServ.getCurrAccount();
+    this.ipAddressForm.patchValue(this.account.nodeIP);
   }
 
-  ngOnInit() {
-    this.isLoading = true;
-    this.formUpdateNode.disable();
-    this.poownServ.get(this.account.nodeIP).then(
-      (res: Buffer) => {
-        this.isLoading = false;
-        this.poown = res;
-        let address = res.toString('utf-8', 0, 44);
-        if (this.account.address == address) {
-          this.formUpdateNode.enable();
-          this.ipAddressForm.patchValue(this.account.nodeIP);
-        } else {
-          this.isError = true;
-          this.formUpdateNode.disable();
-        }
-      },
-      err => {
-        this.isError = true;
-        this.formUpdateNode.disable();
-        console.log(err);
-      }
-    );
-  }
+  ngOnInit() {}
 
-  onChangeRecipient() {
+  onChangeNodePublicKey() {
     let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
@@ -93,29 +75,36 @@ export class UpdateNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          let data: UpdateNodeInterface = {
-            accountAddress: this.account.address,
-            nodePublicKey: this.nodePublicKeyForm.value,
-            nodeAddress: this.ipAddressForm.value,
-            fee: this.feeForm.value,
-            funds: this.lockedAmountForm.value,
-            poown: this.poown,
-          };
-          let bytes = updateNodeBuilder(data, this.keyringServ);
+          this.poownServ
+            .get(this.ipAddressForm.value)
+            .then((poown: Buffer) => {
+              let data: UpdateNodeInterface = {
+                accountAddress: this.account.address,
+                nodePublicKey: this.nodePublicKeyForm.value,
+                nodeAddress: this.ipAddressForm.value,
+                fee: this.feeForm.value,
+                funds: this.lockedAmountForm.value,
+                poown: poown,
+              };
+              let bytes = updateNodeBuilder(data, this.keyringServ);
 
-          this.transactionServ.postTransaction(bytes).then(
-            (res: any) => {
+              return this.transactionServ.postTransaction(bytes);
+            })
+            .then(() => {
               Swal.fire('Success', 'success', 'success');
-              this.isLoading = false;
+
+              // change IP if has different value
+              if (this.ipAddressForm.value != this.account.nodeIP)
+                this.authServ.editNodeIpAddress(this.ipAddressForm.value);
+
               this.dialogRef.close(true);
-            },
-            err => {
+            })
+            .catch(err => {
               console.log(err);
               Swal.fire('Error', err, 'error');
-              this.isLoading = false;
               this.isError = true;
-            }
-          );
+            })
+            .finally(() => (this.isLoading = false));
         }
       });
     }

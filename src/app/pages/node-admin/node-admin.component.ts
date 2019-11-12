@@ -22,6 +22,7 @@ import { KeyringService } from 'src/app/services/keyring.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
+import { RemoveNodeComponent } from './remove-node/remove-node.component';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -71,6 +72,9 @@ export class NodeAdminComponent implements OnInit {
   getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
+    this.pendingNodeTx = null;
+    this.registeredNode = null;
+
     this.nodeServ
       .getUnconfirmTransaction(this.account.address)
       .then(res => {
@@ -153,31 +157,13 @@ export class NodeAdminComponent implements OnInit {
     });
   }
 
-  removeNode() {
-    Swal.fire({
-      title: `Are you sure want to remove this node?`,
-      showCancelButton: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => {
-        let data: RemoveNodeInterface = {
-          accountAddress: this.account.address,
-          nodePublicKey: this.registeredNode.nodepublickey.toString(),
-          fee: environment.feeSlow,
-        };
-        let bytes = removeNodeBuilder(data, this.keyringServ);
+  openRemoveNode() {
+    const dialog = this.dialog.open(RemoveNodeComponent, {
+      width: '420px',
+    });
 
-        this.transactionServ.postTransaction(bytes).then(
-          (res: any) => {
-            Swal.fire('Success', 'success', 'success');
-            setTimeout(() => this.getRegisteredNode(), 500);
-          },
-          err => {
-            console.log(err);
-            Swal.fire('Error', err, 'error');
-          }
-        );
-        return true;
-      },
+    dialog.afterClosed().subscribe(success => {
+      if (success) this.getRegisteredNode();
     });
   }
 }
