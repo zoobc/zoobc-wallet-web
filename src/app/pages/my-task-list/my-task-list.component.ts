@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-task-list',
@@ -18,7 +19,7 @@ export class MyTaskListComponent implements OnInit {
   @Input() withDetail: boolean = false;
   detailTaskRefDialog: MatDialogRef<any>;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private translate: TranslateService) {}
 
   ngOnInit() {}
 
@@ -28,10 +29,15 @@ export class MyTaskListComponent implements OnInit {
     });
   }
 
-  onOpenDetailTaskComingSoon() {
+  async onOpenDetailTaskComingSoon() {
+    let message: string;
+    await this.translate
+      .get('Coming Soon')
+      .toPromise()
+      .then(res => (message = res));
     Swal.fire({
       type: 'info',
-      title: 'COMING SOON',
+      title: message,
       showConfirmButton: false,
       timer: 1500,
     });
@@ -39,11 +45,16 @@ export class MyTaskListComponent implements OnInit {
   closeDialog() {
     this.detailTaskRefDialog.close();
   }
-  onConfirmDialog() {
+  async onConfirmDialog() {
     this.detailTaskRefDialog.close();
+    let message: string;
+    await this.translate
+      .get('Transaction has been approved')
+      .toPromise()
+      .then(res => (message = res));
     Swal.fire({
       type: 'success',
-      title: 'Transaction has been approved',
+      title: message,
       showConfirmButton: false,
       timer: 1500,
     });

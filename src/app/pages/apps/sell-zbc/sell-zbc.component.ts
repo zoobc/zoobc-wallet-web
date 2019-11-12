@@ -6,11 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sell-zbc.component.scss'],
 })
 export class SellZbcComponent implements OnInit {
-  constructor() {}
+  minDate = new Date();
+  maxDate = new Date();
+  constructor() {
+    this.maxDate.setDate(this.maxDate.getDate() + 10);
+  }
 
   ngOnInit() {}
 
   onSelect(account) {
-    console.log(account);
+
   }
 }
