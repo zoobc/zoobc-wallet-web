@@ -37,10 +37,9 @@ export class NavbarComponent implements OnInit {
     private appServ: AppService,
     private translate: TranslateService
   ) {
-    this.isLoggedIn = this.authServ.isLoggedIn() ? true : false;
-
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
+        this.isLoggedIn = this.authServ.isLoggedIn() ? true : false;
         this.account = authServ.getCurrAccount();
         this.node = this.account ? this.account.nodeIP : null;
       }
