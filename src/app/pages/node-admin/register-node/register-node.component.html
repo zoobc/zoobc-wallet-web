@@ -8,12 +8,14 @@
         type="text"
         placeholder="{{ 'IP Address' | translate }}"
         formControlName="ipAddress"
-        readonly
       />
     </mat-form-field>
     <ng-container *ngIf="ipAddressForm.touched">
       <mat-error *ngIf="ipAddressForm.hasError('required')">
         {{ 'IP Address is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="ipAddressForm.hasError('pattern')">
+        {{ 'Invalid IP address format' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Locked Balance' | translate }}</label>

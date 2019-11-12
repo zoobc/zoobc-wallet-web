@@ -38,7 +38,6 @@ export class NodeRegistrationService {
 
       const request = new GetNodeRegistrationRequest();
       request.setAccountaddress(account.address);
-      request.setNodeaddress(nodeAddress);
 
       grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: environment.grpcUrl,
@@ -80,7 +79,6 @@ export class NodeRegistrationService {
             const tx = mempoolTx[i].transactionbytes;
             const txBytes = Buffer.from(tx.toString(), 'base64');
             const type = txBytes.slice(0, 4).readInt32LE(0);
-            console.log(type);
 
             let found = false;
             switch (type) {

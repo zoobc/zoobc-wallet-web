@@ -76,18 +76,16 @@ export class NodeAdminComponent implements OnInit {
       .then(res => {
         this.pendingNodeTx = res;
         if (!res) return this.nodeServ.getRegisteredNode(this.account);
-        else this.isNodeLoading = false;
-        return false;
       })
       .then((res: RegisteredNodeR) => {
-        this.isNodeLoading = false;
+        console.log(res);
         this.registeredNode = res.noderegistration;
       })
       .catch(err => {
         console.log(err);
-        this.isNodeLoading = false;
         this.isNodeError = true;
-      });
+      })
+      .finally(() => (this.isNodeLoading = false));
   }
 
   generateNewPubKey() {

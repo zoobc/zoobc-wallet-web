@@ -135,6 +135,18 @@ export class AuthService {
     }
   }
 
+  editNodeIpAddress(newIp: string) {
+    let account = this.getCurrAccount();
+    let accounts = this.getAllAccount();
+
+    account.nodeIP = newIp;
+    for (let i = 0; i < accounts.length; i++) {
+      if ((accounts[i].path = account.path)) accounts[i] = account;
+    }
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+  }
+
   restoreAccount(account) {
     localStorage.setItem('ACCOUNT', JSON.stringify(account));
     this.switchAccount(account[0]);
