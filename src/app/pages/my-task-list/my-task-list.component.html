@@ -75,13 +75,11 @@
       </div>
     </div>
     <div class="text-right" style="margin-top: 8px">
-      <button
-        mat-flat-button
-        color="warn"
-        style="margin-right: 8px"
-        (click)="closeDialog()"
-      >
+      <button mat-button style="margin-right: 8px" (click)="closeDialog()">
         {{ 'Cancel' | translate }}
+      </button>
+      <button mat-flat-button color="warn" style="margin-right: 8px">
+        {{ 'Reject' | translate }}
       </button>
       <button mat-flat-button color="primary" (click)="onConfirmDialog()">
         {{ 'Confirm' | translate }}
