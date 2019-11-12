@@ -60,6 +60,18 @@
         />
       </mat-form-field>
 
+      <label>{{ 'Timeout' | translate }}</label>
+      <mat-form-field appearance="outline" class="block" color="accent">
+        <input
+          matInput
+          [min]="minDate"
+          [max]="maxDate"
+          [owlDateTime]="dt8"
+          [owlDateTimeTrigger]="dt8"
+        />
+        <owl-date-time #dt8></owl-date-time>
+      </mat-form-field>
+
       <button mat-flat-button color="primary" type="submit" class="block">
         <span>{{ 'Send' | translate }}</span>
       </button>
