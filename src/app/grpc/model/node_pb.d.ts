@@ -4,6 +4,9 @@
 import * as jspb from "google-protobuf";
 
 export class Node extends jspb.Message {
+  getId(): number;
+  setId(value: number): void;
+
   getSharedaddress(): string;
   setSharedaddress(value: string): void;
 
@@ -25,6 +28,7 @@ export class Node extends jspb.Message {
 
 export namespace Node {
   export type AsObject = {
+    id: number,
     sharedaddress: string,
     address: string,
     port: number,

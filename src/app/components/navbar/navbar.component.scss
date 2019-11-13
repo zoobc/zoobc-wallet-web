@@ -49,8 +49,12 @@
     .menu {
       width: 60%;
       text-align: right;
-      .account-dropdown i {
-        font-size: 22px;
+      .account-dropdown {
+        margin: 0 4px;
+        color: white;
+        i {
+          font-size: 22px;
+        }
       }
 
       .language-dropdown {

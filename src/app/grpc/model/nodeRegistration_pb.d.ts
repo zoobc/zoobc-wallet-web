@@ -51,8 +51,8 @@ export class NodeRegistration extends jspb.Message {
   getLockedbalance(): string;
   setLockedbalance(value: string): void;
 
-  getQueued(): boolean;
-  setQueued(value: boolean): void;
+  getRegistrationstatus(): number;
+  setRegistrationstatus(value: number): void;
 
   getLatest(): boolean;
   setLatest(value: boolean): void;
@@ -78,15 +78,15 @@ export namespace NodeRegistration {
     registrationheight: number,
     nodeaddress?: NodeAddress.AsObject,
     lockedbalance: string,
-    queued: boolean,
+    registrationstatus: number,
     latest: boolean,
     height: number,
   }
 }
 
 export class GetNodeRegistrationsRequest extends jspb.Message {
-  getQueued(): boolean;
-  setQueued(value: boolean): void;
+  getRegistrationstatus(): number;
+  setRegistrationstatus(value: number): void;
 
   getMinregistrationheight(): number;
   setMinregistrationheight(value: number): void;
@@ -111,7 +111,7 @@ export class GetNodeRegistrationsRequest extends jspb.Message {
 
 export namespace GetNodeRegistrationsRequest {
   export type AsObject = {
-    queued: boolean,
+    registrationstatus: number,
     minregistrationheight: number,
     maxregistrationheight: number,
     pagination?: model_pagination_pb.Pagination.AsObject,
@@ -201,4 +201,12 @@ export namespace GetNodeRegistrationResponse {
     noderegistration?: NodeRegistration.AsObject,
   }
 }
+
+export interface NodeRegistrationStateMap {
+  NODEREGISTERED: 0;
+  NODEQUEUED: 1;
+  NODEDELETED: 2;
+}
+
+export const NodeRegistrationState: NodeRegistrationStateMap;
 

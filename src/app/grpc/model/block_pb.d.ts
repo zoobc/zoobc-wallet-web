@@ -4,11 +4,17 @@
 import * as jspb from "google-protobuf";
 import * as model_transaction_pb from "../model/transaction_pb";
 import * as model_batchReceipt_pb from "../model/batchReceipt_pb";
-import * as model_receipt_pb from "../model/receipt_pb";
+import * as model_publishedReceipt_pb from "../model/publishedReceipt_pb";
+import * as model_skippedBlocksmith_pb from "../model/skippedBlocksmith_pb";
 
 export class Block extends jspb.Message {
   getId(): string;
   setId(value: string): void;
+
+  getBlockhash(): Uint8Array | string;
+  getBlockhash_asU8(): Uint8Array;
+  getBlockhash_asB64(): string;
+  setBlockhash(value: Uint8Array | string): void;
 
   getPreviousblockhash(): Uint8Array | string;
   getPreviousblockhash_asU8(): Uint8Array;
@@ -67,10 +73,10 @@ export class Block extends jspb.Message {
   setTransactionsList(value: Array<model_transaction_pb.Transaction>): void;
   addTransactions(value?: model_transaction_pb.Transaction, index?: number): model_transaction_pb.Transaction;
 
-  clearBlockreceiptsList(): void;
-  getBlockreceiptsList(): Array<BlockReceipt>;
-  setBlockreceiptsList(value: Array<BlockReceipt>): void;
-  addBlockreceipts(value?: BlockReceipt, index?: number): BlockReceipt;
+  clearPublishedreceiptsList(): void;
+  getPublishedreceiptsList(): Array<model_publishedReceipt_pb.PublishedReceipt>;
+  setPublishedreceiptsList(value: Array<model_publishedReceipt_pb.PublishedReceipt>): void;
+  addPublishedreceipts(value?: model_publishedReceipt_pb.PublishedReceipt, index?: number): model_publishedReceipt_pb.PublishedReceipt;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Block.AsObject;
@@ -85,6 +91,7 @@ export class Block extends jspb.Message {
 export namespace Block {
   export type AsObject = {
     id: string,
+    blockhash: Uint8Array | string,
     previousblockhash: Uint8Array | string,
     height: number,
     timestamp: string,
@@ -100,37 +107,7 @@ export namespace Block {
     payloadlength: number,
     payloadhash: Uint8Array | string,
     transactionsList: Array<model_transaction_pb.Transaction.AsObject>,
-    blockreceiptsList: Array<BlockReceipt.AsObject>,
-  }
-}
-
-export class BlockReceipt extends jspb.Message {
-  hasReceipt(): boolean;
-  clearReceipt(): void;
-  getReceipt(): model_receipt_pb.Receipt | undefined;
-  setReceipt(value?: model_receipt_pb.Receipt): void;
-
-  clearIntermediatehashesList(): void;
-  getIntermediatehashesList(): Array<Uint8Array | string>;
-  getIntermediatehashesList_asU8(): Array<Uint8Array>;
-  getIntermediatehashesList_asB64(): Array<string>;
-  setIntermediatehashesList(value: Array<Uint8Array | string>): void;
-  addIntermediatehashes(value: Uint8Array | string, index?: number): Uint8Array | string;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): BlockReceipt.AsObject;
-  static toObject(includeInstance: boolean, msg: BlockReceipt): BlockReceipt.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: BlockReceipt, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): BlockReceipt;
-  static deserializeBinaryFromReader(message: BlockReceipt, reader: jspb.BinaryReader): BlockReceipt;
-}
-
-export namespace BlockReceipt {
-  export type AsObject = {
-    receipt?: model_receipt_pb.Receipt.AsObject,
-    intermediatehashesList: Array<Uint8Array | string>,
+    publishedreceiptsList: Array<model_publishedReceipt_pb.PublishedReceipt.AsObject>,
   }
 }
 
@@ -152,6 +129,11 @@ export class BlockExtendedInfo extends jspb.Message {
   getPopchange(): string;
   setPopchange(value: string): void;
 
+  clearSkippedblocksmithsList(): void;
+  getSkippedblocksmithsList(): Array<model_skippedBlocksmith_pb.SkippedBlocksmith>;
+  setSkippedblocksmithsList(value: Array<model_skippedBlocksmith_pb.SkippedBlocksmith>): void;
+  addSkippedblocksmiths(value?: model_skippedBlocksmith_pb.SkippedBlocksmith, index?: number): model_skippedBlocksmith_pb.SkippedBlocksmith;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BlockExtendedInfo.AsObject;
   static toObject(includeInstance: boolean, msg: BlockExtendedInfo): BlockExtendedInfo.AsObject;
@@ -169,6 +151,7 @@ export namespace BlockExtendedInfo {
     receiptvalue: string,
     blocksmithaccountaddress: string,
     popchange: string,
+    skippedblocksmithsList: Array<model_skippedBlocksmith_pb.SkippedBlocksmith.AsObject>,
   }
 }
 

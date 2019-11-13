@@ -23,6 +23,11 @@ export class Host extends jspb.Message {
   getStopped(): boolean;
   setStopped(value: boolean): void;
 
+  clearPrioritypeersList(): void;
+  getPrioritypeersList(): Array<model_peer_pb.Peer>;
+  setPrioritypeersList(value: Array<model_peer_pb.Peer>): void;
+  addPrioritypeers(value?: model_peer_pb.Peer, index?: number): model_peer_pb.Peer;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Host.AsObject;
   static toObject(includeInstance: boolean, msg: Host): Host.AsObject;
@@ -41,6 +46,7 @@ export namespace Host {
     knownpeersMap: Array<[string, model_peer_pb.Peer.AsObject]>,
     blacklistedpeersMap: Array<[string, model_peer_pb.Peer.AsObject]>,
     stopped: boolean,
+    prioritypeersList: Array<model_peer_pb.Peer.AsObject>,
   }
 }
 
@@ -54,6 +60,14 @@ export class HostInfo extends jspb.Message {
   getChainstatusesList(): Array<model_blockchain_pb.ChainStatus>;
   setChainstatusesList(value: Array<model_blockchain_pb.ChainStatus>): void;
   addChainstatuses(value?: model_blockchain_pb.ChainStatus, index?: number): model_blockchain_pb.ChainStatus;
+
+  clearScramblednodesList(): void;
+  getScramblednodesList(): Array<model_peer_pb.Peer>;
+  setScramblednodesList(value: Array<model_peer_pb.Peer>): void;
+  addScramblednodes(value?: model_peer_pb.Peer, index?: number): model_peer_pb.Peer;
+
+  getScramblednodesheight(): number;
+  setScramblednodesheight(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): HostInfo.AsObject;
@@ -69,6 +83,8 @@ export namespace HostInfo {
   export type AsObject = {
     host?: Host.AsObject,
     chainstatusesList: Array<model_blockchain_pb.ChainStatus.AsObject>,
+    scramblednodesList: Array<model_peer_pb.Peer.AsObject>,
+    scramblednodesheight: number,
   }
 }
 
