@@ -277,7 +277,7 @@
       </div>
 
       <span class="sub-title" (click)="toggleAdvancedMenu()">
-        {{ 'Advanced' | translate }}&nbsp;<i>({{ 'Coming Soon' | translate }})</i>
+        {{ 'Advanced Option' | translate }}&nbsp;<i>({{ 'Coming Soon' | translate }})</i>
         <i class="fa fa-caret-down icon-dropdown"></i>
       </span>
 
@@ -312,14 +312,14 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-          <ng-container *ngIf="addressApproverField.touched">
+          <!-- <ng-container *ngIf="addressApproverField.touched">
             <mat-error *ngIf="addressApproverField.hasError('required')">
               {{ 'Address for Approver is required' | translate }}
             </mat-error>
             <mat-error *ngIf="addressApproverField.hasError('invalidAddress')">
               {{ 'ZBC Address is invalid' | translate }}
             </mat-error>
-          </ng-container>
+          </ng-container> -->
         </div>
         <label>{{ 'Approver Commission' | translate }}</label>
         <div class="row">
@@ -347,7 +347,7 @@
                 (keyup)="onChangeCommisssionField()"
               />
             </mat-form-field>
-            <ng-container
+            <!-- <ng-container
               *ngIf="
                 approverCommissionField.touched && typeCommission === 'ZBC'
               "
@@ -358,7 +358,7 @@
               <mat-error *ngIf="approverCommissionField.hasError('min')">
                 {{ 'Minimum commission is' | translate: { val: '0.00000001' } }}
               </mat-error>
-            </ng-container>
+            </ng-container> -->
             <mat-form-field
               appearance="outline"
               class="block"
@@ -374,7 +374,7 @@
                 (keyup)="onChangeCommisssionCurrField()"
               />
             </mat-form-field>
-            <ng-container
+            <!-- <ng-container
               *ngIf="
                 approverCommissionCurrField.touched && typeCommission === 'Fiat'
               "
@@ -390,7 +390,7 @@
                     | translate: { val: '0.00000001' }
                 }}
               </mat-error>
-            </ng-container>
+            </ng-container> -->
           </div>
         </div>
         <label>{{ 'Timeout' | translate }}</label>
@@ -405,11 +405,11 @@
           />
           <owl-date-time #dt8></owl-date-time>
         </mat-form-field>
-        <ng-container *ngIf="timeoutField.touched">
+        <!-- <ng-container *ngIf="timeoutField.touched">
           <mat-error *ngIf="timeoutField.hasError('required')">{{
             'Timeout is required' | translate
           }}</mat-error>
-        </ng-container>
+        </ng-container> -->
         <label>{{ 'Instruction' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">
           <textarea
@@ -419,11 +419,11 @@
             rows="5"
           ></textarea>
         </mat-form-field>
-        <ng-container *ngIf="instructionField.touched">
+        <!-- <ng-container *ngIf="instructionField.touched">
           <mat-error *ngIf="instructionField.hasError('required')">
             {{ 'Instruction is required' | translate }}
           </mat-error>
-        </ng-container>
+        </ng-container> -->
       </div>
 
       <button

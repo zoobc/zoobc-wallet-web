@@ -78,10 +78,19 @@
       <button mat-button style="margin-right: 8px" (click)="closeDialog()">
         {{ 'Cancel' | translate }}
       </button>
-      <button mat-flat-button color="warn" style="margin-right: 8px">
+      <button
+        mat-flat-button
+        color="warn"
+        style="margin-right: 8px"
+        (click)="onOpenDetailTaskComingSoon()"
+      >
         {{ 'Reject' | translate }}
       </button>
-      <button mat-flat-button color="primary" (click)="onConfirmDialog()">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onOpenDetailTaskComingSoon()"
+      >
         {{ 'Confirm' | translate }}
       </button>
     </div>

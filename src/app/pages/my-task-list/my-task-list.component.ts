@@ -41,6 +41,7 @@ export class MyTaskListComponent implements OnInit {
       showConfirmButton: false,
       timer: 1500,
     });
+    this.closeDialog()
   }
   closeDialog() {
     this.detailTaskRefDialog.close();
