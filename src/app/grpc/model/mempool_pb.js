@@ -156,11 +156,12 @@ proto.model.MempoolTransaction.prototype.toObject = function(opt_includeInstance
 proto.model.MempoolTransaction.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, "0"),
-    feeperbyte: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    arrivaltimestamp: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+    blockheight: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    feeperbyte: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+    arrivaltimestamp: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     transactionbytes: msg.getTransactionbytes_asB64(),
-    senderaccountaddress: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    recipientaccountaddress: jspb.Message.getFieldWithDefault(msg, 6, "")
+    senderaccountaddress: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    recipientaccountaddress: jspb.Message.getFieldWithDefault(msg, 7, "")
   };
 
   if (includeInstance) {
@@ -202,22 +203,26 @@ proto.model.MempoolTransaction.deserializeBinaryFromReader = function(msg, reade
       msg.setId(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setFeeperbyte(value);
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setBlockheight(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readInt64String());
-      msg.setArrivaltimestamp(value);
+      msg.setFeeperbyte(value);
       break;
     case 4:
+      var value = /** @type {string} */ (reader.readInt64String());
+      msg.setArrivaltimestamp(value);
+      break;
+    case 5:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setTransactionbytes(value);
       break;
-    case 5:
+    case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setSenderaccountaddress(value);
       break;
-    case 6:
+    case 7:
       var value = /** @type {string} */ (reader.readString());
       msg.setRecipientaccountaddress(value);
       break;
@@ -257,38 +262,45 @@ proto.model.MempoolTransaction.serializeBinaryToWriter = function(message, write
       f
     );
   }
-  f = message.getFeeperbyte();
+  f = message.getBlockheight();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeUint32(
       2,
       f
     );
   }
-  f = message.getArrivaltimestamp();
+  f = message.getFeeperbyte();
   if (parseInt(f, 10) !== 0) {
     writer.writeInt64String(
       3,
       f
     );
   }
+  f = message.getArrivaltimestamp();
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
+      4,
+      f
+    );
+  }
   f = message.getTransactionbytes_asU8();
   if (f.length > 0) {
     writer.writeBytes(
-      4,
+      5,
       f
     );
   }
   f = message.getSenderaccountaddress();
   if (f.length > 0) {
     writer.writeString(
-      5,
+      6,
       f
     );
   }
   f = message.getRecipientaccountaddress();
   if (f.length > 0) {
     writer.writeString(
-      6,
+      7,
       f
     );
   }
@@ -311,46 +323,61 @@ proto.model.MempoolTransaction.prototype.setId = function(value) {
 
 
 /**
- * optional int32 FeePerByte = 2;
+ * optional uint32 BlockHeight = 2;
  * @return {number}
  */
-proto.model.MempoolTransaction.prototype.getFeeperbyte = function() {
+proto.model.MempoolTransaction.prototype.getBlockheight = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /** @param {number} value */
-proto.model.MempoolTransaction.prototype.setFeeperbyte = function(value) {
+proto.model.MempoolTransaction.prototype.setBlockheight = function(value) {
   jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
 /**
- * optional int64 ArrivalTimestamp = 3;
+ * optional int64 FeePerByte = 3;
  * @return {string}
  */
-proto.model.MempoolTransaction.prototype.getArrivaltimestamp = function() {
+proto.model.MempoolTransaction.prototype.getFeeperbyte = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /** @param {string} value */
-proto.model.MempoolTransaction.prototype.setArrivaltimestamp = function(value) {
+proto.model.MempoolTransaction.prototype.setFeeperbyte = function(value) {
   jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
 /**
- * optional bytes TransactionBytes = 4;
- * @return {!(string|Uint8Array)}
+ * optional int64 ArrivalTimestamp = 4;
+ * @return {string}
  */
-proto.model.MempoolTransaction.prototype.getTransactionbytes = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+proto.model.MempoolTransaction.prototype.getArrivaltimestamp = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
+};
+
+
+/** @param {string} value */
+proto.model.MempoolTransaction.prototype.setArrivaltimestamp = function(value) {
+  jspb.Message.setProto3StringIntField(this, 4, value);
 };
 
 
 /**
- * optional bytes TransactionBytes = 4;
+ * optional bytes TransactionBytes = 5;
+ * @return {!(string|Uint8Array)}
+ */
+proto.model.MempoolTransaction.prototype.getTransactionbytes = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * optional bytes TransactionBytes = 5;
  * This is a type-conversion wrapper around `getTransactionbytes()`
  * @return {string}
  */
@@ -361,7 +388,7 @@ proto.model.MempoolTransaction.prototype.getTransactionbytes_asB64 = function() 
 
 
 /**
- * optional bytes TransactionBytes = 4;
+ * optional bytes TransactionBytes = 5;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
  * This is a type-conversion wrapper around `getTransactionbytes()`
@@ -375,37 +402,37 @@ proto.model.MempoolTransaction.prototype.getTransactionbytes_asU8 = function() {
 
 /** @param {!(string|Uint8Array)} value */
 proto.model.MempoolTransaction.prototype.setTransactionbytes = function(value) {
-  jspb.Message.setProto3BytesField(this, 4, value);
+  jspb.Message.setProto3BytesField(this, 5, value);
 };
 
 
 /**
- * optional string SenderAccountAddress = 5;
+ * optional string SenderAccountAddress = 6;
  * @return {string}
  */
 proto.model.MempoolTransaction.prototype.getSenderaccountaddress = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
-};
-
-
-/** @param {string} value */
-proto.model.MempoolTransaction.prototype.setSenderaccountaddress = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
-};
-
-
-/**
- * optional string RecipientAccountAddress = 6;
- * @return {string}
- */
-proto.model.MempoolTransaction.prototype.getRecipientaccountaddress = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
 
 /** @param {string} value */
-proto.model.MempoolTransaction.prototype.setRecipientaccountaddress = function(value) {
+proto.model.MempoolTransaction.prototype.setSenderaccountaddress = function(value) {
   jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * optional string RecipientAccountAddress = 7;
+ * @return {string}
+ */
+proto.model.MempoolTransaction.prototype.getRecipientaccountaddress = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/** @param {string} value */
+proto.model.MempoolTransaction.prototype.setRecipientaccountaddress = function(value) {
+  jspb.Message.setProto3StringField(this, 7, value);
 };
 
 

@@ -4,7 +4,6 @@ import { AppService } from 'src/app/app.service';
 import { MatSidenav, MatDrawerContent } from '@angular/material';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-parent',
@@ -23,7 +22,8 @@ export class ParentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private appServ: AppService // private keyringServ: KeyringService, // private authServ: AuthService
+    private appServ: AppService,
+    private keyringServ: KeyringService
   ) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {

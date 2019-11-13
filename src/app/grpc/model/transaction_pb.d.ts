@@ -284,6 +284,34 @@ export namespace RemoveNodeRegistrationTransactionBody {
   }
 }
 
+export class ClaimNodeRegistrationTransactionBody extends jspb.Message {
+  getNodepublickey(): Uint8Array | string;
+  getNodepublickey_asU8(): Uint8Array;
+  getNodepublickey_asB64(): string;
+  setNodepublickey(value: Uint8Array | string): void;
+
+  hasPoown(): boolean;
+  clearPoown(): void;
+  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
+  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ClaimNodeRegistrationTransactionBody.AsObject;
+  static toObject(includeInstance: boolean, msg: ClaimNodeRegistrationTransactionBody): ClaimNodeRegistrationTransactionBody.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ClaimNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ClaimNodeRegistrationTransactionBody;
+  static deserializeBinaryFromReader(message: ClaimNodeRegistrationTransactionBody, reader: jspb.BinaryReader): ClaimNodeRegistrationTransactionBody;
+}
+
+export namespace ClaimNodeRegistrationTransactionBody {
+  export type AsObject = {
+    nodepublickey: Uint8Array | string,
+    poown?: model_proofOfOwnership_pb.ProofOfOwnership.AsObject,
+  }
+}
+
 export class SetupAccountDatasetTransactionBody extends jspb.Message {
   getSetteraccountaddress(): string;
   setSetteraccountaddress(value: string): void;
@@ -349,38 +377,6 @@ export namespace RemoveAccountDatasetTransactionBody {
     recipientaccountaddress: string,
     property: string,
     value: string,
-  }
-}
-
-export class ClaimNodeRegistrationTransactionBody extends jspb.Message {
-  getNodepublickey(): Uint8Array | string;
-  getNodepublickey_asU8(): Uint8Array;
-  getNodepublickey_asB64(): string;
-  setNodepublickey(value: Uint8Array | string): void;
-
-  getAccountaddress(): string;
-  setAccountaddress(value: string): void;
-
-  hasPoown(): boolean;
-  clearPoown(): void;
-  getPoown(): model_proofOfOwnership_pb.ProofOfOwnership | undefined;
-  setPoown(value?: model_proofOfOwnership_pb.ProofOfOwnership): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ClaimNodeRegistrationTransactionBody.AsObject;
-  static toObject(includeInstance: boolean, msg: ClaimNodeRegistrationTransactionBody): ClaimNodeRegistrationTransactionBody.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ClaimNodeRegistrationTransactionBody, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ClaimNodeRegistrationTransactionBody;
-  static deserializeBinaryFromReader(message: ClaimNodeRegistrationTransactionBody, reader: jspb.BinaryReader): ClaimNodeRegistrationTransactionBody;
-}
-
-export namespace ClaimNodeRegistrationTransactionBody {
-  export type AsObject = {
-    nodepublickey: Uint8Array | string,
-    accountaddress: string,
-    poown?: model_proofOfOwnership_pb.ProofOfOwnership.AsObject,
   }
 }
 

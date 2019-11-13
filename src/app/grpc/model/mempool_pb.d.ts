@@ -8,8 +8,11 @@ export class MempoolTransaction extends jspb.Message {
   getId(): string;
   setId(value: string): void;
 
-  getFeeperbyte(): number;
-  setFeeperbyte(value: number): void;
+  getBlockheight(): number;
+  setBlockheight(value: number): void;
+
+  getFeeperbyte(): string;
+  setFeeperbyte(value: string): void;
 
   getArrivaltimestamp(): string;
   setArrivaltimestamp(value: string): void;
@@ -38,7 +41,8 @@ export class MempoolTransaction extends jspb.Message {
 export namespace MempoolTransaction {
   export type AsObject = {
     id: string,
-    feeperbyte: number,
+    blockheight: number,
+    feeperbyte: string,
     arrivaltimestamp: string,
     transactionbytes: Uint8Array | string,
     senderaccountaddress: string,
