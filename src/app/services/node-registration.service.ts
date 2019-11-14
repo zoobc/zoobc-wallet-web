@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { grpc } from '@improbable-eng/grpc-web';
-import { environment } from 'src/environments/environment';
 import { NodeRegistrationService as NodeRegistrationServ } from '../grpc/service/nodeRegistration_pb_service';
 import {
   GetNodeRegistrationRequest,
@@ -11,17 +10,16 @@ import { SavedAccount } from './auth.service';
 import {
   GetMempoolTransactionsRequest,
   GetMempoolTransactionsResponse,
-  MempoolTransaction,
 } from '../grpc/model/mempool_pb';
 import { Pagination, OrderBy } from '../grpc/model/pagination_pb';
 import { MempoolService } from '../grpc/service/mempool_pb_service';
-import { readInt64 } from 'src/helpers/converters';
 import {
   REGISTER_NODE_TYPE,
   UPDATE_NODE_TYPE,
   REMOVE_NODE_TYPE,
   CLAIM_NODE_TYPE,
 } from 'src/helpers/transaction-builder/constant';
+import { Node } from 'src/helpers/node-list';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +29,8 @@ export class NodeRegistrationService {
 
   getRegisteredNode(account: SavedAccount) {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const nodeAddress = new NodeAddress();
       nodeAddress.setAddress('18.139.3.139');
       // nodeAddress.setPort(5001);
@@ -40,7 +40,7 @@ export class NodeRegistrationService {
       request.setNodeaddress(nodeAddress);
 
       grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
-        host: environment.grpcUrl,
+        host: node.ip,
         request: request,
         onMessage: (message: GetNodeRegistrationResponse) => {
           resolve(message.toObject());
@@ -59,6 +59,8 @@ export class NodeRegistrationService {
 
   getUnconfirmTransaction(address: string) {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const request = new GetMempoolTransactionsRequest();
       const pagination = new Pagination();
       pagination.setOrderby(OrderBy.DESC);
@@ -67,7 +69,7 @@ export class NodeRegistrationService {
 
       grpc.invoke(MempoolService.GetMempoolTransactions, {
         request: request,
-        host: environment.grpcUrl,
+        host: node.ip,
         onMessage: (message: GetMempoolTransactionsResponse) => {
           let mempoolTx = message.toObject().mempooltransactionsList;
           let res: any = null;

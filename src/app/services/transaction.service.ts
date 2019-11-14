@@ -16,10 +16,10 @@ import {
 import { TransactionService as TransactionServ } from '../grpc/service/transaction_pb_service';
 import { MempoolService } from '../grpc/service/mempool_pb_service';
 
-import { environment } from '../../environments/environment';
 import { readInt64 } from 'src/helpers/converters';
 import { ContactService } from './contact.service';
 import { Pagination, OrderBy } from '../grpc/model/pagination_pb';
+import { Node } from 'src/helpers/node-list';
 
 export interface Transaction {
   id: string;
@@ -53,6 +53,8 @@ export class TransactionService {
     address: string
   ): Promise<Transactions> {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const request = new GetTransactionsRequest();
       const pagination = new Pagination();
       pagination.setLimit(limit);
@@ -64,7 +66,7 @@ export class TransactionService {
 
       grpc.invoke(TransactionServ.GetTransactions, {
         request: request,
-        host: environment.grpcUrl,
+        host: node.ip,
         onMessage: (message: GetTransactionsResponse) => {
           // recreate list of transactions
           let transactions: Transaction[] = message
@@ -118,12 +120,14 @@ export class TransactionService {
 
   getTransaction(id: string): Promise<Transaction> {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const request = new GetTransactionRequest();
       request.setId(id);
 
       grpc.invoke(TransactionServ.GetTransaction, {
         request: request,
-        host: environment.grpcUrl,
+        host: node.ip,
         onMessage: (message: TransactionResponse) => {
           let tx = message.toObject();
 
@@ -161,6 +165,8 @@ export class TransactionService {
 
   getUnconfirmTransaction(address: string) {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const request = new GetMempoolTransactionsRequest();
       const pagination = new Pagination();
       pagination.setOrderby(OrderBy.DESC);
@@ -169,7 +175,7 @@ export class TransactionService {
 
       grpc.invoke(MempoolService.GetMempoolTransactions, {
         request: request,
-        host: environment.grpcUrl,
+        host: node.ip,
         onMessage: (message: GetMempoolTransactionsResponse) => {
           // recreate list of transactions
           let transactions: any = message
@@ -223,12 +229,14 @@ export class TransactionService {
 
   postTransaction(txBytes) {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const request = new PostTransactionRequest();
       request.setTransactionbytes(txBytes);
 
       grpc.invoke(TransactionServ.PostTransaction, {
         request: request,
-        host: environment.grpcUrl,
+        host: node.ip,
         onMessage: (message: PostTransactionResponse) => {
           resolve(message.toObject());
         },
