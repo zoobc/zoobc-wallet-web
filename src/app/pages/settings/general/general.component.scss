@@ -1,0 +1,38 @@
+@import '../../../../styles/variables';
+
+.general-container {
+  .setting-section {
+    margin-bottom: 32px;
+    .title {
+      margin: 0 0 24px 0;
+      position: relative;
+      z-index: 1;
+      &:before {
+        border-top: 2px solid #dfdfdf;
+        content: '';
+        margin: 0 auto;
+        position: absolute;
+        top: 50%;
+        width: 95%;
+        z-index: -1;
+      }
+      span {
+        background: #f9fafb;
+        padding-right: 8px;
+        font-size: 20px;
+        color: $black1;
+      }
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: $black2;
+      margin: 0 0 8px 0;
+    }
+  }
+
+  .select-node {
+    max-width: 250px;
+    width: 100%;
+  }
+}

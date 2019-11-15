@@ -4,7 +4,6 @@ import {
   ProofOfOwnership,
 } from '../grpc/model/proofOfOwnership_pb';
 import { grpc } from '@improbable-eng/grpc-web';
-import { environment } from 'src/environments/environment';
 import { NodeAdminService } from '../grpc/service/proofOfOwnership_pb_service';
 import { KeyringService } from './keyring.service';
 import { RequestType } from '../grpc/model/auth_pb';
@@ -16,7 +15,7 @@ import { poownBuilder } from 'src/helpers/transaction-builder/poown';
 export class PoownService {
   constructor(private keyringServ: KeyringService) {}
 
-  get(ip: string = environment.grpcUrl): Promise<Buffer> {
+  get(ip: string): Promise<Buffer> {
     ip = ip.startsWith('http://') ? ip : `http://${ip}`;
 
     return new Promise((resolve, reject) => {
