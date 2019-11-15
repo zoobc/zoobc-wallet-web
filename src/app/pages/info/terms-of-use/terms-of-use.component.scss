@@ -2,20 +2,26 @@
 
 .card-title {
   font-weight: bold;
+  margin-bottom: 24px;
 }
 .title {
   font-size: 17px;
   font-weight: bold;
   color: $black1;
+  margin-top: 16px !important;
+  margin-bottom: 24px;
 }
 .sub-title {
   font-weight: 700;
   color: $black2;
+  margin-top: 12px !important;
+  margin-bottom: 8px;
 }
 
 .mat-card {
   box-shadow: none !important;
-  border: 1px solid #ddd;
-  // padding: 0;
-  // background: transparent;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  line-height: 22px;
 }
