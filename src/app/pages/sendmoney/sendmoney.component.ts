@@ -59,11 +59,11 @@ export class SendmoneyComponent implements OnInit {
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
-  addressApproverField = new FormControl('', Validators.required);
-  approverCommissionField = new FormControl('', Validators.required);
-  approverCommissionCurrField = new FormControl('', Validators.required);
-  instructionField = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', Validators.required);
+  addressApproverField = new FormControl('');
+  approverCommissionField = new FormControl('');
+  approverCommissionCurrField = new FormControl('');
+  instructionField = new FormControl('');
+  timeoutField = new FormControl('');
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
