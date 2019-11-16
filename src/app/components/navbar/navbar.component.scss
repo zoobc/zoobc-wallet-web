@@ -26,6 +26,7 @@
         }
         .version {
           font-size: 12px;
+          margin-top: 0px;
           font-style: italic;
         }
       }
@@ -44,7 +45,6 @@
         padding-left: 16px;
         font-weight: 200;
         font-size: 22px;
-        align-self: center;
         @media #{$small-and-down} {
           display: none;
         }
