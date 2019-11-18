@@ -1,9 +1,21 @@
 {
   "node": [
-    { "ip": "http://172.104.47.168:4001", "default": true },
-    { "ip": "http://172.104.47.168:5001", "default": true },
-    { "ip": "http://172.104.47.168:6001", "default": true },
-    { "ip": "http://172.104.47.168:7001", "default": true }
+    {
+      "ip": "http://n0.alpha.proofofparticipation.network:8080",
+      "default": true
+    },
+    {
+      "ip": "http://n1.alpha.proofofparticipation.network:8080",
+      "default": true
+    },
+    {
+      "ip": "http://n2.alpha.proofofparticipation.network:8080",
+      "default": true
+    },
+    {
+      "ip": "http://n3.alpha.proofofparticipation.network:8080",
+      "default": true
+    }
   ],
   "timestamp": 1573702240
 }
