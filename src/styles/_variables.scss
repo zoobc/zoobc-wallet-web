@@ -83,15 +83,15 @@ $white3: rgba(
 // );
 
 $primary: (
-  50: #ebf3f9,
-  100: #c4dcee,
-  200: #9dc5e2,
-  300: #75add6,
-  400: #4e96cb,
-  500: #0c3d65,
-  600: #0b3d65,
-  700: #1d4562,
-  800: #112a3b,
+  50: #e8f3fc,
+  100: #badcf7,
+  200: #5eaeed,
+  300: #3096e8,
+  400: #177dcf,
+  500: #1261a1,
+  600: #0d4573,
+  700: #082a45,
+  800: #030e17,
   contrast: (
     50: $black1,
     100: $black1,
@@ -153,7 +153,7 @@ $accent: (
 
 $primary-gradient: linear-gradient(
   45deg,
-  map-get($primary, 500),
+  map-get($primary, 700),
   map-get($primary, 300)
 );
 

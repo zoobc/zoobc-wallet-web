@@ -7,7 +7,7 @@
 @import './styles/grid.css';
 
 @include mat-core();
-$app-primary: mat-palette($primary, 500);
+$app-primary: mat-palette($primary, 700);
 $app-accent: mat-palette($accent, 500);
 $app-theme: mat-light-theme($app-primary, $app-accent);
 
