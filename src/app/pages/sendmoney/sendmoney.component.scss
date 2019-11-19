@@ -2,10 +2,8 @@
 @import '../../../styles/mixins';
 
 .sendmoney-container {
-  .mat-card {
-    max-width: 400px;
-    margin: 0 auto;
-  }
+  max-width: 400px;
+  margin: 0 auto;
 
   .zbc-form-item {
     .amount {
