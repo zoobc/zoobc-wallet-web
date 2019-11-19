@@ -16,7 +16,7 @@ import {
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
 import { addressValidation, truncate } from 'src/helpers/utils';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   sendMoneyBuilder,
   SendMoneyInterface,
@@ -92,7 +92,8 @@ export class SendmoneyComponent implements OnInit {
     private contactServ: ContactService,
     private translate: TranslateService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private activeRoute: ActivatedRoute
   ) {
     this.formSend = new FormGroup({
       recipient: this.recipientForm,
@@ -113,6 +114,11 @@ export class SendmoneyComponent implements OnInit {
     this.disableFieldAdvancedMenu();
     // max date 10 days
     this.maxDate.setDate(this.maxDate.getDate() + 10);
+
+    const amount = this.activeRoute.snapshot.params['amount'];
+    const recipient = this.activeRoute.snapshot.params['recipient'];
+    this.amountForm.patchValue(amount);
+    this.recipientForm.patchValue(recipient);
   }
 
   ngOnInit() {
