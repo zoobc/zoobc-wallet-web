@@ -18,8 +18,8 @@ export class AppService implements CanActivate {
   canActivate(): boolean {
     if (this.authServ.isLoggedIn()) return true;
 
-    // this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
-    this.router.navigateByUrl(`/login`);
+    this.router.navigateByUrl(`/login?redirect=${window.location.pathname}`);
+    // this.router.navigateByUrl(`/login`);
     return false;
   }
 
