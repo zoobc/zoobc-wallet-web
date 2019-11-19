@@ -7,11 +7,13 @@
     margin-bottom: 24px;
   }
   form {
-    button {
-      width: 100%;
-      height: 40px;
-      letter-spacing: 1px;
+    .btn-grouped {
+      margin: 16px auto;
       font-weight: bold;
+      button {
+        width: 150px;
+        margin: 0 4px 8px 4px;
+      }
     }
   }
 }

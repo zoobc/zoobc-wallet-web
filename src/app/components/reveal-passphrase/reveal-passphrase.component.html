@@ -15,14 +15,20 @@
     </mat-error>
   </form>
 
-  <div *ngIf="phrase">
-    <p
-      class="phrase-text"
-      (click)="copyPhrase()"
-      matTooltip="Copy to clipboard"
-    >
-      {{ phrase }}
-    </p>
+  <div class="row passphrase-section" *ngIf="phrase">
+    <div class="col-6 col-sm-4" *ngFor="let p of arrPhrase; let key = index">
+      <div class="box-passphrase">
+        <div class="number">{{ key + 1 }}</div>
+        <div class="word">{{ p }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-grouped" *ngIf="phrase">
+    <button mat-flat-button color="primary" (click)="copyPhrase()">
+      <i matPrefix class="fas fa-copy"></i>
+      <span class="text">{{ 'Copy Passphrase' | translate }}</span>
+    </button>
   </div>
 
   <div class="text-left">
