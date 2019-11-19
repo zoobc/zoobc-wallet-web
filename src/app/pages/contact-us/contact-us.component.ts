@@ -1,16 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import {
-  FormGroup,
-  Validators,
-  FormControl,
-  FormGroupDirective,
-} from '@angular/forms';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { FeedbackService } from 'src/app/services/feedback.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-contact-us',
@@ -20,35 +14,63 @@ import {
 export class ContactUsComponent implements OnInit {
   contactForm: FormGroup;
   emailField = new FormControl('', [Validators.required, Validators.email]);
-  subjectField = new FormControl('', Validators.required);
-  fileField = new FormControl(null);
+  nameField = new FormControl('', Validators.required);
+  fileField = new FormControl('');
   messageField = new FormControl('', Validators.required);
-  sendCopyCheck = new FormControl(false);
-  imgURL: any;
 
-  filename: string;
+  isUploadLoading: boolean = false;
+  isUploadSuccess: boolean = false;
+  isFeedbackLoading: boolean = false;
 
   @ViewChild('fileInput') myInputVariable: ElementRef;
 
-  constructor(private cd: ChangeDetectorRef) {
+  constructor(
+    private feedbackServ: FeedbackService,
+    private router: Router,
+    private translate: TranslateService,
+    private snackbar: MatSnackBar
+  ) {
     this.contactForm = new FormGroup({
       email: this.emailField,
-      subject: this.subjectField,
+      name: this.nameField,
       file: this.fileField,
       message: this.messageField,
-      canSendCopy: this.sendCopyCheck,
     });
   }
   ngOnInit() {}
 
   onSubmit() {
     if (this.contactForm.valid) {
-      this.contactForm.reset();
-      Object.keys(this.contactForm.controls).forEach(key => {
-        this.contactForm.controls[key].setErrors(null);
-      });
-      this.filename = '';
-      this.imgURL = null;
+      this.isFeedbackLoading = true;
+
+      this.feedbackServ
+        .submit({
+          email: this.emailField.value,
+          name: this.nameField.value,
+          message: this.messageField.value,
+          attachments: this.fileField.value,
+        })
+        .toPromise()
+        .then(async () => {
+          let message: string;
+          await this.translate
+            .get('Thank you for your feedback!')
+            .toPromise()
+            .then(res => (message = res));
+          this.snackbar.open(message, null, { duration: 3000 });
+
+          this.router.navigateByUrl('/dashboard');
+        })
+        .catch(async err => {
+          console.error(err);
+
+          let message: string;
+          await this.translate
+            .get('An error occurred while processing your request')
+            .toPromise()
+            .then(res => (message = res));
+          this.snackbar.open(message, null, { duration: 3000 });
+        });
     }
   }
 
@@ -56,29 +78,29 @@ export class ContactUsComponent implements OnInit {
     this.myInputVariable.nativeElement.click();
   }
 
-  onFileChange(event) {
-    const reader = new FileReader();
+  onFileChange(files: FileList) {
+    if (files && files.length) {
+      this.isUploadLoading = true;
+      this.isUploadSuccess = false;
 
-    if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      this.filename = event.target.files[0].name;
-
-      const mimeType = event.target.files[0].type;
-      if (mimeType.match(/image\/*/) == null) {
-        this.imgURL = null;
-        this.fileField.setErrors({ invalidType: true });
-      } else {
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.contactForm.patchValue({
-            file: reader.result,
-          });
-
-          // need to run CD since file load runs outside of zone
-          this.cd.markForCheck();
-          this.imgURL = reader.result;
-        };
+      let formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        formData.append('file[]', file, file.name);
       }
+
+      this.feedbackServ
+        .upload(formData)
+        .toPromise()
+        .then((images: number[]) => {
+          this.fileField.patchValue(images);
+          this.isUploadSuccess = true;
+        })
+        .catch(err => {
+          console.error(err.error);
+          Swal.fire({ type: 'error', title: 'Oops...', text: err.error });
+        })
+        .finally(() => (this.isUploadLoading = false));
     }
   }
 }

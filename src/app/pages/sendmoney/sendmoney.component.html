@@ -53,18 +53,18 @@
       </div>
 
       <ng-container *ngIf="saveAddress">
-        <label>{{ 'Alias' | translate }}</label>
+        <label>{{ 'Name' | translate }}</label>
         <mat-form-field appearance="outline" color="accent" class="block">
           <input
             matInput
             type="text"
             formControlName="alias"
-            placeholder="{{ 'Alias' | translate }}"
+            placeholder="{{ 'Name' | translate }}"
           />
         </mat-form-field>
         <ng-container *ngIf="aliasField.touched">
           <mat-error *ngIf="aliasField.hasError('required')">
-            {{ 'Alias is required' | translate }}
+            {{ 'Name is required' | translate }}
           </mat-error>
         </ng-container>
       </ng-container>
