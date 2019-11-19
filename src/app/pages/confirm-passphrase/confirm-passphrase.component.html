@@ -1,5 +1,11 @@
 <div class="confirm-passphrase-container">
   <h2 class="mat-h2">{{ 'Confirm Your Passphrase' | translate }}</h2>
+  <h3>
+    {{
+      'Fill The Missing Phrase Word to Complete Create New Wallet !!!'
+        | translate
+    }}
+  </h3>
   <form [formGroup]="confirmForm" (submit)="openCreatePin()">
     <div class="row" formArrayName="words">
       <div
@@ -25,13 +31,20 @@
         {{ 'The passphrase is not matched' | translate }}
       </mat-error>
     </div>
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="confirmForm.invalid"
-    >
-      {{ 'Confirm' | translate }}
-    </button>
+    <div class="btn-grouped">
+      <button mat-flat-button color="warn" (click)="backClicked()">
+        <i matPrefix class="fas fa-arrow-left"></i>
+        <span class="text">{{ 'Back' | translate }}</span>
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="confirmForm.invalid"
+      >
+        <i matPrefix class="fas fa-check"></i>
+        <span class="text">{{ 'Confirm' | translate }}</span>
+      </button>
+    </div>
   </form>
 </div>

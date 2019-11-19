@@ -37,7 +37,14 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.generateNewWallet();
+    if (history.state.passphrase) {
+      this.passphrase = history.state.passphrase;
+      this.masterSeed = history.state.masterSeed;
+      this.isWrittenDown.patchValue(true);
+      this.isAgree.patchValue(true);
+    } else {
+      this.generateNewWallet();
+    }
   }
 
   generateNewWallet() {
