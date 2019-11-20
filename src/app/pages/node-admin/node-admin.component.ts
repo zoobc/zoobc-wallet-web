@@ -78,8 +78,9 @@ export class NodeAdminComponent implements OnInit {
     this.nodeServ
       .getUnconfirmTransaction(this.account.address)
       .then(res => {
+        console.log(res);
         this.pendingNodeTx = res;
-        if (!res) return this.nodeServ.getRegisteredNode(this.account);
+        return this.nodeServ.getRegisteredNode(this.account);
       })
       .then((res: RegisteredNodeR) => {
         console.log(res);

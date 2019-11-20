@@ -1,46 +1,42 @@
 <div class="header">
   <div class="header-container">
     <div class="brand">
-      <button
-        mat-icon-button
-        *ngIf="isLoggedIn"
-        class="hamburger"
-        (click)="onToggle()"
-      >
+      <button mat-icon-button *ngIf="isLoggedIn" class="hamburger" (click)="onToggle()">
         <i class="fa fa-bars" style="font-size: 18px"></i>
       </button>
       <a routerLink="/" class="brand-text">
         <img src="/assets/img/zbc-white.png" alt="" />
-        <h3><b>ZooBC</b> Wallet</h3>
+        <h3>
+          <b>ZooBC</b> Wallet
+          <p class="version">Alpha - Version 0.1</p>
+        </h3>
       </a>
     </div>
     <div class="menu">
+
+      <button style="color: white; background:#ec5b58;background-color:#ec5b58;"
+        matTooltip="{{ 'Feedback' | translate }}" routerLink="/feedback" target="_blank">
+        <span>FEEDBACK</span>
+      </button>
+
       <!-- language menu -->
-      <button
-        mat-button
-        class="language-dropdown"
-        [matMenuTriggerFor]="language"
-      >
+      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
         <span>{{ activeLanguage }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
       <mat-menu #language="matMenu">
-        <button
-          *ngFor="let language of languages"
-          (click)="selectActiveLanguage(language.code)"
-          mat-menu-item
-        >
+        <button *ngFor="let language of languages" (click)="selectActiveLanguage(language.code)" mat-menu-item>
           {{ language.country }}
         </button>
       </mat-menu>
 
+      <!-- <a mat-icon-button class="account-dropdown" matTooltip="{{ 'Feedback' | translate }}" routerLink="/feedback"
+        target="_blank">
+        <i class="fa fa-comments"></i>
+      </a> -->
+
       <!-- account menu -->
-      <button
-        mat-icon-button
-        class="account-dropdown"
-        [matMenuTriggerFor]="account"
-        *ngIf="isLoggedIn"
-      >
+      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="isLoggedIn">
         <i class="fa fa-cog"></i>
       </button>
       <mat-menu #account="matMenu">
@@ -52,23 +48,28 @@
             </button>
             <mat-divider></mat-divider>
           </ng-container>
-          <button mat-menu-item routerLink="/settings/about">
-            <i class="fas fa-info"></i>
-            {{ 'Info & Help' | translate }}
-          </button>
-          <!-- <button mat-menu-item routerLink="/settings">
-            <i class="fa fa-cog"></i>
-            {{ 'Setting' | translate }}
+          <!-- <button mat-menu-item routerLink="/feedback">
+            <i class="fas fa-comments"></i>
+            {{ 'Give Feedback' | translate }}
           </button> -->
-          <mat-divider></mat-divider>
           <button mat-menu-item (click)="onComingSoonPage()">
             <i class="fab fa-usb"></i>
             {{ 'Connect Hardware Wallet' | translate }}
           </button>
           <mat-divider></mat-divider>
-          <button mat-menu-item (click)="onOpenRevealPassphrase()">
+          <!-- <button mat-menu-item (click)="onOpenRevealPassphrase()">
             <i class="fa fa-eye"></i>
             {{ 'Reveal Passphrase' | translate }}
+          </button>
+          <mat-divider></mat-divider> -->
+          <button mat-menu-item routerLink="/settings/about">
+            <i class="fas fa-info"></i>
+            {{ 'Info & Help' | translate }}
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/settings/general">
+            <i class="fa fa-cog"></i>
+            {{ 'Setting' | translate }}
           </button>
           <mat-divider></mat-divider>
           <button (click)="onLogout()" mat-menu-item>

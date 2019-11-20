@@ -36,6 +36,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { SellZbcComponent } from './sell-zbc/sell-zbc.component';
 import { AddressModule } from 'src/app/components/address/address.module';
 import { AccountSelectorModule } from 'src/app/components/account-selector/account-selector.module';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -61,6 +62,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     FormsModule,
     InfiniteScrollModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     RouterModule.forChild(routes),
     TranslateModule.forRoot({
       loader: {

@@ -31,7 +31,7 @@ goog.exportSymbol('proto.model.HostInfo', null, global);
  * @constructor
  */
 proto.model.Host = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.model.Host.repeatedFields_, null);
 };
 goog.inherits(proto.model.Host, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -84,6 +84,13 @@ if (goog.DEBUG && !COMPILED) {
   proto.model.GetHostPeersResponse.displayName = 'proto.model.GetHostPeersResponse';
 }
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.model.Host.repeatedFields_ = [7];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -120,7 +127,9 @@ proto.model.Host.toObject = function(includeInstance, msg) {
     unresolvedpeersMap: (f = msg.getUnresolvedpeersMap()) ? f.toObject(includeInstance, proto.model.Peer.toObject) : [],
     knownpeersMap: (f = msg.getKnownpeersMap()) ? f.toObject(includeInstance, proto.model.Peer.toObject) : [],
     blacklistedpeersMap: (f = msg.getBlacklistedpeersMap()) ? f.toObject(includeInstance, proto.model.Peer.toObject) : [],
-    stopped: jspb.Message.getBooleanFieldWithDefault(msg, 6, false)
+    stopped: jspb.Message.getBooleanFieldWithDefault(msg, 6, false),
+    prioritypeersList: jspb.Message.toObjectList(msg.getPrioritypeersList(),
+    model_peer_pb.Peer.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -190,6 +199,11 @@ proto.model.Host.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setStopped(value);
       break;
+    case 7:
+      var value = new model_peer_pb.Peer;
+      reader.readMessage(value,model_peer_pb.Peer.deserializeBinaryFromReader);
+      msg.addPrioritypeers(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -248,6 +262,14 @@ proto.model.Host.serializeBinaryToWriter = function(message, writer) {
     writer.writeBool(
       6,
       f
+    );
+  }
+  f = message.getPrioritypeersList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      7,
+      f,
+      model_peer_pb.Peer.serializeBinaryToWriter
     );
   }
 };
@@ -385,13 +407,47 @@ proto.model.Host.prototype.setStopped = function(value) {
 };
 
 
+/**
+ * repeated Peer PriorityPeers = 7;
+ * @return {!Array<!proto.model.Peer>}
+ */
+proto.model.Host.prototype.getPrioritypeersList = function() {
+  return /** @type{!Array<!proto.model.Peer>} */ (
+    jspb.Message.getRepeatedWrapperField(this, model_peer_pb.Peer, 7));
+};
+
+
+/** @param {!Array<!proto.model.Peer>} value */
+proto.model.Host.prototype.setPrioritypeersList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 7, value);
+};
+
+
+/**
+ * @param {!proto.model.Peer=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.model.Peer}
+ */
+proto.model.Host.prototype.addPrioritypeers = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 7, opt_value, proto.model.Peer, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ */
+proto.model.Host.prototype.clearPrioritypeersList = function() {
+  this.setPrioritypeersList([]);
+};
+
+
 
 /**
  * List of repeated fields within this message type.
  * @private {!Array<number>}
  * @const
  */
-proto.model.HostInfo.repeatedFields_ = [2];
+proto.model.HostInfo.repeatedFields_ = [2,3];
 
 
 
@@ -426,7 +482,10 @@ proto.model.HostInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
     host: (f = msg.getHost()) && proto.model.Host.toObject(includeInstance, f),
     chainstatusesList: jspb.Message.toObjectList(msg.getChainstatusesList(),
-    model_blockchain_pb.ChainStatus.toObject, includeInstance)
+    model_blockchain_pb.ChainStatus.toObject, includeInstance),
+    scramblednodesList: jspb.Message.toObjectList(msg.getScramblednodesList(),
+    model_peer_pb.Peer.toObject, includeInstance),
+    scramblednodesheight: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -473,6 +532,15 @@ proto.model.HostInfo.deserializeBinaryFromReader = function(msg, reader) {
       reader.readMessage(value,model_blockchain_pb.ChainStatus.deserializeBinaryFromReader);
       msg.addChainstatuses(value);
       break;
+    case 3:
+      var value = new model_peer_pb.Peer;
+      reader.readMessage(value,model_peer_pb.Peer.deserializeBinaryFromReader);
+      msg.addScramblednodes(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setScramblednodesheight(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -516,6 +584,21 @@ proto.model.HostInfo.serializeBinaryToWriter = function(message, writer) {
       2,
       f,
       model_blockchain_pb.ChainStatus.serializeBinaryToWriter
+    );
+  }
+  f = message.getScramblednodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      3,
+      f,
+      model_peer_pb.Peer.serializeBinaryToWriter
+    );
+  }
+  f = message.getScramblednodesheight();
+  if (f !== 0) {
+    writer.writeUint32(
+      4,
+      f
     );
   }
 };
@@ -585,6 +668,55 @@ proto.model.HostInfo.prototype.addChainstatuses = function(opt_value, opt_index)
  */
 proto.model.HostInfo.prototype.clearChainstatusesList = function() {
   this.setChainstatusesList([]);
+};
+
+
+/**
+ * repeated Peer ScrambledNodes = 3;
+ * @return {!Array<!proto.model.Peer>}
+ */
+proto.model.HostInfo.prototype.getScramblednodesList = function() {
+  return /** @type{!Array<!proto.model.Peer>} */ (
+    jspb.Message.getRepeatedWrapperField(this, model_peer_pb.Peer, 3));
+};
+
+
+/** @param {!Array<!proto.model.Peer>} value */
+proto.model.HostInfo.prototype.setScramblednodesList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 3, value);
+};
+
+
+/**
+ * @param {!proto.model.Peer=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.model.Peer}
+ */
+proto.model.HostInfo.prototype.addScramblednodes = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.model.Peer, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ */
+proto.model.HostInfo.prototype.clearScramblednodesList = function() {
+  this.setScramblednodesList([]);
+};
+
+
+/**
+ * optional uint32 ScrambledNodesHeight = 4;
+ * @return {number}
+ */
+proto.model.HostInfo.prototype.getScramblednodesheight = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/** @param {number} value */
+proto.model.HostInfo.prototype.setScramblednodesheight = function(value) {
+  jspb.Message.setProto3IntField(this, 4, value);
 };
 
 

@@ -49,7 +49,7 @@
         {{ 'Fee is required' | translate }}
       </mat-error>
       <mat-error *ngIf="feeForm.hasError('min')">
-        {{ 'Minimum fee is' | translate: { val: 0.00000001 } }}
+        {{ 'Minimum fee is' | translate: { val: '0.00000001' } }}
       </mat-error>
     </ng-container>
     <label>{{ 'Node Public Key' | translate }}</label>

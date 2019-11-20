@@ -131,9 +131,10 @@ proto.model.Node.prototype.toObject = function(opt_includeInstance) {
  */
 proto.model.Node.toObject = function(includeInstance, msg) {
   var f, obj = {
-    sharedaddress: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    address: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    port: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    id: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    sharedaddress: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    address: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    port: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -171,14 +172,18 @@ proto.model.Node.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setSharedaddress(value);
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setId(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setAddress(value);
+      msg.setSharedaddress(value);
       break;
     case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setAddress(value);
+      break;
+    case 4:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setPort(value);
       break;
@@ -211,24 +216,31 @@ proto.model.Node.prototype.serializeBinary = function() {
  */
 proto.model.Node.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getSharedaddress();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getId();
+  if (f !== 0) {
+    writer.writeInt64(
       1,
       f
     );
   }
-  f = message.getAddress();
+  f = message.getSharedaddress();
   if (f.length > 0) {
     writer.writeString(
       2,
       f
     );
   }
+  f = message.getAddress();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
   f = message.getPort();
   if (f !== 0) {
     writer.writeUint32(
-      3,
+      4,
       f
     );
   }
@@ -236,47 +248,62 @@ proto.model.Node.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * optional string SharedAddress = 1;
- * @return {string}
+ * optional int64 ID = 1;
+ * @return {number}
  */
-proto.model.Node.prototype.getSharedaddress = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.model.Node.prototype.getId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
-/** @param {string} value */
-proto.model.Node.prototype.setSharedaddress = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+/** @param {number} value */
+proto.model.Node.prototype.setId = function(value) {
+  jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
 /**
- * optional string Address = 2;
+ * optional string SharedAddress = 2;
  * @return {string}
  */
-proto.model.Node.prototype.getAddress = function() {
+proto.model.Node.prototype.getSharedaddress = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /** @param {string} value */
-proto.model.Node.prototype.setAddress = function(value) {
+proto.model.Node.prototype.setSharedaddress = function(value) {
   jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional uint32 Port = 3;
+ * optional string Address = 3;
+ * @return {string}
+ */
+proto.model.Node.prototype.getAddress = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/** @param {string} value */
+proto.model.Node.prototype.setAddress = function(value) {
+  jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional uint32 Port = 4;
  * @return {number}
  */
 proto.model.Node.prototype.getPort = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /** @param {number} value */
 proto.model.Node.prototype.setPort = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  jspb.Message.setProto3IntField(this, 4, value);
 };
 
 

@@ -37,10 +37,9 @@ export class NavbarComponent implements OnInit {
     private appServ: AppService,
     private translate: TranslateService
   ) {
-    this.isLoggedIn = this.authServ.isLoggedIn() ? true : false;
-
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
+        this.isLoggedIn = this.authServ.isLoggedIn() ? true : false;
         this.account = authServ.getCurrAccount();
         this.node = this.account ? this.account.nodeIP : null;
       }
@@ -77,10 +76,15 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  onComingSoonPage() {
+  async onComingSoonPage() {
+    let message: string;
+    await this.translate
+      .get('Coming Soon')
+      .toPromise()
+      .then(res => (message = res));
     Swal.fire({
       type: 'info',
-      title: 'COMING SOON',
+      title: message,
       showConfirmButton: false,
       timer: 1500,
     });

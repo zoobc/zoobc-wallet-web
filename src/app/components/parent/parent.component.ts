@@ -4,7 +4,8 @@ import { AppService } from 'src/app/app.service';
 import { MatSidenav, MatDrawerContent } from '@angular/material';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { AuthService } from 'src/app/services/auth.service';
+import nodeListJson from '../../../assets/node-list.json';
+import { NodeList } from '../../../helpers/node-list';
 
 @Component({
   selector: 'app-parent',
@@ -24,8 +25,7 @@ export class ParentComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private appServ: AppService,
-    private keyringServ: KeyringService,
-    private authServ: AuthService
+    private keyringServ: KeyringService
   ) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -37,6 +37,8 @@ export class ParentComponent implements OnInit {
     });
 
     this.isLogin = this.appServ.isLoggedIn();
+
+    this.importNodeList();
   }
 
   @HostListener('window:resize', ['$event']) onResize(event) {
@@ -52,5 +54,15 @@ export class ParentComponent implements OnInit {
 
   ngOnDestroy() {
     this.routerEvent.unsubscribe();
+  }
+
+  importNodeList() {
+    let nodeList: NodeList = nodeListJson;
+    let currNodeList: NodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
+
+    if (!currNodeList || currNodeList.timestamp < nodeList.timestamp) {
+      localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
+      localStorage.setItem('SELECTED_NODE', JSON.stringify(nodeList.node[0]));
+    }
   }
 }

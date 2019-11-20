@@ -5,8 +5,8 @@ import {
   GetAccountBalanceRequest,
   GetAccountBalanceResponse,
 } from '../grpc/model/accountBalance_pb';
-import { environment } from '../../environments/environment';
 import { grpc } from '@improbable-eng/grpc-web';
+import { Node } from 'src/helpers/node-list';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +16,13 @@ export class AccountService {
 
   getAccountBalance(address: string) {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
       const request = new GetAccountBalanceRequest();
+
       request.setAccountaddress(address);
       grpc.invoke(AccountBalanceService.GetAccountBalance, {
         request: request,
-        host: environment.grpcUrl,
+        host: node.ip,
         onMessage: (message: GetAccountBalanceResponse) => {
           resolve(message.toObject());
         },

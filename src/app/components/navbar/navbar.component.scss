@@ -24,6 +24,11 @@
         &:hover {
           opacity: 1;
         }
+        .version {
+          font-size: 12px;
+          margin-top: 0px;
+          font-style: italic;
+        }
       }
       .hamburger {
         margin-right: 8px;
@@ -40,17 +45,20 @@
         padding-left: 16px;
         font-weight: 200;
         font-size: 22px;
-        align-self: center;
         @media #{$small-and-down} {
           display: none;
         }
       }
     }
     .menu {
-      width: 60%;
+      width: 70%;
       text-align: right;
-      .account-dropdown i {
-        font-size: 22px;
+      .account-dropdown {
+        margin: 0 4px;
+        color: white;
+        i {
+          font-size: 22px;
+        }
       }
 
       .language-dropdown {

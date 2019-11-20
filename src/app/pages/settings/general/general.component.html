@@ -1,3 +1,43 @@
-<p>
-  general works!
-</p>
+<div class="general-container">
+  <div class="setting-section">
+    <p class="title"><span>General</span></p>
+
+    <p class="subtitle">Language</p>
+    <mat-form-field appearance="outline" color="accent">
+      <mat-select
+        [value]="activeLanguage"
+        (selectionChange)="changeLanguage($event.value)"
+      >
+        <mat-option *ngFor="let language of languages" [value]="language.code">
+          {{ language.country }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="setting-section">
+    <p class="title"><span>Node</span></p>
+
+    <p class="subtitle">Select Node</p>
+    <mat-form-field appearance="outline" color="accent" class="select-node">
+      <mat-select
+        [value]="selectedNode.ip"
+        (selectionChange)="changeNode($event.value)"
+      >
+        <mat-option *ngFor="let node of nodeList.node" [value]="node.ip">
+          {{ node.ip }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="setting-section">
+    <p class="title"><span>Security & Privacy</span></p>
+
+    <p class="subtitle">Reveal Passphrase</p>
+    <button mat-flat-button (click)="onOpenRevealPassphrase()" color="primary">
+      <i matPrefix class="fa fa-eye"></i>
+      {{ 'Reveal Passphrase' | translate }}
+    </button>
+  </div>
+</div>

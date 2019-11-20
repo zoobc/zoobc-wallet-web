@@ -111,6 +111,7 @@ export class ConfirmPassphraseComponent implements OnInit {
       nodeIP: null,
       address: accountAddress,
     };
+    localStorage.removeItem('ACCOUNT');
     this.authServ.addAccount(account);
     this.authServ.login(key);
   }
