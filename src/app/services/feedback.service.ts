@@ -5,10 +5,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class FeedbackService {
-  // key = '6iiLMDdWejJrMi831uTdnZg4vSWlguwLBjbw5962Zu5EPA6c8xvKyhItme6hFWTs';
-  // id = '11045';
-  key = 'aDo8GkNKKeKHjb0XSt37EeqwibFFiPOSWqzpPYVIWZZYLhZ38iUU3CxLNL4fWP0I';
-  id = '11054';
+  key = '6iiLMDdWejJrMi831uTdnZg4vSWlguwLBjbw5962Zu5EPA6c8xvKyhItme6hFWTs';
+  id = '11045';
+  // key = 'aDo8GkNKKeKHjb0XSt37EeqwibFFiPOSWqzpPYVIWZZYLhZ38iUU3CxLNL4fWP0I';
+  // id = '11054';
 
   constructor(private http: HttpClient) {}
 
