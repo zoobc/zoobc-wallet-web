@@ -3,7 +3,7 @@
 
 .header {
   height: $header-height-offset;
-  background-color: map-get($primary, 600);
+  background-color: map-get($primary, 700);
   .header-container {
     margin: 0 auto;
     display: flex;
@@ -53,6 +53,11 @@
     .menu {
       width: 70%;
       text-align: right;
+      .btn-feedback {
+        color: #fff;
+        background: map-get($accent, 500);
+        text-decoration: none;
+      }
       .account-dropdown {
         margin: 0 4px;
         color: white;
@@ -62,6 +67,9 @@
       }
 
       .language-dropdown {
+        @media #{$small-and-down} {
+          display: none;
+        }
         i {
           margin-left: 8px;
         }

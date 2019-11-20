@@ -2,6 +2,17 @@
   <h2 class="mat-h2">{{ 'Feedback' | translate }}</h2>
   <mat-card>
     <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+      <!-- Name -->
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>{{ 'Name' | translate }}</mat-label>
+        <input matInput type="text" formControlName="name" />
+      </mat-form-field>
+      <ng-container *ngIf="nameField.touched">
+        <mat-error *ngIf="nameField.hasError('required')">
+          {{ 'Name is required' | translate }}
+        </mat-error>
+      </ng-container>
+
       <!-- Email -->
       <mat-form-field appearance="outline" color="accent">
         <mat-label>Email</mat-label>
@@ -15,71 +26,59 @@
           {{ 'Incorrect email format' | translate }}
         </mat-error>
       </ng-container>
-      <!-- Subject -->
-      <mat-form-field appearance="outline" color="accent">
-        <mat-label>{{ 'Subject' | translate }}</mat-label>
-        <input matInput type="text" formControlName="subject" />
-      </mat-form-field>
-      <ng-container *ngIf="subjectField.touched">
-        <mat-error *ngIf="subjectField.hasError('required')">
-          {{ 'Subject is required' | translate }}
-        </mat-error>
-      </ng-container>
+
       <!-- Message -->
       <mat-form-field appearance="outline" color="accent">
         <mat-label>{{ 'Message' | translate }}</mat-label>
-        <textarea matInput formControlName="message" rows="5"></textarea>
+        <textarea matInput formControlName="message" rows="9"></textarea>
       </mat-form-field>
       <ng-container *ngIf="messageField.touched">
         <mat-error *ngIf="messageField.hasError('required')">
           {{ 'Message is required' | translate }}
         </mat-error>
       </ng-container>
+
       <!--File Upload-->
       <div>
         <input
           #fileInput
           type="file"
-          (change)="onFileChange($event)"
+          (change)="onFileChange($event.target.files)"
           style="display: none"
-          accept="image/*"
+          multiple
         />
         <button
           mat-flat-button
           color="primary"
           type="button"
           (click)="openFile()"
+          [disabled]="isUploadLoading"
         >
-          {{ 'Upload image' | translate }}
+          <span *ngIf="isUploadLoading">
+            <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+          </span>
+          {{ 'Add Attachment' | translate }}
         </button>
-        <ng-container *ngIf="!fileField.hasError('invalidType')">
-          <span class="mat-body-1">{{ filename }}</span>
-          <img
-            style="padding: 8px 0"
-            [src]="imgURL"
-            height="200"
-            width="300"
-            *ngIf="imgURL"
-          />
-        </ng-container>
-        <mat-error
-          style="padding: 8px 0"
-          *ngIf="fileField.hasError('invalidType')"
+        <span
+          class="mat-body-1"
+          *ngIf="isUploadSuccess"
+          style="color: #4caf50;"
         >
-          {{ 'Type upload file should be image' | translate }}
-        </mat-error>
+          {{ 'Attachment Added' | translate }}
+        </span>
       </div>
-      <!-- Copy -->
-      <mat-checkbox formControlName="canSendCopy" style="padding: 8px 0">
-        Send me a copy of this message
-      </mat-checkbox>
+      <br />
+
       <!-- Send button -->
       <button
         mat-flat-button
         color="primary"
         type="submit"
-        [disabled]="contactForm.invalid"
+        [disabled]="contactForm.invalid || isFeedbackLoading || isFeedbackError"
       >
+        <span *ngIf="isFeedbackLoading">
+          <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+        </span>
         {{ 'Send' | translate }}
       </button>
     </form>

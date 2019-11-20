@@ -16,6 +16,7 @@ export class RevealPassphraseComponent implements OnInit {
   pinField = new FormControl('', Validators.required);
   isConfirmPinLoading = false;
   phrase: string;
+  arrPhrase: string[];
 
   constructor(
     private authServ: AuthService,
@@ -40,6 +41,7 @@ export class RevealPassphraseComponent implements OnInit {
           this.phrase = CryptoJS.AES.decrypt(encSeed, key).toString(
             CryptoJS.enc.Utf8
           );
+          this.arrPhrase = this.phrase.split(' ');
         } else this.formConfirmPin.setErrors({ invalid: true });
         this.isConfirmPinLoading = false;
       }, 50);

@@ -2,17 +2,17 @@
   <h2 class="mat-h2">{{ 'Edit Address' | translate }}</h2>
   <form [formGroup]="editForm" (submit)="onSubmit()">
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'Alias' | translate }}</mat-label>
+      <mat-label>{{ 'Name' | translate }}</mat-label>
       <input
         matInput
         type="text"
         formControlName="alias"
-        placeholder="{{ 'Alias' | translate }}"
+        placeholder="{{ 'Name' | translate }}"
       />
     </mat-form-field>
     <ng-container *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">
-        {{ 'Alias is required' | translate }}
+        {{ 'Name is required' | translate }}
       </mat-error>
     </ng-container>
 

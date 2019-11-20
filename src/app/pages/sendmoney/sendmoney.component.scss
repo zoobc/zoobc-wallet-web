@@ -2,10 +2,8 @@
 @import '../../../styles/mixins';
 
 .sendmoney-container {
-  .mat-card {
-    max-width: 400px;
-    margin: 0 auto;
-  }
+  max-width: 400px;
+  margin: 0 auto;
 
   .zbc-form-item {
     .amount {
@@ -73,7 +71,7 @@
     }
     .fee-choosen:enabled {
       color: white;
-      background-color: map-get($primary, 500);
+      background-color: map-get($primary, 700);
       .label {
         color: white !important;
       }

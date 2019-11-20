@@ -44,6 +44,14 @@ export class ConfirmPassphraseComponent implements OnInit {
     this.prefillHalfPassphrase();
   }
 
+  backClicked() {
+    this.router.navigate(['signup'], {
+      state: {
+        masterSeed: history.state.masterSeed,
+        passphrase: history.state.passphrase,
+      },
+    });
+  }
   prefillHalfPassphrase() {
     // removing some words of the passphrase
     this.prefillPassphrase = this.passphrase;
