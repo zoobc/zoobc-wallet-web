@@ -12,6 +12,15 @@
     padding: 8px;
     font-size: 14px;
   }
+  .copy-address {
+    margin-left: 8px;
+    font-size: 16px;
+    @include transition(0.3s ease-in all);
+    &:hover {
+      opacity: 0.6;
+      cursor: pointer;
+    }
+  }
   .qrcode-container {
     width: 100%;
     min-height: 220px;

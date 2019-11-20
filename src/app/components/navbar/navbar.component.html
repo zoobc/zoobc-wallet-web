@@ -1,7 +1,12 @@
 <div class="header">
   <div class="header-container">
     <div class="brand">
-      <button mat-icon-button *ngIf="isLoggedIn" class="hamburger" (click)="onToggle()">
+      <button
+        mat-icon-button
+        *ngIf="isLoggedIn"
+        class="hamburger"
+        (click)="onToggle()"
+      >
         <i class="fa fa-bars" style="font-size: 18px"></i>
       </button>
       <a routerLink="/" class="brand-text">
@@ -13,19 +18,31 @@
       </a>
     </div>
     <div class="menu">
-
-      <button style="color: white; background:#ec5b58;background-color:#ec5b58;"
-        matTooltip="{{ 'Feedback' | translate }}" routerLink="/feedback" target="_blank">
+      <button
+        mat-flat-button
+        class="btn-feedback"
+        matTooltip="{{ 'Feedback' | translate }}"
+        routerLink="/feedback"
+        target="_blank"
+      >
         <span>FEEDBACK</span>
       </button>
 
       <!-- language menu -->
-      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
+      <button
+        mat-button
+        class="language-dropdown"
+        [matMenuTriggerFor]="language"
+      >
         <span>{{ activeLanguage }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
       <mat-menu #language="matMenu">
-        <button *ngFor="let language of languages" (click)="selectActiveLanguage(language.code)" mat-menu-item>
+        <button
+          *ngFor="let language of languages"
+          (click)="selectActiveLanguage(language.code)"
+          mat-menu-item
+        >
           {{ language.country }}
         </button>
       </mat-menu>
@@ -36,7 +53,12 @@
       </a> -->
 
       <!-- account menu -->
-      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="isLoggedIn">
+      <button
+        mat-icon-button
+        class="account-dropdown"
+        [matMenuTriggerFor]="account"
+        *ngIf="isLoggedIn"
+      >
         <i class="fa fa-cog"></i>
       </button>
       <mat-menu #account="matMenu">
