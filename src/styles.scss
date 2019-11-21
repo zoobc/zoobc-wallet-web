@@ -7,9 +7,12 @@
 @import './styles/grid.css';
 
 @include mat-core();
-$app-primary: mat-palette($primary, 700);
+$app-primary: mat-palette($primary, 600);
 $app-accent: mat-palette($accent, 500);
-$app-theme: mat-light-theme($app-primary, $app-accent);
+
+$red: mat-palette($mat-red, 800);
+
+$app-theme: mat-light-theme($app-primary, $app-accent, $red);
 
 @include angular-material-theme($app-theme);
 
