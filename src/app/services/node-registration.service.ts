@@ -32,18 +32,22 @@ export class NodeRegistrationService {
       const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
 
       const nodeAddress = new NodeAddress();
-      nodeAddress.setAddress('18.139.3.139');
-      // nodeAddress.setPort(5001);
+      const ipAddress = account.address.split(':');
+      nodeAddress.setAddress(ipAddress[0]);
+      if (ipAddress[1]) nodeAddress.setPort(parseInt(ipAddress[1]));
 
       const request = new GetNodeRegistrationRequest();
       request.setAccountaddress(account.address);
-      request.setNodeaddress(nodeAddress);
+      // request.setNodeaddress(nodeAddress);
 
       grpc.invoke(NodeRegistrationServ.GetNodeRegistration, {
         host: node.ip,
         request: request,
         onMessage: (message: GetNodeRegistrationResponse) => {
-          resolve(message.toObject());
+          const address = message.toObject().noderegistration.nodeaddress
+            .address;
+          if (address != '') resolve(message.toObject());
+          else resolve({ noderegistration: null });
         },
         onEnd: (
           code: grpc.Code,
@@ -77,7 +81,6 @@ export class NodeRegistrationService {
             const tx = mempoolTx[i].transactionbytes;
             const txBytes = Buffer.from(tx.toString(), 'base64');
             const type = txBytes.slice(0, 4).readInt32LE(0);
-            console.log(type);
 
             let found = false;
             switch (type) {

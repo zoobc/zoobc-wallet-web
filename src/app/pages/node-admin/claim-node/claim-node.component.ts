@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { PoownService } from 'src/app/services/poown.service';
 import { TransactionService } from 'src/app/services/transaction.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
@@ -24,7 +24,6 @@ export class ClaimNodeComponent implements OnInit {
   nodePublicKeyForm = new FormControl('', Validators.required);
 
   account: SavedAccount;
-  poown: Buffer;
 
   isLoading: boolean = false;
   isError: boolean = false;
@@ -34,7 +33,8 @@ export class ClaimNodeComponent implements OnInit {
     private keyringServ: KeyringService,
     private poownServ: PoownService,
     private transactionServ: TransactionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<ClaimNodeComponent>
   ) {
     this.formClaimNode = new FormGroup({
       fee: this.feeForm,
@@ -44,36 +44,14 @@ export class ClaimNodeComponent implements OnInit {
     this.account = authServ.getCurrAccount();
   }
 
-  ngOnInit() {
-    this.isLoading = true;
-    this.formClaimNode.disable();
-    this.poownServ.get(this.account.nodeIP).then(
-      res => {
-        this.isLoading = false;
-        this.poown = res;
-        let address = res.toString('utf-8', 0, 44);
-        if (this.account.address == address) {
-          this.formClaimNode.enable();
-        } else {
-          this.isError = true;
-          this.formClaimNode.disable();
-        }
-      },
-      err => {
-        this.isError = true;
-        this.formClaimNode.disable();
-        console.log(err);
-      }
-    );
-  }
+  ngOnInit() {}
 
-  onChangeRecipient() {
+  onChangeNodePublicKey() {
     let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
-  onClaimNode(e) {
-    e.preventDefault();
+  onClaimNode() {
     if (this.formClaimNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
@@ -84,27 +62,29 @@ export class ClaimNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          let data: ClaimNodeInterface = {
-            accountAddress: this.account.address,
-            nodePublicKey: this.nodePublicKeyForm.value,
-            fee: this.feeForm.value,
-            poown: this.poown,
-          };
+          this.poownServ
+            .get(this.account.nodeIP)
+            .then((poown: Buffer) => {
+              let data: ClaimNodeInterface = {
+                accountAddress: this.account.address,
+                nodePublicKey: this.nodePublicKeyForm.value,
+                fee: this.feeForm.value,
+                poown: poown,
+              };
+              let bytes = claimNodeBuilder(data, this.keyringServ);
 
-          let bytes = claimNodeBuilder(data, this.keyringServ);
-
-          this.transactionServ.postTransaction(bytes).then(
-            (res: any) => {
-              Swal.fire('Success', 'success', 'success');
-              this.isLoading = false;
-            },
-            err => {
+              return this.transactionServ.postTransaction(bytes);
+            })
+            .then(() => {
+              Swal.fire('Success', 'Your node will be claimed soon', 'success');
+              this.dialogRef.close(true);
+            })
+            .catch(err => {
               console.log(err);
               Swal.fire('Error', err, 'error');
-              this.isLoading = false;
               this.isError = true;
-            }
-          );
+            })
+            .finally(() => (this.isLoading = false));
         }
       });
     }

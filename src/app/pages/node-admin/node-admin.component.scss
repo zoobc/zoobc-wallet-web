@@ -6,6 +6,9 @@
     background: $primary-gradient !important;
     color: white;
     margin-bottom: 16px;
+    &.error {
+      background: $error-gradient !important;
+    }
     .icon {
       width: 56px;
       .label {

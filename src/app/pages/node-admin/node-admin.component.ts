@@ -14,14 +14,9 @@ import {
 } from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { TransactionService } from 'src/app/services/transaction.service';
-import {
-  RemoveNodeInterface,
-  removeNodeBuilder,
-} from 'src/helpers/transaction-builder/remove-node';
-import { KeyringService } from 'src/app/services/keyring.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
-import { environment } from 'src/environments/environment';
+import { RemoveNodeComponent } from './remove-node/remove-node.component';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -53,22 +48,12 @@ export class NodeAdminComponent implements OnInit {
     private dialog: MatDialog,
     private nodeServ: NodeRegistrationService,
     authServ: AuthService,
-    private transactionServ: TransactionService,
-    private keyringServ: KeyringService
+    private transactionServ: TransactionService
   ) {
     this.account = authServ.getCurrAccount();
   }
 
   ngOnInit() {
-    this.nodeServ
-      .getUnconfirmTransaction(this.account.address)
-      .then(res => {
-        console.log(res);
-        this.pendingNodeTx = res;
-      })
-      .catch(err => {
-        console.log(err);
-      });
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
   }
@@ -80,29 +65,31 @@ export class NodeAdminComponent implements OnInit {
   getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
+    this.pendingNodeTx = null;
+    this.registeredNode = null;
+
     this.nodeServ
       .getUnconfirmTransaction(this.account.address)
       .then(res => {
         this.pendingNodeTx = res;
-        if (res) return this.nodeServ.getRegisteredNode(this.account);
-        else this.isNodeLoading = false;
-        return false;
+        return this.nodeServ.getRegisteredNode(this.account);
       })
       .then((res: RegisteredNodeR) => {
-        this.isNodeLoading = false;
         this.registeredNode = res.noderegistration;
       })
       .catch(err => {
         console.log(err);
-        this.isNodeLoading = false;
         this.isNodeError = true;
-      });
+      })
+      .finally(() => (this.isNodeLoading = false));
   }
 
   generateNewPubKey() {
     // todo: create loader and display the result
     Swal.fire({
       title: 'Are you sure want to generate new node public key?',
+      text:
+        'You need to update your node registration or your node will stop smithing',
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -147,6 +134,7 @@ export class NodeAdminComponent implements OnInit {
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
+      data: this.registeredNode,
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -164,31 +152,14 @@ export class NodeAdminComponent implements OnInit {
     });
   }
 
-  removeNode() {
-    Swal.fire({
-      title: `Are you sure want to remove this node?`,
-      showCancelButton: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => {
-        let data: RemoveNodeInterface = {
-          accountAddress: this.account.address,
-          nodePublicKey: this.registeredNode.nodepublickey.toString(),
-          fee: environment.feeSlow,
-        };
-        let bytes = removeNodeBuilder(data, this.keyringServ);
+  openRemoveNode() {
+    const dialog = this.dialog.open(RemoveNodeComponent, {
+      width: '420px',
+      data: this.registeredNode,
+    });
 
-        this.transactionServ.postTransaction(bytes).then(
-          (res: any) => {
-            Swal.fire('Success', 'success', 'success');
-            setTimeout(() => this.getRegisteredNode(), 500);
-          },
-          err => {
-            console.log(err);
-            Swal.fire('Error', err, 'error');
-          }
-        );
-        return true;
-      },
+    dialog.afterClosed().subscribe(success => {
+      if (success) this.getRegisteredNode();
     });
   }
 }

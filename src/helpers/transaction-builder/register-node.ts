@@ -31,7 +31,7 @@ export function registerNodeBuilder(
   const fee = intToInt64Bytes(data.fee * 1e8);
 
   const nodePublicKey = base64ToByteArray(data.nodePublicKey);
-  const nodeAddress = Buffer.from('18.139.3.139', 'utf-8');
+  const nodeAddress = Buffer.from(data.nodeAddress, 'utf-8');
   const nodeAddressLength = int32ToBytes(nodeAddress.length);
   const funds = intToInt64Bytes(data.funds * 1e8);
   const bodyLength = int32ToBytes(

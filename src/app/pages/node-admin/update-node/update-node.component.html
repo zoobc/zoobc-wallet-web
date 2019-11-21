@@ -6,13 +6,16 @@
       <input
         matInput
         type="text"
-        placeholder="{{ 'IP Address' | translate }}"
+        placeholder="https://yournode.com:8001 or http://192.168.43.1:8001"
         formControlName="ipAddress"
       />
     </mat-form-field>
     <ng-container *ngIf="ipAddressForm.touched">
       <mat-error *ngIf="ipAddressForm.hasError('required')">
         {{ 'IP Address is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="ipAddressForm.hasError('pattern')">
+        {{ 'Invalid IP address format' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Locked Balance' | translate }}</label>
@@ -56,6 +59,7 @@
         type="text"
         placeholder="{{ 'Node Public Key' | translate }}"
         formControlName="nodePublicKey"
+        (keyup)="onChangeNodePublicKey()"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">

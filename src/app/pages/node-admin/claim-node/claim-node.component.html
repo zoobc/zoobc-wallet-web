@@ -25,7 +25,7 @@
         type="text"
         placeholder="{{ 'Node Public Key' | translate }}"
         formControlName="nodePublicKey"
-        (keyup)="onChangeRecipient()"
+        (keyup)="onChangeNodePublicKey()"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">
@@ -37,8 +37,16 @@
       </mat-error>
     </ng-container>
     <br />
-    <button mat-flat-button color="primary" type="submit">
-      {{ 'Claim Node' | translate }}
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="formClaimNode.invalid || isLoading"
+    >
+      <span *ngIf="isLoading">
+        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+      </span>
+      <span>{{ 'Claim Node' | translate }}</span>
     </button>
   </form>
 </div>

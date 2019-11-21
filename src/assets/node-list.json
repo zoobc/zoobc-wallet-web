@@ -15,7 +15,11 @@
     {
       "ip": "http://n3.alpha.proofofparticipation.network:8080",
       "default": true
+    },
+    {
+      "ip": "http://172.104.47.168:8001",
+      "default": true
     }
   ],
-  "timestamp": 1573702241
+  "timestamp": 1573702246
 }
