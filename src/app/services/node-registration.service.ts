@@ -44,12 +44,10 @@ export class NodeRegistrationService {
         host: node.ip,
         request: request,
         onMessage: (message: GetNodeRegistrationResponse) => {
-          // const address = message.toObject().noderegistration.nodeaddress
-          //   .address;
-          // if (address != '') resolve(message.toObject());
-          // else resolve({ noderegistration: null });
-
-          resolve(message.toObject());
+          const address = message.toObject().noderegistration.nodeaddress
+            .address;
+          if (address != '') resolve(message.toObject());
+          else resolve({ noderegistration: null });
         },
         onEnd: (
           code: grpc.Code,
