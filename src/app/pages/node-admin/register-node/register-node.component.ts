@@ -92,7 +92,11 @@ export class RegisterNodeComponent implements OnInit {
               return this.transactionServ.postTransaction(byte);
             })
             .then(() => {
-              Swal.fire('Success', 'success', 'success');
+              Swal.fire(
+                'Success',
+                'Your node will be registered soon',
+                'success'
+              );
 
               // change IP if has different value
               if (this.ipAddressForm.value != this.account.nodeIP)

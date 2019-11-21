@@ -162,3 +162,5 @@ $accent-gradient: linear-gradient(
   map-get($accent, 500),
   map-get($accent, 300)
 );
+
+$error-gradient: linear-gradient(45deg, #c62828, #ef5350);

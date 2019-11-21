@@ -76,7 +76,7 @@ export class ClaimNodeComponent implements OnInit {
               return this.transactionServ.postTransaction(bytes);
             })
             .then(() => {
-              Swal.fire('Success', 'success', 'success');
+              Swal.fire('Success', 'Your node will be claimed soon', 'success');
               this.dialogRef.close(true);
             })
             .catch(err => {

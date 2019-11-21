@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PoownService } from 'src/app/services/poown.service';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
@@ -6,12 +6,15 @@ import { KeyringService } from 'src/app/services/keyring.service';
 import { TransactionService } from 'src/app/services/transaction.service';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import {
   UpdateNodeInterface,
   updateNodeBuilder,
 } from 'src/helpers/transaction-builder/update-node';
 import Swal from 'sweetalert2';
+import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
+
+type RegisteredNode = NodeRegistration.AsObject;
 
 @Component({
   selector: 'app-update-node',
@@ -44,7 +47,8 @@ export class UpdateNodeComponent implements OnInit {
     private keyringServ: KeyringService,
     private transactionServ: TransactionService,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<UpdateNodeComponent>
+    public dialogRef: MatDialogRef<UpdateNodeComponent>,
+    @Inject(MAT_DIALOG_DATA) public node: RegisteredNode
   ) {
     this.formUpdateNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -55,6 +59,8 @@ export class UpdateNodeComponent implements OnInit {
 
     this.account = authServ.getCurrAccount();
     this.ipAddressForm.patchValue(this.account.nodeIP);
+    this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
+    this.lockedAmountForm.patchValue(this.node.lockedbalance);
   }
 
   ngOnInit() {}
@@ -91,7 +97,7 @@ export class UpdateNodeComponent implements OnInit {
               return this.transactionServ.postTransaction(bytes);
             })
             .then(() => {
-              Swal.fire('Success', 'success', 'success');
+              Swal.fire('Success', 'Your node will be updated soon', 'success');
 
               // change IP if has different value
               if (this.ipAddressForm.value != this.account.nodeIP)

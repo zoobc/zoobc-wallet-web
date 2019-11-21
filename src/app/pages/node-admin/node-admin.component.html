@@ -2,7 +2,7 @@
   <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
   <div class="row">
     <div class="col-12 col-sm-6">
-      <mat-card class="status-card">
+      <mat-card class="status-card" *ngIf="!isNodeHardwareError">
         <div class="icon">
           <i class="fa fa-plug"></i>
           <div class="label">Online</div>
@@ -10,9 +10,20 @@
         <div class="status" *ngIf="account.nodeIP">
           <div class="label">{{ 'IP Address' | translate }}</div>
           <div class="value">{{ account.nodeIP }}</div>
-          <button mat-flat-button (click)="generateNewPubKey()">
+          <button mat-flat-button (click)="generateNewPubKey()" *ngIf="hwInfo">
             {{ 'generate new public key' | translate }}
           </button>
+        </div>
+      </mat-card>
+
+      <mat-card class="status-card error" *ngIf="isNodeHardwareError">
+        <div class="icon">
+          <i class="fa fa-ban"></i>
+          <div class="label">Offline</div>
+        </div>
+        <div class="status" *ngIf="account.nodeIP">
+          <div class="label">{{ 'IP Address' | translate }}</div>
+          <div class="value">{{ account.nodeIP }}</div>
         </div>
       </mat-card>
     </div>
@@ -26,7 +37,7 @@
         <div class="status">
           <div class="label">{{ 'Blocks Created' | translate }}</div>
           <div class="value">
-            20,000 <small>{{ 'Blocks' | translate }}</small>
+            <i>({{ 'Coming Soon' | translate }})</i>
           </div>
         </div>
       </mat-card>
@@ -131,18 +142,26 @@
       <span class="message">
         {{ 'Your node is not registered yet' | translate }}
       </span>
-      <div class="text-center">
-        <button
-          mat-flat-button
-          color="primary"
-          style="margin-right: 8px"
-          (click)="openRegisterNode()"
-        >
-          {{ 'Register Your Node' | translate }}
-        </button>
-        <button mat-flat-button color="accent" (click)="openClaimNode()">
-          {{ 'Claim Your Node' | translate }}
-        </button>
+      <div class="text-center" style="margin:8px 0;">
+        <ng-container *ngIf="!pendingNodeTx">
+          <button
+            mat-flat-button
+            color="primary"
+            style="margin-right: 8px"
+            (click)="openRegisterNode()"
+          >
+            {{ 'Register Your Node' | translate }}
+          </button>
+          <button mat-flat-button color="accent" (click)="openClaimNode()">
+            {{ 'Claim Your Node' | translate }}
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="pendingNodeTx">
+          <span class="pending-label">
+            Pending: <b>{{ pendingNodeTx.type }}</b>
+          </span>
+        </ng-container>
       </div>
     </div>
 

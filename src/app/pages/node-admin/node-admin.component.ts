@@ -14,14 +14,8 @@ import {
 } from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { TransactionService } from 'src/app/services/transaction.service';
-import {
-  RemoveNodeInterface,
-  removeNodeBuilder,
-} from 'src/helpers/transaction-builder/remove-node';
-import { KeyringService } from 'src/app/services/keyring.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
-import { environment } from 'src/environments/environment';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
 
 type NodeHardware = NH.AsObject;
@@ -54,8 +48,7 @@ export class NodeAdminComponent implements OnInit {
     private dialog: MatDialog,
     private nodeServ: NodeRegistrationService,
     authServ: AuthService,
-    private transactionServ: TransactionService,
-    private keyringServ: KeyringService
+    private transactionServ: TransactionService
   ) {
     this.account = authServ.getCurrAccount();
   }
@@ -78,12 +71,10 @@ export class NodeAdminComponent implements OnInit {
     this.nodeServ
       .getUnconfirmTransaction(this.account.address)
       .then(res => {
-        console.log(res);
         this.pendingNodeTx = res;
         return this.nodeServ.getRegisteredNode(this.account);
       })
       .then((res: RegisteredNodeR) => {
-        console.log(res);
         this.registeredNode = res.noderegistration;
       })
       .catch(err => {
@@ -97,6 +88,8 @@ export class NodeAdminComponent implements OnInit {
     // todo: create loader and display the result
     Swal.fire({
       title: 'Are you sure want to generate new node public key?',
+      text:
+        'You need to update your node registration or your node will stop smithing',
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -141,6 +134,7 @@ export class NodeAdminComponent implements OnInit {
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
+      data: this.registeredNode,
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -161,6 +155,7 @@ export class NodeAdminComponent implements OnInit {
   openRemoveNode() {
     const dialog = this.dialog.open(RemoveNodeComponent, {
       width: '420px',
+      data: this.registeredNode,
     });
 
     dialog.afterClosed().subscribe(success => {

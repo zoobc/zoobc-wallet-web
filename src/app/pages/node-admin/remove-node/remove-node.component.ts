@@ -1,21 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { KeyringService } from 'src/app/services/keyring.service';
-import { PoownService } from 'src/app/services/poown.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import {
-  ClaimNodeInterface,
-  claimNodeBuilder,
-} from 'src/helpers/transaction-builder/claim-node';
 import Swal from 'sweetalert2';
 import {
   RemoveNodeInterface,
   removeNodeBuilder,
 } from 'src/helpers/transaction-builder/remove-node';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
+
+type RegisteredNode = NodeRegistration.AsObject;
 
 @Component({
   selector: 'app-remove-node',
@@ -35,10 +33,10 @@ export class RemoveNodeComponent implements OnInit {
   constructor(
     private authServ: AuthService,
     private keyringServ: KeyringService,
-    private poownServ: PoownService,
     private transactionServ: TransactionService,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<RemoveNodeComponent>
+    public dialogRef: MatDialogRef<RemoveNodeComponent>,
+    @Inject(MAT_DIALOG_DATA) public node: RegisteredNode
   ) {
     this.formRemoveNode = new FormGroup({
       fee: this.feeForm,
@@ -46,6 +44,7 @@ export class RemoveNodeComponent implements OnInit {
     });
 
     this.account = authServ.getCurrAccount();
+    this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
   }
 
   ngOnInit() {}
@@ -76,7 +75,7 @@ export class RemoveNodeComponent implements OnInit {
           this.transactionServ
             .postTransaction(bytes)
             .then(() => {
-              Swal.fire('Success', 'success', 'success');
+              Swal.fire('Success', 'Your node will be removed soon', 'success');
               this.dialogRef.close(true);
             })
             .catch(err => {
