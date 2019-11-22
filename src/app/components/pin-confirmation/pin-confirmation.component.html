@@ -5,7 +5,7 @@
   <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
   <div class="text-center">
     <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-      <span class="text-center">{{ 'Pin is not match' | translate }}</span>
+      <span class="text-center">{{ 'Pin does not match' | translate }}</span>
     </mat-error>
     <i
       matPrefix
