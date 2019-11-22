@@ -25,7 +25,7 @@
         routerLink="/feedback"
         target="_blank"
       >
-        <span>FEEDBACK</span>
+        <span>{{ 'Feedback' | translate }}</span>
       </button>
 
       <!-- language menu -->
@@ -91,7 +91,7 @@
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/settings/general">
             <i class="fa fa-cog"></i>
-            {{ 'Setting' | translate }}
+            {{ 'Settings' | translate }}
           </button>
           <mat-divider></mat-divider>
           <button (click)="onLogout()" mat-menu-item>
