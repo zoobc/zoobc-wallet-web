@@ -27,7 +27,7 @@
         (change)="onResetPinValidation()"
       ></field-pins>
       <mat-error *ngIf="isPinMatched == false">
-        {{ 'Pin is not match' | translate }}
+        {{ 'Pin does not match' | translate }}
       </mat-error>
       <div class="text-right">
         <button mat-flat-button color="warn" type="button" (click)="onBack()">
