@@ -24,9 +24,6 @@ $small-and-down: 'only screen and (max-width : #{$small-screen})' !default;
 $medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default;
 $medium-only: 'only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})' !default;
 
-// colors
-$primary-color: #01aad8;
-
 // black
 $black1: rgba(
   $color: black,
@@ -153,13 +150,13 @@ $accent: (
 
 $primary-gradient: linear-gradient(
   45deg,
-  map-get($primary, 700),
-  map-get($primary, 300)
+  map-get($primary, 600),
+  map-get($primary, 400)
 );
 
 $accent-gradient: linear-gradient(
   45deg,
-  map-get($accent, 500),
+  map-get($accent, 600),
   map-get($accent, 300)
 );
 

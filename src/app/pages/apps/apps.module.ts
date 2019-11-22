@@ -65,7 +65,7 @@ const routes: Routes = [
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     RouterModule.forChild(routes),
-    TranslateModule.forRoot({
+    TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
