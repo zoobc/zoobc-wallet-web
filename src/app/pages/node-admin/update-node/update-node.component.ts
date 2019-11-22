@@ -58,7 +58,7 @@ export class UpdateNodeComponent implements OnInit {
     this.account = authServ.getCurrAccount();
     this.ipAddressForm.patchValue(this.account.nodeIP);
     this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
-    this.lockedAmountForm.patchValue(this.node.lockedbalance);
+    this.lockedAmountForm.patchValue(parseInt(this.node.lockedbalance) / 1e8);
   }
 
   ngOnInit() {}

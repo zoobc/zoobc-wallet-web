@@ -34,7 +34,7 @@ export class NodeAdminService {
       const request = new GetNodeHardwareRequest();
 
       this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
-        host: `http://${account.nodeIP}`,
+        host: `${account.nodeIP}`,
       });
       this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
         observer.next(message.toObject());
@@ -56,8 +56,6 @@ export class NodeAdminService {
   }
 
   generateNodeKey(nodeIP: string) {
-    nodeIP = `http://${nodeIP}`;
-
     return new Promise((resolve, reject) => {
       const auth = poownBuilder(RequestType.GENERATETNODEKEY, this.keyringServ);
       const request = new GenerateNodeKeyRequest();

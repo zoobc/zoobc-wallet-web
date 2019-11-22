@@ -141,8 +141,9 @@ export class AuthService {
 
     account.nodeIP = newIp;
     for (let i = 0; i < accounts.length; i++) {
-      if ((accounts[i].path = account.path)) accounts[i] = account;
+      if (accounts[i].path == account.path) accounts[i] = account;
     }
+
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
     localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
   }
