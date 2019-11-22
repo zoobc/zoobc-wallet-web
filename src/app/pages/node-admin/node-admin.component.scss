@@ -31,13 +31,12 @@
       text-align: right;
       width: calc(100% - 56px);
       .label {
-        color: $white2;
+        color: $white1;
         font-size: 14px;
-        font-weight: bold;
         margin-bottom: 4px;
       }
       .value {
-        font-size: 16px;
+        font-size: 14px;
       }
       .mat-flat-button {
         background-color: $white3;
