@@ -1,36 +1,55 @@
 <div class="restore-wallet-container">
   <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
   <form [formGroup]="restoreForm" (submit)="onRestore()">
-    <mat-form-field appearance="outline" color="accent" class="block">
-      <textarea
-        formControlName="passphrase"
-        matInput
-        placeholder="{{ 'Put your passphrase here' | translate }}..."
-        rows="6"
-        (keyup)="onChangeMnemonic()"
-      ></textarea>
-    </mat-form-field>
-    <ng-container *ngIf="passphraseField.touched">
-      <mat-error *ngIf="passphraseField.hasError('required')">
-        {{ 'Passphrase is required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="passphraseField.hasError('mnemonic')">
-        {{ 'Passphrase is invalid' | translate }}
-      </mat-error>
-      <mat-error *ngIf="passphraseField.hasError('lengthMnemonic')">
-        {{
-          'Please use your passphrase words'
-            | translate: { num: mnemonicWordLengtEnv }
-        }}
-      </mat-error>
-    </ng-container>
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="restoreForm.invalid"
-    >
-      {{ 'Open Wallet' | translate }}
+    <div class="row" formArrayName="words">
+      <div
+        class="col-6 col-sm-4"
+        *ngFor="let word of restoreForm.get('words').controls; let i = index"
+      >
+        <mat-form-field
+          [formGroupName]="i"
+          appearance="outline"
+          color="accent"
+          class="block"
+        >
+          <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
+          <input
+            matInput
+            formControlName="word"
+            (paste)="onPasteEvent($event)"
+            (keyup)="onChangeMnemonic()"
+            title="You can paste your 24 Phrase Word"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-error *ngIf="restoreForm.hasError('mnemonic')">
+      {{ 'Passphrase is invalid' | translate }}
+    </mat-error>
+    <mat-error *ngIf="restoreForm.hasError('lengthMnemonic')">
+      {{
+        'Please use your passphrase words'
+          | translate: { num: mnemonicWordLengtEnv }
+      }}
+    </mat-error>
+    <button mat-flat-button type="button" (click)="onClearClicked()">
+      <i matPrefix class="fa fa-times" aria-hidden="true"></i>
+      <span class="text">{{ 'Clear' | translate }}</span>
     </button>
+    <div class="btn-grouped">
+      <button mat-flat-button color="warn" (click)="backClicked()">
+        <i matPrefix class="fas fa-arrow-left"></i>
+        <span class="text">{{ 'Back' | translate }}</span>
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="restoreForm.invalid"
+      >
+        <i matPrefix class="fas fa-check"></i>
+        <span class="text">{{ 'Open Wallet' | translate }}</span>
+      </button>
+    </div>
   </form>
 </div>

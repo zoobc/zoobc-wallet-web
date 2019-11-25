@@ -17,15 +17,17 @@ import {
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
-import { onCopyText } from 'src/helpers/utils';
+import { onCopyText, getAddressFromPublicKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
+import { KeyringService } from 'src/app/services/keyring.service';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 
+const coin = 'ZBC';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -62,17 +64,81 @@ export class DashboardComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private keyringServ: KeyringService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
-  }
-
-  ngOnInit() {
     this.getBalance();
     this.getTransactions();
-
     this.getCurrencyRates();
     this.currencyRate = this.currencyServ.rate;
+  }
+
+  async ngOnInit() {
+    if (history.state.loadAccount) {
+      await this.reloadAccount();
+    } else {
+      this.getBalance();
+      this.getTransactions();
+
+      this.getCurrencyRates();
+      this.currencyRate = this.currencyServ.rate;
+    }
+  }
+
+  async reloadAccount() {
+    let accountName: string = 'Account ';
+    let accountNo: number = 1;
+    let accountPath: number = 0;
+    let publicKey: Uint8Array;
+    let address: string;
+    let listAccountTemp = [];
+    let listAccount = [];
+
+    let counter: number = 0;
+    while (counter < 20) {
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        accountPath
+      );
+
+      publicKey = childSeed.publicKey;
+      address = getAddressFromPublicKey(publicKey);
+
+      const listAccounts = {
+        name: accountName + accountNo,
+        path: accountPath,
+        nodeIP: null,
+        address: address,
+      };
+
+      await this.transactionServ
+        .getTransactions(1, 1, address)
+        .then((res: Transactions) => {
+          const totalTx = res.total;
+          listAccountTemp.push(listAccounts);
+          if (totalTx > 0) {
+            Array.prototype.push.apply(listAccount, listAccountTemp);
+            this.authServ.restoreAccount(listAccount);
+            listAccountTemp = [];
+            counter = 0;
+          }
+        });
+      accountPath++;
+      accountNo++;
+      counter++;
+    }
+    this.accounts = listAccount;
+    // load balance
+    this.accountServ
+      .getAccountBalance(this.currAcc.address)
+      .then((data: AccountBalanceList) => {
+        this.accountBalance = data.accountbalance;
+        return this.authServ.getAccountsWithBalance();
+      })
+      .then((res: SavedAccount[]) => (this.accounts = res))
+      .catch(() => (this.isErrorBalance = true))
+      .finally(() => (this.isLoadingBalance = false));
   }
 
   getBalance() {
