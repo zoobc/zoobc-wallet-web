@@ -50,7 +50,7 @@ export class RestoreWalletComponent implements OnInit {
 
   onChangeMnemonic() {
     const valid = this.mnemonicServ.validateMnemonic(
-      this.passphraseField.value
+      this.passphraseField.value.toLowerCase()
     );
     const mnemonicNumLength = this.passphraseField.value.split(' ').length;
     if (mnemonicNumLength != this.mnemonicWordLengtEnv)
@@ -98,7 +98,7 @@ export class RestoreWalletComponent implements OnInit {
 
   async saveNewAccount(key: string) {
     this.errorOpenWallet = false;
-    const passphrase = this.passphraseField.value;
+    const passphrase = this.passphraseField.value.toLowerCase();
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
       coin,
