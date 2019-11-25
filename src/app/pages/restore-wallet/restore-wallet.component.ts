@@ -155,7 +155,8 @@ export class RestoreWalletComponent implements OnInit {
     let passphrase: string = this.restoreForm.value.words
       .map(form => form.word)
       .join(' ')
-      .replace(/\s\s+/g, ' ');
+      .replace(/\s\s+/g, ' ')
+      .toLowerCase();
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
       coin,
