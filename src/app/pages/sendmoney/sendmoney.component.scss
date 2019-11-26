@@ -46,10 +46,10 @@
     button {
       border-radius: 0;
       margin-left: -1px;
-      border-left: 1px solid #ddd;
       width: calc(33.33333333% + 2px);
       text-transform: none;
-      padding: 8px 8px;
+      padding: 8px;
+      background-color: transparent;
       .fee-button {
         display: flex;
         flex-flow: column;
@@ -59,13 +59,13 @@
           font-size: 14px;
           font-weight: bold;
           line-height: 16px;
-          margin-bottom: 4px;
+          margin-bottom: 8px;
           color: $black2;
         }
         .zbc-currency,
         .fiat-currency {
-          font-size: 12px;
-          line-height: 14px;
+          font-size: 13px;
+          line-height: 18px;
         }
       }
     }
