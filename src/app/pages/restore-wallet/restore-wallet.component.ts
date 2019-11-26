@@ -70,7 +70,7 @@ export class RestoreWalletComponent implements OnInit {
 
   onPasteEvent(event: ClipboardEvent) {
     let clipboardData = event.clipboardData;
-    let passphrase = clipboardData.getData('text');
+    let passphrase = clipboardData.getData('text').toLowerCase();
     let phraseWord = passphrase.split(' ');
     const valid = this.mnemonicServ.validateMnemonic(passphrase);
     if (phraseWord.length != this.mnemonicWordLengtEnv) {
@@ -108,7 +108,8 @@ export class RestoreWalletComponent implements OnInit {
     let passphrase: string = this.restoreForm.value.words
       .map(form => form.word)
       .join(' ')
-      .replace(/\s\s+/g, ' ');
+      .replace(/\s\s+/g, ' ')
+      .toLowerCase();
     const valid = this.mnemonicServ.validateMnemonic(passphrase);
     if (!valid) this.restoreForm.setErrors({ mnemonic: true });
   }
