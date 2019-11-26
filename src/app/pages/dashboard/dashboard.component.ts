@@ -92,8 +92,8 @@ export class DashboardComponent implements OnInit {
     let accountPath: number = 0;
     let publicKey: Uint8Array;
     let address: string;
-    let listAccountTemp = [];
-    let listAccount = [];
+    let accountsTemp = [];
+    let accounts = [];
 
     let counter: number = 0;
     while (counter < 20) {
@@ -105,7 +105,7 @@ export class DashboardComponent implements OnInit {
       publicKey = childSeed.publicKey;
       address = getAddressFromPublicKey(publicKey);
 
-      const listAccounts = {
+      const account = {
         name: accountName + accountNo,
         path: accountPath,
         nodeIP: null,
@@ -116,11 +116,11 @@ export class DashboardComponent implements OnInit {
         .getTransactions(1, 1, address)
         .then((res: Transactions) => {
           const totalTx = res.total;
-          listAccountTemp.push(listAccounts);
+          accountsTemp.push(account);
           if (totalTx > 0) {
-            Array.prototype.push.apply(listAccount, listAccountTemp);
-            this.authServ.restoreAccount(listAccount);
-            listAccountTemp = [];
+            Array.prototype.push.apply(accounts, accountsTemp);
+            this.authServ.restoreAccount(accounts);
+            accountsTemp = [];
             counter = 0;
           }
         });
@@ -128,17 +128,14 @@ export class DashboardComponent implements OnInit {
       accountNo++;
       counter++;
     }
-    this.accounts = listAccount;
+    this.accounts = accounts;
     // load balance
     this.accountServ
       .getAccountBalance(this.currAcc.address)
       .then((data: AccountBalanceList) => {
-        this.accountBalance = data.accountbalance;
         return this.authServ.getAccountsWithBalance();
       })
-      .then((res: SavedAccount[]) => (this.accounts = res))
-      .catch(() => (this.isErrorBalance = true))
-      .finally(() => (this.isLoadingBalance = false));
+      .then((res: SavedAccount[]) => (this.accounts = res));
   }
 
   getBalance() {

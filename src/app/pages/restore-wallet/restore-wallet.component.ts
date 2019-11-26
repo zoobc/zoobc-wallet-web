@@ -73,25 +73,19 @@ export class RestoreWalletComponent implements OnInit {
     let passphrase = clipboardData.getData('text').toLowerCase();
     let phraseWord = passphrase.split(' ');
     const valid = this.mnemonicServ.validateMnemonic(passphrase);
+    this.wordField.controls = [];
+    this.onLoad24Passphrase(phraseWord);
     if (phraseWord.length != this.mnemonicWordLengtEnv) {
-      this.wordField.controls = [];
-      this.onLoad24Passphrase(phraseWord);
       // Give some time for load passphrase after then set error
       setTimeout(() => {
         this.restoreForm.setErrors({ lengthMnemonic: true });
       }, 50);
-    } else {
-      if (!valid) {
-        this.wordField.controls = [];
-        this.onLoad24Passphrase(phraseWord);
-        // Give some time for load passphrase after then set error
-        setTimeout(() => {
-          this.restoreForm.setErrors({ mnemonic: true });
-        }, 50);
-      } else {
-        this.wordField.controls = [];
-        this.onLoad24Passphrase(phraseWord);
-      }
+    }
+    if (!valid) {
+      // Give some time for load passphrase after then set error
+      setTimeout(() => {
+        this.restoreForm.setErrors({ mnemonic: true });
+      }, 50);
     }
   }
 
@@ -142,13 +136,7 @@ export class RestoreWalletComponent implements OnInit {
       disableClose: true,
     });
     pinDialog.afterClosed().subscribe((key: string) => {
-      Swal.fire({
-        allowOutsideClick: false,
-        background: '#00000000',
-        html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
-        showConfirmButton: false,
-        onBeforeOpen: () => this.saveNewAccount(key),
-      });
+      this.saveNewAccount(key);
     });
   }
 
@@ -184,7 +172,6 @@ export class RestoreWalletComponent implements OnInit {
     this.authServ.savePassphraseSeed(passphrase, key);
     this.authServ.saveMasterSeed(masterSeed, key);
     this.authServ.login(key);
-    Swal.close(); // for closing sweetalert loader
     this.router.navigate(['dashboard'], {
       state: { loadAccount: true },
     });
