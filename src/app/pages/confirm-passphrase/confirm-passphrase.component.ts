@@ -88,7 +88,8 @@ export class ConfirmPassphraseComponent implements OnInit {
       let passphraseField: string = this.confirmForm.value.words
         .map(form => form.word)
         .join(' ')
-        .replace(/\s\s+/g, ' ');
+        .replace(/\s\s+/g, ' ')
+        .toLowerCase();
 
       if (passphraseField != this.words)
         this.confirmForm.setErrors({ mnemonic: true });

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 
 import { AccountService } from '../../services/account.service';
 import {
@@ -17,10 +17,8 @@ import {
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
-import { onCopyText, getAddressFromPublicKey } from 'src/helpers/utils';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
 import { KeyringService } from 'src/app/services/keyring.service';
 
@@ -61,10 +59,8 @@ export class DashboardComponent implements OnInit {
     private authServ: AuthService,
     private transactionServ: TransactionService,
     private currencyServ: CurrencyRateService,
-    private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
-    private translate: TranslateService,
     private keyringServ: KeyringService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
@@ -206,17 +202,6 @@ export class DashboardComponent implements OnInit {
   onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
     this.router.navigateByUrl('/');
-  }
-
-  async copyText(text) {
-    onCopyText(text);
-
-    let message: string;
-    await this.translate
-      .get('Address copied to clipboard')
-      .toPromise()
-      .then(res => (message = res));
-    this.snackBar.open(message, null, { duration: 5000 });
   }
 
   onOpenAddAccount() {
