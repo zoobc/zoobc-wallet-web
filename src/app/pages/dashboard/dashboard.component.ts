@@ -17,12 +17,15 @@ import {
   AccountBalance as AB,
 } from 'src/app/grpc/model/accountBalance_pb';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
+import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
+import { KeyringService } from 'src/app/services/keyring.service';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
 
+const coin = 'ZBC';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -57,17 +60,78 @@ export class DashboardComponent implements OnInit {
     private transactionServ: TransactionService,
     private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private keyringServ: KeyringService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
-  }
-
-  ngOnInit() {
     this.getBalance();
     this.getTransactions();
-
     this.getCurrencyRates();
     this.currencyRate = this.currencyServ.rate;
+  }
+
+  async ngOnInit() {
+    if (history.state.loadAccount) {
+      await this.reloadAccount();
+    } else {
+      this.getBalance();
+      this.getTransactions();
+
+      this.getCurrencyRates();
+      this.currencyRate = this.currencyServ.rate;
+    }
+  }
+
+  async reloadAccount() {
+    let accountName: string = 'Account ';
+    let accountNo: number = 1;
+    let accountPath: number = 0;
+    let publicKey: Uint8Array;
+    let address: string;
+    let accountsTemp = [];
+    let accounts = [];
+
+    let counter: number = 0;
+    while (counter < 20) {
+      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
+        coin,
+        accountPath
+      );
+
+      publicKey = childSeed.publicKey;
+      address = getAddressFromPublicKey(publicKey);
+
+      const account = {
+        name: accountName + accountNo,
+        path: accountPath,
+        nodeIP: null,
+        address: address,
+      };
+
+      await this.transactionServ
+        .getTransactions(1, 1, address)
+        .then((res: Transactions) => {
+          const totalTx = res.total;
+          accountsTemp.push(account);
+          if (totalTx > 0) {
+            Array.prototype.push.apply(accounts, accountsTemp);
+            this.authServ.restoreAccount(accounts);
+            accountsTemp = [];
+            counter = 0;
+          }
+        });
+      accountPath++;
+      accountNo++;
+      counter++;
+    }
+    this.accounts = accounts;
+    // load balance
+    this.accountServ
+      .getAccountBalance(this.currAcc.address)
+      .then((data: AccountBalanceList) => {
+        return this.authServ.getAccountsWithBalance();
+      })
+      .then((res: SavedAccount[]) => (this.accounts = res));
   }
 
   getBalance() {

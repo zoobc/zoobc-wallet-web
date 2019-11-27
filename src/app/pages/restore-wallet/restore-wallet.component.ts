@@ -1,5 +1,11 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormArray,
+  FormBuilder,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { KeyringService } from 'src/app/services/keyring.service';
@@ -23,14 +29,15 @@ const coin = 'ZBC';
   styleUrls: ['./restore-wallet.component.scss'],
 })
 export class RestoreWalletComponent implements OnInit {
-  listAccount = [];
-  listAccountTemp = [];
   totalTx: number = 0;
   mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
 
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
   errorOpenWallet: boolean = false;
+
+  word: string;
+  wordField: FormArray;
 
   constructor(
     private dialog: MatDialog,
@@ -39,23 +46,66 @@ export class RestoreWalletComponent implements OnInit {
     private keyringServ: KeyringService,
     private mnemonicServ: MnemonicsService,
     private transactionServ: TransactionService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private fb: FormBuilder
   ) {
-    this.restoreForm = new FormGroup({
-      passphrase: this.passphraseField,
+    this.restoreForm = this.fb.group({
+      words: this.fb.array([]),
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.onLoad24Passphrase('');
+  }
+
+  onLoad24Passphrase(phrase: any) {
+    const phraseWord = phrase;
+    for (let i = 0; i < this.mnemonicWordLengtEnv; i++) {
+      this.wordField = this.restoreForm.get('words') as FormArray;
+      this.wordField.push(
+        this.fb.group({ word: [phraseWord[i], Validators.required] })
+      );
+    }
+  }
+
+  onPasteEvent(event: ClipboardEvent) {
+    let clipboardData = event.clipboardData;
+    let passphrase = clipboardData.getData('text').toLowerCase();
+    let phraseWord = passphrase.split(' ');
+    const valid = this.mnemonicServ.validateMnemonic(passphrase);
+    this.wordField.controls = [];
+    this.onLoad24Passphrase(phraseWord);
+    if (phraseWord.length != this.mnemonicWordLengtEnv) {
+      // Give some time for load passphrase after then set error
+      setTimeout(() => {
+        this.restoreForm.setErrors({ lengthMnemonic: true });
+      }, 50);
+    }
+    if (!valid) {
+      // Give some time for load passphrase after then set error
+      setTimeout(() => {
+        this.restoreForm.setErrors({ mnemonic: true });
+      }, 50);
+    }
+  }
+
+  backClicked() {
+    this.router.navigate(['login']);
+  }
+
+  onClearClicked() {
+    this.wordField.controls = [];
+    this.onLoad24Passphrase('');
+  }
 
   onChangeMnemonic() {
-    const valid = this.mnemonicServ.validateMnemonic(
-      this.passphraseField.value.toLowerCase()
-    );
-    const mnemonicNumLength = this.passphraseField.value.split(' ').length;
-    if (mnemonicNumLength != this.mnemonicWordLengtEnv)
-      this.passphraseField.setErrors({ lengthMnemonic: true });
-    if (!valid) this.passphraseField.setErrors({ mnemonic: true });
+    let passphrase: string = this.restoreForm.value.words
+      .map(form => form.word)
+      .join(' ')
+      .replace(/\s\s+/g, ' ')
+      .toLowerCase();
+    const valid = this.mnemonicServ.validateMnemonic(passphrase);
+    if (!valid) this.restoreForm.setErrors({ mnemonic: true });
   }
 
   async onRestore() {
@@ -86,19 +136,16 @@ export class RestoreWalletComponent implements OnInit {
       disableClose: true,
     });
     pinDialog.afterClosed().subscribe((key: string) => {
-      Swal.fire({
-        allowOutsideClick: false,
-        background: '#00000000',
-        html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
-        showConfirmButton: false,
-        onBeforeOpen: () => this.saveNewAccount(key),
-      });
+      this.saveNewAccount(key);
     });
   }
 
   async saveNewAccount(key: string) {
-    this.errorOpenWallet = false;
-    const passphrase = this.passphraseField.value.toLowerCase();
+    let passphrase: string = this.restoreForm.value.words
+      .map(form => form.word)
+      .join(' ')
+      .replace(/\s\s+/g, ' ')
+      .toLowerCase();
 
     const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
       coin,
@@ -106,109 +153,27 @@ export class RestoreWalletComponent implements OnInit {
       'p4ssphr4se'
     );
     let masterSeed = seed;
-    let accountName: string = 'Account ';
-    let accountNo: number = 1;
-    let accountPath: number = 0;
     let publicKey: Uint8Array;
     let address: string;
 
-    let counter: number = 0;
+    localStorage.removeItem('ACCOUNT');
+    localStorage.removeItem('CURR_ACCOUNT');
+    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
 
-    while (counter < 20) {
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        coin,
-        accountPath
-      );
-
-      publicKey = childSeed.publicKey;
-      address = getAddressFromPublicKey(publicKey);
-
-      const listAccounts = {
-        name: accountName + accountNo,
-        path: accountPath,
-        nodeIP: null,
-        address: address,
-      };
-
-      await this.transactionServ
-        .getTransactions(1, 1, address)
-        .then((res: Transactions) => {
-          this.totalTx = res.total;
-          this.listAccountTemp.push(listAccounts);
-          if (this.totalTx > 0) {
-            Array.prototype.push.apply(this.listAccount, this.listAccountTemp);
-            this.authServ.restoreAccount(this.listAccount);
-            this.listAccountTemp = [];
-            counter = 0;
-          }
-        })
-        .catch(async () => {
-          counter = 20;
-          this.errorOpenWallet = true;
-
-          let message: string;
-          await this.translate
-            .get('An error occurred while processing your request')
-            .toPromise()
-            .then(res => (message = res));
-
-          let messageTryAgain: string;
-          await this.translate
-            .get('Try again')
-            .toPromise()
-            .then(res => (messageTryAgain = res));
-
-          Swal.fire({
-            title: 'Oops...',
-            text: message,
-            type: 'error',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: messageTryAgain,
-          }).then(result => {
-            if (result.value == true) {
-              Swal.fire({
-                allowOutsideClick: false,
-                background: '#00000000',
-                html: `<i class="fas fa-circle-notch fa-spin loader"></i>`,
-                showConfirmButton: false,
-                onBeforeOpen: () => this.saveNewAccount(key),
-              });
-            }
-          });
-        });
-      accountPath++;
-      accountNo++;
-      counter++;
-    }
-    // if account dont have any transaction yet
-    if (this.listAccount.length === 0) {
-      localStorage.removeItem('ACCOUNT');
-      localStorage.removeItem('CURR_ACCOUNT');
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
-
-      publicKey = childSeed.publicKey;
-      address = getAddressFromPublicKey(publicKey);
-      const account: SavedAccount = {
-        name: 'Account 1',
-        path: 0,
-        nodeIP: null,
-        address: address,
-      };
-      const openWalletInValid = this.errorOpenWallet == false;
-      if (openWalletInValid) {
-        this.authServ.addAccount(account);
-        this.authServ.login(key);
-        Swal.close(); // for closing sweetalert loader
-        this.router.navigateByUrl('/dashboard');
-      }
-    }
-    const openWalletInValid = this.errorOpenWallet == false;
-    if (openWalletInValid) {
-      this.authServ.savePassphraseSeed(passphrase, key);
-      this.authServ.saveMasterSeed(masterSeed, key);
-      this.authServ.login(key);
-      Swal.close(); // for closing sweetalert loader
-      this.router.navigateByUrl('/dashboard');
-    }
+    publicKey = childSeed.publicKey;
+    address = getAddressFromPublicKey(publicKey);
+    const account: SavedAccount = {
+      name: 'Account 1',
+      path: 0,
+      nodeIP: null,
+      address: address,
+    };
+    this.authServ.addAccount(account);
+    this.authServ.savePassphraseSeed(passphrase, key);
+    this.authServ.saveMasterSeed(masterSeed, key);
+    this.authServ.login(key);
+    this.router.navigate(['dashboard'], {
+      state: { loadAccount: true },
+    });
   }
 }
