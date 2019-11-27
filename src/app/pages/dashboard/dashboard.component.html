@@ -90,8 +90,11 @@
               </div>
             </div>
           </mat-menu>
-          <span class="address" (click)="copyText(currAcc.address)">
-            <wallet-address [value]="currAcc.address"></wallet-address>
+          <span class="address">
+            <wallet-address
+              [value]="currAcc.address"
+              [copyButton]="true"
+            ></wallet-address>
           </span>
         </div>
         <div class="col-2 text-right">
@@ -194,7 +197,10 @@
     <div class="col-10">
       <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
     </div>
-    <div class="col-2 text-right" *ngIf="!isErrorRecentTx && !isLoadingRecentTx">
+    <div
+      class="col-2 text-right"
+      *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
+    >
       <button mat-icon-button class="reload-button" (click)="getTransactions()">
         <i class="fa fa-redo-alt"></i>
       </button>
