@@ -2,6 +2,10 @@
 
 .transaction-detail-container {
   .row {
+    .icon-redirect {
+      cursor: pointer;
+      margin-left: 5px;
+    }
     color: $black1;
     padding: 8px;
     font-size: 14px;
