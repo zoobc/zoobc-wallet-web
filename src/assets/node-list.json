@@ -1,25 +1,25 @@
 {
   "node": [
     {
-      "ip": "http://n0.alpha.proofofparticipation.network:8080",
+      "ip": "//n0.alpha.proofofparticipation.network:8080",
       "default": true
     },
     {
-      "ip": "http://n1.alpha.proofofparticipation.network:8080",
+      "ip": "//n1.alpha.proofofparticipation.network:8080",
       "default": true
     },
     {
-      "ip": "http://n2.alpha.proofofparticipation.network:8080",
+      "ip": "//n2.alpha.proofofparticipation.network:8080",
       "default": true
     },
     {
-      "ip": "http://n3.alpha.proofofparticipation.network:8080",
+      "ip": "//n3.alpha.proofofparticipation.network:8080",
       "default": true
     },
     {
-      "ip": "http://172.104.47.168:8001",
+      "ip": "//172.104.47.168:8001",
       "default": true
     }
   ],
-  "timestamp": 1573702246
+  "timestamp": 1574922707672
 }

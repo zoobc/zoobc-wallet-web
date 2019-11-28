@@ -202,7 +202,7 @@
       <div class="row">
         <div
           class="col-6 col-sm-3 cpu-usage"
-          *ngFor="let cpu of hwInfo.cpuinformationList"
+          *ngFor="let cpu of hwInfo.cpuinformationList; let i = index"
         >
           <div class="percentage">
             <mat-progress-spinner
@@ -212,7 +212,7 @@
             ></mat-progress-spinner>
             <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
           </div>
-          <div class="cpu-number">CPU {{ cpu.coreid }}</div>
+          <div class="cpu-number">CPU {{ i + 1 }}</div>
         </div>
       </div>
       <br /><br />
