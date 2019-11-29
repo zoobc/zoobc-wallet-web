@@ -24,4 +24,7 @@ export class TransactionDetailComponent implements OnInit {
         this.isLoading = false;
       });
   }
+  redirect() {
+    window.open('https://zoobc.net/transactions/' + this.id, '_blank');
+  }
 }
