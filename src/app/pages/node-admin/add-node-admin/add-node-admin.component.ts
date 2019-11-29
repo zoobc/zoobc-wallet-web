@@ -18,7 +18,7 @@ export class AddNodeAdminComponent implements OnInit {
   formAddNodeAdmin: FormGroup;
   ipAddressField = new FormControl('', [
     Validators.required,
-    Validators.pattern('^(?:http(s)?://)[\\w.-]+(?:.[\\w.-]+)*:\\d+$'),
+    Validators.pattern('^[\\w.-]+:\\d+$'),
   ]);
   constructor(
     private dialogRef: MatDialogRef<AddNodeAdminComponent>,

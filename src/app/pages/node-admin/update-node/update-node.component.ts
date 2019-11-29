@@ -25,7 +25,7 @@ export class UpdateNodeComponent implements OnInit {
   formUpdateNode: FormGroup;
   ipAddressForm = new FormControl('', [
     Validators.required,
-    Validators.pattern('^(?:http(s)?://)[\\w.-]+(?:.[\\w.-]+)*:\\d+$'),
+    Validators.pattern('^[\\w.-]+:\\d+$'),
   ]);
   lockedAmountForm = new FormControl('', [
     Validators.required,
@@ -59,6 +59,11 @@ export class UpdateNodeComponent implements OnInit {
     this.ipAddressForm.patchValue(this.account.nodeIP);
     this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
     this.lockedAmountForm.patchValue(parseInt(this.node.lockedbalance) / 1e8);
+
+    this.lockedAmountForm.setValidators([
+      Validators.required,
+      Validators.min(parseInt(this.node.lockedbalance) / 1e8),
+    ]);
   }
 
   ngOnInit() {}

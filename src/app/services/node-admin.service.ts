@@ -15,6 +15,7 @@ import {
   GenerateNodeKeyResponse,
 } from '../grpc/model/node_pb';
 import { poownBuilder } from 'src/helpers/transaction-builder/poown';
+import { Node } from 'src/helpers/node-list';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +35,7 @@ export class NodeAdminService {
       const request = new GetNodeHardwareRequest();
 
       this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
-        host: `${account.nodeIP}`,
+        host: `//${account.nodeIP}`,
       });
       this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
         observer.next(message.toObject());
@@ -55,12 +56,14 @@ export class NodeAdminService {
     this.nodeAdminClient && this.nodeAdminClient.close();
   }
 
-  generateNodeKey(nodeIP: string) {
+  generateNodeKey() {
     return new Promise((resolve, reject) => {
+      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+
       const auth = poownBuilder(RequestType.GENERATETNODEKEY, this.keyringServ);
       const request = new GenerateNodeKeyRequest();
       const client = grpc.client(NodeAdminServ.GenerateNodeKey, {
-        host: nodeIP,
+        host: node.ip,
       });
 
       client.onMessage((message: GenerateNodeKeyResponse) => {

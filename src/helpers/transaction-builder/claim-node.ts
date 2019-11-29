@@ -29,12 +29,7 @@ export function claimNodeBuilder(
   const fee = intToInt64Bytes(data.fee * 1e8);
 
   const nodePublicKey = Buffer.from(base64ToByteArray(data.nodePublicKey));
-  const bodyLength = int32ToBytes(
-    nodePublicKey.length +
-      addressLength.length +
-      accountAddress.length +
-      data.poown.length
-  );
+  const bodyLength = int32ToBytes(nodePublicKey.length + data.poown.length);
 
   bytes = Buffer.concat([
     TRANSACTION_TYPE,
@@ -47,8 +42,6 @@ export function claimNodeBuilder(
     fee,
     bodyLength,
     nodePublicKey,
-    addressLength,
-    accountAddress,
     data.poown,
   ]);
 

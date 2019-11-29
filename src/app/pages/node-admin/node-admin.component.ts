@@ -94,12 +94,12 @@ export class NodeAdminComponent implements OnInit {
       showLoaderOnConfirm: true,
       preConfirm: () => {
         this.nodeAdminServ
-          .generateNodeKey(this.account.nodeIP)
+          .generateNodeKey()
           .then(res => {
-            console.log(res);
+            Swal.fire('Success', 'success', 'success');
           })
           .catch(err => {
-            console.log(err);
+            Swal.fire('Error', err, 'error');
           });
         return true;
       },
