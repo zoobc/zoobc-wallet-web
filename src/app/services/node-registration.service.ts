@@ -32,7 +32,8 @@ export class NodeRegistrationService {
       const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
 
       const nodeAddress = new NodeAddress();
-      const ipAddress = account.address.split(':');
+      const ipAddress = account.nodeIP.split(':');
+
       nodeAddress.setAddress(ipAddress[0]);
       if (ipAddress[1]) nodeAddress.setPort(parseInt(ipAddress[1]));
 

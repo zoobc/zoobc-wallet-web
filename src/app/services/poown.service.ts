@@ -16,8 +16,6 @@ export class PoownService {
   constructor(private keyringServ: KeyringService) {}
 
   get(ip: string): Promise<Buffer> {
-    ip = ip.startsWith('http://') ? ip : `http://${ip}`;
-
     return new Promise((resolve, reject) => {
       const auth = poownBuilder(
         RequestType.GETPROOFOFOWNERSHIP,
@@ -25,7 +23,7 @@ export class PoownService {
       );
       const request = new GetProofOfOwnershipRequest();
       const client = grpc.client(NodeAdminService.GetProofOfOwnership, {
-        host: ip,
+        host: `//${ip}`,
       });
 
       client.onMessage((message: ProofOfOwnership) => {

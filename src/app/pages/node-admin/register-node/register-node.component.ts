@@ -22,7 +22,7 @@ export class RegisterNodeComponent implements OnInit {
   formRegisterNode: FormGroup;
   ipAddressForm = new FormControl('', [
     Validators.required,
-    Validators.pattern('^(?:http(s)?://)[\\w.-]+(?:.[\\w.-]+)*:\\d+$'),
+    Validators.pattern('^[\\w.-]+:\\d+$'),
   ]);
   lockedBalanceForm = new FormControl('', [
     Validators.required,
