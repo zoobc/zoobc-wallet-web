@@ -30,9 +30,11 @@
       margin: 0 0 8px 0;
     }
   }
-
-  .select-node {
-    max-width: 250px;
-    width: 100%;
+}
+::ng-deep .mat-option {
+  .edit-network {
+    float: right;
+    color: $black2;
+    padding: 0 8px;
   }
 }
