@@ -4,7 +4,7 @@
     <div class="row" formArrayName="words">
       <div
         class="col-6 col-sm-4"
-        *ngFor="let word of restoreForm.get('words').controls; let i = index"
+        *ngFor="let word of restoreForm.get('words')['controls']; let i = index"
       >
         <mat-form-field
           [formGroupName]="i"

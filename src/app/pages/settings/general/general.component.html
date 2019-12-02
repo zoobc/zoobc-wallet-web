@@ -18,17 +18,7 @@
   <div class="setting-section">
     <p class="title"><span>Node</span></p>
 
-    <p class="subtitle">Select Node</p>
-    <mat-form-field appearance="outline" color="accent" class="select-node">
-      <mat-select
-        [value]="selectedNode.ip"
-        (selectionChange)="changeNode($event.value)"
-      >
-        <mat-option *ngFor="let node of nodeList.node" [value]="node.ip">
-          {{ node.ip }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <network></network>
   </div>
 
   <div class="setting-section">

@@ -1,0 +1,20 @@
+<div class="network-container">
+  <p class="subtitle">Select Node</p>
+  <mat-form-field appearance="outline" color="accent" class="select-node">
+    <mat-select
+      [value]="selectedNode.ip"
+      (selectionChange)="changeNode($event.value)"
+    >
+      <mat-option *ngFor="let node of nodeList.node" [value]="node.ip">
+        <span>{{ node.name }}</span>
+        <span class="edit-network" (click)="edit($event)" matTooltip="Edit">
+          <i class="fas fa-pen"></i>
+        </span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" style="margin-left: 16px;">
+    Add Network
+  </button>
+</div>
