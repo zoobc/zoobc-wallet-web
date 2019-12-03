@@ -7,14 +7,7 @@
     >
       <mat-option *ngFor="let node of nodeList.node" [value]="node.ip">
         <span>{{ node.name }}</span>
-        <span class="edit-network" (click)="edit($event)" matTooltip="Edit">
-          <i class="fas fa-pen"></i>
-        </span>
       </mat-option>
     </mat-select>
   </mat-form-field>
-
-  <button mat-flat-button color="primary" style="margin-left: 16px;">
-    Add Network
-  </button>
 </div>
