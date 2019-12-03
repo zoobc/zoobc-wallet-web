@@ -1,0 +1,14 @@
+@import '../../../styles/variables';
+
+::ng-deep .mat-option {
+  .edit-network {
+    float: right;
+    color: $black2;
+    padding: 0 8px;
+  }
+  .delete-network {
+    float: right;
+    color: #c62828;
+    padding: 0 8px;
+  }
+}
