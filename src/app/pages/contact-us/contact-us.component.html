@@ -74,7 +74,7 @@
         mat-flat-button
         color="primary"
         type="submit"
-        [disabled]="contactForm.invalid || isFeedbackLoading || isFeedbackError"
+        [disabled]="contactForm.invalid || isFeedbackLoading"
       >
         <span *ngIf="isFeedbackLoading">
           <i class="fas fa-circle-notch fa-spin"></i>&nbsp;

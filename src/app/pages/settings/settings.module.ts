@@ -34,6 +34,7 @@ import { SettingsComponent } from './settings.component';
 import { AboutComponent } from './about/about.component';
 import { NetworkComponent } from './network/network.component';
 import { GeneralComponent } from './general/general.component';
+import { NetworkModule } from 'src/app/components/network/network.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -68,6 +69,7 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    NetworkModule,
     RouterModule.forChild(routes),
     TranslateModule.forChild({
       loader: {

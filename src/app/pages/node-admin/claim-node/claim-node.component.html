@@ -1,6 +1,6 @@
 <div class="claim-node-container">
   <h2 class="mat-h2">{{ 'Claim Node' | translate }}</h2>
-  <form [formGroup]="formClaimNode" (submit)="onClaimNode($event)">
+  <form [formGroup]="formClaimNode" (submit)="onClaimNode()">
     <label>{{ 'Fee' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input
