@@ -6,6 +6,7 @@ import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import { KeyringService } from 'src/app/services/keyring.service';
 import nodeListJson from '../../../assets/node-list.json';
 import { NodeList } from '../../../helpers/node-list';
+import zoobc, { HostInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-parent',
@@ -64,5 +65,15 @@ export class ParentComponent implements OnInit {
       localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
       localStorage.setItem('SELECTED_NODE', JSON.stringify(nodeList.node[0]));
     }
+
+    const list: HostInterface[] = currNodeList.node.map(node => {
+      return {
+        host: node.ip,
+        name: node.name,
+      };
+    });
+
+    zoobc.Network.list(list);
+    zoobc.Network.set(1);
   }
 }

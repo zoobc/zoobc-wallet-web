@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -8,20 +8,13 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { KeyringService } from 'src/app/services/keyring.service';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { MnemonicsService } from 'src/app/services/mnemonics.service';
-import {
-  TransactionService,
-  Transactions,
-} from 'src/app/services/transaction.service';
-import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
-
-const coin = 'ZBC';
+import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-restore-wallet',
@@ -43,9 +36,7 @@ export class RestoreWalletComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private authServ: AuthService,
-    private keyringServ: KeyringService,
     private mnemonicServ: MnemonicsService,
-    private transactionServ: TransactionService,
     private translate: TranslateService,
     private fb: FormBuilder
   ) {
@@ -145,32 +136,27 @@ export class RestoreWalletComponent implements OnInit {
       .map(form => form.word)
       .join(' ')
       .replace(/\s\s+/g, ' ')
-      .toLowerCase();
+      .toLowerCase()
+      .trim();
 
-    const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
-      coin,
-      passphrase,
-      'p4ssphr4se'
-    );
-    let masterSeed = seed;
-    let publicKey: Uint8Array;
-    let address: string;
+    const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
+    const childSeed = keyring.calcDerivationPath(0);
 
     localStorage.removeItem('ACCOUNT');
     localStorage.removeItem('CURR_ACCOUNT');
-    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
 
-    publicKey = childSeed.publicKey;
-    address = getAddressFromPublicKey(publicKey);
+    const address = getZBCAdress(childSeed.publicKey);
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,
       nodeIP: null,
       address: address,
     };
+
+    const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
+    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
+
     this.authServ.addAccount(account);
-    this.authServ.savePassphraseSeed(passphrase, key);
-    this.authServ.saveMasterSeed(masterSeed, key);
     this.authServ.login(key);
     this.router.navigate(['dashboard'], {
       state: { loadAccount: true },
