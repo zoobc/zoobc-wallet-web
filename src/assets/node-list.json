@@ -1,7 +1,7 @@
 {
   "node": [
     {
-      "ip": "//n1.alpha.proofofparticipation.network:8080",
+      "ip": "//85.90.246.90:8002",
       "default": true,
       "name": "Alpha Testnet"
     },
