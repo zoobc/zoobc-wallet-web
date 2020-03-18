@@ -3,9 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import {
   TransactionService,
   Transaction,
-  Transactions,
 } from '../../services/transaction.service';
 import { AuthService } from 'src/app/services/auth.service';
+
+import zoobc, {
+  TransactionListParams,
+  toTransactionListWallet,
+} from 'zoobc-sdk';
 
 @Component({
   selector: 'app-transferhistory',
@@ -47,26 +51,34 @@ export class TransferhistoryComponent implements OnInit {
       this.isLoading = true;
       this.isError = false;
 
-      this.transactionServ
-        .getTransactions(this.page, perPage, this.address)
-        .then((res: Transactions) => {
-          this.total = res.total;
-
+      const params: TransactionListParams = {
+        address: this.address,
+        transactionType: 1,
+        pagination: {
+          page: this.page,
+          limit: perPage,
+        },
+      };
+      zoobc.Transactions.getList(params)
+        .then(res => {
+          const tx = toTransactionListWallet(res, this.address);
+          this.total = tx.total;
           if (reload) {
-            this.accountHistory = res.transactions;
+            this.accountHistory = <Transaction[]>tx.transactions;
             return this.transactionServ.getUnconfirmTransaction(this.address);
-          } else
-            this.accountHistory = this.accountHistory.concat(res.transactions);
+          } else {
+            this.accountHistory = this.accountHistory.concat(<Transaction[]>(
+              tx.transactions
+            ));
+          }
         })
-        .then((unconfirmTx: Transaction[]) => {
-          // if relaad button pressed app will req unconfirmed tx too
-          if (unconfirmTx) this.unconfirmTx = unconfirmTx;
-        })
-        .catch(() => {
+        .catch(e => {
           this.isError = true;
           this.unconfirmTx = null;
         })
-        .finally(() => (this.isLoading = false));
+        .finally(() => {
+          this.isLoading = false;
+        });
     }
   }
 
