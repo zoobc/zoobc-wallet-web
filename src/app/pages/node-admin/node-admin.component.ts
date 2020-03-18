@@ -19,7 +19,6 @@ import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
 import zoobc, {
   NodeParams,
-  HostInterface,
   toUnconfirmTransactionNodeWallet,
   MempoolListParams,
 } from 'zoobc-sdk';
@@ -57,20 +56,6 @@ export class NodeAdminComponent implements OnInit {
     private transactionServ: TransactionService
   ) {
     this.account = authServ.getCurrAccount();
-
-    const list: HostInterface[] = [
-      {
-        host: 'http://85.90.246.90:8002',
-        name: 'Network 1',
-      },
-      {
-        host: 'Network 2',
-        name: 'http://45.79.39.58:8002',
-      },
-    ];
-
-    zoobc.Network.list(list);
-    zoobc.Network.set(0);
   }
 
   ngOnInit() {
