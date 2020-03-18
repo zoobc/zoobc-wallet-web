@@ -37,20 +37,6 @@ export class TransferhistoryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const list: HostInterface[] = [
-      {
-        host: 'http://85.90.246.90:8002',
-        name: 'Network 1',
-      },
-      {
-        host: 'Network 2',
-        name: 'http://45.79.39.58:8002',
-      },
-    ];
-
-    zoobc.Network.list(list);
-    zoobc.Network.set(0);
-
     this.getTx(true);
   }
 
