@@ -41,7 +41,8 @@
     "ts-protoc-gen": "^0.10.0",
     "tslib": "^1.9.0",
     "tweetnacl": "^1.0.1",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "zoobc-sdk": "github:zoobc/zoobc-sdk#develop"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",
