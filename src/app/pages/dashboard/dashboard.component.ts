@@ -5,7 +5,6 @@ import { AccountService } from '../../services/account.service';
 import {
   TransactionService,
   Transaction,
-  Transactions,
 } from '../../services/transaction.service';
 import {
   Currency,
@@ -21,6 +20,11 @@ import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
 import { KeyringService } from 'src/app/services/keyring.service';
+
+import zoobc, {
+  TransactionListParams,
+  toTransactionListWallet,
+} from 'zoobc-sdk';
 
 type AccountBalance = AB.AsObject;
 type AccountBalanceList = GetAccountBalanceResponse.AsObject;
@@ -108,18 +112,27 @@ export class DashboardComponent implements OnInit {
         address: address,
       };
 
-      await this.transactionServ
-        .getTransactions(1, 1, address)
-        .then((res: Transactions) => {
-          const totalTx = res.total;
-          accountsTemp.push(account);
-          if (totalTx > 0) {
-            Array.prototype.push.apply(accounts, accountsTemp);
-            this.authServ.restoreAccount(accounts);
-            accountsTemp = [];
-            counter = 0;
-          }
-        });
+      const params: TransactionListParams = {
+        address: address,
+        transactionType: 1,
+        pagination: {
+          page: 1,
+          limit: 1,
+        },
+      };
+
+      await zoobc.Transactions.getList(params).then(res => {
+        const tx = toTransactionListWallet(res, address);
+        const totalTx = parseInt(res.total);
+        accountsTemp.push(account);
+        if (totalTx > 0) {
+          Array.prototype.push.apply(accounts, accountsTemp);
+          this.authServ.restoreAccount(accounts);
+          accountsTemp = [];
+          counter = 0;
+        }
+      });
+
       accountPath++;
       accountNo++;
       counter++;
@@ -139,14 +152,15 @@ export class DashboardComponent implements OnInit {
       this.isLoadingBalance = true;
       this.isErrorBalance = false;
 
-      this.accountServ
-        .getAccountBalance(this.currAcc.address)
+      zoobc.Account.getBalance(this.currAcc.address)
         .then((data: AccountBalanceList) => {
           this.accountBalance = data.accountbalance;
           return this.authServ.getAccountsWithBalance();
         })
         .then((res: SavedAccount[]) => (this.accounts = res))
-        .catch(() => (this.isErrorBalance = true))
+        .catch(e => {
+          this.isErrorBalance = true;
+        })
         .finally(() => (this.isLoadingBalance = false));
     }
   }
@@ -159,17 +173,28 @@ export class DashboardComponent implements OnInit {
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
 
-      this.transactionServ
-        .getTransactions(1, 5, this.currAcc.address)
-        .then((res: Transactions) => {
-          this.recentTx = res.transactions;
-          this.totalTx = res.total;
+      const params: TransactionListParams = {
+        address: this.currAcc.address,
+        transactionType: 1,
+        pagination: {
+          page: 1,
+          limit: 5,
+        },
+      };
+
+      zoobc.Transactions.getList(params)
+        .then(res => {
+          const tx = toTransactionListWallet(res, this.currAcc.address);
+          this.recentTx = <Transaction[]>tx.transactions;
+          this.totalTx = tx.total;
           return this.transactionServ.getUnconfirmTransaction(
             this.currAcc.address
           );
         })
         .then((unconfirmTx: Transaction[]) => (this.unconfirmTx = unconfirmTx))
-        .catch(() => (this.isErrorRecentTx = true))
+        .catch(e => {
+          this.isErrorRecentTx = true;
+        })
         .finally(() => (this.isLoadingRecentTx = false));
     }
   }
