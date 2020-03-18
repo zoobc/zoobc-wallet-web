@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
-import { KeyringService } from './keyring.service';
+import zoobc, { BIP32Interface, ZooKeyring } from 'zoobc-sdk';
 import { TransactionService, Transactions } from './transaction.service';
 import { AccountService } from './account.service';
 import { GetAccountBalanceResponse } from '../grpc/model/accountBalance_pb';
@@ -16,20 +16,21 @@ export interface SavedAccount {
   lastTx?: number;
 }
 
-const coin = 'ZBC';
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // private loggedIn: boolean = true;
   private loggedIn: boolean = false;
+  private seed: BIP32Interface;
 
   constructor(
-    private keyringServ: KeyringService,
     private transactionServ: TransactionService,
     private accServ: AccountService
   ) {}
+
+  get getSeed() {
+    return this.seed;
+  }
 
   isLoggedIn(): boolean {
     return this.loggedIn;
@@ -57,14 +58,15 @@ export class AuthService {
 
   login(key: string): boolean {
     // give some delay so that the dom have time to render the spinner
-    const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-    const isPinValid = this.isPinValid(encSeed, key);
-    if (isPinValid) {
-      const seed = Buffer.from(
-        CryptoJS.AES.decrypt(encSeed, key).toString(CryptoJS.enc.Utf8),
-        'hex'
-      );
-      this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
+    const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+    const passphrase = zoobc.Wallet.decryptPassphrase(encPassphrase, key);
+
+    if (passphrase) {
+      const account = this.getCurrAccount();
+      const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
+
+      this.seed = keyring.calcDerivationPath(account.path);
+
       return (this.loggedIn = true);
     }
     return (this.loggedIn = false);
