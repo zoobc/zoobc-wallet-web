@@ -128,18 +128,41 @@ export class DashboardComponent implements OnInit {
         address: address,
       };
 
-      await this.transactionServ
-        .getTransactions(1, 1, address)
-        .then((res: Transactions) => {
-          const totalTx = res.total;
-          accountsTemp.push(account);
-          if (totalTx > 0) {
-            Array.prototype.push.apply(accounts, accountsTemp);
-            this.authServ.restoreAccount(accounts);
-            accountsTemp = [];
-            counter = 0;
-          }
-        });
+      const params: TransactionListParams = {
+        address: address,
+        transactionType: 1,
+        pagination: {
+          page: 1,
+          limit: 1,
+        },
+      };
+
+      // await this.transactionServ
+      //   .getTransactions(1, 1, address)
+      //   .then((res: Transactions) => {
+      //     console.log(res);
+      //     const totalTx = res.total;
+      //     accountsTemp.push(account);
+      //     if (totalTx > 0) {
+      //       Array.prototype.push.apply(accounts, accountsTemp);
+      //       this.authServ.restoreAccount(accounts);
+      //       accountsTemp = [];
+      //       counter = 0;
+      //     }
+      //   });
+
+      await zoobc.Transactions.getList(params).then(res => {
+        const tx = toTransactionListWallet(res, address);
+        const totalTx = parseInt(res.total);
+        accountsTemp.push(account);
+        if (totalTx > 0) {
+          Array.prototype.push.apply(accounts, accountsTemp);
+          this.authServ.restoreAccount(accounts);
+          accountsTemp = [];
+          counter = 0;
+        }
+      });
+
       accountPath++;
       accountNo++;
       counter++;
