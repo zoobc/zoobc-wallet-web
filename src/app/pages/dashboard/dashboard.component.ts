@@ -5,7 +5,6 @@ import { AccountService } from '../../services/account.service';
 import {
   TransactionService,
   Transaction,
-  Transactions,
 } from '../../services/transaction.service';
 import {
   Currency,
@@ -24,7 +23,6 @@ import { KeyringService } from 'src/app/services/keyring.service';
 
 import zoobc, {
   TransactionListParams,
-  HostInterface,
   toTransactionListWallet,
 } from 'zoobc-sdk';
 
@@ -123,20 +121,6 @@ export class DashboardComponent implements OnInit {
         },
       };
 
-      // await this.transactionServ
-      //   .getTransactions(1, 1, address)
-      //   .then((res: Transactions) => {
-      //     console.log(res);
-      //     const totalTx = res.total;
-      //     accountsTemp.push(account);
-      //     if (totalTx > 0) {
-      //       Array.prototype.push.apply(accounts, accountsTemp);
-      //       this.authServ.restoreAccount(accounts);
-      //       accountsTemp = [];
-      //       counter = 0;
-      //     }
-      //   });
-
       await zoobc.Transactions.getList(params).then(res => {
         const tx = toTransactionListWallet(res, address);
         const totalTx = parseInt(res.total);
@@ -168,16 +152,6 @@ export class DashboardComponent implements OnInit {
       this.isLoadingBalance = true;
       this.isErrorBalance = false;
 
-      // this.accountServ
-      //   .getAccountBalance(this.currAcc.address)
-      //   .then((data: AccountBalanceList) => {
-      //     this.accountBalance = data.accountbalance;
-      //     return this.authServ.getAccountsWithBalance();
-      //   })
-      //   .then((res: SavedAccount[]) => (this.accounts = res))
-      //   .catch(() => (this.isErrorBalance = true))
-      //   .finally(() => (this.isLoadingBalance = false));
-
       zoobc.Account.getBalance(this.currAcc.address)
         .then((data: AccountBalanceList) => {
           this.accountBalance = data.accountbalance;
@@ -198,19 +172,6 @@ export class DashboardComponent implements OnInit {
 
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
-
-      // this.transactionServ
-      //   .getTransactions(1, 5, this.currAcc.address)
-      //   .then((res: Transactions) => {
-      //     this.recentTx = res.transactions;
-      //     this.totalTx = res.total;
-      //     return this.transactionServ.getUnconfirmTransaction(
-      //       this.currAcc.address
-      //     );
-      //   })
-      //   .then((unconfirmTx: Transaction[]) => (this.unconfirmTx = unconfirmTx))
-      //   .catch(() => (this.isErrorRecentTx = true))
-      //   .finally(() => (this.isLoadingRecentTx = false));
 
       const params: TransactionListParams = {
         address: this.currAcc.address,
