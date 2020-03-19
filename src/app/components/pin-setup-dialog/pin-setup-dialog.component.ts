@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import * as CryptoJS from 'crypto-js';
 import { MatDialogRef } from '@angular/material';
 
 @Component({
@@ -50,16 +49,9 @@ export class PinSetupDialogComponent implements OnInit {
 
   onConfirmPin() {
     if (this.formConfirmPin.valid) {
-      if (this.pin2Form.value == this.pinForm.value) {
-        const key = CryptoJS.PBKDF2(this.pinForm.value, 'salt', {
-          keySize: 8,
-          iterations: 10000,
-        }).toString();
-
-        this.dialogRef.close(key);
-      } else {
-        this.isPinMatched = false;
-      }
+      if (this.pin2Form.value == this.pinForm.value)
+        this.dialogRef.close(this.pinForm.value);
+      else this.isPinMatched = false;
     }
   }
 

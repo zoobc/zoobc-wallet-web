@@ -17,6 +17,11 @@ import { TransactionService } from 'src/app/services/transaction.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
+import zoobc, {
+  NodeParams,
+  toUnconfirmTransactionNodeWallet,
+  MempoolListParams,
+} from 'zoobc-sdk';
 
 type NodeHardware = NH.AsObject;
 type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
@@ -68,11 +73,17 @@ export class NodeAdminComponent implements OnInit {
     this.pendingNodeTx = null;
     this.registeredNode = null;
 
-    this.nodeServ
-      .getUnconfirmTransaction(this.account.address)
+    const params: MempoolListParams = {
+      address: this.account.address,
+    };
+    zoobc.Mempool.getList(params)
       .then(res => {
-        this.pendingNodeTx = res;
-        return this.nodeServ.getRegisteredNode(this.account);
+        const pendingTxs = toUnconfirmTransactionNodeWallet(res);
+        this.pendingNodeTx = pendingTxs;
+        const params: NodeParams = {
+          owner: this.account.address,
+        };
+        return zoobc.Node.get(params);
       })
       .then((res: RegisteredNodeR) => {
         this.registeredNode = res.noderegistration;
