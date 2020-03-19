@@ -5,5 +5,6 @@ export interface NodeList {
 
 export interface Node {
   ip: string;
+  name: string;
   default: boolean;
 }
