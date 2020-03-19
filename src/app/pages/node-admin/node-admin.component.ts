@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
 import {
   NodeHardware as NH,
   GetNodeHardwareResponse,
 } from 'src/app/grpc/model/nodeHardware_pb';
-import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
 import {
@@ -13,7 +11,6 @@ import {
   NodeRegistration,
 } from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { TransactionService } from 'src/app/services/transaction.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
@@ -48,23 +45,13 @@ export class NodeAdminComponent implements OnInit {
   isNodeLoading: boolean = false;
   isNodeError: boolean = false;
 
-  constructor(
-    private nodeAdminServ: NodeAdminService,
-    private dialog: MatDialog,
-    private nodeServ: NodeRegistrationService,
-    authServ: AuthService,
-    private transactionServ: TransactionService
-  ) {
+  constructor(private dialog: MatDialog, private authServ: AuthService) {
     this.account = authServ.getCurrAccount();
   }
 
   ngOnInit() {
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
-  }
-
-  ngOnDestroy() {
-    this.nodeAdminServ.stopNodeHardwareInfo();
   }
 
   getRegisteredNode() {
@@ -104,8 +91,7 @@ export class NodeAdminComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        this.nodeAdminServ
-          .generateNodeKey()
+        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.getSeed)
           .then(res => {
             Swal.fire('Success', 'success', 'success');
           })
@@ -120,7 +106,10 @@ export class NodeAdminComponent implements OnInit {
   streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    this.nodeAdminServ.streamNodeHardwareInfo().subscribe(
+    zoobc.Node.getHardwareInfo(
+      this.account.nodeIP,
+      this.authServ.getSeed
+    ).subscribe(
       (res: NodeHardwareResponse) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
