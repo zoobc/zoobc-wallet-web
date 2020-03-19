@@ -7,6 +7,7 @@ import { KeyringService } from '../../services/keyring.service';
 import { onCopyText } from '../../../helpers/utils';
 import { AuthService } from 'src/app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import zoobc, { ZooKeyring } from 'zoobc-sdk';
 
 const coin = 'ZBC';
 
@@ -48,17 +49,8 @@ export class SignupComponent implements OnInit {
   }
 
   generateNewWallet() {
-    let { phrase: passphrase } = this.keyringServ.generateRandomPhrase();
-    const pass = 'p4ssphr4se';
-
-    const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
-      coin,
-      passphrase,
-      pass
-    );
-
-    this.masterSeed = seed;
-    this.passphrase = passphrase.split(' ');
+    let phrase = ZooKeyring.generateRandomPhrase();
+    this.passphrase = phrase.split(' ');
   }
 
   async copyPassphrase() {

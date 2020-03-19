@@ -28,59 +28,6 @@ export class NodeAdminService {
     private keyringServ: KeyringService
   ) {}
 
-  streamNodeHardwareInfo() {
-    return new Observable(observer => {
-      const account = this.authServ.getCurrAccount();
-      const auth = poownBuilder(RequestType.GETNODEHARDWARE, this.keyringServ);
-      const request = new GetNodeHardwareRequest();
-
-      this.nodeAdminClient = grpc.client(NodeHardwareService.GetNodeHardware, {
-        host: `//${account.nodeIP}`,
-      });
-      this.nodeAdminClient.onMessage((message: GetNodeHardwareResponse) => {
-        observer.next(message.toObject());
-      });
-      this.nodeAdminClient.onEnd(
-        (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
-          if (status != grpc.Code.OK) observer.error(statusMessage);
-        }
-      );
-
-      this.nodeAdminClient.start(new grpc.Metadata({ authorization: auth }));
-      this.nodeAdminClient.send(request);
-      this.nodeAdminClient.finishSend();
-    });
-  }
-
-  stopNodeHardwareInfo() {
-    this.nodeAdminClient && this.nodeAdminClient.close();
-  }
-
-  generateNodeKey() {
-    return new Promise((resolve, reject) => {
-      const node: Node = JSON.parse(localStorage.getItem('SELECTED_NODE'));
-
-      const auth = poownBuilder(RequestType.GENERATETNODEKEY, this.keyringServ);
-      const request = new GenerateNodeKeyRequest();
-      const client = grpc.client(NodeAdminServ.GenerateNodeKey, {
-        host: node.ip,
-      });
-
-      client.onMessage((message: GenerateNodeKeyResponse) => {
-        resolve(message.toObject());
-      });
-      client.onEnd(
-        (status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
-          if (status != grpc.Code.OK) reject(statusMessage);
-        }
-      );
-
-      client.start(new grpc.Metadata({ authorization: auth }));
-      client.send(request);
-      client.finishSend();
-    });
-  }
-
   addNodeAdmin(ip: string) {
     let account: SavedAccount = this.authServ.getCurrAccount();
     let accounts: SavedAccount[] = this.authServ.getAllAccount();

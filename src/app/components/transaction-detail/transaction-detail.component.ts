@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { TransactionService } from 'src/app/services/transaction.service';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Transaction } from 'src/app/services/transaction.service';
+import zoobc from 'zoobc-sdk';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -9,20 +8,15 @@ import { Transaction } from 'src/app/services/transaction.service';
   styleUrls: ['./transaction-detail.component.scss'],
 })
 export class TransactionDetailComponent implements OnInit {
-  transaction: Transaction;
+  transaction: {};
   isLoading: boolean = true;
-  constructor(
-    private transactionServ: TransactionService,
-    @Inject(MAT_DIALOG_DATA) public id: any
-  ) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public id: any) {}
 
   ngOnInit() {
-    this.transactionServ
-      .getTransaction(this.id)
-      .then((transaction: Transaction) => {
-        this.transaction = transaction;
-        this.isLoading = false;
-      });
+    zoobc.Transactions.get(this.id).then((transaction: object) => {
+      this.transaction = transaction;
+      this.isLoading = false;
+    });
   }
   redirect() {
     window.open('https://zoobc.net/transactions/' + this.id, '_blank');
