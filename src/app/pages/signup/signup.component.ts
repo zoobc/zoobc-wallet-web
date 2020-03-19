@@ -50,10 +50,6 @@ export class SignupComponent implements OnInit {
 
   generateNewWallet() {
     let phrase = ZooKeyring.generateRandomPhrase();
-    const pass = 'p4ssphr4se';
-    const seed = zoobc.Wallet.encryptPassphrase(phrase, pass);
-
-    this.masterSeed = seed;
     this.passphrase = phrase.split(' ');
   }
 
