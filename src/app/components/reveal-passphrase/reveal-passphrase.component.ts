@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { generateEncKey, onCopyText } from 'src/helpers/utils';
-import { AuthService } from 'src/app/services/auth.service';
-import * as CryptoJS from 'crypto-js';
+import { onCopyText } from 'src/helpers/utils';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
+import zoobc from 'zoobc-sdk';
 
 @Component({
   selector: 'app-reveal-passphrase',
@@ -19,7 +18,6 @@ export class RevealPassphraseComponent implements OnInit {
   arrPhrase: string[];
 
   constructor(
-    private authServ: AuthService,
     public dialogRef: MatDialogRef<RevealPassphraseComponent>,
     private translate: TranslateService,
     private snackBar: MatSnackBar
@@ -34,15 +32,14 @@ export class RevealPassphraseComponent implements OnInit {
       this.isConfirmPinLoading = true;
 
       setTimeout(() => {
-        const key = generateEncKey(this.pinField.value);
-        const encSeed = localStorage.getItem('ENC_PASSPHRASE_SEED');
-        const isPinValid = this.authServ.isPinValid(encSeed, key);
-        if (isPinValid) {
-          this.phrase = CryptoJS.AES.decrypt(encSeed, key).toString(
-            CryptoJS.enc.Utf8
-          );
-          this.arrPhrase = this.phrase.split(' ');
-        } else this.formConfirmPin.setErrors({ invalid: true });
+        const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+
+        this.phrase = zoobc.Wallet.decryptPassphrase(
+          encPassphrase,
+          this.pinField.value
+        );
+        if (this.phrase) this.arrPhrase = this.phrase.split(' ');
+        else this.formConfirmPin.setErrors({ invalid: true });
         this.isConfirmPinLoading = false;
       }, 50);
     }

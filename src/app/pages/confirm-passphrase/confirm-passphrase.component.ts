@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { KeyringService } from 'src/app/services/keyring.service';
 import { getAddressFromPublicKey } from 'src/helpers/utils';
+import zoobc, { ZooKeyring } from 'zoobc-sdk';
 
 const coin = 'ZBC';
 @Component({
@@ -23,6 +24,7 @@ export class ConfirmPassphraseComponent implements OnInit {
 
   confirmForm: FormGroup;
   wordField: FormArray;
+  zooKeyring;
 
   mnemonicNumWords = environment.mnemonicNumWords;
 
@@ -110,10 +112,15 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
-    const childSeed = this.keyringServ.calcForDerivationPathForCoin(coin, 0);
+    const pass = 'p4ssphr4se';
+    this.zooKeyring = new ZooKeyring(this.words, pass);
+
+    const encPassphrase = zoobc.Wallet.encryptPassphrase(this.words, key);
+    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
+
+    const childSeed = this.zooKeyring.calcDerivationPath(0);
     const accountAddress = getAddressFromPublicKey(childSeed.publicKey);
-    this.authServ.saveMasterSeed(this.masterSeed, key);
-    this.authServ.savePassphraseSeed(this.words, key);
+
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,
