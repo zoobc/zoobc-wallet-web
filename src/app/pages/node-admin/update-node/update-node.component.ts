@@ -79,7 +79,7 @@ export class UpdateNodeComponent implements OnInit {
             accountAddress: this.account.address,
             fee: this.feeForm.value,
             nodePublicKey: this.nodePublicKeyForm.value,
-            nodeAddress: 'http://85.90.246.90:8002',
+            nodeAddress: this.ipAddressForm.value,
             funds: this.lockedAmountForm.value,
           };
 
