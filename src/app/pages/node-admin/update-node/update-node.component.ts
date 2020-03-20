@@ -7,7 +7,6 @@ import { TransactionService } from 'src/app/services/transaction.service';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { updateNodeBuilder } from 'src/helpers/transaction-builder/update-node';
 import Swal from 'sweetalert2';
 import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
 import zoobc, { UpdateNodeInterface } from 'zoobc-sdk';
@@ -93,21 +92,6 @@ export class UpdateNodeComponent implements OnInit {
           };
 
           zoobc.Node.update(data, this.authServ.getSeed)
-            // this.poownServ
-            //   .get(this.ipAddressForm.value)
-            // .then((poown: Buffer) => {
-            //   let data: UpdateNodeInterface = {
-            //     accountAddress: this.account.address,
-            //     nodePublicKey: this.nodePublicKeyForm.value,
-            //     nodeAddress: this.ipAddressForm.value,
-            //     fee: this.feeForm.value,
-            //     funds: this.lockedAmountForm.value,
-            //     poown: poown,
-            //   };
-            //   let bytes = updateNodeBuilder(data, this.keyringServ);
-
-            //   return this.transactionServ.postTransaction(bytes);
-            // })
             .then(() => {
               Swal.fire('Success', 'Your node will be updated soon', 'success');
 
