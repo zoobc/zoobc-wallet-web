@@ -7,12 +7,10 @@ import { TransactionService } from 'src/app/services/transaction.service';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import {
-  UpdateNodeInterface,
-  updateNodeBuilder,
-} from 'src/helpers/transaction-builder/update-node';
+import { updateNodeBuilder } from 'src/helpers/transaction-builder/update-node';
 import Swal from 'sweetalert2';
 import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
+import zoobc, { UpdateNodeInterface } from 'zoobc-sdk';
 
 type RegisteredNode = NodeRegistration.AsObject;
 
@@ -74,6 +72,8 @@ export class UpdateNodeComponent implements OnInit {
   }
 
   onUpdateNode() {
+    console.log('ip address form', this.ipAddressForm.value);
+    console.log('ip address node', this.account.nodeIP);
     if (this.formUpdateNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
@@ -84,25 +84,35 @@ export class UpdateNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          this.poownServ
-            .get(this.ipAddressForm.value)
-            .then((poown: Buffer) => {
-              let data: UpdateNodeInterface = {
-                accountAddress: this.account.address,
-                nodePublicKey: this.nodePublicKeyForm.value,
-                nodeAddress: this.ipAddressForm.value,
-                fee: this.feeForm.value,
-                funds: this.lockedAmountForm.value,
-                poown: poown,
-              };
-              let bytes = updateNodeBuilder(data, this.keyringServ);
+          let data: UpdateNodeInterface = {
+            accountAddress: this.account.address,
+            fee: this.feeForm.value,
+            nodePublicKey: this.nodePublicKeyForm.value,
+            nodeAddress: 'http://85.90.246.90:8002',
+            funds: this.lockedAmountForm.value,
+          };
 
-              return this.transactionServ.postTransaction(bytes);
-            })
+          zoobc.Node.update(data, this.authServ.getSeed)
+            // this.poownServ
+            //   .get(this.ipAddressForm.value)
+            // .then((poown: Buffer) => {
+            //   let data: UpdateNodeInterface = {
+            //     accountAddress: this.account.address,
+            //     nodePublicKey: this.nodePublicKeyForm.value,
+            //     nodeAddress: this.ipAddressForm.value,
+            //     fee: this.feeForm.value,
+            //     funds: this.lockedAmountForm.value,
+            //     poown: poown,
+            //   };
+            //   let bytes = updateNodeBuilder(data, this.keyringServ);
+
+            //   return this.transactionServ.postTransaction(bytes);
+            // })
             .then(() => {
               Swal.fire('Success', 'Your node will be updated soon', 'success');
 
               // change IP if has different value
+
               if (this.ipAddressForm.value != this.account.nodeIP)
                 this.authServ.editNodeIpAddress(this.ipAddressForm.value);
 
