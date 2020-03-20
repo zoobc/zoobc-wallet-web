@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-
-import { TransactionService } from '../../services/transaction.service';
-import { KeyringService } from 'src/app/services/keyring.service';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
@@ -17,12 +14,9 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
 import { addressValidation, truncate } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  sendMoneyBuilder,
-  SendMoneyInterface,
-} from 'src/helpers/transaction-builder/send-money';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-
+import zoobc from 'zoobc-sdk';
+import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 @Component({
   selector: 'app-sendmoney',
   templateUrl: './sendmoney.component.html',
@@ -81,13 +75,9 @@ export class SendmoneyComponent implements OnInit {
   showSaveAddressBtn: boolean = true;
   customFee: boolean = false;
   advancedMenu: boolean = false;
-  minDate = new Date();
-  maxDate = new Date();
 
   constructor(
-    private transactionServ: TransactionService,
     private authServ: AuthService,
-    private keyringServ: KeyringService,
     private currencyServ: CurrencyRateService,
     private contactServ: ContactService,
     private translate: TranslateService,
@@ -112,8 +102,6 @@ export class SendmoneyComponent implements OnInit {
     this.aliasField.disable();
     // disable some field where (advancedMenu = false)
     this.disableFieldAdvancedMenu();
-    // max date 10 days
-    this.maxDate.setDate(this.maxDate.getDate() + 10);
 
     const amount = this.activeRoute.snapshot.params['amount'];
     const recipient = this.activeRoute.snapshot.params['recipient'];
@@ -335,10 +323,15 @@ export class SendmoneyComponent implements OnInit {
         recipient: this.recipientForm.value,
         fee: this.feeForm.value,
         amount: this.amountForm.value,
+        approverAddress: this.addressApproverField.value,
+        commission: this.approverCommissionField.value,
+        timeout: this.timeoutField.value,
+        instruction: this.instructionField.value,
       };
-      const txBytes = sendMoneyBuilder(data, this.keyringServ);
+      // const txBytes = sendMoneyBuilder(data, this.keyringServ);
+      const childSeed = this.authServ.getSeed;
 
-      this.transactionServ.postTransaction(txBytes).then(
+      zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: any) => {
           this.isLoading = false;
           let message: string;
