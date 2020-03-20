@@ -5,7 +5,6 @@ import { NodeAdminService } from 'src/app/services/node-admin.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { PoownService } from 'src/app/services/poown.service';
 import zoobc, { RequestType } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 
@@ -26,7 +25,7 @@ export class AddNodeAdminComponent implements OnInit {
     private nodeAdminServ: NodeAdminService,
     private router: Router,
     private translate: TranslateService,
-    private poownServ: PoownService,
+    // private poownServ: PoownService,
     private authSrv: AuthService
   ) {
     this.formAddNodeAdmin = new FormGroup({
@@ -39,8 +38,6 @@ export class AddNodeAdminComponent implements OnInit {
   onAddNodeAdmin() {
     if (this.formAddNodeAdmin.valid) {
       this.isLoading = true;
-
-      const currAccount: SavedAccount = this.authSrv.getCurrAccount();
       const childSeed = this.authSrv.getSeed;
 
       const auth: string = zoobc.Poown.createAuth(
@@ -65,7 +62,6 @@ export class AddNodeAdminComponent implements OnInit {
           });
         })
         .catch(async err => {
-          console.log(err);
           Swal.fire('Error', err, 'error');
           this.isLoading = false;
         });
