@@ -11,7 +11,6 @@ import {
   NodeRegistration,
 } from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-// import { KeyringService } from 'src/app/services/keyring.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
@@ -33,7 +32,6 @@ type RegisteredNode = NodeRegistration.AsObject;
 })
 export class NodeAdminComponent implements OnInit {
   account: SavedAccount;
-  // keyringServ: KeyringService;
   hwInfo: NodeHardware;
   mbToB = Math.pow(1024, 2);
   gbToB = Math.pow(1024, 3);
@@ -53,9 +51,6 @@ export class NodeAdminComponent implements OnInit {
   ngOnInit() {
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
-    // const seed =
-    //   'c0a6e8e22681e240fb6af88a03ed9b9cfab7d35145f59ce1e578d214e863820e44b0c12e3688129f7235ea6972b1ef6f381756517c6703802e74479a1ea5e7f6';
-    // this.keyringServ.calcBip32RootKeyFromSeed('ZBC', Buffer.from(seed, 'hex'));
   }
 
   getRegisteredNode() {

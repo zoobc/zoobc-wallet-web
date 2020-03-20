@@ -65,31 +65,6 @@ export class AddNodeAdminComponent implements OnInit {
           Swal.fire('Error', err, 'error');
           this.isLoading = false;
         });
-
-      // this.poownServ
-      //   .get(this.ipAddressField.value)
-      //   .then(async () => {
-      //     this.isLoading = false;
-      //     this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
-
-      //     let message: string;
-      //     await this.translate
-      //       .get('Node Admin Added!')
-      //       .toPromise()
-      //       .then(res => (message = res));
-      //     Swal.fire('', message, 'success').then(() => {
-      //       this.dialogRef.close();
-      //       // delaying the redirect so the timestamp of poown not in the past
-      //       setTimeout(() => {
-      //         this.router.navigateByUrl('/nodeadmin');
-      //       }, 400);
-      //     });
-      //   })
-      //   .catch(async err => {
-      //     console.log(err);
-      //     Swal.fire('Error', err, 'error');
-      //     this.isLoading = false;
-      //   });
     }
   }
 }

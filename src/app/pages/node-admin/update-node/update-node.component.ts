@@ -1,9 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PoownService } from 'src/app/services/poown.service';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { KeyringService } from 'src/app/services/keyring.service';
-import { TransactionService } from 'src/app/services/transaction.service';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -37,10 +34,7 @@ export class UpdateNodeComponent implements OnInit {
   isError: boolean = false;
 
   constructor(
-    private poownServ: PoownService,
     private authServ: AuthService,
-    private keyringServ: KeyringService,
-    private transactionServ: TransactionService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
     @Inject(MAT_DIALOG_DATA) public node: RegisteredNode
@@ -71,8 +65,6 @@ export class UpdateNodeComponent implements OnInit {
   }
 
   onUpdateNode() {
-    console.log('ip address form', this.ipAddressForm.value);
-    console.log('ip address node', this.account.nodeIP);
     if (this.formUpdateNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
