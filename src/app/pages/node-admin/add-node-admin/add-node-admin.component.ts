@@ -15,7 +15,6 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 })
 export class AddNodeAdminComponent implements OnInit {
   isLoading: boolean = false;
-
   formAddNodeAdmin: FormGroup;
   ipAddressField = new FormControl('', [
     Validators.required,
