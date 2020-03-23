@@ -32,7 +32,6 @@ type RegisteredNode = NodeRegistration.AsObject;
 })
 export class NodeAdminComponent implements OnInit {
   account: SavedAccount;
-
   hwInfo: NodeHardware;
   mbToB = Math.pow(1024, 2);
   gbToB = Math.pow(1024, 3);

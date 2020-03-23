@@ -34,7 +34,7 @@ export class PinConfirmationComponent implements OnInit {
           encPassphrase,
           this.pinField.value
         );
-        if (!isPinValid) this.dialogRef.close(true);
+        if (isPinValid) this.dialogRef.close(true);
         else this.formConfirmPin.setErrors({ invalid: true });
         this.isConfirmPinLoading = false;
       }, 50);
