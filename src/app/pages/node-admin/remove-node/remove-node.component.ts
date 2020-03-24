@@ -1,16 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { KeyringService } from 'src/app/services/keyring.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import { TransactionService } from 'src/app/services/transaction.service';
-import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
-import zoobc, { RemoveNodeInterface } from 'zoobc-sdk';
-
-type RegisteredNode = NodeRegistration.AsObject;
+import zoobc, { RemoveNodeInterface, isZBCPublicKeyValid } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-remove-node',
@@ -29,11 +23,9 @@ export class RemoveNodeComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
-    private keyringServ: KeyringService,
-    private transactionServ: TransactionService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<RemoveNodeComponent>,
-    @Inject(MAT_DIALOG_DATA) public node: RegisteredNode
+    @Inject(MAT_DIALOG_DATA) public node: any
   ) {
     this.formRemoveNode = new FormGroup({
       fee: this.feeForm,
@@ -47,7 +39,7 @@ export class RemoveNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
+    let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
