@@ -8,10 +8,7 @@ import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
-import {
-  registerNodeBuilder,
-  RegisterNodeInterface,
-} from 'src/helpers/transaction-builder/register-node';
+import zoobc, { RegisterNodeInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-register-node',
@@ -74,21 +71,15 @@ export class RegisterNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          this.poownServ
-            .get(this.ipAddressForm.value)
-            .then((poown: Buffer) => {
-              let data: RegisterNodeInterface = {
-                accountAddress: this.account.address,
-                nodePublicKey: this.nodePublicKeyForm.value,
-                nodeAddress: this.ipAddressForm.value,
-                fee: this.feeForm.value,
-                funds: this.lockedBalanceForm.value,
-                poown: poown,
-              };
-              let byte = registerNodeBuilder(data, this.keyringServ);
+          let data: RegisterNodeInterface = {
+            accountAddress: this.account.address,
+            nodePublicKey: this.nodePublicKeyForm.value,
+            nodeAddress: this.ipAddressForm.value,
+            fee: this.feeForm.value,
+            funds: this.lockedBalanceForm.value,
+          };
 
-              return this.transactionServ.postTransaction(byte);
-            })
+          zoobc.Node.register(data, this.authServ.getSeed)
             .then(() => {
               Swal.fire(
                 'Success',
