@@ -1,16 +1,4 @@
-[submodule "externals/bip32"]
-	path = externals/bip32
-	url = https://github.com/BlockchainZoo/bip32.git
-	branch = SLIP10
-[submodule "externals/bip39"]
-	path = externals/bip39
-	url = https://github.com/iancoleman/bip39.git
-	branch = master
 [submodule "src/assets/languages"]
 	path = src/assets/languages
 	url = https://github.com/zoobc/zoobc-language-files
 	branch = master
-[submodule "proto"]
-	path = externals/proto
-	url = https://github.com/zoobc/zoobc-schema
-	branch = develop
