@@ -6,12 +6,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import {
-  RemoveNodeInterface,
-  removeNodeBuilder,
-} from 'src/helpers/transaction-builder/remove-node';
 import { TransactionService } from 'src/app/services/transaction.service';
 import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
+import zoobc, { RemoveNodeInterface } from 'zoobc-sdk';
 
 type RegisteredNode = NodeRegistration.AsObject;
 
@@ -70,10 +67,8 @@ export class RemoveNodeComponent implements OnInit {
             nodePublicKey: this.nodePublicKeyForm.value,
             fee: this.feeForm.value,
           };
-          let bytes = removeNodeBuilder(data, this.keyringServ);
 
-          this.transactionServ
-            .postTransaction(bytes)
+          zoobc.Node.remove(data, this.authServ.getSeed)
             .then(() => {
               Swal.fire('Success', 'Your node will be removed soon', 'success');
               this.dialogRef.close(true);
