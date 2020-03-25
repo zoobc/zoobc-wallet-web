@@ -21,20 +21,6 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/_redirects"],
             "styles": ["src/styles.scss"],
-            "scripts": [
-              "externals/bip39/src/js/bitcoinjs-3.3.2.js",
-              "externals/bip39/src/js/bitcoinjs-extensions.js",
-              "externals/bip39/src/js/wordlist_english.js",
-              "externals/bip39/src/js/wordlist_japanese.js",
-              "externals/bip39/src/js/wordlist_spanish.js",
-              "externals/bip39/src/js/wordlist_chinese_simplified.js",
-              "externals/bip39/src/js/wordlist_chinese_traditional.js",
-              "externals/bip39/src/js/wordlist_french.js",
-              "externals/bip39/src/js/wordlist_italian.js",
-              "externals/bip39/src/js/wordlist_korean.js",
-              "externals/bip39/src/js/jsbip39.js",
-              "externals/bip39/src/js/sjcl-bip39.js"
-            ],
             "es5BrowserSupport": true
           },
           "configurations": {

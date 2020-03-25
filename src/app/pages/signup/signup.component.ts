@@ -2,14 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-
-import { KeyringService } from '../../services/keyring.service';
 import { onCopyText } from '../../../helpers/utils';
-import { AuthService } from 'src/app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc, { ZooKeyring } from 'zoobc-sdk';
-
-const coin = 'ZBC';
+import { ZooKeyring } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-signup',
@@ -26,8 +21,6 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authServ: AuthService,
-    private keyringServ: KeyringService,
     private snackbar: MatSnackBar,
     private translate: TranslateService
   ) {

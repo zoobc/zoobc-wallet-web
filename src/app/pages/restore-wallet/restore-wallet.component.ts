@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
-import { MnemonicsService } from 'src/app/services/mnemonics.service';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
@@ -36,7 +35,6 @@ export class RestoreWalletComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private authServ: AuthService,
-    private mnemonicServ: MnemonicsService,
     private translate: TranslateService,
     private fb: FormBuilder
   ) {
@@ -63,7 +61,7 @@ export class RestoreWalletComponent implements OnInit {
     let clipboardData = event.clipboardData;
     let passphrase = clipboardData.getData('text').toLowerCase();
     let phraseWord = passphrase.split(' ');
-    const valid = this.mnemonicServ.validateMnemonic(passphrase);
+    const valid = ZooKeyring.isPassphraseValid(passphrase);
     this.wordField.controls = [];
     this.onLoad24Passphrase(phraseWord);
     if (phraseWord.length != this.mnemonicWordLengtEnv) {
@@ -95,7 +93,7 @@ export class RestoreWalletComponent implements OnInit {
       .join(' ')
       .replace(/\s\s+/g, ' ')
       .toLowerCase();
-    const valid = this.mnemonicServ.validateMnemonic(passphrase);
+    const valid = ZooKeyring.isPassphraseValid(passphrase);
     if (!valid) this.restoreForm.setErrors({ mnemonic: true });
   }
 

@@ -1,14 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import { NodeRegistration } from 'src/app/grpc/model/nodeRegistration_pb';
-import zoobc, { UpdateNodeInterface } from 'zoobc-sdk';
-
-type RegisteredNode = NodeRegistration.AsObject;
+import zoobc, { UpdateNodeInterface, isZBCPublicKeyValid } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-update-node',
@@ -37,7 +33,7 @@ export class UpdateNodeComponent implements OnInit {
     private authServ: AuthService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
-    @Inject(MAT_DIALOG_DATA) public node: RegisteredNode
+    @Inject(MAT_DIALOG_DATA) public node: any
   ) {
     this.formUpdateNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -60,7 +56,7 @@ export class UpdateNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
+    let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 

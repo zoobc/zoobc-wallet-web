@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { sign as naclSign } from 'tweetnacl';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -167,7 +166,6 @@ export function getLanguage(languageServ: LanguageService) {
       useFactory: getLanguage,
     },
     { provide: 'global', useFactory: () => window },
-    { provide: 'nacl.sign', useFactory: () => naclSign },
   ],
   entryComponents: [
     AddAccountComponent,

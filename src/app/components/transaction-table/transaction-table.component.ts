@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Transaction } from 'src/app/grpc/model/transaction_pb';
 import { MatDialog } from '@angular/material';
 import { TransactionDetailComponent } from '../transaction-detail/transaction-detail.component';
+import { ZooTransactionsInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-transaction-table',
@@ -9,7 +9,7 @@ import { TransactionDetailComponent } from '../transaction-detail/transaction-de
   styleUrls: ['./transaction-table.component.scss'],
 })
 export class TransactionTableComponent implements OnInit {
-  @Input() transactionData: Transaction[];
+  @Input() transactionData: ZooTransactionsInterface[];
   @Input() isLoading: boolean = false;
   @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;

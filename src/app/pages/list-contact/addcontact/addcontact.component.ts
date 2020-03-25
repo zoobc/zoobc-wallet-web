@@ -3,8 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
-import { addressValidation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { ZBCAddressValidation } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-addcontact',
@@ -30,7 +30,7 @@ export class AddcontactComponent implements OnInit {
   ngOnInit() {}
 
   onAddressValidation() {
-    const validation = addressValidation(this.addressField.value);
+    const validation = ZBCAddressValidation(this.addressField.value);
     if (!validation) {
       this.addressField.setErrors({ invalidAddress: true });
     }

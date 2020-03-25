@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
 import zoobc, {
   BIP32Interface,
   ZooKeyring,
   TransactionListParams,
   toTransactionListWallet,
 } from 'zoobc-sdk';
-import { TransactionService, Transactions } from './transaction.service';
-import { AccountService } from './account.service';
-import { GetAccountBalanceResponse } from '../grpc/model/accountBalance_pb';
-
-type AccountBalance = GetAccountBalanceResponse.AsObject;
 
 export interface SavedAccount {
   path: number;
@@ -27,14 +21,16 @@ export interface SavedAccount {
 export class AuthService {
   private loggedIn: boolean = false;
   private seed: BIP32Interface;
+  private _keyring: ZooKeyring;
 
-  constructor(
-    private transactionServ: TransactionService,
-    private accServ: AccountService
-  ) {}
+  constructor() {}
 
   get getSeed() {
     return this.seed;
+  }
+
+  get keyring() {
+    return this._keyring;
   }
 
   isLoggedIn(): boolean {
@@ -54,9 +50,8 @@ export class AuthService {
 
     if (passphrase) {
       const account = this.getCurrAccount();
-      const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
-
-      this.seed = keyring.calcDerivationPath(account.path);
+      this._keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
+      this.seed = this._keyring.calcDerivationPath(account.path);
 
       return (this.loggedIn = true);
     }
@@ -81,7 +76,6 @@ export class AuthService {
 
   getAccountsWithBalance(): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
-      let currAddress = this.getCurrAccount().address;
       let accounts = this.getAllAccount();
 
       let error = false;
@@ -152,10 +146,5 @@ export class AuthService {
   restoreAccount(account) {
     localStorage.setItem('ACCOUNT', JSON.stringify(account));
     this.switchAccount(account[0]);
-  }
-
-  savePassphraseSeed(passphrase: string, key: string) {
-    const encPassphraseSeed = CryptoJS.AES.encrypt(passphrase, key).toString();
-    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphraseSeed);
   }
 }
