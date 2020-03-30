@@ -1,13 +1,10 @@
 <div class="network-container">
   <mat-form-field appearance="outline" color="accent" class="select-node">
     <mat-select
-      [value]="selectedNode.ip"
+      [value]="selectedNode"
       (selectionChange)="changeNode($event.value)"
     >
-      <mat-option
-        *ngFor="let node of nodeList.node; let i = index"
-        [value]="node.ip"
-      >
+      <mat-option *ngFor="let node of nodeList.node; let i = index" [value]="i">
         <span>{{ node.name }}</span>
         <ng-container *ngIf="!node.default">
           <span
@@ -66,7 +63,7 @@
       <input
         matInput
         type="text"
-        placeholder="yournode.com:8001 or 192.168.43.1:8001"
+        placeholder="https://yournode.com:80 or http://192.168.43.1:8001"
         formControlName="ip"
       />
     </mat-form-field>

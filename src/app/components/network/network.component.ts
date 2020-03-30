@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { NodeList, Node } from '../../../helpers/node-list';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import zoobc, { HostInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'network',
@@ -13,7 +14,7 @@ export class NetworkComponent implements OnInit {
   detailRefDialog: MatDialogRef<any>;
 
   nodeList: NodeList;
-  selectedNode: Node;
+  selectedNode: number;
 
   currAction: string = 'add';
 
@@ -21,7 +22,7 @@ export class NetworkComponent implements OnInit {
   nameField = new FormControl('', [Validators.required]);
   ipField = new FormControl('', [
     Validators.required,
-    Validators.pattern('^[\\w.-]+:\\d+$'),
+    Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
   ]);
 
   constructor(private dialog: MatDialog) {
@@ -33,12 +34,15 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.nodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
-    this.selectedNode = JSON.parse(localStorage.getItem('SELECTED_NODE'));
+    this.selectedNode = parseInt(
+      JSON.parse(localStorage.getItem('SELECTED_NODE'))
+    );
   }
 
-  changeNode(ip: string) {
-    const node = this.nodeList.node.find(node => node.ip == ip);
-    localStorage.setItem('SELECTED_NODE', JSON.stringify(node));
+  changeNode(idx: number) {
+    localStorage.setItem('SELECTED_NODE', idx.toString());
+    zoobc.Network.set(idx);
+    this.selectedNode = idx;
   }
 
   openDialog(e, action, node?: Node, idx?: number) {
@@ -61,23 +65,46 @@ export class NetworkComponent implements OnInit {
         if (action == 'add') this.nodeList.node.push(node);
         else if (action == 'edit') this.nodeList.node[idx] = node;
         localStorage.setItem('NODE_LIST', JSON.stringify(this.nodeList));
+
+        this.updateHost();
       }
     });
   }
 
   submitNetwork() {
-    const node: Node = {
-      name: this.nameField.value,
-      ip: this.ipField.value,
-      default: false,
-    };
+    if (this.formNetwork.valid) {
+      const node: Node = {
+        name: this.nameField.value,
+        ip: this.ipField.value,
+        default: false,
+      };
 
-    this.detailRefDialog.close(node);
+      this.detailRefDialog.close(node);
+    }
   }
 
   delete(e, idx: number) {
     e.stopPropagation();
     this.nodeList.node.splice(idx, 1);
     localStorage.setItem('NODE_LIST', JSON.stringify(this.nodeList));
+
+    this.updateHost();
+
+    // if current index network bigger than users index of removed network
+    // host length will be minus by one so it can be out of index error
+    if (this.selectedNode >= idx) {
+      this.selectedNode--;
+      this.changeNode(this.selectedNode);
+    }
+  }
+
+  updateHost() {
+    const list: HostInterface[] = this.nodeList.node.map(node => {
+      return {
+        host: node.ip,
+        name: node.name,
+      };
+    });
+    zoobc.Network.list(list);
   }
 }
