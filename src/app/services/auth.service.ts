@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
-import { KeyringService } from './keyring.service';
-import { TransactionService, Transactions } from './transaction.service';
-import { AccountService } from './account.service';
-import { GetAccountBalanceResponse } from '../grpc/model/accountBalance_pb';
-
-type AccountBalance = GetAccountBalanceResponse.AsObject;
+import zoobc, {
+  BIP32Interface,
+  ZooKeyring,
+  TransactionListParams,
+  toTransactionListWallet,
+} from 'zoobc-sdk';
 
 export interface SavedAccount {
   path: number;
@@ -16,20 +15,23 @@ export interface SavedAccount {
   lastTx?: number;
 }
 
-const coin = 'ZBC';
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // private loggedIn: boolean = true;
   private loggedIn: boolean = false;
+  private seed: BIP32Interface;
+  private _keyring: ZooKeyring;
 
-  constructor(
-    private keyringServ: KeyringService,
-    private transactionServ: TransactionService,
-    private accServ: AccountService
-  ) {}
+  constructor() {}
+
+  get getSeed() {
+    return this.seed;
+  }
+
+  get keyring() {
+    return this._keyring;
+  }
 
   isLoggedIn(): boolean {
     return this.loggedIn;
@@ -41,30 +43,16 @@ export class AuthService {
     return accounts.length;
   }
 
-  isPinValid(encSeed: string, key: string): boolean {
-    let isPinValid = false;
-    try {
-      const seed = CryptoJS.AES.decrypt(encSeed, key).toString(
-        CryptoJS.enc.Utf8
-      );
-      if (!seed) throw 'not match';
-      isPinValid = true;
-    } catch (e) {
-      isPinValid = false;
-    }
-    return isPinValid;
-  }
-
   login(key: string): boolean {
     // give some delay so that the dom have time to render the spinner
-    const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-    const isPinValid = this.isPinValid(encSeed, key);
-    if (isPinValid) {
-      const seed = Buffer.from(
-        CryptoJS.AES.decrypt(encSeed, key).toString(CryptoJS.enc.Utf8),
-        'hex'
-      );
-      this.keyringServ.calcBip32RootKeyFromSeed(coin, seed);
+    const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+    const passphrase = zoobc.Wallet.decryptPassphrase(encPassphrase, key);
+
+    if (passphrase) {
+      const account = this.getCurrAccount();
+      this._keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
+      this.seed = this._keyring.calcDerivationPath(account.path);
+
       return (this.loggedIn = true);
     }
     return (this.loggedIn = false);
@@ -88,32 +76,39 @@ export class AuthService {
 
   getAccountsWithBalance(): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
-      let currAddress = this.getCurrAccount().address;
       let accounts = this.getAllAccount();
 
       let error = false;
+
       for (let i = 0; i < accounts.length; i++) {
         let account = accounts[i];
-        await this.transactionServ
-          .getTransactions(1, 1, account.address)
-          .then((res: Transactions) => {
-            if (res.transactions.length > 0)
-              account.lastTx = res.transactions[0].timestamp;
-            else account.lastTx = null;
-            return this.accServ.getAccountBalance(accounts[i].address);
-          })
-          .then((res: AccountBalance) => {
-            account.balance = parseInt(res.accountbalance.spendablebalance);
-            accounts[i] = account;
+        let params: TransactionListParams = {
+          address: account.address,
+          transactionType: 1,
+          pagination: {
+            page: 1,
+            limit: 1,
+          },
+        };
 
-            // update current account to local storage
-            if (account.address == currAddress)
-              localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+        zoobc.Transactions.getList(params)
+          .then(res => {
+            const tx = toTransactionListWallet(res, account.address);
+            if (tx.transactions.length > 0) {
+              account.lastTx = tx.transactions[0].timestamp;
+            } else {
+              account.lastTx = null;
+            }
+            return zoobc.Account.getBalance(account.address);
+          })
+          .then(res => {
+            account.balance = parseInt(res.accountbalance.spendablebalance);
           })
           .catch(err => {
             error = true;
             reject(err);
           });
+
         if (error) break;
       }
       if (!error) resolve(accounts);
@@ -151,15 +146,5 @@ export class AuthService {
   restoreAccount(account) {
     localStorage.setItem('ACCOUNT', JSON.stringify(account));
     this.switchAccount(account[0]);
-  }
-
-  saveMasterSeed(seedBase58: string, key: string) {
-    const encSeed = CryptoJS.AES.encrypt(seedBase58, key).toString();
-    localStorage.setItem('ENC_MASTER_SEED', encSeed);
-  }
-
-  savePassphraseSeed(passphrase: string, key: string) {
-    const encPassphraseSeed = CryptoJS.AES.encrypt(passphrase, key).toString();
-    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphraseSeed);
   }
 }

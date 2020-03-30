@@ -1,17 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { KeyringService } from 'src/app/services/keyring.service';
-import { PoownService } from 'src/app/services/poown.service';
-import { TransactionService } from 'src/app/services/transaction.service';
-import { isPubKeyValid } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
-import {
-  registerNodeBuilder,
-  RegisterNodeInterface,
-} from 'src/helpers/transaction-builder/register-node';
+import zoobc, { RegisterNodeInterface, isZBCPublicKeyValid } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-register-node',
@@ -39,9 +32,6 @@ export class RegisterNodeComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
-    private keyringServ: KeyringService,
-    private poownServ: PoownService,
-    private transactionServ: TransactionService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<RegisterNodeComponent>
   ) {
@@ -59,7 +49,7 @@ export class RegisterNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    let isValid = isPubKeyValid(this.nodePublicKeyForm.value);
+    let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -74,21 +64,15 @@ export class RegisterNodeComponent implements OnInit {
           this.isLoading = true;
           this.isError = false;
 
-          this.poownServ
-            .get(this.ipAddressForm.value)
-            .then((poown: Buffer) => {
-              let data: RegisterNodeInterface = {
-                accountAddress: this.account.address,
-                nodePublicKey: this.nodePublicKeyForm.value,
-                nodeAddress: this.ipAddressForm.value,
-                fee: this.feeForm.value,
-                funds: this.lockedBalanceForm.value,
-                poown: poown,
-              };
-              let byte = registerNodeBuilder(data, this.keyringServ);
+          let data: RegisterNodeInterface = {
+            accountAddress: this.account.address,
+            nodePublicKey: this.nodePublicKeyForm.value,
+            nodeAddress: this.ipAddressForm.value,
+            fee: this.feeForm.value,
+            funds: this.lockedBalanceForm.value,
+          };
 
-              return this.transactionServ.postTransaction(byte);
-            })
+          zoobc.Node.register(data, this.authServ.getSeed)
             .then(() => {
               Swal.fire(
                 'Success',

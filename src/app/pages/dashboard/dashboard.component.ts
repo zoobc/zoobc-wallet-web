@@ -1,38 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { AccountService } from '../../services/account.service';
-import {
-  TransactionService,
-  Transaction,
-  Transactions,
-} from '../../services/transaction.service';
 import {
   Currency,
   CurrencyRateService,
 } from 'src/app/services/currency-rate.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import {
-  GetAccountBalanceResponse,
-  AccountBalance as AB,
-} from 'src/app/grpc/model/accountBalance_pb';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
-import { getAddressFromPublicKey } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
-import { KeyringService } from 'src/app/services/keyring.service';
 
-type AccountBalance = AB.AsObject;
-type AccountBalanceList = GetAccountBalanceResponse.AsObject;
+import zoobc, {
+  TransactionListParams,
+  toTransactionListWallet,
+  getZBCAdress,
+  MempoolListParams,
+  ZooTransactionsInterface,
+} from 'zoobc-sdk';
 
-const coin = 'ZBC';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  accountBalance: AccountBalance;
+  accountBalance: any;
   isLoadingBalance: boolean = false;
   isLoadingRecentTx: boolean = false;
 
@@ -40,8 +32,8 @@ export class DashboardComponent implements OnInit {
   isErrorRecentTx: boolean = false;
 
   totalTx: number;
-  recentTx: Transaction[];
-  unconfirmTx: Transaction[];
+  recentTx: any;
+  unconfirmTx: any;
 
   currencyRate: Currency = {
     name: '',
@@ -55,13 +47,10 @@ export class DashboardComponent implements OnInit {
   zbcPriceInUsd: number = 10;
 
   constructor(
-    private accountServ: AccountService,
     private authServ: AuthService,
-    private transactionServ: TransactionService,
     private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
-    private router: Router,
-    private keyringServ: KeyringService
+    private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.getBalance();
@@ -83,6 +72,8 @@ export class DashboardComponent implements OnInit {
   }
 
   async reloadAccount() {
+    const keyring = this.authServ.keyring;
+
     let accountName: string = 'Account ';
     let accountNo: number = 1;
     let accountPath: number = 0;
@@ -92,43 +83,45 @@ export class DashboardComponent implements OnInit {
     let accounts = [];
 
     let counter: number = 0;
+
     while (counter < 20) {
-      const childSeed = this.keyringServ.calcForDerivationPathForCoin(
-        coin,
-        accountPath
-      );
+      const childSeed = keyring.calcDerivationPath(accountPath);
 
       publicKey = childSeed.publicKey;
-      address = getAddressFromPublicKey(publicKey);
-
+      address = getZBCAdress(publicKey);
       const account = {
         name: accountName + accountNo,
         path: accountPath,
         nodeIP: null,
         address: address,
       };
-
-      await this.transactionServ
-        .getTransactions(1, 1, address)
-        .then((res: Transactions) => {
-          const totalTx = res.total;
-          accountsTemp.push(account);
-          if (totalTx > 0) {
-            Array.prototype.push.apply(accounts, accountsTemp);
-            this.authServ.restoreAccount(accounts);
-            accountsTemp = [];
-            counter = 0;
-          }
-        });
+      const params: TransactionListParams = {
+        address: address,
+        transactionType: 1,
+        pagination: {
+          page: 1,
+          limit: 1,
+        },
+      };
+      await zoobc.Transactions.getList(params).then(res => {
+        const tx = toTransactionListWallet(res, address);
+        const totalTx = parseInt(res.total);
+        accountsTemp.push(account);
+        if (totalTx > 0) {
+          Array.prototype.push.apply(accounts, accountsTemp);
+          this.authServ.restoreAccount(accounts);
+          accountsTemp = [];
+          counter = 0;
+        }
+      });
       accountPath++;
       accountNo++;
       counter++;
     }
     this.accounts = accounts;
     // load balance
-    this.accountServ
-      .getAccountBalance(this.currAcc.address)
-      .then((data: AccountBalanceList) => {
+    zoobc.Account.getBalance(this.currAcc.address)
+      .then(() => {
         return this.authServ.getAccountsWithBalance();
       })
       .then((res: SavedAccount[]) => (this.accounts = res));
@@ -139,14 +132,15 @@ export class DashboardComponent implements OnInit {
       this.isLoadingBalance = true;
       this.isErrorBalance = false;
 
-      this.accountServ
-        .getAccountBalance(this.currAcc.address)
-        .then((data: AccountBalanceList) => {
+      zoobc.Account.getBalance(this.currAcc.address)
+        .then(data => {
           this.accountBalance = data.accountbalance;
           return this.authServ.getAccountsWithBalance();
         })
         .then((res: SavedAccount[]) => (this.accounts = res))
-        .catch(() => (this.isErrorBalance = true))
+        .catch(e => {
+          this.isErrorBalance = true;
+        })
         .finally(() => (this.isLoadingBalance = false));
     }
   }
@@ -159,17 +153,29 @@ export class DashboardComponent implements OnInit {
       this.isLoadingRecentTx = true;
       this.isErrorRecentTx = false;
 
-      this.transactionServ
-        .getTransactions(1, 5, this.currAcc.address)
-        .then((res: Transactions) => {
-          this.recentTx = res.transactions;
-          this.totalTx = res.total;
-          return this.transactionServ.getUnconfirmTransaction(
-            this.currAcc.address
-          );
+      const params: TransactionListParams = {
+        address: this.currAcc.address,
+        transactionType: 1,
+        pagination: {
+          page: 1,
+          limit: 5,
+        },
+      };
+
+      zoobc.Transactions.getList(params)
+        .then(res => {
+          const tx = toTransactionListWallet(res, this.currAcc.address);
+          this.recentTx = tx.transactions;
+          this.totalTx = tx.total;
+          const params: MempoolListParams = {
+            address: this.currAcc.address,
+          };
+          return zoobc.Mempool.getList(params);
         })
-        .then((unconfirmTx: Transaction[]) => (this.unconfirmTx = unconfirmTx))
-        .catch(() => (this.isErrorRecentTx = true))
+        .then(unconfirmTx => (this.unconfirmTx = unconfirmTx))
+        .catch(e => {
+          this.isErrorRecentTx = true;
+        })
         .finally(() => (this.isLoadingRecentTx = false));
     }
   }

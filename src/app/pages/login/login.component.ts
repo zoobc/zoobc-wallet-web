@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { generateEncKey } from 'src/helpers/utils';
+import zoobc from 'zoobc-sdk';
 
 @Component({
   selector: 'app-login',
@@ -12,10 +12,10 @@ import { generateEncKey } from 'src/helpers/utils';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  encSeed = localStorage.getItem('ENC_MASTER_SEED');
+  encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
   isLoggedIn: boolean;
   isLoading: boolean = false;
-  hasAccount = this.encSeed ? true : false;
+  hasAccount = this.encPassphrase ? true : false;
 
   formSetPin: FormGroup;
   setPinForm = new FormControl('', [
@@ -69,8 +69,7 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
 
       setTimeout(() => {
-        const key = generateEncKey(this.pinForm.value);
-        if (this.authServ.login(key)) {
+        if (this.authServ.login(this.pinForm.value)) {
           this.route.queryParams.subscribe(params => {
             const redirect = params.redirect || '/dashboard';
             this.router.navigateByUrl(redirect);

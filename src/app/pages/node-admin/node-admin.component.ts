@@ -1,27 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { MatDialog } from '@angular/material';
-import {
-  NodeHardware as NH,
-  GetNodeHardwareResponse,
-} from 'src/app/grpc/model/nodeHardware_pb';
-import { NodeRegistrationService } from 'src/app/services/node-registration.service';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
-import {
-  GetNodeRegistrationResponse,
-  NodeRegistration,
-} from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { TransactionService } from 'src/app/services/transaction.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
-
-type NodeHardware = NH.AsObject;
-type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
-type RegisteredNodeR = GetNodeRegistrationResponse.AsObject;
-type RegisteredNode = NodeRegistration.AsObject;
+import zoobc, {
+  NodeParams,
+  toUnconfirmTransactionNodeWallet,
+  MempoolListParams,
+} from 'zoobc-sdk';
 
 @Component({
   selector: 'app-node-admin',
@@ -30,12 +19,11 @@ type RegisteredNode = NodeRegistration.AsObject;
 })
 export class NodeAdminComponent implements OnInit {
   account: SavedAccount;
-
-  hwInfo: NodeHardware;
+  hwInfo: any;
   mbToB = Math.pow(1024, 2);
   gbToB = Math.pow(1024, 3);
 
-  registeredNode: RegisteredNode;
+  registeredNode: any;
   pendingNodeTx = null;
 
   isNodeHardwareLoading: boolean = false;
@@ -43,13 +31,7 @@ export class NodeAdminComponent implements OnInit {
   isNodeLoading: boolean = false;
   isNodeError: boolean = false;
 
-  constructor(
-    private nodeAdminServ: NodeAdminService,
-    private dialog: MatDialog,
-    private nodeServ: NodeRegistrationService,
-    authServ: AuthService,
-    private transactionServ: TransactionService
-  ) {
+  constructor(private dialog: MatDialog, private authServ: AuthService) {
     this.account = authServ.getCurrAccount();
   }
 
@@ -58,23 +40,25 @@ export class NodeAdminComponent implements OnInit {
     this.streamNodeHardwareInfo();
   }
 
-  ngOnDestroy() {
-    this.nodeAdminServ.stopNodeHardwareInfo();
-  }
-
   getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
     this.pendingNodeTx = null;
     this.registeredNode = null;
 
-    this.nodeServ
-      .getUnconfirmTransaction(this.account.address)
+    const params: MempoolListParams = {
+      address: this.account.address,
+    };
+    zoobc.Mempool.getList(params)
       .then(res => {
-        this.pendingNodeTx = res;
-        return this.nodeServ.getRegisteredNode(this.account);
+        const pendingTxs = toUnconfirmTransactionNodeWallet(res);
+        this.pendingNodeTx = pendingTxs;
+        const params: NodeParams = {
+          owner: this.account.address,
+        };
+        return zoobc.Node.get(params);
       })
-      .then((res: RegisteredNodeR) => {
+      .then((res: any) => {
         this.registeredNode = res.noderegistration;
       })
       .catch(err => {
@@ -93,8 +77,7 @@ export class NodeAdminComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        this.nodeAdminServ
-          .generateNodeKey()
+        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.getSeed)
           .then(res => {
             Swal.fire('Success', 'success', 'success');
           })
@@ -109,12 +92,16 @@ export class NodeAdminComponent implements OnInit {
   streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    this.nodeAdminServ.streamNodeHardwareInfo().subscribe(
-      (res: NodeHardwareResponse) => {
+    zoobc.Node.getHardwareInfo(
+      `//${this.account.nodeIP}`,
+      this.authServ.getSeed
+    ).subscribe(
+      (res: any) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
       },
       err => {
+        console.log(err);
         this.isNodeHardwareLoading = false;
         this.isNodeHardwareError = true;
       }

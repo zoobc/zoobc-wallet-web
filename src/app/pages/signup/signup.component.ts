@@ -2,13 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-
-import { KeyringService } from '../../services/keyring.service';
 import { onCopyText } from '../../../helpers/utils';
-import { AuthService } from 'src/app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
-
-const coin = 'ZBC';
+import { ZooKeyring } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-signup',
@@ -25,8 +21,6 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authServ: AuthService,
-    private keyringServ: KeyringService,
     private snackbar: MatSnackBar,
     private translate: TranslateService
   ) {
@@ -48,17 +42,8 @@ export class SignupComponent implements OnInit {
   }
 
   generateNewWallet() {
-    let { phrase: passphrase } = this.keyringServ.generateRandomPhrase();
-    const pass = 'p4ssphr4se';
-
-    const { seed } = this.keyringServ.calcBip32RootKeyFromMnemonic(
-      coin,
-      passphrase,
-      pass
-    );
-
-    this.masterSeed = seed;
-    this.passphrase = passphrase.split(' ');
+    let phrase = ZooKeyring.generateRandomPhrase();
+    this.passphrase = phrase.split(' ');
   }
 
   async copyPassphrase() {

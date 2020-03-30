@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
-import { generateEncKey } from 'src/helpers/utils';
 import { MatDialogRef } from '@angular/material';
+import zoobc from 'zoobc-sdk';
 
 @Component({
   selector: 'app-pin-confirmation',
@@ -16,10 +15,7 @@ export class PinConfirmationComponent implements OnInit {
   isFormSendLoading = false;
   isConfirmPinLoading = false;
 
-  constructor(
-    private authServ: AuthService,
-    public dialogRef: MatDialogRef<PinConfirmationComponent>
-  ) {
+  constructor(public dialogRef: MatDialogRef<PinConfirmationComponent>) {
     this.formConfirmPin = new FormGroup({
       pin: this.pinField,
     });
@@ -33,9 +29,11 @@ export class PinConfirmationComponent implements OnInit {
 
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
-        const key = generateEncKey(this.pinField.value);
-        const encSeed = localStorage.getItem('ENC_MASTER_SEED');
-        const isPinValid = this.authServ.isPinValid(encSeed, key);
+        const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+        const isPinValid = zoobc.Wallet.decryptPassphrase(
+          encPassphrase,
+          this.pinField.value
+        );
         if (isPinValid) this.dialogRef.close(true);
         else this.formConfirmPin.setErrors({ invalid: true });
         this.isConfirmPinLoading = false;
