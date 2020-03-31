@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -15,12 +15,34 @@ import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 
+interface Languages {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-restore-wallet',
   templateUrl: './restore-wallet.component.html',
   styleUrls: ['./restore-wallet.component.scss'],
 })
 export class RestoreWalletComponent implements OnInit {
+  @Input() language: Languages;
+
+  activeLanguage = 'ENGLISH';
+
+  languages: Languages[] = [
+    { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
+    { value: 'english', viewValue: 'English' },
+    { value: 'japanese', viewValue: 'Japanese' },
+    { value: 'spanish', viewValue: 'Spanish' },
+    { value: 'italian', viewValue: 'Italian' },
+    { value: 'french', viewValue: 'French' },
+    { value: 'korean', viewValue: 'Korean' },
+    { value: 'chinese_traditional', viewValue: 'Chinese Traditional' },
+  ];
+
+  lang: string;
+
   totalTx: number = 0;
   mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
 
@@ -57,11 +79,16 @@ export class RestoreWalletComponent implements OnInit {
     }
   }
 
+  selectActiveLanguage(language) {
+    this.lang = language.value;
+    this.activeLanguage = this.lang;
+  }
+
   onPasteEvent(event: ClipboardEvent) {
     let clipboardData = event.clipboardData;
     let passphrase = clipboardData.getData('text').toLowerCase();
     let phraseWord = passphrase.split(' ');
-    const valid = ZooKeyring.isPassphraseValid(passphrase);
+    const valid = ZooKeyring.isPassphraseValid(passphrase, this.lang);
     this.wordField.controls = [];
     this.onLoad24Passphrase(phraseWord);
     if (phraseWord.length != this.mnemonicWordLengtEnv) {

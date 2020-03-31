@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
@@ -6,12 +6,33 @@ import { onCopyText } from '../../../helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { ZooKeyring } from 'zoobc-sdk';
 
+interface Languages {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
+  @Input() language: Languages;
+
+  activeLanguage = 'ENGLISH';
+
+  languages: Languages[] = [
+    { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
+    { value: 'english', viewValue: 'English' },
+    { value: 'japanese', viewValue: 'Japanese' },
+    { value: 'spanish', viewValue: 'Spanish' },
+    { value: 'italian', viewValue: 'Italian' },
+    { value: 'french', viewValue: 'French' },
+    { value: 'korean', viewValue: 'Korean' },
+    { value: 'chinese_traditional', viewValue: 'Chinese Traditional' },
+  ];
+
+  lang: string;
   passphrase: string[];
   masterSeed: string;
 
@@ -41,9 +62,20 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  selectActiveLanguage(language) {
+    this.lang = language.value;
+    this.activeLanguage = this.lang;
+    this.generateNewWallet();
+  }
+
   generateNewWallet() {
-    let phrase = ZooKeyring.generateRandomPhrase();
-    this.passphrase = phrase.split(' ');
+    if (this.lang === 'japanese') {
+      let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
+      this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
+    } else {
+      let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
+      this.passphrase = phrase.split(' ');
+    }
   }
 
   async copyPassphrase() {
