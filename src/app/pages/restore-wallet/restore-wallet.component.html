@@ -1,12 +1,7 @@
 <div class="restore-wallet-container">
   <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
   <div class="language-selector">
-    <button
-      mat-flat-button
-      color="primary"
-      class="language-dropdown"
-      [matMenuTriggerFor]="language"
-    >
+    <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
       <span>{{ activeLanguage }}</span>
       <i class="fa fa-caret-down"></i>
     </button>
