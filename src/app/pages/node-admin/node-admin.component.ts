@@ -1,15 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import {
-  NodeHardware as NH,
-  GetNodeHardwareResponse,
-} from 'src/app/grpc/model/nodeHardware_pb';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
-import {
-  GetNodeRegistrationResponse,
-  NodeRegistration,
-} from 'src/app/grpc/model/nodeRegistration_pb';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
@@ -20,11 +12,6 @@ import zoobc, {
   MempoolListParams,
 } from 'zoobc-sdk';
 
-type NodeHardware = NH.AsObject;
-type NodeHardwareResponse = GetNodeHardwareResponse.AsObject;
-type RegisteredNodeR = GetNodeRegistrationResponse.AsObject;
-type RegisteredNode = NodeRegistration.AsObject;
-
 @Component({
   selector: 'app-node-admin',
   templateUrl: './node-admin.component.html',
@@ -32,12 +19,11 @@ type RegisteredNode = NodeRegistration.AsObject;
 })
 export class NodeAdminComponent implements OnInit {
   account: SavedAccount;
-
-  hwInfo: NodeHardware;
+  hwInfo: any;
   mbToB = Math.pow(1024, 2);
   gbToB = Math.pow(1024, 3);
 
-  registeredNode: RegisteredNode;
+  registeredNode: any;
   pendingNodeTx = null;
 
   isNodeHardwareLoading: boolean = false;
@@ -72,7 +58,7 @@ export class NodeAdminComponent implements OnInit {
         };
         return zoobc.Node.get(params);
       })
-      .then((res: RegisteredNodeR) => {
+      .then((res: any) => {
         this.registeredNode = res.noderegistration;
       })
       .catch(err => {
@@ -107,14 +93,15 @@ export class NodeAdminComponent implements OnInit {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
     zoobc.Node.getHardwareInfo(
-      this.account.nodeIP,
+      `//${this.account.nodeIP}`,
       this.authServ.getSeed
     ).subscribe(
-      (res: NodeHardwareResponse) => {
+      (res: any) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
       },
       err => {
+        console.log(err);
         this.isNodeHardwareLoading = false;
         this.isNodeHardwareError = true;
       }

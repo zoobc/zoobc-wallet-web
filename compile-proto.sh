@@ -1,7 +1,0 @@
-# protoc --plugin="protoc-gen-ts='node_modules/.bin/protoc-gen-ts'" --grpc-web_out="import_style=typescript,mode=grpcwebtext:src/app/grpc" --js_out="import_style=commonjs,binary:src/app/grpc" externals/proto/model/*.proto --proto_path=externals/proto
-# protoc --plugin="protoc-gen-ts='node_modules/.bin/protoc-gen-ts'" --grpc-web_out="import_style=typescript,mode=grpcwebtext:src/app/grpc" --js_out="import_style=commonjs,binary:src/app/grpc" externals/proto/service/*.proto --proto_path=externals/proto
-# protoc --plugin="protoc-gen-ts='node_modules/.bin/protoc-gen-ts'" --grpc-web_out="import_style=typescript,mode=grpcwebtext:src/app/grpc" --js_out="import_style=commonjs,binary:src/app/grpc" externals/proto/google/api/*.proto --proto_path=externals/proto
-
-protoc --plugin="protoc-gen-ts=node_modules\.bin\protoc-gen-ts.cmd" --js_out="import_style=commonjs,binary:src/app/grpc" --ts_out="src/app/grpc" externals/proto/model/*.proto --proto_path=externals/proto
-protoc --plugin="protoc-gen-ts=node_modules\.bin\protoc-gen-ts.cmd" --js_out="import_style=commonjs,binary:src/app/grpc" --ts_out="service=true:src/app/grpc" externals/proto/service/*.proto --proto_path=externals/proto
-protoc --plugin="protoc-gen-ts=node_modules\.bin\protoc-gen-ts.cmd" --js_out="import_style=commonjs,binary:src/app/grpc" --ts_out="src/app/grpc" externals/proto/google/api/*.proto --proto_path=externals/proto

@@ -2,9 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ContactService, Contact } from 'src/app/services/contact.service';
-import { addressValidation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { isZBCAddressValid } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-editcontact',
@@ -24,7 +24,7 @@ export class EditcontactComponent implements OnInit {
   ) {}
 
   onAddressValidation() {
-    const validation = addressValidation(this.addressField.value);
+    const validation = isZBCAddressValid(this.addressField.value);
     if (!validation) {
       this.addressField.setErrors({ invalidAddress: true });
     }

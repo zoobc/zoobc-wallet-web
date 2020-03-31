@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
-import {
-  TransactionService,
-  Transaction,
-} from '../../services/transaction.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 import zoobc, {
   TransactionListParams,
   toTransactionListWallet,
+  MempoolListParams,
 } from 'zoobc-sdk';
 
 @Component({
@@ -17,8 +13,8 @@ import zoobc, {
   styleUrls: ['./transferhistory.component.scss'],
 })
 export class TransferhistoryComponent implements OnInit {
-  accountHistory: Transaction[];
-  unconfirmTx: Transaction[];
+  accountHistory: any[];
+  unconfirmTx: any[];
 
   page: number = 1;
   perPage: number = 10;
@@ -29,10 +25,7 @@ export class TransferhistoryComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  constructor(
-    private transactionServ: TransactionService,
-    private authServ: AuthService
-  ) {}
+  constructor(private authServ: AuthService) {}
 
   ngOnInit() {
     this.getTx(true);
@@ -64,12 +57,11 @@ export class TransferhistoryComponent implements OnInit {
           const tx = toTransactionListWallet(res, this.address);
           this.total = tx.total;
           if (reload) {
-            this.accountHistory = <Transaction[]>tx.transactions;
-            return this.transactionServ.getUnconfirmTransaction(this.address);
+            this.accountHistory = tx.transactions;
+            const params: MempoolListParams = { address: this.address };
+            return zoobc.Mempool.getList(params);
           } else {
-            this.accountHistory = this.accountHistory.concat(<Transaction[]>(
-              tx.transactions
-            ));
+            this.accountHistory = this.accountHistory.concat(tx.transactions);
           }
         })
         .catch(e => {

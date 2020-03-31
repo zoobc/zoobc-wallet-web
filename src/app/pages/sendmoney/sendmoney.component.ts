@@ -12,10 +12,10 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { addressValidation, truncate } from 'src/helpers/utils';
+import { truncate } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 @Component({
   selector: 'app-sendmoney',
@@ -195,12 +195,12 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeRecipient() {
-    let validation = addressValidation(this.recipientForm.value);
+    let validation = isZBCAddressValid(this.recipientForm.value);
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
   onChangeAddressApprover() {
-    let validation = addressValidation(this.addressApproverField.value);
+    let validation = isZBCAddressValid(this.addressApproverField.value);
     if (!validation)
       this.addressApproverField.setErrors({ invalidAddress: true });
   }
@@ -366,6 +366,7 @@ export class SendmoneyComponent implements OnInit {
         },
         async err => {
           this.isLoading = false;
+          console.log(err);
 
           let message: string;
           await this.translate
