@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
 import { truncate } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { ZBCAddressValidation } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 @Component({
   selector: 'app-sendmoney',
@@ -195,12 +195,12 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onChangeRecipient() {
-    let validation = ZBCAddressValidation(this.recipientForm.value);
+    let validation = isZBCAddressValid(this.recipientForm.value);
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
   onChangeAddressApprover() {
-    let validation = ZBCAddressValidation(this.addressApproverField.value);
+    let validation = isZBCAddressValid(this.addressApproverField.value);
     if (!validation)
       this.addressApproverField.setErrors({ invalidAddress: true });
   }

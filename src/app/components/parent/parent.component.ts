@@ -56,9 +56,10 @@ export class ParentComponent implements OnInit {
     let nodeList: NodeList = nodeListJson;
     let currNodeList: NodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
 
+    // if there's a new network on node-list.json
     if (!currNodeList || currNodeList.timestamp < nodeList.timestamp) {
       localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
-      localStorage.setItem('SELECTED_NODE', JSON.stringify(nodeList.node[0]));
+      localStorage.setItem('SELECTED_NODE', '0');
 
       currNodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
     }
@@ -71,6 +72,6 @@ export class ParentComponent implements OnInit {
     });
 
     zoobc.Network.list(list);
-    zoobc.Network.set(1);
+    zoobc.Network.set(parseInt(localStorage.getItem('SELECTED_NODE')));
   }
 }
