@@ -2,14 +2,14 @@
   <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
-      <span>{{ activeLanguage }}</span>
+      <span>{{ mnemonicLanguage }}</span>
       <i class="fa fa-caret-down"></i>
     </button>
     <mat-menu #language="matMenu">
       <button
         *ngFor="let language of languages"
         [value]="language.value"
-        (click)="selectActiveLanguage(language)"
+        (click)="selectMnemonicLanguage(language)"
         mat-menu-item
       >
         {{ language.viewValue }}

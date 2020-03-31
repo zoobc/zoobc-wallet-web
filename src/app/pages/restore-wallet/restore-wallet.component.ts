@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -26,9 +26,7 @@ interface Languages {
   styleUrls: ['./restore-wallet.component.scss'],
 })
 export class RestoreWalletComponent implements OnInit {
-  @Input() language: Languages;
-
-  activeLanguage = 'ENGLISH';
+  mnemonicLanguage = 'ENGLISH';
 
   languages: Languages[] = [
     { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
@@ -79,9 +77,9 @@ export class RestoreWalletComponent implements OnInit {
     }
   }
 
-  selectActiveLanguage(language) {
+  selectMnemonicLanguage(language) {
     this.lang = language.value;
-    this.activeLanguage = this.lang;
+    this.mnemonicLanguage = this.lang;
   }
 
   onPasteEvent(event: ClipboardEvent) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
@@ -17,9 +17,7 @@ interface Languages {
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
-  @Input() language: Languages;
-
-  activeLanguage = 'ENGLISH';
+  mnemonicLanguage = 'ENGLISH';
 
   languages: Languages[] = [
     { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
@@ -62,20 +60,17 @@ export class SignupComponent implements OnInit {
     }
   }
 
-  selectActiveLanguage(language) {
+  selectMnemonicLanguage(language) {
     this.lang = language.value;
-    this.activeLanguage = this.lang;
+    this.mnemonicLanguage = this.lang;
     this.generateNewWallet();
   }
 
   generateNewWallet() {
-    if (this.lang === 'japanese') {
-      let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
+    let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
+    if (this.lang === 'japanese')
       this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
-    } else {
-      let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
-      this.passphrase = phrase.split(' ');
-    }
+    else this.passphrase = phrase.split(' ');
   }
 
   async copyPassphrase() {
