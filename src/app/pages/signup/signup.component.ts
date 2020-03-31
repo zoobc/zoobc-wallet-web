@@ -6,12 +6,31 @@ import { onCopyText } from '../../../helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { ZooKeyring } from 'zoobc-sdk';
 
+interface Languages {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
+  mnemonicLanguage = 'ENGLISH';
+
+  languages: Languages[] = [
+    { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
+    { value: 'english', viewValue: 'English' },
+    { value: 'japanese', viewValue: 'Japanese' },
+    { value: 'spanish', viewValue: 'Spanish' },
+    { value: 'italian', viewValue: 'Italian' },
+    { value: 'french', viewValue: 'French' },
+    { value: 'korean', viewValue: 'Korean' },
+    { value: 'chinese_traditional', viewValue: 'Chinese Traditional' },
+  ];
+
+  lang: string;
   passphrase: string[];
   masterSeed: string;
 
@@ -41,9 +60,17 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  selectMnemonicLanguage(language) {
+    this.lang = language.value;
+    this.mnemonicLanguage = this.lang;
+    this.generateNewWallet();
+  }
+
   generateNewWallet() {
-    let phrase = ZooKeyring.generateRandomPhrase();
-    this.passphrase = phrase.split(' ');
+    let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
+    if (this.lang === 'japanese')
+      this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
+    else this.passphrase = phrase.split(' ');
   }
 
   async copyPassphrase() {

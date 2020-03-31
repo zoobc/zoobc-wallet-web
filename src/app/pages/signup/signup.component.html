@@ -1,6 +1,23 @@
 <div class="signup-container">
   <h2 class="mat-h2">{{ 'Create New Account' | translate }}</h2>
   <h4 class="mat-h4">{{ 'Your Passphrase' | translate }}:</h4>
+
+  <div class="language-selector">
+    <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
+      <span>{{ mnemonicLanguage }}</span>
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <mat-menu #language="matMenu">
+      <button
+        *ngFor="let language of languages"
+        [value]="language.value"
+        (click)="selectMnemonicLanguage(language)"
+        mat-menu-item
+      >
+        {{ language.viewValue }}
+      </button>
+    </mat-menu>
+  </div>
   <div class="row passphrase-section">
     <div class="col-6 col-sm-4" *ngFor="let p of passphrase; let key = index">
       <div class="box-passphrase">
