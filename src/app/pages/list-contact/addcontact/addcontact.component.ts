@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { ZBCAddressValidation } from 'zoobc-sdk';
+import { isZBCAddressValid } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-addcontact',
@@ -30,7 +30,7 @@ export class AddcontactComponent implements OnInit {
   ngOnInit() {}
 
   onAddressValidation() {
-    const validation = ZBCAddressValidation(this.addressField.value);
+    const validation = isZBCAddressValid(this.addressField.value);
     if (!validation) {
       this.addressField.setErrors({ invalidAddress: true });
     }
