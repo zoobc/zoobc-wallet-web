@@ -5,4 +5,5 @@ export const environment = {
   feeFast: 0.01,
   feeMedium: 0.005,
   feeSlow: 0.001,
+  fee: 0.01,
 };

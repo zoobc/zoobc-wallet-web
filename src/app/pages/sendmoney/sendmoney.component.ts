@@ -17,6 +17,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
+import { async } from '@angular/core/testing';
 @Component({
   selector: 'app-sendmoney',
   templateUrl: './sendmoney.component.html',
@@ -34,9 +35,9 @@ export class SendmoneyComponent implements OnInit {
     value: 0,
   };
 
-  feeFast = environment.feeFast;
-  feeMedium = environment.feeMedium;
-  feeSlow = environment.feeSlow;
+  feeSlow = environment.fee;
+  feeMedium = this.feeSlow * 5;
+  feeFast = this.feeMedium * 5;
   activeButton: number = 2;
   kindFee: string;
 
@@ -248,6 +249,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async onOpenDialogDetailSendMoney() {
+    await this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
@@ -387,6 +389,46 @@ export class SendmoneyComponent implements OnInit {
     zoobc.Account.getBalance(this.account.address)
       .then(res => {
         this.blockHeight = res.accountbalance.blockheight;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  async getMinimumFee() {
+    let data: SendMoneyInterface = {
+      sender: this.account.address,
+      recipient: this.recipientForm.value,
+      fee: this.feeForm.value,
+      amount: this.amountForm.value,
+      approverAddress: this.addressApproverField.value,
+      commission: this.approverCommissionField.value,
+      timeout: this.timeoutField.value,
+      instruction: this.instructionField.value,
+    };
+    // const txBytes = sendMoneyBuilder(data, this.keyringServ);
+    const childSeed = this.authServ.getSeed;
+
+    await zoobc.Transactions.getTransactionMinimumFee(data, childSeed)
+      .then(res => {
+        let fee: number = parseInt(res.fee) / 1e8;
+        this.feeSlow = fee;
+        this.feeMedium = this.feeSlow * 5;
+        this.feeFast = this.feeMedium * 5;
+
+        let value: number = 0;
+        switch (this.kindFee) {
+          case 'Slow':
+            value = this.feeSlow;
+            break;
+          case 'Fast':
+            value = this.feeFast;
+            break;
+          default:
+            value = this.feeMedium;
+        }
+
+        this.feeForm.patchValue(value);
       })
       .catch(err => {
         console.log(err);
