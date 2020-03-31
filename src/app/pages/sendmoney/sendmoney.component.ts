@@ -76,6 +76,8 @@ export class SendmoneyComponent implements OnInit {
   customFee: boolean = false;
   advancedMenu: boolean = false;
 
+  blockHeight: number;
+
   constructor(
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
@@ -132,6 +134,8 @@ export class SendmoneyComponent implements OnInit {
 
     this.account = this.authServ.getCurrAccount();
     this.getAccounts();
+
+    this.getBlockHeight();
   }
 
   getAccounts() {
@@ -377,5 +381,15 @@ export class SendmoneyComponent implements OnInit {
         }
       );
     }
+  }
+
+  getBlockHeight() {
+    zoobc.Account.getBalance(this.account.address)
+      .then(res => {
+        this.blockHeight = res.accountbalance.blockheight;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 }

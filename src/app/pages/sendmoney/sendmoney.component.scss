@@ -90,6 +90,11 @@
     .address-alias {
       color: $black2;
     }
+    .block-height {
+      display: block;
+      text-align: right;
+      color: map-get($accent, 600);
+    }
   }
 }
 
