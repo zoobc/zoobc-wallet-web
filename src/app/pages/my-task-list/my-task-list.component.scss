@@ -2,48 +2,20 @@
 @import '../../../styles/mixins';
 
 .my-task-container {
-  .my-task-item {
-    border-bottom: 1px solid #ddd;
-    padding: 16px 6px;
-    margin: 0;
-    align-items: center;
-    &.hover:hover {
-      background-color: #eee;
-      cursor: pointer;
-    }
-    .title-task {
-      word-break: break-all;
-      color: $black1;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-    .date {
-      color: $black2;
-      font-size: 13px;
-    }
-    .commission-receive {
-      color: #4caf50;
-      font-size: 18px;
-      font-weight: bold;
-    }
+  .mat-tab-group {
+    border-style: outset !important;
+    border-radius: 10px !important;
+    border-left: inset !important;
+    border-top: inset !important;
   }
-}
-
-.detail-task-container {
-  .row {
-    color: $black1;
-    padding: 8px;
-    font-size: 14px;
-    border-bottom: 1px solid #ddd;
-    word-break: break-all;
-    div:nth-child(odd) {
-      padding: 4px 0;
-      font-size: 13px;
-      font-weight: bold;
-      color: $black2;
-    }
-    div:nth-child(even) {
-      padding: 4px 0;
-    }
+  .mat-tab-label.mat-tab-label-content {
+    font-size: medium !important;
+    font-weight: bold !important;
+  }
+  .block-height {
+    display: block;
+    text-align: right;
+    color: $black2;
+    margin: 10px 10px 10px 0;
   }
 }

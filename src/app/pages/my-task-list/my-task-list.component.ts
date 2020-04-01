@@ -1,13 +1,11 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  Input,
-} from '@angular/core';
-import Swal from 'sweetalert2';
-import { MatDialogRef, MatDialog } from '@angular/material';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import zoobc from 'zoobc-sdk';
+import { AuthService } from 'src/app/services/auth.service';
+import { GetEscrowTransactionsResponse } from 'zoobc-sdk/grpc/model/escrow_pb';
+import { MatTabChangeEvent } from '@angular/material';
+import { EscrowTableComponent } from 'src/app/components/escrow-table/escrow-table.component';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-my-task-list',
@@ -15,49 +13,80 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./my-task-list.component.scss'],
 })
 export class MyTaskListComponent implements OnInit {
-  @ViewChild('detailTask') detailTask: TemplateRef<any>;
+  @Input() isLoading: boolean = false;
+  @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;
-  detailTaskRefDialog: MatDialogRef<any>;
+  @ViewChild(EscrowTableComponent) private escrowTx: EscrowTableComponent;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService) {}
+  escrowTransactions;
+  account;
+  timeout;
+  blockHeight: number;
 
-  ngOnInit() {}
+  constructor(
+    public dialog: MatDialog,
+    private authServ: AuthService,
+    private contactServ: ContactService
+  ) {}
+  async ngOnInit() {
+    this.account = this.authServ.getCurrAccount();
+    this.getEscrowTx();
+    this.getBlockHeight();
+  }
+  async getEscrowTx() {
+    this.isLoading = true;
 
-  onOpenDetailTask() {
-    this.detailTaskRefDialog = this.dialog.open(this.detailTask, {
-      width: '500px',
-    });
+    const params = {
+      approverAddress: this.account.address,
+    };
+    const txs = await zoobc.Escrows.getList(params)
+      .then((res: GetEscrowTransactionsResponse.AsObject) => {
+        this.escrowTransactions = res.escrowsList.filter(tx => {
+          if (tx.status == 0 && tx.latest == true) return tx;
+        });
+        this.escrowTransactions = this.escrowTransactions.map(tx => {
+          const alias =
+            this.contactServ.getContact(tx.recipientaddress).alias || '';
+          return {
+            id: tx.id,
+            alias: alias,
+            senderaddress: tx.senderaddress,
+            recipientaddress: tx.recipientaddress,
+            approveraddress: tx.approveraddress,
+            amount: tx.amount,
+            commission: tx.commission,
+            timeout: parseInt(tx.timeout),
+            status: tx.status,
+            blockheight: tx.blockheight,
+            latest: tx.latest,
+            instruction: tx.instruction,
+          };
+        });
+      })
+      .catch(err => {
+        this.isError = true;
+      })
+      .finally(() => (this.isLoading = false));
   }
 
-  async onOpenDetailTaskComingSoon() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
-    Swal.fire({
-      type: 'info',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-    this.closeDialog()
+  getBlockHeight() {
+    this.isLoading = true;
+    zoobc.Account.getBalance(this.account.address)
+      .then(res => {
+        this.blockHeight = res.accountbalance.blockheight;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => (this.isLoading = false));
   }
-  closeDialog() {
-    this.detailTaskRefDialog.close();
-  }
-  async onConfirmDialog() {
-    this.detailTaskRefDialog.close();
-    let message: string;
-    await this.translate
-      .get('Transaction has been approved')
-      .toPromise()
-      .then(res => (message = res));
-    Swal.fire({
-      type: 'success',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+
+  onTabChanged(event: MatTabChangeEvent) {
+    this.escrowTransactions = [];
+    this.blockHeight = 0;
+    if (event.index == 0) {
+      this.escrowTx.onRefresh();
+      this.getBlockHeight();
+    }
   }
 }
