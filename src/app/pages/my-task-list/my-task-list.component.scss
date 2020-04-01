@@ -2,16 +2,6 @@
 @import '../../../styles/mixins';
 
 .my-task-container {
-  .mat-tab-group {
-    border-style: outset !important;
-    border-radius: 10px !important;
-    border-left: inset !important;
-    border-top: inset !important;
-  }
-  .mat-tab-label.mat-tab-label-content {
-    font-size: medium !important;
-    font-weight: bold !important;
-  }
   .block-height {
     display: block;
     text-align: right;
