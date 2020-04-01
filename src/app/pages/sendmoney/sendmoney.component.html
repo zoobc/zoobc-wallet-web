@@ -180,7 +180,7 @@
                 {{ 'Fee is required' | translate }}
               </mat-error>
               <mat-error *ngIf="feeForm.hasError('min')">
-                {{ 'Minimum fee is' | translate: { val: '0.00000001' } }}
+                {{ 'Minimum fee is' | translate: { val: feeSlow } }}
               </mat-error>
             </ng-container>
             <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'Fiat'" color="accent">
@@ -293,7 +293,8 @@
         <label class="block-height"><b>{{ 'Block Height' }} : {{blockHeight}}</b></label>
         <label>{{ 'Timeout' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">
-          <input matInput type="number" formControlName="timeout" placeholder="{{ 'Timeout' | translate }}" />
+          <input (change)="onChangeTimeOut()" matInput type="number" formControlName="timeout"
+            placeholder="{{ 'Timeout' | translate }}" />
         </mat-form-field>
         <!-- <ng-container *ngIf="timeoutField.touched">
           <mat-error *ngIf="timeoutField.hasError('required')">{{

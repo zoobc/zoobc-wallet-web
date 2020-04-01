@@ -12,12 +12,12 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { truncate } from 'src/helpers/utils';
+import { truncate, calcMinFee } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
-import { async } from '@angular/core/testing';
+
 @Component({
   selector: 'app-sendmoney',
   templateUrl: './sendmoney.component.html',
@@ -50,7 +50,7 @@ export class SendmoneyComponent implements OnInit {
   amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.feeMedium, [
     Validators.required,
-    Validators.min(1 / 1e8),
+    Validators.min(this.feeSlow),
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
@@ -237,7 +237,8 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  toggleCustomFee() {
+  async toggleCustomFee() {
+    await this.getMinimumFee();
     this.customFee = !this.customFee;
     if (!this.customFee) this.onFeeChoose(this.activeButton);
   }
@@ -406,32 +407,31 @@ export class SendmoneyComponent implements OnInit {
       timeout: this.timeoutField.value,
       instruction: this.instructionField.value,
     };
-    // const txBytes = sendMoneyBuilder(data, this.keyringServ);
-    const childSeed = this.authServ.getSeed;
 
-    await zoobc.Transactions.getTransactionMinimumFee(data, childSeed)
-      .then(res => {
-        let fee: number = parseInt(res.fee) / 1e8;
-        this.feeSlow = fee;
-        this.feeMedium = this.feeSlow * 5;
-        this.feeFast = this.feeMedium * 5;
+    const fee: number = calcMinFee(data);
+    this.feeSlow = fee;
+    this.feeMedium = this.feeSlow * 5;
+    this.feeFast = this.feeMedium * 5;
 
-        let value: number = 0;
-        switch (this.kindFee) {
-          case 'Slow':
-            value = this.feeSlow;
-            break;
-          case 'Fast':
-            value = this.feeFast;
-            break;
-          default:
-            value = this.feeMedium;
-        }
+    this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
 
-        this.feeForm.patchValue(value);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    if (this.customFee == false) {
+      let value: number = 0;
+      switch (this.kindFee) {
+        case 'Slow':
+          value = this.feeSlow;
+          break;
+        case 'Fast':
+          value = this.feeFast;
+          break;
+        default:
+          value = this.feeMedium;
+      }
+      this.feeForm.patchValue(value);
+    }
+  }
+
+  onChangeTimeOut() {
+    this.getMinimumFee();
   }
 }
