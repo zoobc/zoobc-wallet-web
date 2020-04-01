@@ -241,8 +241,7 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  async toggleCustomFee() {
-    await this.getMinimumFee();
+  toggleCustomFee() {
     this.customFee = !this.customFee;
     if (!this.customFee) this.onFeeChoose(this.activeButton);
   }
@@ -254,7 +253,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async onOpenDialogDetailSendMoney() {
-    await this.getMinimumFee();
+    this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
