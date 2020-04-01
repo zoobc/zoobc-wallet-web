@@ -1,3 +1,5 @@
+import { SendMoneyInterface } from 'zoobc-sdk';
+
 export function onCopyText(text: string) {
   let isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
   let selBox = document.createElement('textarea');
@@ -22,4 +24,15 @@ export function onCopyText(text: string) {
 
 export function truncate(num: number, places: number): number {
   return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+}
+
+export function calcMinFee(data: SendMoneyInterface) {
+  const blockPeriod = 10 * 1e8;
+  const feePerBlockPeriod = 0.01 * 1e8;
+
+  if (data.timeout) {
+    return (
+      (Math.ceil((data.timeout * 1e8) / blockPeriod) * feePerBlockPeriod) / 1e8
+    );
+  } else return feePerBlockPeriod / 1e8;
 }
