@@ -128,8 +128,12 @@ export class SendmoneyComponent implements OnInit {
       // convert fee to current currency
       this.onFeeChoose(2);
 
-      const minCurrency = truncate((1 / 1e8) * rate.value, 8);
-      this.feeFormCurr.setValidators(Validators.min(minCurrency));
+      const minCurrency = truncate(this.feeSlow * rate.value, 8);
+
+      this.feeFormCurr.setValidators([
+        Validators.required,
+        Validators.min(minCurrency),
+      ]);
       this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
 
@@ -414,6 +418,12 @@ export class SendmoneyComponent implements OnInit {
     this.feeFast = this.feeMedium * 5;
 
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
+
+    const feeCurrency = fee * this.currencyRate.value;
+    this.feeFormCurr.setValidators([
+      Validators.required,
+      Validators.min(feeCurrency),
+    ]);
 
     if (this.customFee == false) {
       let value: number = 0;

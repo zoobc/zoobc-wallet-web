@@ -194,7 +194,7 @@
               <mat-error *ngIf="feeFormCurr.hasError('min')">
                 {{
                   'Minimum amount of fee in ZBC must be ZBC'
-                    | translate: { val: '0.00000001' }
+                    | translate: { val: feeSlow }
                 }}
               </mat-error>
             </ng-container>
