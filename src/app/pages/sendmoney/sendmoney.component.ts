@@ -418,11 +418,12 @@ export class SendmoneyComponent implements OnInit {
 
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
 
-    const feeCurrency = fee * this.currencyRate.value;
+    const feeCurrency = truncate(fee * this.currencyRate.value, 8);
     this.feeFormCurr.setValidators([
       Validators.required,
       Validators.min(feeCurrency),
     ]);
+    this.amountCurrencyForm.setValidators(Validators.min(feeCurrency));
 
     if (this.customFee == false) {
       let value: number = 0;
