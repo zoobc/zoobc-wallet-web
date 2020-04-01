@@ -12,11 +12,12 @@ import {
 } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { truncate } from 'src/helpers/utils';
+import { truncate, calcMinFee } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
+
 @Component({
   selector: 'app-sendmoney',
   templateUrl: './sendmoney.component.html',
@@ -34,9 +35,9 @@ export class SendmoneyComponent implements OnInit {
     value: 0,
   };
 
-  feeFast = environment.feeFast;
-  feeMedium = environment.feeMedium;
-  feeSlow = environment.feeSlow;
+  feeSlow = environment.fee;
+  feeMedium = this.feeSlow * 5;
+  feeFast = this.feeMedium * 5;
   activeButton: number = 2;
   kindFee: string;
 
@@ -49,7 +50,7 @@ export class SendmoneyComponent implements OnInit {
   amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.feeMedium, [
     Validators.required,
-    Validators.min(1 / 1e8),
+    Validators.min(this.feeSlow),
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
@@ -127,8 +128,12 @@ export class SendmoneyComponent implements OnInit {
       // convert fee to current currency
       this.onFeeChoose(2);
 
-      const minCurrency = truncate((1 / 1e8) * rate.value, 8);
-      this.feeFormCurr.setValidators(Validators.min(minCurrency));
+      const minCurrency = truncate(this.feeSlow * rate.value, 8);
+
+      this.feeFormCurr.setValidators([
+        Validators.required,
+        Validators.min(minCurrency),
+      ]);
       this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
 
@@ -248,6 +253,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async onOpenDialogDetailSendMoney() {
+    this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
@@ -391,5 +397,51 @@ export class SendmoneyComponent implements OnInit {
       .catch(err => {
         console.log(err);
       });
+  }
+
+  async getMinimumFee() {
+    let data: SendMoneyInterface = {
+      sender: this.account.address,
+      recipient: this.recipientForm.value,
+      fee: this.feeForm.value,
+      amount: this.amountForm.value,
+      approverAddress: this.addressApproverField.value,
+      commission: this.approverCommissionField.value,
+      timeout: this.timeoutField.value,
+      instruction: this.instructionField.value,
+    };
+
+    const fee: number = calcMinFee(data);
+    this.feeSlow = fee;
+    this.feeMedium = this.feeSlow * 5;
+    this.feeFast = this.feeMedium * 5;
+
+    this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
+
+    const feeCurrency = truncate(fee * this.currencyRate.value, 8);
+    this.feeFormCurr.setValidators([
+      Validators.required,
+      Validators.min(feeCurrency),
+    ]);
+    this.amountCurrencyForm.setValidators(Validators.min(feeCurrency));
+
+    if (this.customFee == false) {
+      let value: number = 0;
+      switch (this.kindFee) {
+        case 'Slow':
+          value = this.feeSlow;
+          break;
+        case 'Fast':
+          value = this.feeFast;
+          break;
+        default:
+          value = this.feeMedium;
+      }
+      this.feeForm.patchValue(value);
+    }
+  }
+
+  onChangeTimeOut() {
+    this.getMinimumFee();
   }
 }
