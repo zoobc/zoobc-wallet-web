@@ -26,6 +26,7 @@ export class MyTaskListComponent implements OnInit {
   @ViewChild(EscrowTableComponent) private escrowTx: EscrowTableComponent;
 
   escrowTransactions;
+  totalTx: number = 0;
   account;
   timeout;
   blockHeight: number;
@@ -37,6 +38,15 @@ export class MyTaskListComponent implements OnInit {
   ) {}
   async ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    // get all total tx because if limit not provide it will just give 30 entry of data
+    const params = {
+      approverAddress: this.account.address,
+    };
+    const txs = await zoobc.Escrows.getList(params).then(
+      (res: GetEscrowTransactionsResponse.AsObject) => {
+        this.totalTx = parseInt(res.total);
+      }
+    );
     this.getEscrowTx();
     this.getBlockHeight();
   }
@@ -45,6 +55,9 @@ export class MyTaskListComponent implements OnInit {
 
     const params = {
       approverAddress: this.account.address,
+      pagination: {
+        limit: this.totalTx,
+      },
     };
     const txs = await zoobc.Escrows.getList(params)
       .then((res: GetEscrowTransactionsResponse.AsObject) => {
