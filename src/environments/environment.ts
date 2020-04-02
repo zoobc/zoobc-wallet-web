@@ -6,9 +6,7 @@ export const environment = {
   production: false,
   mnemonicLanguage: 'english',
   mnemonicNumWords: 24,
-  feeFast: 0.01,
-  feeMedium: 0.005,
-  feeSlow: 0.001,
+  fee: 0.01,
 };
 
 /*
