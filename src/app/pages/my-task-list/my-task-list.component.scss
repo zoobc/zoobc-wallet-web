@@ -5,7 +5,15 @@
   .block-height {
     display: block;
     text-align: right;
-    color: $black2;
-    margin: 10px 10px 10px 0;
+    color: map-get($primary, 500);
+    margin: 16px;
+  }
+  .mat-tab-label {
+    font-weight: bold;
+  }
+
+  /* Styles for the active tab label */
+  .mat-tab-label.mat-tab-label-active {
+    font-weight: bold;
   }
 }

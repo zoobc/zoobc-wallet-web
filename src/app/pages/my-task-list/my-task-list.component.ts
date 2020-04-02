@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import zoobc from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,6 +17,7 @@ import { ContactService } from 'src/app/services/contact.service';
   selector: 'app-my-task-list',
   templateUrl: './my-task-list.component.html',
   styleUrls: ['./my-task-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MyTaskListComponent implements OnInit {
   @Input() isLoading: boolean = false;
@@ -82,8 +89,9 @@ export class MyTaskListComponent implements OnInit {
   }
 
   onTabChanged(event: MatTabChangeEvent) {
-    this.escrowTransactions = [];
-    this.blockHeight = 0;
+    // reset the escrow list & blockheight to undefined instead of making it null because it will not indicate that you don't have any data
+    this.escrowTransactions = undefined;
+    this.blockHeight = undefined;
     if (event.index == 0) {
       this.escrowTx.onRefresh();
       this.getBlockHeight();

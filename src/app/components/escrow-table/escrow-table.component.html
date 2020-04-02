@@ -27,7 +27,7 @@
         <div class="title-task">
           <wallet-address [value]="escrow.recipientaddress"></wallet-address>
         </div>
-        <div class="timeout">Expired after blockheight: {{ escrow.timeout }}</div>
+        <div class="timeout">Expired after blockheight: {{ escrow.timeout | number }}</div>
       </div>
       <div class="col-12 col-sm-4 text-right">
         <div class="commission-receive">
