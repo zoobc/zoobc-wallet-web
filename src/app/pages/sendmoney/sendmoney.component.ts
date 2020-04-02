@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {
   CurrencyRateService,
@@ -24,16 +24,15 @@ import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/s
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
+  subscription: Subscription = new Subscription();
+
   contacts: Contact[];
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
 
-  currencyRate: Currency = {
-    name: '',
-    value: 0,
-  };
+  currencyRate: Currency;
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 5;
@@ -121,7 +120,7 @@ export class SendmoneyComponent implements OnInit {
       map(value => this.filterContacts(value))
     );
 
-    this.currencyServ.currencyRate.subscribe((rate: Currency) => {
+    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       // set default fee to medium
       this.onChangeFeeField();
@@ -136,11 +135,16 @@ export class SendmoneyComponent implements OnInit {
       ]);
       this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
+    this.subscription.add(subsRate);
 
     this.account = this.authServ.getCurrAccount();
     this.getAccounts();
 
     this.getBlockHeight();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   getAccounts() {

@@ -30,10 +30,7 @@ export class AccountSelectorComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  currencyRate: Currency = {
-    name: '',
-    value: 0,
-  };
+  currencyRate: Currency;
 
   constructor(
     private authServ: AuthService,
@@ -42,10 +39,7 @@ export class AccountSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currencyServ.currencyRate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-    });
-
+    this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
     this.account = this.authServ.getCurrAccount();
     this.getAccounts();
   }
@@ -58,6 +52,7 @@ export class AccountSelectorComponent implements OnInit {
       .then((res: SavedAccount[]) => {
         this.accounts = res;
         this.account = this.accounts.find(acc => this.account.path == acc.path);
+        this.select.emit(this.account);
       })
       .catch(() => (this.isError = true))
       .finally(() => (this.isLoading = false));

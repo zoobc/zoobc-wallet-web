@@ -15,8 +15,8 @@ import zoobc, {
   toTransactionListWallet,
   getZBCAdress,
   MempoolListParams,
-  ZooTransactionsInterface,
 } from 'zoobc-sdk';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +24,8 @@ import zoobc, {
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  subscription: Subscription = new Subscription();
+
   accountBalance: any;
   isLoadingBalance: boolean = false;
   isLoadingRecentTx: boolean = false;
@@ -35,16 +37,11 @@ export class DashboardComponent implements OnInit {
   recentTx: any;
   unconfirmTx: any;
 
-  currencyRate: Currency = {
-    name: '',
-    value: 0,
-  };
+  currencyRate: Currency;
   currencyRates: Currency[];
 
   currAcc: SavedAccount;
   accounts: SavedAccount[];
-
-  zbcPriceInUsd: number = 10;
 
   constructor(
     private authServ: AuthService,
@@ -53,22 +50,26 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
+
     this.getBalance();
     this.getTransactions();
-    this.getCurrencyRates();
-    this.currencyRate = this.currencyServ.rate;
+
+    const subsRate = this.currencyServ.rate.subscribe(
+      rate => (this.currencyRate = rate)
+    );
+    this.subscription.add(subsRate);
+    this.currencyServ
+      .getRates()
+      .then(rates => (this.currencyRates = rates))
+      .catch(err => console.log(err));
   }
 
-  async ngOnInit() {
-    if (history.state.loadAccount) {
-      await this.reloadAccount();
-    } else {
-      this.getBalance();
-      this.getTransactions();
+  ngOnInit() {
+    if (history.state.loadAccount) this.reloadAccount();
+  }
 
-      this.getCurrencyRates();
-      this.currencyRate = this.currencyServ.rate;
-    }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   async reloadAccount() {
@@ -180,29 +181,8 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getCurrencyRates() {
-    this.currencyServ.getCurrencyRate().subscribe((res: any) => {
-      let rates = Object.keys(res.rates).map(currencyName => {
-        let rate = {
-          name: currencyName,
-          value: res.rates[currencyName] * this.zbcPriceInUsd,
-        };
-        if (this.currencyRate.name == currencyName)
-          this.currencyRate.value = rate.value;
-        return rate;
-      });
-      rates.sort((a, b) => {
-        if (a.name < b.name) return -1;
-        if (a.name > b.name) return 1;
-      });
-
-      this.currencyRates = rates;
-    });
-  }
-
   onChangeRate(rate) {
-    this.currencyServ.onChangeRate(rate);
-    this.currencyRate = rate;
+    this.currencyServ.updateRate(rate);
   }
 
   onSwitchAccount(account: SavedAccount) {
