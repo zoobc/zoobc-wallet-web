@@ -67,6 +67,8 @@ import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { AccountSelectorModule } from './components/account-selector/account-selector.module';
 import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
+import { EscrowTransactionModule } from './components/escrow-transaction/escrow-transaction.module';
+import { MultisigTransactionModule } from './components/multisig-transaction/multisig-transaction.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -157,6 +159,8 @@ export function getLanguage(languageServ: LanguageService) {
     MatChipsModule,
     MatDividerModule,
     MatAutocompleteModule,
+    EscrowTransactionModule,
+    MultisigTransactionModule,
   ],
   bootstrap: [AppComponent],
   providers: [
