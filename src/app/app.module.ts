@@ -70,6 +70,8 @@ import { AccountSelectorModule } from './components/account-selector/account-sel
 import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
 import { EscrowTransactionDetailComponent } from './components/escrow-transaction-detail/escrow-transaction-detail.component';
 import { EscrowTableComponent } from './components/escrow-table/escrow-table.component';
+import { EscrowTransactionModule } from './components/escrow-transaction/escrow-transaction.module';
+import { MultisigTransactionModule } from './components/multisig-transaction/multisig-transaction.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -163,6 +165,8 @@ export function getLanguage(languageServ: LanguageService) {
     MatDividerModule,
     MatAutocompleteModule,
     MatTabsModule,
+    EscrowTransactionModule,
+    MultisigTransactionModule,
   ],
   bootstrap: [AppComponent],
   providers: [
