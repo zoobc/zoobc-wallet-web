@@ -179,7 +179,8 @@ export class RestoreWalletComponent implements OnInit {
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
 
-    this.authServ.addAccount(account);
+    localStorage.setItem('ACCOUNT', JSON.stringify([account]));
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
     this.authServ.login(key);
     this.router.navigate(['dashboard'], {
       state: { loadAccount: true },
