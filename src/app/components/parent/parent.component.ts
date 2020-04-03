@@ -6,6 +6,10 @@ import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from '../../../assets/node-list.json';
 import { NodeList } from '../../../helpers/node-list';
 import zoobc, { HostInterface } from 'zoobc-sdk';
+import {
+  CurrencyRateService,
+  Currency,
+} from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-parent',
@@ -24,7 +28,8 @@ export class ParentComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private appServ: AppService
+    private appServ: AppService,
+    private currencyServ: CurrencyRateService
   ) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -46,6 +51,7 @@ export class ParentComponent implements OnInit {
 
   ngOnInit() {
     this.appServ.setSidenav(this.sidenav);
+    this.currencyServ.getRate().catch(err => {});
   }
 
   ngOnDestroy() {
