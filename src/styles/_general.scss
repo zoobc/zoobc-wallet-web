@@ -133,6 +133,10 @@ button[mat-flat-button] {
 
 // ============================ FORM ========================
 
+form.grid {
+  display: grid;
+}
+
 label {
   font-size: 14px;
   color: $black2;

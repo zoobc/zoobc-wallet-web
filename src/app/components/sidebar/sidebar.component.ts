@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReceiveComponent } from 'src/app/pages/receive/receive.component';
 import { MatDialog } from '@angular/material';
 import { AppService } from 'src/app/app.service';
@@ -11,18 +11,17 @@ import { Router, NavigationEnd } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
   @Input() menu: string;
 
   routerEvent: Subscription;
-
   account: SavedAccount;
 
   constructor(
     private dialog: MatDialog,
     private appServ: AppService,
-    private authServ: AuthService,
-    private router: Router
+    private router: Router,
+    authServ: AuthService
   ) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -30,8 +29,6 @@ export class SidebarComponent implements OnInit {
       }
     });
   }
-
-  ngOnInit() {}
 
   ngOnDestroy() {
     this.routerEvent.unsubscribe();

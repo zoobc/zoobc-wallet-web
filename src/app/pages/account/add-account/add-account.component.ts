@@ -8,7 +8,6 @@ import { getZBCAdress } from 'zoobc-sdk';
 @Component({
   selector: 'app-add-new-account',
   templateUrl: './add-account.component.html',
-  styleUrls: ['./add-account.component.scss'],
 })
 export class AddAccountComponent implements OnInit {
   lenAccount = this.authServ.getAllAccount().length + 1;

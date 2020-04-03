@@ -82,7 +82,7 @@ export class RestoreWalletComponent implements OnInit {
     this.mnemonicLanguage = this.lang;
   }
 
-  onPasteEvent(event: ClipboardEvent) {
+  onPaste(event: ClipboardEvent) {
     let clipboardData = event.clipboardData;
     let passphrase = clipboardData.getData('text').toLowerCase();
     let phraseWord = passphrase.split(' ');
@@ -103,11 +103,11 @@ export class RestoreWalletComponent implements OnInit {
     }
   }
 
-  backClicked() {
+  onBack() {
     this.router.navigate(['login']);
   }
 
-  onClearClicked() {
+  onClearPassphrase() {
     this.wordField.controls = [];
     this.onLoad24Passphrase('');
   }
@@ -117,7 +117,8 @@ export class RestoreWalletComponent implements OnInit {
       .map(form => form.word)
       .join(' ')
       .replace(/\s\s+/g, ' ')
-      .toLowerCase();
+      .toLowerCase()
+      .trim();
     const valid = ZooKeyring.isPassphraseValid(passphrase);
     if (!valid) this.restoreForm.setErrors({ mnemonic: true });
   }
@@ -157,10 +158,7 @@ export class RestoreWalletComponent implements OnInit {
   async saveNewAccount(key: string) {
     let passphrase: string = this.restoreForm.value.words
       .map(form => form.word)
-      .join(' ')
-      .replace(/\s\s+/g, ' ')
-      .toLowerCase()
-      .trim();
+      .join(' ');
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');

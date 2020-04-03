@@ -77,7 +77,7 @@ export class NodeAdminComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.getSeed)
+        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
           .then(res => {
             Swal.fire('Success', 'success', 'success');
           })
@@ -94,7 +94,7 @@ export class NodeAdminComponent implements OnInit {
     this.isNodeHardwareError = false;
     zoobc.Node.getHardwareInfo(
       `//${this.account.nodeIP}`,
-      this.authServ.getSeed
+      this.authServ.seed
     ).subscribe(
       (res: any) => {
         this.isNodeHardwareLoading = false;

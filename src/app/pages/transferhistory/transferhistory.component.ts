@@ -10,7 +10,6 @@ import zoobc, {
 @Component({
   selector: 'app-transferhistory',
   templateUrl: './transferhistory.component.html',
-  styleUrls: ['./transferhistory.component.scss'],
 })
 export class TransferhistoryComponent implements OnInit {
   accountHistory: any[];

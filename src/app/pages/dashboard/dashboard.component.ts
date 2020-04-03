@@ -110,7 +110,8 @@ export class DashboardComponent implements OnInit {
         accountsTemp.push(account);
         if (totalTx > 0) {
           Array.prototype.push.apply(accounts, accountsTemp);
-          this.authServ.restoreAccount(accounts);
+          localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+          this.authServ.switchAccount(accounts[0]);
           accountsTemp = [];
           counter = 0;
         }

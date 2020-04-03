@@ -1,6 +1,6 @@
 <div class="register-node-container">
   <h2 class="mat-h2">{{ 'Register Node' | translate }}</h2>
-  <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()">
+  <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()" class="grid">
     <label>{{ 'IP Address' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input

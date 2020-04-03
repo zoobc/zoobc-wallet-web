@@ -32,7 +32,7 @@
           <input
             matInput
             formControlName="word"
-            (paste)="onPasteEvent($event)"
+            (paste)="onPaste($event)"
             (keyup)="onChangeMnemonic()"
             title="You can paste your 24 Phrase Word"
           />
@@ -48,12 +48,12 @@
           | translate: { num: mnemonicWordLengtEnv }
       }}
     </mat-error>
-    <button mat-flat-button type="button" (click)="onClearClicked()">
+    <button mat-flat-button type="button" (click)="onClearPassphrase()">
       <i matPrefix class="fa fa-times" aria-hidden="true"></i>
       <span class="text">{{ 'Clear' | translate }}</span>
     </button>
     <div class="btn-grouped">
-      <button mat-flat-button color="warn" (click)="backClicked()">
+      <button mat-flat-button color="warn" (click)="onBack()">
         <i matPrefix class="fas fa-arrow-left"></i>
         <span class="text">{{ 'Back' | translate }}</span>
       </button>
