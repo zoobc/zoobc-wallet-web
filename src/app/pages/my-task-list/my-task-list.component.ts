@@ -6,10 +6,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import zoobc from 'zoobc-sdk';
+import zoobc, { EscrowListParams } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { GetEscrowTransactionsResponse } from 'zoobc-sdk/grpc/model/escrow_pb';
-import { MatTabChangeEvent } from '@angular/material';
 import { EscrowTableComponent } from 'src/app/components/escrow-table/escrow-table.component';
 import { ContactService } from 'src/app/services/contact.service';
 
@@ -38,31 +37,22 @@ export class MyTaskListComponent implements OnInit {
   ) {}
   async ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    // get all total tx because if limit not provide it will just give 30 entry of data
-    const params = {
-      approverAddress: this.account.address,
-    };
-    const txs = await zoobc.Escrows.getList(params).then(
-      (res: GetEscrowTransactionsResponse.AsObject) => {
-        this.totalTx = parseInt(res.total);
-      }
-    );
     this.getEscrowTx();
     this.getBlockHeight();
   }
   async getEscrowTx() {
     this.isLoading = true;
-
-    const params = {
+    const params: EscrowListParams = {
       approverAddress: this.account.address,
+      statusList: [0],
       pagination: {
-        limit: this.totalTx,
+        orderBy: 0,
       },
     };
     const txs = await zoobc.Escrows.getList(params)
       .then((res: GetEscrowTransactionsResponse.AsObject) => {
         this.escrowTransactions = res.escrowsList.filter(tx => {
-          if (tx.status == 0 && tx.latest == true) return tx;
+          if (tx.latest == true) return tx;
         });
         this.escrowTransactions = this.escrowTransactions.map(tx => {
           const alias =
@@ -85,6 +75,7 @@ export class MyTaskListComponent implements OnInit {
       })
       .catch(err => {
         this.isError = true;
+        console.log(err);
       })
       .finally(() => (this.isLoading = false));
   }
@@ -99,15 +90,5 @@ export class MyTaskListComponent implements OnInit {
         console.log(err);
       })
       .finally(() => (this.isLoading = false));
-  }
-
-  onTabChanged(event: MatTabChangeEvent) {
-    // reset the escrow list & blockheight to undefined instead of making it null because it will not indicate that you don't have any data
-    this.escrowTransactions = undefined;
-    this.blockHeight = undefined;
-    if (event.index == 0) {
-      this.escrowTx.onRefresh();
-      this.getBlockHeight();
-    }
   }
 }

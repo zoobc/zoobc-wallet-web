@@ -3,7 +3,7 @@
     {{ 'My Tasks' | translate }}
   </h2>
   <mat-card style="padding: 0;">
-    <mat-tab-group (selectedTabChange)="onTabChanged($event)" mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center">
       <mat-tab label="Escrow Approval">
         <label class="block-height" *ngIf="!isLoading"><b>{{ 'Block Height' | translate }} :
             {{blockHeight | number}}</b></label>
