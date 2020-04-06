@@ -59,11 +59,17 @@ export class SendmoneyComponent implements OnInit {
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
-  addressApproverField = new FormControl('');
-  approverCommissionField = new FormControl('');
-  approverCommissionCurrField = new FormControl('');
-  instructionField = new FormControl('');
-  timeoutField = new FormControl('');
+  addressApproverField = new FormControl('', Validators.required);
+  approverCommissionField = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  approverCommissionCurrField = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  instructionField = new FormControl('', Validators.required);
+  timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
@@ -106,8 +112,6 @@ export class SendmoneyComponent implements OnInit {
       instruction: this.instructionField,
       timeout: this.timeoutField,
     });
-    //conditional validation for escrow
-    this.formSend.setValidators(this.conditionalEscrowValidate());
     // disable alias field (saveAddress = false)
     this.aliasField.disable();
     // disable some field where (advancedMenu = false)
@@ -188,6 +192,12 @@ export class SendmoneyComponent implements OnInit {
     const fee = truncate(this.feeForm.value, 8);
     const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
+  }
+
+  onChangeAddressApprover() {
+    let validation = isZBCAddressValid(this.addressApproverField.value);
+    if (!validation)
+      this.addressApproverField.setErrors({ invalidAddress: true });
   }
 
   onChangeCommisssionField() {
@@ -451,78 +461,5 @@ export class SendmoneyComponent implements OnInit {
 
   onChangeTimeOut() {
     this.getMinimumFee();
-  }
-
-  conditionalEscrowValidate(): ValidatorFn {
-    return (group: FormGroup): ValidationErrors => {
-      const addressApprover = group.get('addressApprover');
-      const approverCommission = group.get('approverCommission');
-      const instruction = group.get('instruction');
-      const timeout = group.get('timeout');
-      const approverCommissionCurr = group.get('approverCommissionCurr');
-      if (
-        addressApprover.value ||
-        approverCommission.value ||
-        instruction.value ||
-        timeout.value ||
-        approverCommissionCurr.value
-      ) {
-        if (!addressApprover.value) {
-          addressApprover.setErrors({ required: true });
-        } else {
-          if (!isZBCAddressValid(addressApprover.value)) {
-            addressApprover.setErrors({ invalidAddress: true });
-          } else {
-            addressApprover.setErrors(null);
-          }
-        }
-
-        if (!approverCommission.value) {
-          approverCommission.setErrors({ required: true });
-        } else {
-          if (approverCommission.value < 1 / 1e8) {
-            approverCommission.setErrors({ min: true });
-          } else {
-            approverCommission.setErrors(null);
-          }
-        }
-
-        if (!approverCommissionCurr.value) {
-          approverCommissionCurr.setErrors({ required: true });
-        } else {
-          if (
-            approverCommissionCurr.value / this.currencyRate.value <
-            1 / 1e8
-          ) {
-            approverCommissionCurr.setErrors({ min: true });
-          } else {
-            approverCommissionCurr.setErrors(null);
-          }
-        }
-
-        if (!instruction.value) {
-          instruction.setErrors({ required: true });
-        } else {
-          instruction.setErrors(null);
-        }
-
-        if (!timeout.value) {
-          timeout.setErrors({ required: true });
-        } else {
-          if (timeout.value < 1) {
-            timeout.setErrors({ min: true });
-          } else {
-            timeout.setErrors(null);
-          }
-        }
-      } else {
-        addressApprover.setErrors(null);
-        approverCommission.setErrors(null);
-        approverCommissionCurr.setErrors(null);
-        instruction.setErrors(null);
-        timeout.setErrors(null);
-      }
-      return null;
-    };
   }
 }
