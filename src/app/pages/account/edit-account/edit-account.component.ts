@@ -8,7 +8,6 @@ import { AddAccountComponent } from '../add-account/add-account.component';
 @Component({
   selector: 'app-edit-account',
   templateUrl: './edit-account.component.html',
-  styleUrls: ['./edit-account.component.scss'],
 })
 export class EditAccountComponent implements OnInit {
   formEditAccount: FormGroup;

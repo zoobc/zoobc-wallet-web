@@ -95,7 +95,10 @@ a:not([href='']) {
 }
 
 // ===================== CUSTOM BUTTON =================
-button[mat-flat-button] {
+button[mat-flat-button],
+a[mat-flat-button],
+a[mat-stroked-button],
+button[mat-stroked-button] {
   text-transform: uppercase;
   border-radius: 4px;
   *[matPrefix] {
@@ -108,6 +111,14 @@ button[mat-flat-button] {
     height: 32px;
     font-size: 12px;
     line-height: 12px;
+  }
+}
+
+a[mat-stroked-button],
+button[mat-stroked-button] {
+  border: 2px solid map-get($primary, 500) !important;
+  &[color='warn'] {
+    border: 2px solid $red !important;
   }
 }
 
@@ -132,6 +143,10 @@ button[mat-flat-button] {
 }
 
 // ============================ FORM ========================
+
+form.grid {
+  display: grid;
+}
 
 label {
   font-size: 14px;

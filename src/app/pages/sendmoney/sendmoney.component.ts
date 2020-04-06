@@ -124,7 +124,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.contacts = this.contactServ.getContactList() || [];
+    this.contacts = this.contactServ.getList() || [];
 
     // set filtered contacts function
     this.filteredContacts = this.recipientForm.valueChanges.pipe(
@@ -155,6 +155,10 @@ export class SendmoneyComponent implements OnInit {
     this.getBlockHeight();
 
     // this.watchEscrowField();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   ngOnDestroy() {
@@ -357,7 +361,7 @@ export class SendmoneyComponent implements OnInit {
         instruction: this.instructionField.value,
       };
       // const txBytes = sendMoneyBuilder(data, this.keyringServ);
-      const childSeed = this.authServ.getSeed;
+      const childSeed = this.authServ.seed;
 
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: any) => {
@@ -386,7 +390,7 @@ export class SendmoneyComponent implements OnInit {
               alias: this.aliasField.value,
               address: this.recipientForm.value,
             };
-            this.contacts = this.contactServ.addContact(newContact);
+            this.contacts = this.contactServ.add(newContact);
           }
 
           this.sendMoneyRefDialog.close();

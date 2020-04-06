@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
-import zoobc from 'zoobc-sdk';
 
 @Component({
   selector: 'app-login',

@@ -6,10 +6,7 @@ import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from '../../../assets/node-list.json';
 import { NodeList } from '../../../helpers/node-list';
 import zoobc, { HostInterface } from 'zoobc-sdk';
-import {
-  CurrencyRateService,
-  Currency,
-} from 'src/app/services/currency-rate.service';
+import { CurrencyRateService } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-parent',
@@ -51,7 +48,7 @@ export class ParentComponent implements OnInit {
 
   ngOnInit() {
     this.appServ.setSidenav(this.sidenav);
-    this.currencyServ.getRate().catch(err => {});
+    this.currencyServ.getRate().catch(() => {});
   }
 
   ngOnDestroy() {

@@ -1,6 +1,6 @@
 <div class="update-node-container">
   <h2 class="mat-h2">{{ 'Update Node' | translate }}</h2>
-  <form [formGroup]="formUpdateNode" (submit)="onUpdateNode()">
+  <form [formGroup]="formUpdateNode" (submit)="onUpdateNode()" class="grid">
     <label>{{ 'IP Address' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input

@@ -112,7 +112,8 @@ export class DashboardComponent implements OnInit {
         accountsTemp.push(account);
         if (totalTx > 0) {
           Array.prototype.push.apply(accounts, accountsTemp);
-          this.authServ.restoreAccount(accounts);
+          localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+          this.authServ.switchAccount(accounts[0]);
           accountsTemp = [];
           counter = 0;
         }
@@ -170,8 +171,7 @@ export class DashboardComponent implements OnInit {
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
           this.recentTx.map(recent => {
-            recent['alias'] =
-              this.contactServ.getContact(recent.address).alias || '';
+            recent['alias'] = this.contactServ.get(recent.address).alias || '';
           });
           this.totalTx = tx.total;
 

@@ -32,7 +32,6 @@ export class SignupComponent implements OnInit {
 
   lang: string;
   passphrase: string[];
-  masterSeed: string;
 
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
@@ -52,7 +51,6 @@ export class SignupComponent implements OnInit {
   ngOnInit() {
     if (history.state.passphrase) {
       this.passphrase = history.state.passphrase;
-      this.masterSeed = history.state.masterSeed;
       this.isWrittenDown.patchValue(true);
       this.isAgree.patchValue(true);
     } else {
@@ -87,7 +85,7 @@ export class SignupComponent implements OnInit {
 
   goToConfirmPage() {
     this.router.navigate(['confirm-passphrase'], {
-      state: { masterSeed: this.masterSeed, passphrase: this.passphrase },
+      state: { passphrase: this.passphrase },
     });
   }
 }

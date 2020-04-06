@@ -9,7 +9,6 @@ import { isZBCAddressValid } from 'zoobc-sdk';
 @Component({
   selector: 'app-editcontact',
   templateUrl: './editcontact.component.html',
-  styleUrls: ['./editcontact.component.scss'],
 })
 export class EditcontactComponent implements OnInit {
   editForm: FormGroup;
@@ -61,7 +60,7 @@ export class EditcontactComponent implements OnInit {
           text: message,
         });
       } else {
-        const contacts: Contact[] = this.contactServ.updateContact(
+        const contacts: Contact[] = this.contactServ.update(
           this.editForm.value,
           this.contact.address
         );

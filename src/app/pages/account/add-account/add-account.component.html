@@ -1,6 +1,6 @@
 <div class="add-account-container">
   <h2 class="mat-h2 text-center">{{ 'Add New Account' | translate }}</h2>
-  <form [formGroup]="formAddAccount" (submit)="onAddAccount()">
+  <form [formGroup]="formAddAccount" (submit)="onAddAccount()" class="grid">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Account Name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />

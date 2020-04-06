@@ -1,17 +1,17 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
 import zoobc, { UpdateNodeInterface, isZBCPublicKeyValid } from 'zoobc-sdk';
+import { NodeAdminService } from 'src/app/services/node-admin.service';
 
 @Component({
   selector: 'app-update-node',
   templateUrl: './update-node.component.html',
-  styleUrls: ['./update-node.component.scss'],
 })
-export class UpdateNodeComponent implements OnInit {
+export class UpdateNodeComponent {
   formUpdateNode: FormGroup;
   ipAddressForm = new FormControl('', [
     Validators.required,
@@ -31,6 +31,7 @@ export class UpdateNodeComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
+    private NodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
     @Inject(MAT_DIALOG_DATA) public node: any
@@ -52,8 +53,6 @@ export class UpdateNodeComponent implements OnInit {
       Validators.min(parseInt(this.node.lockedbalance) / 1e8),
     ]);
   }
-
-  ngOnInit() {}
 
   onChangeNodePublicKey() {
     let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
@@ -79,14 +78,13 @@ export class UpdateNodeComponent implements OnInit {
             funds: this.lockedAmountForm.value,
           };
 
-          zoobc.Node.update(data, this.authServ.getSeed)
+          zoobc.Node.update(data, this.authServ.seed)
             .then(() => {
               Swal.fire('Success', 'Your node will be updated soon', 'success');
 
               // change IP if has different value
-
               if (this.ipAddressForm.value != this.account.nodeIP)
-                this.authServ.editNodeIpAddress(this.ipAddressForm.value);
+                this.NodeAdminServ.editIpAddress(this.ipAddressForm.value);
 
               this.dialogRef.close(true);
             })

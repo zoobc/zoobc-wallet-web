@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -9,9 +9,8 @@ import { isZBCPublicKeyValid } from 'zoobc-sdk';
 @Component({
   selector: 'app-claim-node',
   templateUrl: './claim-node.component.html',
-  styleUrls: ['./claim-node.component.scss'],
 })
-export class ClaimNodeComponent implements OnInit {
+export class ClaimNodeComponent {
   formClaimNode: FormGroup;
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
@@ -33,8 +32,6 @@ export class ClaimNodeComponent implements OnInit {
 
     this.account = authServ.getCurrAccount();
   }
-
-  ngOnInit() {}
 
   onChangeNodePublicKey() {
     let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);

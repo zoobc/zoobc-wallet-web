@@ -17,11 +17,9 @@ export class ConfirmPassphraseComponent implements OnInit {
   passphrase: string[];
   prefillPassphrase: string[];
 
-  masterSeed: string;
-
   confirmForm: FormGroup;
   wordField: FormArray;
-  zooKeyring;
+  zooKeyring: ZooKeyring;
 
   mnemonicNumWords = environment.mnemonicNumWords;
 
@@ -35,7 +33,6 @@ export class ConfirmPassphraseComponent implements OnInit {
 
     this.words = history.state.passphrase.join(' ');
     this.passphrase = Object.assign([], history.state.passphrase);
-    this.masterSeed = history.state.masterSeed;
   }
 
   ngOnInit() {
@@ -45,11 +42,11 @@ export class ConfirmPassphraseComponent implements OnInit {
   backClicked() {
     this.router.navigate(['signup'], {
       state: {
-        masterSeed: history.state.masterSeed,
         passphrase: history.state.passphrase,
       },
     });
   }
+
   prefillHalfPassphrase() {
     // removing some words of the passphrase
     this.prefillPassphrase = this.passphrase;
