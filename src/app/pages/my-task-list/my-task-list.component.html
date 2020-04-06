@@ -2,8 +2,17 @@
   <h2 class="mat-h2">
     {{ 'My Tasks' | translate }}
   </h2>
-  <mat-card style="padding: 0">
-    <app-escrow-transaction></app-escrow-transaction>
-    <app-multisig-transaction></app-multisig-transaction>
+  <mat-card style="padding: 0;">
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Escrow Approval">
+        <label class="block-height" *ngIf="!isLoading"><b>{{ 'Block Height' | translate }} :
+            {{blockHeight | number}}</b></label>
+        <escrow-transactions [escrowTransactionsData]="escrowTransactions" [withDetail]="true" [isLoading]="isLoading"
+          [isError]="isError" (refresh)="getEscrowTx()"></escrow-transactions>
+      </mat-tab>
+      <mat-tab label="Multi Signature - Coming Soon">
+        <app-multisig-transaction></app-multisig-transaction>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card>
 </div>
