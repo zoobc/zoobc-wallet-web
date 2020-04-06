@@ -40,7 +40,7 @@ export class RestoreWalletComponent implements OnInit {
   ];
 
   lang: string;
-
+  mnemonic: string;
   totalTx: number = 0;
   mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
 
@@ -77,16 +77,9 @@ export class RestoreWalletComponent implements OnInit {
     }
   }
 
-  selectMnemonicLanguage(language) {
-    this.lang = language.value;
-    this.mnemonicLanguage = this.lang;
-  }
-
-  onPasteEvent(event: ClipboardEvent) {
-    let clipboardData = event.clipboardData;
-    let passphrase = clipboardData.getData('text').toLowerCase();
-    let phraseWord = passphrase.split(' ');
-    const valid = ZooKeyring.isPassphraseValid(passphrase, this.lang);
+  validatePassphrase() {
+    let phraseWord = this.mnemonic.split(' ');
+    const valid = ZooKeyring.isPassphraseValid(this.mnemonic, this.lang);
     this.wordField.controls = [];
     this.onLoad24Passphrase(phraseWord);
     if (phraseWord.length != this.mnemonicWordLengtEnv) {
@@ -101,6 +94,19 @@ export class RestoreWalletComponent implements OnInit {
         this.restoreForm.setErrors({ mnemonic: true });
       }, 50);
     }
+  }
+
+  selectMnemonicLanguage(language) {
+    this.lang = language.value;
+    this.mnemonicLanguage = this.lang;
+    this.validatePassphrase();
+  }
+
+  onPasteEvent(event: ClipboardEvent) {
+    let clipboardData = event.clipboardData;
+    let passphrase = clipboardData.getData('text').toLowerCase();
+    this.mnemonic = passphrase;
+    this.validatePassphrase();
   }
 
   backClicked() {
