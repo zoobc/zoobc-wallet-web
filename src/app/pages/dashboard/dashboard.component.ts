@@ -17,6 +17,7 @@ import zoobc, {
   MempoolListParams,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -47,7 +48,8 @@ export class DashboardComponent implements OnInit {
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private contactServ: ContactService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
 
@@ -167,7 +169,12 @@ export class DashboardComponent implements OnInit {
         .then(res => {
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
+          this.recentTx.map(recent => {
+            recent['alias'] =
+              this.contactServ.getContact(recent.address).alias || '';
+          });
           this.totalTx = tx.total;
+
           const params: MempoolListParams = {
             address: this.currAcc.address,
           };
