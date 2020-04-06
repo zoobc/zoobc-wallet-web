@@ -48,7 +48,7 @@ export class ParentComponent implements OnInit {
 
   ngOnInit() {
     this.appServ.setSidenav(this.sidenav);
-    this.currencyServ.getRate().catch(err => {});
+    this.currencyServ.getRate().catch(() => {});
   }
 
   ngOnDestroy() {

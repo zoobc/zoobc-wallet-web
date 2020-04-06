@@ -1,5 +1,11 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ValidatorFn,
+  ValidationErrors,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -53,11 +59,17 @@ export class SendmoneyComponent implements OnInit {
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
-  addressApproverField = new FormControl('');
-  approverCommissionField = new FormControl('');
-  approverCommissionCurrField = new FormControl('');
-  instructionField = new FormControl('');
-  timeoutField = new FormControl('');
+  addressApproverField = new FormControl('', Validators.required);
+  approverCommissionField = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  approverCommissionCurrField = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  instructionField = new FormControl('', Validators.required);
+  timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
@@ -141,6 +153,12 @@ export class SendmoneyComponent implements OnInit {
     this.getAccounts();
 
     this.getBlockHeight();
+
+    // this.watchEscrowField();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   ngOnDestroy() {
@@ -180,6 +198,12 @@ export class SendmoneyComponent implements OnInit {
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
+  onChangeAddressApprover() {
+    let validation = isZBCAddressValid(this.addressApproverField.value);
+    if (!validation)
+      this.addressApproverField.setErrors({ invalidAddress: true });
+  }
+
   onChangeCommisssionField() {
     const commission = truncate(this.approverCommissionField.value, 8);
     const commissionCurrency = commission * this.currencyRate.value;
@@ -210,12 +234,6 @@ export class SendmoneyComponent implements OnInit {
   onChangeRecipient() {
     let validation = isZBCAddressValid(this.recipientForm.value);
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
-  }
-
-  onChangeAddressApprover() {
-    let validation = isZBCAddressValid(this.addressApproverField.value);
-    if (!validation)
-      this.addressApproverField.setErrors({ invalidAddress: true });
   }
 
   isAddressInContacts() {

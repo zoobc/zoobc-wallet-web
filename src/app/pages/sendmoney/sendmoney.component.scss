@@ -6,11 +6,14 @@
   margin: 0 auto;
 
   .zbc-form-item {
+    margin-top: 10px;
+
     .amount {
       .primary-amount {
         font-size: 1.3rem;
         margin-bottom: 0.2rem;
       }
+
       .secondary-amount {
         font-size: 0.8rem;
         margin-bottom: 0.2rem;
@@ -19,12 +22,12 @@
   }
 
   .sub-title {
-    cursor: pointer;
     font-weight: bold;
     display: flex;
     flex-direction: row;
-    margin: 24px 0;
+    margin: 24px 0 10px 0;
     color: $black2;
+
     &:before,
     &:after {
       content: '';
@@ -32,6 +35,10 @@
       border-bottom: 2px solid $black2;
       margin: 10px;
     }
+  }
+
+  .button-margin {
+    margin-top: 15px;
   }
 
   .icon-dropdown {
@@ -43,6 +50,7 @@
     border: 1px solid #ddd;
     border-radius: 6px;
     margin: 4px 0 8px 0;
+
     button {
       border-radius: 0;
       margin-left: -1px;
@@ -50,11 +58,13 @@
       text-transform: none;
       padding: 8px;
       background-color: transparent;
+
       .fee-button {
         display: flex;
         flex-flow: column;
         align-items: flex-start;
         justify-content: flex-start;
+
         .label {
           font-size: 14px;
           font-weight: bold;
@@ -62,6 +72,7 @@
           margin-bottom: 8px;
           color: $black2;
         }
+
         .zbc-currency,
         .fiat-currency {
           font-size: 13px;
@@ -69,13 +80,16 @@
         }
       }
     }
+
     .fee-choosen:enabled {
       color: white;
       background-color: map-get($primary, 600);
+
       .label {
         color: white !important;
       }
     }
+
     display: flex;
     justify-content: stretch;
   }
@@ -83,17 +97,20 @@
   form {
     .row {
       margin: 0 -4px;
+
       [class^='col'] {
         padding: 0 4px;
       }
     }
+
     .address-alias {
       color: $black2;
     }
+
     .block-height {
       display: block;
       text-align: right;
-      color: map-get($accent, 600);
+      color: map-get($accent, 500);
     }
   }
 }
@@ -112,53 +129,64 @@
       display: inline-flex;
       // for webkit only
       display: -webkit-inline-box;
+
       .text {
         margin: 0 8px 0 0;
         line-height: 28px;
       }
+
       img {
         width: 24px;
         margin-bottom: 8px;
       }
     }
   }
+
   .title {
     color: $black2;
     font-size: 16px !important;
     font-weight: bold;
     margin-bottom: 8px;
   }
+
   .content {
     margin-top: 10px;
     word-break: break-all;
     margin-bottom: 10px;
+
     .label {
       font-size: 14px;
       color: $black3;
       font-weight: bold;
       margin-bottom: 4px;
     }
+
     .address,
     .amount,
     .total {
       margin-bottom: 12px;
     }
+
     .amount {
       .zbc {
         font-size: 16px;
         margin-bottom: 4px;
       }
+
       .currency {
         font-size: 14px;
       }
     }
+
     .total {
       color: #4caf50;
       font-weight: bold;
+
       .zbc {
         font-size: 18px;
         margin-bottom: 4px;
       }
+
       .currency {
         font-size: 16px;
       }

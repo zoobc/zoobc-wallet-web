@@ -95,7 +95,8 @@ a:not([href='']) {
 }
 
 // ===================== CUSTOM BUTTON =================
-button[mat-flat-button] {
+button[mat-flat-button],
+a[mat-flat-button] {
   text-transform: uppercase;
   border-radius: 4px;
   *[matPrefix] {

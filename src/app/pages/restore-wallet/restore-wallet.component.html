@@ -53,10 +53,10 @@
       <span class="text">{{ 'Clear' | translate }}</span>
     </button>
     <div class="btn-grouped">
-      <button mat-flat-button color="warn" (click)="onBack()">
+      <a mat-flat-button color="warn" routerLink="/login">
         <i matPrefix class="fas fa-arrow-left"></i>
         <span class="text">{{ 'Back' | translate }}</span>
-      </button>
+      </a>
       <button
         mat-flat-button
         color="primary"

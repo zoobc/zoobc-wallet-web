@@ -1,63 +1,93 @@
 import {
   Component,
   OnInit,
-  ViewChild,
-  TemplateRef,
   Input,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import Swal from 'sweetalert2';
-import { MatDialogRef, MatDialog } from '@angular/material';
-import { TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material';
+import zoobc, { EscrowListParams } from 'zoobc-sdk';
+import { AuthService } from 'src/app/services/auth.service';
+import { GetEscrowTransactionsResponse } from 'zoobc-sdk/grpc/model/escrow_pb';
+import { EscrowTableComponent } from 'src/app/components/escrow-table/escrow-table.component';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-my-task-list',
   templateUrl: './my-task-list.component.html',
   styleUrls: ['./my-task-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MyTaskListComponent implements OnInit {
-  @ViewChild('detailTask') detailTask: TemplateRef<any>;
+  @Input() isLoading: boolean = false;
+  @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;
-  detailTaskRefDialog: MatDialogRef<any>;
+  @ViewChild(EscrowTableComponent) private escrowTx: EscrowTableComponent;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService) {}
+  escrowTransactions;
+  totalTx: number = 0;
+  account;
+  timeout;
+  blockHeight: number;
 
-  ngOnInit() {}
-
-  onOpenDetailTask() {
-    this.detailTaskRefDialog = this.dialog.open(this.detailTask, {
-      width: '500px',
-    });
+  constructor(
+    public dialog: MatDialog,
+    private authServ: AuthService,
+    private contactServ: ContactService
+  ) {}
+  async ngOnInit() {
+    this.account = this.authServ.getCurrAccount();
+    this.getEscrowTx();
+    this.getBlockHeight();
+  }
+  async getEscrowTx() {
+    this.isLoading = true;
+    const params: EscrowListParams = {
+      approverAddress: this.account.address,
+      statusList: [0],
+      pagination: {
+        orderBy: 0,
+      },
+    };
+    const txs = await zoobc.Escrows.getList(params)
+      .then((res: GetEscrowTransactionsResponse.AsObject) => {
+        this.escrowTransactions = res.escrowsList.filter(tx => {
+          if (tx.latest == true) return tx;
+        });
+        this.escrowTransactions = this.escrowTransactions.map(tx => {
+          const alias = this.contactServ.get(tx.recipientaddress).alias || '';
+          return {
+            id: tx.id,
+            alias: alias,
+            senderaddress: tx.senderaddress,
+            recipientaddress: tx.recipientaddress,
+            approveraddress: tx.approveraddress,
+            amount: tx.amount,
+            commission: tx.commission,
+            timeout: parseInt(tx.timeout),
+            status: tx.status,
+            blockheight: tx.blockheight,
+            latest: tx.latest,
+            instruction: tx.instruction,
+          };
+        });
+      })
+      .catch(err => {
+        this.isError = true;
+        console.log(err);
+      })
+      .finally(() => (this.isLoading = false));
   }
 
-  async onOpenDetailTaskComingSoon() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
-    Swal.fire({
-      type: 'info',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-    this.closeDialog()
-  }
-  closeDialog() {
-    this.detailTaskRefDialog.close();
-  }
-  async onConfirmDialog() {
-    this.detailTaskRefDialog.close();
-    let message: string;
-    await this.translate
-      .get('Transaction has been approved')
-      .toPromise()
-      .then(res => (message = res));
-    Swal.fire({
-      type: 'success',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+  getBlockHeight() {
+    this.isLoading = true;
+    zoobc.Account.getBalance(this.account.address)
+      .then(res => {
+        this.blockHeight = res.accountbalance.blockheight;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => (this.isLoading = false));
   }
 }
