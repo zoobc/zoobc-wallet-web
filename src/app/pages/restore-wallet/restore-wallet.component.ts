@@ -162,12 +162,9 @@ export class RestoreWalletComponent implements OnInit {
       .toLowerCase()
       .trim();
 
+    const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
     const childSeed = keyring.calcDerivationPath(0);
-
-    localStorage.removeItem('ACCOUNT');
-    localStorage.removeItem('CURR_ACCOUNT');
-
     const address = getZBCAdress(childSeed.publicKey);
     const account: SavedAccount = {
       name: 'Account 1',
@@ -176,11 +173,12 @@ export class RestoreWalletComponent implements OnInit {
       address: address,
     };
 
-    const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
+    localStorage.removeItem('ACCOUNT');
+    localStorage.removeItem('CURR_ACCOUNT');
     localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
-
     localStorage.setItem('ACCOUNT', JSON.stringify([account]));
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+
     this.authServ.login(key);
     this.router.navigate(['dashboard'], {
       state: { loadAccount: true },
