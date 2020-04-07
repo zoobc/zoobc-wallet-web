@@ -1,0 +1,63 @@
+<div [className]="withDetail ? 'escrow-transaction-item row' : 'escrow-transaction-item hover row'"
+  (click)="onOpenDetailTask()">
+  <div class="col-12 col-sm-8">
+    <div class="title-task">Approval-Send Money</div>
+    <div class="date">{{ 1572226684000 | dateAgo }}</div>
+  </div>
+  <div class="col-12 col-sm-4 text-right">
+    <div class="commission-receive">
+      + 10 ZBC
+    </div>
+  </div>
+</div>
+
+
+<ng-template #detailEscrow>
+  <div class="detail-escrow-container">
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
+      <div class="col-12 col-md-8">1335562333909324037</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <wallet-address value="YuKTkCCWOPeGBknQSTGsNuyREB-iGhIz6ur4suM4FXMb" [copyButton]="true"></wallet-address>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <wallet-address value="B9C35tu6hJCE7IrwqL5uxnh6OW77Pw99JIdrSpHMg2Ki" [copyButton]="true"></wallet-address>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
+      <div class="col-12 col-md-8">1,000 ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Commission Fee' | translate }}:</div>
+      <div class="col-12 col-md-8">10 ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Timeout' }}:</div>
+      <div class="col-12 col-md-8">1000 Blocks</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Instruction' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        Please check sender balance if already get 5 bitcoin before confirm
+      </div>
+    </div>
+    <div class="text-right" style="margin-top: 8px">
+      <button mat-button style="margin-right: 8px" (click)="closeDialog()">
+        {{ 'Cancel' | translate }}
+      </button>
+      <button mat-flat-button color="warn" style="margin-right: 8px" (click)="onOpenDetailTaskComingSoon()">
+        {{ 'Reject' | translate }}
+      </button>
+      <button mat-flat-button color="primary" (click)="onOpenDetailTaskComingSoon()">
+        {{ 'Confirm' | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

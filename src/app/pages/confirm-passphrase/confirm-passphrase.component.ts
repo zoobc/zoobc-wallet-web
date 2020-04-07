@@ -112,8 +112,6 @@ export class ConfirmPassphraseComponent implements OnInit {
     this.zooKeyring = new ZooKeyring(this.words, pass);
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(this.words, key);
-    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
-
     const childSeed = this.zooKeyring.calcDerivationPath(0);
     const accountAddress = getZBCAdress(childSeed.publicKey);
 
@@ -123,8 +121,12 @@ export class ConfirmPassphraseComponent implements OnInit {
       nodeIP: null,
       address: accountAddress,
     };
+
     localStorage.removeItem('ACCOUNT');
-    this.authServ.addAccount(account);
+    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
+    localStorage.setItem('ACCOUNT', JSON.stringify([account]));
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+
     this.authServ.login(key);
   }
 }

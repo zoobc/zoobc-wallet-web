@@ -1,10 +1,16 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ValidatorFn,
+  ValidationErrors,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {
   CurrencyRateService,
@@ -24,16 +30,15 @@ import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/s
   styleUrls: ['./sendmoney.component.scss'],
 })
 export class SendmoneyComponent implements OnInit {
+  subscription: Subscription = new Subscription();
+
   contacts: Contact[];
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
   @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
 
-  currencyRate: Currency = {
-    name: '',
-    value: 0,
-  };
+  currencyRate: Currency;
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 5;
@@ -54,11 +59,17 @@ export class SendmoneyComponent implements OnInit {
   ]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
-  addressApproverField = new FormControl('');
-  approverCommissionField = new FormControl('');
-  approverCommissionCurrField = new FormControl('');
-  instructionField = new FormControl('');
-  timeoutField = new FormControl('');
+  addressApproverField = new FormControl('', Validators.required);
+  approverCommissionField = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  approverCommissionCurrField = new FormControl('', [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]);
+  instructionField = new FormControl('', Validators.required);
+  timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
@@ -121,7 +132,7 @@ export class SendmoneyComponent implements OnInit {
       map(value => this.filterContacts(value))
     );
 
-    this.currencyServ.currencyRate.subscribe((rate: Currency) => {
+    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       // set default fee to medium
       this.onChangeFeeField();
@@ -136,11 +147,18 @@ export class SendmoneyComponent implements OnInit {
       ]);
       this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
+    this.subscription.add(subsRate);
 
     this.account = this.authServ.getCurrAccount();
     this.getAccounts();
 
     this.getBlockHeight();
+
+    // this.watchEscrowField();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   getAccounts() {
@@ -176,6 +194,12 @@ export class SendmoneyComponent implements OnInit {
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
+  onChangeAddressApprover() {
+    let validation = isZBCAddressValid(this.addressApproverField.value);
+    if (!validation)
+      this.addressApproverField.setErrors({ invalidAddress: true });
+  }
+
   onChangeCommisssionField() {
     const commission = truncate(this.approverCommissionField.value, 8);
     const commissionCurrency = commission * this.currencyRate.value;
@@ -206,12 +230,6 @@ export class SendmoneyComponent implements OnInit {
   onChangeRecipient() {
     let validation = isZBCAddressValid(this.recipientForm.value);
     if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
-  }
-
-  onChangeAddressApprover() {
-    let validation = isZBCAddressValid(this.addressApproverField.value);
-    if (!validation)
-      this.addressApproverField.setErrors({ invalidAddress: true });
   }
 
   isAddressInContacts() {
