@@ -7,8 +7,11 @@
       <mat-tab label="Escrow Approval">
         <label class="block-height" *ngIf="!isLoading"><b>{{ 'Block Height' | translate }} :
             {{blockHeight | number}}</b></label>
-        <escrow-transactions [escrowTransactionsData]="escrowTransactions" [withDetail]="true" [isLoading]="isLoading"
-          [isError]="isError" (refresh)="getEscrowTx()"></escrow-transactions>
+        <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
+          [scrollWindow]="false" [infiniteScrollContainer]="'.mat-drawer-content'" [fromRoot]="true">
+          <app-escrow-transactions [escrowTransactionsData]="escrowTransactions" [withDetail]="true"
+            [isLoading]="isLoading" [isError]="isError" (refresh)="getEscrowTx(true)"></app-escrow-transactions>
+        </div>
       </mat-tab>
       <mat-tab label="Multi Signature - Coming Soon">
         <app-multisig-transaction></app-multisig-transaction>
