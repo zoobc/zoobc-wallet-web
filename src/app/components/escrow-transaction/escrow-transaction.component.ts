@@ -73,7 +73,7 @@ export class EscrowTransactionComponent implements OnInit {
         approvalCode: 0,
         transactionId: id,
       };
-      const childSeed = this.authServ.getSeed;
+      const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
         .then(
           async res => {
@@ -132,7 +132,7 @@ export class EscrowTransactionComponent implements OnInit {
         approvalCode: 1,
         transactionId: id,
       };
-      const childSeed = this.authServ.getSeed;
+      const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
         .then(
           async res => {

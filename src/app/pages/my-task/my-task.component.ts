@@ -54,7 +54,7 @@ export class MyTaskComponent implements OnInit {
         pagination: {
           page: this.page,
           limit: perPage,
-          orderBy: OrderBy.DESC,
+          orderBy: OrderBy.ASC,
         },
       };
       zoobc.Escrows.getList(params)
@@ -64,8 +64,7 @@ export class MyTaskComponent implements OnInit {
             if (tx.latest == true) return tx;
           });
           let txMap = txFilter.map(tx => {
-            const alias =
-              this.contactServ.getContact(tx.recipientaddress).alias || '';
+            const alias = this.contactServ.get(tx.recipientaddress).alias || '';
             return {
               id: tx.id,
               alias: alias,

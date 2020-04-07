@@ -161,10 +161,6 @@ export class SendmoneyComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
   getAccounts() {
     this.accounts = this.authServ.getAllAccount();
     this.accounts.forEach(account => {
