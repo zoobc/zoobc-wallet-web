@@ -60,8 +60,7 @@ export class TransferhistoryComponent implements OnInit {
         .then(res => {
           const tx = toTransactionListWallet(res, this.address);
           tx.transactions.map(recent => {
-            recent['alias'] =
-              this.contactServ.getContact(recent.address).alias || '';
+            recent['alias'] = this.contactServ.get(recent.address).alias || '';
           });
           this.total = tx.total;
           if (reload) {
