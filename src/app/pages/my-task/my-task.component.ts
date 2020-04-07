@@ -54,7 +54,8 @@ export class MyTaskComponent implements OnInit {
         pagination: {
           page: this.page,
           limit: perPage,
-          orderBy: OrderBy.ASC,
+          orderBy: OrderBy.DESC,
+          orderField: 'block_height',
         },
       };
       zoobc.Escrows.getList(params)
