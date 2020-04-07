@@ -11,11 +11,11 @@ export interface Contact {
 export class ContactService {
   constructor() {}
 
-  getContactList(): Contact[] {
+  getList(): Contact[] {
     return JSON.parse(localStorage.getItem('CONTACT_LIST'));
   }
 
-  getContact(address: string): Contact {
+  get(address: string): Contact {
     const contacts: Contact[] =
       JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
 
@@ -23,7 +23,7 @@ export class ContactService {
     return contacts.find(c => c.address == address) || empty;
   }
 
-  addContact(contact: Contact): Contact[] {
+  add(contact: Contact): Contact[] {
     let contacts: Contact[] =
       JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
     contacts.push(contact);
@@ -31,14 +31,14 @@ export class ContactService {
     return contacts;
   }
 
-  deleteContact(address: string): Contact[] {
+  delete(address: string): Contact[] {
     let contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST'));
     contacts = contacts.filter(contact => contact.address != address);
     localStorage.setItem('CONTACT_LIST', JSON.stringify(contacts));
     return contacts;
   }
 
-  updateContact(newContact: Contact, oldAddress: string): Contact[] {
+  update(newContact: Contact, oldAddress: string): Contact[] {
     let contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST'));
     contacts = contacts.map(contact => {
       if (contact.address == oldAddress) return newContact;

@@ -7,10 +7,11 @@ import zoobc, {
   MempoolListParams,
 } from 'zoobc-sdk';
 
+import { ContactService } from 'src/app/services/contact.service';
+
 @Component({
   selector: 'app-transferhistory',
   templateUrl: './transferhistory.component.html',
-  styleUrls: ['./transferhistory.component.scss'],
 })
 export class TransferhistoryComponent implements OnInit {
   accountHistory: any[];
@@ -25,7 +26,10 @@ export class TransferhistoryComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  constructor(private authServ: AuthService) {}
+  constructor(
+    private authServ: AuthService,
+    private contactServ: ContactService
+  ) {}
 
   ngOnInit() {
     this.getTx(true);
@@ -55,6 +59,10 @@ export class TransferhistoryComponent implements OnInit {
       zoobc.Transactions.getList(params)
         .then(res => {
           const tx = toTransactionListWallet(res, this.address);
+          tx.transactions.map(recent => {
+            recent['alias'] =
+              this.contactServ.getContact(recent.address).alias || '';
+          });
           this.total = tx.total;
           if (reload) {
             this.accountHistory = tx.transactions;

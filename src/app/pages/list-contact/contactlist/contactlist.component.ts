@@ -21,7 +21,7 @@ export class ContactlistComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.contacts = this.contactServ.getContactList();
+    this.contacts = this.contactServ.getList();
   }
 
   deleteContact(contact) {
@@ -34,7 +34,7 @@ export class ContactlistComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        this.contacts = this.contactServ.deleteContact(contact.address);
+        this.contacts = this.contactServ.delete(contact.address);
         return true;
       },
     });

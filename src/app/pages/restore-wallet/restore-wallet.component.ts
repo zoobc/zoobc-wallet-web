@@ -40,7 +40,7 @@ export class RestoreWalletComponent implements OnInit {
   ];
 
   lang: string;
-
+  mnemonic: string;
   totalTx: number = 0;
   mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
 
@@ -77,16 +77,9 @@ export class RestoreWalletComponent implements OnInit {
     }
   }
 
-  selectMnemonicLanguage(language) {
-    this.lang = language.value;
-    this.mnemonicLanguage = this.lang;
-  }
-
-  onPasteEvent(event: ClipboardEvent) {
-    let clipboardData = event.clipboardData;
-    let passphrase = clipboardData.getData('text').toLowerCase();
-    let phraseWord = passphrase.split(' ');
-    const valid = ZooKeyring.isPassphraseValid(passphrase, this.lang);
+  validatePassphrase() {
+    let phraseWord = this.mnemonic.split(' ');
+    const valid = ZooKeyring.isPassphraseValid(this.mnemonic, this.lang);
     this.wordField.controls = [];
     this.onLoad24Passphrase(phraseWord);
     if (phraseWord.length != this.mnemonicWordLengtEnv) {
@@ -103,11 +96,20 @@ export class RestoreWalletComponent implements OnInit {
     }
   }
 
-  backClicked() {
-    this.router.navigate(['login']);
+  selectMnemonicLanguage(language) {
+    this.lang = language.value;
+    this.mnemonicLanguage = this.lang;
+    this.validatePassphrase();
   }
 
-  onClearClicked() {
+  onPaste(event: ClipboardEvent) {
+    let clipboardData = event.clipboardData;
+    let passphrase = clipboardData.getData('text').toLowerCase();
+    this.mnemonic = passphrase;
+    this.validatePassphrase();
+  }
+
+  onClearPassphrase() {
     this.wordField.controls = [];
     this.onLoad24Passphrase('');
   }
@@ -117,7 +119,8 @@ export class RestoreWalletComponent implements OnInit {
       .map(form => form.word)
       .join(' ')
       .replace(/\s\s+/g, ' ')
-      .toLowerCase();
+      .toLowerCase()
+      .trim();
     const valid = ZooKeyring.isPassphraseValid(passphrase);
     if (!valid) this.restoreForm.setErrors({ mnemonic: true });
   }
@@ -157,10 +160,7 @@ export class RestoreWalletComponent implements OnInit {
   async saveNewAccount(key: string) {
     let passphrase: string = this.restoreForm.value.words
       .map(form => form.word)
-      .join(' ')
-      .replace(/\s\s+/g, ' ')
-      .toLowerCase()
-      .trim();
+      .join(' ');
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');

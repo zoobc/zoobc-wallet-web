@@ -55,8 +55,7 @@ export class MyTaskListComponent implements OnInit {
           if (tx.latest == true) return tx;
         });
         this.escrowTransactions = this.escrowTransactions.map(tx => {
-          const alias =
-            this.contactServ.getContact(tx.recipientaddress).alias || '';
+          const alias = this.contactServ.get(tx.recipientaddress).alias || '';
           return {
             id: tx.id,
             alias: alias,

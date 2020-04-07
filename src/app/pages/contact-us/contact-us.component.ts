@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material';
   templateUrl: './contact-us.component.html',
   styleUrls: ['./contact-us.component.scss'],
 })
-export class ContactUsComponent implements OnInit {
+export class ContactUsComponent {
   contactForm: FormGroup;
   emailField = new FormControl('', [Validators.required, Validators.email]);
   nameField = new FormControl('', Validators.required);
@@ -37,7 +37,6 @@ export class ContactUsComponent implements OnInit {
       message: this.messageField,
     });
   }
-  ngOnInit() {}
 
   onSubmit() {
     if (this.contactForm.valid) {
@@ -63,7 +62,6 @@ export class ContactUsComponent implements OnInit {
         })
         .catch(async err => {
           console.error(err);
-
           let message: string;
           await this.translate
             .get('An error occurred while processing your request')

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { ContactService, Contact } from 'src/app/services/contact.service';
@@ -9,7 +9,6 @@ import { isZBCAddressValid } from 'zoobc-sdk';
 @Component({
   selector: 'app-addcontact',
   templateUrl: './addcontact.component.html',
-  styleUrls: ['./addcontact.component.scss'],
 })
 export class AddcontactComponent implements OnInit {
   addForm: FormGroup;
@@ -51,9 +50,7 @@ export class AddcontactComponent implements OnInit {
           text: message,
         });
       } else {
-        const contacts: Contact[] = this.contactServ.addContact(
-          this.addForm.value
-        );
+        const contacts: Contact[] = this.contactServ.add(this.addForm.value);
         this.dialogRef.close(contacts);
       }
     }

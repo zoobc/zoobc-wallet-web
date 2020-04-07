@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -9,9 +9,8 @@ import zoobc, { RemoveNodeInterface, isZBCPublicKeyValid } from 'zoobc-sdk';
 @Component({
   selector: 'app-remove-node',
   templateUrl: './remove-node.component.html',
-  styleUrls: ['./remove-node.component.scss'],
 })
-export class RemoveNodeComponent implements OnInit {
+export class RemoveNodeComponent {
   formRemoveNode: FormGroup;
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
@@ -36,8 +35,6 @@ export class RemoveNodeComponent implements OnInit {
     this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
   }
 
-  ngOnInit() {}
-
   onChangeNodePublicKey() {
     let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
@@ -60,7 +57,7 @@ export class RemoveNodeComponent implements OnInit {
             fee: this.feeForm.value,
           };
 
-          zoobc.Node.remove(data, this.authServ.getSeed)
+          zoobc.Node.remove(data, this.authServ.seed)
             .then(() => {
               Swal.fire('Success', 'Your node will be removed soon', 'success');
               this.dialogRef.close(true);

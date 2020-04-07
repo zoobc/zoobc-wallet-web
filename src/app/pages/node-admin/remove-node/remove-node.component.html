@@ -1,6 +1,6 @@
 <div class="remove-node-container">
   <h2 class="mat-h2">{{ 'Remove Node' | translate }}</h2>
-  <form [formGroup]="formRemoveNode" (submit)="onRemoveNode()">
+  <form [formGroup]="formRemoveNode" (submit)="onRemoveNode()" class="grid">
     <label>{{ 'Fee' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input

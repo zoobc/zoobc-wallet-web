@@ -20,13 +20,13 @@ export interface SavedAccount {
 })
 export class AuthService {
   private loggedIn: boolean = false;
-  private seed: BIP32Interface;
+  private _seed: BIP32Interface;
   private _keyring: ZooKeyring;
 
   constructor() {}
 
-  get getSeed() {
-    return this.seed;
+  get seed() {
+    return this._seed;
   }
 
   get keyring() {
@@ -51,7 +51,7 @@ export class AuthService {
     if (passphrase) {
       const account = this.getCurrAccount();
       this._keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
-      this.seed = this._keyring.calcDerivationPath(account.path);
+      this._seed = this._keyring.calcDerivationPath(account.path);
 
       return (this.loggedIn = true);
     }
@@ -60,6 +60,8 @@ export class AuthService {
 
   logout() {
     this.loggedIn = false;
+    this._keyring = null;
+    this._seed = null;
   }
 
   switchAccount(account: SavedAccount) {
@@ -78,7 +80,6 @@ export class AuthService {
   getAccountsWithBalance(): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
       let accounts = this.getAllAccount();
-
       let error = false;
 
       for (let i = 0; i < accounts.length; i++) {
@@ -92,14 +93,12 @@ export class AuthService {
           },
         };
 
-        zoobc.Transactions.getList(params)
+        await zoobc.Transactions.getList(params)
           .then(res => {
             const tx = toTransactionListWallet(res, account.address);
-            if (tx.transactions.length > 0) {
+            if (tx.transactions.length > 0)
               account.lastTx = tx.transactions[0].timestamp;
-            } else {
-              account.lastTx = null;
-            }
+            else account.lastTx = null;
             return zoobc.Account.getBalance(account.address);
           })
           .then(res => {
@@ -129,23 +128,5 @@ export class AuthService {
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.switchAccount(account);
     }
-  }
-
-  editNodeIpAddress(newIp: string) {
-    let account = this.getCurrAccount();
-    let accounts = this.getAllAccount();
-
-    account.nodeIP = newIp;
-    for (let i = 0; i < accounts.length; i++) {
-      if (accounts[i].path == account.path) accounts[i] = account;
-    }
-
-    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
-    localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
-  }
-
-  restoreAccount(account) {
-    localStorage.setItem('ACCOUNT', JSON.stringify(account));
-    this.switchAccount(account[0]);
   }
 }
