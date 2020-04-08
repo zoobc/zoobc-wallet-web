@@ -7,15 +7,20 @@
     <div [className]="withDetail ? 'escrow-item hover row' : 'escrow-item hover'"
       *ngFor="let escrow of escrowTransactionsData; let i = index" (click)="openDetail(escrow.id)">
       <div class="col-12 col-sm-8">
-        <div class="alias-task" *ngIf="escrow.alias">
-          {{escrow.alias}}
+        <div class="title-task">
+          <b style="margin-right: 8px;">Sender:</b>
+          <wallet-address [value]="escrow.senderaddress"></wallet-address>
         </div>
         <div class="title-task">
+          <b style="margin-right: 8px;">Recepient:</b>
           <wallet-address [value]="escrow.recipientaddress"></wallet-address>
         </div>
         <div class="timeout">Expired after blockheight: {{ escrow.timeout | number }}</div>
       </div>
       <div class="col-12 col-sm-4 text-right">
+        <div class="nominal-task">
+          Amount
+        </div>
         <div class="commission-receive">
           + {{ escrow.commission / 1e8 | number: '0.0-8' }} ZBC
         </div>
@@ -50,7 +55,7 @@
 
 
 <ng-template #detailEscrow>
-  <div class="detail-task-container" *ngIf="escrowDetail">
+  <div class="detail-task-container" *ngIf="escrowDetail && !isLoadingDetail">
     <div class="row">
       <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
       <div class="col-12 col-md-8">{{escrowDetail.id}}</div>
@@ -82,15 +87,79 @@
       </div>
     </div>
     <div class="text-right" style="margin-top: 8px">
-      <button mat-button style="margin-right: 8px" (click)="closeDialog()">
+      <button [disabled]="isLoadingTx" mat-button style="margin-right: 8px" (click)="closeDialog()">
         {{ 'Cancel' | translate }}
       </button>
-      <button mat-flat-button color="warn" style="margin-right: 8px" (click)="onOpenPinDialog(escrowDetail.id, 1)">
-        {{ 'Reject' | translate }}
+      <button [disabled]="isLoadingTx" mat-flat-button color="warn" style="margin-right: 8px"
+        (click)="onOpenPinDialog(escrowDetail.id, 1)">
+        <span *ngIf="isLoadingTx">
+          <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
+        <span>{{ 'Reject' | translate }}</span>
       </button>
-      <button mat-flat-button color="primary" (click)="onOpenPinDialog(escrowDetail.id, 0)">
-        {{ 'Confirm' | translate }}
+      <button [disabled]="isLoadingTx" mat-flat-button color="primary" (click)="onOpenPinDialog(escrowDetail.id, 0)">
+        <span *ngIf="isLoadingTx">
+          <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+        </span>
+        <span>
+          {{ 'Confirm' | translate }}
+        </span>
       </button>
+    </div>
+  </div>
+
+  <div class="detail-task-container skeleton" *ngIf="isLoadingDetail">
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:20%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:100%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:70%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:40%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:40%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:100%;"></div>
+      </div>
     </div>
   </div>
 </ng-template>

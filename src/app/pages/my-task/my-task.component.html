@@ -5,8 +5,13 @@
   <mat-card style="padding: 0;">
     <mat-tab-group mat-align-tabs="center">
       <mat-tab label="Escrow Approval">
-        <label class="block-height" *ngIf="!isLoading"><b>{{ 'Block Height' | translate }} :
-            {{blockHeight | number}}</b></label>
+        <div class="text-right">
+          <button mat-icon-button class="reload-button" (click)="getEscrowTx(true)">
+            <i class="fa fa-redo-alt"></i>
+          </button>
+          <label class="block-height" *ngIf="!isLoadingBlockHeight"><b>{{ 'Block Height' | translate }} :
+              {{blockHeight | number}}</b></label>
+        </div>
         <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
           [scrollWindow]="false" [infiniteScrollContainer]="'.mat-drawer-content'" [fromRoot]="true">
           <app-escrow-transactions [escrowTransactionsData]="escrowTransactions" [withDetail]="true"

@@ -22,6 +22,7 @@ export class MyTaskComponent implements OnInit {
   @Input() isLoading: boolean = false;
   @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;
+  isLoadingBlockHeight: boolean = false;
 
   escrowTransactions;
   account;
@@ -47,6 +48,11 @@ export class MyTaskComponent implements OnInit {
     if (!this.isLoading) {
       this.isLoading = true;
       const perPage = Math.ceil(window.outerHeight / 72);
+
+      if (reload) {
+        this.escrowTransactions = null;
+        this.page = 1;
+      }
 
       const params: EscrowListParams = {
         approverAddress: this.account.address,
@@ -96,7 +102,7 @@ export class MyTaskComponent implements OnInit {
   }
 
   getBlockHeight() {
-    this.isLoading = true;
+    this.isLoadingBlockHeight = true;
     zoobc.Account.getBalance(this.account.address)
       .then(res => {
         this.blockHeight = res.accountbalance.blockheight;
@@ -104,7 +110,7 @@ export class MyTaskComponent implements OnInit {
       .catch(err => {
         console.log(err);
       })
-      .finally(() => (this.isLoading = false));
+      .finally(() => (this.isLoadingBlockHeight = false));
   }
 
   onScroll() {

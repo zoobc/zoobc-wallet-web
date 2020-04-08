@@ -12,7 +12,6 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 
 @Component({
@@ -30,14 +29,15 @@ export class EscrowTransactionComponent implements OnInit {
   detailEscrowRefDialog: MatDialogRef<any>;
 
   escrowDetail: object;
+  isLoadingDetail: boolean = false;
+  isLoadingTx: boolean = false;
   waitingList = [];
   account;
 
   constructor(
     public dialog: MatDialog,
     private translate: TranslateService,
-    private authServ: AuthService,
-    private router: Router
+    private authServ: AuthService
   ) {}
 
   ngOnInit() {
@@ -49,16 +49,19 @@ export class EscrowTransactionComponent implements OnInit {
     }
   }
 
+  onRefresh() {
+    this.refresh.emit(true);
+  }
+
   openDetail(id) {
-    zoobc.Escrows.get(id)
-      .then(res => {
-        this.escrowDetail = res;
-      })
-      .finally(() => {
-        this.detailEscrowRefDialog = this.dialog.open(this.detailEscrow, {
-          width: '500px',
-        });
-      });
+    this.isLoadingDetail = true;
+    zoobc.Escrows.get(id).then(res => {
+      this.escrowDetail = res;
+      this.isLoadingDetail = false;
+    });
+    this.detailEscrowRefDialog = this.dialog.open(this.detailEscrow, {
+      width: '500px',
+    });
   }
 
   closeDialog() {
@@ -83,6 +86,7 @@ export class EscrowTransactionComponent implements OnInit {
   async onConfirm(id) {
     const checkWaitList = this.waitingList.includes(id);
     if (checkWaitList != true) {
+      this.isLoadingTx = true;
       const data = {
         approvalAddress: this.account.address,
         fee: 1,
@@ -93,7 +97,7 @@ export class EscrowTransactionComponent implements OnInit {
       zoobc.Escrows.approval(data, childSeed)
         .then(
           async res => {
-            this.isLoading = false;
+            this.isLoadingTx = false;
             let message: string;
             await this.translate
               .get('Transaction has been approved')
@@ -110,10 +114,9 @@ export class EscrowTransactionComponent implements OnInit {
               'WAITING_LIST',
               JSON.stringify(this.waitingList)
             );
-            this.router.navigateByUrl('/dashboard');
           },
           async err => {
-            this.isLoading = false;
+            this.isLoadingTx = false;
             console.log('err', err);
             let message: string;
             await this.translate
@@ -123,7 +126,9 @@ export class EscrowTransactionComponent implements OnInit {
             Swal.fire('Opps...', message, 'error');
           }
         )
-        .finally(() => this.closeDialog());
+        .finally(() => {
+          this.closeDialog(), this.onRefresh();
+        });
     } else {
       let message: string;
       await this.translate
@@ -135,13 +140,16 @@ export class EscrowTransactionComponent implements OnInit {
         title: message,
         showConfirmButton: false,
         timer: 1500,
-      }).then(() => this.closeDialog());
+      }).then(() => {
+        this.closeDialog(), this.onRefresh();
+      });
     }
   }
 
   async onReject(id) {
     const checkWaitList = this.waitingList.includes(id);
     if (checkWaitList != true) {
+      this.isLoadingTx = true;
       const data = {
         approvalAddress: this.account.address,
         fee: 1,
@@ -152,7 +160,7 @@ export class EscrowTransactionComponent implements OnInit {
       zoobc.Escrows.approval(data, childSeed)
         .then(
           async res => {
-            this.isLoading = false;
+            this.isLoadingTx = false;
             let message: string;
             await this.translate
               .get('Transaction has been rejected')
@@ -169,10 +177,9 @@ export class EscrowTransactionComponent implements OnInit {
               'WAITING_LIST',
               JSON.stringify(this.waitingList)
             );
-            this.router.navigateByUrl('/dashboard');
           },
           async err => {
-            this.isLoading = false;
+            this.isLoadingTx = false;
             console.log('err', err);
             let message: string;
             await this.translate
@@ -182,7 +189,9 @@ export class EscrowTransactionComponent implements OnInit {
             Swal.fire('Opps...', message, 'error');
           }
         )
-        .finally(() => this.closeDialog());
+        .finally(() => {
+          this.closeDialog(), this.onRefresh();
+        });
     } else {
       let message: string;
       await this.translate
@@ -194,7 +203,9 @@ export class EscrowTransactionComponent implements OnInit {
         title: message,
         showConfirmButton: false,
         timer: 1500,
-      }).then(() => this.closeDialog());
+      }).then(() => {
+        this.closeDialog(), this.onRefresh();
+      });
     }
   }
 }

@@ -10,14 +10,15 @@
     &:first-child {
       border-top: 1px solid #ddd;
     }
+    @include transition(0.3s ease-in all);
     &.hover:hover {
       background-color: #eee;
       cursor: pointer;
     }
-    .alias-task {
+    .nominal-task {
       word-break: break-all;
-      color: $black1;
-      font-size: 15px;
+      color: $black2;
+      font-size: 13px;
       margin-bottom: 8px;
       font-weight: bold;
     }
@@ -26,13 +27,15 @@
       color: $black1;
       font-size: 13px;
       margin-bottom: 8px;
+      display: flex;
     }
     .timeout {
       color: $black1;
       font-size: 13px;
+      font-weight: bold;
     }
     .commission-receive {
-      color: #4caf50;
+      color: map-get($accent, 500);
       font-size: 18px;
       font-weight: bold;
     }
