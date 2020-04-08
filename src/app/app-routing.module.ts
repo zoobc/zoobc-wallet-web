@@ -13,7 +13,7 @@ import { ContactlistComponent } from './pages/list-contact/contactlist/contactli
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component';
+import { MyTaskComponent } from './pages/my-task/my-task.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,7 +28,7 @@ const routes: Routes = [
       { path: 'request/:recipient', component: SendmoneyComponent },
       { path: 'request/:recipient/:amount', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
-      { path: 'my-tasks', component: MyTaskListComponent },
+      { path: 'my-tasks', component: MyTaskComponent },
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',

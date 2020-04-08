@@ -40,7 +40,6 @@ export class MultisigTransactionComponent implements OnInit {
       showConfirmButton: false,
       timer: 1500,
     });
-    this.closeDialog();
   }
   closeDialog() {
     this.detailMultisigRefDialog.close();
