@@ -11,7 +11,6 @@ import { isZBCAddressValid } from 'zoobc-sdk';
 @Component({
   selector: 'input-address',
   templateUrl: './input-address.component.html',
-  styleUrls: ['./input-address.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

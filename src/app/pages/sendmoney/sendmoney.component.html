@@ -189,39 +189,18 @@
       <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
         {{ 'Escrow Transaction' }}
       </mat-checkbox>
-
       <div class="zbc-form-item" *ngIf="advancedMenu">
-        <label>{{ 'Approver Address' | translate }}</label>
-        <div class="row">
-          <mat-form-field appearance="outline" class="block" color="accent">
-            <input matInput placeholder="{{ 'Approver Address' | translate }}..." aria-label="contacts"
-              [matAutocomplete]="auto" formControlName="addressApprover" (keyup)="onChangeAddressApprover()"
-              (blur)="isAddressInContacts()" />
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option disabled>
-                <span class="mat-caption">
-                  {{
-                    'Search address from your address book or your own account'
-                      | translate
-                  }}
-                </span>
-              </mat-option>
-              <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
-                <span>{{ contact.alias }}</span> |
-                <small>{{ contact.address }}</small>
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <ng-container *ngIf="addressApproverField.touched">
-            <mat-error *ngIf="addressApproverField.hasError('required')">
-              {{ 'Address for Approver is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="addressApproverField.hasError('invalidAddress')">
-              {{ 'ZBC Address is invalid' | translate }}
-            </mat-error>
-          </ng-container>
-        </div>
-        <label>{{ 'Approver Commission' | translate }}</label>
+        <input-address label="{{ 'Approver Address' | translate }}" classList="block" formControlName="addressApprover"
+          placeholder="{{ 'Approver Address' | translate }}..."></input-address>
+        <ng-container *ngIf="addressApproverField.touched">
+          <mat-error *ngIf="addressApproverField.hasError('required')">
+            {{ 'Address for Approver is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="addressApproverField.hasError('invalidAddress')">
+            {{ 'ZBC Address is invalid' | translate }}
+          </mat-error>
+        </ng-container>
+        <label class="label-margin">{{ 'Approver Commission' | translate }}</label>
         <div class="row">
           <div class="col-4 col-sm-3">
             <mat-form-field appearance="outline" color="accent" class="block">

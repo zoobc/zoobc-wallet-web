@@ -194,12 +194,6 @@ export class SendmoneyComponent implements OnInit {
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
-  onChangeAddressApprover() {
-    let validation = isZBCAddressValid(this.addressApproverField.value);
-    if (!validation)
-      this.addressApproverField.setErrors({ invalidAddress: true });
-  }
-
   onChangeCommisssionField() {
     const commission = truncate(this.approverCommissionField.value, 8);
     const commissionCurrency = commission * this.currencyRate.value;
@@ -225,11 +219,6 @@ export class SendmoneyComponent implements OnInit {
         contact.alias.toLowerCase().includes(filterValue)
       );
     } else if (value == '') return this.contacts;
-  }
-
-  onChangeRecipient() {
-    let validation = isZBCAddressValid(this.recipientForm.value);
-    if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
   isAddressInContacts() {
