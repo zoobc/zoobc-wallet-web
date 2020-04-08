@@ -67,6 +67,7 @@ export class AuthService {
   switchAccount(account: SavedAccount) {
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
     this._keyring.calcDerivationPath(account.path);
+    this._seed = this._keyring.calcDerivationPath(account.path);
   }
 
   getCurrAccount(): SavedAccount {
