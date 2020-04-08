@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import zoobc from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -62,6 +63,21 @@ export class EscrowTransactionComponent implements OnInit {
 
   closeDialog() {
     this.detailEscrowRefDialog.close();
+  }
+
+  onOpenPinDialog(id, approvalCode) {
+    let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
+      width: '400px',
+    });
+    pinRefDialog.afterClosed().subscribe(isPinValid => {
+      if (isPinValid) {
+        if (approvalCode == 0) {
+          this.onConfirm(id);
+        } else {
+          this.onReject(id);
+        }
+      }
+    });
   }
 
   async onConfirm(id) {

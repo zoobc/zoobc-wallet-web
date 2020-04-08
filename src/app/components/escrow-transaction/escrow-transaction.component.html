@@ -85,10 +85,10 @@
       <button mat-button style="margin-right: 8px" (click)="closeDialog()">
         {{ 'Cancel' | translate }}
       </button>
-      <button mat-flat-button color="warn" style="margin-right: 8px" (click)="onReject(escrowDetail.id)">
+      <button mat-flat-button color="warn" style="margin-right: 8px" (click)="onOpenPinDialog(escrowDetail.id, 1)">
         {{ 'Reject' | translate }}
       </button>
-      <button mat-flat-button color="primary" (click)="onConfirm(escrowDetail.id)">
+      <button mat-flat-button color="primary" (click)="onOpenPinDialog(escrowDetail.id, 0)">
         {{ 'Confirm' | translate }}
       </button>
     </div>

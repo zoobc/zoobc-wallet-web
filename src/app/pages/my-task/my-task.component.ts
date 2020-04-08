@@ -55,7 +55,7 @@ export class MyTaskComponent implements OnInit {
           page: this.page,
           limit: perPage,
           orderBy: OrderBy.DESC,
-          orderField: 'block_height',
+          orderField: 'timeout',
         },
       };
       zoobc.Escrows.getList(params)
