@@ -4,27 +4,8 @@
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)"></account-selector>
-
-      <label>{{ 'Recepient Address' | translate }}</label>
-      <mat-form-field appearance="outline" class="block" color="accent">
-        <input matInput placeholder="{{ 'Recepient Address' | translate }}..." aria-label="contacts"
-          [matAutocomplete]="auto" formControlName="recipient" (keyup)="onChangeRecipient()"
-          (blur)="isAddressInContacts()" />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option disabled>
-            <span class="mat-caption">
-              {{
-                'Search address from your address book or your own account'
-                  | translate
-              }}
-            </span>
-          </mat-option>
-          <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
-            <span>{{ contact.alias }}</span> |
-            <small>{{ contact.address }}</small>
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+      <input-address label="{{ 'Recepient Address' | translate }}" classList="block" formControlName="recipient"
+        placeholder="{{ 'Recepient Address' | translate }}..."></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
           {{ 'Recepient is required' | translate }}

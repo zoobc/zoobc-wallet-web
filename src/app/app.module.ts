@@ -72,6 +72,7 @@ import { EscrowTransactionDetailComponent } from './components/escrow-transactio
 import { EscrowTableComponent } from './components/escrow-table/escrow-table.component';
 import { EscrowTransactionModule } from './components/escrow-transaction/escrow-transaction.module';
 import { MultisigTransactionModule } from './components/multisig-transaction/multisig-transaction.module';
+import { InputAddressModule } from './components/input-address/input-address.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -167,6 +168,7 @@ export function getLanguage(languageServ: LanguageService) {
     MatTabsModule,
     EscrowTransactionModule,
     MultisigTransactionModule,
+    InputAddressModule,
   ],
   bootstrap: [AppComponent],
   providers: [
