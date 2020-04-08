@@ -29,7 +29,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     private authServ: AuthService,
     private router: Router
   ) {
-    if (!history.state.passphrase) router.navigateByUrl('/signup');
+    if (!history.state.passphrase) router.navigateByUrl('/');
 
     this.words = history.state.passphrase.join(' ');
     this.passphrase = Object.assign([], history.state.passphrase);
@@ -37,14 +37,6 @@ export class ConfirmPassphraseComponent implements OnInit {
 
   ngOnInit() {
     this.prefillHalfPassphrase();
-  }
-
-  backClicked() {
-    this.router.navigate(['signup'], {
-      state: {
-        passphrase: history.state.passphrase,
-      },
-    });
   }
 
   prefillHalfPassphrase() {
