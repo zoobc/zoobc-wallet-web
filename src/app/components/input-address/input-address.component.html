@@ -1,0 +1,20 @@
+<label>{{ label}}</label>
+<mat-form-field appearance="outline" [className]="classList" color="accent">
+  <input matInput [disabled]="disabled" (focus)="onChange($event.target.value)" (blur)="_onTouched()"
+    (keyup)="onChange($event.target.value)" [value]="value" [matAutocomplete]="auto" placeholder="{{placeholder}}">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option disabled>
+      <span class="mat-caption">
+        {{
+          'Search address from your address book or your own account'
+            | translate
+        }}
+      </span>
+    </mat-option>
+    <mat-option #matOption (click)="onOptionClick(contact.address)" *ngFor="let contact of filteredContacts "
+      [value]="contact.address">
+      <span>{{ contact.alias }}</span> |
+      <small>{{ contact.address }}</small>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
