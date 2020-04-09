@@ -11,6 +11,7 @@ a:not([href='']) {
   font-weight: 400;
   color: map-get($accent, 500);
   @include transition(0.3s ease-in all);
+
   &:hover {
     opacity: 0.7;
   }
@@ -26,18 +27,22 @@ a:not([href='']) {
   flex-direction: column;
   align-items: center;
   color: $black3;
+
   &.padding {
     padding: 16px;
   }
+
   i {
     font-size: 42px;
     margin: 1rem 0;
   }
+
   .message {
     font-size: 16px;
     margin-bottom: 12px;
     text-align: center;
   }
+
   button {
     height: 32px;
     font-size: 12px;
@@ -47,10 +52,12 @@ a:not([href='']) {
 
 .breadcrumb {
   margin-bottom: 16px;
+
   a {
     margin-right: 6px;
     font-weight: bold;
   }
+
   i {
     color: $black2;
     margin-right: 6px;
@@ -73,20 +80,25 @@ a:not([href='']) {
   .mat-expansion-panel {
     box-shadow: none !important;
     border: 1px solid #ddd;
+
     &:not(first-of-type) {
       margin-top: -1px;
     }
+
     &.mat-expansion-panel-spacing {
       margin: 16px 0 !important;
     }
+
     &:first-of-type,
     &:last-of-type {
       box-shadow: none !important;
     }
+
     &:first-of-type {
       border-top-right-radius: 8px;
       border-top-left-radius: 8px;
     }
+
     &:last-of-type {
       border-bottom-right-radius: 8px;
       border-bottom-left-radius: 8px;
@@ -101,12 +113,15 @@ a[mat-stroked-button],
 button[mat-stroked-button] {
   text-transform: uppercase;
   border-radius: 4px;
+
   *[matPrefix] {
     margin-right: 12px;
   }
+
   &.block {
     width: 100%;
   }
+
   &.small {
     height: 32px;
     font-size: 12px;
@@ -117,6 +132,7 @@ button[mat-stroked-button] {
 a[mat-stroked-button],
 button[mat-stroked-button] {
   border: 2px solid map-get($primary, 500) !important;
+
   &[color='warn'] {
     border: 2px solid $red !important;
   }
@@ -126,9 +142,11 @@ button[mat-stroked-button] {
 .text-left {
   text-align: left;
 }
+
 .text-center {
   text-align: center;
 }
+
 .text-right {
   text-align: right;
 }
@@ -137,6 +155,7 @@ button[mat-stroked-button] {
 .row {
   padding: 0px;
   margin: 0 -8px;
+
   [class^='col'] {
     padding: 0 8px;
   }
@@ -153,29 +172,34 @@ label {
   color: $black2;
 }
 
-.mat-form-field {
+mat-form-field {
   margin-bottom: 8px;
+
   .mat-form-field-prefix {
     top: 0px !important;
     padding: 12px 0 !important;
   }
+
   .mat-form-field-infix {
     padding: 12px 0 !important;
     border: 0 !important;
   }
+
   .mat-form-field-flex {
     margin: 0 !important;
   }
+
   .mat-form-field-outline {
     top: 0 !important;
   }
+
   .mat-form-field-label {
     font-size: 14px !important;
     margin: 0 !important;
     top: 24px !important;
   }
-  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
-    .mat-form-field-label {
+
+  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
     margin-top: 4px !important;
     transform: translateY(-1.49373em) scale(0.8) !important;
   }
@@ -189,7 +213,7 @@ label {
   }
 
   // if mat-error exactly on bottom
-  & ~ .mat-error {
+  &~.mat-error {
     margin-top: -8px;
   }
 }
@@ -216,16 +240,20 @@ label {
     color: white;
   }
 }
+
 .swal2-styled {
   border-radius: 8px !important;
   font-weight: bold !important;
 }
+
 .swal2-confirm {
   background: $primary-gradient !important;
 }
+
 .swal2-cancel {
   background: $error-gradient !important;
 }
+
 .swal2-title {
   font-size: 24px !important;
   font-weight: 400 !important;
@@ -233,39 +261,44 @@ label {
 
 // ================== SKELETON LOADER =============== //
 .skeleton {
+
   // &:hover { background-color: white !important; }
   .skeleton-image {
     background-color: #eeeeee !important;
     background-image: none;
     margin-bottom: 16px;
     border-radius: 6px;
+
     &.rounded {
       border-radius: 100%;
     }
   }
+
   .skeleton-text {
     height: 16px;
     // background-color: #eeeeee;
-    background-image: linear-gradient(
-      90deg,
-      #f4f4f4 0px,
-      rgba(229, 229, 229, 0.8) 40px,
-      #f4f4f4 80px
-    );
+    background-image: linear-gradient(90deg,
+        #f4f4f4 0px,
+        rgba(229, 229, 229, 0.8) 40px,
+        #f4f4f4 80px);
     background-size: 1000px;
     margin-bottom: 8px;
     border-radius: 6px;
     animation: shine-lines 2s infinite ease-out;
+
     &.big {
       height: 24px;
     }
+
     &.small {
       height: 12px;
     }
   }
+
   .margin-16 {
     margin-bottom: 16px;
   }
+
   .margin-24 {
     margin-bottom: 24px;
   }
@@ -275,6 +308,7 @@ label {
   0% {
     background-position: -100px;
   }
+
   40%,
   100% {
     background-position: 200px;
@@ -288,10 +322,12 @@ label {
   align-items: center;
   color: $black3;
   padding: 2rem;
+
   i {
     font-size: 3rem;
     margin: 1rem 0;
   }
+
   .message {
     font-size: 1.1rem;
     margin: 0.5rem 0;

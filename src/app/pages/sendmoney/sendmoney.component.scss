@@ -112,6 +112,11 @@
       text-align: right;
       color: map-get($accent, 500);
     }
+
+    .label-margin {
+      margin-top: 10px;
+      display: block;
+    }
   }
 }
 
