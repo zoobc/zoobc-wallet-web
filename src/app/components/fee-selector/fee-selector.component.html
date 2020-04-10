@@ -82,6 +82,10 @@
         <input
           matInput
           type="number"
+          (blur)="onTouched()"
+          (input)="onChange($event.target.value)"
+          [disabled]="disabled"
+          [value]="value"
           formControlName="fee"
           placeholder="{{ 'Fee' | translate }}"
           (change)="onChangeFeeField()"

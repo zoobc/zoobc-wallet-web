@@ -1,5 +1,17 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  forwardRef,
+} from '@angular/core';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,11 +34,23 @@ import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/s
   selector: 'fee-selector',
   templateUrl: './fee-selector.component.html',
   styleUrls: ['./fee-selector.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => FeeSelectorComponent),
+      multi: true,
+    },
+  ],
 })
-export class FeeSelectorComponent implements OnInit {
+export class FeeSelectorComponent implements ControlValueAccessor {
   subscription: Subscription = new Subscription();
 
   currencyRate: Currency;
+
+  value: number;
+  onChange: (ev) => void;
+  onTouched: () => void;
+  disabled: boolean;
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 2;
@@ -62,6 +86,19 @@ export class FeeSelectorComponent implements OnInit {
     });
   }
 
+  writeValue(value: any): void {
+    this.value = value ? value : '';
+  }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
   ngOnInit() {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
@@ -92,6 +129,9 @@ export class FeeSelectorComponent implements OnInit {
     const fee = truncate(this.feeForm.value, 8);
     const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
+    console.log('fee', fee);
+    console.log('feeCurrency', feeCurrency);
+    console.log('feeFormCurr', this.feeFormCurr);
   }
 
   onChangeFeeCurrencyField() {
