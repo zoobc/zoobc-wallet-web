@@ -42,14 +42,14 @@ import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/s
     },
   ],
 })
-export class FeeSelectorComponent implements ControlValueAccessor {
+export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
   subscription: Subscription = new Subscription();
 
   currencyRate: Currency;
 
   value: number;
-  onChange: (ev) => void;
-  onTouched: () => void;
+  onChange: any = () => {};
+  onTouched: any = () => {};
   disabled: boolean;
 
   feeSlow = environment.fee;
@@ -80,7 +80,6 @@ export class FeeSelectorComponent implements ControlValueAccessor {
     private activeRoute: ActivatedRoute
   ) {
     this.formSend = new FormGroup({
-      amountCurrency: this.amountCurrencyForm,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
     });
@@ -113,7 +112,6 @@ export class FeeSelectorComponent implements ControlValueAccessor {
         Validators.required,
         Validators.min(minCurrency),
       ]);
-      this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
     });
 
     this.subscription.add(subsRate);
@@ -129,9 +127,8 @@ export class FeeSelectorComponent implements ControlValueAccessor {
     const fee = truncate(this.feeForm.value, 8);
     const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
-    console.log('fee', fee);
-    console.log('feeCurrency', feeCurrency);
-    console.log('feeFormCurr', this.feeFormCurr);
+    this.value = this.onChange();
+    console.log(this.value);
   }
 
   onChangeFeeCurrencyField() {
