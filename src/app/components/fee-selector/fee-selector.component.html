@@ -82,14 +82,13 @@
         <input
           matInput
           type="number"
-          (blur)="onTouched()"
-          (input)="onChange($event.target.value)"
+          (blur)="_onTouched()"
           [disabled]="disabled"
           [value]="value"
-          formControlName="fee"
+          formControlName="feeForm"
           placeholder="{{ 'Fee' | translate }}"
-          (change)="onChangeFeeField()"
-          (keyup)="onChangeFeeField()"
+          (input)="onChange($event.target.value)"
+          (keyup)="onChange($event.target.value)"
         />
       </mat-form-field>
       <ng-container *ngIf="feeForm.touched && typeFee === 'ZBC'">

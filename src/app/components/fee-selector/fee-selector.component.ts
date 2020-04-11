@@ -4,6 +4,7 @@ import {
   ViewChild,
   TemplateRef,
   forwardRef,
+  Input,
 } from '@angular/core';
 import {
   FormGroup,
@@ -43,13 +44,13 @@ import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/s
   ],
 })
 export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
+  @Input() fee: number;
+
   subscription: Subscription = new Subscription();
 
   currencyRate: Currency;
 
   value: number;
-  onChange: any = () => {};
-  onTouched: any = () => {};
   disabled: boolean;
 
   feeSlow = environment.fee;
@@ -60,7 +61,6 @@ export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
 
   formSend: FormGroup;
 
-  amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.feeMedium, [
     Validators.required,
     Validators.min(this.feeSlow),
@@ -71,6 +71,9 @@ export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
   typeFee = 'ZBC';
 
   customFee: boolean = false;
+
+  private _onChange = (value: any) => {};
+  private _onTouched = (value: any) => {};
 
   constructor(
     private currencyServ: CurrencyRateService,
@@ -89,10 +92,10 @@ export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
     this.value = value ? value : '';
   }
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this._onChange = fn;
   }
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -123,12 +126,15 @@ export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
     this.subscription.unsubscribe();
   }
 
+  onChange(value: any) {
+    this.feeForm.patchValue(value);
+    this.onChangeFeeField();
+  }
+
   onChangeFeeField() {
     const fee = truncate(this.feeForm.value, 8);
     const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
-    this.value = this.onChange();
-    console.log(this.value);
   }
 
   onChangeFeeCurrencyField() {
