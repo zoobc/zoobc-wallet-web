@@ -47,6 +47,7 @@ export class SendmoneyComponent implements OnInit {
   kindFee: string;
 
   formSend: FormGroup;
+
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [
     Validators.required,
@@ -70,6 +71,7 @@ export class SendmoneyComponent implements OnInit {
   ]);
   instructionField = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
+  typeCoinField = new FormControl('ZBC');
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
@@ -79,7 +81,6 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  typeCoin = 'ZBC';
   typeFee = 'ZBC';
   typeCommission = 'ZBC';
 
@@ -103,6 +104,7 @@ export class SendmoneyComponent implements OnInit {
       recipient: this.recipientForm,
       amount: this.amountForm,
       amountCurrency: this.amountCurrencyForm,
+      typeCoin: this.typeCoinField,
       alias: this.aliasField,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
@@ -145,7 +147,10 @@ export class SendmoneyComponent implements OnInit {
         Validators.required,
         Validators.min(minCurrency),
       ]);
-      this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
+      this.amountCurrencyForm.setValidators([
+        Validators.required,
+        Validators.min(minCurrency),
+      ]);
     });
     this.subscription.add(subsRate);
 
@@ -174,18 +179,6 @@ export class SendmoneyComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-  }
-
-  onChangeAmountField() {
-    const amount = truncate(this.amountForm.value, 8);
-    const amountCurrency = amount * this.currencyRate.value;
-    this.amountCurrencyForm.patchValue(amountCurrency);
-  }
-
-  onChangeAmountCurrencyField() {
-    const amount = this.amountCurrencyForm.value / this.currencyRate.value;
-    const amountTrunc = truncate(amount, 8);
-    this.amountForm.patchValue(amountTrunc);
   }
 
   onChangeFeeField() {
@@ -430,7 +423,10 @@ export class SendmoneyComponent implements OnInit {
       Validators.required,
       Validators.min(feeCurrency),
     ]);
-    this.amountCurrencyForm.setValidators(Validators.min(feeCurrency));
+    this.amountCurrencyForm.setValidators([
+      Validators.required,
+      Validators.min(feeCurrency),
+    ]);
 
     if (this.customFee == false) {
       let value: number = 0;

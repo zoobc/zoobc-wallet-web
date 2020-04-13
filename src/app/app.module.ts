@@ -71,6 +71,7 @@ import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-nod
 import { EscrowTransactionModule } from './components/escrow-transaction/escrow-transaction.module';
 import { MultisigTransactionModule } from './components/multisig-transaction/multisig-transaction.module';
 import { InputAddressModule } from './components/input-address/input-address.module';
+import { InputAmountModule } from './components/input-amount/input-amount.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -165,6 +166,7 @@ export function getLanguage(languageServ: LanguageService) {
     EscrowTransactionModule,
     MultisigTransactionModule,
     InputAddressModule,
+    InputAmountModule,
   ],
   bootstrap: [AppComponent],
   providers: [
