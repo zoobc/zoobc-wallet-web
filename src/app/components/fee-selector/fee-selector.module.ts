@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FeeSelectorComponent } from './fee-selector.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -25,6 +26,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   declarations: [FeeSelectorComponent],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

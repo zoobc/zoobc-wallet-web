@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  forwardRef,
-  Input,
-} from '@angular/core';
+import { Component, OnInit, forwardRef } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -13,23 +6,14 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import Swal from 'sweetalert2';
-import { ContactService, Contact } from 'src/app/services/contact.service';
-import { TranslateService } from '@ngx-translate/core';
-import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import {
   CurrencyRateService,
   Currency,
 } from 'src/app/services/currency-rate.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { truncate, calcMinFee } from 'src/helpers/utils';
-import { Router, ActivatedRoute } from '@angular/router';
-import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
-import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
+import { truncate } from 'src/helpers/utils';
 
 @Component({
   selector: 'fee-selector',
@@ -44,8 +28,6 @@ import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/s
   ],
 })
 export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
-  @Input() fee: number;
-
   subscription: Subscription = new Subscription();
 
   currencyRate: Currency;
@@ -77,10 +59,7 @@ export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
 
   constructor(
     private currencyServ: CurrencyRateService,
-    private translate: TranslateService,
-    public dialog: MatDialog,
-    private router: Router,
-    private activeRoute: ActivatedRoute
+    public dialog: MatDialog
   ) {
     this.formSend = new FormGroup({
       fee: this.feeForm,
@@ -118,17 +97,20 @@ export class FeeSelectorComponent implements OnInit, ControlValueAccessor {
     });
 
     this.subscription.add(subsRate);
-
-    // this.watchEscrowField();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  onChange(value: any) {
+  onChangeFee(value: any) {
     this.feeForm.patchValue(value);
     this.onChangeFeeField();
+  }
+
+  onChangeFeeCurr(value: any) {
+    this.feeForm.patchValue(value);
+    this.onChangeFeeCurrencyField();
   }
 
   onChangeFeeField() {
