@@ -188,13 +188,6 @@ export class SendmoneyComponent implements OnInit {
     this.amountForm.patchValue(amountTrunc);
   }
 
-  onChangeFeeCurr(value: number) {
-    this.feeFormCurr.patchValue(value);
-    console.log('feeFormCurr value now ', this.feeFormCurr.value);
-    console.log('feeForm value now ', typeof this.feeFormCurr.value);
-    console.log('feeForm value now ', typeof this.feeFormCurr.value);
-  }
-
   onChangeFeeField() {
     const fee = truncate(this.feeForm.value, 8);
     const feeCurrency = fee * this.currencyRate.value;
