@@ -13,14 +13,8 @@ import { NodeAdminService } from 'src/app/services/node-admin.service';
 })
 export class RegisterNodeComponent {
   formRegisterNode: FormGroup;
-  ipAddressForm = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^[\\w.-]+:\\d+$'),
-  ]);
-  lockedBalanceForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
+  lockedBalanceForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
 
@@ -73,11 +67,7 @@ export class RegisterNodeComponent {
 
           zoobc.Node.register(data, this.authServ.seed)
             .then(() => {
-              Swal.fire(
-                'Success',
-                'Your node will be registered soon',
-                'success'
-              );
+              Swal.fire('Success', 'Your node will be registered soon', 'success');
 
               // change IP if has different value
               if (this.ipAddressForm.value != this.account.nodeIP)

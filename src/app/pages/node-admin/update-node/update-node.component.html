@@ -6,7 +6,7 @@
       <input
         matInput
         type="text"
-        placeholder="yournode.com:8001 or 192.168.43.1:8001"
+        placeholder="https://yournode.com:8001 or http://192.168.43.1:8001"
         formControlName="ipAddress"
       />
     </mat-form-field>
@@ -32,20 +32,12 @@
         {{ 'Locked Balance is required' | translate }}
       </mat-error>
       <mat-error *ngIf="lockedAmountForm.hasError('min')">
-        {{
-          'New locked balance cannot be smaller than current locked balance'
-            | translate
-        }}
+        {{ 'New locked balance cannot be smaller than current locked balance' | translate }}
       </mat-error>
     </ng-container>
     <label>{{ 'Fee' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
-      <input
-        matInput
-        type="number"
-        formControlName="fee"
-        placeholder="{{ 'Fee' | translate }}"
-      />
+      <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="feeForm.touched">
       <mat-error *ngIf="feeForm.hasError('required')">
@@ -74,15 +66,8 @@
       </mat-error>
     </ng-container>
     <br />
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="formUpdateNode.invalid || isLoading"
-    >
-      <span *ngIf="isLoading">
-        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
-      </span>
+    <button mat-flat-button color="primary" type="submit" [disabled]="formUpdateNode.invalid || isLoading">
+      <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
       <span>{{ 'Update Node' | translate }}</span>
     </button>
   </form>

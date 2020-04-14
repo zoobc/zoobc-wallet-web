@@ -10,6 +10,7 @@ import zoobc, {
   NodeParams,
   toUnconfirmTransactionNodeWallet,
   MempoolListParams,
+  TransactionListParams,
 } from 'zoobc-sdk';
 
 @Component({
@@ -31,6 +32,8 @@ export class NodeAdminComponent implements OnInit {
   isNodeLoading: boolean = false;
   isNodeError: boolean = false;
 
+  lastClaim: string = undefined;
+
   constructor(private dialog: MatDialog, private authServ: AuthService) {
     this.account = authServ.getCurrAccount();
   }
@@ -49,6 +52,13 @@ export class NodeAdminComponent implements OnInit {
     const params: MempoolListParams = {
       address: this.account.address,
     };
+    const param: TransactionListParams = {
+      transactionType: 770,
+      address: this.account.address,
+    };
+    zoobc.Transactions.getList(param).then(res => {
+      this.lastClaim = res.transactionsList[0].timestamp;
+    });
     zoobc.Mempool.getList(params)
       .then(res => {
         const pendingTxs = toUnconfirmTransactionNodeWallet(res);
@@ -58,8 +68,11 @@ export class NodeAdminComponent implements OnInit {
         };
         return zoobc.Node.get(params);
       })
-      .then((res: any) => {
-        this.registeredNode = res.noderegistration;
+      .then(res => {
+        if (res) {
+          const { registrationstatus } = res.noderegistration;
+          if (registrationstatus == 0) this.registeredNode = res.noderegistration;
+        }
       })
       .catch(err => {
         console.log(err);
@@ -72,8 +85,7 @@ export class NodeAdminComponent implements OnInit {
     // todo: create loader and display the result
     Swal.fire({
       title: 'Are you sure want to generate new node public key?',
-      text:
-        'You need to update your node registration or your node will stop smithing',
+      text: 'You need to update your node registration or your node will stop smithing',
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -92,10 +104,7 @@ export class NodeAdminComponent implements OnInit {
   streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    zoobc.Node.getHardwareInfo(
-      `//${this.account.nodeIP}`,
-      this.authServ.seed
-    ).subscribe(
+    zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
       (res: any) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
@@ -132,6 +141,7 @@ export class NodeAdminComponent implements OnInit {
   openClaimNode() {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
+      data: this.registeredNode,
     });
 
     dialog.afterClosed().subscribe(success => {
