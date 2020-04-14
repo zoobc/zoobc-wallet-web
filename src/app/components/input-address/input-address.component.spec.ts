@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EscrowTableComponent } from './escrow-table.component';
+import { InputAddressComponent } from './input-address.component';
 
-describe('EscrowTableComponent', () => {
-  let component: EscrowTableComponent;
-  let fixture: ComponentFixture<EscrowTableComponent>;
+describe('InputAddressComponent', () => {
+  let component: InputAddressComponent;
+  let fixture: ComponentFixture<InputAddressComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EscrowTableComponent ]
+      declarations: [ InputAddressComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EscrowTableComponent);
+    fixture = TestBed.createComponent(InputAddressComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

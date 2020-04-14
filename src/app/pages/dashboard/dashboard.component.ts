@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import {
-  Currency,
-  CurrencyRateService,
-} from 'src/app/services/currency-rate.service';
+import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
 import { Router } from '@angular/router';
@@ -15,6 +12,7 @@ import zoobc, {
   toTransactionListWallet,
   getZBCAdress,
   MempoolListParams,
+  toUnconfirmedSendMoneyWallet,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -56,9 +54,7 @@ export class DashboardComponent implements OnInit {
     this.getBalance();
     this.getTransactions();
 
-    const subsRate = this.currencyServ.rate.subscribe(
-      rate => (this.currencyRate = rate)
-    );
+    const subsRate = this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
     this.subscription.add(subsRate);
     this.currencyServ
       .getRates()
@@ -180,7 +176,9 @@ export class DashboardComponent implements OnInit {
           };
           return zoobc.Mempool.getList(params);
         })
-        .then(unconfirmTx => (this.unconfirmTx = unconfirmTx))
+        .then(
+          unconfirmTx => (this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address))
+        )
         .catch(e => {
           this.isErrorRecentTx = true;
         })

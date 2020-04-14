@@ -6,7 +6,7 @@
       <input
         matInput
         type="text"
-        placeholder="yournode.com:8001 or 192.168.43.1:8001"
+        placeholder="https://yournode.com:8001 or http://192.168.43.1:8001"
         formControlName="ipAddress"
       />
     </mat-form-field>
@@ -18,15 +18,8 @@
         {{ 'Invalid IP address format' | translate }}
       </mat-error>
     </ng-container>
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="isLoading || formAddNodeAdmin.invalid"
-    >
-      <span *ngIf="isLoading">
-        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
-      </span>
+    <button mat-flat-button color="primary" type="submit" [disabled]="isLoading || formAddNodeAdmin.invalid">
+      <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
       <span>{{ 'Add' | translate }}</span>
     </button>
     <button

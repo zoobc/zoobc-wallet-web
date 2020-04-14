@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyTaskListComponent } from './my-task-list.component';
+import { InputAmountComponent } from './input-amount.component';
 
-describe('MyTaskListComponent', () => {
-  let component: MyTaskListComponent;
-  let fixture: ComponentFixture<MyTaskListComponent>;
+describe('InputAmountComponent', () => {
+  let component: InputAmountComponent;
+  let fixture: ComponentFixture<InputAmountComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MyTaskListComponent ]
+      declarations: [ InputAmountComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MyTaskListComponent);
+    fixture = TestBed.createComponent(InputAmountComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -50,11 +50,7 @@
       <h2 class="mat-h2">{{ 'Registered Node' | translate }}</h2>
     </div>
     <div class="col-2 text-right">
-      <button
-        mat-icon-button
-        class="reload-button"
-        (click)="getRegisteredNode()"
-      >
+      <button mat-icon-button class="reload-button" (click)="getRegisteredNode()">
         <i class="fa fa-redo-alt"></i>
       </button>
     </div>
@@ -66,24 +62,16 @@
         <div class="col-12 col-sm-6">
           <div class="label">{{ 'Account Address' | translate }}</div>
           <div class="value">
-            <wallet-address
-              [value]="registeredNode.accountaddress"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="registeredNode.accountaddress" [copyButton]="true"></wallet-address>
           </div>
           <div class="label">{{ 'Node Public Key' | translate }}</div>
           <div class="value">
-            <wallet-address
-              [value]="registeredNode.nodepublickey"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="registeredNode.nodepublickey" [copyButton]="true"></wallet-address>
           </div>
         </div>
         <div class="col-12 col-sm-6">
           <div class="label">{{ 'Locked Balance' | translate }}</div>
-          <div class="value big">
-            {{ registeredNode.lockedbalance / 1e8 | number: '0.0-8' }} ZBC
-          </div>
+          <div class="value big">{{ registeredNode.lockedbalance / 1e8 | number: '0.0-8' }} ZBC</div>
           <div class="label">{{ 'Height' | translate }}</div>
           <div class="value big">{{ registeredNode.height }}</div>
           <div class="label">{{ 'Registration Height' | translate }}</div>
@@ -91,14 +79,8 @@
         </div>
       </div>
       <div class="text-right">
-        <!-- <span class="pending-label">Pending: Update Node</span> -->
         <ng-container *ngIf="!pendingNodeTx">
-          <button
-            mat-flat-button
-            color="primary"
-            style="margin-right: 8px"
-            (click)="openUpdateNode()"
-          >
+          <button mat-flat-button color="primary" style="margin-right: 8px" (click)="openUpdateNode()">
             Update Node
           </button>
           <button mat-flat-button color="warn" (click)="openRemoveNode()">
@@ -134,22 +116,14 @@
     </ng-container>
 
     <!-- NODE NOT REGISTERED -->
-    <div
-      class="not-registered-node"
-      *ngIf="!registeredNode && !isNodeLoading && !isNodeError"
-    >
+    <div class="not-registered-node" *ngIf="!registeredNode && !isNodeLoading && !isNodeError">
       <i matPrefix class="fa fa-desktop"></i>
       <span class="message">
         {{ 'Your node is not registered yet' | translate }}
       </span>
       <div class="text-center" style="margin:8px 0;">
         <ng-container *ngIf="!pendingNodeTx">
-          <button
-            mat-flat-button
-            color="primary"
-            style="margin: 8px 8px 8px 0"
-            (click)="openRegisterNode()"
-          >
+          <button mat-flat-button color="primary" style="margin: 8px 8px 8px 0" (click)="openRegisterNode()">
             {{ 'Register Your Node' | translate }}
           </button>
           <button mat-flat-button color="accent" (click)="openClaimNode()">
@@ -163,6 +137,9 @@
           </span>
         </ng-container>
       </div>
+      <ng-container *ngIf="lastClaim">
+        Last claiming: {{ lastClaim * 1000 | date: 'dd MMMM yyyy HH:mm:ss' }}
+      </ng-container>
     </div>
 
     <!-- NODE REGISTRATION ERROR -->
@@ -187,11 +164,7 @@
       <span class="message">
         {{ 'An error occurred while processing your request' | translate }}
       </span>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="streamNodeHardwareInfo()"
-      >
+      <button mat-flat-button color="primary" (click)="streamNodeHardwareInfo()">
         {{ 'Try Again' | translate }}
       </button>
     </div>
@@ -200,10 +173,7 @@
     <ng-container *ngIf="hwInfo && !isNodeHardwareError">
       <h2 class="mat-h2">{{ 'CPU' | translate }}</h2>
       <div class="row">
-        <div
-          class="col-6 col-sm-3 cpu-usage"
-          *ngFor="let cpu of hwInfo.cpuinformationList; let i = index"
-        >
+        <div class="col-6 col-sm-3 cpu-usage" *ngFor="let cpu of hwInfo.cpuinformationList; let i = index">
           <div class="percentage">
             <mat-progress-spinner
               [value]="cpu.usedpercent"
@@ -253,21 +223,12 @@
           <div class="memory-usage">
             <div class="label">{{ 'Usage' | translate }}</div>
             <div class="usage">
-              <span>
-                {{ hwInfo.memoryinformation.used / gbToB | number: '0.0-2' }}GB/
-              </span>
-              <span>
-                {{ hwInfo.memoryinformation.total / gbToB | number: '0.0-2' }}GB
-              </span>
-              <span>
-                ({{ hwInfo.memoryinformation.usedpercent | number: '0.0-2' }}%)
-              </span>
+              <span> {{ hwInfo.memoryinformation.used / gbToB | number: '0.0-2' }}GB/ </span>
+              <span> {{ hwInfo.memoryinformation.total / gbToB | number: '0.0-2' }}GB </span>
+              <span> ({{ hwInfo.memoryinformation.usedpercent | number: '0.0-2' }}%) </span>
             </div>
             <div class="persentage-container">
-              <div
-                class="percentage"
-                [ngStyle]="{ 'width.%': hwInfo.memoryinformation.usedpercent }"
-              ></div>
+              <div class="percentage" [ngStyle]="{ 'width.%': hwInfo.memoryinformation.usedpercent }"></div>
             </div>
           </div>
           <br />
@@ -278,22 +239,11 @@
           <div class="memory-usage">
             <div class="label">{{ 'Usage' | translate }}</div>
             <div class="usage">
-              <span>
-                {{
-                  hwInfo.storageinformation.used / gbToB | number: '0.0-2'
-                }}GB/
-              </span>
-              <span>
-                {{
-                  hwInfo.storageinformation.total / gbToB | number: '0.0-2'
-                }}GB
-              </span>
+              <span> {{ hwInfo.storageinformation.used / gbToB | number: '0.0-2' }}GB/ </span>
+              <span> {{ hwInfo.storageinformation.total / gbToB | number: '0.0-2' }}GB </span>
             </div>
             <div class="persentage-container">
-              <div
-                class="percentage"
-                [ngStyle]="{ 'width.%': hwInfo.storageinformation.usedpercent }"
-              ></div>
+              <div class="percentage" [ngStyle]="{ 'width.%': hwInfo.storageinformation.usedpercent }"></div>
             </div>
           </div>
         </div>

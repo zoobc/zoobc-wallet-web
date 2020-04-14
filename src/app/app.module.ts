@@ -64,15 +64,15 @@ import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal
 import { EditAccountComponent } from './pages/account/edit-account/edit-account.component';
 import { AddressModule } from './components/address/address.module';
 import { DateAgoModule } from './pipes/date-ago.module';
-import { MyTaskListComponent } from './pages/my-task-list/my-task-list.component';
+import { MyTaskComponent } from './pages/my-task/my-task.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { AccountSelectorModule } from './components/account-selector/account-selector.module';
 import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
-import { EscrowTransactionDetailComponent } from './components/escrow-transaction-detail/escrow-transaction-detail.component';
-import { EscrowTableComponent } from './components/escrow-table/escrow-table.component';
 import { EscrowTransactionModule } from './components/escrow-transaction/escrow-transaction.module';
 import { MultisigTransactionModule } from './components/multisig-transaction/multisig-transaction.module';
 import { FeeSelectorModule } from './components/fee-selector/fee-selector.module';
+import { InputAddressModule } from './components/input-address/input-address.module';
+import { InputAmountModule } from './components/input-amount/input-amount.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -114,9 +114,7 @@ export function getLanguage(languageServ: LanguageService) {
     RevealPassphraseComponent,
     EditAccountComponent,
     AddNodeAdminComponent,
-    MyTaskListComponent,
-    EscrowTransactionDetailComponent,
-    EscrowTableComponent,
+    MyTaskComponent,
   ],
   imports: [
     BrowserModule,
@@ -169,6 +167,8 @@ export function getLanguage(languageServ: LanguageService) {
     EscrowTransactionModule,
     MultisigTransactionModule,
     FeeSelectorModule,
+    InputAddressModule,
+    InputAmountModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -191,7 +191,6 @@ export function getLanguage(languageServ: LanguageService) {
     RevealPassphraseComponent,
     EditAccountComponent,
     AddNodeAdminComponent,
-    EscrowTransactionDetailComponent,
   ],
 })
 export class AppModule {}
