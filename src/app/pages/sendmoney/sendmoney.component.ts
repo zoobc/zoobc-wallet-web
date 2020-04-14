@@ -271,11 +271,6 @@ export class SendmoneyComponent implements OnInit {
     this.customFee = value;
   }
 
-  // toggleCustomFee() {
-  //   this.customFee = !this.customFee;
-  //   if (!this.customFee) this.onFeeChoose(this.activeButton);
-  // }
-
   toggleAdvancedMenu() {
     this.advancedMenu = !this.advancedMenu;
     this.enableFieldAdvancedMenu();
