@@ -1,21 +1,12 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  ValidatorFn,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import {
-  CurrencyRateService,
-  Currency,
-} from 'src/app/services/currency-rate.service';
+import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
 import { truncate, calcMinFee } from 'src/helpers/utils';
@@ -49,29 +40,18 @@ export class SendmoneyComponent implements OnInit {
   formSend: FormGroup;
 
   recipientForm = new FormControl('', Validators.required);
-  amountForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.feeMedium, [
-    Validators.required,
-    Validators.min(this.feeSlow),
-  ]);
+  feeForm = new FormControl(this.feeMedium, [Validators.required, Validators.min(this.feeSlow)]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
   addressApproverField = new FormControl('', Validators.required);
-  approverCommissionField = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
-  approverCommissionCurrField = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  approverCommissionField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
+  approverCommissionCurrField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   instructionField = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
   typeCoinField = new FormControl('ZBC');
+  typeCommissionField = new FormControl('ZBC');
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
@@ -82,7 +62,6 @@ export class SendmoneyComponent implements OnInit {
   accounts: SavedAccount[];
 
   typeFee = 'ZBC';
-  typeCommission = 'ZBC';
 
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
@@ -111,6 +90,7 @@ export class SendmoneyComponent implements OnInit {
       addressApprover: this.addressApproverField,
       approverCommission: this.approverCommissionField,
       approverCommissionCurr: this.approverCommissionCurrField,
+      typeCommission: this.typeCommissionField,
       instruction: this.instructionField,
       timeout: this.timeoutField,
     });
@@ -143,14 +123,8 @@ export class SendmoneyComponent implements OnInit {
 
       const minCurrency = truncate(this.feeSlow * rate.value, 8);
 
-      this.feeFormCurr.setValidators([
-        Validators.required,
-        Validators.min(minCurrency),
-      ]);
-      this.amountCurrencyForm.setValidators([
-        Validators.required,
-        Validators.min(minCurrency),
-      ]);
+      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+      this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
 
@@ -187,18 +161,6 @@ export class SendmoneyComponent implements OnInit {
     this.feeFormCurr.patchValue(feeCurrency);
   }
 
-  onChangeCommisssionField() {
-    const commission = truncate(this.approverCommissionField.value, 8);
-    const commissionCurrency = commission * this.currencyRate.value;
-    this.approverCommissionCurrField.patchValue(commissionCurrency);
-  }
-  onChangeCommisssionCurrField() {
-    const commission =
-      this.approverCommissionCurrField.value / this.currencyRate.value;
-    const commissionTrunc = truncate(commission, 8);
-    this.approverCommissionField.patchValue(commissionTrunc);
-  }
-
   onChangeFeeCurrencyField() {
     const fee = this.feeFormCurr.value / this.currencyRate.value;
     const feeTrunc = truncate(fee, 8);
@@ -208,9 +170,7 @@ export class SendmoneyComponent implements OnInit {
   filterContacts(value: string): Contact[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      return this.contacts.filter((contact: Contact) =>
-        contact.alias.toLowerCase().includes(filterValue)
-      );
+      return this.contacts.filter((contact: Contact) => contact.alias.toLowerCase().includes(filterValue));
     } else if (value == '') return this.contacts;
   }
 
@@ -419,14 +379,8 @@ export class SendmoneyComponent implements OnInit {
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
 
     const feeCurrency = truncate(fee * this.currencyRate.value, 8);
-    this.feeFormCurr.setValidators([
-      Validators.required,
-      Validators.min(feeCurrency),
-    ]);
-    this.amountCurrencyForm.setValidators([
-      Validators.required,
-      Validators.min(feeCurrency),
-    ]);
+    this.feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
+    this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
 
     if (this.customFee == false) {
       let value: number = 0;
@@ -446,5 +400,9 @@ export class SendmoneyComponent implements OnInit {
 
   onChangeTimeOut() {
     this.getMinimumFee();
+  }
+
+  test() {
+    console.log(this.formSend);
   }
 }

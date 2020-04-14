@@ -1,5 +1,5 @@
-<div *ngIf="displayConverter" class="zbc-form-item">
-  <div class="amount text-right">
+<div class="zbc-form-item">
+  <div *ngIf="displayConverter" class="amount text-right">
     <div class="primary-amount">
       {{ group.get('amount').value | number: '0.0-8' }} ZBC
     </div>
@@ -21,13 +21,14 @@
       </mat-form-field>
     </div>
     <div class="col-8 col-sm-9">
-      <mat-form-field appearance="outline" class="block" *ngIf="group.get('typeCoin').value === 'ZBC'" color="accent">
+      <mat-form-field appearance="outline" class="block" *ngIf="group.get(typeCoinName).value === 'ZBC'" color="accent">
         <input matInput (keyup)="onChangeAmountField($event.target.value)"
           (change)="onChangeAmountField($event.target.value)" type="number" formControlName="{{amountName}}"
           placeholder="{{label}}" />
       </mat-form-field>
 
-      <mat-form-field *ngIf="group.get('typeCoin').value === 'Fiat'" appearance="outline" class="block" color="accent">
+      <mat-form-field *ngIf="group.get(typeCoinName).value === 'Fiat'" appearance="outline" class="block"
+        color="accent">
         <input matInput (keyup)="onChangeAmountCurrencyField($event.target.value)"
           (change)="onChangeAmountCurrencyField($event.target.value)" type="number"
           formControlName="{{amountCurrencyName}}" placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}" />

@@ -173,24 +173,15 @@
             {{ 'ZBC Address is invalid' | translate }}
           </mat-error>
         </ng-container>
-        <label class="label-margin">{{ 'Approver Commission' | translate }}</label>
+        <input-amount [group]=formSend typeCoinName="typeCommission" amountCurrencyName="approverCommissionCurr"
+          amountName="approverCommission" [displayConverter]="false" [currencyRate]="currencyRate"
+          label="{{ 'Approver Commission' | translate }}">
+        </input-amount>
         <div class="row">
-          <div class="col-4 col-sm-3">
-            <mat-form-field appearance="outline" color="accent" class="block">
-              <mat-select [(value)]="typeCommission">
-                <mat-option value="ZBC">ZBC</mat-option>
-                <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+          <div class="col-4 col-sm-3">&nbsp;</div>
           <div class="col-8 col-sm-9">
-            <mat-form-field appearance="outline" class="block" *ngIf="typeCommission === 'ZBC'" color="accent">
-              <input matInput type="number" formControlName="approverCommission"
-                placeholder="{{ 'Approver Commission' | translate }}" (change)="onChangeCommisssionField()"
-                (keyup)="onChangeCommisssionField()" />
-            </mat-form-field>
             <ng-container *ngIf="
-                approverCommissionField.touched && typeCommission === 'ZBC'
+                approverCommissionField.touched && typeCommissionField.value === 'ZBC'
               ">
               <mat-error *ngIf="approverCommissionField.hasError('required')">
                 {{ 'Commission for approver is required' | translate }}
@@ -199,13 +190,8 @@
                 {{ 'Minimum commission is' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
-            <mat-form-field appearance="outline" class="block" *ngIf="typeCommission === 'Fiat'" color="accent">
-              <input matInput type="number" formControlName="approverCommissionCurr"
-                placeholder="{{ 'Commission Currency' | translate }}" (change)="onChangeCommisssionCurrField()"
-                (keyup)="onChangeCommisssionCurrField()" />
-            </mat-form-field>
             <ng-container *ngIf="
-                approverCommissionCurrField.touched && typeCommission === 'Fiat'
+                approverCommissionCurrField.touched && typeCommissionField.value === 'Fiat'
               ">
               <mat-error *ngIf="approverCommissionCurrField.hasError('required')">
                 {{ 'Commission for approver is required' | translate }}
