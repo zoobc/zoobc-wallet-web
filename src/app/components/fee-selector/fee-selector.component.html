@@ -61,9 +61,7 @@
 
 <div class="zbc-form-item" *ngIf="customFee">
   <div class="amount text-right">
-    <div class="primary-amount">
-      {{ group.get('fee').value | number: '0.0-8' }} ZBC
-    </div>
+    <div class="primary-amount">{{ group.get('fee').value | number: '0.0-8' }} ZBC</div>
     <div class="secondary-amount">
       {{ group.get('feeCurr').value | number: '0.0-2' }} {{ currencyRate.name }}
     </div>
@@ -80,24 +78,17 @@
         </mat-form-field>
       </div>
       <div class="col-8 col-sm-9">
-        <mat-form-field
-          appearance="outline"
-          class="block"
-          *ngIf="typeFee === 'ZBC'"
-          color="accent"
-        >
+        <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'ZBC'" color="accent">
           <input
             matInput
             type="number"
             formControlName="{{ feeName }}"
             placeholder="{{ 'Fee' | translate }}"
-            (input)="onChangeFeeField()"
-            (keyup)="onChangeFeeField()"
+            (input)="onChangeFeeField($event.target.value)"
+            (keyup)="onChangeFeeField($event.target.value)"
           />
         </mat-form-field>
-        <ng-container
-          *ngIf="this.group.get('fee').touched && typeFee === 'ZBC'"
-        >
+        <ng-container *ngIf="this.group.get('fee').touched && typeFee === 'ZBC'">
           <mat-error *ngIf="this.group.get('fee').hasError('required')">
             {{ 'Fee is required' | translate }}
           </mat-error>
@@ -105,32 +96,22 @@
             {{ 'Minimum fee is' | translate: { val: feeSlow } }}
           </mat-error>
         </ng-container>
-        <mat-form-field
-          appearance="outline"
-          class="block"
-          *ngIf="typeFee === 'Fiat'"
-          color="accent"
-        >
+        <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'Fiat'" color="accent">
           <input
             matInput
             type="number"
             formControlName="{{ feeCurrName }}"
             placeholder="{{ 'Fee' | translate }}"
-            (input)="onChangeFeeCurrencyField()"
-            (keyup)="onChangeFeeCurrencyField()"
+            (input)="onChangeFeeCurrencyField($event.target.value)"
+            (keyup)="onChangeFeeCurrencyField($event.target.value)"
           />
         </mat-form-field>
-        <ng-container
-          *ngIf="this.group.get('feeCurr').touched && typeFee === 'Fiat'"
-        >
+        <ng-container *ngIf="this.group.get('feeCurr').touched && typeFee === 'Fiat'">
           <mat-error *ngIf="this.group.get('feeCurr').hasError('required')">
             {{ 'Fee is required' | translate }}
           </mat-error>
           <mat-error *ngIf="this.group.get('feeCurr').hasError('min')">
-            {{
-              'Minimum amount of fee in ZBC must be ZBC'
-                | translate: { val: feeSlow }
-            }}
+            {{ 'Minimum amount of fee in ZBC must be ZBC' | translate: { val: feeSlow } }}
           </mat-error>
         </ng-container>
       </div>

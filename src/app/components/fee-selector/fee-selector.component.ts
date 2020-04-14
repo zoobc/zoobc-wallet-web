@@ -33,14 +33,14 @@ export class FeeSelectorComponent implements OnInit {
 
   ngOnInit() {}
 
-  onChangeFeeField() {
-    const fee = truncate(this.group.get(this.feeName).value, 8);
+  onChangeFeeField(value) {
+    const fee = truncate(value, 8);
     const feeCurrency = fee * this.currencyRate.value;
     this.group.get(this.feeCurrName).patchValue(feeCurrency);
   }
 
-  onChangeFeeCurrencyField() {
-    const fee = this.group.get(this.feeName).value / this.currencyRate.value;
+  onChangeFeeCurrencyField(value) {
+    const fee = value / this.currencyRate.value;
     const feeTrunc = truncate(fee, 8);
     this.group.get(this.feeName).patchValue(feeTrunc);
   }
