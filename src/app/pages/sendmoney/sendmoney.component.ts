@@ -41,8 +41,8 @@ export class SendmoneyComponent implements OnInit {
   currencyRate: Currency;
 
   feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 5;
-  feeFast = this.feeMedium * 5;
+  feeMedium = this.feeSlow * 2;
+  feeFast = this.feeMedium * 2;
   activeButton: number = 2;
   kindFee: string;
 
@@ -137,7 +137,7 @@ export class SendmoneyComponent implements OnInit {
       // set default fee to medium
       this.onChangeFeeField();
       // convert fee to current currency
-      this.onFeeChoose(2);
+      this.onClickFeeChoose(2);
 
       const minCurrency = truncate(this.feeSlow * rate.value, 8);
 
@@ -188,10 +188,23 @@ export class SendmoneyComponent implements OnInit {
     this.amountForm.patchValue(amountTrunc);
   }
 
+  onChangeFeeCurr(value: number) {
+    this.feeFormCurr.patchValue(value);
+    console.log('feeFormCurr value now ', this.feeFormCurr.value);
+    console.log('feeForm value now ', typeof this.feeFormCurr.value);
+    console.log('feeForm value now ', typeof this.feeFormCurr.value);
+  }
+
   onChangeFeeField() {
     const fee = truncate(this.feeForm.value, 8);
     const feeCurrency = fee * this.currencyRate.value;
     this.feeFormCurr.patchValue(feeCurrency);
+  }
+
+  onChangeFeeCurrencyField() {
+    const fee = this.feeFormCurr.value / this.currencyRate.value;
+    const feeTrunc = truncate(fee, 8);
+    this.feeForm.patchValue(feeTrunc);
   }
 
   onChangeAddressApprover() {
@@ -205,17 +218,12 @@ export class SendmoneyComponent implements OnInit {
     const commissionCurrency = commission * this.currencyRate.value;
     this.approverCommissionCurrField.patchValue(commissionCurrency);
   }
+
   onChangeCommisssionCurrField() {
     const commission =
       this.approverCommissionCurrField.value / this.currencyRate.value;
     const commissionTrunc = truncate(commission, 8);
     this.approverCommissionField.patchValue(commissionTrunc);
-  }
-
-  onChangeFeeCurrencyField() {
-    const fee = this.feeFormCurr.value / this.currencyRate.value;
-    const feeTrunc = truncate(fee, 8);
-    this.feeForm.patchValue(feeTrunc);
   }
 
   filterContacts(value: string): Contact[] {
@@ -259,10 +267,14 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  toggleCustomFee() {
-    this.customFee = !this.customFee;
-    if (!this.customFee) this.onFeeChoose(this.activeButton);
+  onToggleCustomFee(value) {
+    this.customFee = value;
   }
+
+  // toggleCustomFee() {
+  //   this.customFee = !this.customFee;
+  //   if (!this.customFee) this.onFeeChoose(this.activeButton);
+  // }
 
   toggleAdvancedMenu() {
     this.advancedMenu = !this.advancedMenu;
@@ -301,7 +313,7 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  onFeeChoose(value) {
+  onClickFeeChoose(value) {
     let fee: number = 0;
     if (value === 1) {
       fee = this.feeSlow;
@@ -431,8 +443,8 @@ export class SendmoneyComponent implements OnInit {
 
     const fee: number = calcMinFee(data);
     this.feeSlow = fee;
-    this.feeMedium = this.feeSlow * 5;
-    this.feeFast = this.feeMedium * 5;
+    this.feeMedium = this.feeSlow * 2;
+    this.feeFast = this.feeMedium * 2;
 
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
 

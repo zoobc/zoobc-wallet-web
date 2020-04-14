@@ -1,11 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FeeSelectorComponent } from './fee-selector.component';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { DateAgoModule } from 'src/app/pipes/date-ago.module';
-import { HttpClient } from '@angular/common/http';
 import {
   MatCardModule,
   MatCheckboxModule,
@@ -13,6 +7,12 @@ import {
   MatInputModule,
   MatButtonModule,
 } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FeeSelectorComponent } from './fee-selector.component';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { DateAgoModule } from 'src/app/pipes/date-ago.module';
+import { HttpClient } from '@angular/common/http';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(
@@ -26,8 +26,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   declarations: [FeeSelectorComponent],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -42,6 +40,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   exports: [FeeSelectorComponent],
 })

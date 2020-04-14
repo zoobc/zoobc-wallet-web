@@ -145,7 +145,15 @@
           </ng-container>
         </div>
       </div>
-      <fee-selector formControlName="fee"></fee-selector>
+      <fee-selector
+        [group]="formSend"
+        feeName="fee"
+        feeCurrName="feeCurr"
+        [required]="true"
+        [currencyRate]="currencyRate"
+        (onToggleCustomFee)="onToggleCustomFee($event)"
+        (onClickFeeChoose)="onClickFeeChoose($event)"
+      ></fee-selector>
       <!-- <label>{{ 'Fee' | translate }}</label>
       <div class="choose-fee">
         <button
