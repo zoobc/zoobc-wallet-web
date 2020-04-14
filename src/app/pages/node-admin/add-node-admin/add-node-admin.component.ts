@@ -17,7 +17,7 @@ export class AddNodeAdminComponent {
   formAddNodeAdmin: FormGroup;
   ipAddressField = new FormControl('', [
     Validators.required,
-    Validators.pattern('^[\\w.-]+:\\d+$'),
+    Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
   ]);
   constructor(
     private dialogRef: MatDialogRef<AddNodeAdminComponent>,
@@ -36,12 +36,9 @@ export class AddNodeAdminComponent {
       this.isLoading = true;
       const childSeed = this.authSrv.seed;
 
-      const auth: string = zoobc.Poown.createAuth(
-        RequestType.GETPROOFOFOWNERSHIP,
-        childSeed
-      );
+      const auth: string = zoobc.Poown.createAuth(RequestType.GETPROOFOFOWNERSHIP, childSeed);
 
-      zoobc.Poown.request(auth, `//${this.ipAddressField.value}`)
+      zoobc.Poown.request(auth, this.ipAddressField.value)
         .then(async () => {
           let message: string;
           this.isLoading = false;
