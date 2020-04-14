@@ -1,6 +1,18 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
+.amount {
+  .primary-amount {
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .secondary-amount {
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
 .choose-fee {
   border: 1px solid #ddd;
   border-radius: 6px;
