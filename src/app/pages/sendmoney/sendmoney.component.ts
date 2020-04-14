@@ -401,8 +401,4 @@ export class SendmoneyComponent implements OnInit {
   onChangeTimeOut() {
     this.getMinimumFee();
   }
-
-  test() {
-    console.log(this.formSend);
-  }
 }
