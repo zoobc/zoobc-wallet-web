@@ -6,6 +6,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-confirm-passphrase',
@@ -27,24 +28,25 @@ export class ConfirmPassphraseComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private authServ: AuthService,
-    private router: Router
-  ) {
-    if (!history.state.passphrase) router.navigateByUrl('/signup');
-
-    this.words = history.state.passphrase.join(' ');
-    this.passphrase = Object.assign([], history.state.passphrase);
-  }
+    private router: Router,
+    private location: Location
+  ) {}
 
   ngOnInit() {
-    this.prefillHalfPassphrase();
+    if (!history.state.passphrase) {
+      this.location.replaceState('signup');
+      this.location.back();
+
+      this.confirmForm = this.fb.group({ words: this.fb.array([]) });
+    } else {
+      this.words = history.state.passphrase.join(' ');
+      this.passphrase = Object.assign([], history.state.passphrase);
+      this.prefillHalfPassphrase();
+    }
   }
 
   backClicked() {
-    this.router.navigate(['signup'], {
-      state: {
-        passphrase: history.state.passphrase,
-      },
-    });
+    this.location.back();
   }
 
   prefillHalfPassphrase() {
@@ -72,9 +74,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     const prefill = this.prefillPassphrase;
     for (let i = 0; i < this.mnemonicNumWords; i++) {
       this.wordField = <FormArray>this.confirmForm.controls['words'];
-      this.wordField.push(
-        this.fb.group({ word: [prefill[i], Validators.required] })
-      );
+      this.wordField.push(this.fb.group({ word: [prefill[i], Validators.required] }));
     }
   }
 
@@ -86,8 +86,7 @@ export class ConfirmPassphraseComponent implements OnInit {
         .replace(/\s\s+/g, ' ')
         .toLowerCase();
 
-      if (passphraseField != this.words)
-        this.confirmForm.setErrors({ mnemonic: true });
+      if (passphraseField != this.words) this.confirmForm.setErrors({ mnemonic: true });
     } else this.confirmForm.setErrors({ required: true });
   }
 
