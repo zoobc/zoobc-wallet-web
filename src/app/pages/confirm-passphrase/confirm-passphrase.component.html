@@ -1,9 +1,7 @@
 <div class="confirm-passphrase-container">
   <h2 class="mat-h2">{{ 'Confirm Your Passphrase' | translate }}</h2>
   <p class="mat-body-1">
-    {{
-      'Fill The Missing Phrase Word to Complete Create New Wallet!' | translate
-    }}
+    {{ 'Fill The Missing Phrase Word to Complete Create New Wallet!' | translate }}
   </p>
   <form [formGroup]="confirmForm" (submit)="openCreatePin()">
     <div class="row" formArrayName="words">
@@ -23,10 +21,10 @@
       </mat-error>
     </div>
     <div class="btn-grouped">
-      <a mat-flat-button color="warn" routerLink="/signup">
+      <button mat-flat-button color="warn" (click)="backClicked()">
         <i matPrefix class="fas fa-arrow-left"></i>
         <span class="text">{{ 'Back' | translate }}</span>
-      </a>
+      </button>
       <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
         <i matPrefix class="fas fa-check"></i>
         <span class="text">{{ 'Confirm' | translate }}</span>

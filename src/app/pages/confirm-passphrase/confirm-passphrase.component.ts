@@ -45,6 +45,10 @@ export class ConfirmPassphraseComponent implements OnInit {
     }
   }
 
+  backClicked() {
+    this.location.back();
+  }
+
   prefillHalfPassphrase() {
     // removing some words of the passphrase
     this.prefillPassphrase = this.passphrase;
