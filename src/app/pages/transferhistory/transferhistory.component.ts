@@ -5,6 +5,7 @@ import zoobc, {
   TransactionListParams,
   toTransactionListWallet,
   MempoolListParams,
+  toUnconfirmedSendMoneyWallet,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -26,16 +27,13 @@ export class TransferhistoryComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  constructor(
-    private authServ: AuthService,
-    private contactServ: ContactService
-  ) {}
+  constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
   ngOnInit() {
     this.getTx(true);
   }
 
-  getTx(reload: boolean = false) {
+  async getTx(reload: boolean = false) {
     if (!this.isLoading) {
       // 72 is transaction item's height
       const perPage = Math.ceil(window.outerHeight / 72);
@@ -48,7 +46,7 @@ export class TransferhistoryComponent implements OnInit {
       this.isLoading = true;
       this.isError = false;
 
-      const params: TransactionListParams = {
+      const txParam: TransactionListParams = {
         address: this.address,
         transactionType: 1,
         pagination: {
@@ -56,29 +54,29 @@ export class TransferhistoryComponent implements OnInit {
           limit: perPage,
         },
       };
-      zoobc.Transactions.getList(params)
-        .then(res => {
-          const tx = toTransactionListWallet(res, this.address);
-          tx.transactions.map(recent => {
-            recent['alias'] =
-              this.contactServ.getContact(recent.address).alias || '';
-          });
-          this.total = tx.total;
-          if (reload) {
-            this.accountHistory = tx.transactions;
-            const params: MempoolListParams = { address: this.address };
-            return zoobc.Mempool.getList(params);
-          } else {
-            this.accountHistory = this.accountHistory.concat(tx.transactions);
-          }
-        })
-        .catch(e => {
-          this.isError = true;
-          this.unconfirmTx = null;
-        })
-        .finally(() => {
-          this.isLoading = false;
+
+      try {
+        let tx = await zoobc.Transactions.getList(txParam).then(res =>
+          toTransactionListWallet(res, this.address)
+        );
+        tx.transactions.map(recent => {
+          recent['alias'] = this.contactServ.get(recent.address).alias || '';
         });
+        this.total = tx.total;
+        this.accountHistory = reload ? tx.transactions : this.accountHistory.concat(tx.transactions);
+
+        if (reload) {
+          const mempoolParams: MempoolListParams = { address: this.address };
+          this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(res =>
+            toUnconfirmedSendMoneyWallet(res, this.address)
+          );
+        }
+      } catch {
+        this.isError = true;
+        this.unconfirmTx = null;
+      } finally {
+        this.isLoading = false;
+      }
     }
   }
 

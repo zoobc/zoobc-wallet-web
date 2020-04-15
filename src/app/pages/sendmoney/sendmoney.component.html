@@ -4,27 +4,8 @@
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)"></account-selector>
-
-      <label>{{ 'Recepient Address' | translate }}</label>
-      <mat-form-field appearance="outline" class="block" color="accent">
-        <input matInput placeholder="{{ 'Recepient Address' | translate }}..." aria-label="contacts"
-          [matAutocomplete]="auto" formControlName="recipient" (keyup)="onChangeRecipient()"
-          (blur)="isAddressInContacts()" />
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option disabled>
-            <span class="mat-caption">
-              {{
-                'Search address from your address book or your own account'
-                  | translate
-              }}
-            </span>
-          </mat-option>
-          <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
-            <span>{{ contact.alias }}</span> |
-            <small>{{ contact.address }}</small>
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+      <input-address label="{{ 'Recepient Address' | translate }}" classList="block" formControlName="recipient"
+        placeholder="{{ 'Recepient Address' | translate }}..."></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
           {{ 'Recepient is required' | translate }}
@@ -54,35 +35,13 @@
           </mat-error>
         </ng-container>
       </ng-container>
-
-      <div class="zbc-form-item">
-        <div class="amount text-right">
-          <div class="primary-amount">
-            {{ amountForm.value | number: '0.0-8' }} ZBC
-          </div>
-          <div class="secondary-amount">
-            {{ amountCurrencyForm.value | number: '0.0-2' }}
-            {{ currencyRate.name }}
-          </div>
-        </div>
-      </div>
-
-      <label>{{ 'Coin Amount' | translate }}</label>
+      <input-amount [group]=formSend typeCoinName="typeCoin" amountCurrencyName="amountCurrency" amountName="amount"
+        [displayConverter]="true" [currencyRate]="currencyRate" label="{{ 'Coin Amount' | translate }}">
+      </input-amount>
       <div class="row">
-        <div class="col-4 col-sm-3">
-          <mat-form-field appearance="outline" color="accent" class="block">
-            <mat-select [(value)]="typeCoin">
-              <mat-option value="ZBC">ZBC</mat-option>
-              <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+        <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
-          <mat-form-field appearance="outline" class="block" *ngIf="typeCoin === 'ZBC'" color="accent">
-            <input matInput type="number" formControlName="amount" placeholder="{{ 'Coin Amount' | translate }}"
-              (change)="onChangeAmountField()" (keyup)="onChangeAmountField()" />
-          </mat-form-field>
-          <ng-container *ngIf="amountForm.touched && typeCoin === 'ZBC'">
+          <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
             <mat-error *ngIf="amountForm.hasError('required')">
               {{ 'Amount is required' | translate }}
             </mat-error>
@@ -90,12 +49,7 @@
               {{ 'Minimum amount is' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
-          <mat-form-field *ngIf="typeCoin === 'Fiat'" appearance="outline" class="block" color="accent">
-            <input matInput type="number" formControlName="amountCurrency"
-              placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}" (change)="onChangeAmountCurrencyField()"
-              (keyup)="onChangeAmountCurrencyField()" />
-          </mat-form-field>
-          <ng-container *ngIf="amountCurrencyForm.touched && typeCoin === 'Fiat'">
+          <ng-container *ngIf="amountCurrencyForm.touched && typeCoinField.value === 'Fiat'">
             <mat-error *ngIf="amountCurrencyForm.hasError('required')">
               {{ 'Amount is required' | translate }}
             </mat-error>
@@ -208,56 +162,26 @@
       <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
         {{ 'Escrow Transaction' }}
       </mat-checkbox>
-
       <div class="zbc-form-item" *ngIf="advancedMenu">
-        <label>{{ 'Approver Address' | translate }}</label>
+        <input-address label="{{ 'Approver Address' | translate }}" classList="block" formControlName="addressApprover"
+          placeholder="{{ 'Approver Address' | translate }}..."></input-address>
+        <ng-container *ngIf="addressApproverField.touched">
+          <mat-error *ngIf="addressApproverField.hasError('required')">
+            {{ 'Address for Approver is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="addressApproverField.hasError('invalidAddress')">
+            {{ 'ZBC Address is invalid' | translate }}
+          </mat-error>
+        </ng-container>
+        <input-amount [group]=formSend typeCoinName="typeCommission" amountCurrencyName="approverCommissionCurr"
+          amountName="approverCommission" [displayConverter]="false" [currencyRate]="currencyRate"
+          label="{{ 'Approver Commission' | translate }}">
+        </input-amount>
         <div class="row">
-          <mat-form-field appearance="outline" class="block" color="accent">
-            <input matInput placeholder="{{ 'Approver Address' | translate }}..." aria-label="contacts"
-              [matAutocomplete]="auto" formControlName="addressApprover" (keyup)="onChangeAddressApprover()"
-              (blur)="isAddressInContacts()" />
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option disabled>
-                <span class="mat-caption">
-                  {{
-                    'Search address from your address book or your own account'
-                      | translate
-                  }}
-                </span>
-              </mat-option>
-              <mat-option *ngFor="let contact of filteredContacts | async" [value]="contact.address">
-                <span>{{ contact.alias }}</span> |
-                <small>{{ contact.address }}</small>
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <ng-container *ngIf="addressApproverField.touched">
-            <mat-error *ngIf="addressApproverField.hasError('required')">
-              {{ 'Address for Approver is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="addressApproverField.hasError('invalidAddress')">
-              {{ 'ZBC Address is invalid' | translate }}
-            </mat-error>
-          </ng-container>
-        </div>
-        <label>{{ 'Approver Commission' | translate }}</label>
-        <div class="row">
-          <div class="col-4 col-sm-3">
-            <mat-form-field appearance="outline" color="accent" class="block">
-              <mat-select [(value)]="typeCommission">
-                <mat-option value="ZBC">ZBC</mat-option>
-                <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+          <div class="col-4 col-sm-3">&nbsp;</div>
           <div class="col-8 col-sm-9">
-            <mat-form-field appearance="outline" class="block" *ngIf="typeCommission === 'ZBC'" color="accent">
-              <input matInput type="number" formControlName="approverCommission"
-                placeholder="{{ 'Approver Commission' | translate }}" (change)="onChangeCommisssionField()"
-                (keyup)="onChangeCommisssionField()" />
-            </mat-form-field>
             <ng-container *ngIf="
-                approverCommissionField.touched && typeCommission === 'ZBC'
+                approverCommissionField.touched && typeCommissionField.value === 'ZBC'
               ">
               <mat-error *ngIf="approverCommissionField.hasError('required')">
                 {{ 'Commission for approver is required' | translate }}
@@ -266,13 +190,8 @@
                 {{ 'Minimum commission is' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
-            <mat-form-field appearance="outline" class="block" *ngIf="typeCommission === 'Fiat'" color="accent">
-              <input matInput type="number" formControlName="approverCommissionCurr"
-                placeholder="{{ 'Commission Currency' | translate }}" (change)="onChangeCommisssionCurrField()"
-                (keyup)="onChangeCommisssionCurrField()" />
-            </mat-form-field>
             <ng-container *ngIf="
-                approverCommissionCurrField.touched && typeCommission === 'Fiat'
+                approverCommissionCurrField.touched && typeCommissionField.value === 'Fiat'
               ">
               <mat-error *ngIf="approverCommissionCurrField.hasError('required')">
                 {{ 'Commission for approver is required' | translate }}

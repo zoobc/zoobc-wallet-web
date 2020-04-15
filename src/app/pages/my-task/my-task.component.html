@@ -1,0 +1,26 @@
+<div class="my-task-container">
+  <h2 class="mat-h2">
+    {{ 'My Tasks' | translate }}
+  </h2>
+  <mat-card style="padding: 0;">
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Escrow Approval">
+        <div class="text-right">
+          <button mat-icon-button class="reload-button" (click)="getEscrowTx(true)">
+            <i class="fa fa-redo-alt"></i>
+          </button>
+          <label class="block-height" *ngIf="!isLoadingBlockHeight"><b>{{ 'Block Height' | translate }} :
+              {{blockHeight | number}}</b></label>
+        </div>
+        <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()"
+          [scrollWindow]="false" [infiniteScrollContainer]="'.mat-drawer-content'" [fromRoot]="true">
+          <app-escrow-transactions [escrowTransactionsData]="escrowTransactions" [withDetail]="true"
+            [isLoading]="isLoading" [isError]="isError" (refresh)="getEscrowTx(true)"></app-escrow-transactions>
+        </div>
+      </mat-tab>
+      <mat-tab label="Multi Signature - Coming Soon">
+        <app-multisig-transaction></app-multisig-transaction>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>
