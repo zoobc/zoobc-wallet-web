@@ -1,0 +1,109 @@
+<div class="confirmation-dialog">
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <div class="title">{{ 'Confirm Send Money' | translate }}</div>
+    </div>
+    <div class="col-12 col-sm-6 text-right">
+      <a class="brand">
+        <div class="title-wallet">
+          <p class="text">ZooBC Wallet</p>
+          <img src="../../../../assets/img/zbc-color.svg" alt="" />
+        </div>
+      </a>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="content">
+    <div class="row">
+      <div class="col-12 col-sm-6 test">
+        <div class="label">{{ 'From' | translate }}:</div>
+        <div class="address">
+          <wallet-address
+            [value]="account.address"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+        <div class="label">{{ 'Recepient' | translate }}:</div>
+        <div class="address">
+          <wallet-address
+            [value]="form.recipient"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+        <ng-container *ngIf="advancedMenu">
+          <div class="label">{{ 'Approver Address' | translate }}:</div>
+          <div class="address">
+            <wallet-address
+              [value]="form.addressApprover"
+              [copyButton]="true"
+            ></wallet-address>
+          </div>
+          <div class="label">{{ 'Approver Commission' | translate }}:</div>
+          <div class="amount">
+            <div class="zbc">
+              {{ form.approverCommission | number: '0.0-8' }} ZBC
+            </div>
+            <div class="currency">
+              {{ form.approverCommissionCurr | number: '0.0-2' }}
+              {{ currencyRateName }}
+            </div>
+          </div>
+          <div class="label">{{ 'Timeout' | translate }}:</div>
+          <div class="amount">
+            {{ form.timeout }}
+          </div>
+          <div class="label">{{ 'Instruction' | translate }}:</div>
+          <div class="instruction">
+            {{ form.instruction }}
+          </div>
+        </ng-container>
+      </div>
+      <div class="col-12 col-sm-6 text-right">
+        <div class="label">{{ 'Amount' | translate }}:</div>
+        <div class="amount">
+          <div class="zbc">{{ form.amount | number: '0.0-8' }} ZBC</div>
+          <div class="currency">
+            {{ form.amountCurrency | number: '0.0-2' }}
+            {{ currencyRateName }}
+          </div>
+        </div>
+        <div class="label">
+          <span>Fee</span>
+          <span *ngIf="!customFee"> - {{ kindFee }}</span>
+          <span>:</span>
+        </div>
+        <div class="amount">
+          <div class="zbc">{{ form.fee | number: '0.0-8' }} ZBC</div>
+          <div class="currency">
+            {{ form.feeCurr | number: '0.0-2' }} {{ currencyRateName }}
+          </div>
+        </div>
+        <div class="label">{{ 'Total' | translate }} :</div>
+        <div class="total">
+          <div class="zbc">
+            {{ form.amount + form.fee | number: '0.0-8' }} ZBC
+          </div>
+          <div class="currency">
+            {{ form.amountCurrency + form.feeCurr | number: '0.0-2' }}
+            {{ currencyRateName }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="text-right" style="margin-top: 8px">
+    <button
+      mat-flat-button
+      color="warn"
+      (click)="closeDialog()"
+      style="margin-right: 8px"
+    >
+      {{ 'Cancel' | translate }}
+    </button>
+    <button mat-flat-button color="primary" (click)="onOpenPinDialog()">
+      {{ 'Confirm' | translate }}
+    </button>
+  </div>
+</div>
