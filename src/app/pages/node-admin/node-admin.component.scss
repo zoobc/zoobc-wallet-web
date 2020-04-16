@@ -6,17 +6,21 @@
     background: $primary-gradient !important;
     color: white;
     margin-bottom: 16px;
+
     &.error {
       background: $error-gradient !important;
     }
+
     .icon {
       width: 56px;
+
       .label {
         font-size: 13px;
         color: $white1;
         text-align: center;
         padding-top: 4px;
       }
+
       i {
         padding: 16px;
         font-size: 22px;
@@ -27,17 +31,21 @@
         background-color: rgba($color: white, $alpha: 0.4);
       }
     }
+
     .status {
       text-align: right;
       width: calc(100% - 56px);
+
       .label {
         color: $white1;
         font-size: 14px;
         margin-bottom: 4px;
       }
+
       .value {
         font-size: 14px;
       }
+
       .mat-flat-button {
         background-color: $white3;
         margin-top: 8px;
@@ -48,6 +56,7 @@
       }
     }
   }
+
   .node-spec,
   .registered-node {
     .label {
@@ -55,14 +64,17 @@
       color: $black3;
       margin: 0 0 4px 0;
     }
+
     .value {
       font-size: 14px;
       color: $black1;
       margin: 0 0 16px 0;
     }
+
     .value.big {
       font-size: 16px;
     }
+
     .pending-label {
       background-color: map-get($accent, 500);
       border-radius: 16px;
@@ -79,10 +91,12 @@
   flex-direction: column;
   align-items: center;
   color: $black3;
+
   i {
     font-size: 32px;
     margin: 8px 0;
   }
+
   .message {
     font-size: 1.1rem;
     margin: 0.5rem 0;
@@ -93,8 +107,10 @@
   .percentage {
     text-align: center;
     position: relative;
+
     .mat-progress-spinner {
       margin: 0 auto;
+
       &::before {
         content: '';
         position: absolute;
@@ -105,6 +121,7 @@
         border-radius: 50%;
         background: #ccc;
       }
+
       &::after {
         content: '';
         position: absolute;
@@ -117,6 +134,7 @@
         background: white;
       }
     }
+
     .label {
       position: absolute;
       top: calc(50% - 7px);
@@ -126,6 +144,7 @@
       color: $black2;
     }
   }
+
   .cpu-number {
     text-align: center;
     font-size: 14px;
@@ -146,11 +165,13 @@
 .memory-usage {
   display: flex;
   flex-wrap: wrap;
+
   .label {
     width: 30%;
     font-size: 14px;
     color: $black2;
   }
+
   .usage {
     width: 70%;
     text-align: right;
@@ -158,6 +179,7 @@
     font-weight: bold;
     color: $black2;
   }
+
   .persentage-container {
     position: relative;
     height: 8px;
@@ -165,6 +187,7 @@
     margin-top: 4px;
     border-radius: 6px;
     background-color: #ccc;
+
     .percentage {
       background-color: map-get($primary, 600);
       height: 8px;
@@ -178,9 +201,52 @@
     margin-right: 8px;
     color: $black3;
   }
+
   .nodeadmin-menu-container {
     overflow-y: scroll;
     overflow-x: hidden;
     max-height: 150px;
   }
+}
+
+.confirmation-dialog {
+  .content {
+    margin-top: 10px;
+    word-break: break-all;
+    margin-bottom: 10px;
+    text-align: center;
+
+    .icon-check {
+      color: #a5dc86;
+    }
+
+    .title {
+      font-size: 24px !important;
+      font-weight: 400 !important;
+      color: $black2;
+      text-align: center;
+      max-width: 100%;
+    }
+
+    .sub-title {
+      font-size: 1.125em;
+      color: $black3;
+      line-height: normal;
+      font-weight: 400;
+      margin-top: -10px;
+    }
+
+    .address {
+      color: $black1;
+      font-size: 1.3em;
+      margin-top: -20px;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+
+
+
+  }
+
 }
