@@ -31,10 +31,7 @@ export class SendmoneyComponent implements OnInit {
 
   currencyRate: Currency;
 
-  feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 2;
-  feeFast = this.feeMedium * 2;
-  activeButton: number = 2;
+  minFee = environment.fee;
   kindFee: string;
 
   formSend: FormGroup;
@@ -42,7 +39,7 @@ export class SendmoneyComponent implements OnInit {
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.feeMedium, [Validators.required, Validators.min(this.feeSlow)]);
+  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
   addressApproverField = new FormControl('', Validators.required);
@@ -116,12 +113,8 @@ export class SendmoneyComponent implements OnInit {
 
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-      // set default fee to medium
-      this.onChangeFeeField();
-      // convert fee to current currency
-      this.onClickFeeChoose(2);
 
-      const minCurrency = truncate(this.feeSlow * rate.value, 8);
+      const minCurrency = truncate(this.minFee * rate.value, 8);
 
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
@@ -153,18 +146,6 @@ export class SendmoneyComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-  }
-
-  onChangeFeeField() {
-    const fee = truncate(this.feeForm.value, 8);
-    const feeCurrency = fee * this.currencyRate.value;
-    this.feeFormCurr.patchValue(feeCurrency);
-  }
-
-  onChangeFeeCurrencyField() {
-    const fee = this.feeFormCurr.value / this.currencyRate.value;
-    const feeTrunc = truncate(fee, 8);
-    this.feeForm.patchValue(feeTrunc);
   }
 
   filterContacts(value: string): Contact[] {
@@ -199,10 +180,6 @@ export class SendmoneyComponent implements OnInit {
       this.aliasField.enable();
       this.saveAddress = true;
     }
-  }
-
-  onToggleCustomFee(value) {
-    this.customFee = value;
   }
 
   toggleAdvancedMenu() {
@@ -243,24 +220,8 @@ export class SendmoneyComponent implements OnInit {
   }
 
   onClickFeeChoose(value) {
-    let fee: number = 0;
-    if (value === 1) {
-      fee = this.feeSlow;
-      this.kindFee = 'Slow';
-    } else if (value === 2) {
-      fee = this.feeMedium;
-      this.kindFee = 'Average';
-    } else {
-      fee = this.feeFast;
-      this.kindFee = 'Fast';
-    }
-
-    const feeCurrency = fee * this.currencyRate.value;
-    this.formSend.patchValue({
-      fee: fee,
-      feeCurr: feeCurrency,
-    });
-    this.activeButton = value;
+    this.kindFee = value;
+    console.log('Kindfee', value);
   }
 
   closeDialog() {
@@ -371,30 +332,13 @@ export class SendmoneyComponent implements OnInit {
     };
 
     const fee: number = calcMinFee(data);
-    this.feeSlow = fee;
-    this.feeMedium = this.feeSlow * 2;
-    this.feeFast = this.feeMedium * 2;
+    this.minFee = fee;
 
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
 
     const feeCurrency = truncate(fee * this.currencyRate.value, 8);
     this.feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
     this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
-
-    if (this.customFee == false) {
-      let value: number = 0;
-      switch (this.kindFee) {
-        case 'Slow':
-          value = this.feeSlow;
-          break;
-        case 'Fast':
-          value = this.feeFast;
-          break;
-        default:
-          value = this.feeMedium;
-      }
-      this.feeForm.patchValue(value);
-    }
   }
 
   onChangeTimeOut() {

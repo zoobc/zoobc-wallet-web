@@ -4,8 +4,12 @@
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)"></account-selector>
-      <input-address label="{{ 'Recepient Address' | translate }}" classList="block" formControlName="recipient"
-        placeholder="{{ 'Recepient Address' | translate }}..."></input-address>
+      <input-address
+        label="{{ 'Recepient Address' | translate }}"
+        classList="block"
+        formControlName="recipient"
+        placeholder="{{ 'Recepient Address' | translate }}..."
+      ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
           {{ 'Recepient is required' | translate }}
@@ -27,12 +31,7 @@
       <ng-container *ngIf="saveAddress">
         <label>{{ 'Name' | translate }}</label>
         <mat-form-field appearance="outline" color="accent" class="block">
-          <input
-            matInput
-            type="text"
-            formControlName="alias"
-            placeholder="{{ 'Name' | translate }}"
-          />
+          <input matInput type="text" formControlName="alias" placeholder="{{ 'Name' | translate }}" />
         </mat-form-field>
         <ng-container *ngIf="aliasField.touched">
           <mat-error *ngIf="aliasField.hasError('required')">
@@ -40,8 +39,15 @@
           </mat-error>
         </ng-container>
       </ng-container>
-      <input-amount [group]=formSend typeCoinName="typeCoin" amountCurrencyName="amountCurrency" amountName="amount"
-        [displayConverter]="true" [currencyRate]="currencyRate" label="{{ 'Coin Amount' | translate }}">
+      <input-amount
+        [group]="formSend"
+        typeCoinName="typeCoin"
+        amountCurrencyName="amountCurrency"
+        amountName="amount"
+        [displayConverter]="true"
+        [currencyRate]="currencyRate"
+        label="{{ 'Coin Amount' | translate }}"
+      >
       </input-amount>
       <div class="row">
         <div class="col-4 col-sm-3">&nbsp;</div>
@@ -55,15 +61,11 @@
             </mat-error>
           </ng-container>
           <ng-container *ngIf="amountCurrencyForm.touched && typeCoinField.value === 'Fiat'">
-
             <mat-error *ngIf="amountCurrencyForm.hasError('required')">
               {{ 'Amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{
-                'Minimum amount in ZBC must be ZBC'
-                  | translate: { val: '0.00000001' }
-              }}
+              {{ 'Minimum amount in ZBC must be ZBC' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
         </div>
@@ -72,9 +74,10 @@
         [group]="formSend"
         feeName="fee"
         feeCurrName="feeCurr"
+        [minFee]="minFee"
+        [timeoutField]="timeoutField.value"
         [required]="true"
         [currencyRate]="currencyRate"
-        (onToggleCustomFee)="onToggleCustomFee($event)"
         (onClickFeeChoose)="onClickFeeChoose($event)"
       ></fee-selector>
 
@@ -85,8 +88,12 @@
         {{ 'Escrow Transaction' }}
       </mat-checkbox>
       <div class="zbc-form-item" *ngIf="advancedMenu">
-        <input-address label="{{ 'Approver Address' | translate }}" classList="block" formControlName="addressApprover"
-          placeholder="{{ 'Approver Address' | translate }}..."></input-address>
+        <input-address
+          label="{{ 'Approver Address' | translate }}"
+          classList="block"
+          formControlName="addressApprover"
+          placeholder="{{ 'Approver Address' | translate }}..."
+        ></input-address>
         <ng-container *ngIf="addressApproverField.touched">
           <mat-error *ngIf="addressApproverField.hasError('required')">
             {{ 'Address for Approver is required' | translate }}
@@ -95,17 +102,20 @@
             {{ 'ZBC Address is invalid' | translate }}
           </mat-error>
         </ng-container>
-        <input-amount [group]=formSend typeCoinName="typeCommission" amountCurrencyName="approverCommissionCurr"
-          amountName="approverCommission" [displayConverter]="false" [currencyRate]="currencyRate"
-          label="{{ 'Approver Commission' | translate }}">
+        <input-amount
+          [group]="formSend"
+          typeCoinName="typeCommission"
+          amountCurrencyName="approverCommissionCurr"
+          amountName="approverCommission"
+          [displayConverter]="false"
+          [currencyRate]="currencyRate"
+          label="{{ 'Approver Commission' | translate }}"
+        >
         </input-amount>
         <div class="row">
           <div class="col-4 col-sm-3">&nbsp;</div>
           <div class="col-8 col-sm-9">
-
-            <ng-container *ngIf="
-                approverCommissionField.touched && typeCommissionField.value === 'ZBC'
-              ">
+            <ng-container *ngIf="approverCommissionField.touched && typeCommissionField.value === 'ZBC'">
               <mat-error *ngIf="approverCommissionField.hasError('required')">
                 {{ 'Commission for approver is required' | translate }}
               </mat-error>
@@ -114,17 +124,12 @@
               </mat-error>
             </ng-container>
 
-            <ng-container *ngIf="
-                approverCommissionCurrField.touched && typeCommissionField.value === 'Fiat'
-              ">
+            <ng-container *ngIf="approverCommissionCurrField.touched && typeCommissionField.value === 'Fiat'">
               <mat-error *ngIf="approverCommissionCurrField.hasError('required')">
                 {{ 'Commission for approver is required' | translate }}
               </mat-error>
               <mat-error *ngIf="approverCommissionCurrField.hasError('min')">
-                {{
-                  'Minimum Commission for approver in ZBC must be ZBC'
-                    | translate: { val: '0.00000001' }
-                }}
+                {{ 'Minimum Commission for approver in ZBC must be ZBC' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
           </div>
@@ -168,9 +173,7 @@
         class="block button-margin"
         [disabled]="formSend.invalid || isLoading || isError"
       >
-        <span *ngIf="isLoading">
-          <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
-        </span>
+        <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
         <span>{{ 'Send' | translate }}</span>
       </button>
     </form>
@@ -198,17 +201,11 @@
         <div class="col-12 col-sm-6 test">
           <div class="label">{{ 'From' | translate }}:</div>
           <div class="address">
-            <wallet-address
-              [value]="account.address"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="account.address" [copyButton]="true"></wallet-address>
           </div>
           <div class="label">{{ 'Recepient' | translate }}:</div>
           <div class="address">
-            <wallet-address
-              [value]="recipientForm.value"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="recipientForm.value" [copyButton]="true"></wallet-address>
           </div>
         </div>
         <div class="col-12 col-sm-6 text-right">
@@ -227,19 +224,13 @@
           </div>
           <div class="amount">
             <div class="zbc">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
-            <div class="currency">
-              {{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}
-            </div>
+            <div class="currency">{{ feeFormCurr.value | number: '0.0-2' }} {{ currencyRate.name }}</div>
           </div>
           <div class="label">{{ 'Total' | translate }} :</div>
           <div class="total">
-            <div class="zbc">
-              {{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC
-            </div>
+            <div class="zbc">{{ amountForm.value + feeForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{
-                amountCurrencyForm.value + feeFormCurr.value | number: '0.0-2'
-              }}
+              {{ amountCurrencyForm.value + feeFormCurr.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -249,12 +240,7 @@
     <mat-divider></mat-divider>
 
     <div class="text-right" style="margin-top: 8px">
-      <button
-        mat-flat-button
-        color="warn"
-        (click)="closeDialog()"
-        style="margin-right: 8px"
-      >
+      <button mat-flat-button color="warn" (click)="closeDialog()" style="margin-right: 8px">
         {{ 'Cancel' | translate }}
       </button>
       <button mat-flat-button color="primary" (click)="onOpenPinDialog()">

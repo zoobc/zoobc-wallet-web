@@ -50,20 +50,16 @@
   </button>
 </div>
 <div style="margin-bottom: 8px;">
-  <mat-checkbox
-    class="checkbox-margin"
-    (click)="toggleCustomFee()"
-    (change)="onToggleCustomFee.emit($event.checked)"
-  >
+  <mat-checkbox class="checkbox-margin" (click)="toggleCustomFee()">
     {{ 'Custom Fee' | translate }}
   </mat-checkbox>
 </div>
 
 <div class="zbc-form-item" *ngIf="customFee">
   <div class="amount text-right">
-    <div class="primary-amount">{{ group.get('fee').value | number: '0.0-8' }} ZBC</div>
+    <div class="primary-amount">{{ group.get(feeName).value | number: '0.0-8' }} ZBC</div>
     <div class="secondary-amount">
-      {{ group.get('feeCurr').value | number: '0.0-2' }} {{ currencyRate.name }}
+      {{ group.get(feeCurrName).value | number: '0.0-2' }} {{ currencyRate.name }}
     </div>
   </div>
   <label>{{ 'Custom Fee' | translate }}</label>
@@ -88,11 +84,11 @@
             (keyup)="onChangeFeeField($event.target.value)"
           />
         </mat-form-field>
-        <ng-container *ngIf="this.group.get('fee').touched && typeFee === 'ZBC'">
-          <mat-error *ngIf="this.group.get('fee').hasError('required')">
+        <ng-container *ngIf="this.group.get(this.feeName).touched && typeFee === 'ZBC'">
+          <mat-error *ngIf="this.group.get(this.feeName).hasError('required')">
             {{ 'Fee is required' | translate }}
           </mat-error>
-          <mat-error *ngIf="this.group.get('fee').hasError('min')">
+          <mat-error *ngIf="this.group.get(this.feeName).hasError('min')">
             {{ 'Minimum fee is' | translate: { val: feeSlow } }}
           </mat-error>
         </ng-container>
@@ -106,11 +102,11 @@
             (keyup)="onChangeFeeCurrencyField($event.target.value)"
           />
         </mat-form-field>
-        <ng-container *ngIf="this.group.get('feeCurr').touched && typeFee === 'Fiat'">
-          <mat-error *ngIf="this.group.get('feeCurr').hasError('required')">
+        <ng-container *ngIf="this.group.get(this.feeCurrName).touched && typeFee === 'Fiat'">
+          <mat-error *ngIf="this.group.get(this.feeCurrName).hasError('required')">
             {{ 'Fee is required' | translate }}
           </mat-error>
-          <mat-error *ngIf="this.group.get('feeCurr').hasError('min')">
+          <mat-error *ngIf="this.group.get(this.feeCurrName).hasError('min')">
             {{ 'Minimum amount of fee in ZBC must be ZBC' | translate: { val: feeSlow } }}
           </mat-error>
         </ng-container>
