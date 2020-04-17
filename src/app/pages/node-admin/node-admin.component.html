@@ -175,11 +175,7 @@
       <div class="row">
         <div class="col-6 col-sm-3 cpu-usage" *ngFor="let cpu of hwInfo.cpuinformationList; let i = index">
           <div class="percentage">
-            <mat-progress-spinner
-              [value]="cpu.usedpercent"
-              diameter="80"
-              color="primary"
-            ></mat-progress-spinner>
+            <mat-progress-spinner [value]="cpu.usedpercent" diameter="80" color="primary"></mat-progress-spinner>
             <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
           </div>
           <div class="cpu-number">CPU {{ i + 1 }}</div>
@@ -265,3 +261,23 @@
   </mat-card>
   <br />
 </div>
+
+<ng-template #popupPubKey>
+  <div class="confirmation-dialog">
+    <div class="content">
+      <div class="row">
+        <div class="col-12">
+          <i class="far fa-check-circle fa-7x icon-check"></i>
+          <h2 class="title">Success</h2>
+          <h4 class="sub-title">New Public Key Address</h4>
+          <div class="address">
+            <wallet-address [center]="true" [value]="nodePublicKey" [copyButton]="true"></wallet-address>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center footer" style="margin-top: 10px">
+      <button (click)="onCloseDialog()" mat-flat-button class="btncustom"> {{'Ok'}} </button>
+    </div>
+  </div>
+</ng-template>
