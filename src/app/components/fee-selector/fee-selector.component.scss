@@ -1,0 +1,82 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.amount {
+  .primary-amount {
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .secondary-amount {
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+  }
+}
+
+.choose-fee {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin: 4px 0 8px 0;
+
+  button {
+    border-radius: 0;
+    margin-left: -1px;
+    width: calc(33.33333333% + 2px);
+    text-transform: none;
+    padding: 8px;
+    background-color: transparent;
+
+    .fee-button {
+      display: flex;
+      flex-flow: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+
+      .label {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 16px;
+        margin-bottom: 8px;
+        color: $black2;
+      }
+
+      .zbc-currency,
+      .fiat-currency {
+        font-size: 13px;
+        line-height: 18px;
+      }
+    }
+  }
+
+  .fee-choosen:enabled {
+    color: white;
+    background-color: map-get($primary, 600);
+
+    .label {
+      color: white !important;
+    }
+  }
+
+  display: flex;
+  justify-content: stretch;
+}
+
+form {
+  .row {
+    margin: 0 -4px;
+
+    [class^='col'] {
+      padding: 0 4px;
+    }
+  }
+
+  .address-alias {
+    color: $black2;
+  }
+
+  .block-height {
+    display: block;
+    text-align: right;
+    color: map-get($accent, 500);
+  }
+}
