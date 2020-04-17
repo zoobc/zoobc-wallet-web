@@ -73,14 +73,11 @@ import { MultisigTransactionModule } from './components/multisig-transaction/mul
 import { FeeSelectorModule } from './components/fee-selector/fee-selector.module';
 import { InputAddressModule } from './components/input-address/input-address.module';
 import { InputAmountModule } from './components/input-amount/input-amount.module';
+import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-send.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(
-    httpClient,
-    './assets/languages/locales/',
-    '.json'
-  );
+  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 
 export function getLanguage(languageServ: LanguageService) {
@@ -115,6 +112,7 @@ export function getLanguage(languageServ: LanguageService) {
     EditAccountComponent,
     AddNodeAdminComponent,
     MyTaskComponent,
+    ConfirmSendComponent,
   ],
   imports: [
     BrowserModule,
@@ -191,6 +189,7 @@ export function getLanguage(languageServ: LanguageService) {
     RevealPassphraseComponent,
     EditAccountComponent,
     AddNodeAdminComponent,
+    ConfirmSendComponent,
   ],
 })
 export class AppModule {}

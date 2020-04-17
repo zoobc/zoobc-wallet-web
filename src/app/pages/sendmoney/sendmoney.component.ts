@@ -14,6 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
+import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 
 @Component({
   selector: 'app-sendmoney',
@@ -26,8 +27,6 @@ export class SendmoneyComponent implements OnInit {
   contacts: Contact[];
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
-
-  @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
 
   currencyRate: Currency;
 
@@ -125,8 +124,6 @@ export class SendmoneyComponent implements OnInit {
     this.getAccounts();
 
     this.getBlockHeight();
-
-    // this.watchEscrowField();
   }
 
   ngOnDestroy() {
@@ -192,9 +189,23 @@ export class SendmoneyComponent implements OnInit {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
-      this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+      this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
-        data: this.formSend.value,
+        data: {
+          form: this.formSend.value,
+          customFee: this.customFee,
+          kindFee: this.kindFee,
+          advancedMenu: this.advancedMenu,
+          account: this.account,
+          currencyName: this.currencyRate.name,
+          saveAddress: this.saveAddress,
+          alias: this.aliasField.value,
+        },
+      });
+      this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
+        if (onConfirm) {
+          this.onOpenPinDialog();
+        }
       });
     } else {
       let message: string;
@@ -213,7 +224,6 @@ export class SendmoneyComponent implements OnInit {
 
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {
-        this.sendMoneyRefDialog.close();
         this.onSendMoney();
       }
     });
@@ -222,10 +232,6 @@ export class SendmoneyComponent implements OnInit {
   onClickFeeChoose(value) {
     this.kindFee = value;
     console.log('Kindfee', value);
-  }
-
-  closeDialog() {
-    this.sendMoneyRefDialog.close();
   }
 
   disableFieldAdvancedMenu() {
@@ -290,8 +296,6 @@ export class SendmoneyComponent implements OnInit {
             };
             this.contacts = this.contactServ.add(newContact);
           }
-
-          this.sendMoneyRefDialog.close();
           this.router.navigateByUrl('/dashboard');
         },
         async err => {
@@ -310,9 +314,9 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getBlockHeight() {
-    zoobc.Account.getBalance(this.account.address)
+    zoobc.Host.getBlock()
       .then(res => {
-        this.blockHeight = res.accountbalance.blockheight;
+        this.blockHeight = res.chainstatusesList[1].height;
       })
       .catch(err => {
         console.log(err);
