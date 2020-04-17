@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
@@ -33,6 +33,10 @@ export class NodeAdminComponent implements OnInit {
   isNodeError: boolean = false;
 
   lastClaim: string = undefined;
+  nodePublicKey: string = '';
+
+  @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
+  successRefDialog: MatDialogRef<any>;
 
   constructor(private dialog: MatDialog, private authServ: AuthService) {
     this.account = authServ.getCurrAccount();
@@ -89,14 +93,17 @@ export class NodeAdminComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
+        return zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
           .then(res => {
-            Swal.fire('Success', 'success', 'success');
+            this.nodePublicKey = res.nodepublickey.toString();
+            this.successRefDialog = this.dialog.open(this.popupPubKey, {
+              disableClose: true,
+              width: '500px',
+            });
           })
           .catch(err => {
             Swal.fire('Error', err, 'error');
           });
-        return true;
       },
     });
   }
@@ -158,5 +165,9 @@ export class NodeAdminComponent implements OnInit {
     dialog.afterClosed().subscribe(success => {
       if (success) this.getRegisteredNode();
     });
+  }
+
+  onCloseDialog() {
+    this.successRefDialog.close();
   }
 }
