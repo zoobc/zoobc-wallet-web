@@ -7,10 +7,11 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
 import { truncate, calcMinFee } from 'src/helpers/utils';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
@@ -51,6 +52,8 @@ export class SendmoneyComponent implements OnInit {
   typeCoinField = new FormControl('ZBC');
   typeCommissionField = new FormControl('ZBC');
 
+  sendMoneyRefDialog: MatDialogRef<any>;
+
   isLoading = false;
   isError = false;
 
@@ -72,6 +75,7 @@ export class SendmoneyComponent implements OnInit {
     private contactServ: ContactService,
     private translate: TranslateService,
     public dialog: MatDialog,
+    private router: Router,
     private activeRoute: ActivatedRoute
   ) {
     this.formSend = new FormGroup({
@@ -209,7 +213,7 @@ export class SendmoneyComponent implements OnInit {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
-      let sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
+      this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         data: {
           form: this.formSend.value,
@@ -218,10 +222,14 @@ export class SendmoneyComponent implements OnInit {
           advancedMenu: this.advancedMenu,
           account: this.account,
           currencyName: this.currencyRate.name,
-          isValid: this.formSend.valid,
           saveAddress: this.saveAddress,
           alias: this.aliasField.value,
         },
+      });
+      this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
+        if (onConfirm) {
+          this.onOpenPinDialog();
+        }
       });
     } else {
       let message: string;
@@ -231,6 +239,18 @@ export class SendmoneyComponent implements OnInit {
         .then(res => (message = res));
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
+  }
+
+  onOpenPinDialog() {
+    let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
+      width: '400px',
+    });
+
+    pinRefDialog.afterClosed().subscribe(isPinValid => {
+      if (isPinValid) {
+        this.onSendMoney();
+      }
+    });
   }
 
   onFeeChoose(value) {
@@ -268,6 +288,69 @@ export class SendmoneyComponent implements OnInit {
     this.instructionField.enable();
     this.timeoutField.enable();
     this.approverCommissionCurrField.enable();
+  }
+
+  async onSendMoney() {
+    if (this.formSend.valid) {
+      this.isLoading = true;
+
+      let data: SendMoneyInterface = {
+        sender: this.account.address,
+        recipient: this.recipientForm.value,
+        fee: this.feeForm.value,
+        amount: this.amountForm.value,
+        approverAddress: this.addressApproverField.value,
+        commission: this.approverCommissionField.value,
+        timeout: this.timeoutField.value,
+        instruction: this.instructionField.value,
+      };
+      // const txBytes = sendMoneyBuilder(data, this.keyringServ);
+      const childSeed = this.authServ.seed;
+
+      zoobc.Transactions.sendMoney(data, childSeed).then(
+        async (res: any) => {
+          this.isLoading = false;
+          let message: string;
+          await this.translate
+            .get('Your Transaction is processing')
+            .toPromise()
+            .then(res => (message = res));
+          let subMessage: string;
+          await this.translate
+            .get('You send coins to', {
+              amount: data.amount,
+              currencyValue: truncate(this.amountCurrencyForm.value, 2),
+              currencyName: this.currencyRate.name,
+              recipient: data.recipient,
+            })
+            .toPromise()
+            .then(res => (subMessage = res));
+
+          Swal.fire(message, subMessage, 'success');
+
+          // save address
+          if (this.saveAddress) {
+            const newContact = {
+              alias: this.aliasField.value,
+              address: this.recipientForm.value,
+            };
+            this.contacts = this.contactServ.add(newContact);
+          }
+          this.router.navigateByUrl('/dashboard');
+        },
+        async err => {
+          this.isLoading = false;
+          console.log(err);
+
+          let message: string;
+          await this.translate
+            .get('An error occurred while processing your request')
+            .toPromise()
+            .then(res => (message = res));
+          Swal.fire('Opps...', message, 'error');
+        }
+      );
+    }
   }
 
   getBlockHeight() {
