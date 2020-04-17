@@ -271,9 +271,9 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getBlockHeight() {
-    zoobc.Account.getBalance(this.account.address)
+    zoobc.Host.getBlock()
       .then(res => {
-        this.blockHeight = res.accountbalance.blockheight;
+        this.blockHeight = res.chainstatusesList[1].height;
       })
       .catch(err => {
         console.log(err);
