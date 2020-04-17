@@ -93,7 +93,7 @@ export class NodeAdminComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
+        return zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
           .then(res => {
             this.nodePublicKey = res.nodepublickey.toString();
             this.successRefDialog = this.dialog.open(this.popupPubKey, {
@@ -104,7 +104,6 @@ export class NodeAdminComponent implements OnInit {
           .catch(err => {
             Swal.fire('Error', err, 'error');
           });
-        return true;
       },
     });
   }

@@ -241,12 +241,19 @@
       font-size: 1.3em;
       margin-top: -20px;
       margin-bottom: 20px;
-      font-weight: bold;
     }
-
-
-
-
   }
 
+  .footer {
+    .btncustom {
+      width: 6em;
+      height: 2.5em;
+      font-size: large;
+      font-weight: bold;
+      background: linear-gradient(45deg, #0d4573, #177dcf) !important;
+      border-radius: 8px !important;
+      color: white;
+      text-transform: uppercase;
+    }
+  }
 }
