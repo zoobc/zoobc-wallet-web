@@ -1,28 +1,20 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  ValidatorFn,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import {
-  CurrencyRateService,
-  Currency,
-} from 'src/app/services/currency-rate.service';
+import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
 import { truncate, calcMinFee } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
+import zoobc from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
+import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 
 @Component({
   selector: 'app-sendmoney',
@@ -36,40 +28,26 @@ export class SendmoneyComponent implements OnInit {
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
-  @ViewChild('popupDetailSendMoney') popupDetailSendMoney: TemplateRef<any>;
-
   currencyRate: Currency;
 
-  feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 5;
-  feeFast = this.feeMedium * 5;
-  activeButton: number = 2;
+  minFee = environment.fee;
   kindFee: string;
 
   formSend: FormGroup;
+
   recipientForm = new FormControl('', Validators.required);
-  amountForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.feeMedium, [
-    Validators.required,
-    Validators.min(this.feeSlow),
-  ]);
+  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
   addressApproverField = new FormControl('', Validators.required);
-  approverCommissionField = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
-  approverCommissionCurrField = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  approverCommissionField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
+  approverCommissionCurrField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   instructionField = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
+  typeCoinField = new FormControl('ZBC');
+  typeCommissionField = new FormControl('ZBC');
 
   sendMoneyRefDialog: MatDialogRef<any>;
 
@@ -79,9 +57,7 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  typeCoin = 'ZBC';
   typeFee = 'ZBC';
-  typeCommission = 'ZBC';
 
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
@@ -103,12 +79,14 @@ export class SendmoneyComponent implements OnInit {
       recipient: this.recipientForm,
       amount: this.amountForm,
       amountCurrency: this.amountCurrencyForm,
+      typeCoin: this.typeCoinField,
       alias: this.aliasField,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
       addressApprover: this.addressApproverField,
       approverCommission: this.approverCommissionField,
       approverCommissionCurr: this.approverCommissionCurrField,
+      typeCommission: this.typeCommissionField,
       instruction: this.instructionField,
       timeout: this.timeoutField,
     });
@@ -134,18 +112,11 @@ export class SendmoneyComponent implements OnInit {
 
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-      // set default fee to medium
-      this.onChangeFeeField();
-      // convert fee to current currency
-      this.onFeeChoose(2);
 
-      const minCurrency = truncate(this.feeSlow * rate.value, 8);
+      const minCurrency = truncate(this.minFee * rate.value, 8);
 
-      this.feeFormCurr.setValidators([
-        Validators.required,
-        Validators.min(minCurrency),
-      ]);
-      this.amountCurrencyForm.setValidators(Validators.min(minCurrency));
+      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+      this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
 
@@ -153,8 +124,6 @@ export class SendmoneyComponent implements OnInit {
     this.getAccounts();
 
     this.getBlockHeight();
-
-    // this.watchEscrowField();
   }
 
   ngOnDestroy() {
@@ -176,60 +145,11 @@ export class SendmoneyComponent implements OnInit {
     this.account = account;
   }
 
-  onChangeAmountField() {
-    const amount = truncate(this.amountForm.value, 8);
-    const amountCurrency = amount * this.currencyRate.value;
-    this.amountCurrencyForm.patchValue(amountCurrency);
-  }
-
-  onChangeAmountCurrencyField() {
-    const amount = this.amountCurrencyForm.value / this.currencyRate.value;
-    const amountTrunc = truncate(amount, 8);
-    this.amountForm.patchValue(amountTrunc);
-  }
-
-  onChangeFeeField() {
-    const fee = truncate(this.feeForm.value, 8);
-    const feeCurrency = fee * this.currencyRate.value;
-    this.feeFormCurr.patchValue(feeCurrency);
-  }
-
-  onChangeAddressApprover() {
-    let validation = isZBCAddressValid(this.addressApproverField.value);
-    if (!validation)
-      this.addressApproverField.setErrors({ invalidAddress: true });
-  }
-
-  onChangeCommisssionField() {
-    const commission = truncate(this.approverCommissionField.value, 8);
-    const commissionCurrency = commission * this.currencyRate.value;
-    this.approverCommissionCurrField.patchValue(commissionCurrency);
-  }
-  onChangeCommisssionCurrField() {
-    const commission =
-      this.approverCommissionCurrField.value / this.currencyRate.value;
-    const commissionTrunc = truncate(commission, 8);
-    this.approverCommissionField.patchValue(commissionTrunc);
-  }
-
-  onChangeFeeCurrencyField() {
-    const fee = this.feeFormCurr.value / this.currencyRate.value;
-    const feeTrunc = truncate(fee, 8);
-    this.feeForm.patchValue(feeTrunc);
-  }
-
   filterContacts(value: string): Contact[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      return this.contacts.filter((contact: Contact) =>
-        contact.alias.toLowerCase().includes(filterValue)
-      );
+      return this.contacts.filter((contact: Contact) => contact.alias.toLowerCase().includes(filterValue));
     } else if (value == '') return this.contacts;
-  }
-
-  onChangeRecipient() {
-    let validation = isZBCAddressValid(this.recipientForm.value);
-    if (!validation) this.recipientForm.setErrors({ invalidAddress: true });
   }
 
   isAddressInContacts() {
@@ -259,11 +179,6 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  toggleCustomFee() {
-    this.customFee = !this.customFee;
-    if (!this.customFee) this.onFeeChoose(this.activeButton);
-  }
-
   toggleAdvancedMenu() {
     this.advancedMenu = !this.advancedMenu;
     this.enableFieldAdvancedMenu();
@@ -274,9 +189,23 @@ export class SendmoneyComponent implements OnInit {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     if (this.account.balance / 1e8 >= total) {
-      this.sendMoneyRefDialog = this.dialog.open(this.popupDetailSendMoney, {
+      this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
-        data: this.formSend.value,
+        data: {
+          form: this.formSend.value,
+          customFee: this.customFee,
+          kindFee: this.kindFee,
+          advancedMenu: this.advancedMenu,
+          account: this.account,
+          currencyName: this.currencyRate.name,
+          saveAddress: this.saveAddress,
+          alias: this.aliasField.value,
+        },
+      });
+      this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
+        if (onConfirm) {
+          this.onOpenPinDialog();
+        }
       });
     } else {
       let message: string;
@@ -295,35 +224,14 @@ export class SendmoneyComponent implements OnInit {
 
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {
-        this.sendMoneyRefDialog.close();
         this.onSendMoney();
       }
     });
   }
 
-  onFeeChoose(value) {
-    let fee: number = 0;
-    if (value === 1) {
-      fee = this.feeSlow;
-      this.kindFee = 'Slow';
-    } else if (value === 2) {
-      fee = this.feeMedium;
-      this.kindFee = 'Average';
-    } else {
-      fee = this.feeFast;
-      this.kindFee = 'Fast';
-    }
-
-    const feeCurrency = fee * this.currencyRate.value;
-    this.formSend.patchValue({
-      fee: fee,
-      feeCurr: feeCurrency,
-    });
-    this.activeButton = value;
-  }
-
-  closeDialog() {
-    this.sendMoneyRefDialog.close();
+  onClickFeeChoose(value) {
+    this.kindFee = value;
+    console.log('Kindfee', value);
   }
 
   disableFieldAdvancedMenu() {
@@ -388,8 +296,6 @@ export class SendmoneyComponent implements OnInit {
             };
             this.contacts = this.contactServ.add(newContact);
           }
-
-          this.sendMoneyRefDialog.close();
           this.router.navigateByUrl('/dashboard');
         },
         async err => {
@@ -408,9 +314,9 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getBlockHeight() {
-    zoobc.Account.getBalance(this.account.address)
+    zoobc.Host.getBlock()
       .then(res => {
-        this.blockHeight = res.accountbalance.blockheight;
+        this.blockHeight = res.chainstatusesList[1].height;
       })
       .catch(err => {
         console.log(err);
@@ -430,33 +336,13 @@ export class SendmoneyComponent implements OnInit {
     };
 
     const fee: number = calcMinFee(data);
-    this.feeSlow = fee;
-    this.feeMedium = this.feeSlow * 5;
-    this.feeFast = this.feeMedium * 5;
+    this.minFee = fee;
 
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
 
     const feeCurrency = truncate(fee * this.currencyRate.value, 8);
-    this.feeFormCurr.setValidators([
-      Validators.required,
-      Validators.min(feeCurrency),
-    ]);
-    this.amountCurrencyForm.setValidators(Validators.min(feeCurrency));
-
-    if (this.customFee == false) {
-      let value: number = 0;
-      switch (this.kindFee) {
-        case 'Slow':
-          value = this.feeSlow;
-          break;
-        case 'Fast':
-          value = this.feeFast;
-          break;
-        default:
-          value = this.feeMedium;
-      }
-      this.feeForm.patchValue(value);
-    }
+    this.feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
+    this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
   }
 
   onChangeTimeOut() {

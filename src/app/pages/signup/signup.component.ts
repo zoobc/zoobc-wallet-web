@@ -49,13 +49,7 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (history.state.passphrase) {
-      this.passphrase = history.state.passphrase;
-      this.isWrittenDown.patchValue(true);
-      this.isAgree.patchValue(true);
-    } else {
-      this.generateNewWallet();
-    }
+    this.generateNewWallet();
   }
 
   selectMnemonicLanguage(language) {

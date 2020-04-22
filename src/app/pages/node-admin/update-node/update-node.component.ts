@@ -13,14 +13,8 @@ import { NodeAdminService } from 'src/app/services/node-admin.service';
 })
 export class UpdateNodeComponent {
   formUpdateNode: FormGroup;
-  ipAddressForm = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^[\\w.-]+:\\d+$'),
-  ]);
-  lockedAmountForm = new FormControl('', [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]);
+  ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
+  lockedAmountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   feeForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   nodePublicKeyForm = new FormControl('', Validators.required);
 

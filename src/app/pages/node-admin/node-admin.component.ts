@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
@@ -10,6 +10,7 @@ import zoobc, {
   NodeParams,
   toUnconfirmTransactionNodeWallet,
   MempoolListParams,
+  TransactionListParams,
 } from 'zoobc-sdk';
 
 @Component({
@@ -31,6 +32,12 @@ export class NodeAdminComponent implements OnInit {
   isNodeLoading: boolean = false;
   isNodeError: boolean = false;
 
+  lastClaim: string = undefined;
+  nodePublicKey: string = '';
+
+  @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
+  successRefDialog: MatDialogRef<any>;
+
   constructor(private dialog: MatDialog, private authServ: AuthService) {
     this.account = authServ.getCurrAccount();
   }
@@ -49,6 +56,13 @@ export class NodeAdminComponent implements OnInit {
     const params: MempoolListParams = {
       address: this.account.address,
     };
+    const param: TransactionListParams = {
+      transactionType: 770,
+      address: this.account.address,
+    };
+    zoobc.Transactions.getList(param).then(res => {
+      this.lastClaim = res.transactionsList[0].timestamp;
+    });
     zoobc.Mempool.getList(params)
       .then(res => {
         const pendingTxs = toUnconfirmTransactionNodeWallet(res);
@@ -58,8 +72,11 @@ export class NodeAdminComponent implements OnInit {
         };
         return zoobc.Node.get(params);
       })
-      .then((res: any) => {
-        this.registeredNode = res.noderegistration;
+      .then(res => {
+        if (res) {
+          const { registrationstatus } = res.noderegistration;
+          if (registrationstatus == 0) this.registeredNode = res.noderegistration;
+        }
       })
       .catch(err => {
         console.log(err);
@@ -72,19 +89,21 @@ export class NodeAdminComponent implements OnInit {
     // todo: create loader and display the result
     Swal.fire({
       title: 'Are you sure want to generate new node public key?',
-      text:
-        'You need to update your node registration or your node will stop smithing',
+      text: 'You need to update your node registration or your node will stop smithing',
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
+        return zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
           .then(res => {
-            Swal.fire('Success', 'success', 'success');
+            this.nodePublicKey = res.nodepublickey.toString();
+            this.successRefDialog = this.dialog.open(this.popupPubKey, {
+              disableClose: true,
+              width: '500px',
+            });
           })
           .catch(err => {
             Swal.fire('Error', err, 'error');
           });
-        return true;
       },
     });
   }
@@ -92,10 +111,7 @@ export class NodeAdminComponent implements OnInit {
   streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    zoobc.Node.getHardwareInfo(
-      `//${this.account.nodeIP}`,
-      this.authServ.seed
-    ).subscribe(
+    zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
       (res: any) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
@@ -132,6 +148,7 @@ export class NodeAdminComponent implements OnInit {
   openClaimNode() {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
+      data: this.registeredNode,
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -148,5 +165,9 @@ export class NodeAdminComponent implements OnInit {
     dialog.afterClosed().subscribe(success => {
       if (success) this.getRegisteredNode();
     });
+  }
+
+  onCloseDialog() {
+    this.successRefDialog.close();
   }
 }

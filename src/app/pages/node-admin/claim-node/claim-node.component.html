@@ -1,14 +1,18 @@
 <div class="claim-node-container">
   <h2 class="mat-h2">{{ 'Claim Node' | translate }}</h2>
   <form [formGroup]="formClaimNode" (submit)="onClaimNode()" class="grid">
-    <label>{{ 'Fee' | translate }}</label>
+    <label>{{ 'IP Address' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <input
         matInput
-        type="number"
-        formControlName="fee"
-        placeholder="{{ 'Fee' | translate }}"
+        type="text"
+        placeholder="https://yournode.com:8001 or http://192.168.43.1:8001"
+        formControlName="ipAddress"
       />
+    </mat-form-field>
+    <label>{{ 'Fee' | translate }}</label>
+    <mat-form-field appearance="outline" color="accent">
+      <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="feeForm.touched">
       <mat-error *ngIf="feeForm.hasError('required')">
@@ -37,15 +41,8 @@
       </mat-error>
     </ng-container>
     <br />
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="formClaimNode.invalid || isLoading"
-    >
-      <span *ngIf="isLoading">
-        <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
-      </span>
+    <button mat-flat-button color="primary" type="submit" [disabled]="formClaimNode.invalid || isLoading">
+      <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
       <span>{{ 'Claim Node' | translate }}</span>
     </button>
   </form>

@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import zoobc, { EscrowListParams } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
@@ -33,11 +27,7 @@ export class MyTaskComponent implements OnInit {
   total: number = 0;
   finished: boolean = false;
 
-  constructor(
-    public dialog: MatDialog,
-    private authServ: AuthService,
-    private contactServ: ContactService
-  ) {}
+  constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
   async ngOnInit() {
     this.account = this.authServ.getCurrAccount();
     this.getEscrowTx(true);
@@ -101,11 +91,15 @@ export class MyTaskComponent implements OnInit {
     }
   }
 
+  reload(load: boolean = false) {
+    this.getEscrowTx(load);
+    this.getBlockHeight();
+  }
   getBlockHeight() {
     this.isLoadingBlockHeight = true;
-    zoobc.Account.getBalance(this.account.address)
+    zoobc.Host.getBlock()
       .then(res => {
-        this.blockHeight = res.accountbalance.blockheight;
+        this.blockHeight = res.chainstatusesList[1].height;
       })
       .catch(err => {
         console.log(err);
@@ -114,10 +108,7 @@ export class MyTaskComponent implements OnInit {
   }
 
   onScroll() {
-    if (
-      this.escrowTransactions &&
-      this.escrowTransactions.length < this.total
-    ) {
+    if (this.escrowTransactions && this.escrowTransactions.length < this.total) {
       this.page++;
       this.getEscrowTx();
     } else this.finished = true;
