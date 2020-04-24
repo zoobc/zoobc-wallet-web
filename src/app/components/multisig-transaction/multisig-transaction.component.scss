@@ -12,10 +12,15 @@
     cursor: pointer;
   }
 
-  .title-task {
+  .alias {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .address {
     word-break: break-all;
     color: $black1;
-    font-size: 16px;
+    font-size: 13px;
     margin-bottom: 8px;
   }
 
@@ -24,13 +29,16 @@
     font-size: 13px;
   }
 
-  .commission-receive {
-    color: #4caf50;
+  .amount {
+    color: #f44336;
     font-size: 18px;
     font-weight: bold;
   }
+  .fee {
+    color: #f44336;
+    font-size: 12px;
+  }
 }
-
 
 .detail-multisig-container {
   .row {
