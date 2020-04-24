@@ -1,4 +1,6 @@
-<label>{{ label}}</label>
+<ng-container *ngIf="label.length>0">
+  <label>{{ label}}</label>
+</ng-container>
 <mat-form-field appearance="outline" [className]="classList" color="accent">
   <input matInput [disabled]="disabled" (focus)="onChange($event.target.value)" (blur)="_onTouched()"
     (keyup)="onChange($event.target.value)" [value]="value" [matAutocomplete]="auto" placeholder="{{placeholder}}">

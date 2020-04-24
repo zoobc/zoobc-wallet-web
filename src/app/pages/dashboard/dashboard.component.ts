@@ -196,7 +196,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onOpenAddAccount() {
-    this.dialog.open(AddAccountComponent, { width: '360px' });
+    this.dialog.open(AddAccountComponent, { width: '360px', maxHeight: '99vh' });
   }
 
   onOpenEditAccount(e, account: SavedAccount) {
