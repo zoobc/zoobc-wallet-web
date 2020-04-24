@@ -1,0 +1,33 @@
+.add-account-container {
+
+  .checkbox-margin {
+    margin: 10px 0;
+  }
+
+  .inline-control {
+    display: flex;
+    justify-content: space-between;
+
+    .custom-mat {
+      width: 100%;
+      margin-bottom: 0;
+    }
+  }
+
+  .custom-btn {
+    float: right;
+    text-transform: capitalize;
+    line-height: 30px;
+    margin: 10px 0;
+  }
+
+  .center-error {
+    text-align: center;
+    margin: 3px 0;
+  }
+
+  // color : #c62828;
+
+
+
+}

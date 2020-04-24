@@ -1,8 +1,8 @@
 <div class="add-account-container">
   <h2 class="mat-h2 text-center">{{ 'Edit Account' | translate }}</h2>
   <form [formGroup]="formEditAccount" (submit)="onEditAccount()" class="grid">
+    <label>{{ 'Account Name' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'Account Name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">
@@ -10,7 +10,68 @@
         {{ 'Account name is required' | translate }}
       </mat-error>
     </ng-container>
-    <button mat-flat-button color="primary" type="submit">
+    <div style="margin-bottom: 8px;">
+      <mat-checkbox class="checkbox-margin" (click)="toogleMultiSignature()">
+        {{ 'Multisignature Account' }}
+      </mat-checkbox>
+    </div>
+    <ng-container *ngIf="isMultiSignature">
+      <label>{{'Participants'}}</label>
+      <div formArrayName="participants">
+        <ng-container *ngFor="let participant of participantsField.controls; let i = index; trackBy: trackByFn">
+          <div class="inline-control">
+            <input-address style="width: 100%;" label="" classList="custom-mat" [formControlName]="i"
+              placeholder="{{'Participant '}} {{i+1}}...">
+            </input-address>
+            <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <ng-container *ngIf="participantsField.controls[i].touched">
+            <mat-error *ngIf="participantsField.controls[i].hasError('required')">
+              {{ 'Participant is required'}}
+            </mat-error>
+            <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
+              {{ 'Participant Address is invalid'}}
+            </mat-error>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div>
+        <button (click)="addParticipant()" mat-flat-button class="custom-btn" color="primary" type="button">
+          {{ 'Add Participants'}}
+        </button>
+      </div>
+      <ng-container *ngIf="participantsField.touched">
+        <mat-error class="center-error" *ngIf="participantsField.hasError('duplicate')">
+          {{ 'Participant must be unique'}}
+        </mat-error>
+      </ng-container>
+      <label>{{ 'Nonce'}}</label>
+      <mat-form-field appearance="outline" color="accent">
+        <input formControlName="nonce" matInput type="text" />
+      </mat-form-field>
+      <ng-container *ngIf="nonceField.touched">
+        <mat-error *ngIf="nonceField.hasError('required')">
+          {{ 'Nonce is required'}}
+        </mat-error>
+      </ng-container>
+      <label>{{ 'Minimum Signature'}}</label>
+      <mat-form-field appearance="outline" color="accent">
+        <input formControlName="minimumSignature" matInput type="number" />
+      </mat-form-field>
+      <ng-container *ngIf="minSignatureField.touched">
+        <mat-error *ngIf="minSignatureField.hasError('required')">
+          {{ 'Minimum Signature is required'}}
+        </mat-error>
+        <mat-error *ngIf="minSignatureField.hasError('min')">
+          {{ 'Minimum Signature is 1' }}
+        </mat-error>
+      </ng-container>
+      <label>{{ 'Sign by'}}</label>
+      <account-selector (select)="onSwitchSignBy($event)"></account-selector>
+    </ng-container>
+    <button mat-flat-button color="primary" type="submit" [disabled]="formEditAccount.invalid">
       {{ 'Edit' | translate }}
     </button>
   </form>
