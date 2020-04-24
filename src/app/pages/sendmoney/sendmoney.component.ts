@@ -231,7 +231,6 @@ export class SendmoneyComponent implements OnInit {
 
   onClickFeeChoose(value) {
     this.kindFee = value;
-    console.log('Kindfee', value);
   }
 
   disableFieldAdvancedMenu() {
