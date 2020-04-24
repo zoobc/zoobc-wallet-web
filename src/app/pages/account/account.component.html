@@ -1,0 +1,72 @@
+<div class="account-container">
+  <div class="row">
+    <div class="col-4">
+      <h2 class="mat-h2">{{ 'Accounts' | translate }}</h2>
+    </div>
+    <div class="col-8 text-right">
+      <button mat-flat-button color="primary">
+        <span>{{ 'Add New Account' | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="transaction-table">
+    <mat-card>
+      <div class="transaction-item hover row">
+        <div class="col-12 col-sm-8">
+          <div class="name">
+            Account Name
+          </div>
+          <div class="address">
+            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
+          </div>
+        </div>
+        <div class="col-12 col-sm-4 text-right">
+          <div class="edit-button">
+            <button mat-icon-button>
+              <i class="fas fa-pen"></i>
+            </button>
+          </div>
+          <div class="select-button">
+            <button mat-flat-button color="primary">
+              <span>{{ 'Select' | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="transaction-item hover row">
+        <div class="col-12 col-sm-8">
+          <div class="name">
+            Account Multisig
+            <span class="label">
+              Multi Signature
+            </span>
+          </div>
+          <div class="address">
+            <p>Address:</p>
+            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
+          </div>
+          <div class="signedBy">
+            <p>Signed by:</p>
+            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
+          </div>
+        </div>
+        <div class="col-12 col-sm-4 text-right">
+          <div class="multisig-button">
+            <button mat-icon-button>
+              <i class="fas fa-file-signature"></i>
+            </button>
+            <button mat-icon-button>
+              <i class="fas fa-pen"></i>
+            </button>
+          </div>
+          <div class="select-button">
+            <button mat-flat-button color="primary">
+              <span>{{ 'Select' | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
