@@ -51,6 +51,7 @@ export class AddAccountComponent implements OnInit {
       const accountAddress = getZBCAdress(childSeed.publicKey);
       const account: SavedAccount = {
         name: this.accountNameField.value,
+        type: 'normal',
         path,
         nodeIP: null,
         address: accountAddress,
