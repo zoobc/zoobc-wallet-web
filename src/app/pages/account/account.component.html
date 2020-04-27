@@ -11,24 +11,24 @@
   </div>
 
   <div class="transaction-table">
-    <mat-card>
+    <mat-card style="padding: 0">
       <div class="transaction-item hover row">
         <div class="col-12 col-sm-8">
           <div class="name">
-            Account Name
+            {{ 'Account Name' }}
           </div>
           <div class="address">
             <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
           </div>
         </div>
         <div class="col-12 col-sm-4 text-right">
-          <div class="edit-button">
-            <button mat-icon-button>
+          <div class="text-right-item">
+            <button mat-icon-button class="pen">
               <i class="fas fa-pen"></i>
             </button>
           </div>
-          <div class="select-button">
-            <button mat-flat-button color="primary">
+          <div class="text-right-item">
+            <button mat-flat-button color="primary" class="select-button">
               <span>{{ 'Select' | translate }}</span>
             </button>
           </div>
@@ -38,7 +38,7 @@
         <div class="col-12 col-sm-8">
           <div class="name">
             Account Multisig
-            <span class="label">
+            <span class="label" color="primary">
               Multi Signature
             </span>
           </div>
@@ -52,16 +52,16 @@
           </div>
         </div>
         <div class="col-12 col-sm-4 text-right">
-          <div class="multisig-button">
-            <button mat-icon-button>
+          <div class="text-right-item">
+            <button mat-icon-button class="file-signature">
               <i class="fas fa-file-signature"></i>
             </button>
-            <button mat-icon-button>
+            <button mat-icon-button class="pen">
               <i class="fas fa-pen"></i>
             </button>
           </div>
-          <div class="select-button">
-            <button mat-flat-button color="primary">
+          <div class="text-right-item">
+            <button mat-flat-button color="primary" class="select-button">
               <span>{{ 'Select' | translate }}</span>
             </button>
           </div>
