@@ -1,12 +1,18 @@
 <div class="account-selector-container">
   <div class="from-account" (click)="openAccountList()" *ngIf="accounts">
-    <div class="name">
-      {{ account.name }}
-      <small>
-        <wallet-address [value]="account.address"></wallet-address>
-      </small>
-    </div>
-    <div class="balance">{{ account.balance / 1e8 | number: '0.0-8' }} ZBC</div>
+    <ng-container *ngIf="account">
+      <div class="name">
+        {{ account.name }}
+        <small>
+          <wallet-address [value]="account.address"></wallet-address>
+        </small>
+      </div>
+      <div class="balance">{{ account.balance / 1e8 | number: '0.0-8' }} ZBC</div>
+    </ng-container>
+
+    <ng-container *ngIf="!account">
+      No Account Selected
+    </ng-container>
   </div>
 
   <div class="from-account" *ngIf="isLoading">
@@ -22,12 +28,7 @@
       <div style="margin-bottom: 8px;">
         {{ 'An error occurred while processing your request' | translate }}
       </div>
-      <button
-        mat-flat-button
-        class="small"
-        color="primary"
-        (click)="getAccounts()"
-      >
+      <button mat-flat-button class="small" color="primary" (click)="getAccounts()">
         {{ 'Try Again' | translate }}
       </button>
     </div>
@@ -41,22 +42,12 @@
     </h3>
 
     <div class="account-list" *ngIf="accounts">
-      <mat-card
-        *ngFor="let acc of accounts"
-        class="account-card"
-        (click)="onSwitchAccount(acc)"
-      >
-        <div
-          class="row"
-          [ngClass]="account.path == acc.path ? 'row active' : 'row'"
-        >
+      <mat-card *ngFor="let acc of accounts" class="account-card" (click)="onSwitchAccount(acc)">
+        <div class="row" [ngClass]="account.path == acc.path ? 'row active' : 'row'">
           <div class="col-12">
             <div class="name">{{ acc.name }}</div>
             <div class="address">
-              <wallet-address
-                [value]="acc.address"
-                [copyButton]="true"
-              ></wallet-address>
+              <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
             </div>
             <div class="last-tx">
               <span>{{ 'Last Transaction' | translate }}:&nbsp;</span>
@@ -65,9 +56,7 @@
             </div>
           </div>
           <div class="col-12 text-right">
-            <div class="balance">
-              {{ acc.balance / 1e8 | number: '0.0-8' }} <small>ZBC</small>
-            </div>
+            <div class="balance">{{ acc.balance / 1e8 | number: '0.0-8' }} <small>ZBC</small></div>
             <div class="balance-in-currency">
               {{ (acc.balance / 1e8) * currencyRate.value | number: '0.0-2' }}
               <small>{{ currencyRate.name }}</small>
@@ -75,6 +64,11 @@
           </div>
         </div>
       </mat-card>
+    </div>
+
+    <div class="no-content" *ngIf="accounts.length == 0">
+      <i matPrefix class="far fa-address-card"></i>
+      <span class="message">No Accounts on the list</span>
     </div>
   </div>
 </ng-template>
