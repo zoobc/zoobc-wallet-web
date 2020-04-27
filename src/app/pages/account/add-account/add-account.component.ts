@@ -13,10 +13,7 @@ export class AddAccountComponent implements OnInit {
   lenAccount = this.authServ.getAllAccount().length + 1;
 
   formAddAccount: FormGroup;
-  accountNameField = new FormControl(
-    `Account ${this.lenAccount}`,
-    Validators.required
-  );
+  accountNameField = new FormControl(`Account ${this.lenAccount}`, Validators.required);
 
   constructor(
     private authServ: AuthService,
@@ -38,6 +35,7 @@ export class AddAccountComponent implements OnInit {
       const accountAddress = getZBCAdress(childSeed.publicKey);
       const account: SavedAccount = {
         name: this.accountNameField.value,
+        type: 'normal',
         path,
         nodeIP: null,
         address: accountAddress,
