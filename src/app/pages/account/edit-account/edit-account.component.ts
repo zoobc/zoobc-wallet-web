@@ -95,6 +95,21 @@ export class EditAccountComponent implements OnInit {
       let currAcc = this.authServ.getCurrAccount();
       if (currAcc.path == this.account.path) {
         currAcc.name = this.accountNameField.value;
+        if (this.isMultiSignature) {
+          //add multi signature prop
+          currAcc.type = 'multisig';
+          currAcc.participants = this.participantsField.value.filter(value => value.length > 0);
+          currAcc.nonce = this.nonceField.value;
+          currAcc.minSig = this.minSignatureField.value;
+          currAcc.signBy = this.signBy;
+        } else {
+          //remove multi signature prop
+          currAcc.type = 'normal';
+          delete currAcc['participants'];
+          delete currAcc['nonce'];
+          delete currAcc['minSig'];
+          delete currAcc['signBy'];
+        }
         localStorage.setItem('CURR_ACCOUNT', JSON.stringify(currAcc));
       }
 
