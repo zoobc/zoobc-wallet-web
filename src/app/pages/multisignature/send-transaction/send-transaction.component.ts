@@ -6,9 +6,9 @@ import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.se
 import { truncate } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { PinConfirmationComponent } from '../../pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 
 @Component({
   selector: 'app-send-transaction',
