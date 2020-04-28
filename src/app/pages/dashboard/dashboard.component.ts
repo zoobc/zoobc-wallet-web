@@ -203,6 +203,7 @@ export class DashboardComponent implements OnInit {
     e.stopPropagation();
     const dialog = this.dialog.open(EditAccountComponent, {
       width: '360px',
+      maxHeight: '99vh',
       data: account,
     });
     dialog.afterClosed().subscribe((edited: boolean) => {
