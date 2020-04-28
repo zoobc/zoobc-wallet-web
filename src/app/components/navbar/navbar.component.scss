@@ -53,6 +53,10 @@
     .menu {
       width: 70%;
       text-align: right;
+      .address-card {
+        font-size: 22px;
+        margin: 0 -5px 0 15px;
+      }
       .account-dropdown {
         margin: 0 4px;
         color: white;
@@ -60,7 +64,6 @@
           font-size: 22px;
         }
       }
-
       .language-dropdown {
         @media #{$small-and-down} {
           display: none;

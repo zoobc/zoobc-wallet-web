@@ -75,6 +75,7 @@ import { InputAddressModule } from './components/input-address/input-address.mod
 import { InputAmountModule } from './components/input-amount/input-amount.module';
 import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-send.component';
 import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
+import { AccountComponent } from './pages/account/account.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -115,6 +116,7 @@ export function getLanguage(languageServ: LanguageService) {
     MyTaskComponent,
     ConfirmSendComponent,
     SendTransactionComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,
