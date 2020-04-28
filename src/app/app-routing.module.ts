@@ -14,6 +14,7 @@ import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.co
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { MyTaskComponent } from './pages/my-task/my-task.component';
+import { AccountComponent } from './pages/account/account.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -29,6 +30,7 @@ const routes: Routes = [
       { path: 'request/:recipient/:amount', component: SendmoneyComponent },
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskComponent },
+      { path: 'accounts', component: AccountComponent },
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',
