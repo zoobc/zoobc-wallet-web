@@ -1,10 +1,5 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
-  FormControl,
-} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 import { Contact, ContactService } from 'src/app/services/contact.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { isZBCAddressValid } from 'zoobc-sdk';
@@ -41,10 +36,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   private _onTouched = (value: any) => {};
   disabled: boolean;
 
-  constructor(
-    private contactServ: ContactService,
-    private authServ: AuthService
-  ) {}
+  constructor(private contactServ: ContactService, private authServ: AuthService) {}
 
   ngOnInit() {
     this.contacts = this.contactServ.getList() || [];
@@ -70,6 +62,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   onChange(value: any) {
     this.filteredContacts = this.filterContacts(value);
     this._onChange(value);
+    this._onTouched(value);
   }
 
   onOptionClick(address: any) {

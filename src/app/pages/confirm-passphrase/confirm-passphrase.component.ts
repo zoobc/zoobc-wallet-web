@@ -113,6 +113,7 @@ export class ConfirmPassphraseComponent implements OnInit {
 
     const account: SavedAccount = {
       name: 'Account 1',
+      type: 'normal',
       path: 0,
       nodeIP: null,
       address: accountAddress,

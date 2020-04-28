@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormArray,
-  FormBuilder,
-} from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
@@ -71,9 +65,7 @@ export class RestoreWalletComponent implements OnInit {
     const phraseWord = phrase;
     for (let i = 0; i < this.mnemonicWordLengtEnv; i++) {
       this.wordField = this.restoreForm.get('words') as FormArray;
-      this.wordField.push(
-        this.fb.group({ word: [phraseWord[i], Validators.required] })
-      );
+      this.wordField.push(this.fb.group({ word: [phraseWord[i], Validators.required] }));
     }
   }
 
@@ -158,9 +150,7 @@ export class RestoreWalletComponent implements OnInit {
   }
 
   async saveNewAccount(key: string) {
-    let passphrase: string = this.restoreForm.value.words
-      .map(form => form.word)
-      .join(' ');
+    let passphrase: string = this.restoreForm.value.words.map(form => form.word).join(' ');
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
@@ -169,6 +159,7 @@ export class RestoreWalletComponent implements OnInit {
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,
+      type: 'normal',
       nodeIP: null,
       address: address,
     };
