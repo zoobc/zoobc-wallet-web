@@ -1,0 +1,47 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.multisig-info-dialog {
+  .title {
+    color: $black2;
+    font-size: 18px !important;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .content {
+    .label {
+      font-size: 14px;
+      color: $black3;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .participants {
+      padding: 0;
+      margin: 0px 0px 20px 15px;
+      li {
+        list-style-type: circle;
+        margin-bottom: 6px;
+      }
+    }
+
+    .nonce,
+    .min-signature {
+      font-weight: normal;
+      color: #212121;
+    }
+
+    .signed-by {
+      margin: 20px 0;
+    }
+
+    .share-multisig-info {
+      cursor: pointer;
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

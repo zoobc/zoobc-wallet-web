@@ -1,0 +1,33 @@
+<div class="multisig-info-dialog">
+  <div class="row">
+    <div class="col-12">
+      <div class="title">{{ 'Account Name' | translate }}</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="row">
+      <div class="col-12">
+        <div class="label">{{ 'Participants' | translate }}:</div>
+        <ul class="participants">
+          <li><wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address></li>
+          <li><wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address></li>
+          <li><wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address></li>
+        </ul>
+        <div class="label">
+          {{ 'Nonce' | translate }}: <span class="nonce">{{ nonce }}</span>
+        </div>
+        <div class="label">
+          {{ 'Min Signature' | translate }}: <span class="min-signature">{{ minAdress }} address(es)</span>
+        </div>
+        <div class="signed-by">
+          <div class="label">{{ 'Signed By' | translate }}:</div>
+          <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
+        </div>
+        <div class="share-multisig-info" (click)="copyPhrase()">
+          <div class="label">{{ 'Share This Multisig Info' | translate }}:</div>
+          <p>{{ url }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
