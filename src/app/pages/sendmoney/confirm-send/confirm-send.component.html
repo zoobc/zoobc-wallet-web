@@ -59,7 +59,7 @@
         </div>
         <div class="label">
           <span>Fee</span>
-          <span *ngIf="!customFee"> - {{ kindFee }}</span>
+          <span> - {{ kindFee }}</span>
           <span>:</span>
         </div>
         <div class="amount">
@@ -67,13 +67,20 @@
           <div class="currency">{{ form.feeCurr | number: '0.0-2' }} {{ currencyRateName }}</div>
         </div>
         <div class="label">{{ 'Total' | translate }} :</div>
-        <div class="total">
+        <div class="total" *ngIf="advancedMenu; else not_escrow">
+          <div class="zbc">{{ form.amount + form.fee + form.approverCommission | number: '0.0-8' }} ZBC</div>
+          <div class="currency">
+            {{ form.amountCurrency + form.feeCurr + form.approverCommissionCurr | number: '0.0-2' }}
+            {{ currencyRateName }}
+          </div>
+        </div>
+        <ng-template #not_escrow>
           <div class="zbc">{{ form.amount + form.fee | number: '0.0-8' }} ZBC</div>
           <div class="currency">
             {{ form.amountCurrency + form.feeCurr | number: '0.0-2' }}
             {{ currencyRateName }}
           </div>
-        </div>
+        </ng-template>
       </div>
     </div>
   </div>
