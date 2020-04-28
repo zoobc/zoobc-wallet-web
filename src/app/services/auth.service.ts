@@ -12,6 +12,7 @@ export interface SavedAccount {
   minSig?: number;
   balance?: number;
   lastTx?: number;
+  signBy?: SavedAccount;
 }
 
 @Injectable({
