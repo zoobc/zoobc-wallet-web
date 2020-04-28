@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
@@ -40,6 +40,9 @@ export class AddAccountComponent implements OnInit {
 
   ngOnInit() {
     this.signBy = this.authServ.getCurrAccount();
+    if (this.signBy.type == 'multisig') {
+      this.signBy = this.authServ.getAllAccount('normal')[0];
+    }
     this.disableFieldMultiSignature();
   }
 
@@ -49,13 +52,20 @@ export class AddAccountComponent implements OnInit {
       const path = this.authServ.generateDerivationPath();
       const childSeed = keyring.calcDerivationPath(path);
       const accountAddress = getZBCAdress(childSeed.publicKey);
-      const account: SavedAccount = {
+      let account: SavedAccount = {
         name: this.accountNameField.value,
         type: 'normal',
         path,
         nodeIP: null,
         address: accountAddress,
       };
+      if (this.isMultiSignature) {
+        account.type = 'multisig';
+        account.participants = this.participantsField.value.filter(value => value.length > 0);
+        account.nonce = this.nonceField.value;
+        account.minSig = this.minSignatureField.value;
+        account.signBy = this.signBy;
+      }
       this.authServ.addAccount(account);
       this.dialogRef.close();
       this.router.navigateByUrl('/');
@@ -94,12 +104,24 @@ export class AddAccountComponent implements OnInit {
   }
 
   addParticipant() {
-    this.participantsField.push(new FormControl('', Validators.required));
+    const length: number = this.participantsField.length;
+    if (length >= 2) {
+      this.participantsField.push(new FormControl(''));
+    } else {
+      this.participantsField.push(new FormControl('', [Validators.required]));
+    }
+  }
+
+  reComposeValidation() {
+    let presentValidator: ValidatorFn = this.participantsField.controls[1].validator;
+    this.participantsField.controls[1].setValidators([presentValidator, Validators.required]);
+    this.participantsField.controls[1].updateValueAndValidity();
   }
 
   removeParticipant(index: number) {
     if (this.participantsField.length > this.minParticipant) {
       this.participantsField.removeAt(index);
+      if (index <= 1) this.reComposeValidation();
     } else {
       Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
     }
@@ -110,7 +132,7 @@ export class AddAccountComponent implements OnInit {
   }
 
   uniqueParticipant(formArray: FormArray): ValidationErrors {
-    const values = formArray.value;
+    const values = formArray.value.filter(val => val.length > 0);
     const controls = formArray.controls;
     const result = values.some((element, index) => {
       return values.indexOf(element) !== index;
@@ -120,9 +142,5 @@ export class AddAccountComponent implements OnInit {
       return { duplicate: true };
     }
     return null;
-  }
-
-  trackByFn(index) {
-    return index;
   }
 }
