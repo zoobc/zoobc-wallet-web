@@ -11,17 +11,17 @@
       </mat-error>
     </ng-container>
     <div style="margin-bottom: 8px;">
-      <mat-checkbox class="checkbox-margin" (click)="toogleMultiSignature()">
+      <mat-checkbox class="checkbox-margin" [checked]="isMultiSignature" (change)="toogleMultiSignature()">
         {{ 'Multisignature Account' }}
       </mat-checkbox>
     </div>
     <ng-container *ngIf="isMultiSignature">
       <label>{{'Participants'}}</label>
       <div formArrayName="participants">
-        <ng-container *ngFor="let participant of participantsField.controls; let i = index; trackBy: trackByFn">
+        <ng-container *ngFor="let participant of participantsField.controls; let i = index; ">
           <div class="inline-control">
-            <input-address style="width: 100%;" label="" classList="custom-mat" [formControlName]="i"
-              placeholder="{{'Participant '}} {{i+1}}...">
+            <input-address [exceptContact]="account" style="width: 100%;" label="" classList="custom-mat"
+              [formControlName]="i" placeholder="{{'Participant '}} {{i+1}}...">
             </input-address>
             <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
               <i class="fas fa-trash"></i>
@@ -33,6 +33,9 @@
             </mat-error>
             <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
               {{ 'Participant Address is invalid'}}
+            </mat-error>
+            <mat-error *ngIf="participantsField.controls[i].hasError('isMainAddress')">
+              {{'Participant Address cannot be the same as the main address'}}
             </mat-error>
           </ng-container>
         </ng-container>
@@ -69,7 +72,8 @@
         </mat-error>
       </ng-container>
       <label>{{ 'Sign by'}}</label>
-      <account-selector (select)="onSwitchSignBy($event)"></account-selector>
+      <account-selector [defaultValue]="signBy" [type]="'normal'" [switchAccount]="false"
+        (select)="onSwitchSignBy($event)"></account-selector>
     </ng-container>
     <button mat-flat-button color="primary" type="submit" [disabled]="formEditAccount.invalid">
       {{ 'Edit' | translate }}

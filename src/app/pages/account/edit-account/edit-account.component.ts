@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -17,7 +17,7 @@ export class EditAccountComponent implements OnInit {
   participantsField = new FormArray([], this.uniqueParticipant);
   nonceField = new FormControl('', Validators.required);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(1)]);
-
+  tempAddressField = new FormControl(this.account.address);
   signBy: SavedAccount;
 
   isMultiSignature: boolean = false;
@@ -34,13 +34,37 @@ export class EditAccountComponent implements OnInit {
       participants: this.participantsField,
       nonce: this.nonceField,
       minimumSignature: this.minSignatureField,
+      tempAddress: this.tempAddressField,
     });
     this.accountNameField.patchValue(this.account.name);
+    if (this.account.type == 'multisig') this.patchMultiSignatureForm();
   }
 
   ngOnInit() {
-    this.signBy = this.authServ.getCurrAccount();
-    this.disableFieldMultiSignature();
+    if (!this.isMultiSignature) this.disableFieldMultiSignature();
+  }
+
+  patchMultiSignatureForm() {
+    this.isMultiSignature = true;
+    this.patchPartisipant();
+    this.nonceField.patchValue(this.account.nonce);
+    this.minSignatureField.patchValue(this.account.minSig);
+    this.signBy = this.account.signBy;
+  }
+
+  patchPartisipant() {
+    while (this.participantsField.controls.length !== 0) {
+      this.participantsField.removeAt(0);
+    }
+    this.account.participants.map((pcp, index) => {
+      if (index > 1) {
+        this.participantsField.push(new FormControl(pcp, [this.participantNotMainAddress]));
+      } else {
+        this.participantsField.push(
+          new FormControl(pcp, [Validators.required, this.participantNotMainAddress])
+        );
+      }
+    });
   }
 
   onEditAccount() {
@@ -50,6 +74,21 @@ export class EditAccountComponent implements OnInit {
         const account = accounts[i];
         if (account.path == this.account.path) {
           accounts[i].name = this.accountNameField.value;
+          if (this.isMultiSignature) {
+            //add multi signature prop
+            accounts[i].type = 'multisig';
+            accounts[i].participants = this.participantsField.value.filter(value => value.length > 0);
+            accounts[i].nonce = this.nonceField.value;
+            accounts[i].minSig = this.minSignatureField.value;
+            accounts[i].signBy = this.signBy;
+          } else {
+            //remove multi signature prop
+            accounts[i].type = 'normal';
+            delete accounts[i]['participants'];
+            delete accounts[i]['nonce'];
+            delete accounts[i]['minSig'];
+            delete accounts[i]['signBy'];
+          }
           break;
         }
       }
@@ -81,7 +120,11 @@ export class EditAccountComponent implements OnInit {
     this.isMultiSignature = !this.isMultiSignature;
     if (this.isMultiSignature) {
       this.enableFieldMultiSignature();
-      this.pushInitParticipant();
+      if (this.account.type == 'multisig') {
+        this.patchMultiSignatureForm();
+      } else {
+        this.pushInitParticipant();
+      }
     } else {
       this.disableFieldMultiSignature();
     }
@@ -92,17 +135,29 @@ export class EditAccountComponent implements OnInit {
       this.participantsField.removeAt(0);
     }
     for (let i = 0; i < this.minParticipant; i++) {
-      this.participantsField.push(new FormControl('', [Validators.required]));
+      this.participantsField.push(new FormControl('', [Validators.required, this.participantNotMainAddress]));
     }
   }
 
   addParticipant() {
-    this.participantsField.push(new FormControl('', Validators.required));
+    const length: number = this.participantsField.length;
+    if (length >= 2) {
+      this.participantsField.push(new FormControl('', [this.participantNotMainAddress]));
+    } else {
+      this.participantsField.push(new FormControl('', [Validators.required, this.participantNotMainAddress]));
+    }
+  }
+
+  reComposeValidation() {
+    let presentValidator: ValidatorFn = this.participantsField.controls[1].validator;
+    this.participantsField.controls[1].setValidators([presentValidator, Validators.required]);
+    this.participantsField.controls[1].updateValueAndValidity();
   }
 
   removeParticipant(index: number) {
     if (this.participantsField.length > this.minParticipant) {
       this.participantsField.removeAt(index);
+      if (index <= 1) this.reComposeValidation();
     } else {
       Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
     }
@@ -113,7 +168,7 @@ export class EditAccountComponent implements OnInit {
   }
 
   uniqueParticipant(formArray: FormArray): ValidationErrors {
-    const values = formArray.value;
+    const values = formArray.value.filter(val => val.length > 0);
     const controls = formArray.controls;
     const result = values.some((element, index) => {
       return values.indexOf(element) !== index;
@@ -125,7 +180,14 @@ export class EditAccountComponent implements OnInit {
     return null;
   }
 
-  trackByFn(index) {
-    return index;
+  participantNotMainAddress(formControl: FormControl): ValidationErrors {
+    try {
+      const mainAddress = formControl.parent.parent.get('tempAddress').value;
+      if (mainAddress == formControl.value) {
+        return { isMainAddress: true };
+      }
+    } catch (error) {
+      return null;
+    }
   }
 }
