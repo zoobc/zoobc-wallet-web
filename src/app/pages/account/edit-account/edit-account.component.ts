@@ -201,6 +201,7 @@ export class EditAccountComponent implements OnInit {
       if (mainAddress == formControl.value) {
         return { isMainAddress: true };
       }
+      return null;
     } catch (error) {
       return null;
     }
