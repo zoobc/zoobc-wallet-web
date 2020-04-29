@@ -21,7 +21,7 @@
         <ng-container *ngFor="let participant of participantsField.controls; let i = index; ">
           <div class="inline-control">
             <input-address [exceptContact]="account" style="width: 100%;" label="" classList="custom-mat"
-              [formControlName]="i" placeholder="{{'Participant '}} {{i+1}}...">
+              [formControlName]="i" [type]="'normal'" placeholder="{{'Participant '}} {{i+1}}...">
             </input-address>
             <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
               <i class="fas fa-trash"></i>
@@ -52,11 +52,14 @@
       </ng-container>
       <label>{{ 'Nonce'}}</label>
       <mat-form-field appearance="outline" color="accent">
-        <input formControlName="nonce" matInput type="text" />
+        <input formControlName="nonce" matInput type="number" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
         <mat-error *ngIf="nonceField.hasError('required')">
           {{ 'Nonce is required'}}
+        </mat-error>
+        <mat-error *ngIf="nonceField.hasError('min')">
+          {{ 'Minimum Nonce is 1'}}
         </mat-error>
       </ng-container>
       <label>{{ 'Minimum Signature'}}</label>
@@ -68,7 +71,7 @@
           {{ 'Minimum Signature is required'}}
         </mat-error>
         <mat-error *ngIf="minSignatureField.hasError('min')">
-          {{ 'Minimum Signature is 1' }}
+          {{ 'Minimum Signature is 2' }}
         </mat-error>
       </ng-container>
       <label>{{ 'Sign by'}}</label>

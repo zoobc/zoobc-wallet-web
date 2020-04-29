@@ -15,8 +15,8 @@ export class EditAccountComponent implements OnInit {
   formEditAccount: FormGroup;
   accountNameField = new FormControl('', Validators.required);
   participantsField = new FormArray([], this.uniqueParticipant);
-  nonceField = new FormControl('', Validators.required);
-  minSignatureField = new FormControl('', [Validators.required, Validators.min(1)]);
+  nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
+  minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
   tempAddressField = new FormControl(this.account.address);
   signBy: SavedAccount;
 
@@ -68,7 +68,9 @@ export class EditAccountComponent implements OnInit {
   }
 
   onEditAccount() {
-    if (this.formEditAccount.valid) {
+    let valSignBy: boolean = true;
+    if (this.isMultiSignature) valSignBy = this.validatedSignBy();
+    if (this.formEditAccount.valid && valSignBy) {
       let accounts = this.authServ.getAllAccount();
       for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
@@ -89,6 +91,7 @@ export class EditAccountComponent implements OnInit {
             delete accounts[i]['minSig'];
             delete accounts[i]['signBy'];
           }
+
           break;
         }
       }
@@ -116,6 +119,8 @@ export class EditAccountComponent implements OnInit {
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.dialogRef.close(true);
       this.router.navigateByUrl('/');
+    } else {
+      Swal.fire('Error', `Sign By field must be selected from participants`, 'error');
     }
   }
 
@@ -205,5 +210,10 @@ export class EditAccountComponent implements OnInit {
     } catch (error) {
       return null;
     }
+  }
+
+  validatedSignBy() {
+    const result = this.participantsField.value.includes(this.signBy.address);
+    return result;
   }
 }

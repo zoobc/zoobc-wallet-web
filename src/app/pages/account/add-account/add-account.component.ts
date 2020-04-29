@@ -17,8 +17,8 @@ export class AddAccountComponent implements OnInit {
   formAddAccount: FormGroup;
   accountNameField = new FormControl(`Account ${this.lenAccount}`, Validators.required);
   participantsField = new FormArray([], this.uniqueParticipant);
-  nonceField = new FormControl('', Validators.required);
-  minSignatureField = new FormControl('', [Validators.required, Validators.min(1)]);
+  nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
+  minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
 
   signBy: SavedAccount;
 
@@ -47,7 +47,9 @@ export class AddAccountComponent implements OnInit {
   }
 
   onAddAccount() {
-    if (this.formAddAccount.valid) {
+    let valSignBy: boolean = true;
+    if (this.isMultiSignature) valSignBy = this.validatedSignBy();
+    if (this.formAddAccount.valid && valSignBy) {
       const keyring = this.authServ.keyring;
       const path = this.authServ.generateDerivationPath();
       const childSeed = keyring.calcDerivationPath(path);
@@ -69,6 +71,8 @@ export class AddAccountComponent implements OnInit {
       this.authServ.addAccount(account);
       this.dialogRef.close();
       this.router.navigateByUrl('/');
+    } else {
+      Swal.fire('Error', `Sign By field must be selected from participants`, 'error');
     }
   }
 
@@ -142,5 +146,10 @@ export class AddAccountComponent implements OnInit {
       return { duplicate: true };
     }
     return null;
+  }
+
+  validatedSignBy() {
+    const result = this.participantsField.value.includes(this.signBy.address);
+    return result;
   }
 }

@@ -24,6 +24,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   @Input() label: string;
   @Input() classList: string;
   @Input() exceptContact: SavedAccount;
+  @Input() type: 'normal' | 'multisig' = null;
 
   value: string;
   tempVal: string[];
@@ -80,7 +81,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   }
 
   getAccounts() {
-    this.accounts = this.authServ.getAllAccount();
+    this.accounts = this.authServ.getAllAccount(this.type);
     if (this.exceptContact)
       this.accounts = this.accounts.filter(acc => acc.address !== this.exceptContact.address);
     this.accounts.forEach(account => {
