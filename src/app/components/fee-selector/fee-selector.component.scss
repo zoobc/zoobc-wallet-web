@@ -51,6 +51,7 @@
   .fee-choosen:enabled {
     color: white;
     background-color: map-get($primary, 600);
+    border-radius: 6px;
 
     .label {
       color: white !important;
