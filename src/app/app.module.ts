@@ -30,6 +30,7 @@ import {
   MatDividerModule,
   MatAutocompleteModule,
   MatTabsModule,
+  MatStepperModule,
 } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -75,6 +76,8 @@ import { InputAddressModule } from './components/input-address/input-address.mod
 import { InputAmountModule } from './components/input-amount/input-amount.module';
 import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-send.component';
 import { AccountComponent } from './pages/account/account.component';
+import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
+import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -115,6 +118,8 @@ export function getLanguage(languageServ: LanguageService) {
     MyTaskComponent,
     ConfirmSendComponent,
     AccountComponent,
+    MultisignatureComponent,
+    AddMultisigInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -169,6 +174,7 @@ export function getLanguage(languageServ: LanguageService) {
     FeeSelectorModule,
     InputAddressModule,
     InputAmountModule,
+    MatStepperModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -192,6 +198,7 @@ export function getLanguage(languageServ: LanguageService) {
     EditAccountComponent,
     AddNodeAdminComponent,
     ConfirmSendComponent,
+    AddMultisigInfoComponent,
   ],
 })
 export class AppModule {}

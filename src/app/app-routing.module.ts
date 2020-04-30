@@ -15,6 +15,7 @@ import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { MyTaskComponent } from './pages/my-task/my-task.component';
 import { AccountComponent } from './pages/account/account.component';
+import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -31,6 +32,7 @@ const routes: Routes = [
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskComponent },
       { path: 'accounts', component: AccountComponent },
+      { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',
