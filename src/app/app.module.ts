@@ -30,6 +30,7 @@ import {
   MatDividerModule,
   MatAutocompleteModule,
   MatTabsModule,
+  MatStepperModule,
 } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -77,6 +78,7 @@ import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-sen
 import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
 import { AccountComponent } from './pages/account/account.component';
 import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-info.component';
+import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -119,6 +121,7 @@ export function getLanguage(languageServ: LanguageService) {
     SendTransactionComponent,
     AccountComponent,
     MultisigInfoComponent,
+    CreateTransactionComponent,
   ],
   imports: [
     BrowserModule,
@@ -168,6 +171,7 @@ export function getLanguage(languageServ: LanguageService) {
     MatDividerModule,
     MatAutocompleteModule,
     MatTabsModule,
+    MatStepperModule,
     EscrowTransactionModule,
     MultisigTransactionModule,
     FeeSelectorModule,
