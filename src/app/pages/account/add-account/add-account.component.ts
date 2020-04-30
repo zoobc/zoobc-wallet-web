@@ -39,17 +39,11 @@ export class AddAccountComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.signBy = this.authServ.getCurrAccount();
-    if (this.signBy.type == 'multisig') {
-      this.signBy = this.authServ.getAllAccount('normal')[0];
-    }
     this.disableFieldMultiSignature();
   }
 
   onAddAccount() {
-    let valSignBy: boolean = true;
-    if (this.isMultiSignature) valSignBy = this.validatedSignBy();
-    if (this.formAddAccount.valid && valSignBy) {
+    if (this.formAddAccount.valid) {
       const keyring = this.authServ.keyring;
       const path = this.authServ.generateDerivationPath();
       const childSeed = keyring.calcDerivationPath(path);
@@ -63,16 +57,15 @@ export class AddAccountComponent implements OnInit {
       };
       if (this.isMultiSignature) {
         account.type = 'multisig';
+        account.path = this.signBy.path;
         account.participants = this.participantsField.value.filter(value => value.length > 0);
         account.nonce = this.nonceField.value;
         account.minSig = this.minSignatureField.value;
-        account.signBy = this.signBy;
+        account.signByAddress = this.signBy.address;
       }
       this.authServ.addAccount(account);
       this.dialogRef.close();
       this.router.navigateByUrl('/');
-    } else {
-      Swal.fire('Error', `Sign By field must be selected from participants`, 'error');
     }
   }
 
@@ -146,10 +139,5 @@ export class AddAccountComponent implements OnInit {
       return { duplicate: true };
     }
     return null;
-  }
-
-  validatedSignBy() {
-    const result = this.participantsField.value.includes(this.signBy.address);
-    return result;
   }
 }

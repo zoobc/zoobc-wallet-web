@@ -10,18 +10,13 @@
         {{ 'Account name is required' | translate }}
       </mat-error>
     </ng-container>
-    <div style="margin-bottom: 8px;">
-      <mat-checkbox class="checkbox-margin" [checked]="isMultiSignature" (change)="toogleMultiSignature()">
-        {{ 'Multisignature Account' }}
-      </mat-checkbox>
-    </div>
     <ng-container *ngIf="isMultiSignature">
       <label>{{'Participants'}}</label>
       <div formArrayName="participants">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index; ">
           <div class="inline-control">
             <input-address [exceptContact]="account" style="width: 100%;" label="" classList="custom-mat"
-              [formControlName]="i" [type]="'normal'" placeholder="{{'Participant '}} {{i+1}}...">
+              [formControlName]="i" placeholder="{{'Participant '}} {{i+1}}...">
             </input-address>
             <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
               <i class="fas fa-trash"></i>
@@ -75,7 +70,7 @@
         </mat-error>
       </ng-container>
       <label>{{ 'Sign by'}}</label>
-      <account-selector [defaultValue]="signBy" [type]="'normal'" [switchAccount]="false"
+      <account-selector [selectedValue]="account.signByAddress" [type]="'normal'" [switchAccount]="false"
         (select)="onSwitchSignBy($event)"></account-selector>
     </ng-container>
     <button mat-flat-button color="primary" type="submit" [disabled]="formEditAccount.invalid">

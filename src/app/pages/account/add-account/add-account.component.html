@@ -20,7 +20,7 @@
       <div formArrayName="participants">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index;">
           <div class="inline-control">
-            <input-address style="width: 100%;" label="" classList="custom-mat" [type]="'normal'" [formControlName]="i"
+            <input-address style="width: 100%;" label="" classList="custom-mat" [formControlName]="i"
               placeholder="{{'Participant '}} {{i+1}}...">
             </input-address>
             <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
@@ -77,6 +77,5 @@
     <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid">
       {{ 'Add' | translate }}
     </button>
-
   </form>
 </div>

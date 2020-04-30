@@ -41,6 +41,7 @@ export class EditAccountComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.enableFieldMultiSignature();
     if (!this.isMultiSignature) this.disableFieldMultiSignature();
   }
 
@@ -49,7 +50,6 @@ export class EditAccountComponent implements OnInit {
     this.patchPartisipant();
     this.nonceField.patchValue(this.account.nonce);
     this.minSignatureField.patchValue(this.account.minSig);
-    this.signBy = this.account.signBy;
   }
 
   patchPartisipant() {
@@ -68,30 +68,19 @@ export class EditAccountComponent implements OnInit {
   }
 
   onEditAccount() {
-    let valSignBy: boolean = true;
-    if (this.isMultiSignature) valSignBy = this.validatedSignBy();
-    if (this.formEditAccount.valid && valSignBy) {
+    if (this.formEditAccount.valid) {
       let accounts = this.authServ.getAllAccount();
       for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
-        if (account.path == this.account.path) {
+        if (account.address == this.account.address) {
           accounts[i].name = this.accountNameField.value;
           if (this.isMultiSignature) {
-            //add multi signature prop
-            accounts[i].type = 'multisig';
             accounts[i].participants = this.participantsField.value.filter(value => value.length > 0);
             accounts[i].nonce = this.nonceField.value;
             accounts[i].minSig = this.minSignatureField.value;
-            accounts[i].signBy = this.signBy;
-          } else {
-            //remove multi signature prop
-            accounts[i].type = 'normal';
-            delete accounts[i]['participants'];
-            delete accounts[i]['nonce'];
-            delete accounts[i]['minSig'];
-            delete accounts[i]['signBy'];
+            accounts[i].signByAddress = this.signBy.address;
+            accounts[i].path = this.signBy.path;
           }
-
           break;
         }
       }
@@ -99,28 +88,17 @@ export class EditAccountComponent implements OnInit {
       if (currAcc.path == this.account.path) {
         currAcc.name = this.accountNameField.value;
         if (this.isMultiSignature) {
-          //add multi signature prop
-          currAcc.type = 'multisig';
           currAcc.participants = this.participantsField.value.filter(value => value.length > 0);
           currAcc.nonce = this.nonceField.value;
           currAcc.minSig = this.minSignatureField.value;
-          currAcc.signBy = this.signBy;
-        } else {
-          //remove multi signature prop
-          currAcc.type = 'normal';
-          delete currAcc['participants'];
-          delete currAcc['nonce'];
-          delete currAcc['minSig'];
-          delete currAcc['signBy'];
+          currAcc.path = this.signBy.path;
+          currAcc.signByAddress = this.signBy.address;
         }
         localStorage.setItem('CURR_ACCOUNT', JSON.stringify(currAcc));
       }
-
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.dialogRef.close(true);
       this.router.navigateByUrl('/');
-    } else {
-      Swal.fire('Error', `Sign By field must be selected from participants`, 'error');
     }
   }
 
@@ -134,20 +112,6 @@ export class EditAccountComponent implements OnInit {
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
-  }
-
-  toogleMultiSignature() {
-    this.isMultiSignature = !this.isMultiSignature;
-    if (this.isMultiSignature) {
-      this.enableFieldMultiSignature();
-      if (this.account.type == 'multisig') {
-        this.patchMultiSignatureForm();
-      } else {
-        this.pushInitParticipant();
-      }
-    } else {
-      this.disableFieldMultiSignature();
-    }
   }
 
   pushInitParticipant() {
@@ -210,10 +174,5 @@ export class EditAccountComponent implements OnInit {
     } catch (error) {
       return null;
     }
-  }
-
-  validatedSignBy() {
-    const result = this.participantsField.value.includes(this.signBy.address);
-    return result;
   }
 }
