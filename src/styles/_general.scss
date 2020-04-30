@@ -97,6 +97,7 @@ a:not([href='']) {
   border-radius: 8px !important;
   color: $black1;
 }
+// ========================= END GENERAL ============================
 
 // ======================== ACCORDION ==============================
 .mat-accordion {
@@ -128,7 +129,7 @@ a:not([href='']) {
     }
   }
 }
-// ======================== ACCORDION ==============================
+// ======================== END ACCORDION ===========================
 
 // ============================ BUTTON ============================
 button[mat-flat-button],
@@ -252,7 +253,6 @@ mat-form-field {
 // ============================== END FORM ==============================
 
 // ============================ SWAL CUSTOM STYLE ========================
-
 .swal2-content {
   .loader {
     font-size: 48px;
@@ -277,6 +277,7 @@ mat-form-field {
   font-size: 24px !important;
   font-weight: 400 !important;
 }
+// ========================= END SWAL CUSTOM STYLE ===================
 
 // ================== SKELETON LOADER =============== //
 .skeleton {

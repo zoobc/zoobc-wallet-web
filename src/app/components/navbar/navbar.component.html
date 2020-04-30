@@ -29,6 +29,7 @@
         class="address-card"
         routerLink="/accounts"
         target="_blank"
+        *ngIf="isLoggedIn"
       >
         <i class="fas fa-address-card"></i>
       </button>
@@ -47,11 +48,6 @@
           {{ language.country }}
         </button>
       </mat-menu>
-
-      <!-- <a mat-icon-button class="account-dropdown" matTooltip="{{ 'Feedback' | translate }}" routerLink="/feedback"
-        target="_blank">
-        <i class="fa fa-comments"></i>
-      </a> -->
 
       <!-- account menu -->
       <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="isLoggedIn">
