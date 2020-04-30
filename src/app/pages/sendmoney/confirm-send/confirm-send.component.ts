@@ -14,14 +14,12 @@ export class ConfirmSendComponent implements OnInit {
   ) {}
   account: any;
   form: any;
-  customFee: boolean;
   kindFee: string;
   advancedMenu: boolean = false;
   currencyRateName: string;
   ngOnInit() {
     this.account = this.data.account;
     this.form = this.data.form;
-    this.customFee = this.data.customFee;
     this.kindFee = this.data.kindFee;
     this.advancedMenu = this.data.advancedMenu;
     this.currencyRateName = this.data.currencyName;

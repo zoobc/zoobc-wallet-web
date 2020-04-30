@@ -75,9 +75,11 @@ import { FeeSelectorModule } from './components/fee-selector/fee-selector.module
 import { InputAddressModule } from './components/input-address/input-address.module';
 import { InputAmountModule } from './components/input-amount/input-amount.module';
 import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-send.component';
+import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
 import { AccountComponent } from './pages/account/account.component';
-import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
+import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-info.component';
 import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
+import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -117,9 +119,11 @@ export function getLanguage(languageServ: LanguageService) {
     AddNodeAdminComponent,
     MyTaskComponent,
     ConfirmSendComponent,
+    SendTransactionComponent,
     AccountComponent,
-    MultisignatureComponent,
+    MultisigInfoComponent,
     AddMultisigInfoComponent,
+    CreateTransactionComponent,
   ],
   imports: [
     BrowserModule,
@@ -169,6 +173,7 @@ export function getLanguage(languageServ: LanguageService) {
     MatDividerModule,
     MatAutocompleteModule,
     MatTabsModule,
+    MatStepperModule,
     EscrowTransactionModule,
     MultisigTransactionModule,
     FeeSelectorModule,
@@ -199,6 +204,7 @@ export function getLanguage(languageServ: LanguageService) {
     AddNodeAdminComponent,
     ConfirmSendComponent,
     AddMultisigInfoComponent,
+    MultisigInfoComponent,
   ],
 })
 export class AppModule {}

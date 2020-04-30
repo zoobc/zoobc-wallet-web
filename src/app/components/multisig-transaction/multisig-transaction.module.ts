@@ -9,11 +9,7 @@ import { MatCardModule, MatButtonModule } from '@angular/material';
 import { AddressModule } from '../address/address.module';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(
-    httpClient,
-    './assets/languages/locales/',
-    '.json'
-  );
+  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 
 @NgModule({
