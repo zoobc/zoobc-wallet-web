@@ -14,13 +14,12 @@
     .label {
       font-size: 14px;
       color: $black3;
-      font-weight: bold;
       margin-bottom: 8px;
     }
 
     .participants {
-      padding: 0;
-      margin: 0px 0px 20px 15px;
+      padding-left: 24px;
+      margin: 8px 0px 24px 0px;
       li {
         list-style-type: circle;
         margin-bottom: 6px;
@@ -29,12 +28,11 @@
 
     .nonce,
     .min-signature {
-      font-weight: normal;
-      color: #212121;
+      color: $black1;
     }
 
     .signed-by {
-      margin: 20px 0;
+      margin: 24px 0;
     }
 
     .share-multisig-info {
