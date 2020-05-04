@@ -17,6 +17,7 @@ import { MyTaskComponent } from './pages/my-task/my-task.component';
 import { AccountComponent } from './pages/account/account.component';
 import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
+import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -33,6 +34,7 @@ const routes: Routes = [
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskComponent },
       { path: 'accounts', component: AccountComponent },
+      { path: 'multisignature', component: MultisignatureComponent },
       { path: 'multisignature/send-transaction', component: SendTransactionComponent },
       { path: 'multisignature/create-transaction', component: CreateTransactionComponent },
       {
