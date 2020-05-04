@@ -193,7 +193,6 @@ export class SendmoneyComponent implements OnInit {
         width: '500px',
         data: {
           form: this.formSend.value,
-          customFee: this.customFee,
           kindFee: this.kindFee,
           advancedMenu: this.advancedMenu,
           account: this.account,
@@ -231,7 +230,6 @@ export class SendmoneyComponent implements OnInit {
 
   onClickFeeChoose(value) {
     this.kindFee = value;
-    console.log('Kindfee', value);
   }
 
   disableFieldAdvancedMenu() {

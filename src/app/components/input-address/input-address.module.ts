@@ -4,18 +4,10 @@ import { InputAddressComponent } from './input-address.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  MatFormFieldModule,
-  MatInputModule,
-  MatAutocompleteModule,
-} from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatAutocompleteModule } from '@angular/material';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(
-    httpClient,
-    './assets/languages/locales/',
-    '.json'
-  );
+  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 
 @NgModule({

@@ -1,17 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter, Input } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
-import {
-  CurrencyRateService,
-  Currency,
-} from 'src/app/services/currency-rate.service';
+import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'account-selector',
@@ -20,6 +10,10 @@ import {
 })
 export class AccountSelectorComponent implements OnInit {
   @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
+
+  @Input() type: 'normal' | 'multisig' = null;
+  @Input() switchAccount: boolean = true;
+  @Input() selectedValue: string;
   @Output() select: EventEmitter<SavedAccount> = new EventEmitter();
 
   accountRefDialog: MatDialogRef<any>;
@@ -48,10 +42,16 @@ export class AccountSelectorComponent implements OnInit {
     this.isLoading = true;
     this.isError = false;
     this.authServ
-      .getAccountsWithBalance()
+      .getAccountsWithBalance(this.type)
       .then((res: SavedAccount[]) => {
         this.accounts = res;
-        this.account = this.accounts.find(acc => this.account.path == acc.path);
+        if (this.selectedValue) {
+          this.account = this.accounts.find(acc => acc.address == this.selectedValue);
+        } else {
+          this.account = this.accounts.find(acc => this.account.address == acc.address);
+          if (!this.account) this.account = this.accounts[0];
+        }
+
         this.select.emit(this.account);
       })
       .catch(() => (this.isError = true))
@@ -65,7 +65,7 @@ export class AccountSelectorComponent implements OnInit {
   }
 
   onSwitchAccount(account: SavedAccount) {
-    this.authServ.switchAccount(account);
+    if (this.switchAccount) this.authServ.switchAccount(account);
     this.account = account;
     this.accountRefDialog.close();
     this.select.emit(account);

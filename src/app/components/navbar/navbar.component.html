@@ -1,12 +1,7 @@
 <div class="header">
   <div class="header-container">
     <div class="brand">
-      <button
-        mat-icon-button
-        *ngIf="isLoggedIn"
-        class="hamburger"
-        (click)="onToggle()"
-      >
+      <button mat-icon-button *ngIf="isLoggedIn" class="hamburger" (click)="onToggle()">
         <i class="fa fa-bars" style="font-size: 18px"></i>
       </button>
       <a routerLink="/" class="brand-text">
@@ -28,12 +23,19 @@
         <span>Feedback</span>
       </button>
 
-      <!-- language menu -->
       <button
-        mat-button
-        class="language-dropdown"
-        [matMenuTriggerFor]="language"
+        mat-icon-button
+        matTooltip="Accounts"
+        class="address-card"
+        routerLink="/accounts"
+        target="_blank"
+        *ngIf="isLoggedIn"
       >
+        <i class="fas fa-address-card"></i>
+      </button>
+
+      <!-- language menu -->
+      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
         <span>{{ activeLanguage }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
@@ -47,18 +49,8 @@
         </button>
       </mat-menu>
 
-      <!-- <a mat-icon-button class="account-dropdown" matTooltip="{{ 'Feedback' | translate }}" routerLink="/feedback"
-        target="_blank">
-        <i class="fa fa-comments"></i>
-      </a> -->
-
       <!-- account menu -->
-      <button
-        mat-icon-button
-        class="account-dropdown"
-        [matMenuTriggerFor]="account"
-        *ngIf="isLoggedIn"
-      >
+      <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="isLoggedIn">
         <i class="fa fa-cog"></i>
       </button>
       <mat-menu #account="matMenu">

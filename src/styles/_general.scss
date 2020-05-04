@@ -4,6 +4,7 @@ body {
   margin: 0px;
   font-family: 'Roboto', sans-serif !important;
   font-size: 14px;
+  color: $black1 !important;
 }
 
 a:not([href='']) {
@@ -17,6 +18,7 @@ a:not([href='']) {
   }
 }
 
+// =========================== GENERAL =============================
 .reload-button {
   font-size: 18px !important;
   color: $black2 !important;
@@ -64,18 +66,40 @@ a:not([href='']) {
   }
 }
 
-// ==================== DIALOG =====================
-.mat-dialog-container {
-  padding: 24px 16px !important;
+.text-left {
+  text-align: left;
 }
 
-// ==================== CARD ========================
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.row {
+  padding: 0px;
+  margin: 0 -8px;
+
+  [class^='col'] {
+    padding: 0 8px;
+  }
+}
+
+.mat-dialog-container {
+  padding: 24px 16px !important;
+  color: $black1 !important;
+}
+
 .mat-card {
   box-shadow: 0 0 10px rgba(52, 61, 72, 0.2) !important;
   border-radius: 8px !important;
+  color: $black1;
 }
+// ========================= END GENERAL ============================
 
-// ==================== ACCORDION ========================
+// ======================== ACCORDION ==============================
 .mat-accordion {
   .mat-expansion-panel {
     box-shadow: none !important;
@@ -105,8 +129,9 @@ a:not([href='']) {
     }
   }
 }
+// ======================== END ACCORDION ===========================
 
-// ===================== CUSTOM BUTTON =================
+// ============================ BUTTON ============================
 button[mat-flat-button],
 a[mat-flat-button],
 a[mat-stroked-button],
@@ -123,46 +148,30 @@ button[mat-stroked-button] {
   }
 
   &.small {
-    height: 32px;
+    height: 28px;
     font-size: 12px;
-    line-height: 12px;
+    line-height: 28px;
   }
 }
 
 a[mat-stroked-button],
 button[mat-stroked-button] {
-  border: 2px solid map-get($primary, 500) !important;
+  border: 1px solid map-get($primary, 600) !important;
+  &.small {
+    line-height: 26px !important;
+  }
+
+  &[color='accent'] {
+    border: 1px solid map-get($accent, 500) !important;
+  }
 
   &[color='warn'] {
-    border: 2px solid $red !important;
+    border: 1px solid $red !important;
   }
 }
+// ============================ END BUTTON ============================
 
-// ====================== TEXT ALIGNMENT ======================
-.text-left {
-  text-align: left;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-// ============================ CUSTOM GRID ========================
-.row {
-  padding: 0px;
-  margin: 0 -8px;
-
-  [class^='col'] {
-    padding: 0 8px;
-  }
-}
-
-// ============================ FORM ========================
-
+// ================================ FORM ==============================
 form.grid {
   display: grid;
 }
@@ -199,7 +208,8 @@ mat-form-field {
     top: 24px !important;
   }
 
-  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
+    .mat-form-field-label {
     margin-top: 4px !important;
     transform: translateY(-1.49373em) scale(0.8) !important;
   }
@@ -208,12 +218,21 @@ mat-form-field {
     transform: none !important;
   }
 
+  button[mat-icon-button][matSuffix] {
+    color: $black2;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px;
+    line-height: 16px;
+    top: -4px;
+  }
+
   &.block {
     width: 100%;
   }
 
   // if mat-error exactly on bottom
-  &~.mat-error {
+  & ~ .mat-error {
     margin-top: -8px;
   }
 }
@@ -231,9 +250,9 @@ mat-form-field {
   font-size: 14px;
   margin-bottom: 8px;
 }
+// ============================== END FORM ==============================
 
 // ============================ SWAL CUSTOM STYLE ========================
-
 .swal2-content {
   .loader {
     font-size: 48px;
@@ -258,10 +277,10 @@ mat-form-field {
   font-size: 24px !important;
   font-weight: 400 !important;
 }
+// ========================= END SWAL CUSTOM STYLE ===================
 
 // ================== SKELETON LOADER =============== //
 .skeleton {
-
   // &:hover { background-color: white !important; }
   .skeleton-image {
     background-color: #eeeeee !important;
@@ -277,10 +296,7 @@ mat-form-field {
   .skeleton-text {
     height: 16px;
     // background-color: #eeeeee;
-    background-image: linear-gradient(90deg,
-        #f4f4f4 0px,
-        rgba(229, 229, 229, 0.8) 40px,
-        #f4f4f4 80px);
+    background-image: linear-gradient(90deg, #f4f4f4 0px, rgba(229, 229, 229, 0.8) 40px, #f4f4f4 80px);
     background-size: 1000px;
     margin-bottom: 8px;
     border-radius: 6px;
@@ -312,24 +328,5 @@ mat-form-field {
   40%,
   100% {
     background-position: 200px;
-  }
-}
-
-// ================== DATA NOT AVAILABLE =============== //
-.data-unavailable {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: $black3;
-  padding: 2rem;
-
-  i {
-    font-size: 3rem;
-    margin: 1rem 0;
-  }
-
-  .message {
-    font-size: 1.1rem;
-    margin: 0.5rem 0;
   }
 }

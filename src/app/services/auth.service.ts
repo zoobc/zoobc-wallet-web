@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import zoobc, {
-  BIP32Interface,
-  ZooKeyring,
-  TransactionListParams,
-  toTransactionListWallet,
-} from 'zoobc-sdk';
+import zoobc, { BIP32Interface, ZooKeyring, TransactionListParams, toTransactionListWallet } from 'zoobc-sdk';
 
 export interface SavedAccount {
-  path: number;
   name: string;
+  path: number;
+  type: 'normal' | 'multisig';
   nodeIP: string;
   address: string;
+  participants?: [string];
+  nonce?: number;
+  minSig?: number;
   balance?: number;
   lastTx?: number;
+  signByAddress?: string;
 }
 
 @Injectable({
@@ -38,8 +38,7 @@ export class AuthService {
   }
 
   generateDerivationPath(): number {
-    const accounts: SavedAccount[] =
-      JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+    const accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
     return accounts.length;
   }
 
@@ -74,13 +73,18 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }
 
-  getAllAccount(): SavedAccount[] {
-    return JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+  getAllAccount(type?: 'normal' | 'multisig'): SavedAccount[] {
+    let accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+
+    if (type == 'normal') return accounts.filter(acc => acc.type == 'normal');
+    else if (type == 'multisig') return accounts.filter(acc => acc.type == 'multisig');
+    return accounts;
   }
 
-  getAccountsWithBalance(): Promise<SavedAccount[]> {
+  getAccountsWithBalance(type?: 'normal' | 'multisig'): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
-      let accounts = this.getAllAccount();
+      let accounts = this.getAllAccount(type);
+
       let error = false;
 
       for (let i = 0; i < accounts.length; i++) {
@@ -97,8 +101,7 @@ export class AuthService {
         await zoobc.Transactions.getList(params)
           .then(res => {
             const tx = toTransactionListWallet(res, account.address);
-            if (tx.transactions.length > 0)
-              account.lastTx = tx.transactions[0].timestamp;
+            if (tx.transactions.length > 0) account.lastTx = tx.transactions[0].timestamp;
             else account.lastTx = null;
             return zoobc.Account.getBalance(account.address);
           })
@@ -118,9 +121,9 @@ export class AuthService {
 
   addAccount(account: SavedAccount) {
     const accounts = this.getAllAccount();
-    const { path } = account;
+    const { address } = account;
     const isDuplicate = accounts.find(acc => {
-      if (path && acc.path === path) return true;
+      if (address && acc.address === address) return true;
       return false;
     });
 
