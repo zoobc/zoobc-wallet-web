@@ -12,6 +12,7 @@ export interface SavedAccount {
   minSig?: number;
   balance?: number;
   lastTx?: number;
+  signByAddress?: string;
 }
 
 @Injectable({
@@ -120,9 +121,9 @@ export class AuthService {
 
   addAccount(account: SavedAccount) {
     const accounts = this.getAllAccount();
-    const { path } = account;
+    const { address } = account;
     const isDuplicate = accounts.find(acc => {
-      if (path && acc.path === path) return true;
+      if (address && acc.address === address) return true;
       return false;
     });
 

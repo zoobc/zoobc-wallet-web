@@ -55,7 +55,7 @@ export class AddNodeAdminComponent {
           });
         })
         .catch(async err => {
-          Swal.fire('Error', err, 'error');
+          Swal.fire('Error', err.message, 'error');
           this.isLoading = false;
         });
     }
