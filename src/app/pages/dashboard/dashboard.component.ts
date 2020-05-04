@@ -196,13 +196,14 @@ export class DashboardComponent implements OnInit {
   }
 
   onOpenAddAccount() {
-    this.dialog.open(AddAccountComponent, { width: '360px' });
+    this.dialog.open(AddAccountComponent, { width: '360px', maxHeight: '99vh' });
   }
 
   onOpenEditAccount(e, account: SavedAccount) {
     e.stopPropagation();
     const dialog = this.dialog.open(EditAccountComponent, {
       width: '360px',
+      maxHeight: '99vh',
       data: account,
     });
     dialog.afterClosed().subscribe((edited: boolean) => {

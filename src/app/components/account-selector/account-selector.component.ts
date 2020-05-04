@@ -13,6 +13,7 @@ export class AccountSelectorComponent implements OnInit {
 
   @Input() type: 'normal' | 'multisig' = null;
   @Input() switchAccount: boolean = true;
+  @Input() selectedValue: string;
   @Output() select: EventEmitter<SavedAccount> = new EventEmitter();
 
   accountRefDialog: MatDialogRef<any>;
@@ -44,7 +45,13 @@ export class AccountSelectorComponent implements OnInit {
       .getAccountsWithBalance(this.type)
       .then((res: SavedAccount[]) => {
         this.accounts = res;
-        this.account = this.accounts.find(acc => this.account.path == acc.path);
+        if (this.selectedValue) {
+          this.account = this.accounts.find(acc => acc.address == this.selectedValue);
+        } else {
+          this.account = this.accounts.find(acc => this.account.address == acc.address);
+          if (!this.account) this.account = this.accounts[0];
+        }
+
         this.select.emit(this.account);
       })
       .catch(() => (this.isError = true))
