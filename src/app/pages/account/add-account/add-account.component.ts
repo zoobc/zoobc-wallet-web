@@ -124,16 +124,9 @@ export class AddAccountComponent implements OnInit {
     }
   }
 
-  reComposeValidation() {
-    let presentValidator: ValidatorFn = this.participantsField.controls[1].validator;
-    this.participantsField.controls[1].setValidators([presentValidator, Validators.required]);
-    this.participantsField.controls[1].updateValueAndValidity();
-  }
-
   removeParticipant(index: number) {
     if (this.participantsField.length > this.minParticipant) {
       this.participantsField.removeAt(index);
-      if (index <= 1) this.reComposeValidation();
     } else {
       Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
     }
