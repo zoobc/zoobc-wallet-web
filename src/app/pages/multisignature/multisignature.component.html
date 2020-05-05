@@ -1,0 +1,99 @@
+<div class="multisinature-container">
+  <h2 class="mat-h2">{{'Multisignature Transaction' | translate}}</h2>
+  <mat-card>
+    <h4 class="mat-h4 check-title">{{'Send Money'|| translate}}</h4>
+    <p class="check-desciption">
+      {{'Please select what properties you need to create multisignature transaction'| translate}}</p>
+    <div class="row check-box">
+      <div class="column-check">
+        <mat-checkbox class="check-margin" [checked]="addInfo">
+          {{ 'Add Multisignature Info' | translate}}
+          <i class="fas fa-info-circle" matTooltip="{{'Add Multisignature Info'| translate}}"
+            matTooltipPosition="above"></i>
+        </mat-checkbox>
+      </div>
+      <div class="column-check">
+        <mat-checkbox class="check-margin" [checked]="createTransaction">
+          {{ 'Create Transaction' | translate}}
+          <i class="fas fa-info-circle" matTooltip="{{'Create Transaction'| translate}}" matTooltipPosition="above"></i>
+        </mat-checkbox>
+      </div>
+      <div class="column-check">
+        <mat-checkbox class="check-margin" [checked]="addSignature">
+          {{ 'Add participants signature'| translate }}
+          <i class="fas fa-info-circle" matTooltip="{{'Add participants signature'| translate}}"
+            matTooltipPosition="above"></i>
+        </mat-checkbox>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <button (click)="onNext()" mat-flat-button class="custom-btn" color="primary" type="button">
+          {{ 'Next' | translate}}
+        </button>
+      </div>
+    </div>
+  </mat-card>
+  <div class="row">
+    <div class="col-12">
+      <h3 class="mat-h3 subtitle">{{ 'Multisignature Drafts'| translate}}</h3>
+    </div>
+  </div>
+  <div class="multisignature-drafts">
+    <mat-card style="padding: 0">
+      <ng-container *ngIf="multiSigDrafts">
+        <div class="no-content padding" *ngIf="multiSigDrafts.length <= 0">
+          <i matPrefix class="fa fa-receipt"></i>
+          <span class="message">{{ 'No Draft Record'| translate}}</span>
+        </div>
+        <div [className]="'transaction-item hover row' 
+                " *ngFor="let draft of multiSigDrafts">
+          <div class="col-12 col-sm-8">
+            <div class="alias"><b>{{'From'| translate}}</b>
+              <span *ngIf="draft.senderAlias">({{draft.senderAlias}})</span>
+            </div>
+            <div class="address">
+              <wallet-address [value]="draft.sender"></wallet-address>
+            </div>
+            <div class="alias"><b>{{'To'| translate}}</b>
+              <span *ngIf="draft.recipientAlias">({{draft.recipientAlias}})</span>
+            </div>
+            <div class="address">
+              <wallet-address [value]="draft.recipient"></wallet-address>
+            </div>
+          </div>
+          <div class="col-12 col-sm-4 text-right">
+            <div class="amount">
+              {{draft.amount}} ZBC
+            </div>
+            <button type="button" class="btn-delete" mat-icon-button color="primary">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isLoading">
+        <div class="transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+          <div class="col-7 col-sm-8">
+            <div class="skeleton-text" style="width:50%;"></div>
+            <div class="skeleton-text small" style="width:75%;"></div>
+            <div class="skeleton-text small" style="width:25%;"></div>
+          </div>
+          <div class="col-5 col-sm-4">
+            <div class="skeleton-text" style="width:71%;float:right"></div>
+            <div class="skeleton-text small" style="width:30%;float:right"></div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="no-content padding" *ngIf="isError">
+        <i matPrefix class="fa fa-exclamation-triangle"></i>
+        <span class="message">
+          {{ 'An error occurred while processing your request' | translate }}
+        </span>
+        <button mat-flat-button color="primary" (click)="onRefresh()">
+          {{ 'Try Again' | translate }}
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>
