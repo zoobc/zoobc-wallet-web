@@ -78,6 +78,7 @@ import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-sen
 import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
 import { AccountComponent } from './pages/account/account.component';
 import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-info.component';
+import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 
 // AoT requires an exported function for factories
@@ -121,6 +122,7 @@ export function getLanguage(languageServ: LanguageService) {
     SendTransactionComponent,
     AccountComponent,
     MultisigInfoComponent,
+    AddMultisigInfoComponent,
     CreateTransactionComponent,
   ],
   imports: [
@@ -177,6 +179,7 @@ export function getLanguage(languageServ: LanguageService) {
     FeeSelectorModule,
     InputAddressModule,
     InputAmountModule,
+    MatStepperModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -200,6 +203,7 @@ export function getLanguage(languageServ: LanguageService) {
     EditAccountComponent,
     AddNodeAdminComponent,
     ConfirmSendComponent,
+    AddMultisigInfoComponent,
     MultisigInfoComponent,
   ],
 })
