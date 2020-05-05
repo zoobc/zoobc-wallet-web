@@ -1,39 +1,42 @@
 <div class="multisinature-container">
-  <h2 class="mat-h2">{{'Multisignature Transaction'}}</h2>
+  <h2 class="mat-h2">{{'Multisignature Transaction' | translate}}</h2>
   <mat-card>
-    <h4 class="mat-h4 check-title">Send Money</h4>
-    <p class="check-desciption">{{'Please select what properties you need to create multisignature transaction'}}</p>
+    <h4 class="mat-h4 check-title">{{'Send Money'|| translate}}</h4>
+    <p class="check-desciption">
+      {{'Please select what properties you need to create multisignature transaction'| translate}}</p>
     <div class="row check-box">
       <div class="column-check">
         <mat-checkbox class="check-margin" [checked]="addInfo">
-          {{ 'Add Multisignature Info' }}
-          <i class="fas fa-info-circle" matTooltip="{{'Add Multisignature Info'}}" matTooltipPosition="above"></i>
+          {{ 'Add Multisignature Info' | translate}}
+          <i class="fas fa-info-circle" matTooltip="{{'Add Multisignature Info'| translate}}"
+            matTooltipPosition="above"></i>
         </mat-checkbox>
       </div>
       <div class="column-check">
         <mat-checkbox class="check-margin" [checked]="createTransaction">
-          {{ 'Create Transaction' }}
-          <i class="fas fa-info-circle" matTooltip="{{'Create Transaction'}}" matTooltipPosition="above"></i>
+          {{ 'Create Transaction' | translate}}
+          <i class="fas fa-info-circle" matTooltip="{{'Create Transaction'| translate}}" matTooltipPosition="above"></i>
         </mat-checkbox>
       </div>
       <div class="column-check">
         <mat-checkbox class="check-margin" [checked]="addSignature">
-          {{ 'Add participants signature' }}
-          <i class="fas fa-info-circle" matTooltip="{{'Add participants signature'}}" matTooltipPosition="above"></i>
+          {{ 'Add participants signature'| translate }}
+          <i class="fas fa-info-circle" matTooltip="{{'Add participants signature'| translate}}"
+            matTooltipPosition="above"></i>
         </mat-checkbox>
       </div>
     </div>
     <div class="row">
       <div class="col-12">
         <button (click)="onNext()" mat-flat-button class="custom-btn" color="primary" type="button">
-          {{ 'Next'}}
+          {{ 'Next' | translate}}
         </button>
       </div>
     </div>
   </mat-card>
   <div class="row">
     <div class="col-12">
-      <h3 class="mat-h3 subtitle">{{ 'Multisignature Drafts'}}</h3>
+      <h3 class="mat-h3 subtitle">{{ 'Multisignature Drafts'| translate}}</h3>
     </div>
   </div>
   <div class="multisignature-drafts">
@@ -41,18 +44,18 @@
       <ng-container *ngIf="multiSigDrafts">
         <div class="no-content padding" *ngIf="multiSigDrafts.length <= 0">
           <i matPrefix class="fa fa-receipt"></i>
-          <span class="message">{{ 'No Draft Record'}}</span>
+          <span class="message">{{ 'No Draft Record'| translate}}</span>
         </div>
         <div [className]="'transaction-item hover row' 
                 " *ngFor="let draft of multiSigDrafts">
           <div class="col-12 col-sm-8">
-            <div class="alias"><b>From</b>
+            <div class="alias"><b>{{'From'| translate}}</b>
               <span *ngIf="draft.senderAlias">({{draft.senderAlias}})</span>
             </div>
             <div class="address">
               <wallet-address [value]="draft.sender"></wallet-address>
             </div>
-            <div class="alias"><b>To</b>
+            <div class="alias"><b>{{'To'| translate}}</b>
               <span *ngIf="draft.recipientAlias">({{draft.recipientAlias}})</span>
             </div>
             <div class="address">
