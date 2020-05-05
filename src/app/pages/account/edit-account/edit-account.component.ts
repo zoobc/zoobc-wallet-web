@@ -85,7 +85,7 @@ export class EditAccountComponent implements OnInit {
         }
       }
       let currAcc = this.authServ.getCurrAccount();
-      if (currAcc.path == this.account.path) {
+      if (currAcc.address == this.account.address) {
         currAcc.name = this.accountNameField.value;
         if (this.isMultiSignature) {
           currAcc.participants = this.participantsField.value.filter(value => value.length > 0);
