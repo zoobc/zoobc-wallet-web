@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormArray, ValidationErrors, Valida
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { getZBCAdress } from 'zoobc-sdk';
+import zoobc, { getZBCAdress, MultiSigAddress } from 'zoobc-sdk';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -44,25 +44,40 @@ export class AddAccountComponent implements OnInit {
 
   onAddAccount() {
     if (this.formAddAccount.valid) {
-      const keyring = this.authServ.keyring;
-      const path = this.authServ.generateDerivationPath();
-      const childSeed = keyring.calcDerivationPath(path);
-      const accountAddress = getZBCAdress(childSeed.publicKey);
-      let account: SavedAccount = {
-        name: this.accountNameField.value,
-        type: 'normal',
-        path,
-        nodeIP: null,
-        address: accountAddress,
-      };
+      let account: SavedAccount;
+
       if (this.isMultiSignature) {
-        account.type = 'multisig';
-        account.path = this.signBy.path;
-        account.participants = this.participantsField.value.filter(value => value.length > 0);
-        account.nonce = this.nonceField.value;
-        account.minSig = this.minSignatureField.value;
-        account.signByAddress = this.signBy.address;
+        const multiParam: MultiSigAddress = {
+          participants: this.participantsField.value.filter(value => value.length > 0),
+          nonce: this.nonceField.value,
+          minSigs: this.minSignatureField.value,
+        };
+        const multiSignAddress: string = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+        account = {
+          name: this.accountNameField.value,
+          type: 'multisig',
+          path: this.signBy.path,
+          nodeIP: null,
+          address: multiSignAddress,
+          participants: this.participantsField.value.filter(value => value.length > 0),
+          nonce: this.nonceField.value,
+          minSig: this.minSignatureField.value,
+          signByAddress: this.signBy.address,
+        };
+      } else {
+        const keyring = this.authServ.keyring;
+        const path = this.authServ.generateDerivationPath();
+        const childSeed = keyring.calcDerivationPath(path);
+        const accountAddress = getZBCAdress(childSeed.publicKey);
+        account = {
+          name: this.accountNameField.value,
+          type: 'normal',
+          path,
+          nodeIP: null,
+          address: accountAddress,
+        };
       }
+
       this.authServ.addAccount(account);
       this.dialogRef.close();
       this.router.navigateByUrl('/');
