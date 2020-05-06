@@ -19,14 +19,21 @@
       <label>{{'Participants'}}</label>
       <div formArrayName="participants">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index;">
-          <div class="inline-control">
+          <ng-container *ngIf="i>1">
+            <div class="inline-control">
+              <input-address style="width: 100%;" label="" classList="custom-mat" [formControlName]="i"
+                placeholder="{{'Participant '}} {{i+1}}...">
+              </input-address>
+              <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="i<=1">
             <input-address style="width: 100%;" label="" classList="custom-mat" [formControlName]="i"
               placeholder="{{'Participant '}} {{i+1}}...">
             </input-address>
-            <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
+          </ng-container>
           <ng-container *ngIf="participantsField.controls[i].touched">
             <mat-error *ngIf="participantsField.controls[i].hasError('required')">
               {{ 'Participant is required'}}
