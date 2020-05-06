@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AddAccountComponent } from '../add-account/add-account.component';
 import Swal from 'sweetalert2';
+import zoobc, { MultiSigAddress } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-edit-account',
@@ -22,6 +23,7 @@ export class EditAccountComponent implements OnInit {
 
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
+  newMultiSigAddress: string;
 
   constructor(
     private authServ: AuthService,
@@ -75,6 +77,15 @@ export class EditAccountComponent implements OnInit {
         if (account.address == this.account.address) {
           accounts[i].name = this.accountNameField.value;
           if (this.isMultiSignature) {
+            const multiParam: MultiSigAddress = {
+              participants: this.participantsField.value.filter(value => value.length > 0),
+              nonce: this.nonceField.value,
+              minSigs: this.minSignatureField.value,
+            };
+
+            this.newMultiSigAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+
+            accounts[i].address = this.newMultiSigAddress;
             accounts[i].participants = this.participantsField.value.filter(value => value.length > 0);
             accounts[i].nonce = this.nonceField.value;
             accounts[i].minSig = this.minSignatureField.value;
@@ -85,9 +96,10 @@ export class EditAccountComponent implements OnInit {
         }
       }
       let currAcc = this.authServ.getCurrAccount();
-      if (currAcc.path == this.account.path) {
+      if (currAcc.address == this.account.address) {
         currAcc.name = this.accountNameField.value;
         if (this.isMultiSignature) {
+          currAcc.address = this.newMultiSigAddress;
           currAcc.participants = this.participantsField.value.filter(value => value.length > 0);
           currAcc.nonce = this.nonceField.value;
           currAcc.minSig = this.minSignatureField.value;
@@ -132,16 +144,9 @@ export class EditAccountComponent implements OnInit {
     }
   }
 
-  reComposeValidation() {
-    let presentValidator: ValidatorFn = this.participantsField.controls[1].validator;
-    this.participantsField.controls[1].setValidators([presentValidator, Validators.required]);
-    this.participantsField.controls[1].updateValueAndValidity();
-  }
-
   removeParticipant(index: number) {
     if (this.participantsField.length > this.minParticipant) {
       this.participantsField.removeAt(index);
-      if (index <= 1) this.reComposeValidation();
     } else {
       Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
     }

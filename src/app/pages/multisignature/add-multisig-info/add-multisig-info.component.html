@@ -1,0 +1,71 @@
+<div class="add-multisig-info-container">
+  <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
+  <mat-card>
+    <mat-horizontal-stepper labelPosition="bottom" linear #stepper>
+      <mat-step [stepControl]="firstFormGroup">
+        <mat-divider></mat-divider>
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Add Multisig Info</ng-template>
+          <label>{{ 'Import My Multisignature Account' | translate }}</label>
+          <account-selector (select)="onSwitchAccount($event)"></account-selector>
+          <label>{{ 'Participants' | translate }}</label>
+          <div
+            formArrayName="participants"
+            *ngFor="let participant of firstFormGroup.get('participants').controls; let i = index"
+          >
+            <input-address
+              classList="block"
+              [formControlName]="i"
+              placeholder="{{ 'Participant Address' | translate }}..."
+            ></input-address>
+          </div>
+          <div class="add-participants-button-row">
+            <button mat-flat-button color="primary" (click)="onAddParticipants()" class="small">
+              <span>{{ 'Add Participants' | translate }}</span>
+            </button>
+          </div>
+          <label>{{ 'Nonce' | translate }}</label>
+          <mat-form-field appearance="outline" class="block" color="accent">
+            <input matInput type="number" formControlName="nonce" placeholder="{{ 'Nonce' | translate }}" />
+          </mat-form-field>
+          <label>{{ 'Minimum Signature' | translate }}</label>
+          <mat-form-field appearance="outline" class="block" color="accent">
+            <input
+              matInput
+              type="number"
+              formControlName="minSignature"
+              placeholder="{{ 'Minimum Signature' | translate }}"
+            />
+          </mat-form-field>
+          <div class="row" style="margin-top: 10px;">
+            <div class="col">
+              <button mat-flat-button color="warn" class="block" type="button">
+                {{ 'Back' | translate }}
+              </button>
+            </div>
+            <div class="col">
+              <button mat-flat-button color="primary" class="block" type="button">
+                {{ 'Save' | translate }}
+              </button>
+            </div>
+            <div class="col">
+              <button mat-flat-button color="primary" type="button" class="block">
+                {{ 'Next' | translate }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <mat-divider></mat-divider>
+        <form>
+          <ng-template matStepLabel>Create Transaction</ng-template>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="thirdFormGroup">
+        <mat-divider></mat-divider>
+        <ng-template matStepLabel>Add Signatures</ng-template>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card>
+</div>
