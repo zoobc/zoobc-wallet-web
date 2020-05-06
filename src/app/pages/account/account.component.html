@@ -36,14 +36,26 @@
                 </button>
               </div>
               <div class="text-right-item">
-                <button mat-stroked-button color="primary" class="small" (click)="onSwitchAccount(acc)">
-                  <ng-container *ngIf="currAcc.address !== acc.address; else elseAcc">
+                <ng-container *ngIf="currAcc.address !== acc.address; else elseAcc">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
                     <span>{{ 'Select' | translate }}</span>
-                  </ng-container>
-                  <ng-template #elseAcc>
+                  </button>
+                </ng-container>
+                <ng-template #elseAcc>
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
                     <span>{{ 'Selected' | translate }}</span>
-                  </ng-template>
-                </button>
+                  </button>
+                </ng-template>
               </div>
             </div>
           </div>
@@ -88,14 +100,26 @@
                 </button>
               </div>
               <div class="text-right-item">
-                <button mat-flat-button color="primary" class="small" (click)="onSwitchAccount(acc)">
-                  <ng-container *ngIf="currAcc.address !== acc.address; else elseAcc">
+                <ng-container *ngIf="currAcc.address !== acc.address; else elseAcc">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
                     <span>{{ 'Select' | translate }}</span>
-                  </ng-container>
-                  <ng-template #elseAcc>
+                  </button>
+                </ng-container>
+                <ng-template #elseAcc>
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
                     <span>{{ 'Selected' | translate }}</span>
-                  </ng-template>
-                </button>
+                  </button>
+                </ng-template>
               </div>
             </div>
           </div>

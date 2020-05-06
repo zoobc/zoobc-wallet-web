@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
 import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
-import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account',
@@ -15,7 +15,12 @@ export class AccountComponent implements OnInit {
   currAcc: SavedAccount;
   accounts: SavedAccount[];
 
-  constructor(private authServ: AuthService, public dialog: MatDialog, private router: Router) {
+  constructor(
+    private authServ: AuthService,
+    public dialog: MatDialog,
+    private snackbar: MatSnackBar,
+    private translate: TranslateService
+  ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.accounts = this.authServ.getAllAccount();
   }
@@ -41,9 +46,17 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  onSwitchAccount(account: SavedAccount) {
+  async onSwitchAccount(e, account: SavedAccount) {
+    e.stopPropagation();
     this.authServ.switchAccount(account);
     this.currAcc = account;
+
+    let message: string;
+    await this.translate
+      .get(`${this.currAcc.name} selected`)
+      .toPromise()
+      .then(res => (message = res));
+    this.snackbar.open(message, null, { duration: 3000 });
   }
 
   onOpenMultisigInfoDialog() {
