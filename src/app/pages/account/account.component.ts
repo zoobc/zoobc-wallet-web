@@ -59,9 +59,11 @@ export class AccountComponent implements OnInit {
     this.snackbar.open(message, null, { duration: 3000 });
   }
 
-  onOpenMultisigInfoDialog() {
+  onOpenMultisigInfoDialog(e, account: SavedAccount) {
+    e.stopPropagation();
     this.dialog.open(MultisigInfoComponent, {
       width: '300px',
+      data: account,
     });
   }
 }
