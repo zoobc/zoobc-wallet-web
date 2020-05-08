@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { MatDialogRef, MatSnackBar } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { SavedAccount } from 'src/app/services/auth.service';
+import { MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
 import { onCopyText } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -11,30 +11,27 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MultisigInfoComponent implements OnInit {
   currAcc: SavedAccount;
-  account: SavedAccount[];
 
-  address: string = 'SDxshdwefdhabfdlkjKBFHdfajwdaasflSsdfj';
-  nonce: number = 1;
-  minAdress = 3;
-  url: string = 'https://zoobc.one/...SxhdnfHF';
+  url: string = 'https://zoobc.net';
 
   constructor(
     public dialogRef: MatDialogRef<MultisigInfoComponent>,
-    private authServ: AuthService,
     private translate: TranslateService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public account: SavedAccount
   ) {
-    this.currAcc = this.authServ.getCurrAccount();
+    this.currAcc = this.account;
   }
 
   ngOnInit() {}
 
-  async copyPhrase() {
+  async onCopyText(e) {
+    e.stopPropagation();
     onCopyText(this.url);
 
     let message: string;
     await this.translate
-      .get('Link Copied')
+      .get('Multisig Info copied to clipboard')
       .toPromise()
       .then(res => (message = res));
     this.snackBar.open(message, null, { duration: 3000 });
