@@ -167,7 +167,7 @@ export class DashboardComponent implements OnInit {
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
           this.recentTx.map(recent => {
-            recent['alias'] = this.contactServ.get(recent.address).alias || '';
+            recent.alias = this.contactServ.get(recent.address).alias || '';
           });
           this.totalTx = tx.total;
 
@@ -176,9 +176,12 @@ export class DashboardComponent implements OnInit {
           };
           return zoobc.Mempool.getList(params);
         })
-        .then(
-          unconfirmTx => (this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address))
-        )
+        .then(unconfirmTx => {
+          this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address);
+          this.unconfirmTx.map(recent => {
+            recent.alias = this.contactServ.get(recent.address).alias || '';
+          });
+        })
         .catch(e => {
           this.isErrorRecentTx = true;
         })

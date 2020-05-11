@@ -10,7 +10,7 @@
         {{ 'Account name is required' | translate }}
       </mat-error>
     </ng-container>
-    <div style="margin-bottom: 8px;">
+    <!-- <div style="margin-bottom: 8px;">
       <mat-checkbox class="checkbox-margin" (click)="toogleMultiSignature()">
         {{ 'Multisignature Account' }}
       </mat-checkbox>
@@ -80,7 +80,7 @@
       </ng-container>
       <label>{{ 'Sign by'}}</label>
       <account-selector [type]="'normal'" [switchAccount]="false" (select)="onSwitchSignBy($event)"></account-selector>
-    </ng-container>
+    </ng-container> -->
     <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid">
       {{ 'Add' | translate }}
     </button>

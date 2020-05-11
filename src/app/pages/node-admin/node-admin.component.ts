@@ -61,7 +61,7 @@ export class NodeAdminComponent implements OnInit {
       address: this.account.address,
     };
     zoobc.Transactions.getList(param).then(res => {
-      this.lastClaim = res.transactionsList[0].timestamp;
+      if (res.transactionsList.length > 0) this.lastClaim = res.transactionsList[0].timestamp;
     });
     zoobc.Mempool.getList(params)
       .then(res => {
