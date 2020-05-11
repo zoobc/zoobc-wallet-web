@@ -312,7 +312,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   getBlockHeight() {
-    zoobc.Host.getBlock()
+    zoobc.Host.getInfo()
       .then(res => {
         this.blockHeight = res.chainstatusesList[1].height;
       })

@@ -4,7 +4,7 @@
       <h2 class="mat-h2">{{ 'Accounts' | translate }}</h2>
     </div>
     <div class="col-8 text-right">
-      <button mat-flat-button color="primary">
+      <button mat-flat-button color="primary" (click)="onOpenAddAccount()">
         <span>{{ 'Add New Account' | translate }}</span>
       </button>
     </div>
@@ -12,67 +12,119 @@
 
   <div class="account-list">
     <mat-card style="padding: 0">
-      <div class="account row">
-        <div class="col-12 col-sm-8">
-          <div class="name">
-            {{ 'Account Name' }}
+      <ng-container *ngFor="let acc of accounts">
+        <ng-container *ngIf="acc.type === 'normal'">
+          <div class="account row">
+            <div class="col-12 col-sm-8">
+              <div class="name">
+                {{ acc.name }}
+              </div>
+              <div class="address">
+                <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
+              </div>
+            </div>
+            <div class="col-12 col-sm-4 text-right">
+              <div class="text-right-item">
+                <button
+                  mat-icon-button
+                  matTooltip="Edit"
+                  matTooltipPosition="above"
+                  class="icon-btn"
+                  (click)="onOpenEditAccount($event, acc)"
+                >
+                  <i class="fas fa-pen"></i>
+                </button>
+              </div>
+              <div class="text-right-item">
+                <ng-container *ngIf="currAcc.address !== acc.address; else elseAcc">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
+                    <span>{{ 'Select' | translate }}</span>
+                  </button>
+                </ng-container>
+                <ng-template #elseAcc>
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
+                    <span>{{ 'Selected' | translate }}</span>
+                  </button>
+                </ng-template>
+              </div>
+            </div>
           </div>
-          <div class="address">
-            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
+        </ng-container>
+        <ng-container *ngIf="acc.type === 'multisig'">
+          <div class="account row">
+            <div class="col-12 col-sm-8">
+              <div class="name">
+                {{ acc.name }}
+                <span class="label" color="primary">
+                  Multi Signature
+                </span>
+              </div>
+              <div class="address">
+                <p>{{ 'Address' | translate }}:</p>
+                <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
+              </div>
+              <div class="address">
+                <p>{{ 'Signed By' | translate }}:</p>
+                <wallet-address [value]="acc.signByAddress" [copyButton]="true"></wallet-address>
+              </div>
+            </div>
+            <div class="col-12 col-sm-4 text-right">
+              <div class="text-right-item">
+                <button
+                  mat-icon-button
+                  matTooltip="Multi Signature Detail"
+                  matTooltipPosition="above"
+                  class="icon-btn"
+                  (click)="onOpenMultisigInfoDialog($event, acc)"
+                >
+                  <i class="fas fa-file-signature"></i>
+                </button>
+                <button
+                  mat-icon-button
+                  matTooltip="Edit"
+                  matTooltipPosition="above"
+                  class="icon-btn"
+                  (click)="onOpenEditAccount($event, acc)"
+                >
+                  <i class="fas fa-pen"></i>
+                </button>
+              </div>
+              <div class="text-right-item">
+                <ng-container *ngIf="currAcc.address !== acc.address; else elseAcc">
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
+                    <span>{{ 'Select' | translate }}</span>
+                  </button>
+                </ng-container>
+                <ng-template #elseAcc>
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    class="small"
+                    (click)="onSwitchAccount($event, acc)"
+                  >
+                    <span>{{ 'Selected' | translate }}</span>
+                  </button>
+                </ng-template>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col-12 col-sm-4 text-right">
-          <div class="text-right-item">
-            <button mat-icon-button matTooltip="Edit" matTooltipPosition="above" class="icon-btn">
-              <i class="fas fa-pen"></i>
-            </button>
-          </div>
-          <div class="text-right-item">
-            <button mat-stroked-button color="primary" class="small">
-              <span>{{ 'Selected' | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="account row">
-        <div class="col-12 col-sm-8">
-          <div class="name">
-            Account Multisig
-            <span class="label" color="primary">
-              Multi Signature
-            </span>
-          </div>
-          <div class="address">
-            <p>Address:</p>
-            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
-          </div>
-          <div class="address">
-            <p>Signed by:</p>
-            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
-          </div>
-        </div>
-        <div class="col-12 col-sm-4 text-right">
-          <div class="text-right-item">
-            <button
-              mat-icon-button
-              matTooltip="Multi Signature Detail"
-              matTooltipPosition="above"
-              class="icon-btn"
-              (click)="onOpenMultisigInfoDialog()"
-            >
-              <i class="fas fa-file-signature"></i>
-            </button>
-            <button mat-icon-button matTooltip="Edit" matTooltipPosition="above" class="icon-btn">
-              <i class="fas fa-pen"></i>
-            </button>
-          </div>
-          <div class="text-right-item">
-            <button mat-flat-button color="primary" class="small">
-              <span>{{ 'Select' | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
+        </ng-container>
+      </ng-container>
     </mat-card>
   </div>
 </div>
