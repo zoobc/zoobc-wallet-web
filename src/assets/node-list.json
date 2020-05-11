@@ -1,20 +1,30 @@
 {
   "node": [
     {
-      "ip": "//n1.alpha.proofofparticipation.network:8080",
+      "ip": "https://n1.alpha.proofofparticipation.network:8080",
       "default": true,
       "name": "Alpha Testnet"
     },
     {
-      "ip": "//85.90.246.90:8002",
+      "ip": "https://n0.demo.proofofparticipation.network",
       "default": true,
       "name": "Demo Testnet 1"
     },
     {
-      "ip": "//45.79.39.58:8002",
+      "ip": "http://172.104.47.168:8002/",
       "default": true,
       "name": "Demo Testnet 2"
+    },
+    {
+      "ip": "http://85.90.246.90:8002",
+      "default": true,
+      "name": "Dev Testnet 1"
+    },
+    {
+      "ip": "http://45.79.39.58:8002",
+      "default": true,
+      "name": "Dev Testnet 2"
     }
   ],
-  "timestamp": 1584499806341
+  "timestamp": 1589177225298
 }
