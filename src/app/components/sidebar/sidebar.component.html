@@ -33,12 +33,30 @@
         <span>{{ 'Deposit' | translate }}</span>
       </a>
     </li> -->
-    <li [ngClass]="menu == 'sendmoney' && 'active'">
-      <a routerLink="/sendmoney" (click)="onToggle()">
-        <i class="fa fa-paper-plane"></i>
-        <span>{{ 'Send' | translate }}</span>
-      </a>
-    </li>
+    <ng-container *ngIf="account.type == 'normal'">
+      <li [ngClass]="menu == 'sendmoney' && 'active'">
+        <a routerLink="/sendmoney" (click)="onToggle()">
+          <i class="fa fa-paper-plane"></i>
+          <span>{{ 'Send' | translate }}</span>
+        </a>
+      </li>
+      <li [ngClass]="menu == 'multisignature' && 'active'">
+        <a routerLink="/multisignature" (click)="onToggle()">
+          <i class="fa fa-file-signature"></i>
+          <span>{{ 'MultiSig' | translate }}</span>
+        </a>
+      </li>
+    </ng-container>
+
+    <ng-container *ngIf="account.type == 'multisig'">
+      <li [ngClass]="menu == 'multisignature' && 'active'">
+        <a routerLink="/multisignature" (click)="onToggle()">
+          <i class="fa fa-paper-plane"></i>
+          <span>{{ 'Send' | translate }}</span>
+        </a>
+      </li>
+    </ng-container>
+
     <li [ngClass]="menu == 'receive' && 'active'">
       <a (click)="openReceiveForm()">
         <i class="fas fa-money-bill"></i>
