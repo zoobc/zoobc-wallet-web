@@ -23,7 +23,6 @@
       font-weight: bold;
     }
     .title-task {
-      word-break: break-all;
       color: $black1;
       font-size: 13px;
       margin-bottom: 8px;
@@ -39,9 +38,12 @@
       font-size: 18px;
       font-weight: bold;
     }
-    @media (max-width: 600px) {
+    @media #{$small-and-down} {
       .message {
         text-align: center;
+      }
+      .title-task {
+        display: block;
       }
     }
   }
