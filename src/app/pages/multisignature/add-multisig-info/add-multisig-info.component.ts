@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { MatStepper } from '@angular/material';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MultisigService, MultiSigDraft } from 'src/app/services/multisig.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -12,8 +11,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./add-multisig-info.component.scss'],
 })
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
-  @ViewChild('stepper') stepper: MatStepper;
-
   isCompleted = true;
   minParticipants = 3;
 
@@ -28,7 +25,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
 
-  constructor(private fb: FormBuilder, private multisigServ: MultisigService, private router: Router) {
+  constructor(private multisigServ: MultisigService, private router: Router, private location: Location) {
     this.form = new FormGroup({
       participants: this.participantsField,
       nonce: this.nonceField,
@@ -49,8 +46,6 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
         this.minSignatureField.setValue(minSigs);
       }
     });
-
-    this.stepper.selectedIndex = 0;
   }
 
   ngOnDestroy() {
@@ -74,56 +69,35 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     }
   }
 
+  onSwitchAccount() {}
+
   addParticipant() {
-    const length: number = this.participantsField.length;
-    if (length >= 2) {
-      this.participantsField.push(new FormControl(''));
-    } else {
-      this.participantsField.push(new FormControl('', [Validators.required]));
-    }
+    this.participantsField.push(new FormControl(''));
   }
 
   removeParticipant(index: number) {
-    if (this.participantsField.length > this.minParticipant) {
-      this.participantsField.removeAt(index);
-    } else {
-      Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
-    }
+    this.participantsField.removeAt(index);
   }
 
-  onSwitchAccount() {}
-
   saveDraft() {
-    console.log(this.form.value);
-    const { minSigs, nonce } = this.form.value;
-    const multisig = { ...this.multisig };
-
-    let participants: string[] = this.form.value;
-    participants.sort();
-    console.log(participants);
-
-    multisig.multisigInfo = {
-      minSigs: parseInt(minSigs),
-      nonce: parseInt(nonce),
-      participants: participants,
-      multisigAddress: '',
-    };
-
+    this.updateMultisig();
     this.multisigServ.saveDraft();
     this.router.navigate(['/multisignature']);
   }
 
-  next(e) {
-    e.preventDefault();
+  next() {
     if (this.form.valid) {
       this.updateMultisig();
 
-      const { multisigInfo, unisgnedTransactions, signaturesInfo } = this.multisig;
+      const { unisgnedTransactions, signaturesInfo } = this.multisig;
       if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
-      else {
-        this.router.navigate(['/multisignature/send-transaction']);
-      }
+      if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+      else this.router.navigate(['/multisignature/send-transaction']);
     }
+  }
+
+  back() {
+    this.location.back();
   }
 
   updateMultisig() {

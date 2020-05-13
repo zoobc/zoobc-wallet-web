@@ -330,3 +330,41 @@ mat-form-field {
     background-position: 200px;
   }
 }
+
+.stepper {
+  display: flex;
+  padding: 16px 0;
+  .step,
+  .stepper-line {
+    width: 100%;
+    text-align: center;
+  }
+  .step.active {
+    .step-circle {
+      background-color: map-get($accent, 500);
+    }
+    .step-label {
+      color: map-get($accent, 500);
+    }
+  }
+  .step-circle {
+    display: block;
+    background-color: $black4;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    color: white;
+    margin: 0 auto 6px;
+    font-size: 12px;
+    line-height: 24px;
+  }
+  .step-label {
+    display: block;
+    font-size: 14px;
+    color: $black1 !important;
+  }
+  .stepper-line {
+    border-top: 1px solid $black4;
+    margin: 12px -5% 0;
+  }
+}

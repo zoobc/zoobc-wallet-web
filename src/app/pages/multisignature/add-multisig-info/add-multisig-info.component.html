@@ -1,121 +1,120 @@
 <div class="add-multisig-info-container">
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
-    <mat-horizontal-stepper labelPosition="bottom" linear #stepper>
-      <mat-step [stepControl]="firstFormGroup">
-        <mat-divider></mat-divider>
-        <form [formGroup]="form" class="grid" (submit)="next($event)">
-          <ng-template matStepLabel>Add Multisig Info</ng-template>
-          <label>{{ 'Import My Multisignature Account' | translate }}</label>
-          <account-selector (select)="onSwitchAccount($event)"></account-selector>
-          <label>{{ 'Participants' }}</label>
-          <div formArrayName="participants">
-            <ng-container *ngFor="let participant of participantsField.controls; let i = index">
-              <ng-container *ngIf="i > 1">
-                <div class="inline-control">
-                  <input-address
-                    style="width: 100%;"
-                    label=""
-                    classList="custom-mat"
-                    [formControlName]="i"
-                    placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
-                  >
-                  </input-address>
-                  <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="i <= 1">
-                <input-address
-                  style="width: 100%;"
-                  label=""
-                  classList="custom-mat"
-                  [formControlName]="i"
-                  placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
-                >
-                </input-address>
-              </ng-container>
-              <ng-container *ngIf="participantsField.controls[i].touched">
-                <mat-error *ngIf="participantsField.controls[i].hasError('required')">
-                  {{ 'Participant is required' }}
-                </mat-error>
-                <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
-                  {{ 'Participant Address is invalid' }}
-                </mat-error>
-              </ng-container>
-            </ng-container>
-          </div>
-          <div>
-            <button
-              (click)="addParticipant()"
-              mat-flat-button
-              class="custom-btn"
-              color="primary"
-              type="button"
-            >
-              {{ 'Add Participants' }}
-            </button>
-          </div>
-          <ng-container *ngIf="participantsField.touched">
-            <mat-error class="center-error" *ngIf="participantsField.hasError('duplicate')">
-              {{ 'Participant must be unique' }}
-            </mat-error>
-          </ng-container>
-          <label>{{ 'Nonce' }}</label>
-          <mat-form-field appearance="outline" color="accent">
-            <input formControlName="nonce" matInput type="number" />
-          </mat-form-field>
-          <ng-container *ngIf="nonceField.touched">
-            <mat-error *ngIf="nonceField.hasError('required')">
-              {{ 'Nonce is required' }}
-            </mat-error>
-            <mat-error *ngIf="nonceField.hasError('min')">
-              {{ 'Minimum Nonce is 1' }}
-            </mat-error>
-          </ng-container>
-          <label>{{ 'Minimum Signature' }}</label>
-          <mat-form-field appearance="outline" color="accent">
-            <input formControlName="minSigs" matInput type="number" />
-          </mat-form-field>
-          <ng-container *ngIf="minSignatureField.touched">
-            <mat-error *ngIf="minSignatureField.hasError('required')">
-              {{ 'Minimum Signature is required' }}
-            </mat-error>
-            <mat-error *ngIf="minSignatureField.hasError('min')">
-              {{ 'Minimum Signature is 2' }}
-            </mat-error>
-          </ng-container>
+    <div class="stepper">
+      <div class="step active">
+        <span class="step-circle">1</span>
+        <span class="step-label">Add Multisig Info</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle">2</span>
+        <span class="step-label">Create Transaction</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle">3</span>
+        <span class="step-label">Add Signatures</span>
+      </div>
+    </div>
+    <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
-          <div class="row" style="margin-top: 10px;">
-            <div class="col">
-              <button mat-flat-button color="warn" class="block" type="button">
-                {{ 'Back' | translate }}
+    <form [formGroup]="form" (submit)="next()">
+      <label>{{ 'Import My Multisignature Account' | translate }}</label>
+      <account-selector (select)="onSwitchAccount($event)"></account-selector>
+
+      <label>{{ 'Participants' }}</label>
+      <div formArrayName="participants">
+        <ng-container *ngFor="let participant of participantsField.controls; let i = index">
+          <ng-container *ngIf="i > 1">
+            <div class="inline-control">
+              <input-address
+                style="width: 100%;"
+                label=""
+                classList="custom-mat"
+                [formControlName]="i"
+                placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
+              >
+              </input-address>
+              <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
+                <i class="fas fa-trash"></i>
               </button>
             </div>
-            <div class="col">
-              <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
-                {{ 'Save' | translate }}
-              </button>
-            </div>
-            <div class="col">
-              <button mat-flat-button color="primary" class="block" [disabled]="!form.valid">
-                {{ 'Next' | translate }}
-              </button>
-            </div>
-          </div>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="secondFormGroup">
-        <mat-divider></mat-divider>
-        <form>
-          <ng-template matStepLabel>Create Transaction</ng-template>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="thirdFormGroup">
-        <mat-divider></mat-divider>
-        <ng-template matStepLabel>Add Signatures</ng-template>
-      </mat-step>
-    </mat-horizontal-stepper>
+          </ng-container>
+          <ng-container *ngIf="i <= 1">
+            <input-address
+              style="width: 100%;"
+              label=""
+              classList="custom-mat"
+              [formControlName]="i"
+              placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
+            >
+            </input-address>
+          </ng-container>
+          <ng-container *ngIf="participantsField.controls[i].touched">
+            <mat-error *ngIf="participantsField.controls[i].hasError('required')">
+              {{ 'Participant is required' }}
+            </mat-error>
+            <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
+              {{ 'Participant Address is invalid' }}
+            </mat-error>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="text-right">
+        <button (click)="addParticipant()" mat-flat-button class="small" color="primary" type="button">
+          {{ 'Add Participants' }}
+        </button>
+      </div>
+      <ng-container *ngIf="participantsField.touched">
+        <mat-error class="center-error" *ngIf="participantsField.hasError('duplicate')">
+          {{ 'Participant must be unique' }}
+        </mat-error>
+      </ng-container>
+
+      <label>{{ 'Nonce' }}</label>
+      <mat-form-field appearance="outline" color="accent" class="block">
+        <input formControlName="nonce" matInput type="number" />
+      </mat-form-field>
+      <ng-container *ngIf="nonceField.touched">
+        <mat-error *ngIf="nonceField.hasError('required')">
+          {{ 'Nonce is required' }}
+        </mat-error>
+        <mat-error *ngIf="nonceField.hasError('min')">
+          {{ 'Minimum Nonce is 1' }}
+        </mat-error>
+      </ng-container>
+
+      <label>{{ 'Minimum Signature' }}</label>
+      <mat-form-field appearance="outline" color="accent" class="block">
+        <input formControlName="minSigs" matInput type="number" />
+      </mat-form-field>
+      <ng-container *ngIf="minSignatureField.touched">
+        <mat-error *ngIf="minSignatureField.hasError('required')">
+          {{ 'Minimum Signature is required' }}
+        </mat-error>
+        <mat-error *ngIf="minSignatureField.hasError('min')">
+          {{ 'Minimum Signature is 2' }}
+        </mat-error>
+      </ng-container>
+
+      <div class="row" style="margin-top: 10px;">
+        <div class="col">
+          <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
+            {{ 'Back' | translate }}
+          </button>
+        </div>
+        <div class="col">
+          <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
+            {{ 'Save to draft' | translate }}
+          </button>
+        </div>
+        <div class="col">
+          <button mat-flat-button color="primary" class="block" [disabled]="!form.valid">
+            {{ 'Next' | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
   </mat-card>
 </div>

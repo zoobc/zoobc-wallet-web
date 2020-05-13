@@ -20,7 +20,7 @@ export class MultisignatureComponent implements OnInit {
 
   constructor(private router: Router, private multisigServ: MultisigService) {
     this.form = new FormGroup({
-      multsigInfo: this.multisigInfoField,
+      multisigInfo: this.multisigInfoField,
       transaction: this.transactionField,
       signatures: this.signaturesField,
     });
@@ -69,19 +69,32 @@ export class MultisignatureComponent implements OnInit {
     this.isError = false;
   }
 
+  onEditDraft(idx: number) {
+    const multisig: MultiSigDraft = this.multiSigDrafts[idx];
+    this.multisigServ.update(multisig);
+
+    const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
+    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+    else if (unisgnedTransactions) this.router.navigate(['/multisignature/create-transaction']);
+    else if (signaturesInfo) this.router.navigate(['/multisignature/add-signatures']);
+  }
+
   onNext() {
     const multisig: MultiSigDraft = {
       accountAddress: '',
       fee: 0,
       id: 0,
     };
-    if (this.multisigInfoField.value) multisig.multisigInfo = null;
-    if (this.transactionField.value) multisig.unisgnedTransactions = null;
+    const { multisigInfo, transaction, signatures } = this.form.value;
+    if (multisigInfo) multisig.multisigInfo = null;
+    if (transaction) multisig.unisgnedTransactions = null;
+    if (signatures) multisig.signaturesInfo = null;
 
     this.multisigServ.update(multisig);
 
-    if (this.multisigInfoField.value) this.router.navigate(['/multisignature/add-multisig-info']);
-    else if (this.transactionField.value) this.router.navigate(['/multisignature/create-transaction']);
+    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+    else if (transaction) this.router.navigate(['/multisignature/create-transaction']);
+    else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
   }
 
   onRefresh() {

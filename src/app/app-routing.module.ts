@@ -19,6 +19,7 @@ import { SendTransactionComponent } from './pages/multisignature/send-transactio
 import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
+import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -39,6 +40,7 @@ const routes: Routes = [
       { path: 'multisignature/send-transaction', component: SendTransactionComponent },
       { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
       { path: 'multisignature/create-transaction', component: CreateTransactionComponent },
+      { path: 'multisignature/add-signatures', component: AddParticipantsComponent },
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',
