@@ -339,14 +339,6 @@ mat-form-field {
     width: 100%;
     text-align: center;
   }
-  .step.active {
-    .step-circle {
-      background-color: map-get($accent, 500);
-    }
-    .step-label {
-      color: map-get($accent, 500);
-    }
-  }
   .step-circle {
     display: block;
     background-color: $black4;
@@ -360,11 +352,19 @@ mat-form-field {
   }
   .step-label {
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     color: $black1 !important;
   }
   .stepper-line {
     border-top: 1px solid $black4;
     margin: 12px -5% 0;
+  }
+  .step.active {
+    .step-circle {
+      background-color: map-get($accent, 500);
+    }
+    .step-label {
+      color: map-get($accent, 500) !important;
+    }
   }
 }
