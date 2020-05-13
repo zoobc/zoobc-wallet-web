@@ -35,8 +35,9 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      this.multisig = multisig;
+      if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
+      this.multisig = multisig;
       this.pushInitParticipant();
 
       if (multisig.multisigInfo) {
