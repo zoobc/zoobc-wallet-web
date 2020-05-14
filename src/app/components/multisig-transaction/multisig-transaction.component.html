@@ -1,64 +1,144 @@
-<div
-  [className]="withDetail ? 'multisig-transaction-item row' : 'multisig-transaction-item hover row'"
-  (click)="onOpenDetailTask()"
->
-  <div class="col-12 col-sm-8">
-    <div class="alias">Alias Name</div>
-    <div class="address">
-      <wallet-address value="iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb"></wallet-address>
+<div class="multisig-list-container">
+  <ng-container *ngIf="pendingListMultiSig">
+    <div class="no-content padding" *ngIf="pendingListMultiSig.length <= 0">
+      <i matPrefix class="fa fa-receipt"></i>
+      <span class="message">{{ 'No Approval Needed' | translate }}</span>
     </div>
-    <div class="date">
-      {{ 1572313084000 | dateAgo }}
+    <div
+      [className]="withDetail ? 'multisig-transaction-item hover row' : 'multisig-transaction-item hover'"
+      *ngFor="let multisig of pendingListMultiSig; let i = index"
+      (click)="openDetailMultiSignature(multisig.transactionhash)"
+    >
+      <div class="col-12 col-sm-8">
+        <div class="alias" *ngIf="multisig.alias">{{ multisig.alias }}</div>
+        <div class="address">
+          <wallet-address [value]="multisig.senderaddress"></wallet-address>
+        </div>
+        <div class="date">
+          {{ multisig.timestamp * 1000 | dateAgo }}
+        </div>
+      </div>
+      <div class="col-12 col-sm-4 text-right">
+        <div class="amount">- {{ multisig.amount / 1e8 | number: '0.0-8' }} ZBC</div>
+        <div class="fee">- {{ multisig.fee / 1e8 | number: '0.0-8' }} ZBC</div>
+      </div>
     </div>
-  </div>
-  <div class="col-12 col-sm-4 text-right">
-    <div class="amount">
-      - 10 ZBC
+  </ng-container>
+
+  <ng-container *ngIf="isLoading">
+    <div class="multisig-transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+      <div class="col-7 col-sm-8">
+        <div class="skeleton-text" style="width:50%;"></div>
+        <div class="skeleton-text small" style="width:75%;"></div>
+        <div class="skeleton-text small" style="width:25%;"></div>
+      </div>
+      <div class="col-5 col-sm-4">
+        <div class="skeleton-text" style="width:71%;float:right"></div>
+        <div class="skeleton-text small" style="width:80%;float:right"></div>
+      </div>
     </div>
-    <div class="fee">
-      - 0.01 ZBC
-    </div>
+  </ng-container>
+
+  <div class="no-content padding" *ngIf="isError">
+    <i matPrefix class="fa fa-exclamation-triangle"></i>
+    <span class="message">
+      {{ 'An error occurred while processing your request' | translate }}
+    </span>
+    <button mat-flat-button color="primary" (click)="onRefresh()">
+      {{ 'Try Again' | translate }}
+    </button>
   </div>
 </div>
 
 <ng-template #detailMultisig>
-  <div class="detail-multisig-container">
+  <div class="detail-multisig-container" *ngIf="multiSigDetail && !isLoadingDetail">
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address
-          value="YuKTkCCWOPeGBknQSTGsNuyREB-iGhIz6ur4suM4FXMb"
-          [copyButton]="true"
-        ></wallet-address>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
-      <div class="col-12 col-md-8">
-        <wallet-address
-          value="B9C35tu6hJCE7IrwqL5uxnh6OW77Pw99JIdrSpHMg2Ki"
-          [copyButton]="true"
-        ></wallet-address>
+        <wallet-address [value]="multiSigDetail.senderaddress" [copyButton]="true"></wallet-address>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
-      <div class="col-12 col-md-8">10 ZBC</div>
+      <div class="col-12 col-md-8">{{ multiSigDetail.amount / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Fee' | translate }}:</div>
-      <div class="col-12 col-md-8">0.01 ZBC</div>
+      <div class="col-12 col-md-8">{{ multiSigDetail.fee / 1e8 | number: '0.0-8' }} ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Blockheight' | translate }}:</div>
+      <div class="col-12 col-md-8">{{ multiSigDetail.blockheight }}</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Date' | translate }}:</div>
+      <div class="col-12 col-md-8">{{ multiSigDetail.timestamp * 1000 | date: 'medium' }}</div>
     </div>
     <div class="text-right" style="margin-top: 8px">
       <button mat-button style="margin-right: 8px" (click)="closeDialog()">
         {{ 'Cancel' | translate }}
       </button>
       <button mat-flat-button color="warn" style="margin-right: 8px" (click)="onOpenDetailTaskComingSoon()">
-        {{ 'Reject' | translate }}
+        {{ 'Ignore' | translate }}
       </button>
       <button mat-flat-button color="primary" (click)="onOpenDetailTaskComingSoon()">
-        {{ 'Confirm' | translate }}
+        {{ 'Accept' | translate }}
       </button>
+    </div>
+  </div>
+  <div class="detail-multisig-container skeleton" *ngIf="isLoadingDetail">
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:20%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:100%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:70%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:40%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:40%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:100%;"></div>
+      </div>
     </div>
   </div>
 </ng-template>
