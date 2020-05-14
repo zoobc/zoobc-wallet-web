@@ -7,6 +7,7 @@ import nodeListJson from '../../../assets/node-list.json';
 import { NodeList } from '../../../helpers/node-list';
 import zoobc, { HostInterface } from 'zoobc-sdk';
 import { CurrencyRateService } from 'src/app/services/currency-rate.service';
+import { MultiSigDraft } from 'src/app/services/multisig.service';
 
 @Component({
   selector: 'app-parent',
@@ -40,6 +41,9 @@ export class ParentComponent implements OnInit {
     this.isLogin = this.appServ.isLoggedIn();
 
     this.importNodeList();
+
+    const multisigList: MultiSigDraft[] = JSON.parse(localStorage.getItem('MULTISIG_DRAFTS')) || [];
+    if (multisigList.length == 0) localStorage.setItem('MULTISIG_DRAFTS', '[]');
   }
 
   @HostListener('window:resize', ['$event']) onResize(event) {
