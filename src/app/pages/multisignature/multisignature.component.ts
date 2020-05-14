@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 
 @Component({
   selector: 'app-multisignature',
@@ -6,14 +9,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./multisignature.component.scss'],
 })
 export class MultisignatureComponent implements OnInit {
-  constructor() {}
-
-  addInfo: boolean = true;
-  createTransaction: boolean = true;
-  addSignature: boolean = true;
   multiSigDrafts: any;
   isLoading: boolean;
   isError: boolean = false;
+
+  form: FormGroup;
+  multisigInfoField = new FormControl(false);
+  transactionField = new FormControl(false);
+  signaturesField = new FormControl(false);
+
+  constructor(private router: Router, private multisigServ: MultisigService) {
+    this.form = new FormGroup({
+      multisigInfo: this.multisigInfoField,
+      transaction: this.transactionField,
+      signatures: this.signaturesField,
+    });
+  }
 
   ngOnInit() {
     this.isLoading = true;
@@ -58,20 +69,32 @@ export class MultisignatureComponent implements OnInit {
     this.isError = false;
   }
 
-  toggleInfo() {
-    this.addInfo = !this.addInfo;
-  }
+  onEditDraft(idx: number) {
+    const multisig: MultiSigDraft = this.multiSigDrafts[idx];
+    this.multisigServ.update(multisig);
 
-  toogleCreateTransaction() {
-    this.createTransaction = !this.createTransaction;
-  }
-
-  toogleAddSignature() {
-    this.addSignature = !this.createTransaction;
+    const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
+    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+    else if (unisgnedTransactions) this.router.navigate(['/multisignature/create-transaction']);
+    else if (signaturesInfo) this.router.navigate(['/multisignature/add-signatures']);
   }
 
   onNext() {
-    console.log('Next clicked');
+    const multisig: MultiSigDraft = {
+      accountAddress: '',
+      fee: 0,
+      id: 0,
+    };
+    const { multisigInfo, transaction, signatures } = this.form.value;
+    if (multisigInfo) multisig.multisigInfo = null;
+    if (transaction) multisig.unisgnedTransactions = null;
+    if (signatures) multisig.signaturesInfo = null;
+
+    this.multisigServ.update(multisig);
+
+    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+    else if (transaction) this.router.navigate(['/multisignature/create-transaction']);
+    else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
   }
 
   onRefresh() {
