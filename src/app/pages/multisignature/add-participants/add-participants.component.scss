@@ -1,0 +1,69 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.add-participant-container {
+  max-width: 400px;
+  margin: 0 auto;
+
+  .mat-card .mat-divider-horizontal {
+    position: inherit !important;
+    margin-bottom: 10px;
+  }
+
+  .center-head {
+    margin: 0px auto;
+  }
+
+  form {
+    .row {
+      margin: 0 -4px;
+
+      [class^='col'] {
+        padding: 0 4px;
+      }
+    }
+
+    .label-margin {
+      margin-top: 10px;
+      display: block;
+    }
+
+    .custom-input {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .custom-btn {
+      text-transform: capitalize;
+      line-height: 30px;
+      margin: 10px 0;
+    }
+
+    .custom-btn-2 {
+      text-transform: capitalize;
+      line-height: 40px;
+    }
+
+    .address {
+      word-break: break-all;
+      font-size: 13px;
+      margin-bottom: 8px;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  ::ng-deep .mat-step-label {
+    min-width: 120px !important;
+  }
+
+  ::ng-deep .mat-step-header[aria-labelledby="center"] {
+    width: 100%;
+  }
+
+  // ::ng-deep .mat-horizontal-stepper-header {
+  //   margin: 0px auto !important;
+  // }
+}

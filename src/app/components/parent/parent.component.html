@@ -4,10 +4,10 @@
     <mat-drawer
       #sidenav
       [mode]="largeScreen ? 'side' : 'push'"
-      [opened]="largeScreen && isLogin"
+      [opened]="largeScreen"
       [disableClose]="largeScreen ? true : false"
     >
-      <app-sidebar [menu]="menu"></app-sidebar>
+      <app-sidebar [menu]="menu" *ngIf="isLogin"></app-sidebar>
     </mat-drawer>
     <mat-drawer-content #mainContainer>
       <div class="main-container">
