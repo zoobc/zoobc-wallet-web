@@ -191,6 +191,7 @@ export class SendmoneyComponent implements OnInit {
     if (this.account.balance / 1e8 >= total) {
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
+        maxHeight: '90vh',
         data: {
           form: this.formSend.value,
           kindFee: this.kindFee,

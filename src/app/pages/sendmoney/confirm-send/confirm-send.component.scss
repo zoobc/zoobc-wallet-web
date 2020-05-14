@@ -78,9 +78,3 @@
     }
   }
 }
-
-@media #{$small-and-down} {
-  ::ng-deep .cdk-overlay-pane {
-    max-height: 110vw !important;
-  }
-}
