@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
+import { onCopyText } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
   NodeParams,
   toUnconfirmTransactionNodeWallet,
@@ -38,7 +40,12 @@ export class NodeAdminComponent implements OnInit {
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
 
-  constructor(private dialog: MatDialog, private authServ: AuthService) {
+  constructor(
+    private dialog: MatDialog,
+    private authServ: AuthService,
+    private snackbar: MatSnackBar,
+    private translate: TranslateService
+  ) {
     this.account = authServ.getCurrAccount();
   }
 
@@ -169,5 +176,16 @@ export class NodeAdminComponent implements OnInit {
 
   onCloseDialog() {
     this.successRefDialog.close();
+  }
+
+  async onCopyUrl(url: string) {
+    onCopyText(url);
+
+    let message: string;
+    await this.translate
+      .get('Address copied to clipboard')
+      .toPromise()
+      .then(res => (message = res));
+    this.snackbar.open(message, null, { duration: 3000 });
   }
 }

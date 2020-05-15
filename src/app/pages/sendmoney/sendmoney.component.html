@@ -4,12 +4,8 @@
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)"></account-selector>
-      <input-address
-        label="{{ 'Recepient Address' | translate }}"
-        classList="block"
-        formControlName="recipient"
-        placeholder="{{ 'Recepient Address' | translate }}..."
-      ></input-address>
+      <input-address label="{{ 'Recepient Address' | translate }}" classList="block" formControlName="recipient"
+        placeholder="{{ 'Recepient Address' | translate }}..."></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
           {{ 'Recepient is required' | translate }}
@@ -39,15 +35,8 @@
           </mat-error>
         </ng-container>
       </ng-container>
-      <input-amount
-        [group]="formSend"
-        typeCoinName="typeCoin"
-        amountCurrencyName="amountCurrency"
-        amountName="amount"
-        [displayConverter]="true"
-        [currencyRate]="currencyRate"
-        label="{{ 'Coin Amount' | translate }}"
-      >
+      <input-amount [group]="formSend" typeCoinName="typeCoin" amountCurrencyName="amountCurrency" amountName="amount"
+        [displayConverter]="true" [currencyRate]="currencyRate" label="{{ 'Coin Amount' | translate }}">
       </input-amount>
       <div class="row">
         <div class="col-4 col-sm-3">&nbsp;</div>
@@ -70,30 +59,19 @@
           </ng-container>
         </div>
       </div>
-      <fee-selector
-        [group]="formSend"
-        feeName="fee"
-        feeCurrName="feeCurr"
-        [minFee]="minFee"
-        [timeoutField]="timeoutField.value"
-        [required]="true"
-        [currencyRate]="currencyRate"
-        (onClickFeeChoose)="onClickFeeChoose($event)"
-      ></fee-selector>
+      <fee-selector [group]="formSend" feeName="fee" feeCurrName="feeCurr" [minFee]="minFee"
+        [timeoutField]="timeoutField.value" [required]="true" [currencyRate]="currencyRate"
+        (onClickFeeChoose)="onClickFeeChoose($event)"></fee-selector>
 
       <span class="sub-title">
         {{ 'Advanced Option' | translate }}
       </span>
       <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
-        {{ 'Escrow Transaction' }}
+        {{ 'Escrow Transaction'|translate }}
       </mat-checkbox>
       <div class="zbc-form-item" *ngIf="advancedMenu">
-        <input-address
-          label="{{ 'Approver Address' | translate }}"
-          classList="block"
-          formControlName="addressApprover"
-          placeholder="{{ 'Approver Address' | translate }}..."
-        ></input-address>
+        <input-address label="{{ 'Approver Address' | translate }}" classList="block" formControlName="addressApprover"
+          placeholder="{{ 'Approver Address' | translate }}..."></input-address>
         <ng-container *ngIf="addressApproverField.touched">
           <mat-error *ngIf="addressApproverField.hasError('required')">
             {{ 'Address for Approver is required' | translate }}
@@ -102,15 +80,9 @@
             {{ 'ZBC Address is invalid' | translate }}
           </mat-error>
         </ng-container>
-        <input-amount
-          [group]="formSend"
-          typeCoinName="typeCommission"
-          amountCurrencyName="approverCommissionCurr"
-          amountName="approverCommission"
-          [displayConverter]="false"
-          [currencyRate]="currencyRate"
-          label="{{ 'Approver Commission' | translate }}"
-        >
+        <input-amount [group]="formSend" typeCoinName="typeCommission" amountCurrencyName="approverCommissionCurr"
+          amountName="approverCommission" [displayConverter]="false" [currencyRate]="currencyRate"
+          label="{{ 'Approver Commission' | translate }}">
         </input-amount>
         <div class="row">
           <div class="col-4 col-sm-3">&nbsp;</div>
@@ -134,18 +106,11 @@
             </ng-container>
           </div>
         </div>
-        <label class="block-height"
-          ><b>{{ 'Block Height' }} : {{ blockHeight | number }}</b></label
-        >
+        <label class="block-height"><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label>
         <label>{{ 'Timeout' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">
-          <input
-            (change)="onChangeTimeOut()"
-            matInput
-            type="number"
-            formControlName="timeout"
-            placeholder="{{ 'Timeout' | translate }}"
-          />
+          <input (change)="onChangeTimeOut()" matInput type="number" formControlName="timeout"
+            placeholder="{{ 'Timeout' | translate }}" />
         </mat-form-field>
         <ng-container *ngIf="timeoutField.touched">
           <mat-error *ngIf="timeoutField.hasError('required')">{{
@@ -166,13 +131,8 @@
         </ng-container>
       </div>
 
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        class="block button-margin"
-        [disabled]="formSend.invalid || isLoading || isError"
-      >
+      <button mat-flat-button color="primary" type="submit" class="block button-margin"
+        [disabled]="formSend.invalid || isLoading || isError">
         <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
         <span>{{ 'Send' | translate }}</span>
       </button>
