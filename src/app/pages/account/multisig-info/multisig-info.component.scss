@@ -19,14 +19,20 @@
 
     .participants {
       padding-left: 24px;
-      margin: 8px 0px 24px 0px;
+      margin: 8px 0px;
       li {
         list-style-type: circle;
         margin-bottom: 6px;
       }
     }
 
-    .nonce,
+    .nonce {
+      margin-top: 20px;
+      span {
+        color: $black1;
+      }
+    }
+
     .min-signature {
       color: $black1;
     }
@@ -36,10 +42,7 @@
     }
 
     .share-multisig-info {
-      cursor: pointer;
-      p {
-        margin: 0;
-      }
+      text-align: center;
     }
   }
 }

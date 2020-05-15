@@ -1,45 +1,120 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { MatStepper } from '@angular/material';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { MultisigService, MultiSigDraft } from 'src/app/services/multisig.service';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-multisig-info',
   templateUrl: './add-multisig-info.component.html',
   styleUrls: ['./add-multisig-info.component.scss'],
 })
-export class AddMultisigInfoComponent implements OnInit {
-  @ViewChild('stepper') stepper: MatStepper;
-
+export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   isCompleted = true;
   minParticipants = 3;
 
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
-  participantForm = new FormControl('', Validators.required);
-  nonceForm = new FormControl('', Validators.required);
-  minSignatureForm = new FormControl('', Validators.required);
+  isMultiSignature: boolean = false;
+  minParticipant: number = 2;
 
-  constructor(private fb: FormBuilder) {
-    this.firstFormGroup = new FormGroup({
-      participants: this.fb.array([]),
-      nonce: this.nonceForm,
-      minSignature: this.minSignatureForm,
+  form: FormGroup;
+  participantsField = new FormArray([]);
+  nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
+  minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
+
+  multisig: MultiSigDraft;
+  multisigSubs: Subscription;
+
+  constructor(private multisigServ: MultisigService, private router: Router, private location: Location) {
+    this.form = new FormGroup({
+      participants: this.participantsField,
+      nonce: this.nonceField,
+      minSigs: this.minSignatureField,
     });
   }
 
   ngOnInit() {
-    this.stepper.selectedIndex = 0;
-    this.setDefaultParticipantsForms();
+    this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
+      if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
+
+      this.multisig = multisig;
+      this.pushInitParticipant();
+
+      if (multisig.multisigInfo) {
+        const { participants, minSigs, nonce } = multisig.multisigInfo;
+        this.participantsField.setValue(participants);
+        this.nonceField.setValue(nonce);
+        this.minSignatureField.setValue(minSigs);
+      }
+    });
   }
 
-  onAddParticipants() {
-    (<FormArray>this.firstFormGroup.get('participants')).push(this.participantForm);
+  ngOnDestroy() {
+    if (this.multisigSubs) this.multisigSubs.unsubscribe();
   }
 
-  setDefaultParticipantsForms() {
-    for (let i = 1; i <= this.minParticipants; i++) {
-      this.onAddParticipants();
+  pushInitParticipant() {
+    while (this.participantsField.length > 0) {
+      this.participantsField.removeAt(0);
     }
+
+    let len = this.minParticipant;
+    const multisigInfo = this.multisig.multisigInfo;
+    if (multisigInfo) {
+      const participants = multisigInfo.participants;
+      len = participants.length >= 2 && participants.length;
+    }
+
+    for (let i = 0; i < len; i++) {
+      this.participantsField.push(new FormControl('', [Validators.required]));
+    }
+  }
+
+  onSwitchAccount() {}
+
+  addParticipant() {
+    this.participantsField.push(new FormControl(''));
+  }
+
+  removeParticipant(index: number) {
+    this.participantsField.removeAt(index);
+  }
+
+  saveDraft() {
+    this.updateMultisig();
+    this.multisigServ.saveDraft();
+    this.router.navigate(['/multisignature']);
+  }
+
+  next() {
+    if (this.form.valid) {
+      this.updateMultisig();
+
+      const { unisgnedTransactions, signaturesInfo } = this.multisig;
+      if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
+      if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+      else this.router.navigate(['/multisignature/send-transaction']);
+    }
+  }
+
+  back() {
+    this.location.back();
+  }
+
+  updateMultisig() {
+    const { minSigs, nonce } = this.form.value;
+    const multisig = { ...this.multisig };
+
+    let participants: string[] = this.form.value.participants;
+    participants.sort();
+    participants = participants.filter(address => address != '');
+
+    multisig.multisigInfo = {
+      minSigs: parseInt(minSigs),
+      nonce: parseInt(nonce),
+      participants: participants,
+      multisigAddress: '',
+    };
+    this.multisigServ.update(multisig);
   }
 }
