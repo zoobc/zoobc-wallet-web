@@ -44,6 +44,22 @@
 
       .value {
         font-size: 14px;
+
+        .ip-address {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-left: 16px;
+        }
+
+        .copy-ip {
+          cursor: pointer;
+          margin-left: 6px;
+        }
+      }
+
+      .flex {
+        display: flex;
       }
 
       .mat-flat-button {
