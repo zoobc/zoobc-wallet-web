@@ -11,29 +11,44 @@
         <div class="column-check">
           <mat-checkbox class="check-margin" formControlName="multisigInfo">
             {{ 'Add Multisignature Info' | translate }}
-            <i class="fas fa-info-circle" matTooltip="{{ 'Add Multisignature Info' | translate }}"
-              matTooltipPosition="above"></i>
+            <i
+              class="fas fa-info-circle"
+              matTooltip="{{ 'Add Multisignature Info' | translate }}"
+              matTooltipPosition="above"
+            ></i>
           </mat-checkbox>
         </div>
         <div class="column-check">
           <mat-checkbox class="check-margin" formControlName="transaction">
             {{ 'Create Transaction' | translate }}
-            <i class="fas fa-info-circle" matTooltip="{{ 'Create Transaction' | translate }}"
-              matTooltipPosition="above"></i>
+            <i
+              class="fas fa-info-circle"
+              matTooltip="{{ 'Create Transaction' | translate }}"
+              matTooltipPosition="above"
+            ></i>
           </mat-checkbox>
         </div>
         <div class="column-check">
           <mat-checkbox class="check-margin" formControlName="signatures">
             {{ 'Add participants signature' | translate }}
-            <i class="fas fa-info-circle" matTooltip="{{ 'Add participants signature' | translate }}"
-              matTooltipPosition="above"></i>
+            <i
+              class="fas fa-info-circle"
+              matTooltip="{{ 'Add participants signature' | translate }}"
+              matTooltipPosition="above"
+            ></i>
           </mat-checkbox>
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <button (click)="onNext()" mat-flat-button class="custom-btn" color="primary" type="button"
-            [disabled]="!multisigInfoField.value && !transactionField.value && !signaturesField.value">
+          <button
+            (click)="onNext()"
+            mat-flat-button
+            class="custom-btn"
+            color="primary"
+            type="button"
+            [disabled]="!multisigInfoField.value && !transactionField.value && !signaturesField.value"
+          >
             {{ 'Next' | translate }}
           </button>
         </div>
@@ -46,7 +61,7 @@
     </div>
   </div>
   <div class="multisignature-drafts">
-    <mat-card style="padding: 0">
+    <mat-card style="padding: 0;">
       <ng-container *ngIf="multiSigDrafts">
         <div class="no-content padding" *ngIf="multiSigDrafts.length <= 0">
           <i matPrefix class="fa fa-receipt"></i>
@@ -71,7 +86,13 @@
           </div>
           <div class="col-12 col-sm-4 text-right">
             <div class="amount">{{ draft.unisgnedTransactions.amount | number: '0.0-2' }} ZBC</div>
-            <button type="button" (click)="onDeleteDraft(draft.id)" class="btn-delete" mat-icon-button color="primary">
+            <button
+              type="button"
+              (click)="onDeleteDraft(draft.id)"
+              class="btn-delete"
+              mat-icon-button
+              color="primary"
+            >
               <i class="fas fa-trash"></i>
             </button>
           </div>
@@ -80,13 +101,13 @@
       <ng-container *ngIf="isLoading">
         <div class="transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
           <div class="col-7 col-sm-8">
-            <div class="skeleton-text" style="width:50%;"></div>
-            <div class="skeleton-text small" style="width:75%;"></div>
-            <div class="skeleton-text small" style="width:25%;"></div>
+            <div class="skeleton-text" style="width: 50%;"></div>
+            <div class="skeleton-text small" style="width: 75%;"></div>
+            <div class="skeleton-text small" style="width: 25%;"></div>
           </div>
           <div class="col-5 col-sm-4">
-            <div class="skeleton-text" style="width:71%;float:right"></div>
-            <div class="skeleton-text small" style="width:30%;float:right"></div>
+            <div class="skeleton-text" style="width: 71%; float: right;"></div>
+            <div class="skeleton-text small" style="width: 30%; float: right;"></div>
           </div>
         </div>
       </ng-container>
