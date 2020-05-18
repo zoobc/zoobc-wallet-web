@@ -11,44 +11,29 @@
         <div class="column-check">
           <mat-checkbox class="check-margin" formControlName="multisigInfo">
             {{ 'Add Multisignature Info' | translate }}
-            <i
-              class="fas fa-info-circle"
-              matTooltip="{{ 'Add Multisignature Info' | translate }}"
-              matTooltipPosition="above"
-            ></i>
+            <i class="fas fa-info-circle" matTooltip="{{ 'Add Multisignature Info' | translate }}"
+              matTooltipPosition="above"></i>
           </mat-checkbox>
         </div>
         <div class="column-check">
           <mat-checkbox class="check-margin" formControlName="transaction">
             {{ 'Create Transaction' | translate }}
-            <i
-              class="fas fa-info-circle"
-              matTooltip="{{ 'Create Transaction' | translate }}"
-              matTooltipPosition="above"
-            ></i>
+            <i class="fas fa-info-circle" matTooltip="{{ 'Create Transaction' | translate }}"
+              matTooltipPosition="above"></i>
           </mat-checkbox>
         </div>
         <div class="column-check">
           <mat-checkbox class="check-margin" formControlName="signatures">
             {{ 'Add participants signature' | translate }}
-            <i
-              class="fas fa-info-circle"
-              matTooltip="{{ 'Add participants signature' | translate }}"
-              matTooltipPosition="above"
-            ></i>
+            <i class="fas fa-info-circle" matTooltip="{{ 'Add participants signature' | translate }}"
+              matTooltipPosition="above"></i>
           </mat-checkbox>
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <button
-            (click)="onNext()"
-            mat-flat-button
-            class="custom-btn"
-            color="primary"
-            type="button"
-            [disabled]="!multisigInfoField.value && !transactionField.value && !signaturesField.value"
-          >
+          <button (click)="onNext()" mat-flat-button class="custom-btn" color="primary" type="button"
+            [disabled]="!multisigInfoField.value && !transactionField.value && !signaturesField.value">
             {{ 'Next' | translate }}
           </button>
         </div>
@@ -68,25 +53,25 @@
           <span class="message">{{ 'No Draft Record' | translate }}</span>
         </div>
         <div [className]="'transaction-item hover row'" *ngFor="let draft of multiSigDrafts">
-          <div class="col-12 col-sm-8">
+          <div class="col-12 col-sm-8" (click)="onEditDraft(draft.id)">
             <div class="alias">
               <b>{{ 'From' | translate }}</b>
-              <span *ngIf="draft.senderAlias">({{ draft.senderAlias }})</span>
+              <span>{{ getAlias(draft.unisgnedTransactions.sender) }}</span>
             </div>
             <div class="address">
-              <wallet-address [value]="draft.sender"></wallet-address>
+              <wallet-address [value]="draft.unisgnedTransactions.sender"></wallet-address>
             </div>
             <div class="alias">
               <b>{{ 'To' | translate }}</b>
-              <span *ngIf="draft.recipientAlias">({{ draft.recipientAlias }})</span>
+              <span>{{ getAlias(draft.unisgnedTransactions.recipient) }}</span>
             </div>
             <div class="address">
-              <wallet-address [value]="draft.recipient"></wallet-address>
+              <wallet-address [value]="draft.unisgnedTransactions.recipient"></wallet-address>
             </div>
           </div>
           <div class="col-12 col-sm-4 text-right">
-            <div class="amount">{{ draft.amount }} ZBC</div>
-            <button type="button" class="btn-delete" mat-icon-button color="primary">
+            <div class="amount">{{ draft.unisgnedTransactions.amount | number: '0.0-2' }} ZBC</div>
+            <button type="button" (click)="onDeleteDraft(draft.id)" class="btn-delete" mat-icon-button color="primary">
               <i class="fas fa-trash"></i>
             </button>
           </div>

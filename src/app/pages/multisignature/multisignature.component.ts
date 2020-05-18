@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
+import { ContactService } from 'src/app/services/contact.service';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-multisignature',
@@ -9,7 +12,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
   styleUrls: ['./multisignature.component.scss'],
 })
 export class MultisignatureComponent implements OnInit {
-  multiSigDrafts: any;
+  multiSigDrafts: MultiSigDraft[];
   isLoading: boolean;
   isError: boolean = false;
 
@@ -18,7 +21,12 @@ export class MultisignatureComponent implements OnInit {
   transactionField = new FormControl(false);
   signaturesField = new FormControl(false);
 
-  constructor(private router: Router, private multisigServ: MultisigService) {
+  constructor(
+    private router: Router,
+    private multisigServ: MultisigService,
+    private contactServ: ContactService,
+    private translate: TranslateService
+  ) {
     this.form = new FormGroup({
       multisigInfo: this.multisigInfoField,
       transaction: this.transactionField,
@@ -27,46 +35,25 @@ export class MultisignatureComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getMultiSigDraft();
+  }
+
+  getMultiSigDraft() {
+    this.isError = false;
     this.isLoading = true;
-    this.multiSigDrafts = [
-      {
-        sender: 'iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb',
-        senderAlias: 'John Doe',
-        recipient: 'AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai',
-        recipientAlias: 'Jane Doe',
-        amount: 3,
-      },
-      {
-        sender: 'iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb',
-        senderAlias: 'John Doe',
-        recipient: 'AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai',
-        recipientAlias: 'Jane Doe',
-        amount: 4,
-      },
-      {
-        sender: 'iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb',
-        senderAlias: 'John Doe',
-        recipient: 'AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai',
-        recipientAlias: 'Jane Doe',
-        amount: 6,
-      },
-      {
-        sender: 'iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb',
-        senderAlias: 'John Doe',
-        recipient: 'AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai',
-        recipientAlias: 'Jane Doe',
-        amount: 7,
-      },
-      {
-        sender: 'iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb',
-        senderAlias: 'John Doe',
-        recipient: 'AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai',
-        recipientAlias: 'Jane Doe',
-        amount: 3,
-      },
-    ];
+    try {
+      this.multiSigDrafts = this.multisigServ.getDrafts();
+    } catch (error) {
+      this.isError = true;
+    }
     this.isLoading = false;
     this.isError = false;
+  }
+
+  getAlias(address: string): string {
+    let alias = this.contactServ.get(address).alias || '';
+    if (alias.length > 0) return `(${alias})`;
+    return alias;
   }
 
   onEditDraft(idx: number) {
@@ -97,7 +84,24 @@ export class MultisignatureComponent implements OnInit {
     else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
   }
 
+  async onDeleteDraft(id: number) {
+    let sentence: string;
+    await this.translate
+      .get('Are you sure want to delete ?')
+      .toPromise()
+      .then(res => (sentence = res));
+    Swal.fire({
+      title: sentence,
+      showCancelButton: true,
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        this.multisigServ.deleteDraft(id);
+        return true;
+      },
+    });
+  }
+
   onRefresh() {
-    console.log('Refresh clicked');
+    this.getMultiSigDraft();
   }
 }
