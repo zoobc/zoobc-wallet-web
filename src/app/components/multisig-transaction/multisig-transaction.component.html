@@ -2,7 +2,7 @@
   <ng-container *ngIf="pendingListMultiSig">
     <div class="no-content padding" *ngIf="pendingListMultiSig.length <= 0">
       <i matPrefix class="fa fa-receipt"></i>
-      <span class="message">{{ 'No Approval Needed' | translate }}</span>
+      <span class="message">{{ 'No Pending Multisignature Transaction' | translate }}</span>
     </div>
     <div
       [className]="withDetail ? 'multisig-transaction-item hover row' : 'multisig-transaction-item hover'"
@@ -56,6 +56,12 @@
       <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="multiSigDetail.senderaddress" [copyButton]="true"></wallet-address>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <wallet-address [value]="multiSigDetail.recipientaddress" [copyButton]="true"></wallet-address>
       </div>
     </div>
     <div class="row">

@@ -31,15 +31,7 @@
           ></app-escrow-transactions>
         </div>
       </mat-tab>
-      <mat-tab label="Multi Signature - Coming Soon">
-        <div class="text-right">
-          <button mat-icon-button class="reload-button" (click)="reload(true)">
-            <i class="fa fa-redo-alt"></i>
-          </button>
-          <label class="block-height" *ngIf="!isLoadingBlockHeight"
-            ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
-          >
-        </div>
+      <mat-tab label="Multisignature">
         <div
           infiniteScroll
           [infiniteScrollDistance]="2"
