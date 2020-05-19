@@ -12,6 +12,7 @@ import { SavedAccount } from 'src/app/services/auth.service';
   styleUrls: ['./add-multisig-info.component.scss'],
 })
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
+  multiSigDrafts: MultiSigDraft[];
   isCompleted = true;
   minParticipants = 3;
 
@@ -37,6 +38,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getMultiSigDraft();
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
@@ -91,9 +93,18 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     this.participantsField.removeAt(index);
   }
 
+  getMultiSigDraft() {
+    this.multiSigDrafts = this.multisigServ.getDrafts();
+  }
+
   saveDraft() {
     this.updateMultisig();
-    this.multisigServ.saveDraft();
+    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
+    if (isDraft) {
+      this.multisigServ.editDraft();
+    } else {
+      this.multisigServ.saveDraft();
+    }
     this.router.navigate(['/multisignature']);
   }
 
