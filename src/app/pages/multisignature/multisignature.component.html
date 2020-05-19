@@ -61,32 +61,27 @@
     </div>
   </div>
   <div class="multisignature-drafts">
-    <mat-card style="padding: 0">
+    <mat-card style="padding: 0;">
       <ng-container *ngIf="multiSigDrafts">
         <div class="no-content padding" *ngIf="multiSigDrafts.length <= 0">
           <i matPrefix class="fa fa-receipt"></i>
           <span class="message">{{ 'No Draft Record' | translate }}</span>
         </div>
-        <div [className]="'transaction-item hover row'" *ngFor="let draft of multiSigDrafts">
-          <div class="col-12 col-sm-8">
-            <div class="alias">
-              <b>{{ 'From' | translate }}</b>
-              <span *ngIf="draft.senderAlias">({{ draft.senderAlias }})</span>
-            </div>
-            <div class="address">
-              <wallet-address [value]="draft.sender"></wallet-address>
-            </div>
-            <div class="alias">
-              <b>{{ 'To' | translate }}</b>
-              <span *ngIf="draft.recipientAlias">({{ draft.recipientAlias }})</span>
-            </div>
-            <div class="address">
-              <wallet-address [value]="draft.recipient"></wallet-address>
+        <div [className]="'transaction-item hover row'" *ngFor="let draft of multiSigDrafts; let i = index">
+          <div class="col-12 col-sm-8" (click)="onEditDraft(i)">
+            <div class="name">Draft {{ draft.id }}</div>
+            <div class="date">
+              {{ getDate(draft.id) | dateAgo }}
             </div>
           </div>
           <div class="col-12 col-sm-4 text-right">
-            <div class="amount">{{ draft.amount }} ZBC</div>
-            <button type="button" class="btn-delete" mat-icon-button color="primary">
+            <button
+              type="button"
+              (click)="onDeleteDraft(i)"
+              class="btn-delete"
+              mat-icon-button
+              color="primary"
+            >
               <i class="fas fa-trash"></i>
             </button>
           </div>
@@ -95,13 +90,13 @@
       <ng-container *ngIf="isLoading">
         <div class="transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
           <div class="col-7 col-sm-8">
-            <div class="skeleton-text" style="width:50%;"></div>
-            <div class="skeleton-text small" style="width:75%;"></div>
-            <div class="skeleton-text small" style="width:25%;"></div>
+            <div class="skeleton-text" style="width: 50%;"></div>
+            <div class="skeleton-text small" style="width: 75%;"></div>
+            <div class="skeleton-text small" style="width: 25%;"></div>
           </div>
           <div class="col-5 col-sm-4">
-            <div class="skeleton-text" style="width:71%;float:right"></div>
-            <div class="skeleton-text small" style="width:30%;float:right"></div>
+            <div class="skeleton-text" style="width: 71%; float: right;"></div>
+            <div class="skeleton-text small" style="width: 30%; float: right;"></div>
           </div>
         </div>
       </ng-container>
