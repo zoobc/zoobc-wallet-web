@@ -67,28 +67,17 @@
           <i matPrefix class="fa fa-receipt"></i>
           <span class="message">{{ 'No Draft Record' | translate }}</span>
         </div>
-        <div [className]="'transaction-item hover row'" *ngFor="let draft of multiSigDrafts">
-          <div class="col-12 col-sm-8" (click)="onEditDraft(draft.id)">
-            <div class="alias">
-              <b>{{ 'From' | translate }}</b>
-              <span>{{ getAlias(draft.unisgnedTransactions.sender) }}</span>
-            </div>
-            <div class="address">
-              <wallet-address [value]="draft.unisgnedTransactions.sender"></wallet-address>
-            </div>
-            <div class="alias">
-              <b>{{ 'To' | translate }}</b>
-              <span>{{ getAlias(draft.unisgnedTransactions.recipient) }}</span>
-            </div>
-            <div class="address">
-              <wallet-address [value]="draft.unisgnedTransactions.recipient"></wallet-address>
+        <div [className]="'transaction-item hover row'" *ngFor="let draft of multiSigDrafts; let i = index">
+          <div class="col-12 col-sm-8" (click)="onEditDraft(i)">
+            <div class="name">Draft {{ draft.id }}</div>
+            <div class="date">
+              {{ getDate(draft.id) | dateAgo }}
             </div>
           </div>
           <div class="col-12 col-sm-4 text-right">
-            <div class="amount">{{ draft.unisgnedTransactions.amount | number: '0.0-2' }} ZBC</div>
             <button
               type="button"
-              (click)="onDeleteDraft(draft.id)"
+              (click)="onDeleteDraft(i)"
               class="btn-delete"
               mat-icon-button
               color="primary"

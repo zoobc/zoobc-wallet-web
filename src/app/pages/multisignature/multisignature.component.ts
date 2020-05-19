@@ -89,16 +89,22 @@ export class MultisignatureComponent implements OnInit {
     await this.translate
       .get('Are you sure want to delete ?')
       .toPromise()
-      .then(res => (sentence = res));
+      .then((res) => (sentence = res));
     Swal.fire({
       title: sentence,
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
         this.multisigServ.deleteDraft(id);
+        this.getMultiSigDraft();
         return true;
       },
     });
+  }
+
+  getDate(pDate: number) {
+    const newDate = new Date(pDate);
+    return newDate;
   }
 
   onRefresh() {
