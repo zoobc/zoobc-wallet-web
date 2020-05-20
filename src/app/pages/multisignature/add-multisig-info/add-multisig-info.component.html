@@ -21,7 +21,7 @@
 
     <form [formGroup]="form" (submit)="next()">
       <label>{{ 'Import My Multisignature Account' | translate }}</label>
-      <account-selector (select)="onSwitchAccount($event)"></account-selector>
+      <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
 
       <label>{{ 'Participants' }}</label>
       <div formArrayName="participants">

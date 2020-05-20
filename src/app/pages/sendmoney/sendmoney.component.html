@@ -3,7 +3,7 @@
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <label>{{ 'From' | translate }}</label>
-      <account-selector (select)="onSwitchAccount($event)"></account-selector>
+      <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
       <input-address
         label="{{ 'Recepient Address' | translate }}"
         classList="block"
