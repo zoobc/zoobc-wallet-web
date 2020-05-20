@@ -29,50 +29,42 @@
   }
 }
 
-.account-list {
-  margin-bottom: 24px;
-  .account-card {
-    margin-bottom: 8px;
-    padding: 0 8px;
-    &:hover {
-      cursor: pointer;
+.account-card {
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+  color: $black1;
+  font-size: 14px;
+  background-color: white;
+  &:hover {
+    cursor: pointer;
+  }
+  &.active {
+    background: $primary-gradient;
+    color: white;
+    .balance,
+    .balance-in-currency,
+    .name {
+      color: white;
     }
-    .row {
-      border-radius: 6px;
-      padding: 12px 8px;
-      color: $black1;
-      font-size: 14px;
-      background-color: white;
-      &.active {
-        background: $primary-gradient;
-        color: white;
-        .balance,
-        .balance-in-currency,
-        .name {
-          color: white;
-        }
-      }
-      .name {
-        font-weight: bold;
-        color: $black2;
-        margin-bottom: 4px;
-      }
-      .address {
-        margin-bottom: 4px;
-      }
-      .last-tx {
-        margin-bottom: 12px;
-        font-size: 12px;
-      }
-      .balance {
-        color: $black2;
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 4px;
-      }
-      .balance-in-currency {
-        color: $black3;
-      }
-    }
+  }
+  .name {
+    font-weight: bold;
+    color: $black2;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+  .address {
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .balance {
+    color: $black2;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .balance-in-currency {
+    color: $black3;
   }
 }

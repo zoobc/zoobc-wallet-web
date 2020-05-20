@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import zoobc, { BIP32Interface, ZooKeyring, TransactionListParams, toTransactionListWallet } from 'zoobc-sdk';
+import zoobc, { BIP32Interface, ZooKeyring, AccountBalancesParams } from 'zoobc-sdk';
 
 export interface SavedAccount {
   name: string;
@@ -11,7 +11,6 @@ export interface SavedAccount {
   nonce?: number;
   minSig?: number;
   balance?: number;
-  lastTx?: number;
   signByAddress?: string;
 }
 
@@ -84,38 +83,30 @@ export class AuthService {
   getAccountsWithBalance(type?: 'normal' | 'multisig'): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
       let accounts = this.getAllAccount(type);
+      const addresses = accounts.map(acc => acc.address);
+      const params: AccountBalancesParams = {
+        accountAddressList: addresses,
+      };
 
-      let error = false;
-
-      for (let i = 0; i < accounts.length; i++) {
-        let account = accounts[i];
-        let params: TransactionListParams = {
-          address: account.address,
-          transactionType: 1,
-          pagination: {
-            page: 1,
-            limit: 1,
-          },
-        };
-
-        await zoobc.Transactions.getList(params)
-          .then(res => {
-            const tx = toTransactionListWallet(res, account.address);
-            if (tx.transactions.length > 0) account.lastTx = tx.transactions[0].timestamp;
-            else account.lastTx = null;
-            return zoobc.Account.getBalance(account.address);
-          })
-          .then(res => {
-            account.balance = parseInt(res.accountbalance.spendablebalance);
-          })
-          .catch(err => {
-            error = true;
-            reject(err);
+      zoobc.Account.getBalances(params)
+        .then(res => {
+          let balances = res.accountbalancesList;
+          accounts.map(acc => {
+            for (let i = 0; i < balances.length; i++) {
+              const balance = balances[i];
+              if (balance.accountaddress == acc.address) {
+                acc.balance = parseInt(balance.spendablebalance);
+                balances.splice(i, 1);
+                break;
+              }
+            }
           });
-
-        if (error) break;
-      }
-      if (!error) resolve(accounts);
+          resolve(accounts);
+        })
+        .catch(err => {
+          console.log(err);
+          reject(err);
+        });
     });
   }
 

@@ -60,7 +60,8 @@ export class AccountSelectorComponent implements OnInit {
 
   openAccountList() {
     this.accountRefDialog = this.dialog.open(this.accountDialog, {
-      width: '360px',
+      width: '380px',
+      maxHeight: '90vh',
     });
   }
 

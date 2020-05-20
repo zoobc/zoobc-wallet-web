@@ -88,7 +88,9 @@ a:not([href='']) {
 }
 
 .mat-dialog-container {
-  padding: 24px 16px !important;
+  @media #{$small-and-down} {
+    padding: 24px 16px !important;
+  }
   color: $black1 !important;
 }
 
