@@ -32,6 +32,11 @@
         </div>
       </mat-tab>
       <mat-tab label="Multisignature">
+        <div class="text-right">
+          <button mat-icon-button class="reload-button" (click)="reload(true)">
+            <i class="fa fa-redo-alt"></i>
+          </button>
+        </div>
         <div
           infiniteScroll
           [infiniteScrollDistance]="2"
