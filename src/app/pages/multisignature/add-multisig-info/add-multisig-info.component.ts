@@ -4,6 +4,7 @@ import { MultisigService, MultiSigDraft } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { SavedAccount } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -16,6 +17,8 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
+
+  account: SavedAccount;
 
   form: FormGroup;
   participantsField = new FormArray([]);
@@ -70,7 +73,15 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSwitchAccount() {}
+  onSwitchAccount(account: SavedAccount) {
+    if (account.type === 'multisig') {
+      this.participantsField.setValue(account.participants);
+      this.nonceField.setValue(account.nonce);
+      this.minSignatureField.setValue(account.minSig);
+    } else {
+      this.form.reset();
+    }
+  }
 
   addParticipant() {
     this.participantsField.push(new FormControl(''));
