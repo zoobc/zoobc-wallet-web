@@ -33,6 +33,10 @@
       margin-bottom: 0;
     }
 
+    .margin-error {
+      margin-top: 1px;
+    }
+
     .custom-btn {
       text-transform: capitalize;
       line-height: 30px;
@@ -54,16 +58,4 @@
       text-overflow: ellipsis;
     }
   }
-
-  ::ng-deep .mat-step-label {
-    min-width: 120px !important;
-  }
-
-  ::ng-deep .mat-step-header[aria-labelledby="center"] {
-    width: 100%;
-  }
-
-  // ::ng-deep .mat-horizontal-stepper-header {
-  //   margin: 0px auto !important;
-  // }
 }
