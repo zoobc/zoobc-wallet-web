@@ -1,42 +1,44 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
-.multisig-transaction-item {
-  border-bottom: 1px solid #ddd;
-  padding: 16px 6px;
-  margin: 0;
-  align-items: center;
+.multisig-list-container {
+  .multisig-transaction-item {
+    border-bottom: 1px solid #ddd;
+    padding: 16px 6px;
+    margin: 0;
+    align-items: center;
+    @include transition(0.3s ease-in all);
+    &.hover:hover {
+      background-color: #eee;
+      cursor: pointer;
+    }
 
-  &.hover:hover {
-    background-color: #eee;
-    cursor: pointer;
-  }
+    .alias {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
 
-  .alias {
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
+    .address {
+      word-break: break-all;
+      color: $black1;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
 
-  .address {
-    word-break: break-all;
-    color: $black1;
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
+    .date {
+      color: $black2;
+      font-size: 13px;
+    }
 
-  .date {
-    color: $black2;
-    font-size: 13px;
-  }
-
-  .amount {
-    color: #f44336;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  .fee {
-    color: #f44336;
-    font-size: 12px;
+    .amount {
+      color: #f44336;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .fee {
+      color: #f44336;
+      font-size: 12px;
+    }
   }
 }
 

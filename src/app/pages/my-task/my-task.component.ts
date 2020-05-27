@@ -1,6 +1,11 @@
 import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import zoobc, { EscrowListParams } from 'zoobc-sdk';
+import zoobc, {
+  EscrowListParams,
+  MultisigPendingListParams,
+  MultisigPendingTxResponse,
+  toGetPendingList,
+} from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { GetEscrowTransactionsResponse } from 'zoobc-sdk/grpc/model/escrow_pb';
 import { ContactService } from 'src/app/services/contact.service';
@@ -13,42 +18,92 @@ import { OrderBy } from 'zoobc-sdk/grpc/model/pagination_pb';
   encapsulation: ViewEncapsulation.None,
 })
 export class MyTaskComponent implements OnInit {
-  @Input() isLoading: boolean = false;
-  @Input() isError: boolean = false;
-  @Input() withDetail: boolean = false;
+  // Escrow Input
+  @Input() isLoadingEscrow: boolean = false;
+  @Input() isErrorEscrow: boolean = false;
   isLoadingBlockHeight: boolean = false;
-
-  escrowTransactions;
+  // Multisignature input
+  @Input() isLoadingMultisig: boolean = false;
+  @Input() isErrorMultiSig: boolean = false;
   account;
   timeout;
+
+  escrowTransactions;
   blockHeight: number;
-  page: number = 1;
-  perPage: number = 10;
-  total: number = 0;
-  finished: boolean = false;
+  pageEscrow: number = 1;
+  perPageEscrow: number = 10;
+  totalEscrow: number = 0;
+  escrowfinished: boolean = false;
+
+  multiSigPendingList;
+  pageMultiSig: number = 1;
+  perPageMultiSig: number = 10;
+  totalMultiSig: number = 0;
+  multiSigfinished: boolean = false;
 
   constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
   async ngOnInit() {
     this.account = this.authServ.getCurrAccount();
     this.getEscrowTx(true);
+    this.getMultiSigPendingList(true);
     this.getBlockHeight();
   }
 
+  getMultiSigPendingList(reload: boolean = false) {
+    if (!this.isLoadingMultisig) {
+      this.isLoadingMultisig = true;
+      const perPage = Math.ceil(window.outerHeight / 72);
+
+      if (reload) {
+        this.multiSigPendingList = null;
+        this.pageMultiSig = 1;
+      }
+      const params: MultisigPendingListParams = {
+        address: this.account.address,
+        status: 0,
+        pagination: {
+          page: this.pageMultiSig,
+          limit: perPage,
+        },
+      };
+      zoobc.MultiSignature.getPendingList(params)
+        .then((res: MultisigPendingTxResponse) => {
+          const tx = toGetPendingList(res);
+          this.totalMultiSig = tx.count;
+          this.multiSigPendingList = tx.pendingtransactionsList;
+          this.multiSigPendingList.map(res => {
+            res['alias'] = this.contactServ.get(res.senderaddress).alias || '';
+          });
+          console.log(this.multiSigPendingList);
+          if (reload) {
+            this.multiSigPendingList = tx.pendingtransactionsList;
+          } else {
+            this.multiSigPendingList = this.multiSigPendingList.concat(tx.pendingtransactionsList);
+          }
+        })
+        .catch(err => {
+          this.isErrorMultiSig = true;
+          console.log(err);
+        })
+        .finally(() => (this.isLoadingMultisig = false));
+    }
+  }
+
   getEscrowTx(reload: boolean = false) {
-    if (!this.isLoading) {
-      this.isLoading = true;
+    if (!this.isLoadingEscrow) {
+      this.isLoadingEscrow = true;
       const perPage = Math.ceil(window.outerHeight / 72);
 
       if (reload) {
         this.escrowTransactions = null;
-        this.page = 1;
+        this.pageEscrow = 1;
       }
 
       const params: EscrowListParams = {
         approverAddress: this.account.address,
         statusList: [0],
         pagination: {
-          page: this.page,
+          page: this.pageEscrow,
           limit: perPage,
           orderBy: OrderBy.DESC,
           orderField: 'timeout',
@@ -56,7 +111,7 @@ export class MyTaskComponent implements OnInit {
       };
       zoobc.Escrows.getList(params)
         .then((res: GetEscrowTransactionsResponse.AsObject) => {
-          this.total = parseInt(res.total);
+          this.totalEscrow = parseInt(res.total);
           let txFilter = res.escrowsList.filter(tx => {
             if (tx.latest == true) return tx;
           });
@@ -84,17 +139,19 @@ export class MyTaskComponent implements OnInit {
           }
         })
         .catch(err => {
-          this.isError = true;
+          this.isErrorEscrow = true;
           console.log(err);
         })
-        .finally(() => (this.isLoading = false));
+        .finally(() => (this.isLoadingEscrow = false));
     }
   }
 
   reload(load: boolean = false) {
     this.getEscrowTx(load);
+    this.getMultiSigPendingList(load);
     this.getBlockHeight();
   }
+
   getBlockHeight() {
     this.isLoadingBlockHeight = true;
     zoobc.Host.getInfo()
@@ -107,10 +164,17 @@ export class MyTaskComponent implements OnInit {
       .finally(() => (this.isLoadingBlockHeight = false));
   }
 
-  onScroll() {
-    if (this.escrowTransactions && this.escrowTransactions.length < this.total) {
-      this.page++;
+  onScrollEscrow() {
+    if (this.escrowTransactions && this.escrowTransactions.length < this.totalEscrow) {
+      this.pageEscrow++;
       this.getEscrowTx();
-    } else this.finished = true;
+    } else this.escrowfinished = true;
+  }
+
+  onScrollMultiSig() {
+    if (this.multiSigPendingList && this.multiSigPendingList.length < this.totalMultiSig) {
+      this.pageMultiSig++;
+      this.getMultiSigPendingList();
+    } else this.multiSigfinished = true;
   }
 }

@@ -1,84 +1,121 @@
 <div class="add-participant-container">
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
-    <div>
-      <mat-horizontal-stepper labelPosition="bottom" [linear]="true" #stepper>
-        <mat-step [stepControl]="firstFormGroup" *ngIf="selectedDesign===1">
-          <mat-divider></mat-divider>
-          <form>
-            <ng-template matStepLabel>Add Multisig Info</ng-template>
-          </form>
-        </mat-step>
-        <mat-step [stepControl]="secondFormGroup" *ngIf="selectedDesign===1">
-          <mat-divider></mat-divider>
-          <form>
-            <ng-template matStepLabel>Create Transaction</ng-template>
-          </form>
-        </mat-step>
-        <mat-step [stepControl]="thirdFormGroup" [aria-labelledby]="selectedDesign===2 ? 'center' : null">
-          <mat-divider></mat-divider>
-          <form [formGroup]="thirdFormGroup" class="grid">
-            <ng-template matStepLabel>Add Signatures</ng-template>
-            <ng-container *ngIf="selectedDesign===1">
-              <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
-              <mat-form-field appearance="outline" color="accent">
-                <input formControlName="transactionHash" matInput type="text" />
-              </mat-form-field>
-              <label class="label-margin">{{'Participants Signature'|translate}}</label>
-              <div formArrayName="participantsSignature">
-                <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index;">
-                  <mat-form-field class="custom-input" appearance="outline" color="accent">
-                    <input [formControlName]="i" matInput type="text" />
-                  </mat-form-field>
-                </ng-container>
-                <div>
-                  <button (click)="addParticipant()" mat-flat-button class="custom-btn" color="primary" type="button">
-                    {{ 'Add your signature'|translate}}
-                  </button>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 20px;">
-                <div class="col">
-                  <button mat-flat-button color="warn" class="block" type="button">
-                    {{ 'Back' | translate }}
-                  </button>
-                </div>
-                <div class="col">
-                  <button mat-flat-button color="primary" class="block" type="button">
-                    {{ 'Save' | translate }}
-                  </button>
-                </div>
-                <div class="col">
-                  <button mat-flat-button color="primary" type="button" class="block">
-                    {{ 'Next' | translate }}
-                  </button>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="selectedDesign===2">
-              <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
-              <div class="address">
-                {{transactionHash}}
-              </div>
-              <label class="label-margin">{{ 'Your Account' | translate }}</label>
-              <account-selector (select)="onSwitchAccount($event)"></account-selector>
-              <label class="label-margin">{{ 'Your Signature' | translate }}</label>
-              <mat-form-field appearance="outline" color="accent">
-                <input matInput type="text" />
-              </mat-form-field>
-              <button (click)="addSignature()" mat-flat-button class="custom-btn-2" color="primary" type="button">
-                {{ 'Add your signature'|translate}}
-              </button>
-
-              <button (click)="copyUrl()" mat-flat-button class="custom-btn" color="primary" type="button">
-                {{ 'Share This Participants Signature'|translate}}
-              </button>
-
-            </ng-container>
-          </form>
-        </mat-step>
-      </mat-horizontal-stepper>
+    <div class="stepper">
+      <ng-container *ngIf="selectedDesign === 1">
+        <div class="step">
+          <span class="step-circle">1</span>
+          <span class="step-label">Add Multisig Info</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="step">
+          <span class="step-circle">2</span>
+          <span class="step-label">Create Transaction</span>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="step active">
+          <span class="step-circle">3</span>
+          <span class="step-label">Add Signatures</span>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="selectedDesign === 2">
+        <div class="step active">
+          <span class="step-circle">3</span>
+          <span class="step-label">Add Signatures</span>
+        </div>
+      </ng-container>
     </div>
-  </mat-card>
+    <mat-divider style="margin-bottom: 24px;"></mat-divider>
+    <form [formGroup]="form" class="grid">
+      <ng-template matStepLabel>Add Signatures</ng-template>
+      <ng-container *ngIf="selectedDesign === 1">
+        <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
+        <mat-form-field appearance="outline" color="accent">
+          <input formControlName="transactionHash" matInput type="text" />
+        </mat-form-field>
+        <ng-container *ngIf="transactionHashField.touched">
+          <mat-error *ngIf="transactionHashField.hasError('required')">
+            {{ 'Transaction Hash is required' | translate }}
+          </mat-error>
+        </ng-container>
+        <label class="label-margin">{{ 'Participants Signature' | translate }}</label>
+        <div formArrayName="participantsSignature">
+          <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
+            <mat-form-field class="custom-input" appearance="outline" color="accent">
+              <input [formControlName]="i" matInput type="text" />
+            </mat-form-field>
+            <ng-container *ngIf="participantsSignatureField.controls[i].touched">
+              <mat-error
+                class="margin-error"
+                *ngIf="participantsSignatureField.controls[i].hasError('required')"
+              >
+                {{ 'Participant Signature is required' | translate }}
+              </mat-error>
+            </ng-container>
+          </ng-container>
+          <div>
+            <button
+              (click)="onAddSignature()"
+              mat-flat-button
+              class="custom-btn"
+              color="primary"
+              type="button"
+            >
+              {{ 'Add your signature' | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <div class="col">
+            <button (click)="onBack()" mat-flat-button color="warn" class="block" type="button">
+              {{ 'Back' | translate }}
+            </button>
+          </div>
+          <div class="col">
+            <button
+              [disabled]="form.invalid"
+              (click)="onSave()"
+              mat-flat-button
+              color="primary"
+              class="block"
+              type="button"
+            >
+              {{ 'Save To Draft' | translate }}
+            </button>
+          </div>
+          <div class="col">
+            <button
+              [disabled]="form.invalid"
+              (click)="onNext()"
+              mat-flat-button
+              color="primary"
+              type="button"
+              class="block"
+            >
+              {{ 'Next' | translate }}
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="selectedDesign === 2">
+        <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
+        <div class="address">
+          {{ transactionHash }}
+        </div>
+        <label class="label-margin">{{ 'Your Account' | translate }}</label>
+        <account-selector (select)="onSwitchAccount($event)"></account-selector>
+        <label class="label-margin">{{ 'Your Signature' | translate }}</label>
+        <mat-form-field appearance="outline" color="accent">
+          <input matInput type="text" />
+        </mat-form-field>
+        <button (click)="onAddSignature()" mat-flat-button class="custom-btn-2" color="primary" type="button">
+          {{ 'Add your signature' | translate }}
+        </button>
 
+        <button (click)="onCopyUrl()" mat-flat-button class="custom-btn" color="primary" type="button">
+          {{ 'Share This Participants Signature' | translate }}
+        </button>
+      </ng-container>
+    </form>
+  </mat-card>
 </div>
