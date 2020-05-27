@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import zoobc, { BIP32Interface, ZooKeyring, AccountBalancesParams } from 'zoobc-sdk';
+import zoobc, {
+  BIP32Interface,
+  ZooKeyring,
+  AccountBalancesParams,
+  getZBCAdress,
+  TransactionListParams,
+} from 'zoobc-sdk';
 
 export interface SavedAccount {
   name: string;
@@ -21,6 +27,7 @@ export class AuthService {
   private loggedIn: boolean = false;
   private _seed: BIP32Interface;
   private _keyring: ZooKeyring;
+  private restoring = false;
 
   constructor() {}
 
@@ -124,6 +131,55 @@ export class AuthService {
       accounts.push(account);
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.switchAccount(account);
+    }
+  }
+
+  async restoreAccounts() {
+    const isRestored: boolean = localStorage.getItem('IS_RESTORED') === 'true';
+    if (!isRestored && !this.restoring) {
+      this.restoring = true;
+      const keyring = this._keyring;
+
+      let accountPath: number = 0;
+      let accountsTemp = [];
+      let accounts = [];
+      let counter: number = 0;
+
+      while (counter < 20) {
+        const childSeed = keyring.calcDerivationPath(accountPath);
+        const publicKey = childSeed.publicKey;
+        const address = getZBCAdress(publicKey);
+        const account: SavedAccount = {
+          name: 'Account '.concat((accountPath + 1).toString()),
+          path: accountPath,
+          nodeIP: null,
+          address: address,
+          type: 'normal',
+        };
+        const params: TransactionListParams = {
+          address: address,
+          transactionType: 1,
+          pagination: {
+            page: 1,
+            limit: 1,
+          },
+        };
+        await zoobc.Transactions.getList(params).then(res => {
+          const totalTx = parseInt(res.total);
+          accountsTemp.push(account);
+          if (totalTx > 0) {
+            accounts = accounts.concat(accountsTemp);
+            accountsTemp = [];
+            counter = 0;
+          }
+        });
+        accountPath++;
+        counter++;
+      }
+      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+      localStorage.setItem('IS_RESTORED', 'true');
+
+      this.restoring = false;
     }
   }
 }
