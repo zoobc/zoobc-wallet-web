@@ -20,8 +20,16 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="form" (submit)="next()">
-      <label>{{ 'Import My Multisignature Account' | translate }}</label>
-      <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
+      <account-selector
+        (select)="onSwitchAccount($event)"
+        type="multisig"
+        [switchAccount]="false"
+        [selectedValue]=""
+      >
+        <button mat-flat-button color="primary" class="block" type="button">
+          {{ 'Import My Multisignature Account' | translate }}
+        </button>
+      </account-selector>
 
       <label>{{ 'Participants' }}</label>
       <div formArrayName="participants">
