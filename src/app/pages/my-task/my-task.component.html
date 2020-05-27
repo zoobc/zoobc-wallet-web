@@ -17,7 +17,7 @@
           infiniteScroll
           [infiniteScrollDistance]="2"
           [infiniteScrollThrottle]="50"
-          (scrolled)="onScroll()"
+          (scrolled)="onScrollEscrow()"
           [scrollWindow]="false"
           [infiniteScrollContainer]="'.mat-drawer-content'"
           [fromRoot]="true"
@@ -25,14 +25,35 @@
           <app-escrow-transactions
             [escrowTransactionsData]="escrowTransactions"
             [withDetail]="true"
-            [isLoading]="isLoading"
-            [isError]="isError"
+            [isLoading]="isLoadingEscrow"
+            [isError]="isErrorEscrow"
             (refresh)="getEscrowTx(true)"
           ></app-escrow-transactions>
         </div>
       </mat-tab>
-      <mat-tab label="Multi Signature - Coming Soon">
-        <app-multisig-transaction></app-multisig-transaction>
+      <mat-tab label="Multisignature">
+        <div class="text-right">
+          <button mat-icon-button class="reload-button" (click)="reload(true)">
+            <i class="fa fa-redo-alt"></i>
+          </button>
+        </div>
+        <div
+          infiniteScroll
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="onScrollMultiSig()"
+          [scrollWindow]="false"
+          [infiniteScrollContainer]="'.mat-drawer-content'"
+          [fromRoot]="true"
+        >
+          <app-multisig-transaction
+            [pendingListMultiSig]="multiSigPendingList"
+            [withDetail]="true"
+            [isLoading]="isLoadingMultisig"
+            [isError]="isError"
+            (refresh)="getMultiSigPendingList(true)"
+          ></app-multisig-transaction>
+        </div>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

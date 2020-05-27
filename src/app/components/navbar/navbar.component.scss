@@ -53,6 +53,11 @@
     .menu {
       width: 70%;
       text-align: right;
+      @media #{$small-and-down} {
+        ::ng-deep .mat-flat-button {
+          padding: 4px !important;
+        }
+      }
       .address-card {
         font-size: 22px;
         margin: 0 -5px 0 15px;
