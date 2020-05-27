@@ -19,8 +19,6 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
 
-  account: SavedAccount;
-
   form: FormGroup;
   participantsField = new FormArray([]);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
@@ -76,12 +74,10 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   }
 
   onSwitchAccount(account: SavedAccount) {
-    if (account.type === 'multisig') {
+    if (account != undefined) {
       this.participantsField.setValue(account.participants);
       this.nonceField.setValue(account.nonce);
       this.minSignatureField.setValue(account.minSig);
-    } else {
-      this.form.reset();
     }
   }
 
