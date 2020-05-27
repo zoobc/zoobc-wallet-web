@@ -18,6 +18,8 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
   @Input() minFee: number;
   @Input() timeoutField: number;
   @Output() onClickFeeChoose = new EventEmitter();
+  @Input() typeFees?: number;
+  @Input() customFeeValue?: number;
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 2;
@@ -55,7 +57,18 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.setDefaultFee();
+    if (this.customFeeValue) {
+      const feeCurrency = this.customFeeValue * this.currencyRate.value;
+      this.group.patchValue({
+        fee: this.customFeeValue,
+        feeCurr: feeCurrency,
+      });
+      this.toggleCustomFee(event);
+    } else if (this.typeFees) {
+      this.onFeeChoose(this.typeFees);
+    } else {
+      this.setDefaultFee();
+    }
   }
 
   onChangeFeeField(value) {
@@ -70,7 +83,8 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
     this.group.get(this.feeName).patchValue(feeTrunc);
   }
 
-  toggleCustomFee() {
+  toggleCustomFee(event) {
+    event.preventDefault();
     this.customFee = !this.customFee;
     if (this.customFee) {
       this.kindFee = 'Custom';
