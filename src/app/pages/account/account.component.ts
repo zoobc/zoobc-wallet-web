@@ -5,6 +5,7 @@ import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
 import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { TranslateService } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -19,16 +20,37 @@ export class AccountComponent implements OnInit {
     private authServ: AuthService,
     public dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private activeRoute: ActivatedRoute
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.accounts = this.authServ.getAllAccount();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.activeRoute.snapshot.params['accountBase64']) {
+      const accountBase64: string = this.activeRoute.snapshot.params['accountBase64'];
+      const accountStr = atob(accountBase64);
+      const account: SavedAccount = JSON.parse(accountStr);
+      setTimeout(() => {
+        this.onOpenAddAccount(account);
+      }, 50);
+    }
+  }
 
-  onOpenAddAccount() {
-    this.dialog.open(AddAccountComponent, { width: '360px', maxHeight: '99vh' });
+  onOpenAddAccount(account: SavedAccount = null) {
+    const dialog = this.dialog.open(AddAccountComponent, {
+      width: '360px',
+      maxHeight: '99vh',
+      data: account,
+    });
+
+    dialog.afterClosed().subscribe((added: boolean) => {
+      if (added) {
+        this.accounts = this.authServ.getAllAccount();
+        this.currAcc = this.authServ.getCurrAccount();
+      }
+    });
   }
 
   onOpenEditAccount(e, account: SavedAccount) {

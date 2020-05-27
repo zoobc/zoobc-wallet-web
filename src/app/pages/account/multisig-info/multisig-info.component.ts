@@ -12,8 +12,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class MultisigInfoComponent implements OnInit {
   currAcc: SavedAccount;
 
-  url: string = 'https://zoobc.net';
-
   constructor(
     public dialogRef: MatDialogRef<MultisigInfoComponent>,
     private translate: TranslateService,
@@ -27,7 +25,11 @@ export class MultisigInfoComponent implements OnInit {
 
   async onCopyText(e) {
     e.stopPropagation();
-    onCopyText(this.url);
+    const account = JSON.stringify(this.currAcc);
+    const accountBase64 = Buffer.from(account).toString('base64');
+    const url = `${window.location.origin}/accounts/${accountBase64}`;
+
+    onCopyText(url);
 
     let message: string;
     await this.translate
