@@ -5,7 +5,11 @@ import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.se
 import { Subscription } from 'rxjs';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { truncate } from 'src/helpers/utils';
-import { MatStepper } from '@angular/material';
+import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-transaction',
@@ -13,7 +17,6 @@ import { MatStepper } from '@angular/material';
   styleUrls: ['./create-transaction.component.scss'],
 })
 export class CreateTransactionComponent implements OnInit {
-  @ViewChild('stepper') stepper: MatStepper;
   minFee = environment.fee;
   currencyRate: Currency;
   kindFee: string;
@@ -21,19 +24,28 @@ export class CreateTransactionComponent implements OnInit {
   account: SavedAccount;
 
   isCompleted = true;
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
+  createTransactionForm: FormGroup;
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
+  timeoutField = new FormControl('');
   typeCoinField = new FormControl('ZBC');
 
-  constructor(private authServ: AuthService, private currencyServ: CurrencyRateService) {
-    this.secondFormGroup = new FormGroup({
+  multisig: MultiSigDraft;
+  multisigSubs: Subscription;
+  multiSigDrafts: MultiSigDraft[];
+
+  constructor(
+    private authServ: AuthService,
+    private currencyServ: CurrencyRateService,
+    private multisigServ: MultisigService,
+    private router: Router,
+    private location: Location,
+    private translate: TranslateService
+  ) {
+    this.createTransactionForm = new FormGroup({
       recipient: this.recipientForm,
       amount: this.amountForm,
       amountCurrency: this.amountCurrencyForm,
@@ -45,8 +57,8 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stepper.selectedIndex = 1;
     this.account = this.authServ.getCurrAccount();
+    // Currency Subscriptions
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
 
@@ -56,6 +68,24 @@ export class CreateTransactionComponent implements OnInit {
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
+    // Multisignature Subscription
+    this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
+      if (multisig.unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
+
+      this.multisig = multisig;
+
+      if (multisig.unisgnedTransactions) {
+        const { sender, recipient, amount, fee } = multisig.unisgnedTransactions;
+        this.account.address = sender;
+        this.recipientForm.setValue(recipient);
+        this.amountForm.setValue(amount);
+        this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
+        this.feeForm.setValue(fee);
+        this.feeFormCurr.setValue(fee * this.currencyRate.value);
+        this.timeoutField.setValue('0');
+      }
+    });
+    this.getMultiSigDraft();
   }
 
   ngOnDestroy() {
@@ -68,5 +98,46 @@ export class CreateTransactionComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
+  }
+
+  getMultiSigDraft() {
+    this.multiSigDrafts = this.multisigServ.getDrafts();
+  }
+
+  next() {
+    if (this.createTransactionForm.valid) {
+      this.updateCreateTransaction();
+      const { signaturesInfo } = this.multisig;
+      if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+      else this.router.navigate(['/multisignature/send-transaction']);
+    }
+  }
+
+  saveDraft() {
+    this.updateCreateTransaction();
+    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
+    if (isDraft) {
+      this.multisigServ.editDraft();
+    } else {
+      this.multisigServ.saveDraft();
+    }
+    this.router.navigate(['/multisignature']);
+  }
+
+  updateCreateTransaction() {
+    const { recipient, amount, fee } = this.createTransactionForm.value;
+    const multisig = { ...this.multisig };
+
+    multisig.unisgnedTransactions = {
+      sender: this.account.address,
+      amount: amount,
+      fee: fee,
+      recipient: recipient,
+    };
+    this.multisigServ.update(multisig);
+  }
+
+  back() {
+    this.location.back();
   }
 }
