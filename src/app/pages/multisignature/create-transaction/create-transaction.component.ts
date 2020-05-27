@@ -8,7 +8,6 @@ import { truncate } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -37,13 +36,18 @@ export class CreateTransactionComponent implements OnInit {
   multisigSubs: Subscription;
   multiSigDrafts: MultiSigDraft[];
 
+  feeSlow = environment.fee;
+  feeMedium = this.feeSlow * 2;
+  feeFast = this.feeMedium * 2;
+  typeFee: number;
+  customFeeValues: number;
+
   constructor(
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,
     private router: Router,
-    private location: Location,
-    private translate: TranslateService
+    private location: Location
   ) {
     this.createTransactionForm = new FormGroup({
       recipient: this.recipientForm,
@@ -83,6 +87,15 @@ export class CreateTransactionComponent implements OnInit {
         this.feeForm.setValue(fee);
         this.feeFormCurr.setValue(fee * this.currencyRate.value);
         this.timeoutField.setValue('0');
+        if (fee === this.feeSlow) {
+          this.typeFee = 1;
+        } else if (fee === this.feeMedium) {
+          this.typeFee = 2;
+        } else if (fee === this.feeFast) {
+          this.typeFee = 3;
+        } else {
+          this.customFeeValues = fee;
+        }
       }
     });
     this.getMultiSigDraft();

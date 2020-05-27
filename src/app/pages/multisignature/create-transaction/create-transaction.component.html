@@ -20,7 +20,7 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
     <form [formGroup]="createTransactionForm" (submit)="next()">
       <label>{{ 'From' | translate }}</label>
-      <account-selector (select)="onSwitchAccount($event)"></account-selector>
+      <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
       <input-address
         label="{{ 'Recepient Address' | translate }}"
         classList="block"
@@ -46,6 +46,8 @@
         [required]="true"
         [currencyRate]="currencyRate"
         (onClickFeeChoose)="onClickFeeChoose($event)"
+        [typeFees]="typeFee"
+        [customFeeValue]="customFeeValues"
       ></fee-selector>
       <button mat-flat-button type="button" class="block" color="primary">
         {{ 'Generate Transaction Hash URL' | translate }}
