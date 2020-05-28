@@ -74,7 +74,6 @@ export class MyTaskComponent implements OnInit {
           this.multiSigPendingList.map(res => {
             res['alias'] = this.contactServ.get(res.senderaddress).alias || '';
           });
-          console.log(this.multiSigPendingList);
           if (reload) {
             this.multiSigPendingList = tx.pendingtransactionsList;
           } else {
