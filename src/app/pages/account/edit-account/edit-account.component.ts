@@ -1,10 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AddAccountComponent } from '../add-account/add-account.component';
-import Swal from 'sweetalert2';
 import zoobc, { MultiSigAddress } from 'zoobc-sdk';
 
 @Component({
@@ -27,9 +25,8 @@ export class EditAccountComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
-    private router: Router,
     private dialogRef: MatDialogRef<AddAccountComponent>,
-    @Inject(MAT_DIALOG_DATA) public account: SavedAccount
+    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
   ) {
     this.formEditAccount = new FormGroup({
       name: this.accountNameField,
@@ -38,35 +35,23 @@ export class EditAccountComponent implements OnInit {
       minimumSignature: this.minSignatureField,
       tempAddress: this.tempAddressField,
     });
-    this.accountNameField.patchValue(this.account.name);
-    if (this.account.type == 'multisig') this.patchMultiSignatureForm();
   }
 
   ngOnInit() {
-    this.enableFieldMultiSignature();
-    if (!this.isMultiSignature) this.disableFieldMultiSignature();
-  }
-
-  patchMultiSignatureForm() {
-    this.isMultiSignature = true;
-    this.patchPartisipant();
-    this.nonceField.patchValue(this.account.nonce);
-    this.minSignatureField.patchValue(this.account.minSig);
-  }
-
-  patchPartisipant() {
-    while (this.participantsField.controls.length !== 0) {
-      this.participantsField.removeAt(0);
+    this.accountNameField.patchValue(this.account.name);
+    if (this.account.type == 'multisig') {
+      this.enableFieldMultiSignature();
+      this.pushInitParticipant(this.account.participants.length);
+      this.prefillAccount();
+    } else {
+      this.disableFieldMultiSignature();
     }
-    this.account.participants.map((pcp, index) => {
-      if (index > 1) {
-        this.participantsField.push(new FormControl(pcp, [this.participantNotMainAddress]));
-      } else {
-        this.participantsField.push(
-          new FormControl(pcp, [Validators.required, this.participantNotMainAddress])
-        );
-      }
-    });
+  }
+
+  prefillAccount() {
+    this.participantsField.setValue(this.account.participants);
+    this.nonceField.setValue(this.account.nonce);
+    this.minSignatureField.setValue(this.account.minSig);
   }
 
   onEditAccount() {
@@ -110,46 +95,43 @@ export class EditAccountComponent implements OnInit {
       }
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.dialogRef.close(true);
-      this.router.navigateByUrl('/');
     }
   }
 
   disableFieldMultiSignature() {
+    this.isMultiSignature = false;
+
     this.participantsField.disable();
     this.nonceField.disable();
     this.minSignatureField.disable();
   }
 
   enableFieldMultiSignature() {
+    this.isMultiSignature = true;
+
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
   }
 
-  pushInitParticipant() {
-    while (this.participantsField.length > 0) {
-      this.participantsField.removeAt(0);
-    }
-    for (let i = 0; i < this.minParticipant; i++) {
-      this.participantsField.push(new FormControl('', [Validators.required, this.participantNotMainAddress]));
+  toogleMultiSignature() {
+    if (!this.isMultiSignature) this.enableFieldMultiSignature();
+    else this.disableFieldMultiSignature();
+  }
+
+  pushInitParticipant(size = 2) {
+    for (let i = 0; i < size; i++) {
+      if (i < this.minParticipant) this.participantsField.push(new FormControl('', [Validators.required]));
+      else this.participantsField.push(new FormControl(''));
     }
   }
 
   addParticipant() {
-    const length: number = this.participantsField.length;
-    if (length >= 2) {
-      this.participantsField.push(new FormControl('', [this.participantNotMainAddress]));
-    } else {
-      this.participantsField.push(new FormControl('', [Validators.required, this.participantNotMainAddress]));
-    }
+    this.participantsField.push(new FormControl(''));
   }
 
   removeParticipant(index: number) {
-    if (this.participantsField.length > this.minParticipant) {
-      this.participantsField.removeAt(index);
-    } else {
-      Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
-    }
+    this.participantsField.removeAt(index);
   }
 
   onSwitchSignBy(account: SavedAccount) {
@@ -167,17 +149,5 @@ export class EditAccountComponent implements OnInit {
       return { duplicate: true };
     }
     return null;
-  }
-
-  participantNotMainAddress(formControl: FormControl): ValidationErrors {
-    try {
-      const mainAddress = formControl.parent.parent.get('tempAddress').value;
-      if (mainAddress == formControl.value) {
-        return { isMainAddress: true };
-      }
-      return null;
-    } catch (error) {
-      return null;
-    }
   }
 }

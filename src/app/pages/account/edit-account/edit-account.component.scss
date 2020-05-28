@@ -1,33 +1,17 @@
-.add-account-container {
-
-  .checkbox-margin {
-    margin: 10px 0;
-  }
-
+.edit-account-container {
   .inline-control {
     display: flex;
     justify-content: space-between;
 
-    .custom-mat {
-      width: 100%;
-      margin-bottom: 0;
+    > .input {
+      width: calc(100% - 48px);
+    }
+
+    > button {
+      height: 40px;
+      padding: 0 8px;
+      margin: 4px 0 0 8px;
+      min-width: 40px;
     }
   }
-
-  .custom-btn {
-    float: right;
-    text-transform: capitalize;
-    line-height: 30px;
-    margin: 10px 0;
-  }
-
-  .center-error {
-    text-align: center;
-    margin: 3px 0;
-  }
-
-  // color : #c62828;
-
-
-
 }

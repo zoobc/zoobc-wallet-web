@@ -1,21 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatDialogRef } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, { getZBCAdress, MultiSigAddress } from 'zoobc-sdk';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-new-account',
   templateUrl: './add-account.component.html',
   styleUrls: ['./add-account.component.scss'],
 })
-export class AddAccountComponent implements OnInit {
-  lenAccount = this.authServ.getAllAccount().length + 1;
-
+export class AddAccountComponent {
   formAddAccount: FormGroup;
-  accountNameField = new FormControl(`Account ${this.lenAccount}`, Validators.required);
+  accountNameField = new FormControl('', Validators.required);
   participantsField = new FormArray([], this.uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
@@ -27,8 +23,8 @@ export class AddAccountComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
-    private router: Router,
-    private dialogRef: MatDialogRef<AddAccountComponent>
+    private dialogRef: MatDialogRef<AddAccountComponent>,
+    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
   ) {
     this.formAddAccount = new FormGroup({
       name: this.accountNameField,
@@ -36,10 +32,21 @@ export class AddAccountComponent implements OnInit {
       nonce: this.nonceField,
       minimumSignature: this.minSignatureField,
     });
+
+    if (account) {
+      this.enableFieldMultiSignature();
+      this.pushInitParticipant(account.participants.length);
+      this.prefillAccount();
+    } else {
+      this.pushInitParticipant();
+      this.disableFieldMultiSignature();
+    }
   }
 
-  ngOnInit() {
-    this.disableFieldMultiSignature();
+  prefillAccount() {
+    this.participantsField.setValue(this.account.participants);
+    this.nonceField.setValue(this.account.nonce);
+    this.minSignatureField.setValue(this.account.minSig);
   }
 
   onAddAccount() {
@@ -47,19 +54,23 @@ export class AddAccountComponent implements OnInit {
       let account: SavedAccount;
 
       if (this.isMultiSignature) {
+        let participants: [string] = this.participantsField.value.filter(value => value.length > 0);
+        participants = participants.sort();
+
         const multiParam: MultiSigAddress = {
-          participants: this.participantsField.value.filter(value => value.length > 0),
+          participants: participants,
           nonce: this.nonceField.value,
           minSigs: this.minSignatureField.value,
         };
         const multiSignAddress: string = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+
         account = {
           name: this.accountNameField.value,
           type: 'multisig',
           path: this.signBy.path,
           nodeIP: null,
           address: multiSignAddress,
-          participants: this.participantsField.value.filter(value => value.length > 0),
+          participants: participants,
           nonce: this.nonceField.value,
           minSig: this.minSignatureField.value,
           signByAddress: this.signBy.address,
@@ -79,57 +90,50 @@ export class AddAccountComponent implements OnInit {
       }
 
       this.authServ.addAccount(account);
-      this.dialogRef.close();
-      this.router.navigateByUrl('/');
+      this.dialogRef.close(true);
     }
   }
 
   disableFieldMultiSignature() {
+    this.isMultiSignature = false;
+
     this.participantsField.disable();
     this.nonceField.disable();
     this.minSignatureField.disable();
+
+    const len = this.authServ.getAllAccount('normal').length + 1;
+    this.accountNameField.setValue(`Account ${len}`);
   }
 
   enableFieldMultiSignature() {
+    this.isMultiSignature = true;
+
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
+
+    const len = this.authServ.getAllAccount('multisig').length + 1;
+    this.accountNameField.setValue(`Multisig Account ${len}`);
   }
 
   toogleMultiSignature() {
-    this.isMultiSignature = !this.isMultiSignature;
-    if (this.isMultiSignature) {
-      this.enableFieldMultiSignature();
-      this.pushInitParticipant();
-    } else {
-      this.disableFieldMultiSignature();
-    }
+    if (!this.isMultiSignature) this.enableFieldMultiSignature();
+    else this.disableFieldMultiSignature();
   }
 
-  pushInitParticipant() {
-    while (this.participantsField.length > 0) {
-      this.participantsField.removeAt(0);
-    }
-    for (let i = 0; i < this.minParticipant; i++) {
-      this.participantsField.push(new FormControl('', [Validators.required]));
+  pushInitParticipant(size = 2) {
+    for (let i = 0; i < size; i++) {
+      if (i < this.minParticipant) this.participantsField.push(new FormControl('', [Validators.required]));
+      else this.participantsField.push(new FormControl(''));
     }
   }
 
   addParticipant() {
-    const length: number = this.participantsField.length;
-    if (length >= 2) {
-      this.participantsField.push(new FormControl(''));
-    } else {
-      this.participantsField.push(new FormControl('', [Validators.required]));
-    }
+    this.participantsField.push(new FormControl(''));
   }
 
   removeParticipant(index: number) {
-    if (this.participantsField.length > this.minParticipant) {
-      this.participantsField.removeAt(index);
-    } else {
-      Swal.fire('Error', `Minimum participants is ${this.minParticipant}`, 'error');
-    }
+    this.participantsField.removeAt(index);
   }
 
   onSwitchSignBy(account: SavedAccount) {
