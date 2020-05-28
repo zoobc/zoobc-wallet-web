@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { SavedAccount } from 'src/app/services/auth.service';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { onCopyText } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
@@ -21,12 +21,12 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   participantsSignatureField = new FormArray([]);
   participantsAddressField = new FormArray([]);
 
-  minParticipant: number = 3;
   selectedDesign: number = 1;
   account: SavedAccount;
   transactionHash: string = '';
   url: string = 'https://zoobc.one/...SxhdnfHF';
-  timeStamp: string = '';
+  enabledAddParticipant: boolean = false;
+  readOnlyTxHash: boolean = false;
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
@@ -37,7 +37,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private authServ: AuthService
   ) {
     this.form = new FormGroup({
       transactionHash: this.transactionHashField,
@@ -49,16 +50,15 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
       this.multisig = multisig;
     });
-
+    this.account = this.authServ.getCurrAccount();
     if (this.activeRoute.snapshot.params['txHash']) {
-      console.log('design1');
-    } else if (this.activeRoute.snapshot.params['signHash']) {
-      this.selectedDesign = 2;
-      this.transactionHash = this.activeRoute.snapshot.params['signHash'];
-      this.timeStamp = this.activeRoute.snapshot.params['timeStamp'];
+      const txHash = this.activeRoute.snapshot.params['txHash'];
+      const signature = this.activeRoute.snapshot.params['signature'];
+      this.prefillForm(txHash, signature);
     } else {
       if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
       this.patchValue(this.multisig);
+      this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     }
   }
 
@@ -66,26 +66,34 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
   }
 
-  patchValue(multisig: MultiSigDraft) {
-    const { signaturesInfo, multisigInfo } = multisig;
+  prefillForm(txHash: string, sign: String) {}
 
-    if (!signaturesInfo) {
-      if (!multisigInfo) return this.pushInitParticipant();
-      return this.patchParticipant(multisigInfo.participants, true);
+  patchValue(multisig: MultiSigDraft) {
+    const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
+
+    if (!signaturesInfo || signaturesInfo == null) {
+      if (multisigInfo) return this.patchParticipant(multisigInfo.participants, true);
+      if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
+      return this.pushInitParticipant();
     }
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);
-    if (!signaturesInfo.participants) {
-      if (!multisigInfo) return this.pushInitParticipant();
-      return this.patchParticipant(multisigInfo.participants, true);
-    }
-    this.patchParticipant(signaturesInfo.participants, false);
+    if (signaturesInfo.participants) this.patchParticipant(signaturesInfo.participants, false);
+    this.enabledAddParticipant = true;
+  }
+
+  patchUnsignedAddress(addres: string) {
+    const accounts = this.authServ.getAllAccount();
+    const account = accounts.find((acc) => acc.address == addres);
+    this.patchParticipant(account.participants, true);
+  }
+
+  checkEnabledAddParticipant(multisig: MultiSigDraft) {
+    const { multisigInfo, unisgnedTransactions } = multisig;
+    if (multisigInfo || unisgnedTransactions) return false;
+    return true;
   }
 
   patchParticipant(participant: any[], empty: boolean) {
-    while (this.participantsSignatureField.controls.length !== 0) {
-      this.participantsSignatureField.removeAt(0);
-    }
-
     participant.map((pcp) => {
       if (empty) {
         this.participantsSignatureField.push(new FormControl('', [Validators.required]));
@@ -97,25 +105,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     });
   }
 
-  pushInitParticipant() {
-    while (this.participantsSignatureField.length > 0) {
-      this.participantsSignatureField.removeAt(0);
-    }
-    for (let i = 0; i < this.minParticipant; i++) {
+  pushInitParticipant(minParticipant: number = 2) {
+    for (let i = 0; i < minParticipant; i++) {
       this.participantsSignatureField.push(new FormControl('', [Validators.required]));
     }
   }
 
-  jsonBufferToString(buf: any) {
-    try {
-      return Buffer.from(buf.data, 'utf8').toString();
-    } catch (error) {
-      return buf.toString();
-    }
+  addParticipant() {
+    this.participantsSignatureField.push(new FormControl(''));
   }
 
-  stringToBuffer(str: string) {
-    return Buffer.from(str, 'utf8');
+  removeParticipant(index: number) {
+    this.participantsSignatureField.removeAt(index);
   }
 
   getAddress(idx: number) {
@@ -135,12 +136,14 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const multisig = { ...this.multisig };
 
     let participant = [];
-    participantsSignature.map((pcp, index) => {
-      participant[index] = {
-        address: this.getAddress(index),
-        signature: this.stringToBuffer(String(pcp)),
-      };
-    });
+    participantsSignature
+      .filter((pcp) => pcp.length > 0)
+      .map((pcp, index) => {
+        participant[index] = {
+          address: this.getAddress(index),
+          signature: this.stringToBuffer(String(pcp)),
+        };
+      });
 
     multisig.signaturesInfo = {
       txHash: transactionHash,
@@ -148,6 +151,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     };
 
     this.multisigServ.update(multisig);
+  }
+
+  jsonBufferToString(buf: any) {
+    try {
+      return Buffer.from(buf.data, 'utf8').toString();
+    } catch (error) {
+      return buf.toString();
+    }
+  }
+
+  stringToBuffer(str: string) {
+    return Buffer.from(str, 'utf8');
   }
 
   onBack() {
