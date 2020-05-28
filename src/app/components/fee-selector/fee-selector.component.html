@@ -50,7 +50,7 @@
   </button>
 </div>
 <div style="margin-bottom: 8px;">
-  <mat-checkbox class="checkbox-margin" (click)="toggleCustomFee()">
+  <mat-checkbox [checked]="customFee" class="checkbox-margin" (click)="toggleCustomFee($event)">
     {{ 'Custom Fee' | translate }}
   </mat-checkbox>
 </div>

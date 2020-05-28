@@ -92,6 +92,7 @@ export class AuthService {
         .then(res => {
           let balances = res.accountbalancesList;
           accounts.map(acc => {
+            acc.balance = 0;
             for (let i = 0; i < balances.length; i++) {
               const balance = balances[i];
               if (balance.accountaddress == acc.address) {
@@ -100,6 +101,7 @@ export class AuthService {
                 break;
               }
             }
+            return acc;
           });
           resolve(accounts);
         })

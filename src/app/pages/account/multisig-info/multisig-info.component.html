@@ -23,7 +23,8 @@
           <wallet-address [value]="currAcc.signByAddress" [copyButton]="true"></wallet-address>
         </div>
         <div class="share-multisig-info">
-          <button mat-flat-button color="primary" (click)="onCopyText($event)">
+          <button mat-flat-button color="primary" (click)="onCopyText($event)" class="block">
+            <span><i class="fa fa-share-alt"></i> &nbsp;</span>
             <span>{{ 'Share this multisig info' | translate }}</span>
           </button>
         </div>

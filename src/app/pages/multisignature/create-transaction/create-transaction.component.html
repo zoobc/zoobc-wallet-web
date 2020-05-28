@@ -1,71 +1,74 @@
 <div class="create-transaction-container">
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
-    <mat-horizontal-stepper labelPosition="bottom" linear #stepper>
-      <mat-step [stepControl]="firstFormGroup">
-        <mat-divider></mat-divider>
-        <form>
-          <ng-template matStepLabel>Add Multisig Info</ng-template>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="secondFormGroup">
-        <mat-divider></mat-divider>
-        <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>Create Transaction</ng-template>
-          <label>{{ 'From' | translate }}</label>
-          <account-selector (select)="onSwitchAccount($event)"></account-selector>
-          <input-address
-            label="{{ 'Recepient Address' | translate }}"
-            classList="block"
-            formControlName="recipient"
-            placeholder="{{ 'Recepient Address' | translate }}..."
-          ></input-address>
-          <input-amount
-            [group]="secondFormGroup"
-            typeCoinName="typeCoin"
-            amountCurrencyName="amountCurrency"
-            amountName="amount"
-            [displayConverter]="true"
-            [currencyRate]="currencyRate"
-            label="{{ 'Coin Amount' | translate }}"
-          >
-          </input-amount>
-          <fee-selector
-            [group]="secondFormGroup"
-            feeName="fee"
-            feeCurrName="feeCurr"
-            [minFee]="minFee"
-            [timeoutField]="timeoutField.value"
-            [required]="true"
-            [currencyRate]="currencyRate"
-            (onClickFeeChoose)="onClickFeeChoose($event)"
-          ></fee-selector>
-          <button mat-flat-button type="button" class="block" color="primary">
-            {{ 'Generate Transaction Hash URL' | translate }}
+    <div class="stepper">
+      <div class="step">
+        <span class="step-circle">1</span>
+        <span class="step-label">Add Multisig Info</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="step active">
+        <span class="step-circle">2</span>
+        <span class="step-label">Create Transaction</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle">3</span>
+        <span class="step-label">Add Signatures</span>
+      </div>
+    </div>
+    <mat-divider style="margin-bottom: 24px;"></mat-divider>
+    <form [formGroup]="createTransactionForm" (submit)="next()">
+      <label>{{ 'From' | translate }}</label>
+      <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
+      <input-address
+        label="{{ 'Recepient Address' | translate }}"
+        classList="block"
+        formControlName="recipient"
+        placeholder="{{ 'Recepient Address' | translate }}..."
+      ></input-address>
+      <input-amount
+        [group]="createTransactionForm"
+        typeCoinName="typeCoin"
+        amountCurrencyName="amountCurrency"
+        amountName="amount"
+        [displayConverter]="true"
+        [currencyRate]="currencyRate"
+        label="{{ 'Coin Amount' | translate }}"
+      >
+      </input-amount>
+      <fee-selector
+        [group]="createTransactionForm"
+        feeName="fee"
+        feeCurrName="feeCurr"
+        [minFee]="minFee"
+        [timeoutField]="timeoutField.value"
+        [required]="true"
+        [currencyRate]="currencyRate"
+        (onClickFeeChoose)="onClickFeeChoose($event)"
+        [typeFees]="typeFee"
+        [customFeeValue]="customFeeValues"
+      ></fee-selector>
+      <button mat-flat-button type="button" class="block" color="primary">
+        {{ 'Generate Transaction Hash URL' | translate }}
+      </button>
+      <div class="row" style="margin-top: 10px;">
+        <div class="col">
+          <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
+            {{ 'Back' | translate }}
           </button>
-          <div class="row" style="margin-top: 10px;">
-            <div class="col">
-              <button mat-flat-button color="warn" class="block" type="button">
-                {{ 'Back' | translate }}
-              </button>
-            </div>
-            <div class="col">
-              <button mat-flat-button color="primary" class="block" type="button">
-                {{ 'Save' | translate }}
-              </button>
-            </div>
-            <div class="col">
-              <button mat-flat-button color="primary" type="button" class="block">
-                {{ 'Send' | translate }}
-              </button>
-            </div>
-          </div>
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="thirdFormGroup">
-        <mat-divider></mat-divider>
-        <ng-template matStepLabel>Add Signatures</ng-template>
-      </mat-step>
-    </mat-horizontal-stepper>
+        </div>
+        <div class="col">
+          <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
+            {{ 'Save' | translate }}
+          </button>
+        </div>
+        <div class="col">
+          <button mat-flat-button color="primary" class="block" [disabled]="createTransactionForm.invalid">
+            {{ 'Next' | translate }}
+          </button>
+        </div>
+      </div>
+    </form>
   </mat-card>
 </div>
