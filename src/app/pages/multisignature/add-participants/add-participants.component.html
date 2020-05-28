@@ -103,7 +103,7 @@
           {{ transactionHash }}
         </div>
         <label class="label-margin">{{ 'Your Account' | translate }}</label>
-        <account-selector (select)="onSwitchAccount($event)"></account-selector>
+        <account-selector [type]="'normal'" (select)="onSwitchAccount($event)"></account-selector>
         <label class="label-margin">{{ 'Your Signature' | translate }}</label>
         <mat-form-field appearance="outline" color="accent">
           <input matInput type="text" />

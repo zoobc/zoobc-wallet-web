@@ -6,7 +6,7 @@ import { onCopyText } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
@@ -24,8 +24,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   minParticipant: number = 3;
   selectedDesign: number = 1;
   account: SavedAccount;
-  transactionHash: string = 'iSJt3H8wFOzlWKsy_UoEWF_OjF6oymHMqthyUMDKSyxb';
+  transactionHash: string = '';
   url: string = 'https://zoobc.one/...SxhdnfHF';
+  timeStamp: string = '';
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
@@ -35,7 +36,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private multisigServ: MultisigService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private activeRoute: ActivatedRoute
   ) {
     this.form = new FormGroup({
       transactionHash: this.transactionHashField,
@@ -45,10 +47,19 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
-      if (multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
       this.multisig = multisig;
-      this.patchValue(this.multisig);
     });
+
+    if (this.activeRoute.snapshot.params['txHash']) {
+      console.log('design1');
+    } else if (this.activeRoute.snapshot.params['signHash']) {
+      this.selectedDesign = 2;
+      this.transactionHash = this.activeRoute.snapshot.params['signHash'];
+      this.timeStamp = this.activeRoute.snapshot.params['timeStamp'];
+    } else {
+      if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
+      this.patchValue(this.multisig);
+    }
   }
 
   ngOnDestroy() {
