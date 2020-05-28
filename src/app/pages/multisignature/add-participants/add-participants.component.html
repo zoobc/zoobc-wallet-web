@@ -108,7 +108,13 @@
           </ng-container>
         </div>
         <br />
-        <button (click)="onAddSignature()" mat-flat-button color="primary" type="button">
+        <button
+          (click)="onAddSignature()"
+          [disabled]="transactionHashField.value.length <= 0"
+          mat-flat-button
+          color="primary"
+          type="button"
+        >
           {{ 'Add your signature' | translate }}
         </button>
         <div class="row" style="margin-top: 20px;">

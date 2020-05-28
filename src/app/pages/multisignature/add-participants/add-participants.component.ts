@@ -8,6 +8,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { signTransactionHash } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-add-participants',
@@ -23,7 +24,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   selectedDesign: number = 1;
   account: SavedAccount;
-  transactionHash: string = '';
   url: string = 'https://zoobc.one/...SxhdnfHF';
   enabledAddParticipant: boolean = false;
   readOnlyTxHash: boolean = false;
@@ -50,7 +50,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
       this.multisig = multisig;
     });
-    this.account = this.authServ.getCurrAccount();
     if (this.activeRoute.snapshot.params['txHash']) {
       const txHash = this.activeRoute.snapshot.params['txHash'];
       const signature = this.activeRoute.snapshot.params['signature'];
@@ -59,6 +58,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
       this.patchValue(this.multisig);
       this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
+      this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     }
   }
 
@@ -66,7 +66,15 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
   }
 
-  prefillForm(txHash: string, sign: String) {}
+  prefillForm(txHash: string, sign: String) {
+    const multiSigDrafts: MultiSigDraft[] = this.multisigServ.getDrafts();
+    const multiSigDraft = multiSigDrafts.find((draft) => draft.signaturesInfo.txHash == txHash);
+    if (!multiSigDraft) return alert('Not Found');
+    this.multisigServ.update(multiSigDraft);
+    this.patchValue(this.multisig);
+    this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
+    this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
+  }
 
   patchValue(multisig: MultiSigDraft) {
     const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
@@ -90,6 +98,14 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   checkEnabledAddParticipant(multisig: MultiSigDraft) {
     const { multisigInfo, unisgnedTransactions } = multisig;
     if (multisigInfo || unisgnedTransactions) return false;
+    return true;
+  }
+
+  checkReadOnlyTxHash(multisig: MultiSigDraft) {
+    const { unisgnedTransactions } = multisig;
+    if (!unisgnedTransactions || unisgnedTransactions == null) return false;
+    const txHash = this.generateRandomTxHash();
+    this.transactionHashField.patchValue(txHash);
     return true;
   }
 
@@ -184,12 +200,17 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/multisignature']);
   }
 
-  onSwitchAccount(account: SavedAccount) {
-    this.account = account;
+  onAddSignature() {
+    const { transactionHash } = this.form.value;
+    const seed = this.authServ.seed;
+    const signature = signTransactionHash(transactionHash, seed);
+    this.participantsSignatureField.controls[this.participantsSignatureField.controls.length - 1].patchValue(
+      signature.toString('base64')
+    );
   }
 
-  onAddSignature() {
-    console.log('add your signature');
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
   }
 
   async onCopyUrl() {
@@ -201,4 +222,16 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       .then((res) => (message = res));
     this.snackBar.open(message, null, { duration: 3000 });
   }
+
+  //temporary function
+  generateRandomTxHash(length: number = 10) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  //temporary function end here
 }
