@@ -26,7 +26,7 @@
         [switchAccount]="false"
         [selectedValue]=""
       >
-        <button mat-flat-button color="primary" class="block" type="button">
+        <button mat-flat-button color="primary" class="block" type="button" style="margin-bottom: 16px;">
           {{ 'Import My Multisignature Account' | translate }}
         </button>
       </account-selector>
@@ -44,7 +44,7 @@
                 placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
               >
               </input-address>
-              <button (click)="removeParticipant(i)" type="button" mat-icon-button color="primary">
+              <button (click)="removeParticipant(i)" type="button" mat-flat-button color="warn">
                 <i class="fas fa-trash"></i>
               </button>
             </div>

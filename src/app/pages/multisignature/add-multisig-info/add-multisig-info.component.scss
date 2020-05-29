@@ -35,8 +35,14 @@
   display: flex;
   justify-content: space-between;
 
-  .custom-mat {
-    width: 100%;
-    margin-bottom: 0;
+  > .input {
+    width: calc(100% - 48px);
+  }
+
+  > button {
+    height: 40px;
+    padding: 0 8px;
+    margin: 4px 0 0 8px;
+    min-width: 40px;
   }
 }
