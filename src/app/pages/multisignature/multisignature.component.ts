@@ -61,7 +61,8 @@ export class MultisignatureComponent implements OnInit {
     this.multisigServ.update(multisig);
 
     const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
-    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+    if (multisig.fee > 0) this.router.navigate(['/multisignature/send-transaction']);
+    else if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
     else if (unisgnedTransactions) this.router.navigate(['/multisignature/create-transaction']);
     else if (signaturesInfo) this.router.navigate(['/multisignature/add-signatures']);
   }
@@ -89,7 +90,7 @@ export class MultisignatureComponent implements OnInit {
     await this.translate
       .get('Are you sure want to delete ?')
       .toPromise()
-      .then((res) => (sentence = res));
+      .then(res => (sentence = res));
     Swal.fire({
       title: sentence,
       showCancelButton: true,
