@@ -55,15 +55,15 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       const txHash = this.activeRoute.snapshot.params['txHash'];
       const signature = this.activeRoute.snapshot.params['signature'];
       const address = this.activeRoute.snapshot.params['address'];
-      //add patch signature
       const multiSignDrafts = this.multisigServ.getDrafts();
       const multiSignDraft = multiSignDrafts.find((draft) => draft.signaturesInfo.txHash == txHash);
-      const participantValid = this.checkParticipant(multiSignDraft, address);
-      if (!multiSignDraft) {
+      const participantValid = this.checkValidityParticipant(multiSignDraft, address);
+      if (!multiSignDraft || !participantValid) {
         Swal.fire('Error', 'Draft not found', 'error');
         return this.router.navigate(['/multisignature']);
       }
       this.multisigServ.update(multiSignDraft);
+      //patch here;
     }
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
     this.patchValue(this.multisig);
@@ -75,22 +75,25 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
   }
 
-  checkParticipant(multisig: MultiSigDraft, address: string) {
+  checkValidityParticipant(multisig: MultiSigDraft, address: string) {
     const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
-    if (!signaturesInfo || signaturesInfo == null) {
-      let length: number;
+    let length: number;
+    if (
+      !signaturesInfo ||
+      signaturesInfo == null ||
+      signaturesInfo.participants.findIndex((pcp) => pcp.address.length == 0) == -1
+    ) {
       if (multisigInfo) {
         length = multisigInfo.participants.filter((pcp) => pcp == address).length;
-      } else {
+      } else if (unisgnedTransactions) {
         const accounts = this.authServ.getAllAccount();
         const account = accounts.find((acc) => acc.address == unisgnedTransactions.sender);
         length = account.participants.filter((pcp) => pcp == address).length;
-      }
-      if (length > 0) return true;
-      return false;
-    }
+      } else length = 1;
+    } else length = signaturesInfo.participants.filter((pcp) => pcp.address == address).length;
 
-    return null;
+    if (length > 0) return true;
+    return false;
   }
 
   patchValue(multisig: MultiSigDraft) {
