@@ -13,15 +13,8 @@
       </button>
       <mat-menu #rate="matMenu">
         <div class="rates-dropdown-list">
-          <button
-            mat-menu-item
-            *ngFor="let rate of currencyRates"
-            (click)="onChangeRate(rate)"
-          >
-            <i
-              class="fas fa-check fa-sm"
-              *ngIf="currencyRate.name == rate.name"
-            ></i>
+          <button mat-menu-item *ngFor="let rate of currencyRates" (click)="onChangeRate(rate)">
+            <i class="fas fa-check fa-sm" *ngIf="currencyRate.name == rate.name"></i>
             <span>{{ rate.value | number: '0.0-2' }} {{ rate.name }}</span>
           </button>
         </div>
@@ -51,11 +44,7 @@
           <mat-menu #account="matMenu">
             <div class="account-dropdown-list">
               <div class="account-container">
-                <button
-                  mat-menu-item
-                  (click)="onOpenAddAccount()"
-                  class="add-account"
-                >
+                <button mat-menu-item (click)="onOpenAddAccount()" class="add-account">
                   <i class="fas fa-plus"></i>
                   <span>{{ 'Add New Account' | translate }}</span>
                 </button>
@@ -67,23 +56,14 @@
                   class="account"
                 >
                   <div class="account-left">
-                    <i class="fas fa-user" *ngIf="acc.path != currAcc.path"></i>
-                    <i
-                      class="fas fa-check"
-                      *ngIf="acc.path == currAcc.path"
-                    ></i>
+                    <i class="fas fa-user" *ngIf="acc.address != currAcc.address"></i>
+                    <i class="fas fa-check" *ngIf="acc.address == currAcc.address"></i>
                   </div>
                   <div class="account-mid">
                     <div>{{ acc.name }}</div>
-                    <div class="balance">
-                      {{ acc.balance / 1e8 | number: '0.0-2' }} ZBC
-                    </div>
+                    <div class="balance">{{ acc.balance / 1e8 | number: '0.0-2' }} ZBC</div>
                   </div>
-                  <div
-                    class="account-right"
-                    (click)="onOpenEditAccount($event, acc)"
-                    matTooltip="Edit"
-                  >
+                  <div class="account-right" (click)="onOpenEditAccount($event, acc)" matTooltip="Edit">
                     <i class="fas fa-pen"></i>
                   </div>
                 </button>
@@ -91,10 +71,7 @@
             </div>
           </mat-menu>
           <span class="address">
-            <wallet-address
-              [value]="currAcc.address"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="currAcc.address" [copyButton]="true"></wallet-address>
           </span>
         </div>
         <div class="col-2 text-right">
@@ -112,25 +89,16 @@
           <div class="balance-detail">
             <div class="label">{{ 'Balance' | translate }}</div>
             <div class="balance">
-              <i
-                class="fas fa-circle-notch fa-spin"
-                *ngIf="isLoadingBalance"
-              ></i>
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
                 {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
               </span>
               <span> ZBC</span>
             </div>
             <div class="converted-balance">
-              <i
-                class="fas fa-circle-notch fa-spin"
-                *ngIf="isLoadingBalance"
-              ></i>
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
-                {{
-                  (accountBalance.balance / 1e8) * currencyRate.value
-                    | number: '0.0-2'
-                }}
+                {{ (accountBalance.balance / 1e8) * currencyRate.value | number: '0.0-2' }}
               </span>
               <span> {{ currencyRate.name }}</span>
             </div>
@@ -144,25 +112,16 @@
           <div class="balance-detail">
             <div class="label">{{ 'Spendable Balance' | translate }}</div>
             <div class="balance">
-              <i
-                class="fas fa-circle-notch fa-spin"
-                *ngIf="isLoadingBalance"
-              ></i>
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
                 {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
               </span>
               <span> ZBC</span>
             </div>
             <div class="converted-balance">
-              <i
-                class="fas fa-circle-notch fa-spin"
-                *ngIf="isLoadingBalance"
-              ></i>
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
-                {{
-                  (accountBalance.spendablebalance / 1e8) * currencyRate.value
-                    | number: '0.0-2'
-                }}
+                {{ (accountBalance.spendablebalance / 1e8) * currencyRate.value | number: '0.0-2' }}
               </span>
               <span> {{ currencyRate.name }}</span>
             </div>
@@ -178,18 +137,12 @@
         <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
       </div>
       <div class="col-2 text-right">
-        <button
-          mat-icon-button
-          class="reload-button"
-          (click)="getTransactions()"
-        >
+        <button mat-icon-button class="reload-button" (click)="getTransactions()">
           <i class="fa fa-redo-alt"></i>
         </button>
       </div>
     </div>
-    <app-transaction-table
-      [transactionData]="unconfirmTx"
-    ></app-transaction-table>
+    <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
     <br />
   </ng-container>
 
@@ -197,10 +150,7 @@
     <div class="col-10">
       <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
     </div>
-    <div
-      class="col-2 text-right"
-      *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
-    >
+    <div class="col-2 text-right" *ngIf="!isErrorRecentTx && !isLoadingRecentTx">
       <button mat-icon-button class="reload-button" (click)="getTransactions()">
         <i class="fa fa-redo-alt"></i>
       </button>
