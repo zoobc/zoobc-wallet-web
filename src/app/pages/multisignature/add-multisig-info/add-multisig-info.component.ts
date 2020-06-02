@@ -14,10 +14,8 @@ import { SavedAccount } from 'src/app/services/auth.service';
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   multiSigDrafts: MultiSigDraft[];
   isCompleted = true;
-  minParticipants = 3;
 
   isMultiSignature: boolean = false;
-  minParticipant: number = 2;
 
   form: FormGroup;
   participantsField = new FormArray([]);
@@ -37,7 +35,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getMultiSigDraft();
-    this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
+    this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
       if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
@@ -45,7 +43,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
       if (multisig.multisigInfo) {
         const { participants, minSigs, nonce } = multisig.multisigInfo;
-        this.participantsField.setValue(participants);
+        this.patchParticipant(participants);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
       }
@@ -56,26 +54,30 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
   }
 
-  pushInitParticipant() {
+  pushInitParticipant(minParticpant: number = 2) {
     while (this.participantsField.length > 0) {
       this.participantsField.removeAt(0);
     }
 
-    let len = this.minParticipant;
-    const multisigInfo = this.multisig.multisigInfo;
-    if (multisigInfo) {
-      const participants = multisigInfo.participants;
-      len = participants.length >= 2 && participants.length;
-    }
-
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < minParticpant; i++) {
       this.participantsField.push(new FormControl('', [Validators.required]));
     }
   }
 
+  patchParticipant(participants: string[]) {
+    while (this.participantsField.controls.length !== 0) {
+      this.participantsField.removeAt(0);
+    }
+
+    participants.forEach((pcp, index) => {
+      if (index <= 1) this.participantsField.push(new FormControl(pcp, [Validators.required]));
+      else this.participantsField.push(new FormControl(pcp));
+    });
+  }
+
   onSwitchAccount(account: SavedAccount) {
     if (account != undefined) {
-      this.participantsField.setValue(account.participants);
+      this.patchParticipant(account.participants);
       this.nonceField.setValue(account.nonce);
       this.minSignatureField.setValue(account.minSig);
     }
@@ -95,7 +97,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   saveDraft() {
     this.updateMultisig();
-    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
+    const isDraft = this.multiSigDrafts.some((draft) => draft.id == this.multisig.id);
     if (isDraft) {
       this.multisigServ.editDraft();
     } else {
@@ -110,7 +112,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
       const { unisgnedTransactions, signaturesInfo } = this.multisig;
       if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
-      if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+      else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
       else this.router.navigate(['/multisignature/send-transaction']);
     }
   }
@@ -125,7 +127,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
     let participants: string[] = this.form.value.participants;
     participants.sort();
-    participants = participants.filter(address => address != '');
+    participants = participants.filter((address) => address != '');
 
     multisig.multisigInfo = {
       minSigs: parseInt(minSigs),
