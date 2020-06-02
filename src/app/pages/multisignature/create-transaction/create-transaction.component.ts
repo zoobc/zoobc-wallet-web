@@ -8,7 +8,6 @@ import { truncate } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-transaction',
@@ -103,6 +102,7 @@ export class CreateTransactionComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.multisigSubs.unsubscribe();
   }
 
   onClickFeeChoose(value) {

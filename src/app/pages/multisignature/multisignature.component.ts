@@ -89,7 +89,7 @@ export class MultisignatureComponent implements OnInit {
     await this.translate
       .get('Are you sure want to delete ?')
       .toPromise()
-      .then((res) => (sentence = res));
+      .then(res => (sentence = res));
     Swal.fire({
       title: sentence,
       showCancelButton: true,

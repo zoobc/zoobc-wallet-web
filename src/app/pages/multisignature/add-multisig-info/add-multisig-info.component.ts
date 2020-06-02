@@ -110,7 +110,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
       const { unisgnedTransactions, signaturesInfo } = this.multisig;
       if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
-      if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+      else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
       else this.router.navigate(['/multisignature/send-transaction']);
     }
   }
