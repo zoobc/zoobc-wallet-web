@@ -84,7 +84,8 @@ export class MultisignatureComponent implements OnInit {
     else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
   }
 
-  async onDeleteDraft(id: number) {
+  async onDeleteDraft(e, id: number) {
+    e.stopPropagation();
     let sentence: string;
     await this.translate
       .get('Are you sure want to delete ?')

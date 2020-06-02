@@ -220,13 +220,18 @@ mat-form-field {
     transform: none !important;
   }
 
-  button[mat-icon-button][matSuffix] {
-    color: $black2;
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 16px;
-    line-height: 16px;
-    top: -4px;
+  button[mat-icon-button] {
+    &[matSuffix] {
+      color: $black2;
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 16px;
+      line-height: 16px;
+      top: -4px;
+    }
+    &[color='warn'] {
+      color: $red !important;
+    }
   }
 
   &.block {
@@ -368,5 +373,19 @@ mat-form-field {
     .step-label {
       color: map-get($accent, 500) !important;
     }
+  }
+}
+
+// ================================== CHIPS ==================== //
+.chips {
+  margin: 0 -4px 0;
+  .chip {
+    background-color: map-get($accent, 400);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 32px;
+    margin: 2px 4px;
+    display: inline-block;
+    font-size: 12px;
   }
 }
