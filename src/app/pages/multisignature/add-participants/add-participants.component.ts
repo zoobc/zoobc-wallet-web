@@ -48,25 +48,33 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    let participantValid: boolean = false;
+    let signParticipant: string = '';
+    let signAddress: string = '';
+
     this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
       this.multisig = multisig;
     });
+
     if (this.activeRoute.snapshot.params['txHash']) {
-      const txHash = this.activeRoute.snapshot.params['txHash'];
-      const signature = this.activeRoute.snapshot.params['signature'];
-      const address = this.activeRoute.snapshot.params['address'];
-      const multiSignDrafts = this.multisigServ.getDrafts();
-      const multiSignDraft = multiSignDrafts.find((draft) => draft.signaturesInfo.txHash == txHash);
-      const participantValid = this.checkValidityParticipant(multiSignDraft, address);
+      const { txHash, signature, address } = this.activeRoute.snapshot.params;
+      const multiSignDraft = this.multisigServ
+        .getDrafts()
+        .find((draft) => draft.signaturesInfo.txHash == txHash);
+      participantValid = this.checkValidityParticipant(multiSignDraft, address);
       if (!multiSignDraft || !participantValid) {
         Swal.fire('Error', 'Draft not found', 'error');
         return this.router.navigate(['/multisignature']);
       }
       this.multisigServ.update(multiSignDraft);
-      //patch here;
+      signParticipant = signature;
+      signAddress = signAddress;
     }
+
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
+
     this.patchValue(this.multisig);
+    if (participantValid) this.prefillSignAddress(signAddress, signParticipant);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
   }
@@ -113,6 +121,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const accounts = this.authServ.getAllAccount();
     const account = accounts.find((acc) => acc.address == addres);
     this.patchParticipant(account.participants, true);
+  }
+
+  prefillSignAddress(address: string, signature: string) {
+    //jika array participant address ada yang cocok, maka isi di urutan yang sesuai
+    //jika tidak ada yang cocok maka cek apakah signature ada yang sama, jika ada yang sama tumpuk di sana, tapi jika tidak ada yang sama cari yang kosong, jika tidak ada yang kosong tumpuk paling atas
   }
 
   checkEnabledAddParticipant(multisig: MultiSigDraft) {
