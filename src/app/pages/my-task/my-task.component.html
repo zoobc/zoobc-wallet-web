@@ -3,58 +3,89 @@
     {{ 'My Tasks' | translate }}
   </h2>
   <mat-card style="padding: 0;">
-    <mat-tab-group mat-align-tabs="center">
-      <mat-tab label="Escrow Approval">
-        <div class="text-right">
-          <button mat-icon-button class="reload-button" (click)="reload(true)">
-            <i class="fa fa-redo-alt"></i>
-          </button>
-          <label class="block-height" *ngIf="!isLoadingBlockHeight"
-            ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+    <mat-tab-group mat-align-tabs="center" color="accent">
+      <ng-container *ngIf="account.type === 'normal'">
+        <mat-tab label="Escrow Approval">
+          <div class="text-right">
+            <button mat-icon-button class="reload-button" (click)="reload(true)">
+              <i class="fa fa-redo-alt"></i>
+            </button>
+            <label class="block-height" *ngIf="!isLoadingBlockHeight"
+              ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+            >
+          </div>
+          <div
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onScrollEscrow()"
+            [scrollWindow]="false"
+            [infiniteScrollContainer]="'.mat-drawer-content'"
+            [fromRoot]="true"
           >
-        </div>
-        <div
-          infiniteScroll
-          [infiniteScrollDistance]="2"
-          [infiniteScrollThrottle]="50"
-          (scrolled)="onScrollEscrow()"
-          [scrollWindow]="false"
-          [infiniteScrollContainer]="'.mat-drawer-content'"
-          [fromRoot]="true"
-        >
-          <app-escrow-transactions
-            [escrowTransactionsData]="escrowTransactions"
-            [withDetail]="true"
-            [isLoading]="isLoadingEscrow"
-            [isError]="isErrorEscrow"
-            (refresh)="getEscrowTx(true)"
-          ></app-escrow-transactions>
-        </div>
-      </mat-tab>
-      <mat-tab label="Multisignature">
-        <div class="text-right">
-          <button mat-icon-button class="reload-button" (click)="reload(true)">
-            <i class="fa fa-redo-alt"></i>
-          </button>
-        </div>
-        <div
-          infiniteScroll
-          [infiniteScrollDistance]="2"
-          [infiniteScrollThrottle]="50"
-          (scrolled)="onScrollMultiSig()"
-          [scrollWindow]="false"
-          [infiniteScrollContainer]="'.mat-drawer-content'"
-          [fromRoot]="true"
-        >
-          <app-multisig-transaction
-            [pendingListMultiSig]="multiSigPendingList"
-            [withDetail]="true"
-            [isLoading]="isLoadingMultisig"
-            [isError]="isError"
-            (refresh)="getMultiSigPendingList(true)"
-          ></app-multisig-transaction>
-        </div>
-      </mat-tab>
+            <app-escrow-transactions
+              [escrowTransactionsData]="escrowTransactions"
+              [withDetail]="true"
+              [isLoading]="isLoadingEscrow"
+              [isError]="isErrorEscrow"
+              (refresh)="getEscrowTx(true)"
+            ></app-escrow-transactions>
+          </div>
+        </mat-tab>
+      </ng-container>
+      <ng-container *ngIf="account.type === 'multisig'">
+        <mat-tab label="Multisignature">
+          <div class="text-right">
+            <button mat-icon-button class="reload-button" (click)="reload(true)">
+              <i class="fa fa-redo-alt"></i>
+            </button>
+          </div>
+          <div
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onScrollMultiSig()"
+            [scrollWindow]="false"
+            [infiniteScrollContainer]="'.mat-drawer-content'"
+            [fromRoot]="true"
+          >
+            <app-multisig-transaction
+              [pendingListMultiSig]="multiSigPendingList"
+              [withDetail]="true"
+              [isLoading]="isLoadingMultisig"
+              [isError]="isError"
+              (refresh)="getMultiSigPendingList(true)"
+            ></app-multisig-transaction>
+          </div>
+        </mat-tab>
+        <mat-tab label="Escrow Approval">
+          <div class="text-right">
+            <button mat-icon-button class="reload-button" (click)="reload(true)">
+              <i class="fa fa-redo-alt"></i>
+            </button>
+            <label class="block-height" *ngIf="!isLoadingBlockHeight"
+              ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+            >
+          </div>
+          <div
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onScrollEscrow()"
+            [scrollWindow]="false"
+            [infiniteScrollContainer]="'.mat-drawer-content'"
+            [fromRoot]="true"
+          >
+            <app-escrow-transactions
+              [escrowTransactionsData]="escrowTransactions"
+              [withDetail]="true"
+              [isLoading]="isLoadingEscrow"
+              [isError]="isErrorEscrow"
+              (refresh)="getEscrowTx(true)"
+            ></app-escrow-transactions>
+          </div>
+        </mat-tab>
+      </ng-container>
     </mat-tab-group>
   </mat-card>
 </div>
