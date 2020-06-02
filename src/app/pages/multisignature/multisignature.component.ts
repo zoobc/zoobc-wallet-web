@@ -61,8 +61,7 @@ export class MultisignatureComponent implements OnInit {
     this.multisigServ.update(multisig);
 
     const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
-    if (multisig.fee > 0) this.router.navigate(['/multisignature/send-transaction']);
-    else if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
     else if (unisgnedTransactions) this.router.navigate(['/multisignature/create-transaction']);
     else if (signaturesInfo) this.router.navigate(['/multisignature/add-signatures']);
   }
