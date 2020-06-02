@@ -82,11 +82,10 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   checkValidityParticipant(multisig: MultiSigDraft, address: string) {
     const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
-    let length: number;
     if (
       !signaturesInfo ||
       signaturesInfo == null ||
-      signaturesInfo.participants.findIndex((pcp) => pcp.address.length == 0) == -1
+      signaturesInfo.participants.filter((pcp) => pcp.address.length == 0).length > 0
     ) {
       if (multisigInfo) {
         length = multisigInfo.participants.filter((pcp) => pcp == address).length;
@@ -96,7 +95,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
         length = account.participants.filter((pcp) => pcp == address).length;
       } else length = 1;
     } else length = signaturesInfo.participants.filter((pcp) => pcp.address == address).length;
-
     if (length > 0) return true;
     return false;
   }
@@ -206,14 +204,14 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   jsonBufferToString(buf: any) {
     try {
-      return Buffer.from(buf.data, 'base64').toString();
+      return Buffer.from(buf.data, 'utf-8').toString();
     } catch (error) {
-      return buf.toString('base64');
+      return buf.toString('utf-8');
     }
   }
 
   stringToBuffer(str: string) {
-    return Buffer.from(str, 'base64');
+    return Buffer.from(str, 'utf-8');
   }
 
   onBack() {
