@@ -48,10 +48,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    let participantValid: boolean = false;
-    let signParticipant: string = '';
-    let signAddress: string = '';
-
     this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
       this.multisig = multisig;
     });
@@ -61,20 +57,21 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       const multiSignDraft = this.multisigServ
         .getDrafts()
         .find((draft) => draft.signaturesInfo.txHash == txHash);
-      participantValid = this.checkValidityParticipant(multiSignDraft, address);
+      const participantValid = this.checkValidityParticipant(multiSignDraft, address);
       if (!multiSignDraft || !participantValid) {
         Swal.fire('Error', 'Draft not found', 'error');
         return this.router.navigate(['/multisignature']);
       }
       this.multisigServ.update(multiSignDraft);
-      signParticipant = signature;
-      signAddress = signAddress;
+      this.patchValue(this.multisig);
+      this.prefillSignAddress(address, signature);
+      this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
+      return (this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig));
     }
 
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
 
     this.patchValue(this.multisig);
-    if (participantValid) this.prefillSignAddress(signAddress, signParticipant);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
   }
@@ -124,8 +121,17 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   prefillSignAddress(address: string, signature: string) {
-    //jika array participant address ada yang cocok, maka isi di urutan yang sesuai
-    //jika tidak ada yang cocok maka cek apakah signature ada yang sama, jika ada yang sama tumpuk di sana, tapi jika tidak ada yang sama cari yang kosong, jika tidak ada yang kosong tumpuk paling atas
+    let idx: number;
+    idx = this.participantAddress.findIndex((pcp) => pcp == address);
+    if (idx < 0) {
+      idx = this.multisig.signaturesInfo.participants.findIndex(
+        (pcp) => this.jsonBufferToString(pcp.signature) == signature
+      );
+      if (idx < 0) idx = this.participantAddress.findIndex((pcp) => pcp.length == 0);
+      if (idx < 0) idx = 0;
+    }
+
+    this.participantsSignatureField.controls[idx].patchValue(signature);
   }
 
   checkEnabledAddParticipant(multisig: MultiSigDraft) {
