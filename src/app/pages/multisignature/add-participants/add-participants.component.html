@@ -31,7 +31,7 @@
       <ng-container *ngIf="selectedDesign === 1">
         <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
         <mat-form-field appearance="outline" color="accent">
-          <input formControlName="transactionHash" matInput type="text" />
+          <input [readonly]="readOnlyTxHash" formControlName="transactionHash" matInput type="text" />
         </mat-form-field>
         <ng-container *ngIf="transactionHashField.touched">
           <mat-error *ngIf="transactionHashField.hasError('required')">
@@ -40,31 +40,83 @@
         </ng-container>
         <label class="label-margin">{{ 'Participants Signature' | translate }}</label>
         <div formArrayName="participantsSignature">
-          <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
-            <mat-form-field class="custom-input" appearance="outline" color="accent">
-              <input [formControlName]="i" matInput type="text" />
-            </mat-form-field>
-            <ng-container *ngIf="participantsSignatureField.controls[i].touched">
-              <mat-error
-                class="margin-error"
-                *ngIf="participantsSignatureField.controls[i].hasError('required')"
-              >
-                {{ 'Participant Signature is required' | translate }}
-              </mat-error>
+          <ng-container *ngIf="enabledAddParticipant">
+            <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
+              <ng-container *ngIf="i > 1">
+                <div class="inline-control">
+                  <mat-form-field class="custom-input" appearance="outline" color="accent">
+                    <input
+                      placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}..."
+                      [formControlName]="i"
+                      matInput
+                      type="text"
+                    />
+                  </mat-form-field>
+                  <button (click)="removeParticipant(i)" type="button" mat-flat-button color="warn">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="i <= 1">
+                <mat-form-field class="custom-input" appearance="outline" color="accent">
+                  <input
+                    placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}..."
+                    [formControlName]="i"
+                    matInput
+                    type="text"
+                  />
+                </mat-form-field>
+              </ng-container>
+              <ng-container *ngIf="participantsSignatureField.controls[i].touched">
+                <mat-error
+                  class="margin-error"
+                  *ngIf="participantsSignatureField.controls[i].hasError('required')"
+                >
+                  {{ 'Participant Signature is required' | translate }}
+                </mat-error>
+              </ng-container>
             </ng-container>
           </ng-container>
-          <div>
-            <button
-              (click)="onAddSignature()"
-              mat-flat-button
-              class="custom-btn"
-              color="primary"
-              type="button"
-            >
-              {{ 'Add your signature' | translate }}
-            </button>
-          </div>
+          <ng-container *ngIf="!enabledAddParticipant">
+            <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
+              <ng-container>
+                <mat-form-field class="custom-input" appearance="outline" color="accent">
+                  <input
+                    placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}..."
+                    [formControlName]="i"
+                    matInput
+                    type="text"
+                  />
+                </mat-form-field>
+              </ng-container>
+              <ng-container *ngIf="participantsSignatureField.controls[i].touched">
+                <mat-error
+                  class="margin-error"
+                  *ngIf="participantsSignatureField.controls[i].hasError('required')"
+                >
+                  {{ 'Participant Signature is required' | translate }}
+                </mat-error>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="enabledAddParticipant">
+            <div class="text-right" style="margin-top: 8px;">
+              <button (click)="addParticipant()" mat-flat-button color="primary" type="button" class="small">
+                {{ 'Add Participants' }}
+              </button>
+            </div>
+          </ng-container>
         </div>
+        <br />
+        <button
+          (click)="onAddSignature()"
+          [disabled]="transactionHashField.value.length <= 0"
+          mat-flat-button
+          color="primary"
+          type="button"
+        >
+          {{ 'Add your signature' | translate }}
+        </button>
         <div class="row" style="margin-top: 20px;">
           <div class="col">
             <button (click)="onBack()" mat-flat-button color="warn" class="block" type="button">
@@ -103,7 +155,7 @@
           {{ transactionHash }}
         </div>
         <label class="label-margin">{{ 'Your Account' | translate }}</label>
-        <account-selector (select)="onSwitchAccount($event)"></account-selector>
+        <account-selector [type]="'normal'" (select)="onSwitchAccount($event)"></account-selector>
         <label class="label-margin">{{ 'Your Signature' | translate }}</label>
         <mat-form-field appearance="outline" color="accent">
           <input matInput type="text" />
