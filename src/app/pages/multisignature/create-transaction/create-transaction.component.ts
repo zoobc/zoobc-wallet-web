@@ -140,9 +140,10 @@ export class CreateTransactionComponent implements OnInit {
   updateCreateTransaction() {
     const { recipient, amount, fee } = this.createTransactionForm.value;
     const multisig = { ...this.multisig };
+    const address = this.multisig.generatedSender || this.account.address;
 
     multisig.unisgnedTransactions = {
-      sender: this.account.address,
+      sender: address,
       amount: amount,
       fee: fee,
       recipient: recipient,
