@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount } from 'src/app/services/auth.service';
+import zoobc from 'zoobc-sdk';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -35,7 +36,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getMultiSigDraft();
-    this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
+    this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
@@ -97,7 +98,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   saveDraft() {
     this.updateMultisig();
-    const isDraft = this.multiSigDrafts.some((draft) => draft.id == this.multisig.id);
+    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
     if (isDraft) {
       this.multisigServ.editDraft();
     } else {
@@ -127,7 +128,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
     let participants: string[] = this.form.value.participants;
     participants.sort();
-    participants = participants.filter((address) => address != '');
+    participants = participants.filter(address => address != '');
 
     multisig.multisigInfo = {
       minSigs: parseInt(minSigs),
@@ -135,6 +136,8 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       participants: participants,
       multisigAddress: '',
     };
+    const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
+    multisig.generatedSender = address;
     this.multisigServ.update(multisig);
   }
 }

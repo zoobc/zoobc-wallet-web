@@ -1,4 +1,5 @@
 @import '../../../styles/variables';
+@import '../../../styles/mixins';
 
 .multisinature-container {
   .check-title {
@@ -10,62 +11,60 @@
     color: $black2;
   }
 
-  .check-box {
-    margin-bottom: 10px;
-
-    .column-check {
-      margin-right: 4px;
-    }
-
-    .check-margin {
-      margin: 16px 0;
-    }
-  }
-
-  .custom-btn {
-    float: right;
-    text-transform: capitalize;
-    line-height: 30px;
-    margin: 10px 0;
-    width: 110px;
-  }
-
-  .subtitle {
-    margin: 16px 0;
+  .column-check {
+    margin-right: 4px;
+    margin-bottom: 8px;
   }
 
   .multisignature-drafts {
     .transaction-item {
       border-bottom: 1px solid #ddd;
-      padding: 16px 6px;
+      padding: 16px;
       margin: 0;
       align-items: center;
+      @include transition(0.3s ease-in all);
 
       &.hover:hover {
         background-color: #eee;
         cursor: pointer;
       }
 
-      .name {
-        font-size: 16px;
+      .label {
+        color: $black3;
+        margin: 8px 0 4px 0;
+      }
+
+      .id {
+        color: $black2;
         margin-bottom: 4px;
       }
-      .address {
-        word-break: break-all;
-        color: $black1;
-        font-size: 13px;
-        margin-bottom: 8px;
+      .amount {
+        color: #f44336;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      .signed {
+        color: $black2;
+        margin-top: 16px;
       }
       .date {
         color: $black2;
         font-size: 13px;
+        font-style: italic;
+        margin-bottom: 8px;
+      }
+
+      .right {
+        align-self: stretch;
+        min-height: 32px;
+        text-align: right;
       }
 
       .btn-delete {
-        text-align: right;
-        width: auto;
-        height: 0;
-        color: $black2 !important;
+        position: absolute;
+        bottom: 0px;
+        right: 8px;
       }
     }
   }

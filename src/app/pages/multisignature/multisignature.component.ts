@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
-import { ContactService } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -13,8 +12,6 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class MultisignatureComponent implements OnInit {
   multiSigDrafts: MultiSigDraft[];
-  isLoading: boolean;
-  isError: boolean = false;
 
   form: FormGroup;
   multisigInfoField = new FormControl(false);
@@ -24,7 +21,6 @@ export class MultisignatureComponent implements OnInit {
   constructor(
     private router: Router,
     private multisigServ: MultisigService,
-    private contactServ: ContactService,
     private translate: TranslateService
   ) {
     this.form = new FormGroup({
@@ -39,21 +35,7 @@ export class MultisignatureComponent implements OnInit {
   }
 
   getMultiSigDraft() {
-    this.isError = false;
-    this.isLoading = true;
-    try {
-      this.multiSigDrafts = this.multisigServ.getDrafts();
-    } catch (error) {
-      this.isError = true;
-    }
-    this.isLoading = false;
-    this.isError = false;
-  }
-
-  getAlias(address: string): string {
-    let alias = this.contactServ.get(address).alias || '';
-    if (alias.length > 0) return `(${alias})`;
-    return alias;
+    this.multiSigDrafts = this.multisigServ.getDrafts();
   }
 
   onEditDraft(idx: number) {
@@ -84,7 +66,8 @@ export class MultisignatureComponent implements OnInit {
     else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
   }
 
-  async onDeleteDraft(id: number) {
+  async onDeleteDraft(e, id: number) {
+    e.stopPropagation();
     let sentence: string;
     await this.translate
       .get('Are you sure want to delete ?')
