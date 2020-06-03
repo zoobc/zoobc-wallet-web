@@ -17,6 +17,10 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   isCompleted = true;
 
   isMultiSignature: boolean = false;
+  stepper = {
+    transaction: false,
+    signatures: false,
+  };
 
   form: FormGroup;
   participantsField = new FormArray([]);
@@ -37,17 +41,21 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getMultiSigDraft();
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
+      const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
+      if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
       this.pushInitParticipant();
 
-      if (multisig.multisigInfo) {
-        const { participants, minSigs, nonce } = multisig.multisigInfo;
+      if (multisigInfo) {
+        const { participants, minSigs, nonce } = multisigInfo;
         this.patchParticipant(participants);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
       }
+
+      this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
+      this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
   }
 
