@@ -51,7 +51,7 @@ export class MultisigService {
 
   deleteDraft(idx: number) {
     let multisigDrafts = this.getDrafts();
-    multisigDrafts.splice(idx, 1);
+    multisigDrafts = multisigDrafts.filter(draft => draft.id != idx);
     localStorage.setItem('MULTISIG_DRAFTS', JSON.stringify(multisigDrafts));
   }
 }
