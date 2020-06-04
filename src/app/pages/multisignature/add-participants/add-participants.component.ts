@@ -110,34 +110,31 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
 
     if (!signaturesInfo || signaturesInfo == null) {
-      if (multisigInfo) return this.patchParticipant(multisigInfo.participants, true);
+      if (multisigInfo) return this.patchParticipant(multisigInfo.participants);
       if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
       return this.pushInitParticipant();
     }
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);
-    if (signaturesInfo.participants) this.patchParticipant(signaturesInfo.participants, false);
+    if (signaturesInfo.participants) this.patchParticipant(signaturesInfo.participants);
     this.enabledAddParticipant = true;
   }
 
-  patchParticipant(participant: any[], empty: boolean) {
+  patchParticipant(participant: any[]) {
     participant.forEach((pcp) => {
-      if (typeof pcp === 'object') this.participantAddress.push(pcp.address);
-      else this.participantAddress.push(pcp);
-
-      if (empty) {
-        this.participantsSignatureField.push(new FormControl('', [Validators.required]));
-      } else {
-        this.participantsSignatureField.push(
-          new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
-        );
-      }
+      let address: string = '';
+      let signature: string = '';
+      if (typeof pcp === 'object') {
+        address = pcp.address;
+        signature = pcp.signature;
+      } else address = pcp;
+      this.participantsSignatureField.push(this.createParticipant(address, signature, true));
     });
   }
 
   patchUnsignedAddress(addres: string) {
     const accounts = this.authServ.getAllAccount();
     const account = accounts.find((acc) => acc.address == addres);
-    this.patchParticipant(account.participants, true);
+    this.patchParticipant(account.participants);
   }
 
   prefillSignAddress(address: string, signature: string) {
