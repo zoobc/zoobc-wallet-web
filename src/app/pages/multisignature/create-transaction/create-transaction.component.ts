@@ -8,6 +8,8 @@ import { truncate } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { SendMoneyInterface, generateTransactionHash } from 'zoobc-sdk';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-create-transaction',
@@ -33,20 +35,23 @@ export class CreateTransactionComponent implements OnInit {
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
-  multiSigDrafts: MultiSigDraft[];
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 2;
   feeFast = this.feeMedium * 2;
   typeFee: number;
   customFeeValues: number;
+  txHash: string;
+  fileJson: any;
+  isMultiSignature: boolean = false;
 
   constructor(
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private sanitizer: DomSanitizer
   ) {
     this.createTransactionForm = new FormGroup({
       recipient: this.recipientForm,
@@ -57,10 +62,11 @@ export class CreateTransactionComponent implements OnInit {
       timeout: this.timeoutField,
       typeCoin: this.typeCoinField,
     });
+    this.account = authServ.getCurrAccount();
+    this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
   ngOnInit() {
-    this.account = this.authServ.getCurrAccount();
     // Currency Subscriptions
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
@@ -95,9 +101,17 @@ export class CreateTransactionComponent implements OnInit {
         } else {
           this.customFeeValues = fee;
         }
-      }
+      } else if (this.isMultiSignature) this.multisig.generatedSender = this.account.address;
     });
-    this.getMultiSigDraft();
+  }
+
+  generateDownloadJsonUri() {
+    this.updateCreateTransaction();
+    let theJSON = JSON.stringify(this.multisig);
+    let uri = this.sanitizer.bypassSecurityTrustUrl(
+      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
+    );
+    this.fileJson = uri;
   }
 
   ngOnDestroy() {
@@ -113,14 +127,46 @@ export class CreateTransactionComponent implements OnInit {
     this.account = account;
   }
 
-  getMultiSigDraft() {
-    this.multiSigDrafts = this.multisigServ.getDrafts();
-  }
-
   next() {
     if (this.createTransactionForm.valid) {
       this.updateCreateTransaction();
       const { signaturesInfo } = this.multisig;
+      const { amount, fee, recipient, sender } = this.multisig.unisgnedTransactions;
+      const data: SendMoneyInterface = {
+        sender: sender,
+        recipient: recipient,
+        fee: fee,
+        amount: amount,
+      };
+      const accounts = this.authServ.getAllAccount();
+      const account = accounts.find(acc => acc.address == sender);
+      let participantAccount = [];
+      if (this.multisig.signaturesInfo == null) {
+        if (account) {
+          for (let i = 0; i < account.participants.length; i++) {
+            let participant = {
+              address: account.participants[i],
+              signatures: null,
+            };
+            participantAccount.push(participant);
+          }
+        } else {
+          for (let i = 0; i < this.multisig.multisigInfo.participants.length; i++) {
+            let participant = {
+              address: this.multisig.multisigInfo.participants[i],
+              signature: null,
+            };
+            participantAccount.push(participant);
+          }
+        }
+        this.txHash = generateTransactionHash(data);
+        this.multisig.signaturesInfo = {
+          txHash: this.txHash,
+          participants: participantAccount,
+        };
+      } else {
+        this.multisig = this.multisig;
+      }
       if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
       else this.router.navigate(['/multisignature/send-transaction']);
     }
@@ -128,12 +174,8 @@ export class CreateTransactionComponent implements OnInit {
 
   saveDraft() {
     this.updateCreateTransaction();
-    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
-    if (isDraft) {
-      this.multisigServ.editDraft();
-    } else {
-      this.multisigServ.saveDraft();
-    }
+    if (this.multisig.id) this.multisigServ.editDraft();
+    else this.multisigServ.saveDraft();
     this.router.navigate(['/multisignature']);
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { onCopyText } from 'src/helpers/utils';
@@ -39,7 +39,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private activeRoute: ActivatedRoute,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private formBuilder: FormBuilder
   ) {
     this.form = new FormGroup({
       transactionHash: this.transactionHashField,
@@ -48,7 +49,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
+    this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       this.multisig = multisig;
     });
 
@@ -56,7 +57,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       const { txHash, signature, address } = this.activeRoute.snapshot.params;
       const multiSignDraft = this.multisigServ
         .getDrafts()
-        .find((draft) => draft.signaturesInfo.txHash == txHash);
+        .find(draft => draft.signaturesInfo.txHash == txHash);
       const participantValid = this.checkValidityParticipant(multiSignDraft, address);
       if (!multiSignDraft || !participantValid) {
         Swal.fire('Error', 'Draft not found', 'error');
@@ -70,7 +71,21 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     }
 
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
-
+    if (this.multisig.multisigInfo === undefined) {
+      if (this.multisig.signaturesInfo !== null)
+        if (this.multisig.signaturesInfo.participants) {
+          this.pushInitParticipant(this.multisig.signaturesInfo.participants.length);
+          this.participantAddress = [];
+          for (let index = 0; index < this.multisig.signaturesInfo.participants.length; index++) {
+            const addresss = this.multisig.signaturesInfo.participants[index].address;
+            this.participantAddress.push(addresss);
+          }
+        } else {
+          this.pushInitParticipant(this.multisig.multisigInfo.participants.length);
+          this.participantAddress = [];
+          this.participantAddress = this.multisig.multisigInfo.participants;
+        }
+    }
     this.patchValue(this.multisig);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
@@ -85,23 +100,22 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (
       !signaturesInfo ||
       signaturesInfo == null ||
-      signaturesInfo.participants.filter((pcp) => pcp.address.length == 0).length > 0
+      signaturesInfo.participants.filter(pcp => pcp.address.length == 0).length > 0
     ) {
       if (multisigInfo) {
-        length = multisigInfo.participants.filter((pcp) => pcp == address).length;
+        length = multisigInfo.participants.filter(pcp => pcp == address).length;
       } else if (unisgnedTransactions) {
         const accounts = this.authServ.getAllAccount();
-        const account = accounts.find((acc) => acc.address == unisgnedTransactions.sender);
-        length = account.participants.filter((pcp) => pcp == address).length;
+        const account = accounts.find(acc => acc.address == unisgnedTransactions.sender);
+        length = account.participants.filter(pcp => pcp == address).length;
       } else length = 1;
-    } else length = signaturesInfo.participants.filter((pcp) => pcp.address == address).length;
+    } else length = signaturesInfo.participants.filter(pcp => pcp.address == address).length;
     if (length > 0) return true;
     return false;
   }
 
   patchValue(multisig: MultiSigDraft) {
     const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
-
     if (!signaturesInfo || signaturesInfo == null) {
       if (multisigInfo) return this.patchParticipant(multisigInfo.participants, true);
       if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
@@ -114,18 +128,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   patchUnsignedAddress(addres: string) {
     const accounts = this.authServ.getAllAccount();
-    const account = accounts.find((acc) => acc.address == addres);
+    const account = accounts.find(acc => acc.address == addres);
     this.patchParticipant(account.participants, true);
   }
 
   prefillSignAddress(address: string, signature: string) {
     let idx: number;
-    idx = this.participantAddress.findIndex((pcp) => pcp == address);
+    idx = this.participantAddress.findIndex(pcp => pcp == address);
     if (idx < 0) {
       idx = this.multisig.signaturesInfo.participants.findIndex(
-        (pcp) => this.jsonBufferToString(pcp.signature) == signature
+        pcp => this.jsonBufferToString(pcp.signature) == signature
       );
-      if (idx < 0) idx = this.participantAddress.findIndex((pcp) => pcp.length == 0);
+      if (idx < 0) idx = this.participantAddress.findIndex(pcp => pcp.length == 0);
       if (idx < 0) idx = 0;
     }
 
@@ -140,25 +154,36 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   checkReadOnlyTxHash(multisig: MultiSigDraft) {
     const { unisgnedTransactions } = multisig;
-    if (!unisgnedTransactions || unisgnedTransactions == null) return false;
-    const txHash = this.generateRandomTxHash();
-    this.transactionHashField.patchValue(txHash);
-    return true;
+    if (multisig.signaturesInfo) {
+      const { txHash } = multisig.signaturesInfo;
+      this.transactionHashField.patchValue(txHash);
+      return true;
+    } else if (!unisgnedTransactions || unisgnedTransactions == null) return false;
   }
 
   patchParticipant(participant: any[], empty: boolean) {
-    participant.forEach((pcp) => {
-      if (typeof pcp === 'object') this.participantAddress.push(pcp.address);
-      else this.participantAddress.push(pcp);
-
+    while (this.participantsSignatureField.controls.length !== 0) {
+      this.participantsSignatureField.removeAt(0);
+    }
+    participant.forEach(pcp => {
+      if (typeof pcp === 'object') {
+        this.participantAddress.push(pcp.address);
+      } else {
+        this.participantAddress.push(pcp);
+      }
       if (empty) {
         this.participantsSignatureField.push(new FormControl('', [Validators.required]));
       } else {
-        this.participantsSignatureField.push(
-          new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
-        );
+        if (pcp.signature !== undefined && pcp.signature !== null) {
+          this.participantsSignatureField.push(
+            new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
+          );
+        }
       }
     });
+    if (participant.length !== this.participantsSignatureField.length) {
+      this.pushInitParticipant(participant.length);
+    }
   }
 
   pushInitParticipant(minParticipant: number = 2) {
@@ -224,7 +249,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    if (!this.form.valid) return null;
+    // if (!this.form.valid) return null;
     this.updateMultiStorage();
     if (this.multisig.id == 0) {
       this.multisigServ.saveDraft();
@@ -249,7 +274,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       return this.participantsSignatureField.controls[index].patchValue(signature.toString('base64'));
     }
 
-    const index = this.participantsSignatureField.controls.findIndex((ctrl) => ctrl.value.length == 0);
+    const index = this.participantsSignatureField.controls.findIndex(ctrl => ctrl.value.length == 0);
     if (index == -1)
       return this.participantsSignatureField.controls[
         this.participantsSignatureField.controls.length - 1
@@ -268,7 +293,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     await this.translate
       .get('Link Copied')
       .toPromise()
-      .then((res) => (message = res));
+      .then(res => (message = res));
     this.snackBar.open(message, null, { duration: 3000 });
   }
 

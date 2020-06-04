@@ -54,9 +54,12 @@
         [typeFees]="typeFee"
         [customFeeValue]="customFeeValues"
       ></fee-selector>
-      <button mat-flat-button type="button" class="block" color="primary">
-        {{ 'Generate Transaction Hash URL' | translate }}
+      <button mat-flat-button type="button" class="block" color="primary" (click)="generateDownloadJsonUri()">
+        <a style="color: #fff;" [href]="fileJson" download="Multisig_Draft.json">
+          {{ 'Export Draft Multi Signature' | translate }}
+        </a>
       </button>
+
       <div class="row" style="margin-top: 10px;">
         <div class="col">
           <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
