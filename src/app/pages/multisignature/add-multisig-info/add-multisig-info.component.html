@@ -1,21 +1,25 @@
-<!-- <div class="add-multisig-info-container">
+<div class="add-multisig-info-container">
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
     <div class="stepper">
       <div class="step active">
-        <span class="step-circle">1</span>
+        <span class="step-circle"><i class="fa fa-check"></i></span>
         <span class="step-label">Add Multisig Info</span>
       </div>
-      <div class="stepper-line"></div>
-      <div class="step">
-        <span class="step-circle">2</span>
-        <span class="step-label">Create Transaction</span>
-      </div>
-      <div class="stepper-line"></div>
-      <div class="step">
-        <span class="step-circle">3</span>
-        <span class="step-label">Add Signatures</span>
-      </div>
+      <ng-container *ngIf="stepper.transaction">
+        <div class="stepper-line"></div>
+        <div class="step">
+          <span class="step-circle"><i class="fa fa-minus"></i></span>
+          <span class="step-label">Create Transaction</span>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="stepper.signatures">
+        <div class="stepper-line"></div>
+        <div class="step">
+          <span class="step-circle"><i class="fa fa-minus"></i></span>
+          <span class="step-label">Add Signatures</span>
+        </div>
+      </ng-container>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
@@ -128,4 +132,4 @@
       </div>
     </form>
   </mat-card>
-</div> -->
+</div>
