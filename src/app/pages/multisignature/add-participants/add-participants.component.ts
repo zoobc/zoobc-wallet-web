@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { onCopyText } from 'src/helpers/utils';
@@ -29,9 +29,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   multisigSubs: Subscription;
   participantAddress: string[] = [];
 
-  selectedDesign: number = 1;
-  url: string = 'https://zoobc.one/...SxhdnfHF';
-
   constructor(
     private translate: TranslateService,
     private snackBar: MatSnackBar,
@@ -39,7 +36,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private activeRoute: ActivatedRoute,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private formBuilder: FormBuilder
   ) {
     this.form = new FormGroup({
       transactionHash: this.transactionHashField,
@@ -52,22 +50,22 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       this.multisig = multisig;
     });
 
-    if (this.activeRoute.snapshot.params['txHash']) {
-      const { txHash, signature, address } = this.activeRoute.snapshot.params;
-      const multiSignDraft = this.multisigServ
-        .getDrafts()
-        .find((draft) => draft.signaturesInfo.txHash == txHash);
-      const participantValid = this.checkValidityParticipant(multiSignDraft, address);
-      if (!multiSignDraft || !participantValid) {
-        Swal.fire('Error', 'Draft not found', 'error');
-        return this.router.navigate(['/multisignature']);
-      }
-      this.multisigServ.update(multiSignDraft);
-      this.patchValue(this.multisig);
-      this.prefillSignAddress(address, signature);
-      this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
-      return (this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig));
-    }
+    // if (this.activeRoute.snapshot.params['txHash']) {
+    //   const { txHash, signature, address } = this.activeRoute.snapshot.params;
+    //   const multiSignDraft = this.multisigServ
+    //     .getDrafts()
+    //     .find((draft) => draft.signaturesInfo.txHash == txHash);
+    //   const participantValid = this.checkValidityParticipant(multiSignDraft, address);
+    //   if (!multiSignDraft || !participantValid) {
+    //     Swal.fire('Error', 'Draft not found', 'error');
+    //     return this.router.navigate(['/multisignature']);
+    //   }
+    //   this.multisigServ.update(multiSignDraft);
+    //   this.patchValue(this.multisig);
+    //   this.prefillSignAddress(address, signature);
+    //   this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
+    //   return (this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig));
+    // }
 
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
 
@@ -78,6 +76,15 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
+  }
+
+  createParticipant(address: string, signature: string, required: boolean): FormGroup {
+    let validator = Validators.required;
+    if (!required) validator = null;
+    return this.formBuilder.group({
+      address: [address, validator],
+      signature: [signature, validator],
+    });
   }
 
   checkValidityParticipant(multisig: MultiSigDraft, address: string) {
@@ -110,6 +117,21 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);
     if (signaturesInfo.participants) this.patchParticipant(signaturesInfo.participants, false);
     this.enabledAddParticipant = true;
+  }
+
+  patchParticipant(participant: any[], empty: boolean) {
+    participant.forEach((pcp) => {
+      if (typeof pcp === 'object') this.participantAddress.push(pcp.address);
+      else this.participantAddress.push(pcp);
+
+      if (empty) {
+        this.participantsSignatureField.push(new FormControl('', [Validators.required]));
+      } else {
+        this.participantsSignatureField.push(
+          new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
+        );
+      }
+    });
   }
 
   patchUnsignedAddress(addres: string) {
@@ -146,36 +168,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  patchParticipant(participant: any[], empty: boolean) {
-    participant.forEach((pcp) => {
-      if (typeof pcp === 'object') this.participantAddress.push(pcp.address);
-      else this.participantAddress.push(pcp);
-
-      if (empty) {
-        this.participantsSignatureField.push(new FormControl('', [Validators.required]));
-      } else {
-        this.participantsSignatureField.push(
-          new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
-        );
-      }
-    });
-  }
-
   pushInitParticipant(minParticipant: number = 2) {
     for (let i = 0; i < minParticipant; i++) {
-      this.participantAddress.push('');
-      this.participantsSignatureField.push(new FormControl('', [Validators.required]));
+      this.participantsSignatureField.push(this.createParticipant('', '', true));
     }
   }
 
   addParticipant() {
-    this.participantAddress.push('');
-    this.participantsSignatureField.push(new FormControl(''));
+    this.participantsSignatureField.push(this.createParticipant('', '', false));
   }
 
   removeParticipant(index: number) {
     this.participantsSignatureField.removeAt(index);
-    this.participantAddress.splice(index, 1);
   }
 
   getAddress(idx: number) {

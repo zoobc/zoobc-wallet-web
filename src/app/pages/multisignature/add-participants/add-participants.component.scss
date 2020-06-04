@@ -28,24 +28,37 @@
       display: block;
     }
 
-    .custom-input {
-      width: 100%;
-      margin-bottom: 0;
-    }
+    .participant-field {
+      margin-bottom: 16px;
+      .custom-input {
+        width: 100%;
+        margin-bottom: 0;
+      }
 
-    .margin-error {
-      margin-top: 1px;
-    }
+      .margin-error {
+        margin-top: 1px;
+      }
 
-    .custom-btn {
-      text-transform: capitalize;
-      line-height: 30px;
-      margin: 10px 0;
-    }
+      .delete-btn {
+        min-width: 100%;
+        margin-top: 5px;
+      }
 
-    .custom-btn-2 {
-      text-transform: capitalize;
-      line-height: 40px;
+      .inline-control {
+        display: flex;
+        justify-content: space-between;
+
+        > .input {
+          width: calc(100% - 48px);
+        }
+
+        > button {
+          height: 40px;
+          padding: 0 8px;
+          margin: 4px 0 0 8px;
+          min-width: 40px;
+        }
+      }
     }
 
     .address {
@@ -56,22 +69,6 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .inline-control {
-      display: flex;
-      justify-content: space-between;
-
-      > .input {
-        width: calc(100% - 48px);
-      }
-
-      > button {
-        height: 40px;
-        padding: 0 8px;
-        margin: 4px 0 0 8px;
-        min-width: 40px;
-      }
     }
   }
 }
