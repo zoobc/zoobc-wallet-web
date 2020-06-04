@@ -23,6 +23,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string;
   @Input() label: string;
   @Input() classList: string;
+  @Input() readonly: boolean = false;
   @Input() exceptContact: SavedAccount;
 
   value: string;
