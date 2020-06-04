@@ -25,6 +25,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   account: SavedAccount;
   enabledAddParticipant: boolean = false;
   readOnlyTxHash: boolean = false;
+  readOnlyAddress: boolean = false;
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
   participantAddress: string[] = [];
@@ -72,6 +73,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.patchValue(this.multisig);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
+    this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
+    console.log(this.readOnlyAddress);
   }
 
   ngOnDestroy() {
@@ -165,10 +168,17 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  checkReadOnlyAddress(multisig: MultiSigDraft) {
+    const { multisigInfo, unisgnedTransactions } = multisig;
+    if (multisigInfo || unisgnedTransactions) return true;
+    return false;
+  }
+
   pushInitParticipant(minParticipant: number = 2) {
     for (let i = 0; i < minParticipant; i++) {
       this.participantsSignatureField.push(this.createParticipant('', '', true));
     }
+    console.log(this.participantsSignatureField);
   }
 
   addParticipant() {
