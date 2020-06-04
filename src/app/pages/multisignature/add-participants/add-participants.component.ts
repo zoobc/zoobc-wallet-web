@@ -259,20 +259,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.participantsSignatureField.controls[index].patchValue(signature.toString('base64'));
   }
 
-  onSwitchAccount(account: SavedAccount) {
-    this.account = account;
-  }
-
-  async onCopyUrl() {
-    onCopyText(this.url);
-    let message: string;
-    await this.translate
-      .get('Link Copied')
-      .toPromise()
-      .then((res) => (message = res));
-    this.snackBar.open(message, null, { duration: 3000 });
-  }
-
   //temporary function
   generateRandomTxHash(length: number = 10) {
     let result = '';
