@@ -62,14 +62,10 @@
       }
     }
 
-    .address {
-      word-break: break-all;
-      font-size: 13px;
-      margin-bottom: 8px;
+    .center-error {
+      display: block;
       width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      text-align: center;
     }
   }
 }

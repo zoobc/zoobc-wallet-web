@@ -147,16 +147,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   uniqueParticipant(formArray: FormArray): ValidationErrors {
-    //console.log(formArray);
-    // const values = formArray.value.filter(val => val.length > 0);
-    // const controls = formArray.controls;
-    // const result = values.some((element, index) => {
-    //   return values.indexOf(element) !== index;
-    // });
-    // const invalidControls = controls.filter(ctrl => ctrl.valid === false);
-    // if (result && invalidControls.length == 0) {
-    //   return { duplicate: true };
-    // }
+    let values: string[] = [];
+    formArray.value.map(val => {
+      if (val.address.length > 0) values.push(val.address);
+    });
+    const controls = formArray.controls;
+    const result = values.some((element, index) => {
+      return values.indexOf(element) !== index;
+    });
+    const invalidControls = controls.filter(ctrl => ctrl.get('address').valid === false);
+    if (result && invalidControls.length == 0) {
+      return { duplicate: true };
+    }
     return null;
   }
 

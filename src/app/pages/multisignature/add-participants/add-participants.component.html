@@ -160,6 +160,11 @@
             </div>
           </ng-container>
         </ng-container>
+        <ng-container *ngIf="participantsSignatureField.touched">
+          <mat-error *ngIf="participantsSignatureField.hasError('duplicate')">
+            <span class="center-error">{{ 'Participant must be unique' }}</span>
+          </mat-error>
+        </ng-container>
         <ng-container *ngIf="enabledAddParticipant">
           <div class="text-right" style="margin-top: 8px;">
             <button (click)="addParticipant()" mat-flat-button color="primary" type="button" class="small">
