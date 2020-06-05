@@ -197,17 +197,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const { transactionHash, participantsSignature } = this.form.value;
     const multisig = { ...this.multisig };
 
-    let participant = [];
-    participantsSignature.map((pcp, index) => {
-      participant[index] = {
-        address: this.getAddress(index),
-        signature: this.stringToBuffer(String(pcp)),
-      };
-    });
-
     multisig.signaturesInfo = {
       txHash: transactionHash,
-      participants: participant,
+      participants: participantsSignature,
     };
 
     this.multisigServ.update(multisig);
