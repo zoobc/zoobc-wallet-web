@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { onCopyText } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Subscription } from 'rxjs';
@@ -37,7 +35,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   constructor(
     private translate: TranslateService,
-    private snackBar: MatSnackBar,
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
@@ -187,7 +184,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < minParticipant; i++) {
       this.participantsSignatureField.push(this.createParticipant('', '', true));
     }
-    console.log(this.participantsSignatureField);
   }
 
   addParticipant() {
@@ -196,10 +192,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   removeParticipant(index: number) {
     this.participantsSignatureField.removeAt(index);
-  }
-
-  getAddress(idx: number) {
-    return this.participantAddress[idx];
   }
 
   updateMultiStorage() {
