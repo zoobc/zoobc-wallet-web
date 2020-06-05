@@ -57,30 +57,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
     });
 
-    // if (this.activeRoute.snapshot.params['txHash']) {
-    //   const { txHash, signature, address } = this.activeRoute.snapshot.params;
-    //   const multiSignDraft = this.multisigServ
-    //     .getDrafts()
-    //     .find((draft) => draft.signaturesInfo.txHash == txHash);
-    //   const participantValid = this.checkValidityParticipant(multiSignDraft, address);
-    //   if (!multiSignDraft || !participantValid) {
-    //     Swal.fire('Error', 'Draft not found', 'error');
-    //     return this.router.navigate(['/multisignature']);
-    //   }
-    //   this.multisigServ.update(multiSignDraft);
-    //   this.patchValue(this.multisig);
-    //   this.prefillSignAddress(address, signature);
-    //   this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
-    //   return (this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig));
-    // }
-
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
-
     this.patchValue(this.multisig);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
-    console.log(this.readOnlyAddress);
   }
 
   ngOnDestroy() {
@@ -94,25 +75,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       address: [address, validator],
       signature: [signature, validator],
     });
-  }
-
-  checkValidityParticipant(multisig: MultiSigDraft, address: string) {
-    const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
-    if (
-      !signaturesInfo ||
-      signaturesInfo == null ||
-      signaturesInfo.participants.filter(pcp => pcp.address.length == 0).length > 0
-    ) {
-      if (multisigInfo) {
-        length = multisigInfo.participants.filter(pcp => pcp == address).length;
-      } else if (unisgnedTransactions) {
-        const accounts = this.authServ.getAllAccount();
-        const account = accounts.find(acc => acc.address == unisgnedTransactions.sender);
-        length = account.participants.filter(pcp => pcp == address).length;
-      } else length = 1;
-    } else length = signaturesInfo.participants.filter(pcp => pcp.address == address).length;
-    if (length > 0) return true;
-    return false;
   }
 
   patchValue(multisig: MultiSigDraft) {
@@ -144,20 +106,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const accounts = this.authServ.getAllAccount();
     const account = accounts.find(acc => acc.address == addres);
     this.patchParticipant(account.participants);
-  }
-
-  prefillSignAddress(address: string, signature: string) {
-    let idx: number;
-    idx = this.participantAddress.findIndex(pcp => pcp == address);
-    if (idx < 0) {
-      idx = this.multisig.signaturesInfo.participants.findIndex(
-        pcp => this.jsonBufferToString(pcp.signature) == signature
-      );
-      if (idx < 0) idx = this.participantAddress.findIndex(pcp => pcp.length == 0);
-      if (idx < 0) idx = 0;
-    }
-
-    this.participantsSignatureField.controls[idx].patchValue(signature);
   }
 
   checkEnabledAddParticipant(multisig: MultiSigDraft) {
