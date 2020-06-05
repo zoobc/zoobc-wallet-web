@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder, ValidationErrors } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { signTransactionHash } from 'zoobc-sdk';
 import Swal from 'sweetalert2';
@@ -18,7 +17,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   transactionHashField = new FormControl('', Validators.required);
-  participantsSignatureField = new FormArray([]);
+  participantsSignatureField = new FormArray([], this.uniqueParticipant);
 
   account: SavedAccount;
   enabledAddParticipant: boolean = false;
@@ -26,7 +25,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   readOnlyAddress: boolean = false;
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
-  participantAddress: string[] = [];
 
   stepper = {
     multisigInfo: false,
@@ -34,11 +32,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private translate: TranslateService,
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
-    private activeRoute: ActivatedRoute,
     private authServ: AuthService,
     private formBuilder: FormBuilder
   ) {
@@ -83,7 +79,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (!signaturesInfo || signaturesInfo == null) {
       if (multisigInfo) return this.patchParticipant(multisigInfo.participants);
       if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
-      return this.pushInitParticipant();
+      return this.pushInitParticipant(2, this.authServ.getCurrAccount());
     }
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);
     if (signaturesInfo.participants) this.patchParticipant(signaturesInfo.participants);
@@ -111,6 +107,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   checkEnabledAddParticipant(multisig: MultiSigDraft) {
     const { multisigInfo, unisgnedTransactions } = multisig;
     if (multisigInfo || unisgnedTransactions) return false;
+    if (this.authServ.getCurrAccount().type === 'multisig') return false;
     return true;
   }
 
@@ -125,13 +122,20 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   checkReadOnlyAddress(multisig: MultiSigDraft) {
     const { multisigInfo, unisgnedTransactions } = multisig;
     if (multisigInfo || unisgnedTransactions) return true;
+    if (this.authServ.getCurrAccount().type === 'multisig') return true;
     return false;
   }
 
-  pushInitParticipant(minParticipant: number = 2) {
-    for (let i = 0; i < minParticipant; i++) {
-      this.participantsSignatureField.push(this.createParticipant('', '', true));
+  pushInitParticipant(minParticipant: number = 2, curAccount: SavedAccount) {
+    if (curAccount.type == 'normal') {
+      for (let i = 0; i < minParticipant; i++) {
+        this.participantsSignatureField.push(this.createParticipant('', '', true));
+      }
+      return null;
     }
+    curAccount.participants.forEach(pcp => {
+      this.participantsSignatureField.push(this.createParticipant(pcp, '', true));
+    });
   }
 
   addParticipant() {
@@ -140,6 +144,20 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   removeParticipant(index: number) {
     this.participantsSignatureField.removeAt(index);
+  }
+
+  uniqueParticipant(formArray: FormArray): ValidationErrors {
+    //console.log(formArray);
+    // const values = formArray.value.filter(val => val.length > 0);
+    // const controls = formArray.controls;
+    // const result = values.some((element, index) => {
+    //   return values.indexOf(element) !== index;
+    // });
+    // const invalidControls = controls.filter(ctrl => ctrl.valid === false);
+    // if (result && invalidControls.length == 0) {
+    //   return { duplicate: true };
+    // }
+    return null;
   }
 
   updateMultiStorage() {
@@ -189,7 +207,10 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   onAddSignature() {
     const { transactionHash, participantsSignature } = this.form.value;
     const curAcc = this.authServ.getCurrAccount();
-    let idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.address);
+    let idx: number;
+    idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.address);
+    if (curAcc.type === 'multisig' && idx == -1)
+      idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.signByAddress);
     if (idx == -1) return Swal.fire('Error', 'This account is not in Participant List', 'error');
     const seed = this.authServ.seed;
     const signature = signTransactionHash(transactionHash, seed);
