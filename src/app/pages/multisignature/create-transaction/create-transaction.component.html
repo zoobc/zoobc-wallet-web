@@ -36,6 +36,14 @@
         formControlName="recipient"
         placeholder="{{ 'Recepient Address' | translate }}..."
       ></input-address>
+      <ng-container *ngIf="recipientForm.touched">
+        <mat-error *ngIf="recipientForm.hasError('required')">
+          {{ 'Recepient is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
+          {{ 'ZBC Address is invalid' | translate }}
+        </mat-error>
+      </ng-container>
       <input-amount
         [group]="createTransactionForm"
         typeCoinName="typeCoin"
