@@ -32,6 +32,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   selectedDesign: number = 1;
   url: string = 'https://zoobc.one/...SxhdnfHF';
 
+  stepper = {
+    multisigInfo: false,
+    transaction: false,
+  };
+
   constructor(
     private translate: TranslateService,
     private snackBar: MatSnackBar,
@@ -50,7 +55,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
+      const { multisigInfo, unisgnedTransactions } = multisig;
       this.multisig = multisig;
+
+      this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
+      this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
     });
 
     if (this.activeRoute.snapshot.params['txHash']) {

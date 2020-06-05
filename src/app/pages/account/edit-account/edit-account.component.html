@@ -86,6 +86,7 @@
       <account-selector
         [type]="'normal'"
         [switchAccount]="false"
+        [selectedValue]="account.signByAddress"
         (select)="onSwitchSignBy($event)"
       ></account-selector>
     </ng-container>

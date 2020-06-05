@@ -45,6 +45,11 @@ export class CreateTransactionComponent implements OnInit {
   fileJson: any;
   isMultiSignature: boolean = false;
 
+  stepper = {
+    multisigInfo: false,
+    signatures: false,
+  };
+
   constructor(
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
@@ -79,12 +84,13 @@ export class CreateTransactionComponent implements OnInit {
     this.subscription.add(subsRate);
     // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      if (multisig.unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
+      const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
+      if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
 
-      if (multisig.unisgnedTransactions) {
-        const { sender, recipient, amount, fee } = multisig.unisgnedTransactions;
+      if (unisgnedTransactions) {
+        const { sender, recipient, amount, fee } = unisgnedTransactions;
         this.account.address = sender;
         this.recipientForm.setValue(recipient);
         this.amountForm.setValue(amount);
@@ -102,6 +108,9 @@ export class CreateTransactionComponent implements OnInit {
           this.customFeeValues = fee;
         }
       } else if (this.isMultiSignature) this.multisig.generatedSender = this.account.address;
+
+      this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
+      this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
   }
 

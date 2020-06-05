@@ -145,6 +145,7 @@ export class DashboardComponent implements OnInit {
       if (added) {
         this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
         this.currAcc = this.authServ.getCurrAccount();
+        this.getBalance();
       }
     });
   }
