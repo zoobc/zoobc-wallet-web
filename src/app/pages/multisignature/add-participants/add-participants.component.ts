@@ -30,6 +30,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   multisigSubs: Subscription;
   participantAddress: string[] = [];
 
+  stepper = {
+    multisigInfo: false,
+    transaction: false,
+  };
+
   constructor(
     private translate: TranslateService,
     private snackBar: MatSnackBar,
@@ -47,8 +52,12 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.multisigSubs = this.multisigServ.multisig.subscribe((multisig) => {
+    this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
+      const { multisigInfo, unisgnedTransactions } = multisig;
       this.multisig = multisig;
+
+      this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
+      this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
     });
 
     // if (this.activeRoute.snapshot.params['txHash']) {
@@ -95,16 +104,16 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (
       !signaturesInfo ||
       signaturesInfo == null ||
-      signaturesInfo.participants.filter((pcp) => pcp.address.length == 0).length > 0
+      signaturesInfo.participants.filter(pcp => pcp.address.length == 0).length > 0
     ) {
       if (multisigInfo) {
-        length = multisigInfo.participants.filter((pcp) => pcp == address).length;
+        length = multisigInfo.participants.filter(pcp => pcp == address).length;
       } else if (unisgnedTransactions) {
         const accounts = this.authServ.getAllAccount();
-        const account = accounts.find((acc) => acc.address == unisgnedTransactions.sender);
-        length = account.participants.filter((pcp) => pcp == address).length;
+        const account = accounts.find(acc => acc.address == unisgnedTransactions.sender);
+        length = account.participants.filter(pcp => pcp == address).length;
       } else length = 1;
-    } else length = signaturesInfo.participants.filter((pcp) => pcp.address == address).length;
+    } else length = signaturesInfo.participants.filter(pcp => pcp.address == address).length;
     if (length > 0) return true;
     return false;
   }
@@ -123,7 +132,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   patchParticipant(participant: any[]) {
-    participant.forEach((pcp) => {
+    participant.forEach(pcp => {
       let address: string = '';
       let signature: string = '';
       if (typeof pcp === 'object') {
@@ -136,18 +145,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   patchUnsignedAddress(addres: string) {
     const accounts = this.authServ.getAllAccount();
-    const account = accounts.find((acc) => acc.address == addres);
+    const account = accounts.find(acc => acc.address == addres);
     this.patchParticipant(account.participants);
   }
 
   prefillSignAddress(address: string, signature: string) {
     let idx: number;
-    idx = this.participantAddress.findIndex((pcp) => pcp == address);
+    idx = this.participantAddress.findIndex(pcp => pcp == address);
     if (idx < 0) {
       idx = this.multisig.signaturesInfo.participants.findIndex(
-        (pcp) => this.jsonBufferToString(pcp.signature) == signature
+        pcp => this.jsonBufferToString(pcp.signature) == signature
       );
-      if (idx < 0) idx = this.participantAddress.findIndex((pcp) => pcp.length == 0);
+      if (idx < 0) idx = this.participantAddress.findIndex(pcp => pcp.length == 0);
       if (idx < 0) idx = 0;
     }
 
@@ -252,7 +261,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       return this.participantsSignatureField.controls[index].patchValue(signature.toString('base64'));
     }
 
-    const index = this.participantsSignatureField.controls.findIndex((ctrl) => ctrl.value.length == 0);
+    const index = this.participantsSignatureField.controls.findIndex(ctrl => ctrl.value.length == 0);
     if (index == -1)
       return this.participantsSignatureField.controls[
         this.participantsSignatureField.controls.length - 1
