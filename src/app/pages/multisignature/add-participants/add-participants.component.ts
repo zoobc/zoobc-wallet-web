@@ -239,27 +239,13 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   onAddSignature() {
-    const { multisigInfo, unisgnedTransactions } = this.multisig;
+    const { transactionHash, participantsSignature } = this.form.value;
     const curAcc = this.authServ.getCurrAccount();
-    const { transactionHash } = this.form.value;
+    let idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.address);
+    if (idx == -1) return Swal.fire('Error', 'This account is not in Participant List', 'error');
     const seed = this.authServ.seed;
     const signature = signTransactionHash(transactionHash, seed);
-
-    if (curAcc.type !== 'normal') return Swal.fire('Error', 'Multisig Account cant sign !', 'error');
-    if (multisigInfo || unisgnedTransactions) {
-      if (!this.participantAddress.includes(curAcc.address))
-        return Swal.fire('Error', 'This account not in Participants', 'error');
-      const index = this.participantAddress.indexOf(curAcc.address);
-      return this.participantsSignatureField.controls[index].patchValue(signature.toString('base64'));
-    }
-
-    const index = this.participantsSignatureField.controls.findIndex(ctrl => ctrl.value.length == 0);
-    if (index == -1)
-      return this.participantsSignatureField.controls[
-        this.participantsSignatureField.controls.length - 1
-      ].patchValue(signature.toString('base64'));
-
-    this.participantsSignatureField.controls[index].patchValue(signature.toString('base64'));
+    this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
   }
 
   //temporary function
