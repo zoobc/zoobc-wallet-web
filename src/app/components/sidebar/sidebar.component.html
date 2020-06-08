@@ -2,83 +2,29 @@
   <ul class="sidenav-menu">
     <li [ngClass]="menu == 'dashboard' && 'active'">
       <a routerLink="/dashboard" (click)="onToggle()">
-        <i class="fa fa-home"></i>
-        <span>{{ 'Dashboard' | translate }}</span>
+        <i class="fa fa-couch"></i>
+        <span>{{ 'Seats' | translate }}</span>
       </a>
     </li>
-    <ng-template [ngIf]="account && account.nodeIP">
-      <li [ngClass]="menu == 'nodeadmin' && 'active'">
-        <a routerLink="/nodeadmin" (click)="onToggle()">
-          <i class="fa fa-desktop"></i>
-          <span>{{ 'Node Admin' | translate }}</span>
-        </a>
-      </li>
-    </ng-template>
 
-    <li [ngClass]="menu == 'transferhistory' && 'active'">
-      <a routerLink="/transferhistory" (click)="onToggle()">
-        <i class="fa fa-receipt"></i>
-        <span>{{ 'History' | translate }}</span>
+    <li [ngClass]="menu == 'accounts' && 'active'">
+      <a routerLink="/accounts" (click)="onToggle()">
+        <i class="fa fa-address-card"></i>
+        <span>{{ 'Account' | translate }}</span>
       </a>
     </li>
-    <!-- <li>
-      <a routerLink="/#" (click)="onToggle()">
-        <img
-          matPrefix
-          src="../../../assets/img/zbc-black.png"
-          width="28"
-          class="icon-image"
-        />
-        <i class="fa fa-donate"></i>
-        <span>{{ 'Deposit' | translate }}</span>
-      </a>
-    </li> -->
-    <ng-container *ngIf="account.type == 'normal'">
-      <li [ngClass]="menu == 'sendmoney' && 'active'">
-        <a routerLink="/sendmoney" (click)="onToggle()">
-          <i class="fa fa-paper-plane"></i>
-          <span>{{ 'Send' | translate }}</span>
-        </a>
-      </li>
-      <li [ngClass]="menu == 'multisignature' && 'active'">
-        <a routerLink="/multisignature" (click)="onToggle()">
-          <i class="fa fa-file-signature"></i>
-          <span>{{ 'MultiSig' | translate }}</span>
-        </a>
-      </li>
-    </ng-container>
 
-    <ng-container *ngIf="account.type == 'multisig'">
-      <li [ngClass]="menu == 'multisignature' && 'active'">
-        <a routerLink="/multisignature" (click)="onToggle()">
-          <i class="fa fa-paper-plane"></i>
-          <span>{{ 'Send' | translate }}</span>
-        </a>
-      </li>
-    </ng-container>
+    <li [ngClass]="menu == 'account' && 'active'">
+      <a (click)="onComingSoonPage()">
+        <i class="fab fa-usb"></i>
+        <span>{{ 'Hardware Wallet' | translate }}</span>
+      </a>
+    </li>
 
-    <li [ngClass]="menu == 'receive' && 'active'">
-      <a (click)="openReceiveForm()">
-        <i class="fas fa-money-bill"></i>
-        <span>{{ 'Receive' | translate }}</span>
-      </a>
-    </li>
-    <li [ngClass]="menu == 'my-tasks' && 'active'">
-      <a routerLink="/my-tasks" (click)="onToggle()">
-        <i class="fas fa-tasks"></i>
-        <span>{{ 'My Tasks' | translate }}</span>
-      </a>
-    </li>
-    <li [ngClass]="menu == 'contact-list' && 'active'">
-      <a routerLink="/contact-list" (click)="onToggle()">
-        <i class="fa fa-address-book"></i>
-        <span>{{ 'Address Book' | translate }}</span>
-      </a>
-    </li>
-    <li [ngClass]="menu == 'apps' && 'active'">
-      <a routerLink="/apps" (click)="onToggle()">
-        <i class="fa fa-puzzle-piece"></i>
-        <span>{{ 'Apps' | translate }}</span>
+    <li>
+      <a (click)="openRevealPassphrase()">
+        <i class="fa fa-eye"></i>
+        <span>{{ 'Reveal Passphrase' | translate }}</span>
       </a>
     </li>
   </ul>

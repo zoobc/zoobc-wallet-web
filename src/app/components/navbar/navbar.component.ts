@@ -4,7 +4,6 @@ import { Router, NavigationEnd } from '@angular/router';
 import { LanguageService, LANGUAGES } from 'src/app/services/language.service';
 import { AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
-import { AddNodeAdminComponent } from 'src/app/pages/node-admin/add-node-admin/add-node-admin.component';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -62,12 +61,6 @@ export class NavbarComponent implements OnInit {
   selectActiveLanguage(lang) {
     this.langServ.setLanguage(lang);
     this.activeLanguage = lang;
-  }
-
-  onOpenAddNodeAdmin() {
-    this.dialog.open(AddNodeAdminComponent, {
-      width: '360px',
-    });
   }
 
   onOpenRevealPassphrase() {

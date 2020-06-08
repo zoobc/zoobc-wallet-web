@@ -6,8 +6,6 @@ import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from '../../../assets/node-list.json';
 import { NodeList } from '../../../helpers/node-list';
 import zoobc, { HostInterface } from 'zoobc-sdk';
-import { CurrencyRateService } from 'src/app/services/currency-rate.service';
-import { MultiSigDraft } from 'src/app/services/multisig.service';
 
 @Component({
   selector: 'app-parent',
@@ -23,12 +21,7 @@ export class ParentComponent implements OnInit {
 
   isLogin: boolean;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private appServ: AppService,
-    private currencyServ: CurrencyRateService
-  ) {
+  constructor(private router: Router, private route: ActivatedRoute, private appServ: AppService) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
         this.menu = this.route.snapshot.firstChild.url[0].path;
@@ -41,9 +34,6 @@ export class ParentComponent implements OnInit {
     this.isLogin = this.appServ.isLoggedIn();
 
     this.importNodeList();
-
-    const multisigList: MultiSigDraft[] = JSON.parse(localStorage.getItem('MULTISIG_DRAFTS')) || [];
-    if (multisigList.length == 0) localStorage.setItem('MULTISIG_DRAFTS', '[]');
   }
 
   @HostListener('window:resize', ['$event']) onResize(event) {
@@ -52,7 +42,6 @@ export class ParentComponent implements OnInit {
 
   ngOnInit() {
     this.appServ.setSidenav(this.sidenav);
-    this.currencyServ.getRate().catch(() => {});
   }
 
   ngOnDestroy() {
