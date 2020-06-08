@@ -22,11 +22,11 @@
       </div>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
-    <form [formGroup]="form" class="grid">
+    <form [formGroup]="form">
       <ng-template matStepLabel>Add Signatures</ng-template>
 
       <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
-      <mat-form-field appearance="outline" color="accent">
+      <mat-form-field style="width: 100%;" appearance="outline" color="accent">
         <input
           [readonly]="readOnlyTxHash"
           placeholder="Trasaction Hash"
@@ -115,7 +115,7 @@
         <ng-container *ngIf="!enabledAddParticipant">
           <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
             <div class="participant-field" [formGroupName]="i">
-              <div *ngIf="readOnlyAddress && i == 1">
+              <div *ngIf="readOnlyAddress">
                 <wallet-address
                   [value]="participantsSignatureField.controls[i].get('address').value"
                   [copyButton]="true"
