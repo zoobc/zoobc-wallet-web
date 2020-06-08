@@ -115,13 +115,12 @@
         <ng-container *ngIf="!enabledAddParticipant">
           <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
             <div class="participant-field" [formGroupName]="i">
-              <div *ngIf="readOnlyAddress">
+              <div *ngIf="readOnlyAddress && i == 1">
                 <wallet-address
                   [value]="participantsSignatureField.controls[i].get('address').value"
                   [copyButton]="true"
                 ></wallet-address>
               </div>
-
               <ng-container *ngIf="!readOnlyAddress">
                 <input-address label="" formControlName="address" placeholder="{{ 'Address ' }} {{ i + 1 }}">
                 </input-address>
