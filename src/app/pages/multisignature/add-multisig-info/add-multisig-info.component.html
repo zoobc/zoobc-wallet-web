@@ -4,20 +4,20 @@
     <div class="stepper">
       <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">Add Multisig Info</span>
+        <span class="step-label">{{ 'Add Multisig Info' | translate }}</span>
       </div>
       <ng-container *ngIf="stepper.transaction">
         <div class="stepper-line"></div>
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">Create Transaction</span>
+          <span class="step-label">{{ 'Create Transaction' | translate }}</span>
         </div>
       </ng-container>
       <ng-container *ngIf="stepper.signatures">
         <div class="stepper-line"></div>
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">Add Signatures</span>
+          <span class="step-label">{{ 'Add Signatures' | translate }}</span>
         </div>
       </ng-container>
     </div>
@@ -35,7 +35,7 @@
         </button>
       </account-selector>
 
-      <label>{{ 'Participants' }}</label>
+      <label>{{ 'Participants' | translate }}</label>
       <div formArrayName="participants" style="margin-bottom: 8px;">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index">
           <div class="inline-control">
@@ -44,7 +44,7 @@
               label=""
               classList="custom-mat"
               [formControlName]="i"
-              placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
+              placeholder="{{ 'Participant' | translate }} {{ i + 1 }}..."
               [readonly]="this.isMultiSignature"
             >
             </input-address>
@@ -60,10 +60,10 @@
           </div>
           <ng-container *ngIf="participantsField.controls[i].touched">
             <mat-error *ngIf="participantsField.controls[i].hasError('required')">
-              {{ 'Participant is required' }}
+              {{ 'Participant is required' | translate }}
             </mat-error>
             <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
-              {{ 'Participant Address is invalid' }}
+              {{ 'Participant Address is invalid' | translate }}
             </mat-error>
           </ng-container>
         </ng-container>
@@ -71,38 +71,38 @@
 
       <div class="text-right" *ngIf="!isMultiSignature">
         <button (click)="addParticipant()" mat-flat-button class="small" color="primary" type="button">
-          {{ 'Add Participants' }}
+          {{ 'Add Participants' | translate }}
         </button>
       </div>
       <ng-container *ngIf="participantsField.touched">
         <mat-error class="center-error" *ngIf="participantsField.hasError('duplicate')">
-          {{ 'Participant must be unique' }}
+          {{ 'Participant must be unique' | translate }}
         </mat-error>
       </ng-container>
 
-      <label>{{ 'Nonce' }}</label>
+      <label>{{ 'Nonce' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
         <input formControlName="nonce" matInput type="number" [readonly]="this.isMultiSignature" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
         <mat-error *ngIf="nonceField.hasError('required')">
-          {{ 'Nonce is required' }}
+          {{ 'Nonce is required' | translate }}
         </mat-error>
         <mat-error *ngIf="nonceField.hasError('min')">
-          {{ 'Minimum Nonce is 1' }}
+          {{ 'Minimum Nonce is 1' | translate }}
         </mat-error>
       </ng-container>
 
-      <label>{{ 'Minimum Signature' }}</label>
+      <label>{{ 'Minimum Signature' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
         <input formControlName="minSigs" matInput type="number" [readonly]="this.isMultiSignature" />
       </mat-form-field>
       <ng-container *ngIf="minSignatureField.touched">
         <mat-error *ngIf="minSignatureField.hasError('required')">
-          {{ 'Minimum Signature is required' }}
+          {{ 'Minimum Signature is required' | translate }}
         </mat-error>
         <mat-error *ngIf="minSignatureField.hasError('min')">
-          {{ 'Minimum Signature is 2' }}
+          {{ 'Minimum Signature is 2' | translate }}
         </mat-error>
       </ng-container>
 

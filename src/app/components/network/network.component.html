@@ -1,24 +1,13 @@
 <div class="network-container">
   <mat-form-field appearance="outline" color="accent" class="select-node">
-    <mat-select
-      [value]="selectedNode"
-      (selectionChange)="changeNode($event.value)"
-    >
+    <mat-select [value]="selectedNode" (selectionChange)="changeNode($event.value)">
       <mat-option *ngFor="let node of nodeList.node; let i = index" [value]="i">
         <span>{{ node.name }}</span>
         <ng-container *ngIf="!node.default">
-          <span
-            class="delete-network"
-            (click)="delete($event, i)"
-            matTooltip="Delete"
-          >
+          <span class="delete-network" (click)="delete($event, i)" matTooltip="Delete">
             <i class="fas fa-trash"></i>
           </span>
-          <span
-            class="edit-network"
-            (click)="openDialog($event, 'edit', node, i)"
-            matTooltip="Edit"
-          >
+          <span class="edit-network" (click)="openDialog($event, 'edit', node, i)" matTooltip="Edit">
             <i class="fas fa-pen"></i>
           </span>
         </ng-container>
@@ -26,12 +15,7 @@
     </mat-select>
   </mat-form-field>
 
-  <button
-    mat-flat-button
-    color="primary"
-    style="margin-left: 16px;"
-    (click)="openDialog($event, 'add')"
-  >
+  <button mat-flat-button color="primary" style="margin-left: 16px;" (click)="openDialog($event, 'add')">
     {{ 'Add Network' | translate }}
   </button>
 </div>
@@ -43,11 +27,7 @@
   <h2 class="mat-h3" *ngIf="currAction == 'edit'">
     {{ 'Edit Network' | translate }}
   </h2>
-  <form
-    [formGroup]="formNetwork"
-    style="display: grid;"
-    (submit)="submitNetwork()"
-  >
+  <form [formGroup]="formNetwork" style="display: grid;" (submit)="submitNetwork()">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Network Name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
@@ -63,7 +43,7 @@
       <input
         matInput
         type="text"
-        placeholder="https://yournode.com:80 or http://192.168.43.1:8001"
+        placeholder="https://yournode.com:80 {{ 'or' | translate }} http://192.168.43.1:8001"
         formControlName="ip"
       />
     </mat-form-field>

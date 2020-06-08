@@ -55,7 +55,7 @@
               [copyButton]="true"
             ></wallet-address>
           </div>
-          <div class="label">{{ 'Recepient' | translate }}:</div>
+          <div class="label">{{ 'Recipient' | translate }}:</div>
           <div class="address">
             <wallet-address
               [value]="multisig.unisgnedTransactions.recipient"
@@ -96,7 +96,7 @@
             </div>
           </div>
           <div class="label">
-            <span>Fee</span>
+            <span>{{ 'Fee' | translate }}</span>
             <span> - {{ kindFee }}</span>
             <span>:</span>
           </div>
@@ -117,9 +117,7 @@
           </div>
           <ng-template #not_escrow>
             <div class="zbc">
-              {{
-                multisig.unisgnedTransactions.amount + multisig.unisgnedTransactions.fee | number: '0.0-8'
-              }}
+              {{ multisig.unisgnedTransactions.amount + multisig.unisgnedTransactions.fee | number: '0.0-8' }}
               ZBC
             </div>
             <div class="currency">

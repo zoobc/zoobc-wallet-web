@@ -13,7 +13,7 @@
           <div class="label">{{ 'IP Address' | translate }}</div>
           <div class="value">192.168.43.1:7001</div>
           <button mat-flat-button>
-            {{ 'generate new public key' | translate }}
+            {{ 'Generate New Public Key' | translate }}
           </button>
         </div>
       </mat-card>
@@ -84,16 +84,9 @@
     <!-- NODE USAGE LOADED -->
     <h2 class="mat-h2">{{ 'CPU' | translate }}</h2>
     <div class="row">
-      <div
-        class="col-6 col-sm-3 cpu-usage"
-        *ngFor="let i of [0, 1, 2, 3, 4, 5]"
-      >
+      <div class="col-6 col-sm-3 cpu-usage" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
         <div class="percentage">
-          <mat-progress-spinner
-            [value]="20"
-            diameter="80"
-            color="primary"
-          ></mat-progress-spinner>
+          <mat-progress-spinner [value]="20" diameter="80" color="primary"></mat-progress-spinner>
           <div class="label">20%</div>
         </div>
         <div class="cpu-number">CPU {{ i }}</div>

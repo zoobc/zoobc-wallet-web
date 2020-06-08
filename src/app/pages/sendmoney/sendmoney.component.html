@@ -5,10 +5,10 @@
       <label>{{ 'From' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
       <input-address
-        label="{{ 'Recepient Address' | translate }}"
+        label="{{ 'Recipient Address' | translate }}"
         classList="block"
         formControlName="recipient"
-        placeholder="{{ 'Recepient Address' | translate }}..."
+        placeholder="{{ 'Recipient Address' | translate }}..."
       ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
@@ -85,7 +85,7 @@
         {{ 'Advanced Option' | translate }}
       </span>
       <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
-        {{ 'Escrow Transaction' }}
+        {{ 'Escrow Transaction' | translate }}
       </mat-checkbox>
       <div class="zbc-form-item" *ngIf="advancedMenu">
         <input-address
@@ -135,7 +135,7 @@
           </div>
         </div>
         <label class="block-height"
-          ><b>{{ 'Block Height' }} : {{ blockHeight | number }}</b></label
+          ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
         >
         <label>{{ 'Timeout' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">

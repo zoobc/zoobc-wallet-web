@@ -5,19 +5,19 @@
       <ng-container *ngIf="stepper.multisigInfo">
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">Add Multisig Info</span>
+          <span class="step-label">{{ 'Add Multisig Info' | translate }}</span>
         </div>
         <div class="stepper-line"></div>
       </ng-container>
       <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">Create Transaction</span>
+        <span class="step-label">{{ 'Create Transaction' | translate }}</span>
       </div>
       <ng-container *ngIf="stepper.signatures">
         <div class="stepper-line"></div>
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">Add Signatures</span>
+          <span class="step-label">{{ 'Add Signatures' | translate }}</span>
         </div>
       </ng-container>
     </div>
@@ -31,10 +31,10 @@
         <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
       </ng-container>
       <input-address
-        label="{{ 'Recepient Address' | translate }}"
+        label="{{ 'Recipient Address' | translate }}"
         classList="block"
         formControlName="recipient"
-        placeholder="{{ 'Recepient Address' | translate }}..."
+        placeholder="{{ 'Recipient Address' | translate }}..."
       ></input-address>
       <input-amount
         [group]="createTransactionForm"
