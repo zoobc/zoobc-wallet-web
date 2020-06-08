@@ -112,9 +112,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   checkReadOnlyTxHash(multisig: MultiSigDraft) {
-    const { unisgnedTransactions } = multisig;
-    if (!unisgnedTransactions || unisgnedTransactions == null) return false;
-    const txHash = this.generateRandomTxHash();
+    const { signaturesInfo } = multisig;
+    if (!signaturesInfo || signaturesInfo == null) return false;
+    const txHash = signaturesInfo.txHash;
     this.transactionHashField.patchValue(txHash);
     return true;
   }
@@ -196,7 +196,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    if (!this.form.valid) return null;
     this.updateMultiStorage();
     if (this.multisig.id == 0) {
       this.multisigServ.saveDraft();
@@ -218,16 +217,4 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const signature = signTransactionHash(transactionHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
   }
-
-  //temporary function
-  generateRandomTxHash(length: number = 10) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
-  //temporary function end here
 }

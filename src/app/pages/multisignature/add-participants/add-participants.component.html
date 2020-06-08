@@ -52,7 +52,7 @@
                   <mat-error
                     *ngIf="participantsSignatureField.controls[i].get('address').hasError('invalidAddress')"
                   >
-                    {{ 'Address is invalid' }}
+                    {{ 'Address is invalid' | translate }}
                   </mat-error>
                 </ng-container>
                 <div class="inline-control">
@@ -88,7 +88,7 @@
                   <mat-error
                     *ngIf="participantsSignatureField.controls[i].get('address').hasError('invalidAddress')"
                   >
-                    {{ 'Address is invalid' }}
+                    {{ 'Address is invalid' | translate }}
                   </mat-error>
                 </ng-container>
 
@@ -136,7 +136,7 @@
                 <mat-error
                   *ngIf="participantsSignatureField.controls[i].get('address').hasError('invalidAddress')"
                 >
-                  {{ 'Address is invalid' }}
+                  {{ 'Address is invalid' | translate }}
                 </mat-error>
               </ng-container>
 
@@ -167,7 +167,7 @@
         <ng-container *ngIf="enabledAddParticipant">
           <div class="text-right" style="margin-top: 8px;">
             <button (click)="addParticipant()" mat-flat-button color="primary" type="button" class="small">
-              {{ 'Add Participants' }}
+              {{ 'Add Participants' | translate }}
             </button>
           </div>
         </ng-container>
@@ -189,14 +189,7 @@
           </button>
         </div>
         <div class="col">
-          <button
-            [disabled]="form.invalid"
-            (click)="onSave()"
-            mat-flat-button
-            color="primary"
-            class="block"
-            type="button"
-          >
+          <button (click)="onSave()" mat-flat-button color="primary" class="block" type="button">
             {{ 'Save To Draft' | translate }}
           </button>
         </div>
