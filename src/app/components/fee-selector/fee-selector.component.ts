@@ -20,6 +20,7 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
   @Output() onClickFeeChoose = new EventEmitter();
   @Input() typeFees?: number;
   @Input() customFeeValue?: number;
+  @Input() readonly?: boolean = false;
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 2;
@@ -57,6 +58,7 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    if (this.readonly === true) this.readonly = true;
     if (this.customFeeValue) {
       const feeCurrency = this.customFeeValue * this.currencyRate.value;
       this.group.patchValue({

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { onCopyText } from 'src/helpers/utils';
@@ -44,8 +44,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private activeRoute: ActivatedRoute,
-    private authServ: AuthService,
-    private formBuilder: FormBuilder
+    private authServ: AuthService
   ) {
     this.form = new FormGroup({
       transactionHash: this.transactionHashField,
@@ -80,21 +79,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     }
 
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
-    if (this.multisig.multisigInfo === undefined) {
-      if (this.multisig.signaturesInfo !== null)
-        if (this.multisig.signaturesInfo.participants) {
-          this.pushInitParticipant(this.multisig.signaturesInfo.participants.length);
-          this.participantAddress = [];
-          for (let index = 0; index < this.multisig.signaturesInfo.participants.length; index++) {
-            const addresss = this.multisig.signaturesInfo.participants[index].address;
-            this.participantAddress.push(addresss);
-          }
-        } else {
-          this.pushInitParticipant(this.multisig.multisigInfo.participants.length);
-          this.participantAddress = [];
-          this.participantAddress = this.multisig.multisigInfo.participants;
-        }
-    }
+
     this.patchValue(this.multisig);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
@@ -125,6 +110,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   patchValue(multisig: MultiSigDraft) {
     const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
+
     if (!signaturesInfo || signaturesInfo == null) {
       if (multisigInfo) return this.patchParticipant(multisigInfo.participants, true);
       if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
@@ -163,36 +149,25 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   checkReadOnlyTxHash(multisig: MultiSigDraft) {
     const { unisgnedTransactions } = multisig;
-    if (multisig.signaturesInfo) {
-      const { txHash } = multisig.signaturesInfo;
-      this.transactionHashField.patchValue(txHash);
-      return true;
-    } else if (!unisgnedTransactions || unisgnedTransactions == null) return false;
+    if (!unisgnedTransactions || unisgnedTransactions == null) return false;
+    const txHash = this.generateRandomTxHash();
+    this.transactionHashField.patchValue(txHash);
+    return true;
   }
 
   patchParticipant(participant: any[], empty: boolean) {
-    while (this.participantsSignatureField.controls.length !== 0) {
-      this.participantsSignatureField.removeAt(0);
-    }
     participant.forEach(pcp => {
-      if (typeof pcp === 'object') {
-        this.participantAddress.push(pcp.address);
-      } else {
-        this.participantAddress.push(pcp);
-      }
+      if (typeof pcp === 'object') this.participantAddress.push(pcp.address);
+      else this.participantAddress.push(pcp);
+
       if (empty) {
         this.participantsSignatureField.push(new FormControl('', [Validators.required]));
       } else {
-        if (pcp.signature !== undefined && pcp.signature !== null) {
-          this.participantsSignatureField.push(
-            new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
-          );
-        }
+        this.participantsSignatureField.push(
+          new FormControl(this.jsonBufferToString(pcp.signature), [Validators.required])
+        );
       }
     });
-    if (participant.length !== this.participantsSignatureField.length) {
-      this.pushInitParticipant(participant.length);
-    }
   }
 
   pushInitParticipant(minParticipant: number = 2) {
@@ -258,7 +233,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   onSave() {
-    // if (!this.form.valid) return null;
+    if (!this.form.valid) return null;
     this.updateMultiStorage();
     if (this.multisig.id == 0) {
       this.multisigServ.saveDraft();

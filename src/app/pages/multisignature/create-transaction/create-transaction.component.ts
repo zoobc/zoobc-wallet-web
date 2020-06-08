@@ -9,8 +9,9 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SendMoneyInterface, generateTransactionHash } from 'zoobc-sdk';
-import { DomSanitizer } from '@angular/platform-browser';
-
+import { saveAs } from 'file-saver';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
@@ -42,8 +43,9 @@ export class CreateTransactionComponent implements OnInit {
   typeFee: number;
   customFeeValues: number;
   txHash: string;
-  fileJson: any;
   isMultiSignature: boolean = false;
+  isHasTransactionHash: boolean = false;
+  removeExport: boolean = false;
 
   stepper = {
     multisigInfo: false,
@@ -56,7 +58,7 @@ export class CreateTransactionComponent implements OnInit {
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
-    private sanitizer: DomSanitizer
+    private translate: TranslateService
   ) {
     this.createTransactionForm = new FormGroup({
       recipient: this.recipientForm,
@@ -88,6 +90,11 @@ export class CreateTransactionComponent implements OnInit {
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
+      this.removeExport = this.multisig.signaturesInfo !== undefined ? true : false;
+      if (signaturesInfo) {
+        this.isHasTransactionHash = this.multisig.signaturesInfo.txHash !== undefined ? true : false;
+      }
+      if (this.isHasTransactionHash) this.createTransactionForm.disable();
 
       if (unisgnedTransactions) {
         const { sender, recipient, amount, fee } = unisgnedTransactions;
@@ -114,13 +121,45 @@ export class CreateTransactionComponent implements OnInit {
     });
   }
 
-  generateDownloadJsonUri() {
-    this.updateCreateTransaction();
-    let theJSON = JSON.stringify(this.multisig);
-    let uri = this.sanitizer.bypassSecurityTrustUrl(
-      'data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON)
-    );
-    this.fileJson = uri;
+  async generateDownloadJsonUri() {
+    if (!this.isHasTransactionHash) {
+      let title;
+      await this.translate
+        .get('Are you sure?')
+        .toPromise()
+        .then(res => (title = res));
+      let message;
+      await this.translate
+        .get('You will not be able to update the form anymore!')
+        .toPromise()
+        .then(res => (message = res));
+      let buttonText;
+      await this.translate
+        .get('Yes, continue it!')
+        .toPromise()
+        .then(res => (buttonText = res));
+      Swal.fire({
+        title: title,
+        text: message,
+        showCancelButton: true,
+        confirmButtonText: buttonText,
+        type: 'warning',
+      }).then(result => {
+        if (result.value) {
+          this.generatedTxHash();
+          this.updateCreateTransaction();
+          let theJSON = JSON.stringify(this.multisig);
+          const blob = new Blob([theJSON], { type: 'application/JSON' });
+          const url = window.URL.createObjectURL(blob);
+          saveAs(blob, 'Multisignature-Draft.json');
+        }
+      });
+    } else {
+      let theJSON = JSON.stringify(this.multisig);
+      const blob = new Blob([theJSON], { type: 'application/JSON' });
+      const url = window.URL.createObjectURL(blob);
+      saveAs(blob, 'Multisignature-Draft.json');
+    }
   }
 
   ngOnDestroy() {
@@ -136,49 +175,45 @@ export class CreateTransactionComponent implements OnInit {
     this.account = account;
   }
 
-  next() {
+  async next() {
+    if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
     if (this.createTransactionForm.valid) {
       this.updateCreateTransaction();
       const { signaturesInfo } = this.multisig;
-      const { amount, fee, recipient, sender } = this.multisig.unisgnedTransactions;
-      const data: SendMoneyInterface = {
-        sender: sender,
-        recipient: recipient,
-        fee: fee,
-        amount: amount,
-      };
-      const accounts = this.authServ.getAllAccount();
-      const account = accounts.find(acc => acc.address == sender);
-      let participantAccount = [];
-      if (this.multisig.signaturesInfo == null) {
-        if (account) {
-          for (let i = 0; i < account.participants.length; i++) {
-            let participant = {
-              address: account.participants[i],
-              signatures: null,
-            };
-            participantAccount.push(participant);
-          }
-        } else {
-          for (let i = 0; i < this.multisig.multisigInfo.participants.length; i++) {
-            let participant = {
-              address: this.multisig.multisigInfo.participants[i],
-              signature: null,
-            };
-            participantAccount.push(participant);
-          }
+      if (signaturesInfo === null) {
+        if (!this.isHasTransactionHash) {
+          let title;
+          await this.translate
+            .get('Are you sure?')
+            .toPromise()
+            .then(res => (title = res));
+          let message;
+          await this.translate
+            .get('You will not be able to update the form anymore!')
+            .toPromise()
+            .then(res => (message = res));
+          let buttonText;
+          await this.translate
+            .get('Yes, continue it!')
+            .toPromise()
+            .then(res => (buttonText = res));
+          Swal.fire({
+            title: title,
+            text: message,
+            showCancelButton: true,
+            confirmButtonText: buttonText,
+            type: 'warning',
+          }).then(result => {
+            if (result.value) {
+              this.generatedTxHash();
+              this.router.navigate(['/multisignature/add-signatures']);
+            }
+          });
         }
-        this.txHash = generateTransactionHash(data);
-        this.multisig.signaturesInfo = {
-          txHash: this.txHash,
-          participants: participantAccount,
-        };
-      } else {
-        this.multisig = this.multisig;
-      }
-      if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+      } else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
       else this.router.navigate(['/multisignature/send-transaction']);
     }
+    console.log(this.multisig);
   }
 
   saveDraft() {
@@ -204,5 +239,45 @@ export class CreateTransactionComponent implements OnInit {
 
   back() {
     this.location.back();
+  }
+
+  generatedTxHash() {
+    this.updateCreateTransaction();
+    const { amount, fee, recipient, sender } = this.multisig.unisgnedTransactions;
+    const data: SendMoneyInterface = {
+      sender: sender,
+      recipient: recipient,
+      fee: fee,
+      amount: amount,
+    };
+    const accounts = this.authServ.getAllAccount();
+    const account = accounts.find(acc => acc.address == sender);
+    let participantAccount = [];
+    if (this.multisig.signaturesInfo == null) {
+      if (account) {
+        for (let i = 0; i < account.participants.length; i++) {
+          let participant = {
+            address: account.participants[i],
+            signatures: null,
+          };
+          participantAccount.push(participant);
+        }
+      } else {
+        for (let i = 0; i < this.multisig.multisigInfo.participants.length; i++) {
+          let participant = {
+            address: this.multisig.multisigInfo.participants[i],
+            signature: null,
+          };
+          participantAccount.push(participant);
+        }
+      }
+      this.txHash = generateTransactionHash(data);
+      this.multisig.signaturesInfo = {
+        txHash: this.txHash,
+        participants: participantAccount,
+      };
+      this.isHasTransactionHash = true;
+      this.multisig.generatedSender = this.multisig.unisgnedTransactions.sender;
+    }
   }
 }

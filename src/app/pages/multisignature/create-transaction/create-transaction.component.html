@@ -65,11 +65,18 @@
         (onClickFeeChoose)="onClickFeeChoose($event)"
         [typeFees]="typeFee"
         [customFeeValue]="customFeeValues"
+        [readonly]="isHasTransactionHash"
       ></fee-selector>
-      <button mat-flat-button type="button" class="block" color="primary" (click)="generateDownloadJsonUri()">
-        <a style="color: #fff;" [href]="fileJson" download="Multisig_Draft.json">
-          {{ 'Export Draft Multi Signature' | translate }}
-        </a>
+      <button
+        *ngIf="removeExport"
+        mat-flat-button
+        type="button"
+        class="block"
+        color="primary"
+        (click)="generateDownloadJsonUri()"
+        [disabled]="createTransactionForm.invalid"
+      >
+        {{ 'Export Draft Multi Signature' | translate }}
       </button>
 
       <div class="row" style="margin-top: 10px;">
