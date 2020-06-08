@@ -1,10 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { ReceiveComponent } from 'src/app/pages/receive/receive.component';
 import { MatDialog } from '@angular/material';
 import { AppService } from 'src/app/app.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Router, NavigationEnd } from '@angular/router';
+import { RevealPassphraseComponent } from '../reveal-passphrase/reveal-passphrase.component';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,6 +23,7 @@ export class SidebarComponent {
     private dialog: MatDialog,
     private appServ: AppService,
     private router: Router,
+    private translate: TranslateService,
     authServ: AuthService
   ) {
     this.account = authServ.getCurrAccount();
@@ -40,9 +43,23 @@ export class SidebarComponent {
     this.appServ.toggle();
   }
 
-  openReceiveForm() {
-    this.dialog.open(ReceiveComponent, {
-      width: '480px',
+  openRevealPassphrase() {
+    this.dialog.open(RevealPassphraseComponent, {
+      width: '420px',
+    });
+  }
+
+  async onComingSoonPage() {
+    let message: string;
+    await this.translate
+      .get('Coming Soon')
+      .toPromise()
+      .then(res => (message = res));
+    Swal.fire({
+      type: 'info',
+      title: message,
+      showConfirmButton: false,
+      timer: 1500,
     });
   }
 }

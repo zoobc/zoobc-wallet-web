@@ -6,23 +6,10 @@
       </button>
       <a routerLink="/" class="brand-text">
         <img src="/assets/img/zbc-white.png" alt="" />
-        <h3>
-          <b>ZooBC</b> Wallet
-          <p class="version">Alpha - Version 0.2</p>
-        </h3>
+        <h3><b>ZooBC</b><span> Registration</span></h3>
       </a>
     </div>
     <div class="menu">
-      <button
-        mat-flat-button
-        color="accent"
-        style="background-color: #ec5b58;"
-        routerLink="/feedback"
-        target="_blank"
-      >
-        <span>Feedback</span>
-      </button>
-
       <button
         mat-icon-button
         matTooltip="Accounts"
@@ -34,48 +21,17 @@
         <i class="fas fa-address-card"></i>
       </button>
 
-      <!-- language menu -->
-      <button mat-button class="language-dropdown" [matMenuTriggerFor]="language">
-        <span>{{ activeLanguage }}</span>
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <mat-menu #language="matMenu">
-        <button
-          *ngFor="let language of languages"
-          (click)="selectActiveLanguage(language.code)"
-          mat-menu-item
-        >
-          {{ language.country }}
-        </button>
-      </mat-menu>
-
       <!-- account menu -->
       <button mat-icon-button class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="isLoggedIn">
         <i class="fa fa-cog"></i>
       </button>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
-          <ng-container *ngIf="!node">
-            <button mat-menu-item (click)="onOpenAddNodeAdmin()">
-              <i class="fas fa-plus"></i>
-              <span>{{ 'Add Node Admin' | translate }}</span>
-            </button>
-            <mat-divider></mat-divider>
-          </ng-container>
-          <!-- <button mat-menu-item routerLink="/feedback">
-            <i class="fas fa-comments"></i>
-            {{ 'Give Feedback' | translate }}
-          </button> -->
           <button mat-menu-item (click)="onComingSoonPage()">
             <i class="fab fa-usb"></i>
             {{ 'Connect Hardware Wallet' | translate }}
           </button>
           <mat-divider></mat-divider>
-          <!-- <button mat-menu-item (click)="onOpenRevealPassphrase()">
-            <i class="fa fa-eye"></i>
-            {{ 'Reveal Passphrase' | translate }}
-          </button>
-          <mat-divider></mat-divider> -->
           <button mat-menu-item routerLink="/settings/about">
             <i class="fas fa-info"></i>
             {{ 'Info & Help' | translate }}

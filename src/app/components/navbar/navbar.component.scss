@@ -45,6 +45,10 @@
         padding-left: 16px;
         font-weight: 200;
         font-size: 22px;
+        align-self: center;
+        span {
+          font-size: 18px;
+        }
         @media #{$small-and-down} {
           display: none;
         }
@@ -58,11 +62,8 @@
           padding: 4px !important;
         }
       }
+      .account-dropdown,
       .address-card {
-        font-size: 22px;
-        margin: 0 -5px 0 15px;
-      }
-      .account-dropdown {
         margin: 0 4px;
         color: white;
         i {

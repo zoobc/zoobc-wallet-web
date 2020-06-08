@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
-import { Contact, ContactService } from 'src/app/services/contact.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { isZBCAddressValid } from 'zoobc-sdk';
 @Component({
@@ -28,21 +27,17 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
 
   value: string;
   tempVal: string[];
-  contacts: Contact[];
-  contact: Contact;
   account: SavedAccount;
   accounts: SavedAccount[];
-  filteredContacts: Contact[];
 
   private _onChange = (value: any) => {};
   private _onTouched = (value: any) => {};
   disabled: boolean;
 
-  constructor(private contactServ: ContactService, private authServ: AuthService) {}
+  constructor(private authServ: AuthService) {}
 
   ngOnInit() {
-    this.contacts = this.contactServ.getList() || [];
-    this.getAccounts();
+    // this.getAccounts();
   }
 
   writeValue(value: any) {
@@ -62,7 +57,6 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   }
 
   onChange(value: any) {
-    this.filteredContacts = this.filterContacts(value);
     this._onChange(value);
     this._onTouched(value);
   }
@@ -71,27 +65,27 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
     this._onChange(address);
   }
 
-  filterContacts(value: string): Contact[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      return this.contacts.filter((contact: Contact) =>
-        contact.alias.toLocaleLowerCase().includes(filterValue)
-      );
-    } else if (value == '') return this.contacts;
-  }
+  // filterContacts(value: string): Contact[] {
+  //   if (value) {
+  //     const filterValue = value.toLowerCase();
+  //     return this.contacts.filter((contact: Contact) =>
+  //       contact.alias.toLocaleLowerCase().includes(filterValue)
+  //     );
+  //   } else if (value == '') return this.contacts;
+  // }
 
-  getAccounts() {
-    this.accounts = this.authServ.getAllAccount();
-    if (this.exceptContact)
-      this.accounts = this.accounts.filter(acc => acc.address !== this.exceptContact.address);
-    this.accounts.forEach(account => {
-      const contact: Contact = {
-        address: account.address,
-        alias: account.name,
-      };
-      this.contacts.push(contact);
-    });
-  }
+  // getAccounts() {
+  //   this.accounts = this.authServ.getAllAccount();
+  //   if (this.exceptContact)
+  //     this.accounts = this.accounts.filter(acc => acc.address !== this.exceptContact.address);
+  //   this.accounts.forEach(account => {
+  //     const contact: Contact = {
+  //       address: account.address,
+  //       alias: account.name,
+  //     };
+  //     this.contacts.push(contact);
+  //   });
+  // }
 
   validate({ value }: FormControl) {
     let result: boolean = false;

@@ -19,7 +19,7 @@
         {{ 'Search address from your address book or your own account' | translate }}
       </span>
     </mat-option>
-    <mat-option
+    <!-- <mat-option
       #matOption
       (click)="onOptionClick(contact.address)"
       *ngFor="let contact of filteredContacts"
@@ -27,6 +27,6 @@
     >
       <span>{{ contact.alias }}</span> |
       <small>{{ contact.address }}</small>
-    </mat-option>
+    </mat-option> -->
   </mat-autocomplete>
 </mat-form-field>
