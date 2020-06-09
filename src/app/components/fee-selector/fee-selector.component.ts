@@ -20,6 +20,7 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
   @Output() onClickFeeChoose = new EventEmitter();
   @Input() typeFees?: number;
   @Input() customFeeValue?: number;
+  @Input() readonly?: boolean = false;
 
   feeSlow = environment.fee;
   feeMedium = this.feeSlow * 2;

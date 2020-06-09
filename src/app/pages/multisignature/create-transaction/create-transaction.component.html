@@ -36,6 +36,14 @@
         formControlName="recipient"
         placeholder="{{ 'Recepient Address' | translate }}..."
       ></input-address>
+      <ng-container *ngIf="recipientForm.touched">
+        <mat-error *ngIf="recipientForm.hasError('required')">
+          {{ 'Recepient is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
+          {{ 'ZBC Address is invalid' | translate }}
+        </mat-error>
+      </ng-container>
       <input-amount
         [group]="createTransactionForm"
         typeCoinName="typeCoin"
@@ -57,10 +65,20 @@
         (onClickFeeChoose)="onClickFeeChoose($event)"
         [typeFees]="typeFee"
         [customFeeValue]="customFeeValues"
+        [readonly]="isHasTransactionHash"
       ></fee-selector>
-      <button mat-flat-button type="button" class="block" color="primary">
-        {{ 'Generate Transaction Hash URL' | translate }}
+      <button
+        *ngIf="removeExport"
+        mat-flat-button
+        type="button"
+        class="block"
+        color="primary"
+        (click)="generateDownloadJsonUri()"
+        [disabled]="createTransactionForm.invalid"
+      >
+        {{ 'Export Draft Multi Signature' | translate }}
       </button>
+
       <div class="row" style="margin-top: 10px;">
         <div class="col">
           <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
