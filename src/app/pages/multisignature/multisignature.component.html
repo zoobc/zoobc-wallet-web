@@ -52,8 +52,24 @@
       </div>
     </form>
   </mat-card>
+  <div class="row" style="margin-top: 16px;">
+    <div class="col-6">
+      <h2 class="mat-h2">{{ 'Multisignature Drafts' | translate }}</h2>
+    </div>
+    <div class="col-6 text-right">
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileChanged($event)"
+        style="display: none"
+        accept="application/JSON"
+      />
+      <button mat-flat-button color="primary" type="button" (click)="openFile()">
+        {{ 'Import Draft' | translate }}
+      </button>
+    </div>
+  </div>
 
-  <h2 class="mat-h2" style="margin-top: 16px;">{{ 'Multisignature Drafts' | translate }}</h2>
   <div class="multisignature-drafts">
     <mat-card style="padding: 0;">
       <ng-container *ngIf="multiSigDrafts">
