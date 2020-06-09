@@ -26,15 +26,21 @@
       <ng-template matStepLabel>Add Signatures</ng-template>
 
       <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
-      <mat-form-field style="width: 100%;" appearance="outline" color="accent">
-        <input
-          [readonly]="readOnlyTxHash"
-          placeholder="Trasaction Hash"
-          formControlName="transactionHash"
-          matInput
-          type="text"
-        />
-      </mat-form-field>
+      <ng-container *ngIf="!readOnlyTxHash">
+        <mat-form-field style="width: 100%;" appearance="outline" color="accent">
+          <input
+            [readonly]="readOnlyTxHash"
+            placeholder="Trasaction Hash"
+            formControlName="transactionHash"
+            matInput
+            type="text"
+          />
+        </mat-form-field>
+      </ng-container>
+      <ng-container *ngIf="readOnlyTxHash">
+        <wallet-address [value]="transactionHashField.value" [copyButton]="true"></wallet-address>
+        <br />
+      </ng-container>
       <ng-container *ngIf="transactionHashField.touched">
         <mat-error *ngIf="transactionHashField.hasError('required')">
           {{ 'Transaction Hash is required' | translate }}
