@@ -1,3 +1,64 @@
-<p>
-  seats works!
-</p>
+<div class="seats-container">
+  <h2 class="mat-h2">{{ 'Seat List' | translate }}</h2>
+  <mat-card style="padding: 0;">
+    <form class="form-search">
+      <mat-form-field appearance="outline" color="accent" class="block">
+        <input
+          (change)="onChangeTimeOut()"
+          matInput
+          placeholder="{{ 'Search for Seat ID, ETH Address, or ZBC Address' | translate }}"
+        />
+        <button type="submit" class="btn-suffix" matSuffix>
+          <i class="fa fa-search"></i>
+        </button>
+      </mat-form-field>
+    </form>
+    <div class="seat-list row">
+      <div class="col-12 col-md-8">
+        <div class="label">ZBC Address</div>
+        <div class="value">
+          <wallet-address
+            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+
+        <div class="label">ETH Address</div>
+        <div class="value">
+          <wallet-address
+            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 text-right">
+        <div class="label">Seat ID</div>
+        <div class="seat-no">#1234</div>
+      </div>
+    </div>
+
+    <div class="seat-list row">
+      <div class="col-12 col-md-8">
+        <div class="label">ZBC Address</div>
+        <div class="value">
+          <wallet-address
+            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+
+        <div class="label">ETH Address</div>
+        <div class="value">
+          <wallet-address
+            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
+            [copyButton]="true"
+          ></wallet-address>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 text-right">
+        <div class="label">Seat ID</div>
+        <div class="seat-no">#1234</div>
+      </div>
+    </div>
+  </mat-card>
+</div>
