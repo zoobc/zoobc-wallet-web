@@ -58,7 +58,6 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    if (this.readonly === true) this.readonly = true;
     if (this.customFeeValue) {
       const feeCurrency = this.customFeeValue * this.currencyRate.value;
       this.group.patchValue({

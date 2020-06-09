@@ -90,9 +90,9 @@ export class CreateTransactionComponent implements OnInit {
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
-      this.removeExport = this.multisig.signaturesInfo !== undefined ? true : false;
+      this.removeExport = signaturesInfo !== undefined ? true : false;
       if (signaturesInfo) {
-        this.isHasTransactionHash = this.multisig.signaturesInfo.txHash !== undefined ? true : false;
+        this.isHasTransactionHash = signaturesInfo.txHash !== undefined ? true : false;
       }
       if (this.isHasTransactionHash) this.createTransactionForm.disable();
 
