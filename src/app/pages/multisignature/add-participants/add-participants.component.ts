@@ -174,18 +174,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.multisigServ.update(multisig);
   }
 
-  jsonBufferToString(buf: any) {
-    try {
-      return Buffer.from(buf.data, 'utf-8').toString();
-    } catch (error) {
-      return buf.toString('utf-8');
-    }
-  }
-
-  stringToBuffer(str: string) {
-    return Buffer.from(str, 'utf-8');
-  }
-
   onBack() {
     this.location.back();
   }
