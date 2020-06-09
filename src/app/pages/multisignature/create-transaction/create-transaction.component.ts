@@ -213,7 +213,6 @@ export class CreateTransactionComponent implements OnInit {
       } else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
       else this.router.navigate(['/multisignature/send-transaction']);
     }
-    console.log(this.multisig);
   }
 
   saveDraft() {
