@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc from 'zoobc-sdk';
+import { uniqueParticipant } from '../../../../helpers/utils';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -21,7 +22,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   account: SavedAccount;
 
   form: FormGroup;
-  participantsField = new FormArray([], this.uniqueParticipant);
+  participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
 
@@ -144,18 +145,5 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
     multisig.generatedSender = address;
     this.multisigServ.update(multisig);
-  }
-
-  uniqueParticipant(formArray: FormArray): ValidationErrors {
-    const values = formArray.value.filter(val => val.length > 0);
-    const controls = formArray.controls;
-    const result = values.some((element, index) => {
-      return values.indexOf(element) !== index;
-    });
-    const invalidControls = controls.filter(ctrl => ctrl.valid === false);
-    if (result && invalidControls.length == 0) {
-      return { duplicate: true };
-    }
-    return null;
   }
 }
