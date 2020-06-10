@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { signTransactionHash } from 'zoobc-sdk';
+import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -36,7 +37,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private authServ: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private translate: TranslateService
   ) {
     this.form = new FormGroup({
       transactionHash: this.transactionHashField,
@@ -179,10 +181,20 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  onNext() {
-    //check min sig here
-    this.updateMultiStorage();
-    this.router.navigate(['/multisignature/send-transaction']);
+  async onNext() {
+    const signatures = this.participantsSignatureField.value.filter(
+      sign => sign.signature !== null && sign.signature.length > 0
+    );
+    if (signatures.length > 0) {
+      this.updateMultiStorage();
+      return this.router.navigate(['/multisignature/send-transaction']);
+    }
+    let message: string;
+    await this.translate
+      .get('At least 1 signature must be filled')
+      .toPromise()
+      .then(res => (message = res));
+    Swal.fire('Error', message, 'error');
   }
 
   onSave() {
