@@ -1,3 +1,48 @@
-<p>
-  seat-detail works!
-</p>
+<div class="text-center">
+  <h1 class="mat-h1">
+    {{ 'Seat #1234' | translate }}
+  </h1>
+</div>
+<div class="seat-detail-container">
+  <form>
+    <mat-label class="title">{{ 'ETH Address' | translate }}</mat-label>
+    <div class="address">
+      <wallet-address
+        value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
+        [copyButton]="false"
+      ></wallet-address>
+    </div>
+    <mat-label class="title">{{ 'ZooBC Address' | translate }}</mat-label>
+    <account-selector (select)="onSwitch($event)" type="normal"></account-selector>
+    <mat-label class="title">{{ 'Node Public Key' | translate }}</mat-label>
+    <mat-form-field appearance="outline" color="accent" class="block">
+      <input (change)="onChangeTimeOut()" matInput [value]="nodePublicKey" />
+      <button type="button" class="btn-suffix" matSuffix (click)="generateRandomNodePublicKey()">
+        <i class="fas fa-sync"></i>
+      </button>
+    </mat-form-field>
+    <mat-label class="title">{{ 'Message' | translate }}</mat-label>
+    <mat-form-field appearance="outline" color="accent" class="block">
+      <textarea matInput rows="9"> </textarea>
+      <mat-hint align="end">34 of 128 bytes</mat-hint>
+    </mat-form-field>
+    <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
+      {{ 'Download Certificate' | translate }}
+    </button>
+    <button
+      style="margin-top: 10px;"
+      mat-flat-button
+      type="button"
+      class="block"
+      color="primary"
+      (click)="onComingSoon()"
+    >
+      {{ 'Update' | translate }}
+    </button>
+    <div class="text-center" style="margin-top: 10px;">
+      <span
+        >{{ 'Need Help?' }} <a href="/">{{ 'Click Here' }}</a></span
+      >
+    </div>
+  </form>
+</div>

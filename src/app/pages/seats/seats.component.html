@@ -13,7 +13,7 @@
         </button>
       </mat-form-field>
     </form>
-    <div class="seat-list row">
+    <div [className]="withDetail ? 'seat-list row' : 'seat-list hover row'" (click)="onOpenDetailSeat()">
       <div class="col-12 col-md-8">
         <div class="label">ZBC Address</div>
         <div class="value">
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div class="seat-list row">
+    <div [className]="withDetail ? 'seat-list row' : 'seat-list hover row'" (click)="onOpenDetailSeat()">
       <div class="col-12 col-md-8">
         <div class="label">ZBC Address</div>
         <div class="value">

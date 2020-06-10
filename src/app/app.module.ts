@@ -165,6 +165,7 @@ export function getLanguage(languageServ: LanguageService) {
     RevealPassphraseComponent,
     EditAccountComponent,
     MultisigInfoComponent,
+    SeatDetailComponent,
   ],
 })
 export class AppModule {}
