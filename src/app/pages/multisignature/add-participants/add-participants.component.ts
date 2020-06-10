@@ -79,7 +79,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (!signaturesInfo || signaturesInfo == null) {
       if (multisigInfo) return this.patchParticipant(multisigInfo.participants);
       if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
-      return this.pushInitParticipant(2, this.authServ.getCurrAccount());
+      return this.pushInitParticipant(1, this.authServ.getCurrAccount());
     }
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);
     if (signaturesInfo.participants) this.patchParticipant(signaturesInfo.participants);
@@ -94,7 +94,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
         address = pcp.address;
         signature = pcp.signature;
       } else address = pcp;
-      this.participantsSignatureField.push(this.createParticipant(address, signature, true));
+      this.participantsSignatureField.push(this.createParticipant(address, signature, false));
     });
   }
 
@@ -112,8 +112,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   checkReadOnlyTxHash(multisig: MultiSigDraft) {
-    const { signaturesInfo } = multisig;
+    const { signaturesInfo, unisgnedTransactions } = multisig;
     if (!signaturesInfo || signaturesInfo == null) return false;
+    if (!unisgnedTransactions) return false;
     const txHash = signaturesInfo.txHash;
     this.transactionHashField.patchValue(txHash);
     return true;
@@ -126,7 +127,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  pushInitParticipant(minParticipant: number = 2, curAccount: SavedAccount) {
+  pushInitParticipant(minParticipant: number, curAccount: SavedAccount) {
     if (curAccount.type == 'normal') {
       for (let i = 0; i < minParticipant; i++) {
         this.participantsSignatureField.push(this.createParticipant('', '', true));
@@ -134,7 +135,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       return null;
     }
     curAccount.participants.forEach(pcp => {
-      this.participantsSignatureField.push(this.createParticipant(pcp, '', true));
+      this.participantsSignatureField.push(this.createParticipant(pcp, '', false));
     });
   }
 
@@ -179,6 +180,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   onNext() {
+    //check min sig here
     this.updateMultiStorage();
     this.router.navigate(['/multisignature/send-transaction']);
   }

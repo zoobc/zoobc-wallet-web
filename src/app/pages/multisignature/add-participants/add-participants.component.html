@@ -51,7 +51,7 @@
         <ng-container *ngIf="enabledAddParticipant">
           <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
             <div class="participant-field" [formGroupName]="i">
-              <ng-container *ngIf="i > 1">
+              <ng-container *ngIf="i > 0">
                 <input-address label="" formControlName="address" placeholder="{{ 'Address ' }} {{ i + 1 }}">
                 </input-address>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('address').touched">
@@ -81,7 +81,7 @@
                   </button>
                 </div>
               </ng-container>
-              <ng-container *ngIf="i <= 1">
+              <ng-container *ngIf="i <= 0">
                 <input-address label="" formControlName="address" placeholder="{{ 'Address ' }} {{ i + 1 }}">
                 </input-address>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('address').touched">
