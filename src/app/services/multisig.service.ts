@@ -33,7 +33,10 @@ export class MultisigService {
   saveDraft() {
     let multisigDrafts = this.getDrafts();
     const len = multisigDrafts.length;
-    this.sourceMultisig.value.id = new Date().getTime();
+    if (this.sourceMultisig.value.id === 0) this.sourceMultisig.value.id = new Date().getTime();
+    else {
+      this.sourceMultisig.value.id = this.sourceMultisig.value.id;
+    }
     multisigDrafts[len] = this.sourceMultisig.value;
     localStorage.setItem('MULTISIG_DRAFTS', JSON.stringify(multisigDrafts));
   }

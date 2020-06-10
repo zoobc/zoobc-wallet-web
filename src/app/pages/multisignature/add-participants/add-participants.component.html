@@ -120,15 +120,8 @@
             </button>
           </div>
           <div class="col">
-            <button
-              [disabled]="form.invalid"
-              (click)="onSave()"
-              mat-flat-button
-              color="primary"
-              class="block"
-              type="button"
-            >
-              {{ 'Save to draft' | translate }}
+            <button (click)="onSave()" mat-flat-button color="primary" class="block" type="button">
+              {{ 'Save to Draft' | translate }}
             </button>
           </div>
           <div class="col">
