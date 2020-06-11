@@ -38,7 +38,7 @@
       ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
-          {{ 'Recepient is required' | translate }}
+          {{ 'Recipient is required' | translate }}
         </mat-error>
         <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
           {{ 'ZBC Address is invalid' | translate }}

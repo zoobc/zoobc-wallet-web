@@ -71,7 +71,7 @@ export class MultisignatureComponent implements OnInit {
     e.stopPropagation();
     let sentence: string;
     await this.translate
-      .get('Are you sure want to delete ?')
+      .get('Are you sure want to delete?')
       .toPromise()
       .then(res => (sentence = res));
     Swal.fire({
