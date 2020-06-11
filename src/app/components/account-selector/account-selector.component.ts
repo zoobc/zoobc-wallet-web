@@ -27,27 +27,7 @@ export class AccountSelectorComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    this.getAccounts();
-  }
-
-  getAccounts() {
-    this.isLoading = true;
-    this.isError = false;
-    this.authServ
-      .getAccountsWithBalance(this.type)
-      .then((res: SavedAccount[]) => {
-        this.accounts = res;
-        if (this.selectedValue) {
-          this.account = this.accounts.find(acc => acc.address == this.selectedValue);
-        } else if (this.switchAccount) {
-          this.account = this.accounts.find(acc => this.account.address == acc.address);
-          if (!this.account) this.account = this.accounts[0];
-        } else this.account = undefined;
-
-        this.select.emit(this.account);
-      })
-      .catch(() => (this.isError = true))
-      .finally(() => (this.isLoading = false));
+    this.accounts = this.authServ.getAllAccount();
   }
 
   openAccountList() {

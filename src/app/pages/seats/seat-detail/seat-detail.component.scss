@@ -1,0 +1,29 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+.seat-detail-container {
+  .title {
+    color: $black2;
+  }
+  .address {
+    margin-top: 4px;
+    margin-bottom: 16px;
+    display: block;
+    word-break: break-all;
+    color: $black1;
+  }
+  .inline-control {
+    display: flex;
+    justify-content: space-between;
+
+    > .input {
+      width: calc(100% - 48px);
+    }
+
+    > button {
+      height: 40px;
+      padding: 0 8px;
+      margin: 4px 0 0 8px;
+      min-width: 40px;
+    }
+  }
+}
