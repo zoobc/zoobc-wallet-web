@@ -30,7 +30,7 @@
         <mat-form-field style="width: 100%;" appearance="outline" color="accent">
           <input
             [readonly]="readOnlyTxHash"
-            placeholder="Trasaction Hash"
+            placeholder="{{ 'Trasaction Hash' | translate }}"
             formControlName="transactionHash"
             matInput
             type="text"
@@ -52,7 +52,11 @@
           <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
             <div class="participant-field" [formGroupName]="i">
               <ng-container *ngIf="i > 0">
-                <input-address label="" formControlName="address" placeholder="{{ 'Address ' }} {{ i + 1 }}">
+                <input-address
+                  label=""
+                  formControlName="address"
+                  placeholder="{{ 'Address' | translate }} {{ i + 1 }}"
+                >
                 </input-address>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('address').touched">
                   <mat-error
@@ -64,7 +68,7 @@
                 <div class="inline-control">
                   <mat-form-field class="custom-input" appearance="outline" color="accent">
                     <input
-                      placeholder="{{ 'Participant signature ' | translate }} {{ i + 1 }}"
+                      placeholder="{{ 'Signature ' | translate }} {{ i + 1 }}"
                       formControlName="signature"
                       matInput
                       type="text"
@@ -82,7 +86,11 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="i <= 0">
-                <input-address label="" formControlName="address" placeholder="{{ 'Address ' }} {{ i + 1 }}">
+                <input-address
+                  label=""
+                  formControlName="address"
+                  placeholder="{{ 'Address' | translate }} {{ i + 1 }}"
+                >
                 </input-address>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('address').touched">
                   <mat-error
@@ -100,7 +108,7 @@
 
                 <mat-form-field class="custom-input" appearance="outline" color="accent">
                   <input
-                    placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}"
+                    placeholder="{{ 'Signature' | translate }} {{ i + 1 }}"
                     formControlName="signature"
                     matInput
                     type="text"
@@ -128,7 +136,11 @@
                 ></wallet-address>
               </div>
               <ng-container *ngIf="!readOnlyAddress">
-                <input-address label="" formControlName="address" placeholder="{{ 'Address ' }} {{ i + 1 }}">
+                <input-address
+                  label=""
+                  formControlName="address"
+                  placeholder="{{ 'Address' | translate }} {{ i + 1 }}"
+                >
                 </input-address>
               </ng-container>
 
@@ -148,7 +160,7 @@
 
               <mat-form-field class="custom-input" appearance="outline" color="accent">
                 <input
-                  placeholder="{{ 'Signature ' | translate }} {{ i + 1 }}"
+                  placeholder="{{ 'Signature' | translate }} {{ i + 1 }}"
                   formControlName="signature"
                   matInput
                   type="text"
