@@ -16,7 +16,7 @@ export class AddAccountComponent {
   participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
-
+  signFormField = new FormControl('', [Validators.required]);
   signBy: SavedAccount;
 
   isMultiSignature: boolean = false;
@@ -32,6 +32,7 @@ export class AddAccountComponent {
       participants: this.participantsField,
       nonce: this.nonceField,
       minimumSignature: this.minSignatureField,
+      sign: this.signFormField,
     });
 
     if (account) {
@@ -48,6 +49,7 @@ export class AddAccountComponent {
     this.participantsField.setValue(this.account.participants);
     this.nonceField.setValue(this.account.nonce);
     this.minSignatureField.setValue(this.account.minSig);
+    this.signFormField.setValue(this.account.signByAddress);
   }
 
   onAddAccount() {
@@ -101,6 +103,7 @@ export class AddAccountComponent {
     this.participantsField.disable();
     this.nonceField.disable();
     this.minSignatureField.disable();
+    this.signFormField.disable();
 
     const len = this.authServ.getAllAccount('normal').length + 1;
     this.accountNameField.setValue(`Account ${len}`);
@@ -112,6 +115,7 @@ export class AddAccountComponent {
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
+    this.signFormField.enable();
 
     const len = this.authServ.getAllAccount('multisig').length + 1;
     this.accountNameField.setValue(`Multisig Account ${len}`);
@@ -139,5 +143,6 @@ export class AddAccountComponent {
 
   onSwitchSignBy(account: SavedAccount) {
     this.signBy = account;
+    this.signFormField.setValue(account.address);
   }
 }
