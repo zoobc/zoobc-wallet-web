@@ -12,7 +12,8 @@
           <div class="value flex">
             <div class="ip-address">{{ account.nodeIP }}</div>
             <div class="copy-ip" (click)="onCopyUrl(account.nodeIP)">
-              <i class="far fa-copy"></i></div>
+              <i class="far fa-copy"></i>
+            </div>
           </div>
           <button mat-flat-button (click)="generateNewPubKey()" *ngIf="hwInfo">
             {{ 'Generate New Public Key' | translate }}

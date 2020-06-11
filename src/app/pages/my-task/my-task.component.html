@@ -5,7 +5,7 @@
   <mat-card style="padding: 0;">
     <mat-tab-group mat-align-tabs="center" color="accent">
       <ng-container *ngIf="account.type === 'normal'">
-        <mat-tab label="Escrow Approval">
+        <mat-tab label="{{ 'Escrow Approval' | translate }}">
           <div class="text-right">
             <button mat-icon-button class="reload-button" (click)="reload(true)">
               <i class="fa fa-redo-alt"></i>
@@ -58,7 +58,7 @@
             ></app-multisig-transaction>
           </div>
         </mat-tab>
-        <mat-tab label="Escrow Approval">
+        <mat-tab label="{{ 'Escrow Approval' | translate }}">
           <div class="text-right">
             <button mat-icon-button class="reload-button" (click)="reload(true)">
               <i class="fa fa-redo-alt"></i>

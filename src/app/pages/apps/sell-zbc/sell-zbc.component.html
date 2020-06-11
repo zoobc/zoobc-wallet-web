@@ -18,27 +18,19 @@
 
       <label>{{ 'Buyer Address' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
-        <input matInput placeholder="{{ 'Buyer address' | translate }}..." />
+        <input matInput placeholder="{{ 'Buyer Address' | translate }}..." />
       </mat-form-field>
 
       <label>{{ 'Amount Sell (ZBC)' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
-        <input
-          type="number"
-          matInput
-          placeholder="{{ 'Amount' | translate }}..."
-        />
+        <input type="number" matInput placeholder="{{ 'Amount' | translate }}..." />
       </mat-form-field>
 
       <label>{{ 'Amount you will get' | translate }}</label>
       <div class="row">
         <div class="col-8 col-sm-9">
           <mat-form-field appearance="outline" class="block" color="accent">
-            <input
-              matInput
-              type="number"
-              placeholder="{{ 'Amount' | translate }}"
-            />
+            <input matInput type="number" placeholder="{{ 'Amount' | translate }}" />
           </mat-form-field>
         </div>
         <div class="col-4 col-sm-3">
@@ -53,32 +45,16 @@
 
       <label>{{ 'Fee' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
-        <input
-          type="number"
-          matInput
-          placeholder="{{ 'Fee' | translate }}..."
-        />
+        <input type="number" matInput placeholder="{{ 'Fee' | translate }}..." />
       </mat-form-field>
 
       <label>{{ 'Timeout' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
-        <input
-          matInput
-          [min]="minDate"
-          [max]="maxDate"
-          [owlDateTime]="dt8"
-          [owlDateTimeTrigger]="dt8"
-        />
+        <input matInput [min]="minDate" [max]="maxDate" [owlDateTime]="dt8" [owlDateTimeTrigger]="dt8" />
         <owl-date-time #dt8></owl-date-time>
       </mat-form-field>
 
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        class="block"
-        (click)="onOpenComingSoon()"
-      >
+      <button mat-flat-button color="primary" type="submit" class="block" (click)="onOpenComingSoon()">
         <span>{{ 'Send' | translate }}</span>
       </button>
     </form>

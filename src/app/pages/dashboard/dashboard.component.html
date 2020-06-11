@@ -63,7 +63,11 @@
                     <div>{{ acc.name }}</div>
                     <div class="balance">{{ acc.balance / 1e8 | number: '0.0-2' }} ZBC</div>
                   </div>
-                  <div class="account-right" (click)="onOpenEditAccount($event, acc)" matTooltip="Edit">
+                  <div
+                    class="account-right"
+                    (click)="onOpenEditAccount($event, acc)"
+                    matTooltip="{{ 'Edit' | translate }}"
+                  >
                     <i class="fas fa-pen"></i>
                   </div>
                 </button>

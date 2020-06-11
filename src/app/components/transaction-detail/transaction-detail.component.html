@@ -4,7 +4,10 @@
     <div class="col-12 col-md-8">
       {{ transaction.id }}
       <span class="icon-redirect" (click)="redirect()"
-        ><i class="fas fa-external-link-alt" title="Click Here to view on ZooBC.net"></i
+        ><i
+          class="fas fa-external-link-alt"
+          title="{{ 'Click Here to view on ZooBC Explorer' | translate }}"
+        ></i
       ></span>
     </div>
   </div>

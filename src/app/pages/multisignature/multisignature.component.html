@@ -1,7 +1,7 @@
 <div class="multisinature-container">
   <h2 class="mat-h2">{{ 'Multisignature Transaction' | translate }}</h2>
   <mat-card>
-    <h4 class="mat-h4 check-title">{{ 'Send Money' || translate }}</h4>
+    <h4 class="mat-h4 check-title">{{ 'Send Money' | translate }}</h4>
     <p class="check-desciption">
       {{ 'Please select what properties you need to create multisignature transaction' | translate }}
     </p>
@@ -84,12 +84,12 @@
         >
           <div class="row">
             <div class="col-12 col-sm-8">
-              <div class="id">Draft ID. {{ draft.id }}</div>
+              <div class="id">{{ 'Draft ID' | translate }} . {{ draft.id }}</div>
               <div class="date">{{ getDate(draft.id) | dateAgo }}</div>
               <div class="chips">
-                <div class="chip" *ngIf="draft.multisigInfo">Multisig Info</div>
-                <div class="chip" *ngIf="draft.unisgnedTransactions">Transaction</div>
-                <div class="chip" *ngIf="draft.signaturesInfo">Signatures</div>
+                <div class="chip" *ngIf="draft.multisigInfo">{{ 'Multisig Info' | translate }}</div>
+                <div class="chip" *ngIf="draft.unisgnedTransactions">{{ 'Transaction' | translate }}</div>
+                <div class="chip" *ngIf="draft.signaturesInfo">{{ 'Signatures' | translate }}</div>
               </div>
             </div>
             <div class="col-12 col-sm-4 text-right">
@@ -102,26 +102,26 @@
             <div class="col-12 col-sm-9 col-md-10">
               <div class="row">
                 <div class="col-12 col-md-6" *ngIf="draft.unisgnedTransactions">
-                  <div class="label">From</div>
+                  <div class="label">{{ 'From' | translate }}</div>
                   <wallet-address
                     [value]="draft.unisgnedTransactions.sender"
                     [copyButton]="true"
                   ></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.unisgnedTransactions">
-                  <div class="label">To</div>
+                  <div class="label">{{ 'To' | translate }}</div>
                   <wallet-address
                     [value]="draft.unisgnedTransactions.recipient"
                     [copyButton]="true"
                   ></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
-                  <div class="label">Transaction Hash</div>
+                  <div class="label">{{ 'Transaction Hash' | translate }}</div>
                   <wallet-address [value]="draft.signaturesInfo.txHash" [copyButton]="true"></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
                   <div class="signed">
-                    <span>Signed by </span>
+                    <span>{{ 'Signed by' | translate }} </span>
                     <b>
                       <span>{{ draft.signaturesInfo.participants.length }} </span>
                       <span *ngIf="draft.multisigInfo"> of {{ draft.multisigInfo.participants.length }}</span>
