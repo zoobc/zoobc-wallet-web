@@ -9,7 +9,12 @@
         </div>
         <div class="status" *ngIf="account.nodeIP">
           <div class="label">{{ 'IP Address' | translate }}</div>
-          <div class="value">{{ account.nodeIP }}</div>
+          <div class="value flex">
+            <div class="ip-address">{{ account.nodeIP }}</div>
+            <div class="copy-ip" (click)="onCopyUrl(account.nodeIP)">
+              <i class="far fa-copy"></i>
+            </div>
+          </div>
           <button mat-flat-button (click)="generateNewPubKey()" *ngIf="hwInfo">
             {{ 'Generate New Public Key' | translate }}
           </button>
@@ -23,7 +28,12 @@
         </div>
         <div class="status" *ngIf="account.nodeIP">
           <div class="label">{{ 'IP Address' | translate }}</div>
-          <div class="value">{{ account.nodeIP }}</div>
+          <div class="value flex">
+            <div class="ip-address">{{ account.nodeIP }}</div>
+            <div class="copy-ip" (click)="onCopyUrl(account.nodeIP)">
+              <i class="far fa-copy"></i>
+            </div>
+          </div>
         </div>
       </mat-card>
     </div>

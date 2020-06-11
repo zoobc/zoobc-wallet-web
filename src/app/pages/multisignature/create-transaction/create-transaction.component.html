@@ -2,20 +2,24 @@
   <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
   <mat-card>
     <div class="stepper">
-      <div class="step">
-        <span class="step-circle">1</span>
-        <span class="step-label">Add Multisig Info</span>
-      </div>
-      <div class="stepper-line"></div>
+      <ng-container *ngIf="stepper.multisigInfo">
+        <div class="step">
+          <span class="step-circle"><i class="fa fa-minus"></i></span>
+          <span class="step-label">{{ 'Add Multisig Info' | translate }}</span>
+        </div>
+        <div class="stepper-line"></div>
+      </ng-container>
       <div class="step active">
-        <span class="step-circle">2</span>
-        <span class="step-label">Create Transaction</span>
+        <span class="step-circle"><i class="fa fa-check"></i></span>
+        <span class="step-label">{{ 'Create Transaction' | translate }}</span>
       </div>
-      <div class="stepper-line"></div>
-      <div class="step">
-        <span class="step-circle">3</span>
-        <span class="step-label">Add Signatures</span>
-      </div>
+      <ng-container *ngIf="stepper.signatures">
+        <div class="stepper-line"></div>
+        <div class="step">
+          <span class="step-circle"><i class="fa fa-minus"></i></span>
+          <span class="step-label">{{ 'Add Signatures' | translate }}</span>
+        </div>
+      </ng-container>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
     <form [formGroup]="createTransactionForm" (submit)="next()">
@@ -27,11 +31,19 @@
         <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
       </ng-container>
       <input-address
-        label="{{ 'Recepient Address' | translate }}"
+        label="{{ 'Recipient Address' | translate }}"
         classList="block"
         formControlName="recipient"
-        placeholder="{{ 'Recepient Address' | translate }}..."
+        placeholder="{{ 'Recipient Address' | translate }}..."
       ></input-address>
+      <ng-container *ngIf="recipientForm.touched">
+        <mat-error *ngIf="recipientForm.hasError('required')">
+          {{ 'Recipient is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
+          {{ 'ZBC Address is invalid' | translate }}
+        </mat-error>
+      </ng-container>
       <input-amount
         [group]="createTransactionForm"
         typeCoinName="typeCoin"
@@ -53,10 +65,20 @@
         (onClickFeeChoose)="onClickFeeChoose($event)"
         [typeFees]="typeFee"
         [customFeeValue]="customFeeValues"
+        [readonly]="isHasTransactionHash"
       ></fee-selector>
-      <button mat-flat-button type="button" class="block" color="primary">
-        {{ 'Generate Transaction Hash URL' | translate }}
+      <button
+        *ngIf="removeExport"
+        mat-flat-button
+        type="button"
+        class="block"
+        color="primary"
+        (click)="generateDownloadJsonUri()"
+        [disabled]="createTransactionForm.invalid"
+      >
+        {{ 'Export Draft Multi Signature' | translate }}
       </button>
+
       <div class="row" style="margin-top: 10px;">
         <div class="col">
           <button mat-flat-button color="warn" class="block" type="button" (click)="back()">

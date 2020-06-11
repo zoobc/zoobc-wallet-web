@@ -15,7 +15,7 @@
       </ng-container>
 
       <ng-container *ngIf="!account">
-        No Account Selected
+        {{ 'No Account Selected' | translate }}
       </ng-container>
     </div>
 
@@ -68,6 +68,6 @@
 
   <div class="no-content" *ngIf="accounts.length == 0">
     <i matPrefix class="far fa-address-card"></i>
-    <span class="message">No Accounts on the list</span>
+    <span class="message">{{ 'No Accounts on the list' | translate }}</span>
   </div>
 </ng-template>

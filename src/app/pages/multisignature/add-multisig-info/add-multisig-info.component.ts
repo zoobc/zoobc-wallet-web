@@ -4,8 +4,9 @@ import { MultisigService, MultiSigDraft } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { SavedAccount } from 'src/app/services/auth.service';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc from 'zoobc-sdk';
+import { uniqueParticipant } from '../../../../helpers/utils';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -13,41 +14,59 @@ import zoobc from 'zoobc-sdk';
   styleUrls: ['./add-multisig-info.component.scss'],
 })
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
-  multiSigDrafts: MultiSigDraft[];
-  isCompleted = true;
-
   isMultiSignature: boolean = false;
+  stepper = {
+    transaction: false,
+    signatures: false,
+  };
+  account: SavedAccount;
 
   form: FormGroup;
-  participantsField = new FormArray([]);
+  participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
 
-  constructor(private multisigServ: MultisigService, private router: Router, private location: Location) {
+  constructor(
+    private multisigServ: MultisigService,
+    private router: Router,
+    private location: Location,
+    authServ: AuthService
+  ) {
     this.form = new FormGroup({
       participants: this.participantsField,
       nonce: this.nonceField,
       minSigs: this.minSignatureField,
     });
+
+    this.account = authServ.getCurrAccount();
+    this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
   ngOnInit() {
-    this.getMultiSigDraft();
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      if (multisig.multisigInfo === undefined) this.router.navigate(['/multisignature']);
+      const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
+      if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
       this.pushInitParticipant();
 
-      if (multisig.multisigInfo) {
-        const { participants, minSigs, nonce } = multisig.multisigInfo;
+      if (multisigInfo) {
+        const { participants, minSigs, nonce } = multisigInfo;
         this.patchParticipant(participants);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
+      } else if (this.isMultiSignature) {
+        const { participants, minSig, nonce } = this.account;
+        this.patchParticipant(participants);
+        this.nonceField.setValue(nonce);
+        this.minSignatureField.setValue(minSig);
       }
+
+      this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
+      this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
   }
 
@@ -56,19 +75,14 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   }
 
   pushInitParticipant(minParticpant: number = 2) {
-    while (this.participantsField.length > 0) {
-      this.participantsField.removeAt(0);
-    }
+    while (this.participantsField.length > 0) this.participantsField.removeAt(0);
 
-    for (let i = 0; i < minParticpant; i++) {
+    for (let i = 0; i < minParticpant; i++)
       this.participantsField.push(new FormControl('', [Validators.required]));
-    }
   }
 
   patchParticipant(participants: string[]) {
-    while (this.participantsField.controls.length !== 0) {
-      this.participantsField.removeAt(0);
-    }
+    while (this.participantsField.controls.length !== 0) this.participantsField.removeAt(0);
 
     participants.forEach((pcp, index) => {
       if (index <= 1) this.participantsField.push(new FormControl(pcp, [Validators.required]));
@@ -92,18 +106,10 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     this.participantsField.removeAt(index);
   }
 
-  getMultiSigDraft() {
-    this.multiSigDrafts = this.multisigServ.getDrafts();
-  }
-
   saveDraft() {
     this.updateMultisig();
-    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
-    if (isDraft) {
-      this.multisigServ.editDraft();
-    } else {
-      this.multisigServ.saveDraft();
-    }
+    if (this.multisig.id) this.multisigServ.editDraft();
+    else this.multisigServ.saveDraft();
     this.router.navigate(['/multisignature']);
   }
 

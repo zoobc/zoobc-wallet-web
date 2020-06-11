@@ -3,7 +3,7 @@
   <button
     mat-flat-button
     type="button"
-    [disabled]="customFee"
+    [disabled]="customFee || readonly"
     (click)="onFeeChoose(1)"
     [class.fee-choosen]="activeButton === 1"
   >
@@ -19,7 +19,7 @@
   <button
     mat-flat-button
     type="button"
-    [disabled]="customFee"
+    [disabled]="customFee || readonly"
     (click)="onFeeChoose(2)"
     [class.fee-choosen]="activeButton === 2"
   >
@@ -35,7 +35,7 @@
   <button
     mat-flat-button
     type="button"
-    [disabled]="customFee"
+    [disabled]="customFee || readonly"
     (click)="onFeeChoose(3)"
     [class.fee-choosen]="activeButton === 3"
   >
@@ -50,7 +50,12 @@
   </button>
 </div>
 <div style="margin-bottom: 8px;">
-  <mat-checkbox [checked]="customFee" class="checkbox-margin" (click)="toggleCustomFee($event)">
+  <mat-checkbox
+    [checked]="customFee"
+    class="checkbox-margin"
+    (click)="toggleCustomFee($event)"
+    [disableRipple]="readonly"
+  >
     {{ 'Custom Fee' | translate }}
   </mat-checkbox>
 </div>

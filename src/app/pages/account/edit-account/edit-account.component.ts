@@ -4,6 +4,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AddAccountComponent } from '../add-account/add-account.component';
 import zoobc, { MultiSigAddress } from 'zoobc-sdk';
+import { uniqueParticipant } from '../../../../helpers/utils';
 
 @Component({
   selector: 'app-edit-account',
@@ -13,7 +14,7 @@ import zoobc, { MultiSigAddress } from 'zoobc-sdk';
 export class EditAccountComponent implements OnInit {
   formEditAccount: FormGroup;
   accountNameField = new FormControl('', Validators.required);
-  participantsField = new FormArray([], this.uniqueParticipant);
+  participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
   tempAddressField = new FormControl(this.account.address);
@@ -136,18 +137,5 @@ export class EditAccountComponent implements OnInit {
 
   onSwitchSignBy(account: SavedAccount) {
     this.signBy = account;
-  }
-
-  uniqueParticipant(formArray: FormArray): ValidationErrors {
-    const values = formArray.value.filter(val => val.length > 0);
-    const controls = formArray.controls;
-    const result = values.some((element, index) => {
-      return values.indexOf(element) !== index;
-    });
-    const invalidControls = controls.filter(ctrl => ctrl.valid === false);
-    if (result && invalidControls.length == 0) {
-      return { duplicate: true };
-    }
-    return null;
   }
 }

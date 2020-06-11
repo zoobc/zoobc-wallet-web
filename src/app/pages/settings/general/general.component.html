@@ -6,10 +6,7 @@
 
     <p class="subtitle">{{ 'Language' | translate }}</p>
     <mat-form-field appearance="outline" color="accent">
-      <mat-select
-        [value]="activeLanguage"
-        (selectionChange)="changeLanguage($event.value)"
-      >
+      <mat-select [value]="activeLanguage" (selectionChange)="changeLanguage($event.value)">
         <mat-option *ngFor="let language of languages" [value]="language.code">
           {{ language.country }}
         </mat-option>

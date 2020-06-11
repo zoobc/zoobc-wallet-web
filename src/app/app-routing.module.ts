@@ -42,7 +42,6 @@ const routes: Routes = [
       { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
       { path: 'multisignature/create-transaction', component: CreateTransactionComponent },
       { path: 'multisignature/add-signatures', component: AddParticipantsComponent },
-      { path: 'add-signatures/:txHash/:signature/:address', component: AddParticipantsComponent },
 
       {
         path: 'settings',

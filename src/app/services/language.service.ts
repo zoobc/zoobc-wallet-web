@@ -43,7 +43,7 @@ export const LANGUAGES = [
     code: 'en',
   },
   {
-    country: 'Indonesia',
+    country: 'Indonesian',
     code: 'id',
   },
   {
