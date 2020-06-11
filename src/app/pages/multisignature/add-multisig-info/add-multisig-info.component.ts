@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc from 'zoobc-sdk';
+import { uniqueParticipant } from '../../../../helpers/utils';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -21,7 +22,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   account: SavedAccount;
 
   form: FormGroup;
-  participantsField = new FormArray([]);
+  participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
 

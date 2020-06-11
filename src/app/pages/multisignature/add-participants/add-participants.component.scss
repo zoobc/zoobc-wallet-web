@@ -25,53 +25,47 @@
 
     .label-margin {
       margin-top: 10px;
+      margin-bottom: 5px;
       display: block;
     }
 
-    .custom-input {
-      width: 100%;
-      margin-bottom: 0;
-    }
-
-    .margin-error {
-      margin-top: 1px;
-    }
-
-    .custom-btn {
-      text-transform: capitalize;
-      line-height: 30px;
-      margin: 10px 0;
-    }
-
-    .custom-btn-2 {
-      text-transform: capitalize;
-      line-height: 40px;
-    }
-
-    .address {
-      word-break: break-all;
-      font-size: 13px;
-      margin-bottom: 8px;
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .inline-control {
-      display: flex;
-      justify-content: space-between;
-
-      > .input {
-        width: calc(100% - 48px);
+    .participant-field {
+      margin-bottom: 16px;
+      .custom-input {
+        width: 100%;
+        margin-bottom: 0;
       }
 
-      > button {
-        height: 40px;
-        padding: 0 8px;
-        margin: 4px 0 0 8px;
-        min-width: 40px;
+      .margin-error {
+        margin-top: 1px;
       }
+
+      .delete-btn {
+        min-width: 100%;
+        margin-top: 5px;
+      }
+
+      .inline-control {
+        display: flex;
+        justify-content: space-between;
+
+        > .input {
+          width: calc(100% - 48px);
+        }
+
+        > button {
+          height: 40px;
+          padding: 0 8px;
+          margin: 4px 0 0 8px;
+          min-width: 40px;
+        }
+      }
+    }
+
+    .center-error {
+      display: block;
+      width: 100%;
+      text-align: center;
     }
   }
 }
