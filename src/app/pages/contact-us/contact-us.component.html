@@ -15,7 +15,7 @@
 
       <!-- Email -->
       <mat-form-field appearance="outline" color="accent">
-        <mat-label>Email</mat-label>
+        <mat-label>{{ 'Email' | translate }}</mat-label>
         <input matInput type="email" formControlName="email" />
       </mat-form-field>
       <ng-container *ngIf="emailField.touched">
@@ -54,16 +54,10 @@
           (click)="openFile()"
           [disabled]="isUploadLoading"
         >
-          <span *ngIf="isUploadLoading">
-            <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
-          </span>
+          <span *ngIf="isUploadLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
           {{ 'Add Attachment' | translate }}
         </button>
-        <span
-          class="mat-body-1"
-          *ngIf="isUploadSuccess"
-          style="color: #4caf50;"
-        >
+        <span class="mat-body-1" *ngIf="isUploadSuccess" style="color: #4caf50;">
           {{ 'Attachment Added' | translate }}
         </span>
       </div>
@@ -76,9 +70,7 @@
         type="submit"
         [disabled]="contactForm.invalid || isFeedbackLoading"
       >
-        <span *ngIf="isFeedbackLoading">
-          <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
-        </span>
+        <span *ngIf="isFeedbackLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
         {{ 'Send' | translate }}
       </button>
     </form>

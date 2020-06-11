@@ -3,12 +3,7 @@
     {{ 'Apps' | translate }} <i>({{ 'Coming Soon' | translate }})</i>
   </h2>
   <div class="text-right" style="margin-bottom: 8px">
-    <button
-      mat-flat-button
-      color="primary"
-      type="button"
-      (click)="openAddDialog()"
-    >
+    <button mat-flat-button color="primary" type="button" (click)="openAddDialog()">
       <i matPrefix class="fa fa-plus"></i> {{ 'Add' | translate }}
     </button>
   </div>
@@ -18,13 +13,13 @@
       <div class="app-icon">
         <i class="fa fa-puzzle-piece"></i>
       </div>
-      <div class="app-title">Sell ZooBC</div>
+      <div class="app-title">{{ 'Sell ZooBC' | translate }}</div>
     </div>
     <div class="app-item" routerLink="/apps/sell-zbc">
       <div class="app-icon">
         <i class="fa fa-puzzle-piece"></i>
       </div>
-      <div class="app-title">ZooBC Cool App</div>
+      <div class="app-title">{{ 'ZooBC Cool App' | translate }}</div>
     </div>
   </mat-card>
 
@@ -40,16 +35,12 @@
               <div class="app-icon">
                 <i class="fa fa-puzzle-piece"></i>
               </div>
-              <div class="app-title">ZooBC Cool App</div>
+              <div class="app-title">{{ 'ZooBC Cool App' | translate }}</div>
             </div>
           </div>
           <div class="col-12 col-sm-4 text-right">
             <div class="app-action">
-              <button
-                mat-flat-button
-                color="primary"
-                (click)="onOpenComingSoon()"
-              >
+              <button mat-flat-button color="primary" (click)="onOpenComingSoon()">
                 {{ 'Add' | translate }}
               </button>
             </div>
@@ -63,16 +54,12 @@
               <div class="app-icon">
                 <i class="fa fa-puzzle-piece"></i>
               </div>
-              <div class="app-title">ZooBC Cool App</div>
+              <div class="app-title">{{ 'ZooBC Cool App' | translate }}</div>
             </div>
           </div>
           <div class="col-12 col-sm-4 text-right">
             <div class="app-action">
-              <button
-                mat-flat-button
-                color="primary"
-                (click)="onOpenComingSoon()"
-              >
+              <button mat-flat-button color="primary" (click)="onOpenComingSoon()">
                 {{ 'Add' | translate }}
               </button>
             </div>

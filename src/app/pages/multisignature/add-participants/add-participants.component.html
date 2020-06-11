@@ -5,25 +5,25 @@
       <ng-container *ngIf="stepper.multisigInfo">
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">Add Multisig Info</span>
+          <span class="step-label">{{ 'Add Multisig Info' | translate }}</span>
         </div>
         <div class="stepper-line"></div>
       </ng-container>
       <ng-container *ngIf="stepper.transaction">
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">Create Transaction</span>
+          <span class="step-label">{{ 'Create Transaction' | translate }}</span>
         </div>
         <div class="stepper-line"></div>
       </ng-container>
       <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">Add Signatures</span>
+        <span class="step-label">{{ 'Add Signatures' | translate }}</span>
       </div>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
     <form [formGroup]="form" class="grid">
-      <ng-template matStepLabel>Add Signatures</ng-template>
+      <ng-template matStepLabel>{{ 'Add Signatures' | translate }}</ng-template>
       <ng-container *ngIf="selectedDesign === 1">
         <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
         <mat-form-field appearance="outline" color="accent">
@@ -42,7 +42,7 @@
                 <div class="inline-control">
                   <mat-form-field class="custom-input" appearance="outline" color="accent">
                     <input
-                      placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}..."
+                      placeholder="{{ 'Participant Signature' | translate }} {{ i + 1 }}..."
                       [formControlName]="i"
                       matInput
                       type="text"
@@ -56,7 +56,7 @@
               <ng-container *ngIf="i <= 1">
                 <mat-form-field class="custom-input" appearance="outline" color="accent">
                   <input
-                    placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}..."
+                    placeholder="{{ 'Participant Signature' | translate }} {{ i + 1 }}..."
                     [formControlName]="i"
                     matInput
                     type="text"
@@ -98,7 +98,7 @@
           <ng-container *ngIf="enabledAddParticipant">
             <div class="text-right" style="margin-top: 8px;">
               <button (click)="addParticipant()" mat-flat-button color="primary" type="button" class="small">
-                {{ 'Add Participants' }}
+                {{ 'Add Participants' | translate }}
               </button>
             </div>
           </ng-container>
@@ -121,7 +121,7 @@
           </div>
           <div class="col">
             <button (click)="onSave()" mat-flat-button color="primary" class="block" type="button">
-              {{ 'Save To Draft' | translate }}
+              {{ 'Save to Draft' | translate }}
             </button>
           </div>
           <div class="col">
@@ -152,7 +152,6 @@
         <button (click)="onAddSignature()" mat-flat-button class="custom-btn-2" color="primary" type="button">
           {{ 'Add your signature' | translate }}
         </button>
-
         <button (click)="onCopyUrl()" mat-flat-button class="custom-btn" color="primary" type="button">
           {{ 'Share This Participants Signature' | translate }}
         </button>

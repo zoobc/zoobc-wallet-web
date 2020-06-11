@@ -120,7 +120,7 @@ export class EscrowTransactionComponent implements OnInit {
       } else {
         let message: string;
         await this.translate
-          .get('Transaction have been processed')
+          .get('Transaction has been processed')
           .toPromise()
           .then(res => (message = res));
         Swal.fire({
@@ -189,7 +189,7 @@ export class EscrowTransactionComponent implements OnInit {
       } else {
         let message: string;
         await this.translate
-          .get('Transaction have been processed')
+          .get('Transaction has been processed')
           .toPromise()
           .then(res => (message = res));
         Swal.fire({
