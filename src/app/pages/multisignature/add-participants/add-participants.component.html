@@ -99,10 +99,12 @@
                 </ng-container>
 
                 <mat-form-field class="custom-input" appearance="outline" color="accent">
-                  <input <<<<<<< HEAD placeholder="{{ 'Signature ' | translate }} {{ i + 1 }}"
-                  formControlName="signature" ======= placeholder="{{ 'Participant Signature' | translate }}
-                  {{ i + 1 }}..." [formControlName]="i" >>>>>>> cc5e5d3343fed44dfbcb518c7e9e59b328266062
-                  matInput type="text" />
+                  <input
+                    placeholder="{{ 'Participant Signature ' | translate }} {{ i + 1 }}"
+                    formControlName="signature"
+                    matInput
+                    type="text"
+                  />
                 </mat-form-field>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('signature').touched">
                   <mat-error
