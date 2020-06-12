@@ -12,7 +12,7 @@
     </ng-container>
 
     <div style="margin-bottom: 16px;">
-      <mat-checkbox [value]="isMultiSignature" (click)="toogleMultiSignature()">
+      <mat-checkbox #refcheck [value]="isMultiSignature" (click)="toogleMultiSignature($event)">
         {{ 'Multisignature Account' | translate }}
       </mat-checkbox>
     </div>
@@ -101,6 +101,7 @@
       <account-selector
         [type]="'normal'"
         [switchAccount]="false"
+        [selectedValue]="account ? account.signByAddress : undefined"
         (select)="onSwitchSignBy($event)"
       ></account-selector>
     </ng-container>

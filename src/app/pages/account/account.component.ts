@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
@@ -6,6 +6,7 @@ import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-account',
@@ -15,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 export class AccountComponent implements OnInit {
   currAcc: SavedAccount;
   accounts: SavedAccount[];
+  @ViewChild('fileInput') myInputVariable: ElementRef;
 
   constructor(
     private authServ: AuthService,
@@ -87,5 +89,37 @@ export class AccountComponent implements OnInit {
       width: '300px',
       data: account,
     });
+  }
+
+  onImportAccount() {
+    this.myInputVariable.nativeElement.click();
+  }
+
+  onFileChanged(event) {
+    const file = event.target.files[0];
+    const fileReader = new FileReader();
+    if (file == undefined) return null;
+    fileReader.readAsText(file, 'JSON');
+    fileReader.onload = async () => {
+      let fileResult = JSON.parse(fileReader.result.toString());
+      if (!this.isSavedAccount(fileResult)) {
+        let message: string;
+        await this.translate
+          .get('You imported the wrong file')
+          .toPromise()
+          .then(res => (message = res));
+        return Swal.fire('Opps...', message, 'error');
+      }
+      setTimeout(() => {
+        this.onOpenAddAccount(fileResult);
+      }, 50);
+    };
+  }
+
+  isSavedAccount(obj: any): obj is SavedAccount {
+    if ((obj as SavedAccount).type) {
+      return true;
+    }
+    return false;
   }
 }
