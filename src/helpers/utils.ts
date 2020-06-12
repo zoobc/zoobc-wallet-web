@@ -1,5 +1,6 @@
 import { SendMoneyInterface } from 'zoobc-sdk';
 import { ValidationErrors, FormArray } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 export function onCopyText(text: string) {
   let isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
@@ -57,4 +58,17 @@ export function uniqueParticipant(formArray: FormArray): ValidationErrors {
     return { duplicate: true };
   }
   return null;
+}
+
+export async function getTranslation(
+  value: string,
+  translateService: TranslateService,
+  interpolateParams?: Object
+) {
+  let message: string;
+  await translateService
+    .get(value, interpolateParams)
+    .toPromise()
+    .then(res => (message = res));
+  return message;
 }
