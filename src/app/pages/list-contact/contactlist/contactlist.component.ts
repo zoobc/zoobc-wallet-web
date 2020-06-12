@@ -5,6 +5,7 @@ import { EditcontactComponent } from '../editcontact/editcontact.component';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-contactlist',
@@ -24,11 +25,10 @@ export class ContactlistComponent implements OnInit {
     this.contacts = this.contactServ.getList();
   }
 
-  deleteContact(contact) {
-    let sentence: string;
-    this.translate
-      .get('Are you sure want to delete?', { alias: contact.alias })
-      .subscribe(res => (sentence = res));
+  async deleteContact(contact) {
+    let sentence = await getTranslation('Are you sure want to delete?', this.translate, {
+      alias: contact.alias,
+    });
     Swal.fire({
       title: sentence,
       showCancelButton: true,

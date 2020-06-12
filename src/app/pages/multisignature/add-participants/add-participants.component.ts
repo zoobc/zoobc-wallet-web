@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import { signTransactionHash } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-add-participants',
@@ -189,11 +190,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       this.updateMultiStorage();
       return this.router.navigate(['/multisignature/send-transaction']);
     }
-    let message: string;
-    await this.translate
-      .get('At least 1 signature must be filled')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('At least 1 signature must be filled', this.translate);
     Swal.fire('Error', message, 'error');
   }
 

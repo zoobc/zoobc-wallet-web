@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
+import { isZBCAddressValid } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-multisignature',
@@ -14,7 +16,7 @@ export class MultisignatureComponent implements OnInit {
   multiSigDrafts: MultiSigDraft[];
 
   form: FormGroup;
-  multisigInfoField = new FormControl(false);
+  multisigInfoField = new FormControl(true);
   transactionField = new FormControl(false);
   signaturesField = new FormControl(false);
   @ViewChild('fileInput') myInputVariable: ElementRef;
@@ -69,11 +71,9 @@ export class MultisignatureComponent implements OnInit {
 
   async onDeleteDraft(e, id: number) {
     e.stopPropagation();
-    let sentence: string;
-    await this.translate
-      .get('Are you sure want to delete?')
-      .toPromise()
-      .then(res => (sentence = res));
+    let sentence = await getTranslation('Are you sure want to delete?', this.translate, {
+      alias: id,
+    });
     Swal.fire({
       title: sentence,
       showCancelButton: true,
@@ -99,6 +99,19 @@ export class MultisignatureComponent implements OnInit {
     this.myInputVariable.nativeElement.click();
   }
 
+  validationFile(file: any): file is MultiSigDraft {
+    if ((file as MultiSigDraft).generatedSender !== undefined) {
+      const validAddress = isZBCAddressValid((file as MultiSigDraft).generatedSender);
+      if (validAddress) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   onFileChanged(event) {
     const file = event.target.files[0];
     const fileReader = new FileReader();
@@ -106,42 +119,32 @@ export class MultisignatureComponent implements OnInit {
       fileReader.readAsText(file, 'JSON');
       fileReader.onload = async () => {
         let fileResult = JSON.parse(fileReader.result.toString());
-        this.multisigServ.update(fileResult);
-        const listdraft = this.multisigServ.getDrafts();
-        const checkExistDraft = listdraft.some(res => {
-          if (res.id === fileResult.id) return true;
-          else return false;
-        });
-        if (checkExistDraft === true) {
-          let message: string;
-          await this.translate
-            .get('There is same id in your draft')
-            .toPromise()
-            .then(res => (message = res));
+        const validation = this.validationFile(fileResult);
+        if (!validation) {
+          let message = await getTranslation('You imported the wrong file', this.translate);
           Swal.fire('Opps...', message, 'error');
         } else {
-          this.multisigServ.saveDraft();
-          this.onRefresh();
-          let message: string;
-          await this.translate
-            .get('Draft Saved')
-            .toPromise()
-            .then(res => (message = res));
-          let subMessage: string;
-          await this.translate
-            .get('Your Draft has been saved')
-            .toPromise()
-            .then(res => (message = res));
-          Swal.fire(message, subMessage, 'success');
+          this.multisigServ.update(fileResult);
+          const listdraft = this.multisigServ.getDrafts();
+          const checkExistDraft = listdraft.some(res => {
+            if (res.id === fileResult.id) return true;
+            else return false;
+          });
+          if (checkExistDraft === true) {
+            let message = await getTranslation('There is same id in your draft', this.translate);
+            Swal.fire('Opps...', message, 'error');
+          } else {
+            this.multisigServ.saveDraft();
+            this.onRefresh();
+            let message = await getTranslation('Draft Saved', this.translate);
+            let subMessage = await getTranslation('Your Draft has been saved', this.translate);
+            Swal.fire(message, subMessage, 'success');
+          }
         }
       };
       fileReader.onerror = async err => {
         console.log(err);
-        let message: string;
-        await this.translate
-          .get('An error occurred while processing your request')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation('An error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       };
     }

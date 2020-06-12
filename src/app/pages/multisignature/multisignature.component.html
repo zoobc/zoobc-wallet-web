@@ -9,16 +9,6 @@
     <form [formGroup]="form">
       <div class="row">
         <div class="column-check">
-          <mat-checkbox formControlName="multisigInfo">
-            {{ 'Add Multisignature Info' | translate }}
-            <i
-              class="fas fa-info-circle"
-              matTooltip="{{ 'Add Multisignature Info' | translate }}"
-              matTooltipPosition="above"
-            ></i>
-          </mat-checkbox>
-        </div>
-        <div class="column-check">
           <mat-checkbox formControlName="transaction">
             {{ 'Create Transaction' | translate }}
             <i
@@ -45,7 +35,7 @@
           mat-flat-button
           color="primary"
           type="button"
-          [disabled]="!multisigInfoField.value && !transactionField.value && !signaturesField.value"
+          [disabled]="!transactionField.value && !signaturesField.value"
         >
           {{ 'Next' | translate }}
         </button>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-sell-zbc',
@@ -18,11 +19,7 @@ export class SellZbcComponent implements OnInit {
 
   onSelect(account) {}
   async onOpenComingSoon() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('Coming Soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,

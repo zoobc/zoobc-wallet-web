@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import { getTranslation } from 'src/helpers/utils';
 
 interface Languages {
   value: string;
@@ -120,11 +121,10 @@ export class RestoreWalletComponent implements OnInit {
   async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
-        let message: string;
-        await this.translate
-          .get('Your old wallet will be removed from this device')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation(
+          'Your old wallet will be removed from this device',
+          this.translate
+        );
         Swal.fire({
           title: message,
           confirmButtonText: 'Continue',

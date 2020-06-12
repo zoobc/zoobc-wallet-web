@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, { RequestType } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-add-node-admin',
@@ -40,13 +41,9 @@ export class AddNodeAdminComponent {
 
       zoobc.Poown.request(auth, this.ipAddressField.value)
         .then(async () => {
-          let message: string;
+          let message = await getTranslation('Node Admin Added!', this.translate);
           this.isLoading = false;
           this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
-          await this.translate
-            .get('Node Admin Added!')
-            .toPromise()
-            .then(res => (message = res));
           Swal.fire('', message, 'success').then(() => {
             this.dialogRef.close();
             setTimeout(() => {
