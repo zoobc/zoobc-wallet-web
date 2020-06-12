@@ -26,6 +26,7 @@ export class CreateTransactionComponent implements OnInit {
 
   isCompleted = true;
   createTransactionForm: FormGroup;
+  senderForm = new FormControl('', Validators.required);
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
@@ -61,6 +62,7 @@ export class CreateTransactionComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.createTransactionForm = new FormGroup({
+      sender: this.senderForm,
       recipient: this.recipientForm,
       amount: this.amountForm,
       amountCurrency: this.amountCurrencyForm,
@@ -99,6 +101,7 @@ export class CreateTransactionComponent implements OnInit {
       if (unisgnedTransactions) {
         const { sender, recipient, amount, fee } = unisgnedTransactions;
         this.account.address = sender;
+        this.senderForm.setValue(sender);
         this.recipientForm.setValue(recipient);
         this.amountForm.setValue(amount);
         this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
@@ -114,7 +117,10 @@ export class CreateTransactionComponent implements OnInit {
         } else {
           this.customFeeValues = fee;
         }
-      } else if (this.isMultiSignature) this.multisig.generatedSender = this.account.address;
+      } else if (this.isMultiSignature) {
+        this.multisig.generatedSender = this.account.address;
+        this.senderForm.setValue(this.account.address);
+      }
 
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -173,6 +179,7 @@ export class CreateTransactionComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
+    this.senderForm.setValue(account);
   }
 
   async next() {

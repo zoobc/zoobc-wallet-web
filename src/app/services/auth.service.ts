@@ -90,6 +90,7 @@ export class AuthService {
   getAccountsWithBalance(type?: 'normal' | 'multisig'): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
       let accounts = this.getAllAccount(type);
+      if (accounts.length == 0) return resolve(accounts);
       const addresses = accounts.map(acc => acc.address);
       const params: AccountBalancesParams = {
         accountAddressList: addresses,
