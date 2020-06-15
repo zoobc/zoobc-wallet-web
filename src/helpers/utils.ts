@@ -72,3 +72,7 @@ export async function getTranslation(
     .then(res => (message = res));
   return message;
 }
+
+export function stringToBuffer(str: string) {
+  return Buffer.from(str, 'base64');
+}

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { truncate, getTranslation } from 'src/helpers/utils';
+import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -244,7 +244,7 @@ export class CreateTransactionComponent implements OnInit {
         for (let i = 0; i < account.participants.length; i++) {
           let participant = {
             address: account.participants[i],
-            signatures: null,
+            signatures: stringToBuffer(''),
           };
           participantAccount.push(participant);
         }
@@ -252,7 +252,7 @@ export class CreateTransactionComponent implements OnInit {
         for (let i = 0; i < this.multisig.multisigInfo.participants.length; i++) {
           let participant = {
             address: this.multisig.multisigInfo.participants[i],
-            signature: null,
+            signature: stringToBuffer(''),
           };
           participantAccount.push(participant);
         }
