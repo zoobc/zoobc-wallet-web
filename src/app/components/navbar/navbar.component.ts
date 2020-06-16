@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 import { RevealPassphraseComponent } from '../reveal-passphrase/reveal-passphrase.component';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-navbar',
@@ -77,11 +78,7 @@ export class NavbarComponent implements OnInit {
   }
 
   async onComingSoonPage() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('Coming Soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,
@@ -91,12 +88,7 @@ export class NavbarComponent implements OnInit {
   }
 
   async onLogout() {
-    let message: string;
-    await this.translate
-      .get('Are you sure want to logout?')
-      .toPromise()
-      .then(res => (message = res));
-
+    let message = await getTranslation('Are you sure want to logout?', this.translate);
     Swal.fire({
       title: message,
       showCancelButton: true,

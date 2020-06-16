@@ -4,7 +4,7 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import zoobc, { toGetPendingList, MultiSigInterface, signTransactionHash } from 'zoobc-sdk';
-import { base64ToHex } from 'src/helpers/utils';
+import { base64ToHex, getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-multisig-transaction',
@@ -65,11 +65,7 @@ export class MultisigTransactionComponent implements OnInit {
 
   async onConfirmDialog() {
     this.detailMultisigRefDialog.close();
-    let message: string;
-    await this.translate
-      .get('Transaction has been approved')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('Transaction has been approved', this.translate);
     Swal.fire({
       type: 'success',
       title: message,
@@ -99,11 +95,7 @@ export class MultisigTransactionComponent implements OnInit {
 
     zoobc.MultiSignature.postTransaction(data, seed)
       .then(async (res: any) => {
-        let message: string;
-        await this.translate
-          .get('Transaction has been accepted')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation('Transaction has been accepted', this.translate);
         Swal.fire({
           type: 'success',
           title: message,
@@ -113,11 +105,7 @@ export class MultisigTransactionComponent implements OnInit {
       })
       .catch(async err => {
         console.log(err.message);
-        let message: string;
-        await this.translate
-          .get('An error occurred while processing your request')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation('An error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       })
       .finally(() => {

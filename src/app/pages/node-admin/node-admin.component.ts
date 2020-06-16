@@ -6,7 +6,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
-import { onCopyText } from 'src/helpers/utils';
+import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
   NodeParams,
@@ -181,11 +181,7 @@ export class NodeAdminComponent implements OnInit {
   async onCopyUrl(url: string) {
     onCopyText(url);
 
-    let message: string;
-    await this.translate
-      .get('Address copied to clipboard')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('Address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }

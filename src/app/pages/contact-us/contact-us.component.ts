@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-contact-us',
@@ -51,22 +52,17 @@ export class ContactUsComponent {
         })
         .toPromise()
         .then(async () => {
-          let message: string;
-          await this.translate
-            .get('Thank you for your feedback!')
-            .toPromise()
-            .then(res => (message = res));
+          let message = await getTranslation('Thank you for your feedback!', this.translate);
           this.snackbar.open(message, null, { duration: 3000 });
 
           this.router.navigateByUrl('/dashboard');
         })
         .catch(async err => {
           console.error(err);
-          let message: string;
-          await this.translate
-            .get('An error occurred while processing your request')
-            .toPromise()
-            .then(res => (message = res));
+          let message = await getTranslation(
+            'An error occurred while processing your request',
+            this.translate
+          );
           this.snackbar.open(message, null, { duration: 3000 });
         });
     }

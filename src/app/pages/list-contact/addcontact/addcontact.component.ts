@@ -5,6 +5,7 @@ import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { isZBCAddressValid } from 'zoobc-sdk';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-addcontact',
@@ -39,11 +40,10 @@ export class AddcontactComponent implements OnInit {
     if (this.addForm.valid) {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
       if (isDuplicate) {
-        let message: string;
-        await this.translate
-          .get('The address you entered is already in your Address Book')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation(
+          'The address you entered is already in your Address Book',
+          this.translate
+        );
         Swal.fire({
           type: 'error',
           title: 'Oops...',

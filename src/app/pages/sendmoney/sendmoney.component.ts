@@ -9,7 +9,7 @@ import { map, startWith } from 'rxjs/operators';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { environment } from 'src/environments/environment';
-import { truncate, calcMinFee } from 'src/helpers/utils';
+import { truncate, calcMinFee, getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc from 'zoobc-sdk';
@@ -208,11 +208,7 @@ export class SendmoneyComponent implements OnInit {
         }
       });
     } else {
-      let message: string;
-      await this.translate
-        .get('Your balances are not enough for this transaction')
-        .toPromise()
-        .then(res => (message = res));
+      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
@@ -269,22 +265,13 @@ export class SendmoneyComponent implements OnInit {
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: any) => {
           this.isLoading = false;
-          let message: string;
-          await this.translate
-            .get('Your Transaction is processing')
-            .toPromise()
-            .then(res => (message = res));
-          let subMessage: string;
-          await this.translate
-            .get('You send coins to', {
-              amount: data.amount,
-              currencyValue: truncate(this.amountCurrencyForm.value, 2),
-              currencyName: this.currencyRate.name,
-              recipient: data.recipient,
-            })
-            .toPromise()
-            .then(res => (subMessage = res));
-
+          let message = await getTranslation('Your Transaction is processing', this.translate);
+          let subMessage = await getTranslation('You send coins to', this.translate, {
+            amount: data.amount,
+            currencyValue: truncate(this.amountCurrencyForm.value, 2),
+            currencyName: this.currencyRate.name,
+            recipient: data.recipient,
+          });
           Swal.fire(message, subMessage, 'success');
 
           // save address
@@ -301,11 +288,10 @@ export class SendmoneyComponent implements OnInit {
           this.isLoading = false;
           console.log(err);
 
-          let message: string;
-          await this.translate
-            .get('An error occurred while processing your request')
-            .toPromise()
-            .then(res => (message = res));
+          let message = await getTranslation(
+            'An error occurred while processing your request',
+            this.translate
+          );
           Swal.fire('Opps...', message, 'error');
         }
       );

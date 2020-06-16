@@ -6,6 +6,7 @@ import zoobc from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -89,11 +90,7 @@ export class EscrowTransactionComponent implements OnInit {
           .then(
             async res => {
               this.isLoadingTx = false;
-              let message: string;
-              await this.translate
-                .get('Transaction has been approved')
-                .toPromise()
-                .then(res => (message = res));
+              let message = await getTranslation('Transaction has been approved', this.translate);
               Swal.fire({
                 type: 'success',
                 title: message,
@@ -106,11 +103,10 @@ export class EscrowTransactionComponent implements OnInit {
             async err => {
               this.isLoadingTx = false;
               console.log('err', err);
-              let message: string;
-              await this.translate
-                .get('An error occurred while processing your request')
-                .toPromise()
-                .then(res => (message = res));
+              let message = await getTranslation(
+                'An error occurred while processing your request',
+                this.translate
+              );
               Swal.fire('Opps...', message, 'error');
             }
           )
@@ -118,11 +114,7 @@ export class EscrowTransactionComponent implements OnInit {
             this.closeDialog(), this.onRefresh();
           });
       } else {
-        let message: string;
-        await this.translate
-          .get('Transaction has been processed')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation('Transaction has been processed', this.translate);
         Swal.fire({
           type: 'info',
           title: message,
@@ -133,11 +125,7 @@ export class EscrowTransactionComponent implements OnInit {
         });
       }
     } else {
-      let message: string;
-      await this.translate
-        .get('Your balances are not enough for this transaction')
-        .toPromise()
-        .then(res => (message = res));
+      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
@@ -158,11 +146,7 @@ export class EscrowTransactionComponent implements OnInit {
           .then(
             async res => {
               this.isLoadingTx = false;
-              let message: string;
-              await this.translate
-                .get('Transaction has been rejected')
-                .toPromise()
-                .then(res => (message = res));
+              let message = await getTranslation('Transaction has been rejected', this.translate);
               Swal.fire({
                 type: 'success',
                 title: message,
@@ -175,11 +159,10 @@ export class EscrowTransactionComponent implements OnInit {
             async err => {
               this.isLoadingTx = false;
               console.log('err', err);
-              let message: string;
-              await this.translate
-                .get('An error occurred while processing your request')
-                .toPromise()
-                .then(res => (message = res));
+              let message = await getTranslation(
+                'An error occurred while processing your request',
+                this.translate
+              );
               Swal.fire('Opps...', message, 'error');
             }
           )
@@ -187,11 +170,7 @@ export class EscrowTransactionComponent implements OnInit {
             this.closeDialog(), this.onRefresh();
           });
       } else {
-        let message: string;
-        await this.translate
-          .get('Transaction has been processed')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation('Transaction has been processed', this.translate);
         Swal.fire({
           type: 'info',
           title: message,
@@ -202,11 +181,7 @@ export class EscrowTransactionComponent implements OnInit {
         });
       }
     } else {
-      let message: string;
-      await this.translate
-        .get('Your balances are not enough for this transaction')
-        .toPromise()
-        .then(res => (message = res));
+      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
