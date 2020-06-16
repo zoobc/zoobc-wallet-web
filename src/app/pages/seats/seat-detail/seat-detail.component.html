@@ -26,7 +26,14 @@
       <textarea matInput rows="9"> </textarea>
       <mat-hint align="end">34 of 128 bytes</mat-hint>
     </mat-form-field>
-    <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
+    <button
+      mat-flat-button
+      type="button"
+      class="block"
+      color="primary"
+      (click)="onComingSoon()"
+      *ngIf="metamask"
+    >
       {{ 'Download Certificate' | translate }}
     </button>
     <button
@@ -35,9 +42,21 @@
       type="button"
       class="block"
       color="primary"
-      (click)="onComingSoon()"
+      (click)="onUpdate()"
+      *ngIf="metamask"
     >
       {{ 'Update' | translate }}
+    </button>
+    <button
+      style="margin-top: 10px;"
+      mat-flat-button
+      type="button"
+      class="block"
+      color="primary"
+      (click)="connectMetamask()"
+      *ngIf="!metamask"
+    >
+      {{ 'Connect Metamask' | translate }}
     </button>
     <div class="text-center" style="margin-top: 10px;">
       <span

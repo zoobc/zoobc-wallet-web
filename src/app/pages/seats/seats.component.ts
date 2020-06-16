@@ -17,7 +17,7 @@ export class SeatsComponent implements OnInit {
 
   onOpenDetailSeat() {
     this.detailSetRefDialog = this.dialog.open(SeatDetailComponent, {
-      width: '450px',
+      width: '420px',
       maxHeight: '90vh',
     });
   }

@@ -13,7 +13,7 @@
         </button>
       </mat-form-field>
     </form>
-    <div [className]="withDetail ? 'seat-list row' : 'seat-list hover row'" (click)="onOpenDetailSeat()">
+    <div class="seat-list row" (click)="onOpenDetailSeat()">
       <div class="col-12 col-md-8">
         <div class="label">ZBC Address</div>
         <div class="value">
@@ -33,11 +33,11 @@
       </div>
       <div class="col-12 col-md-4 text-right">
         <div class="label">Seat ID</div>
-        <div class="seat-no">#1234</div>
+        <div class="seat-no">#{{ 1234 | number }}</div>
       </div>
     </div>
 
-    <div [className]="withDetail ? 'seat-list row' : 'seat-list hover row'" (click)="onOpenDetailSeat()">
+    <div class="seat-list row" (click)="onOpenDetailSeat()">
       <div class="col-12 col-md-8">
         <div class="label">ZBC Address</div>
         <div class="value">
@@ -57,7 +57,7 @@
       </div>
       <div class="col-12 col-md-4 text-right">
         <div class="label">Seat ID</div>
-        <div class="seat-no">#1234</div>
+        <div class="seat-no">#{{ 1234 | number }}</div>
       </div>
     </div>
   </mat-card>
