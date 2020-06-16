@@ -20,7 +20,7 @@ export class AddressComponent implements OnInit {
     e.stopPropagation();
     onCopyText(this.value);
 
-    let message = await getTranslation('Address copied to clipboard', this.translate);
+    let message = await getTranslation('Successfully copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }
