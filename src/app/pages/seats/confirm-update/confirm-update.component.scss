@@ -1,0 +1,39 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.label {
+  color: $black2;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.value {
+  margin-bottom: 12px;
+  color: $black1;
+}
+.seat-id {
+  font-size: 24px;
+  font-weight: bold;
+  color: map-get($primary, 500);
+  margin-bottom: 12px;
+}
+
+.content-change {
+  display: flex;
+  margin-bottom: 24px;
+  .arrow {
+    width: 88px;
+    text-align: center;
+    align-self: center;
+    i {
+      font-size: 72px;
+      color: map-get($accent, 100);
+    }
+  }
+  .before,
+  .after {
+    border: 1px solid map-get($accent, 500);
+    border-radius: 8px;
+    max-width: calc(50% - 44px);
+    padding: 16px;
+  }
+}

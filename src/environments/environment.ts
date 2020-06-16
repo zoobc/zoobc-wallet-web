@@ -7,6 +7,7 @@ export const environment = {
   mnemonicLanguage: 'english',
   mnemonicNumWords: 24,
   fee: 0.01,
+  etherscan: 'https://kovan.etherscan.io/',
 };
 
 /*
