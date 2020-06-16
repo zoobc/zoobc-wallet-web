@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-apps',
@@ -23,11 +24,7 @@ export class AppsComponent implements OnInit {
   }
 
   async onOpenComingSoon() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('Coming Soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,

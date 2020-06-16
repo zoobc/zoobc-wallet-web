@@ -5,6 +5,7 @@ import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { isZBCAddressValid } from 'zoobc-sdk';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-editcontact',
@@ -31,10 +32,7 @@ export class EditcontactComponent implements OnInit {
 
   ngOnInit() {
     this.aliasField = new FormControl(this.contact.alias, Validators.required);
-    this.addressField = new FormControl(
-      this.contact.address,
-      Validators.required
-    );
+    this.addressField = new FormControl(this.contact.address, Validators.required);
 
     this.editForm = new FormGroup({
       alias: this.aliasField,
@@ -45,25 +43,20 @@ export class EditcontactComponent implements OnInit {
   async onSubmit() {
     if (this.editForm.valid) {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
-      const isChanged =
-        this.addressField.value != this.contact.address ? true : false;
+      const isChanged = this.addressField.value != this.contact.address ? true : false;
 
       if (isDuplicate && isChanged) {
-        let message: string;
-        await this.translate
-          .get('The address you entered is already in your Address Book')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation(
+          'The address you entered is already in your Address Book',
+          this.translate
+        );
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: message,
         });
       } else {
-        const contacts: Contact[] = this.contactServ.update(
-          this.editForm.value,
-          this.contact.address
-        );
+        const contacts: Contact[] = this.contactServ.update(this.editForm.value, this.contact.address);
         this.dialogRef.close(contacts);
       }
     }

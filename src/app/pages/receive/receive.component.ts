@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { onCopyText } from 'src/helpers/utils';
+import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
 
@@ -49,11 +49,7 @@ export class ReceiveComponent implements OnInit {
     e.stopPropagation();
     onCopyText(this.urlReqCoin);
 
-    let message: string;
-    await this.translate
-      .get('Address copied to clipboard')
-      .toPromise()
-      .then(res => (message = res));
+    let message = await getTranslation('Address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }

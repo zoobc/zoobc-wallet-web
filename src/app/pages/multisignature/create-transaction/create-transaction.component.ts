@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { truncate } from 'src/helpers/utils';
+import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -120,8 +120,9 @@ export class CreateTransactionComponent implements OnInit {
       } else if (this.isMultiSignature) {
         this.multisig.generatedSender = this.account.address;
         this.senderForm.setValue(this.account.address);
+      } else {
+        this.senderForm.setValue(this.multisig.generatedSender);
       }
-
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
@@ -129,21 +130,9 @@ export class CreateTransactionComponent implements OnInit {
 
   async generateDownloadJsonUri() {
     if (!this.isHasTransactionHash) {
-      let title;
-      await this.translate
-        .get('Are you sure?')
-        .toPromise()
-        .then(res => (title = res));
-      let message;
-      await this.translate
-        .get('You will not be able to update the form anymore!')
-        .toPromise()
-        .then(res => (message = res));
-      let buttonText;
-      await this.translate
-        .get('Yes, continue it!')
-        .toPromise()
-        .then(res => (buttonText = res));
+      let title = await getTranslation('Are you sure?', this.translate);
+      let message = await getTranslation('You will not be able to update the form anymore!', this.translate);
+      let buttonText = await getTranslation('Yes, continue it!', this.translate);
       Swal.fire({
         title: title,
         text: message,
@@ -189,21 +178,12 @@ export class CreateTransactionComponent implements OnInit {
       const { signaturesInfo } = this.multisig;
       if (signaturesInfo === null) {
         if (!this.isHasTransactionHash) {
-          let title;
-          await this.translate
-            .get('Are you sure?')
-            .toPromise()
-            .then(res => (title = res));
-          let message;
-          await this.translate
-            .get('You will not be able to update the form anymore!')
-            .toPromise()
-            .then(res => (message = res));
-          let buttonText;
-          await this.translate
-            .get('Yes, continue it!')
-            .toPromise()
-            .then(res => (buttonText = res));
+          let title = await getTranslation('Are you sure?', this.translate);
+          let message = await getTranslation(
+            'You will not be able to update the form anymore!',
+            this.translate
+          );
+          let buttonText = await getTranslation('Yes, continue it!', this.translate);
           Swal.fire({
             title: title,
             text: message,
@@ -264,7 +244,7 @@ export class CreateTransactionComponent implements OnInit {
         for (let i = 0; i < account.participants.length; i++) {
           let participant = {
             address: account.participants[i],
-            signatures: null,
+            signatures: stringToBuffer(''),
           };
           participantAccount.push(participant);
         }
@@ -272,7 +252,7 @@ export class CreateTransactionComponent implements OnInit {
         for (let i = 0; i < this.multisig.multisigInfo.participants.length; i++) {
           let participant = {
             address: this.multisig.multisigInfo.participants[i],
-            signature: null,
+            signature: stringToBuffer(''),
           };
           participantAccount.push(participant);
         }
