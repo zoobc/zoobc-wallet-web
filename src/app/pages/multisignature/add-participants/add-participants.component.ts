@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 import { signTransactionHash } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
-import { getTranslation } from 'src/helpers/utils';
+import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-add-participants',
@@ -171,7 +171,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const multisig = { ...this.multisig };
 
     const newPcp = participantsSignature.map(pcp => {
-      pcp.signature = this.stringToBuffer(pcp.signature);
+      pcp.signature = stringToBuffer(pcp.signature);
       return pcp;
     });
 
@@ -229,9 +229,5 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     } catch (error) {
       return buf.toString('base64');
     }
-  }
-
-  stringToBuffer(str: string) {
-    return Buffer.from(str, 'base64');
   }
 }
