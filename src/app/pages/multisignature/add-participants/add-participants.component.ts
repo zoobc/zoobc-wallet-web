@@ -94,7 +94,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       let signature: string = '';
       if (typeof pcp === 'object') {
         address = pcp.address;
-        signature = pcp.signature;
+        signature = this.jsonBufferToString(pcp.signature);
       } else address = pcp;
       this.participantsSignatureField.push(this.createParticipant(address, signature, false));
     });
@@ -169,9 +169,14 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const { transactionHash, participantsSignature } = this.form.value;
     const multisig = { ...this.multisig };
 
+    const newPcp = participantsSignature.map(pcp => {
+      pcp.signature = this.stringToBuffer(pcp.signature);
+      return pcp;
+    });
+
     multisig.signaturesInfo = {
       txHash: transactionHash,
-      participants: participantsSignature,
+      participants: newPcp,
     };
 
     this.multisigServ.update(multisig);
@@ -218,5 +223,18 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const seed = this.authServ.seed;
     const signature = signTransactionHash(transactionHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
+  }
+
+  jsonBufferToString(buf: any) {
+    if (!buf) return '';
+    try {
+      return Buffer.from(buf.data, 'base64').toString('base64');
+    } catch (error) {
+      return buf.toString('base64');
+    }
+  }
+
+  stringToBuffer(str: string) {
+    return Buffer.from(str, 'base64');
   }
 }
