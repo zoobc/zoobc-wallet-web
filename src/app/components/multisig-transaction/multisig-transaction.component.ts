@@ -63,17 +63,6 @@ export class MultisigTransactionComponent implements OnInit {
     this.detailMultisigRefDialog.close();
   }
 
-  async onConfirmDialog() {
-    this.detailMultisigRefDialog.close();
-    let message = await getTranslation('Transaction has been approved', this.translate);
-    Swal.fire({
-      type: 'success',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
-
   onAccept() {
     const account = this.authServ.getCurrAccount();
     const seed = this.authServ.seed;
