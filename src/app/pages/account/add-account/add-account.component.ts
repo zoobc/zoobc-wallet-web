@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
@@ -10,7 +10,7 @@ import { uniqueParticipant } from '../../../../helpers/utils';
   templateUrl: './add-account.component.html',
   styleUrls: ['./add-account.component.scss'],
 })
-export class AddAccountComponent {
+export class AddAccountComponent implements OnInit {
   formAddAccount: FormGroup;
   accountNameField = new FormControl('', Validators.required);
   participantsField = new FormArray([], uniqueParticipant);
@@ -21,6 +21,8 @@ export class AddAccountComponent {
 
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
+
+  @ViewChild('refcheck') checkbox;
 
   constructor(
     private authServ: AuthService,
@@ -43,6 +45,10 @@ export class AddAccountComponent {
       this.pushInitParticipant();
       this.disableFieldMultiSignature();
     }
+  }
+
+  ngOnInit() {
+    if (this.account && this.isMultiSignature) this.checkbox._checked = true;
   }
 
   prefillAccount() {
@@ -121,7 +127,7 @@ export class AddAccountComponent {
     this.accountNameField.setValue(`Multisig Account ${len}`);
   }
 
-  toogleMultiSignature() {
+  toogleMultiSignature(event) {
     if (!this.isMultiSignature) this.enableFieldMultiSignature();
     else this.disableFieldMultiSignature();
   }
@@ -143,6 +149,6 @@ export class AddAccountComponent {
 
   onSwitchSignBy(account: SavedAccount) {
     this.signBy = account;
-    this.signFormField.setValue(account.address);
+    if (account) this.signFormField.setValue(account.address);
   }
 }

@@ -3,7 +3,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate } from 'src/helpers/utils';
+import { truncate, getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -166,32 +166,20 @@ export class SendTransactionComponent implements OnInit {
     const childSeed = this.authServ.seed;
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: any) => {
-        let message: string;
-        await this.translate
-          .get('Your Transaction is processing')
-          .toPromise()
-          .then(res => (message = res));
-        let subMessage: string;
-        await this.translate
-          .get('You send coins to', {
-            amount: data.unisgnedTransactions.amount,
-            currencyValue: truncate(data.unisgnedTransactions.amount * this.currencyRate.value, 2),
-            currencyName: this.currencyRate.name,
-            recipient: data.unisgnedTransactions.recipient,
-          })
-          .toPromise()
-          .then(res => (subMessage = res));
+        let message = await getTranslation('Your Transaction is processing', this.translate);
+        let subMessage = await getTranslation('You send coins to', this.translate, {
+          amount: data.unisgnedTransactions.amount,
+          currencyValue: truncate(data.unisgnedTransactions.amount * this.currencyRate.value, 2),
+          currencyName: this.currencyRate.name,
+          recipient: data.unisgnedTransactions.recipient,
+        });
         this.multisigServ.deleteDraft(this.multisig.id);
         Swal.fire(message, subMessage, 'success');
         this.router.navigateByUrl('/dashboard');
       })
       .catch(async err => {
         console.log(err.message);
-        let message: string;
-        await this.translate
-          .get('An error occurred while processing your request')
-          .toPromise()
-          .then(res => (message = res));
+        let message = await getTranslation('An error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       });
   }
