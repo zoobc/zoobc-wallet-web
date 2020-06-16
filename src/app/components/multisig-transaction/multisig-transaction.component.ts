@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
-import zoobc, { toGetPendingList } from 'zoobc-sdk';
+import zoobc, { toGetPendingList, MultiSigInterface, signTransactionHash } from 'zoobc-sdk';
 import { base64ToHex } from 'src/helpers/utils';
 
 @Component({
@@ -55,18 +55,8 @@ export class MultisigTransactionComponent implements OnInit {
     });
   }
 
-  async onOpenDetailTaskComingSoon() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
-    Swal.fire({
-      type: 'info',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
+  onIgnore() {
+    this.closeDialog();
   }
 
   closeDialog() {
@@ -86,5 +76,54 @@ export class MultisigTransactionComponent implements OnInit {
       showConfirmButton: false,
       timer: 1500,
     });
+  }
+
+  onAccept() {
+    const account = this.authServ.getCurrAccount();
+    const seed = this.authServ.seed;
+
+    this.isLoadingTx = true;
+    let data: MultiSigInterface = {
+      accountAddress: account.signByAddress,
+      fee: this.multiSigDetail.fee,
+      signaturesInfo: {
+        txHash: this.multiSigDetail.transactionhash,
+        participants: [
+          {
+            address: account.signByAddress,
+            signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
+          },
+        ],
+      },
+    };
+
+    zoobc.MultiSignature.postTransaction(data, seed)
+      .then(async (res: any) => {
+        let message: string;
+        await this.translate
+          .get('Transaction has been accepted')
+          .toPromise()
+          .then(res => (message = res));
+        Swal.fire({
+          type: 'success',
+          title: message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch(async err => {
+        console.log(err.message);
+        let message: string;
+        await this.translate
+          .get('An error occurred while processing your request')
+          .toPromise()
+          .then(res => (message = res));
+        Swal.fire('Opps...', message, 'error');
+      })
+      .finally(() => {
+        this.isLoadingTx = false;
+        this.closeDialog();
+        this.onRefresh();
+      });
   }
 }
