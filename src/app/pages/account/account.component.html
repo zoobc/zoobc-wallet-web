@@ -1,11 +1,21 @@
 <div class="account-container">
   <div class="row">
-    <div class="col-4">
+    <div class="col-3">
       <h2 class="mat-h2">{{ 'Accounts' | translate }}</h2>
     </div>
-    <div class="col-8 text-right">
+    <div class="col-9 text-right">
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileChanged($event)"
+        style="display: none"
+        accept="application/JSON"
+      />
       <button mat-flat-button color="primary" (click)="onOpenAddAccount()">
         <span>{{ 'Add New Account' | translate }}</span>
+      </button>
+      <button style="margin-left: 10px;" mat-flat-button color="primary" (click)="onImportAccount()">
+        <span>{{ 'Import' | translate }}</span>
       </button>
     </div>
   </div>

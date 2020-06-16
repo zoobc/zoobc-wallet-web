@@ -1,8 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { SavedAccount } from 'src/app/services/auth.service';
 import { MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
-import { onCopyText, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-multisig-info',
@@ -23,15 +24,11 @@ export class MultisigInfoComponent implements OnInit {
 
   ngOnInit() {}
 
-  async onCopyText(e) {
-    e.stopPropagation();
-    const account = JSON.stringify(this.currAcc);
-    const accountBase64 = Buffer.from(account).toString('base64');
-    const url = `${window.location.origin}/accounts/${accountBase64}`;
-
-    onCopyText(url);
-
-    let message = await getTranslation('Multisig Info copied to clipboard', this.translate);
+  async onExport() {
+    let accountJson = JSON.stringify(this.currAcc);
+    const blob = new Blob([accountJson], { type: 'application/JSON' });
+    saveAs(blob, `Multisignature-info-${this.currAcc.name}`);
+    let message = await getTranslation('Multisig Info successfully exported', this.translate);
     this.snackBar.open(message, null, { duration: 3000 });
   }
 }
