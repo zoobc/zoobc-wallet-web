@@ -72,8 +72,10 @@ export class SendTransactionComponent implements OnInit {
     this.subscription.add(subsRate);
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      this.multisig = multisig;
+      const { multisigInfo } = multisig;
+      if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
+      this.multisig = multisig;
       const { accountAddress, fee } = this.multisig;
       this.account.address = accountAddress;
       this.feeForm.setValue(multisig.fee);
