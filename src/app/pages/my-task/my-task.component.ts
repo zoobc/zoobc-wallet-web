@@ -70,14 +70,14 @@ export class MyTaskComponent implements OnInit {
         .then((res: MultisigPendingTxResponse) => {
           const tx = toGetPendingList(res);
           this.totalMultiSig = tx.count;
-          this.multiSigPendingList = tx.pendingtransactionsList;
-          this.multiSigPendingList.map(res => {
+          const pendingList = tx.pendingtransactionsList;
+          pendingList.map(res => {
             res['alias'] = this.contactServ.get(res.senderaddress).alias || '';
           });
           if (reload) {
-            this.multiSigPendingList = tx.pendingtransactionsList;
+            this.multiSigPendingList = pendingList;
           } else {
-            this.multiSigPendingList = this.multiSigPendingList.concat(tx.pendingtransactionsList);
+            this.multiSigPendingList = this.multiSigPendingList.concat(pendingList);
           }
         })
         .catch(err => {
