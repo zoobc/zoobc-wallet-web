@@ -5,7 +5,7 @@ import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
 import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
 
@@ -24,7 +24,8 @@ export class AccountComponent implements OnInit {
     public dialog: MatDialog,
     private snackbar: MatSnackBar,
     private translate: TranslateService,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private router: Router
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.accounts = this.authServ.getAllAccount();
@@ -78,6 +79,7 @@ export class AccountComponent implements OnInit {
 
     let message = await getTranslation(`${this.currAcc.name} selected`, this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
+    this.router.navigateByUrl('/');
   }
 
   onOpenMultisigInfoDialog(e, account: SavedAccount) {

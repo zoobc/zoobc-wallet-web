@@ -93,6 +93,7 @@ export class EditAccountComponent implements OnInit {
           currAcc.signByAddress = this.signBy.address;
         }
         localStorage.setItem('CURR_ACCOUNT', JSON.stringify(currAcc));
+        this.authServ.updateSeed(currAcc.path);
       }
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.dialogRef.close(true);
