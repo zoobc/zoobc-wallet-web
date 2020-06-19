@@ -4,7 +4,10 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
 import zoobc, { toGetPendingList, MultiSigInterface, signTransactionHash } from 'zoobc-sdk';
-import { base64ToHex, getTranslation } from 'src/helpers/utils';
+import { base64ToHex, getTranslation, truncate } from 'src/helpers/utils';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
+import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-multisig-transaction',
@@ -25,10 +28,36 @@ export class MultisigTransactionComponent implements OnInit {
   isLoadingTx: boolean = false;
   account;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {}
+  form: FormGroup;
+  minFee = environment.fee;
+  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeFormCurr = new FormControl('', Validators.required);
+  timeoutField = new FormControl('0');
+
+  currencyRate: Currency;
+  kindFee: string;
+  advancedMenu: boolean = false;
+
+  constructor(
+    public dialog: MatDialog,
+    private translate: TranslateService,
+    private authServ: AuthService,
+    private currencyServ: CurrencyRateService
+  ) {
+    this.form = new FormGroup({
+      fee: this.feeForm,
+      feeCurr: this.feeFormCurr,
+      timeout: this.timeoutField,
+    });
+  }
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+      this.currencyRate = rate;
+      const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+    });
   }
 
   onRefresh() {
@@ -102,5 +131,9 @@ export class MultisigTransactionComponent implements OnInit {
         this.closeDialog();
         this.onRefresh();
       });
+  }
+
+  onClickFeeChoose(value) {
+    this.kindFee = value;
   }
 }
