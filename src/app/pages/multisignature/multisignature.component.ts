@@ -5,7 +5,8 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-multisignature',
@@ -20,17 +21,22 @@ export class MultisignatureComponent implements OnInit {
   transactionField = new FormControl(false);
   signaturesField = new FormControl(false);
   @ViewChild('fileInput') myInputVariable: ElementRef;
+  isMultiSignature: boolean = false;
+  account: SavedAccount;
 
   constructor(
     private router: Router,
     private multisigServ: MultisigService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authServ: AuthService
   ) {
     this.form = new FormGroup({
       multisigInfo: this.multisigInfoField,
       transaction: this.transactionField,
       signatures: this.signaturesField,
     });
+    this.account = authServ.getCurrAccount();
+    this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
   ngOnInit() {
@@ -62,11 +68,25 @@ export class MultisignatureComponent implements OnInit {
     if (transaction) multisig.unisgnedTransactions = null;
     if (signatures) multisig.signaturesInfo = null;
 
-    this.multisigServ.update(multisig);
+    if (this.isMultiSignature) {
+      multisig.multisigInfo = {
+        minSigs: this.account.minSig,
+        nonce: this.account.nonce,
+        participants: this.account.participants,
+        multisigAddress: '',
+      };
+      const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
+      multisig.generatedSender = address;
+      this.multisigServ.update(multisig);
+      if (transaction) this.router.navigate(['/multisignature/create-transaction']);
+      else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+    } else {
+      this.multisigServ.update(multisig);
 
-    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
-    else if (transaction) this.router.navigate(['/multisignature/create-transaction']);
-    else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+      if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
+      else if (transaction) this.router.navigate(['/multisignature/create-transaction']);
+      else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+    }
   }
 
   async onDeleteDraft(e, id: number) {
