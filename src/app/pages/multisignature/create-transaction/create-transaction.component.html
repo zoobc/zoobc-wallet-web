@@ -54,6 +54,27 @@
         label="{{ 'Coin Amount' | translate }}"
       >
       </input-amount>
+      <div class="row">
+        <div class="col-4 col-sm-3">&nbsp;</div>
+        <div class="col-8 col-sm-9">
+          <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
+            <mat-error *ngIf="amountForm.hasError('required')">
+              {{ 'Amount is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="amountForm.hasError('min')">
+              {{ 'Minimum amount is' | translate: { val: '0.00000001' } }}
+            </mat-error>
+          </ng-container>
+          <ng-container *ngIf="amountCurrencyForm.touched && typeCoinField.value === 'Fiat'">
+            <mat-error *ngIf="amountCurrencyForm.hasError('required')">
+              {{ 'Amount is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="amountCurrencyForm.hasError('min')">
+              {{ 'Minimum amount in ZBC must be ZBC' | translate: { val: '0.00000001' } }}
+            </mat-error>
+          </ng-container>
+        </div>
+      </div>
       <fee-selector
         [group]="createTransactionForm"
         feeName="fee"

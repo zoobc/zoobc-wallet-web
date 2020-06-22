@@ -19,7 +19,7 @@
           <wallet-address [value]="escrow.recipientaddress"></wallet-address>
         </div>
         <div class="timeout">
-          {{ 'Expired after block height' | translate }} : {{ escrow.timeout | number }}
+          {{ 'Expired after block height' | translate }} : {{ escrow.timeout + escrow.blockheight | number }}
         </div>
       </div>
       <div class="col-12 col-sm-4 text-right">

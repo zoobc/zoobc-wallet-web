@@ -155,7 +155,9 @@ export class MyTaskComponent implements OnInit {
     this.isLoadingBlockHeight = true;
     zoobc.Host.getInfo()
       .then(res => {
-        this.blockHeight = res.chainstatusesList[1].height;
+        res.chainstatusesList.filter(chain => {
+          if (chain.chaintype === 0) this.blockHeight = chain.height;
+        });
       })
       .catch(err => {
         console.log(err);
