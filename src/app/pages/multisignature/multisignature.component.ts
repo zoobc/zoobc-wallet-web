@@ -48,10 +48,10 @@ export class MultisignatureComponent implements OnInit {
     this.multiSigDrafts = this.multisigServ
       .getDrafts()
       .filter(draft => {
-        if (draft.generatedSender == currAccount.address) return draft;
-        const { multisigInfo, unisgnedTransactions } = draft;
+        const { multisigInfo, transaction, generatedSender } = draft;
+        if (generatedSender == currAccount.address) return draft;
         if (multisigInfo.participants.includes(currAccount.address)) return draft;
-        if (unisgnedTransactions && unisgnedTransactions.sender == currAccount.address) return draft;
+        if (transaction && transaction.sender == currAccount.address) return draft;
       })
       .sort()
       .reverse();
@@ -122,25 +122,14 @@ export class MultisignatureComponent implements OnInit {
     return newDate;
   }
 
-  onRefresh() {
-    this.getMultiSigDraft();
-  }
-
   openFile() {
     this.myInputVariable.nativeElement.click();
   }
 
   validationFile(file: any): file is MultiSigDraft {
-    if ((file as MultiSigDraft).generatedSender !== undefined) {
-      const validAddress = isZBCAddressValid((file as MultiSigDraft).generatedSender);
-      if (validAddress) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    if ((file as MultiSigDraft).generatedSender !== undefined)
+      return isZBCAddressValid((file as MultiSigDraft).generatedSender);
+    return false;
   }
 
   onFileChanged(event) {
@@ -157,16 +146,14 @@ export class MultisignatureComponent implements OnInit {
         } else {
           this.multisigServ.update(fileResult);
           const listdraft = this.multisigServ.getDrafts();
-          const checkExistDraft = listdraft.some(res => {
-            if (res.id === fileResult.id) return true;
-            else return false;
-          });
+          const checkExistDraft = listdraft.some(res => res.id === fileResult.id);
+
           if (checkExistDraft === true) {
             let message = await getTranslation('There is same id in your draft', this.translate);
             Swal.fire('Opps...', message, 'error');
           } else {
             this.multisigServ.saveDraft();
-            this.onRefresh();
+            this.getMultiSigDraft();
             let message = await getTranslation('Draft Saved', this.translate);
             let subMessage = await getTranslation('Your Draft has been saved', this.translate);
             Swal.fire(message, subMessage, 'success');

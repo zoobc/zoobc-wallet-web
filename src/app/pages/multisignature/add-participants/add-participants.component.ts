@@ -17,7 +17,6 @@ import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 })
 export class AddParticipantsComponent implements OnInit, OnDestroy {
   form: FormGroup;
-
   transactionHashField = new FormControl('', Validators.required);
   participantsSignatureField = new FormArray([], this.uniqueParticipant);
 

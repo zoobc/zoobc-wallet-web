@@ -145,14 +145,12 @@ export class CreateTransactionComponent implements OnInit {
           this.updateCreateTransaction();
           let theJSON = JSON.stringify(this.multisig);
           const blob = new Blob([theJSON], { type: 'application/JSON' });
-          const url = window.URL.createObjectURL(blob);
           saveAs(blob, 'Multisignature-Draft.json');
         }
       });
     } else {
       let theJSON = JSON.stringify(this.multisig);
       const blob = new Blob([theJSON], { type: 'application/JSON' });
-      const url = window.URL.createObjectURL(blob);
       saveAs(blob, 'Multisignature-Draft.json');
     }
   }
@@ -240,7 +238,11 @@ export class CreateTransactionComponent implements OnInit {
     const account = accounts.find(acc => acc.address == sender);
     let participantAccount = [];
 
-    if (this.multisig.signaturesInfo == null) {
+    if (this.multisig.unisgnedTransactions !== undefined) {
+      this.multisig.unisgnedTransactions = sendMoneyBuilder(data);
+    }
+
+    if (this.multisig.signaturesInfo !== undefined) {
       if (account) {
         for (let i = 0; i < account.participants.length; i++) {
           let participant = {
@@ -259,13 +261,10 @@ export class CreateTransactionComponent implements OnInit {
         }
       }
       this.txHash = generateTransactionHash(data);
-      if (this.multisig.unisgnedTransactions !== undefined) {
-        this.multisig.unisgnedTransactions = sendMoneyBuilder(data);
-        this.multisig.signaturesInfo = {
-          txHash: this.txHash,
-          participants: participantAccount,
-        };
-      }
+      this.multisig.signaturesInfo = {
+        txHash: this.txHash,
+        participants: participantAccount,
+      };
 
       this.isHasTransactionHash = true;
       this.multisig.generatedSender = this.multisig.transaction.sender;
