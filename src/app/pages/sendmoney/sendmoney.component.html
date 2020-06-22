@@ -154,6 +154,9 @@
           <mat-error *ngIf="timeoutField.hasError('min')">
             {{ 'Minimum timeout is 1' | translate }}
           </mat-error>
+          <mat-error *ngIf="timeoutField.hasError('max')">
+            {{ 'Maximum timeout is 720' | translate }}
+          </mat-error>
         </ng-container>
         <label>{{ 'Instruction' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">
