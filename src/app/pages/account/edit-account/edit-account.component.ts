@@ -92,8 +92,7 @@ export class EditAccountComponent implements OnInit {
           currAcc.path = this.signBy.path;
           currAcc.signByAddress = this.signBy.address;
         }
-        localStorage.setItem('CURR_ACCOUNT', JSON.stringify(currAcc));
-        this.authServ.updateSeed(currAcc.path);
+        this.authServ.switchAccount(currAcc);
       }
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.dialogRef.close(true);

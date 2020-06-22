@@ -75,11 +75,6 @@ export class AuthService {
     this._seed = this._keyring.calcDerivationPath(account.path);
   }
 
-  updateSeed(path: number) {
-    this._keyring.calcDerivationPath(path);
-    this._seed = this._keyring.calcDerivationPath(path);
-  }
-
   getCurrAccount(): SavedAccount {
     return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }

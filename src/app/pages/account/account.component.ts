@@ -79,7 +79,6 @@ export class AccountComponent implements OnInit {
 
     let message = await getTranslation(`${this.currAcc.name} selected`, this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
-    this.router.navigateByUrl('/');
   }
 
   onOpenMultisigInfoDialog(e, account: SavedAccount) {
