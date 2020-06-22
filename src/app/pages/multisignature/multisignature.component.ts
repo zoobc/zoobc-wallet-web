@@ -42,7 +42,8 @@ export class MultisignatureComponent implements OnInit {
   }
 
   onEditDraft(idx: number) {
-    const multisig: MultiSigDraft = this.multiSigDrafts[idx];
+    let multisig: MultiSigDraft = this.multiSigDrafts[idx];
+    multisig.unisgnedTransactions = Buffer.from(multisig.unisgnedTransactions);
     this.multisigServ.update(multisig);
 
     const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
