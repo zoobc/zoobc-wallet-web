@@ -44,7 +44,17 @@ export class MultisignatureComponent implements OnInit {
   }
 
   getMultiSigDraft() {
-    this.multiSigDrafts = this.multisigServ.getDrafts();
+    const currAccount = this.authServ.getCurrAccount();
+    this.multiSigDrafts = this.multisigServ
+      .getDrafts()
+      .filter(draft => {
+        if (draft.generatedSender == currAccount.address) return draft;
+        const { multisigInfo, unisgnedTransactions } = draft;
+        if (multisigInfo.participants.includes(currAccount.address)) return draft;
+        if (unisgnedTransactions && unisgnedTransactions.sender == currAccount.address) return draft;
+      })
+      .sort()
+      .reverse();
   }
 
   onEditDraft(idx: number) {

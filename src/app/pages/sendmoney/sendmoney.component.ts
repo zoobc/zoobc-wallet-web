@@ -45,7 +45,7 @@ export class SendmoneyComponent implements OnInit {
   approverCommissionField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   approverCommissionCurrField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   instructionField = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1)]);
+  timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   typeCoinField = new FormControl('ZBC');
   typeCommissionField = new FormControl('ZBC');
 
@@ -301,7 +301,9 @@ export class SendmoneyComponent implements OnInit {
   getBlockHeight() {
     zoobc.Host.getInfo()
       .then(res => {
-        this.blockHeight = res.chainstatusesList[1].height;
+        res.chainstatusesList.filter(chain => {
+          if (chain.chaintype === 0) this.blockHeight = chain.height;
+        });
       })
       .catch(err => {
         console.log(err);
