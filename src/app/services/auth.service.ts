@@ -6,6 +6,7 @@ import zoobc, {
   getZBCAdress,
   TransactionListParams,
 } from 'zoobc-sdk';
+import { BehaviorSubject } from 'rxjs';
 
 export interface SavedAccount {
   name: string;
@@ -29,7 +30,13 @@ export class AuthService {
   private _keyring: ZooKeyring;
   private restoring = false;
 
-  constructor() {}
+  private sourceCurrAccount = new BehaviorSubject<SavedAccount>(null);
+  currAccount = this.sourceCurrAccount.asObservable();
+
+  constructor() {
+    const account = this.getCurrAccount();
+    this.sourceCurrAccount.next(account);
+  }
 
   get seed() {
     return this._seed;
@@ -73,6 +80,7 @@ export class AuthService {
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
     this._keyring.calcDerivationPath(account.path);
     this._seed = this._keyring.calcDerivationPath(account.path);
+    this.sourceCurrAccount.next(account);
   }
 
   getCurrAccount(): SavedAccount {
