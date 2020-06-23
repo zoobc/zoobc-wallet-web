@@ -8,7 +8,7 @@ import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { SendMoneyInterface, generateTransactionHash } from 'zoobc-sdk';
+import zoobc, { SendMoneyInterface, generateTransactionHash } from 'zoobc-sdk';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,6 +47,7 @@ export class CreateTransactionComponent implements OnInit {
   isMultiSignature: boolean = false;
   isHasTransactionHash: boolean = false;
   removeExport: boolean = false;
+  accountBalance: any;
 
   stepper = {
     multisigInfo: false,
@@ -71,7 +72,7 @@ export class CreateTransactionComponent implements OnInit {
       timeout: this.timeoutField,
       typeCoin: this.typeCoinField,
     });
-    this.account = authServ.getCurrAccount();
+    this.account = this.authServ.getCurrAccount();
     this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
@@ -120,8 +121,10 @@ export class CreateTransactionComponent implements OnInit {
       } else if (this.isMultiSignature) {
         this.multisig.generatedSender = this.account.address;
         this.senderForm.setValue(this.account.address);
+        this.getBalance(this.account.address);
       } else {
         this.senderForm.setValue(this.multisig.generatedSender);
+        this.getBalance(this.multisig.generatedSender);
       }
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -172,33 +175,39 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   async next() {
+    const total = this.amountForm.value + this.feeForm.value;
     if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
-    if (this.createTransactionForm.valid) {
-      this.updateCreateTransaction();
-      const { signaturesInfo } = this.multisig;
-      if (signaturesInfo === null) {
-        if (!this.isHasTransactionHash) {
-          let title = await getTranslation('Are you sure?', this.translate);
-          let message = await getTranslation(
-            'You will not be able to update the form anymore!',
-            this.translate
-          );
-          let buttonText = await getTranslation('Yes, continue it!', this.translate);
-          Swal.fire({
-            title: title,
-            text: message,
-            showCancelButton: true,
-            confirmButtonText: buttonText,
-            type: 'warning',
-          }).then(result => {
-            if (result.value) {
-              this.generatedTxHash();
-              this.router.navigate(['/multisignature/add-signatures']);
-            }
-          });
-        }
-      } else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
-      else this.router.navigate(['/multisignature/send-transaction']);
+    if (this.accountBalance / 1e8 >= total) {
+      if (this.createTransactionForm.valid) {
+        this.updateCreateTransaction();
+        const { signaturesInfo } = this.multisig;
+        if (signaturesInfo === null) {
+          if (!this.isHasTransactionHash) {
+            let title = await getTranslation('Are you sure?', this.translate);
+            let message = await getTranslation(
+              'You will not be able to update the form anymore!',
+              this.translate
+            );
+            let buttonText = await getTranslation('Yes, continue it!', this.translate);
+            Swal.fire({
+              title: title,
+              text: message,
+              showCancelButton: true,
+              confirmButtonText: buttonText,
+              type: 'warning',
+            }).then(result => {
+              if (result.value) {
+                this.generatedTxHash();
+                this.router.navigate(['/multisignature/add-signatures']);
+              }
+            });
+          }
+        } else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+        else this.router.navigate(['/multisignature/send-transaction']);
+      }
+    } else {
+      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
@@ -265,5 +274,11 @@ export class CreateTransactionComponent implements OnInit {
       this.isHasTransactionHash = true;
       this.multisig.generatedSender = this.multisig.unisgnedTransactions.sender;
     }
+  }
+
+  getBalance(address: string) {
+    zoobc.Account.getBalance(address).then(res => {
+      this.accountBalance = res.accountbalance.spendablebalance;
+    });
   }
 }
