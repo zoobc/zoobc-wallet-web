@@ -20,10 +20,7 @@ export class NetworkComponent implements OnInit {
 
   formNetwork: FormGroup;
   nameField = new FormControl('', [Validators.required]);
-  ipField = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
-  ]);
+  ipField = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
 
   constructor(private dialog: MatDialog) {
     this.formNetwork = new FormGroup({
@@ -34,9 +31,7 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.nodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
-    this.selectedNode = parseInt(
-      JSON.parse(localStorage.getItem('SELECTED_NODE'))
-    );
+    this.selectedNode = parseInt(JSON.parse(localStorage.getItem('SELECTED_NODE')));
   }
 
   changeNode(idx: number) {
@@ -49,6 +44,7 @@ export class NetworkComponent implements OnInit {
     e.stopPropagation();
     this.detailRefDialog = this.dialog.open(this.detailDialog, {
       width: '360px',
+      maxHeight: '90vh',
     });
 
     this.currAction = action;

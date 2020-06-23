@@ -106,6 +106,7 @@ export class NodeAdminComponent implements OnInit {
             this.successRefDialog = this.dialog.open(this.popupPubKey, {
               disableClose: true,
               width: '500px',
+              maxHeight: '90vh',
             });
           })
           .catch(err => {
@@ -134,6 +135,7 @@ export class NodeAdminComponent implements OnInit {
   openRegisterNode() {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -144,6 +146,7 @@ export class NodeAdminComponent implements OnInit {
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
       data: this.registeredNode,
     });
 
@@ -155,6 +158,7 @@ export class NodeAdminComponent implements OnInit {
   openClaimNode() {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
       data: this.registeredNode,
     });
 
@@ -166,6 +170,7 @@ export class NodeAdminComponent implements OnInit {
   openRemoveNode() {
     const dialog = this.dialog.open(RemoveNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
       data: this.registeredNode,
     });
 

@@ -19,6 +19,7 @@ export class GeneralComponent implements OnInit {
   onOpenRevealPassphrase() {
     this.dialog.open(RevealPassphraseComponent, {
       width: '420px',
+      maxHeight: '90vh',
     });
   }
 

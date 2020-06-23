@@ -141,11 +141,13 @@ export class SendTransactionComponent implements OnInit {
   onOpenConfirmDialog() {
     this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
       width: '500px',
+      maxHeight: '90vh',
     });
   }
   onConfirm() {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
+      maxHeight: '90vh',
     });
 
     pinRefDialog.afterClosed().subscribe(isPinValid => {
