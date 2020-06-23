@@ -62,6 +62,7 @@ export class AuthService {
 
     if (passphrase) {
       const account = this.getCurrAccount();
+      this.sourceCurrAccount.next(account);
       this._keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
       this._seed = this._keyring.calcDerivationPath(account.path);
 
