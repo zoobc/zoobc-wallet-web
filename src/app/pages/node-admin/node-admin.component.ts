@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
@@ -14,13 +14,14 @@ import zoobc, {
   MempoolListParams,
   TransactionListParams,
 } from 'zoobc-sdk';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-node-admin',
   templateUrl: './node-admin.component.html',
   styleUrls: ['./node-admin.component.scss'],
 })
-export class NodeAdminComponent implements OnInit {
+export class NodeAdminComponent implements OnInit, OnDestroy {
   account: SavedAccount;
   hwInfo: any;
   mbToB = Math.pow(1024, 2);
@@ -36,6 +37,8 @@ export class NodeAdminComponent implements OnInit {
 
   lastClaim: string = undefined;
   nodePublicKey: string = '';
+
+  stream: Subscription;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
@@ -54,6 +57,10 @@ export class NodeAdminComponent implements OnInit {
     this.streamNodeHardwareInfo();
   }
 
+  ngOnDestroy() {
+    if (this.stream) this.stream.unsubscribe();
+  }
+
   getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
@@ -68,7 +75,7 @@ export class NodeAdminComponent implements OnInit {
       address: this.account.address,
     };
     zoobc.Transactions.getList(param).then(res => {
-      this.lastClaim = res.transactionsList[0].timestamp;
+      this.lastClaim = res.transactionsList[0] && res.transactionsList[0].timestamp;
     });
     zoobc.Mempool.getList(params)
       .then(res => {
@@ -118,7 +125,7 @@ export class NodeAdminComponent implements OnInit {
   streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
+    this.stream = zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
       (res: any) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;

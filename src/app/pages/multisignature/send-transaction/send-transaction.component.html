@@ -50,17 +50,11 @@
         <div class="col-12 col-sm-6 test">
           <div class="label">{{ 'From' | translate }}:</div>
           <div class="address">
-            <wallet-address
-              [value]="multisig.unisgnedTransactions.sender"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="multisig.transaction.sender" [copyButton]="true"></wallet-address>
           </div>
           <div class="label">{{ 'Recipient' | translate }}:</div>
           <div class="address">
-            <wallet-address
-              [value]="multisig.unisgnedTransactions.recipient"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="multisig.transaction.recipient" [copyButton]="true"></wallet-address>
           </div>
           <ng-container *ngIf="advancedMenu">
             <mat-divider style="margin-bottom: 10px;"></mat-divider>
