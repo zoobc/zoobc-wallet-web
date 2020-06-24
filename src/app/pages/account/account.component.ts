@@ -85,6 +85,7 @@ export class AccountComponent implements OnInit {
     e.stopPropagation();
     this.dialog.open(MultisigInfoComponent, {
       width: '300px',
+      maxHeight: '90vh',
       data: account,
     });
   }

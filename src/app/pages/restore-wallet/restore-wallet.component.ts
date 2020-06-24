@@ -142,6 +142,7 @@ export class RestoreWalletComponent implements OnInit {
   openPinDialog() {
     let pinDialog = this.dialog.open(PinSetupDialogComponent, {
       width: '400px',
+      maxHeight: '90vh',
       disableClose: true,
     });
     pinDialog.afterClosed().subscribe((key: string) => {

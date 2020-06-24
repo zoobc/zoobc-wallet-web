@@ -43,6 +43,7 @@ export class ContactlistComponent implements OnInit {
   onOpenAddContact() {
     const dialog = this.dialog.open(AddcontactComponent, {
       width: '460px',
+      maxHeight: '90vh',
     });
 
     dialog.afterClosed().subscribe(contacts => {
@@ -53,6 +54,7 @@ export class ContactlistComponent implements OnInit {
   onOpenEditContact(contact) {
     const dialog = this.dialog.open(EditcontactComponent, {
       width: '460px',
+      maxHeight: '90vh',
       data: contact,
     });
 

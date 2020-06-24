@@ -52,6 +52,7 @@ export class MultisigTransactionComponent implements OnInit {
     });
     this.detailMultisigRefDialog = this.dialog.open(this.detailMultisigDialog, {
       width: '500px',
+      maxHeight: '90vh',
     });
   }
 
