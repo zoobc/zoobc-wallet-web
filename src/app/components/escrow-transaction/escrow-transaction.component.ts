@@ -52,6 +52,7 @@ export class EscrowTransactionComponent implements OnInit {
     });
     this.detailEscrowRefDialog = this.dialog.open(this.detailEscrow, {
       width: '500px',
+      maxHeight: '90vh',
     });
   }
 
@@ -62,6 +63,7 @@ export class EscrowTransactionComponent implements OnInit {
   onOpenPinDialog(id, approvalCode) {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
+      maxHeight: '90vh',
     });
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {

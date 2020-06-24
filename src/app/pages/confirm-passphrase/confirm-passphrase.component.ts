@@ -94,6 +94,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     if (this.confirmForm.valid) {
       let pinDialog = this.dialog.open(PinSetupDialogComponent, {
         width: '400px',
+        maxHeight: '90vh',
         disableClose: true,
       });
       pinDialog.afterClosed().subscribe((key: string) => {
