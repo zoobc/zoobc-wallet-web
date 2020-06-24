@@ -50,6 +50,7 @@ export class RegisterNodeComponent {
     if (this.formRegisterNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
+        maxHeight: '90vh',
       });
 
       pinRefDialog.afterClosed().subscribe(isPinValid => {

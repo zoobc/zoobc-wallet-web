@@ -46,6 +46,7 @@ export class ClaimNodeComponent {
     if (this.formClaimNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
+        maxHeight: '90vh',
       });
       pinRefDialog.afterClosed().subscribe(isPinValid => {
         if (isPinValid) {
