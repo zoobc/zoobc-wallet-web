@@ -72,7 +72,6 @@
         <mat-error class="center-error" *ngIf="participantsField.hasError('duplicate')">
           {{ 'Participant must be unique' | translate }}
         </mat-error>
-        <br />
       </ng-container>
       <div class="text-right" *ngIf="!isMultiSignature">
         <button (click)="addParticipant()" mat-flat-button class="small" color="primary" type="button">

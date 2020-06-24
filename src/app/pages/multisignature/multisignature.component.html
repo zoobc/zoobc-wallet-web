@@ -78,32 +78,26 @@
               <div class="date">{{ getDate(draft.id) | dateAgo }}</div>
               <div class="chips">
                 <div class="chip" *ngIf="draft.multisigInfo">{{ 'Multisig Info' | translate }}</div>
-                <div class="chip" *ngIf="draft.unisgnedTransactions">{{ 'Transaction' | translate }}</div>
+                <div class="chip" *ngIf="draft.transaction">{{ 'Transaction' | translate }}</div>
                 <div class="chip" *ngIf="draft.signaturesInfo">{{ 'Signatures' | translate }}</div>
               </div>
             </div>
             <div class="col-12 col-sm-4 text-right">
-              <div class="amount" *ngIf="draft.unisgnedTransactions">
-                - {{ draft.unisgnedTransactions.amount | number: '0.0-2' }} ZBC
+              <div class="amount" *ngIf="draft.transaction">
+                - {{ draft.transaction.amount | number: '0.0-2' }} ZBC
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-12 col-sm-9 col-md-10">
               <div class="row">
-                <div class="col-12 col-md-6" *ngIf="draft.unisgnedTransactions">
+                <div class="col-12 col-md-6" *ngIf="draft.transaction">
                   <div class="label">{{ 'From' | translate }}</div>
-                  <wallet-address
-                    [value]="draft.unisgnedTransactions.sender"
-                    [copyButton]="true"
-                  ></wallet-address>
+                  <wallet-address [value]="draft.transaction.sender" [copyButton]="true"></wallet-address>
                 </div>
-                <div class="col-12 col-md-6" *ngIf="draft.unisgnedTransactions">
+                <div class="col-12 col-md-6" *ngIf="draft.transaction">
                   <div class="label">{{ 'To' | translate }}</div>
-                  <wallet-address
-                    [value]="draft.unisgnedTransactions.recipient"
-                    [copyButton]="true"
-                  ></wallet-address>
+                  <wallet-address [value]="draft.transaction.recipient" [copyButton]="true"></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
                   <div class="label">{{ 'Transaction Hash' | translate }}</div>
