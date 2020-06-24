@@ -68,12 +68,14 @@ export class NavbarComponent implements OnInit {
   onOpenAddNodeAdmin() {
     this.dialog.open(AddNodeAdminComponent, {
       width: '360px',
+      maxHeight: '90vh',
     });
   }
 
   onOpenRevealPassphrase() {
     this.dialog.open(RevealPassphraseComponent, {
       width: '420px',
+      maxHeight: '90vh',
     });
   }
 

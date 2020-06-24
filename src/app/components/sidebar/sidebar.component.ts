@@ -23,7 +23,7 @@ export class SidebarComponent {
     private router: Router,
     authServ: AuthService
   ) {
-    this.account = authServ.getCurrAccount();
+    authServ.currAccount.subscribe(account => (this.account = account));
 
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {

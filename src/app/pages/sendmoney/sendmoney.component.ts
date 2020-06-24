@@ -216,6 +216,7 @@ export class SendmoneyComponent implements OnInit {
   onOpenPinDialog() {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
+      maxHeight: '90vh',
     });
 
     pinRefDialog.afterClosed().subscribe(isPinValid => {

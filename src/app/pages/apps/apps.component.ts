@@ -20,6 +20,7 @@ export class AppsComponent implements OnInit {
   openAddDialog() {
     this.addRefDialog = this.dialog.open(this.appDialog, {
       width: '400px',
+      maxHeight: '90vh',
     });
   }
 

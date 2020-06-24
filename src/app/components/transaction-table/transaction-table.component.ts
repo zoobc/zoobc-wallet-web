@@ -27,7 +27,7 @@ export class TransactionTableComponent implements OnInit {
     if (this.withDetail) {
       this.dialog.open(TransactionDetailComponent, {
         width: '500px',
-        height: '500px',
+        maxHeight: '90vh',
         data: id,
       });
     }
