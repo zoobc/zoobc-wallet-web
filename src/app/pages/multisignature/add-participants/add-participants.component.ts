@@ -17,7 +17,6 @@ import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 })
 export class AddParticipantsComponent implements OnInit, OnDestroy {
   form: FormGroup;
-
   transactionHashField = new FormControl('', Validators.required);
   participantsSignatureField = new FormArray([], this.uniqueParticipant);
 
@@ -77,11 +76,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   patchValue(multisig: MultiSigDraft) {
-    const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
+    const { signaturesInfo, multisigInfo, unisgnedTransactions, transaction } = multisig;
 
     if (!signaturesInfo || signaturesInfo == null) {
       if (multisigInfo) return this.patchParticipant(multisigInfo.participants);
-      if (unisgnedTransactions) return this.patchUnsignedAddress(unisgnedTransactions.sender);
+      if (unisgnedTransactions) return this.patchUnsignedAddress(transaction.sender);
       return this.pushInitParticipant(1, this.authServ.getCurrAccount());
     }
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);
@@ -95,7 +94,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       let signature: string = '';
       if (typeof pcp === 'object') {
         address = pcp.address;
-        signature = this.jsonBufferToString(pcp.signature);
+        signature = Buffer.from(pcp.signature).toString('base64');
       } else address = pcp;
       this.participantsSignatureField.push(this.createParticipant(address, signature, false));
     });
