@@ -100,7 +100,7 @@ export class MultisigTransactionComponent implements OnInit {
     this.isLoadingTx = true;
     let data: MultiSigInterface = {
       accountAddress: account.signByAddress,
-      fee: this.multiSigDetail.fee,
+      fee: this.feeForm.value,
       signaturesInfo: {
         txHash: this.multiSigDetail.transactionhash,
         participants: [

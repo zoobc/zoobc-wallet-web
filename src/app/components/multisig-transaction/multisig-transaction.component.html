@@ -107,7 +107,7 @@
       >
         {{ 'Ignore' | translate }}
       </button>
-      <button [disabled]="isLoadingTx || form.valid" mat-flat-button color="primary" (click)="onAccept()">
+      <button [disabled]="isLoadingTx || !form.valid" mat-flat-button color="primary" (click)="onAccept()">
         {{ 'Accept' | translate }}
       </button>
     </div>
