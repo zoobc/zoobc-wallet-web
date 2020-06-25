@@ -83,9 +83,9 @@
         <div class="col-12 col-sm-6 text-right">
           <div class="label">{{ 'Amount' | translate }}:</div>
           <div class="amount">
-            <div class="zbc">{{ multisig.unisgnedTransactions.amount | number: '0.0-8' }} ZBC</div>
+            <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.unisgnedTransactions.amount * currencyRate.value | number: '0.0-2' }}
+              {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -95,9 +95,9 @@
             <span>:</span>
           </div>
           <div class="amount">
-            <div class="zbc">{{ multisig.unisgnedTransactions.fee | number: '0.0-8' }} ZBC</div>
+            <div class="zbc">{{ multisig.transaction.fee | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.unisgnedTransactions.fee * currencyRate.value | number: '0.0-2' }}
+              {{ multisig.transaction.fee * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -111,13 +111,13 @@
           </div>
           <ng-template #not_escrow>
             <div class="zbc">
-              {{ multisig.unisgnedTransactions.amount + multisig.unisgnedTransactions.fee | number: '0.0-8' }}
+              {{ multisig.transaction.amount + multisig.transaction.fee | number: '0.0-8' }}
               ZBC
             </div>
             <div class="currency">
               {{
-                multisig.unisgnedTransactions.amount * currencyRate.value +
-                  multisig.unisgnedTransactions.fee * currencyRate.value | number: '0.0-2'
+                multisig.transaction.amount * currencyRate.value +
+                  multisig.transaction.fee * currencyRate.value | number: '0.0-2'
               }}
               {{ currencyRate.name }}
             </div>

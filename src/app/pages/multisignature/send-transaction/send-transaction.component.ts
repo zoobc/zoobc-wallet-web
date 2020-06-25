@@ -26,6 +26,7 @@ export class SendTransactionComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
   account: SavedAccount;
+  accounts: SavedAccount[];
   formSend: FormGroup;
   minFee = environment.fee;
   feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
@@ -45,6 +46,7 @@ export class SendTransactionComponent implements OnInit {
   feeFast = this.feeMedium * 2;
   typeFee: number;
   customFeeValues: number;
+  isValidSignBy: boolean = true;
 
   constructor(
     private authServ: AuthService,
@@ -64,6 +66,7 @@ export class SendTransactionComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    this.accounts = this.authServ.getAllAccount();
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
@@ -158,7 +161,24 @@ export class SendTransactionComponent implements OnInit {
     });
   }
 
+  validationSignBy() {
+    this.accounts.filter(async res => {
+      if (res.address === this.multisig.generatedSender) {
+        const resultAccount = res;
+        if (resultAccount.signByAddress !== this.account.address) {
+          this.isValidSignBy = false;
+          let message = await getTranslation('This account is not your signby account', this.translate);
+          return Swal.fire({ type: 'error', title: 'Oops...', text: message });
+        } else {
+          this.isValidSignBy = true;
+        }
+      }
+    });
+  }
+
   async onSendMultiSignatureTransaction() {
+    this.updateSendTransaction();
+    this.validationSignBy();
     const {
       accountAddress,
       fee,
@@ -167,7 +187,6 @@ export class SendTransactionComponent implements OnInit {
       signaturesInfo,
       transaction,
     } = this.multisig;
-    this.updateSendTransaction();
     let data: MultiSigInterface = {
       accountAddress,
       fee,
@@ -177,24 +196,29 @@ export class SendTransactionComponent implements OnInit {
     };
 
     const childSeed = this.authServ.seed;
-    zoobc.MultiSignature.postTransaction(data, childSeed)
-      .then(async (res: any) => {
-        let message = await getTranslation('Your Transaction is processing', this.translate);
-        let subMessage = await getTranslation('You send coins to', this.translate, {
-          amount: transaction.amount,
-          currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
-          currencyName: this.currencyRate.name,
-          recipient: transaction.recipient,
+    if (this.isValidSignBy) {
+      zoobc.MultiSignature.postTransaction(data, childSeed)
+        .then(async (res: any) => {
+          let message = await getTranslation('Your Transaction is processing', this.translate);
+          let subMessage = await getTranslation('You send coins to', this.translate, {
+            amount: transaction.amount,
+            currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
+            currencyName: this.currencyRate.name,
+            recipient: transaction.recipient,
+          });
+          this.multisigServ.deleteDraft(this.multisig.id);
+          Swal.fire(message, subMessage, 'success');
+          this.router.navigateByUrl('/dashboard');
+        })
+        .catch(async err => {
+          console.log(err.message);
+          let message = await getTranslation(
+            'An error occurred while processing your request',
+            this.translate
+          );
+          Swal.fire('Opps...', message, 'error');
         });
-        this.multisigServ.deleteDraft(this.multisig.id);
-        Swal.fire(message, subMessage, 'success');
-        this.router.navigateByUrl('/dashboard');
-      })
-      .catch(async err => {
-        console.log(err.message);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
-        Swal.fire('Opps...', message, 'error');
-      });
+    }
   }
 
   closeDialog() {
