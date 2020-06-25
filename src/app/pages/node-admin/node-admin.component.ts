@@ -38,7 +38,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   lastClaim: string = undefined;
   nodePublicKey: string = '';
 
-  stream: Subscription;
+  stream: any;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
