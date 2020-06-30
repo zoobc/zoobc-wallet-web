@@ -13,6 +13,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import zoobc, { MultiSigInterface } from 'zoobc-sdk';
+import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 
 @Component({
   selector: 'app-send-transaction',
@@ -148,11 +149,15 @@ export class SendTransactionComponent implements OnInit {
   }
 
   onOpenConfirmDialog() {
-    this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
-      width: '500px',
-      maxHeight: '90vh',
-    });
+    this.validationParticipant();
+    if (this.isValidParticipant) {
+      this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
+        width: '500px',
+        maxHeight: '90vh',
+      });
+    }
   }
+
   onConfirm() {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
@@ -189,8 +194,6 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async onSendMultiSignatureTransaction() {
-    this.updateSendTransaction();
-    this.validationParticipant();
     const {
       accountAddress,
       fee,
@@ -199,40 +202,52 @@ export class SendTransactionComponent implements OnInit {
       signaturesInfo,
       transaction,
     } = this.multisig;
+    const signatureInfoFilter: SignatureInfo = {
+      txHash: signaturesInfo.txHash,
+      participants: [],
+    };
+    signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
+      if (this.jsonBufferToString(pcp.signature).length > 0) return pcp;
+    });
+    this.updateSendTransaction();
     let data: MultiSigInterface = {
       accountAddress,
       fee,
       multisigInfo,
       unisgnedTransactions,
-      signaturesInfo,
+      signaturesInfo: signatureInfoFilter,
     };
     const childSeed = this.authServ.seed;
-    if (this.isValidParticipant) {
-      zoobc.MultiSignature.postTransaction(data, childSeed)
-        .then(async (res: any) => {
-          let message = await getTranslation('Your Transaction is processing', this.translate);
-          let subMessage = await getTranslation('You send coins to', this.translate, {
-            amount: transaction.amount,
-            currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
-            currencyName: this.currencyRate.name,
-            recipient: transaction.recipient,
-          });
-          this.multisigServ.deleteDraft(this.multisig.id);
-          Swal.fire(message, subMessage, 'success');
-          this.router.navigateByUrl('/dashboard');
-        })
-        .catch(async err => {
-          console.log(err.message);
-          let message = await getTranslation(
-            'An error occurred while processing your request',
-            this.translate
-          );
-          Swal.fire('Opps...', message, 'error');
+    zoobc.MultiSignature.postTransaction(data, childSeed)
+      .then(async (res: any) => {
+        let message = await getTranslation('Your Transaction is processing', this.translate);
+        let subMessage = await getTranslation('You send coins to', this.translate, {
+          amount: transaction.amount,
+          currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
+          currencyName: this.currencyRate.name,
+          recipient: transaction.recipient,
         });
-    }
+        this.multisigServ.deleteDraft(this.multisig.id);
+        Swal.fire(message, subMessage, 'success');
+        this.router.navigateByUrl('/dashboard');
+      })
+      .catch(async err => {
+        console.log(err.message);
+        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        Swal.fire('Opps...', message, 'error');
+      });
   }
 
   closeDialog() {
     this.dialog.closeAll();
+  }
+
+  jsonBufferToString(buf: any) {
+    if (!buf) return '';
+    try {
+      return Buffer.from(buf.data, 'base64').toString('base64');
+    } catch (error) {
+      return buf.toString('base64');
+    }
   }
 }
