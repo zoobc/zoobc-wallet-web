@@ -13,6 +13,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import zoobc, { MultiSigInterface } from 'zoobc-sdk';
+import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 
 @Component({
   selector: 'app-send-transaction',
@@ -167,13 +168,20 @@ export class SendTransactionComponent implements OnInit {
       signaturesInfo,
       transaction,
     } = this.multisig;
+    const signatureInfoFilter: SignatureInfo = {
+      txHash: signaturesInfo.txHash,
+      participants: [],
+    };
+    signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
+      if (this.jsonBufferToString(pcp.signature).length > 0) return pcp;
+    });
     this.updateSendTransaction();
     let data: MultiSigInterface = {
       accountAddress,
       fee,
       multisigInfo,
       unisgnedTransactions,
-      signaturesInfo,
+      signaturesInfo: signatureInfoFilter,
     };
 
     const childSeed = this.authServ.seed;
@@ -199,5 +207,13 @@ export class SendTransactionComponent implements OnInit {
 
   closeDialog() {
     this.dialog.closeAll();
+  }
+  jsonBufferToString(buf: any) {
+    if (!buf) return '';
+    try {
+      return Buffer.from(buf.data, 'base64').toString('base64');
+    } catch (error) {
+      return buf.toString('base64');
+    }
   }
 }
