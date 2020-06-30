@@ -7,7 +7,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import Web3 from 'web3';
 import { environment } from 'src/environments/environment';
 const web3 = new Web3(
-  new Web3.providers.WebsocketProvider('wss://kovan.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
+  new Web3.providers.WebsocketProvider('wss://goerli.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
 );
 import { abi } from 'src/helpers/abi';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
