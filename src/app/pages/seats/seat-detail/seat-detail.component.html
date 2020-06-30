@@ -4,7 +4,7 @@
   </h1>
 </div>
 <div class="seat-detail-container">
-  <form>
+  <form [formGroup]="form">
     <mat-label class="title">{{ 'ETH Address' | translate }}</mat-label>
     <div class="address">
       <wallet-address
@@ -16,15 +16,15 @@
     <account-selector (select)="onSwitch($event)" type="normal"></account-selector>
     <mat-label class="title">{{ 'Node Public Key' | translate }}</mat-label>
     <mat-form-field appearance="outline" color="accent" class="block">
-      <input (change)="onChangeTimeOut()" matInput [value]="nodePublicKey" />
+      <input (change)="onChangeTimeOut()" matInput formControlName="nodePubKey" />
       <button type="button" class="btn-suffix" matSuffix (click)="generateRandomNodePublicKey()">
         <i class="fas fa-sync"></i>
       </button>
     </mat-form-field>
     <mat-label class="title">{{ 'Message' | translate }}</mat-label>
     <mat-form-field appearance="outline" color="accent" class="block">
-      <textarea matInput rows="9"> </textarea>
-      <mat-hint align="end">34 of 128 bytes</mat-hint>
+      <textarea matInput rows="9" formControlName="message"> </textarea>
+      <mat-hint>34 of 128 bytes</mat-hint>
     </mat-form-field>
     <button
       mat-flat-button

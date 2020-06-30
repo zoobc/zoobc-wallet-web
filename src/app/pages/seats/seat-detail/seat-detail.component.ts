@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 const web3 = new Web3(
   new Web3.providers.WebsocketProvider('wss://kovan.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
 );
+import { abi } from 'src/helpers/abi';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-seat-detail',
@@ -17,12 +19,25 @@ const web3 = new Web3(
 })
 export class SeatDetailComponent implements OnInit {
   account: SavedAccount;
-  nodePublicKey: string = 'AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai';
+  nodePublicKey: string = 'ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7';
 
   metamask: boolean = false;
   etherscanUrl = environment.etherscan;
 
-  constructor(private authServ: AuthService, public dialog: MatDialog) {}
+  form: FormGroup;
+  addressField = new FormControl('', Validators.required);
+  nodePubKeyField = new FormControl('', Validators.required);
+  messageField = new FormControl('', Validators.required);
+
+  constructor(private authServ: AuthService, public dialog: MatDialog) {
+    this.form = new FormGroup({
+      address: this.addressField,
+      nodePubKey: this.nodePubKeyField,
+      message: this.messageField,
+    });
+
+    this.nodePubKeyField.setValue(this.nodePublicKey);
+  }
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
@@ -31,7 +46,7 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onSwitch(account: SavedAccount) {
-    this.account = account;
+    this.addressField.setValue(account.address);
   }
 
   generateRandomNodePublicKey(length: number = 44) {
@@ -74,15 +89,26 @@ export class SeatDetailComponent implements OnInit {
   onSendTransaction() {
     const ethereum = window['ethereum'];
 
+    const tokenAddress = environment.tokenAddress;
+    const abiItem = abi;
+
+    const address = this.addressField.value;
+    const pubkey = this.nodePubKeyField.value;
+    const message = this.messageField.value;
+
+    let contract = new web3.eth.Contract(abiItem, tokenAddress);
+    const data = contract.methods.setData(100, address, pubkey, message).encodeABI();
+    contract.options.from = ethereum.selectedAddress;
+
     const transactionParameters = {
       nonce: '0x00',
-      gasPrice: web3.utils.toHex(web3.utils.toWei('15', 'gwei')),
-      gas: web3.utils.toHex('380000'),
-      to: '0x35725814A6F71E27C5C428A3bEdb8DAA504Aa0e7',
+      gasPrice: web3.utils.toHex(web3.utils.toWei(environment.gasPrice.toString(), 'gwei')),
+      gas: web3.utils.toHex(environment.gasLimit.toString()),
+      to: tokenAddress,
       from: ethereum.selectedAddress,
-      value: web3.utils.toHex(web3.utils.toWei('0.01', 'ether')),
-      data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057',
-      chainId: 3,
+      value: '0x00',
+      data: data,
+      chainId: environment.chainId,
     };
 
     ethereum.sendAsync(
