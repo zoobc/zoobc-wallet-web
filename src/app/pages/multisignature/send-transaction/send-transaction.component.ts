@@ -46,7 +46,7 @@ export class SendTransactionComponent implements OnInit {
   feeFast = this.feeMedium * 2;
   typeFee: number;
   customFeeValues: number;
-  isValidSignBy: boolean = true;
+  isValidParticipant: boolean = true;
 
   constructor(
     private authServ: AuthService,
@@ -81,6 +81,11 @@ export class SendTransactionComponent implements OnInit {
       this.multisig = multisig;
       const { accountAddress, fee } = this.multisig;
       this.account.address = accountAddress;
+      const selectedAccount = this.accounts.filter(res => {
+        if (res.address === this.account.address) {
+          this.authServ.switchAccount(res);
+        }
+      });
       this.feeForm.setValue(multisig.fee);
       this.feeFormCurr.setValue(multisig.fee * this.currencyRate.value);
       this.timeoutField.setValue('0');
@@ -139,6 +144,7 @@ export class SendTransactionComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
+    this.authServ.switchAccount(account);
   }
 
   onOpenConfirmDialog() {
@@ -161,16 +167,22 @@ export class SendTransactionComponent implements OnInit {
     });
   }
 
-  validationSignBy() {
+  validationParticipant() {
     this.accounts.filter(async res => {
       if (res.address === this.multisig.generatedSender) {
         const resultAccount = res;
-        if (resultAccount.signByAddress !== this.account.address) {
-          this.isValidSignBy = false;
-          let message = await getTranslation('This account is not your signby account', this.translate);
+        const isParticipant = resultAccount.participants.some(res => {
+          if (res !== this.account.address) {
+            this.isValidParticipant = false;
+            return false;
+          } else {
+            this.isValidParticipant = true;
+            return true;
+          }
+        });
+        if (!isParticipant) {
+          let message = await getTranslation('This account is not one of your participant', this.translate);
           return Swal.fire({ type: 'error', title: 'Oops...', text: message });
-        } else {
-          this.isValidSignBy = true;
         }
       }
     });
@@ -178,7 +190,7 @@ export class SendTransactionComponent implements OnInit {
 
   async onSendMultiSignatureTransaction() {
     this.updateSendTransaction();
-    this.validationSignBy();
+    this.validationParticipant();
     const {
       accountAddress,
       fee,
@@ -194,9 +206,8 @@ export class SendTransactionComponent implements OnInit {
       unisgnedTransactions,
       signaturesInfo,
     };
-
     const childSeed = this.authServ.seed;
-    if (this.isValidSignBy) {
+    if (this.isValidParticipant) {
       zoobc.MultiSignature.postTransaction(data, childSeed)
         .then(async (res: any) => {
           let message = await getTranslation('Your Transaction is processing', this.translate);
