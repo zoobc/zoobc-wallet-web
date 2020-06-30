@@ -12,6 +12,7 @@ export const environment = {
   gasPrice: 3,
   gasLimit: 100000,
   chainId: 5,
+  infuraProvider: 'wss://goerli.infura.io/ws/v3/02b8b87e84ed4293845926d6d2f473ff',
 };
 
 /*

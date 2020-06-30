@@ -12,12 +12,16 @@ export class AddressComponent implements OnInit {
   @Input() value: string;
   @Input() copyButton: boolean = false;
   @Input() center: boolean = false;
-  constructor(
-    private snackbar: MatSnackBar,
-    private translate: TranslateService
-  ) {}
 
-  ngOnInit() {}
+  len: number = 0;
+  halfLen: number = 0;
+
+  constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
+
+  ngOnInit() {
+    this.len = this.value.length;
+    this.halfLen = Math.round(this.value.length / 2);
+  }
 
   async onCopyText(e) {
     e.stopPropagation();

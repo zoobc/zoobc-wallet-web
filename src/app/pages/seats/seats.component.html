@@ -1,64 +1,83 @@
 <div class="seats-container">
   <h2 class="mat-h2">{{ 'Seat List' | translate }}</h2>
   <mat-card style="padding: 0;">
-    <form class="form-search">
+    <form class="form-search" [formGroup]="form" (submit)="onSearch()">
       <mat-form-field appearance="outline" color="accent" class="block">
         <input
-          (change)="onChangeTimeOut()"
+          formControlName="search"
           matInput
-          placeholder="{{ 'Search for Seat ID, ETH Address, or ZBC Address' | translate }}"
+          placeholder="{{ 'Search for Seat ID or ETH Address' | translate }}"
         />
         <button type="submit" class="btn-suffix" matSuffix>
           <i class="fa fa-search"></i>
         </button>
       </mat-form-field>
     </form>
-    <div class="seat-list row" (click)="onOpenDetailSeat()">
-      <div class="col-12 col-md-8">
-        <div class="label">ZBC Address</div>
-        <div class="value">
-          <wallet-address
-            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
-            [copyButton]="true"
-          ></wallet-address>
-        </div>
 
-        <div class="label">ETH Address</div>
-        <div class="value">
-          <wallet-address
-            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
-            [copyButton]="true"
-          ></wallet-address>
-        </div>
-      </div>
-      <div class="col-12 col-md-4 text-right">
-        <div class="label">Seat ID</div>
-        <div class="seat-no">#{{ 1234 | number }}</div>
-      </div>
-    </div>
+    <!-- NOT LOADING -->
+    <ng-container *ngIf="!isLoading">
+      <!-- IF SUCCEED -->
+      <ng-container *ngIf="!isError">
+        <ng-container *ngIf="seats">
+          <!-- CONTAINS DATA -->
+          <div class="seat-list row" (click)="onOpenDetailSeat()" *ngFor="let seat of seats">
+            <div class="col-12 col-md-8">
+              <div class="label">ZBC Address</div>
+              <div class="value">
+                <wallet-address
+                  *ngIf="seat.zbcAddress"
+                  value="{{ seat.zbcAddress }}"
+                  [copyButton]="true"
+                ></wallet-address>
+                <i *ngIf="!seat.zbcAddress">(No ZBC address yet)</i>
+              </div>
 
-    <div class="seat-list row" (click)="onOpenDetailSeat()">
-      <div class="col-12 col-md-8">
-        <div class="label">ZBC Address</div>
-        <div class="value">
-          <wallet-address
-            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
-            [copyButton]="true"
-          ></wallet-address>
-        </div>
+              <div class="label">ETH Address</div>
+              <div class="value">
+                <wallet-address value="{{ seat.ethAddress }}" [copyButton]="true"></wallet-address>
+              </div>
+            </div>
+            <div class="col-12 col-md-4 text-right">
+              <div class="label">Seat ID</div>
+              <div class="seat-no">#{{ seat.tokenId | number }}</div>
+            </div>
+          </div>
 
-        <div class="label">ETH Address</div>
-        <div class="value">
-          <wallet-address
-            value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
-            [copyButton]="true"
-          ></wallet-address>
+          <!-- GOT NO DATA -->
+          <div class="no-content" *ngIf="seats.length <= 0" style="padding: 32px;">
+            <i matPrefix class="fa fa-ticket-alt"></i>
+            <span class="message">No Seat Found. Please try another keyword</span>
+          </div>
+        </ng-container>
+
+        <!-- DISPLAY INIT -->
+        <div class="no-content" *ngIf="!seats" style="padding: 40px;">
+          <i matPrefix class="fa fa-search"></i>
+          <span class="message">Please use the search bar to search for Seat ID or ETH address</span>
+        </div>
+      </ng-container>
+
+      <!-- IF ERROR -->
+      <div class="no-content" *ngIf="isError" style="padding: 32px;">
+        <i matPrefix class="far fa-frown"></i>
+        <span class="message">Error occured. Please try again</span>
+      </div>
+    </ng-container>
+
+    <!-- LOADING -->
+    <ng-container *ngIf="isLoading">
+      <div class="seat-list row skeleton" *ngFor="let i of [0, 1, 2, 3, 4]">
+        <div class="col-12 col-md-8">
+          <div class="skeleton-text small" style="width: 40%;"></div>
+          <div class="skeleton-text" style="width: 100%;margin-bottom: 16px;"></div>
+          <div class="skeleton-text small" style="width: 40%;"></div>
+          <div class="skeleton-text" style="width: 100%;"></div>
+        </div>
+        <div class="col-12 col-md-4 text-right">
+          <div class="skeleton-text small" style="width: 41%;float:right"></div>
+          <div class="skeleton-text big" style="width: 60%;float:right"></div>
         </div>
       </div>
-      <div class="col-12 col-md-4 text-right">
-        <div class="label">Seat ID</div>
-        <div class="seat-no">#{{ 1234 | number }}</div>
-      </div>
-    </div>
+    </ng-container>
   </mat-card>
 </div>
