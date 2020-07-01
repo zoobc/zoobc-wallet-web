@@ -82,7 +82,6 @@ export class SeatService {
         }
         return resolve([]);
       } catch (err) {
-        console.log(err);
         return reject(err);
       }
     });
