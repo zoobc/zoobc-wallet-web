@@ -38,6 +38,8 @@ export class MultisigTransactionComponent implements OnInit {
   kindFee: string;
   advancedMenu: boolean = false;
   enabledSign: boolean = true;
+  showSignForm: boolean = false;
+  pendingSignatures = [];
 
   constructor(
     public dialog: MatDialog,
@@ -66,6 +68,7 @@ export class MultisigTransactionComponent implements OnInit {
   }
 
   openDetailMultiSignature(txHash) {
+    this.showSignForm = false;
     const hashHex = base64ToHex(txHash);
     this.isLoadingDetail = true;
     zoobc.MultiSignature.getPendingByTxHash(hashHex).then(res => {
@@ -78,13 +81,14 @@ export class MultisigTransactionComponent implements OnInit {
       };
       const txFilter = toGetPendingList(tx);
       this.multiSigDetail = txFilter.pendingtransactionsList[0];
-      if (
-        res.pendingsignaturesList.findIndex(
-          sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
-        ) >= 0
-      )
-        this.enabledSign = false;
+
+      this.pendingSignatures = res.pendingsignaturesList;
+      const idx = this.pendingSignatures.findIndex(
+        sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
+      );
+      if (idx >= 0) this.enabledSign = false;
       else this.enabledSign = true;
+
       this.isLoadingDetail = false;
     });
     this.detailMultisigRefDialog = this.dialog.open(this.detailMultisigDialog, {
@@ -144,5 +148,9 @@ export class MultisigTransactionComponent implements OnInit {
 
   onClickFeeChoose(value) {
     this.kindFee = value;
+  }
+
+  toogleShowSignForm() {
+    this.showSignForm = !this.showSignForm;
   }
 }

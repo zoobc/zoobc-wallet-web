@@ -80,37 +80,41 @@
       <div class="col-12 col-md-4">{{ 'Date' | translate }}:</div>
       <div class="col-12 col-md-8">{{ multiSigDetail.timestamp * 1000 | date: 'medium' }}</div>
     </div>
-    <div class="row">
-      <div class="col-12 col-md-12">
-        <fee-selector
-          [group]="form"
-          feeName="fee"
-          feeCurrName="feeCurr"
-          [minFee]="minFee"
-          [timeoutField]="timeoutField.value"
-          [required]="true"
-          [currencyRate]="currencyRate"
-          (onClickFeeChoose)="onClickFeeChoose($event)"
-          [typeFees]="typeFee"
-          [customFeeValue]="customFeeValues"
-        ></fee-selector>
+    <div *ngIf="enabledSign" style="margin: 16px 0 16px;">
+      <mat-checkbox (click)="toogleShowSignForm($event)">Sign the transaction</mat-checkbox>
+    </div>
+    <ng-container *ngIf="showSignForm">
+      <div class="row">
+        <div class="col-12 col-md-12">
+          <fee-selector
+            [group]="form"
+            feeName="fee"
+            feeCurrName="feeCurr"
+            [minFee]="minFee"
+            [timeoutField]="timeoutField.value"
+            [required]="true"
+            [currencyRate]="currencyRate"
+            (onClickFeeChoose)="onClickFeeChoose($event)"
+            [typeFees]="typeFee"
+            [customFeeValue]="customFeeValues"
+          ></fee-selector>
+        </div>
       </div>
-    </div>
-
-    <div class="text-right" style="margin-top: 8px">
-      <button
-        [disabled]="isLoadingTx"
-        mat-flat-button
-        color="warn"
-        style="margin-right: 8px"
-        (click)="onIgnore()"
-      >
-        {{ 'Ignore' | translate }}
-      </button>
-      <button [disabled]="isLoadingTx || !form.valid" mat-flat-button color="primary" (click)="onAccept()">
-        {{ 'Accept' | translate }}
-      </button>
-    </div>
+      <div class="text-right" style="margin-top: 8px">
+        <button
+          [disabled]="isLoadingTx"
+          mat-flat-button
+          color="warn"
+          style="margin-right: 8px"
+          (click)="onIgnore()"
+        >
+          {{ 'Ignore' | translate }}
+        </button>
+        <button [disabled]="isLoadingTx || !form.valid" mat-flat-button color="primary" (click)="onAccept()">
+          {{ 'Accept' | translate }}
+        </button>
+      </div>
+    </ng-container>
   </div>
   <div class="detail-multisig-container skeleton" *ngIf="isLoadingDetail">
     <div class="row">

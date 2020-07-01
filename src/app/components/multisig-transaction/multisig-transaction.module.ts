@@ -5,7 +5,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DateAgoModule } from 'src/app/pipes/date-ago.module';
 import { HttpClient } from '@angular/common/http';
-import { MatCardModule, MatButtonModule } from '@angular/material';
+import { MatCardModule, MatButtonModule, MatCheckboxModule } from '@angular/material';
 import { AddressModule } from '../address/address.module';
 import { FeeSelectorModule } from 'src/app/components/fee-selector/fee-selector.module';
 
@@ -29,6 +29,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatCardModule,
     AddressModule,
     FeeSelectorModule,
+    MatCheckboxModule,
   ],
   exports: [MultisigTransactionComponent],
 })
