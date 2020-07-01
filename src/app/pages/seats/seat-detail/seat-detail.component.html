@@ -1,67 +1,110 @@
 <div class="text-center">
-  <h1 class="mat-h1">
-    {{ 'Seat #1234' | translate }}
-  </h1>
+  <h1 class="mat-h1">Seat #{{ tokenId }}</h1>
 </div>
-<div class="seat-detail-container">
-  <form [formGroup]="form">
-    <mat-label class="title">{{ 'ETH Address' | translate }}</mat-label>
-    <div class="address">
-      <wallet-address
-        value="AFiTqqX99kYXjLFJJ2AWuzKK5zxYUT1Pn0p3s6lutkai"
-        [copyButton]="false"
-      ></wallet-address>
+
+<!-- NOT LOADING -->
+<ng-container *ngIf="!isLoading">
+  <!-- IF SUCCEED -->
+  <ng-container *ngIf="!isError">
+    <!-- CONTAINS DATA -->
+    <div class="seat-detail-container" *ngIf="seat">
+      <form [formGroup]="form">
+        <mat-label class="title">{{ 'ETH Address' | translate }}</mat-label>
+        <div class="address">
+          <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
+        </div>
+
+        <mat-label class="title">{{ 'ZooBC Address' | translate }}</mat-label>
+        <div class="zoobc-address">
+          <div class="address">
+            <wallet-address
+              *ngIf="addressField.value"
+              [value]="addressField.value"
+              [copyButton]="true"
+            ></wallet-address>
+            <i *ngIf="!addressField.value">(No ZBC Address yet)</i>
+          </div>
+          <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false" *ngIf="editable">
+            <button mat-flat-button type="button" class="block" color="primary">
+              Change Address
+            </button>
+          </account-selector>
+        </div>
+
+        <mat-label class="title">{{ 'Node Public Key' | translate }}</mat-label>
+        <mat-form-field appearance="outline" color="accent" class="block">
+          <input (change)="onChangeTimeOut()" matInput formControlName="nodePubKey" />
+          <button type="button" class="btn-suffix" matSuffix (click)="generateRandomNodePublicKey()">
+            <i class="fas fa-sync"></i>
+          </button>
+        </mat-form-field>
+
+        <mat-label class="title">{{ 'Message' | translate }}</mat-label>
+        <mat-form-field appearance="outline" color="accent" class="block">
+          <textarea matInput rows="9" formControlName="message"> </textarea>
+          <mat-hint>34 of 128 bytes</mat-hint>
+        </mat-form-field>
+
+        <ng-container *ngIf="metamask && editable">
+          <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
+            <i matPrefix class="fa fa-download"></i>
+            {{ 'Download Certificate' | translate }}
+          </button>
+          <button
+            style="margin-top: 10px;"
+            mat-flat-button
+            type="button"
+            class="block"
+            color="primary"
+            (click)="onUpdate()"
+          >
+            <i matPrefix class="fa fa-pen"></i>
+            {{ 'Update' | translate }}
+          </button>
+        </ng-container>
+
+        <button
+          style="margin-top: 10px;"
+          mat-flat-button
+          type="button"
+          class="block"
+          color="primary"
+          (click)="connectMetamask()"
+          *ngIf="!metamask"
+        >
+          {{ 'Connect Metamask' | translate }}
+        </button>
+        <div class="text-center" style="margin-top: 10px;">
+          <span
+            >{{ 'Need Help?' }} <a href="/">{{ 'Click Here' }}</a></span
+          >
+        </div>
+      </form>
     </div>
-    <mat-label class="title">{{ 'ZooBC Address' | translate }}</mat-label>
-    <account-selector (select)="onSwitch($event)" type="normal"></account-selector>
-    <mat-label class="title">{{ 'Node Public Key' | translate }}</mat-label>
-    <mat-form-field appearance="outline" color="accent" class="block">
-      <input (change)="onChangeTimeOut()" matInput formControlName="nodePubKey" />
-      <button type="button" class="btn-suffix" matSuffix (click)="generateRandomNodePublicKey()">
-        <i class="fas fa-sync"></i>
-      </button>
-    </mat-form-field>
-    <mat-label class="title">{{ 'Message' | translate }}</mat-label>
-    <mat-form-field appearance="outline" color="accent" class="block">
-      <textarea matInput rows="9" formControlName="message"> </textarea>
-      <mat-hint>34 of 128 bytes</mat-hint>
-    </mat-form-field>
-    <button
-      mat-flat-button
-      type="button"
-      class="block"
-      color="primary"
-      (click)="onComingSoon()"
-      *ngIf="metamask"
-    >
-      {{ 'Download Certificate' | translate }}
-    </button>
-    <button
-      style="margin-top: 10px;"
-      mat-flat-button
-      type="button"
-      class="block"
-      color="primary"
-      (click)="onUpdate()"
-      *ngIf="metamask"
-    >
-      {{ 'Update' | translate }}
-    </button>
-    <button
-      style="margin-top: 10px;"
-      mat-flat-button
-      type="button"
-      class="block"
-      color="primary"
-      (click)="connectMetamask()"
-      *ngIf="!metamask"
-    >
-      {{ 'Connect Metamask' | translate }}
-    </button>
-    <div class="text-center" style="margin-top: 10px;">
-      <span
-        >{{ 'Need Help?' }} <a href="/">{{ 'Click Here' }}</a></span
-      >
-    </div>
-  </form>
-</div>
+
+    <!-- GOT NO DATA -->
+  </ng-container>
+
+  <!-- IF ERROR -->
+  <ng-container></ng-container>
+</ng-container>
+
+<!-- LOADING -->
+<ng-container *ngIf="isLoading">
+  <div class="skeleton">
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;margin-bottom: 24px;"></div>
+
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;margin-bottom: 24px;"></div>
+
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;margin-bottom: 24px;"></div>
+
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;"></div>
+    <div class="skeleton-text" style="width: 100%;"></div>
+    <div class="skeleton-text" style="width: 100%;"></div>
+    <div class="skeleton-text" style="width: 30%;"></div>
+  </div>
+</ng-container>

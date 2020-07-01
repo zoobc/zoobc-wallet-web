@@ -20,7 +20,7 @@
       <ng-container *ngIf="!isError">
         <ng-container *ngIf="seats">
           <!-- CONTAINS DATA -->
-          <div class="seat-list row" (click)="onOpenDetailSeat()" *ngFor="let seat of seats">
+          <div class="seat-list row" (click)="onOpenDetailSeat(seat.tokenId)" *ngFor="let seat of seats">
             <div class="col-12 col-md-8">
               <div class="label">ZBC Address</div>
               <div class="value">
