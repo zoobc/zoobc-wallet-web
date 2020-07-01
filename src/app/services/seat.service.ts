@@ -7,7 +7,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider(environment.infuraPro
 export interface Seat {
   tokenId: number;
   zbcAddress?: string;
-  ethAddress?: string;
+  ethAddress: string;
   nodePubKey?: string;
   message?: string;
 }
@@ -76,11 +76,9 @@ export class SeatService {
         const isExist = await contract.methods.exists(tokenId).call();
         if (isExist) {
           const zbcAddress = await contract.methods.getAccountAddress(tokenId).call();
-          const nodePubKey = await contract.methods.getNodePublicKey(tokenId).call();
-          const message = await contract.methods.getGenesisMessage(tokenId).call();
           const ethAddress = await contract.methods.ownerOf(tokenId).call();
 
-          return resolve([{ zbcAddress, nodePubKey, message, ethAddress, tokenId }]);
+          return resolve([{ zbcAddress, ethAddress, tokenId }]);
         }
         return resolve([]);
       } catch (err) {
@@ -88,5 +86,27 @@ export class SeatService {
         return reject(err);
       }
     });
+  }
+
+  async get(tokenId: number): Promise<Seat> {
+    const tokenAddress = environment.tokenAddress;
+    const abiItem = abi;
+    const contract = new web3.eth.Contract(abiItem, tokenAddress);
+
+    try {
+      const isExist = await contract.methods.exists(tokenId).call();
+      if (isExist) {
+        const zbcAddress = await contract.methods.getAccountAddress(tokenId).call();
+        const nodePubKey = await contract.methods.getNodePublicKey(tokenId).call();
+        const message = await contract.methods.getGenesisMessage(tokenId).call();
+        const ethAddress = await contract.methods.ownerOf(tokenId).call();
+
+        return { zbcAddress, nodePubKey, message, ethAddress, tokenId };
+      }
+      return null;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 }

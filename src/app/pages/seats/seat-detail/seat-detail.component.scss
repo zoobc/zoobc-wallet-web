@@ -11,6 +11,12 @@
     word-break: break-all;
     color: $black1;
   }
+  .zoobc-address {
+    margin-bottom: 16px;
+    > .address {
+      margin-bottom: 8px;
+    }
+  }
   .inline-control {
     display: flex;
     justify-content: space-between;

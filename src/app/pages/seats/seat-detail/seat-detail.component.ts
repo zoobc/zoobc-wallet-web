@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.component';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Web3 from 'web3';
@@ -11,6 +11,7 @@ const web3 = new Web3(
 );
 import { abi } from 'src/helpers/abi';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Seat, SeatService } from 'src/app/services/seat.service';
 
 @Component({
   selector: 'app-seat-detail',
@@ -24,25 +25,70 @@ export class SeatDetailComponent implements OnInit {
   metamask: boolean = false;
   etherscanUrl = environment.etherscan;
 
+  isLoading: boolean = false;
+  isError: boolean = false;
+  editable: boolean = false;
+
+  seat: Seat;
+  selectedAddress: string;
+
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
   messageField = new FormControl('', Validators.required);
 
-  constructor(private authServ: AuthService, public dialog: MatDialog) {
+  constructor(
+    private authServ: AuthService,
+    public dialog: MatDialog,
+    private seatServ: SeatService,
+    @Inject(MAT_DIALOG_DATA) private tokenId: number
+  ) {
     this.form = new FormGroup({
       address: this.addressField,
       nodePubKey: this.nodePubKeyField,
       message: this.messageField,
     });
-
-    this.nodePubKeyField.setValue(this.nodePublicKey);
   }
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    const ethereum = window['ethereum'];
-    this.metamask = ethereum.isConnected();
+
+    if (window['ethereum']) {
+      const ethereum = window['ethereum'];
+      this.metamask = ethereum.isConnected();
+      this.selectedAddress = ethereum.selectedAddress;
+    }
+
+    this.getSeat();
+  }
+
+  getSeat() {
+    this.isLoading = true;
+    this.isError = false;
+    this.seatServ
+      .get(this.tokenId)
+      .then(seat => {
+        this.isLoading = false;
+        this.seat = seat;
+        this.addressField.setValue(seat.zbcAddress);
+        this.nodePubKeyField.setValue(seat.nodePubKey);
+        this.messageField.setValue(seat.message);
+
+        const ethereum = window['ethereum'];
+        if (ethereum.selectedAddress.toLowerCase() != seat.ethAddress.toLowerCase()) {
+          this.addressField.disable();
+          this.nodePubKeyField.disable();
+          this.messageField.disable();
+          this.editable = false;
+        } else {
+          this.editable = true;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.isLoading = false;
+        this.isError = true;
+      });
   }
 
   onSwitch(account: SavedAccount) {
@@ -97,7 +143,7 @@ export class SeatDetailComponent implements OnInit {
     const message = this.messageField.value;
 
     let contract = new web3.eth.Contract(abiItem, tokenAddress);
-    const data = contract.methods.setData(100, address, pubkey, message).encodeABI();
+    const data = contract.methods.setData(this.tokenId, address, pubkey, message).encodeABI();
     contract.options.from = ethereum.selectedAddress;
 
     const transactionParameters = {

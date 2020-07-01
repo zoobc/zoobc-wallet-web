@@ -29,10 +29,11 @@ export class SeatsComponent implements OnInit {
 
   ngOnInit() {}
 
-  onOpenDetailSeat() {
+  onOpenDetailSeat(tokenId: number) {
     this.detailSetRefDialog = this.dialog.open(SeatDetailComponent, {
       width: '420px',
       maxHeight: '90vh',
+      data: tokenId,
     });
   }
 
