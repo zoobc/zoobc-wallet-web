@@ -3,7 +3,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate, getTranslation } from 'src/helpers/utils';
+import { truncate, getTranslation, jsonBufferToString } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -172,28 +172,26 @@ export class SendTransactionComponent implements OnInit {
     });
   }
 
-  validationParticipant() {
-    this.accounts.filter(async res => {
-      if (res.address === this.multisig.generatedSender) {
-        const resultAccount = res;
-        const isParticipant = resultAccount.participants.some(res => {
-          if (res !== this.account.address) {
-            this.isValidParticipant = false;
-            return false;
-          } else {
-            this.isValidParticipant = true;
-            return true;
-          }
-        });
-        if (!isParticipant) {
-          let message = await getTranslation('This account is not one of your participant', this.translate);
-          return Swal.fire({ type: 'error', title: 'Oops...', text: message });
-        }
+  async validationParticipant() {
+    this.updateSendTransaction();
+    const { multisigInfo } = this.multisig;
+    const isParticipant = multisigInfo.participants.some(res => {
+      if (res !== this.account.address) {
+        this.isValidParticipant = false;
+        return false;
+      } else {
+        this.isValidParticipant = true;
+        return true;
       }
     });
+    if (!isParticipant) {
+      let message = await getTranslation('This account is not one of your participant', this.translate);
+      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
+    }
   }
 
   async onSendMultiSignatureTransaction() {
+    this.updateSendTransaction();
     const {
       accountAddress,
       fee,
@@ -202,21 +200,31 @@ export class SendTransactionComponent implements OnInit {
       signaturesInfo,
       transaction,
     } = this.multisig;
-    const signatureInfoFilter: SignatureInfo = {
-      txHash: signaturesInfo.txHash,
-      participants: [],
-    };
-    signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
-      if (this.jsonBufferToString(pcp.signature).length > 0) return pcp;
-    });
-    this.updateSendTransaction();
-    let data: MultiSigInterface = {
-      accountAddress,
-      fee,
-      multisigInfo,
-      unisgnedTransactions,
-      signaturesInfo: signatureInfoFilter,
-    };
+    let data: MultiSigInterface;
+    if (signaturesInfo !== undefined) {
+      const signatureInfoFilter: SignatureInfo = {
+        txHash: signaturesInfo.txHash,
+        participants: [],
+      };
+      signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
+        if (jsonBufferToString(pcp.signature).length > 0) return pcp;
+      });
+      data = {
+        accountAddress,
+        fee,
+        multisigInfo,
+        unisgnedTransactions,
+        signaturesInfo: signatureInfoFilter,
+      };
+    } else {
+      data = {
+        accountAddress,
+        fee,
+        multisigInfo,
+        unisgnedTransactions,
+        signaturesInfo,
+      };
+    }
     const childSeed = this.authServ.seed;
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: any) => {
@@ -240,14 +248,5 @@ export class SendTransactionComponent implements OnInit {
 
   closeDialog() {
     this.dialog.closeAll();
-  }
-
-  jsonBufferToString(buf: any) {
-    if (!buf) return '';
-    try {
-      return Buffer.from(buf.data, 'base64').toString('base64');
-    } catch (error) {
-      return buf.toString('base64');
-    }
   }
 }
