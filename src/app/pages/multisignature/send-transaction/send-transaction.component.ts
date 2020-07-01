@@ -48,6 +48,7 @@ export class SendTransactionComponent implements OnInit {
   typeFee: number;
   customFeeValues: number;
   isValidParticipant: boolean = true;
+  isMultiSigAccount: boolean = false;
 
   constructor(
     private authServ: AuthService,
@@ -67,6 +68,7 @@ export class SendTransactionComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    if (this.account.type === 'multisig') this.isMultiSigAccount = true;
     this.accounts = this.authServ.getAllAccount();
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
@@ -80,8 +82,12 @@ export class SendTransactionComponent implements OnInit {
       if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
-      const { accountAddress, fee } = this.multisig;
-      this.account.address = accountAddress;
+      const { accountAddress, fee, generatedSender } = this.multisig;
+      if (this.isMultiSigAccount) {
+        this.account.address = generatedSender;
+      } else {
+        this.account.address = accountAddress;
+      }
       const selectedAccount = this.accounts.filter(res => {
         if (res.address === this.account.address) {
           this.authServ.switchAccount(res);
@@ -125,7 +131,11 @@ export class SendTransactionComponent implements OnInit {
   updateSendTransaction() {
     const { fee } = this.formSend.value;
     const multisig = { ...this.multisig };
-    multisig.accountAddress = this.account.address;
+    if (this.isMultiSigAccount) {
+      multisig.accountAddress = this.account.signByAddress;
+    } else {
+      multisig.accountAddress = this.account.address;
+    }
     multisig.fee = fee;
     this.multisigServ.update(multisig);
   }
@@ -176,7 +186,7 @@ export class SendTransactionComponent implements OnInit {
     this.updateSendTransaction();
     const { multisigInfo } = this.multisig;
     const isParticipant = multisigInfo.participants.some(res => {
-      if (res !== this.account.address) {
+      if (res !== this.account.address && res !== this.account.signByAddress) {
         this.isValidParticipant = false;
         return false;
       } else {
