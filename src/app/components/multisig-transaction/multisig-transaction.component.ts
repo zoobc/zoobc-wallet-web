@@ -37,6 +37,7 @@ export class MultisigTransactionComponent implements OnInit {
   currencyRate: Currency;
   kindFee: string;
   advancedMenu: boolean = false;
+  enabledSign: boolean = true;
 
   constructor(
     public dialog: MatDialog,
@@ -77,6 +78,13 @@ export class MultisigTransactionComponent implements OnInit {
       };
       const txFilter = toGetPendingList(tx);
       this.multiSigDetail = txFilter.pendingtransactionsList[0];
+      if (
+        res.pendingsignaturesList.findIndex(
+          sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
+        ) >= 0
+      )
+        this.enabledSign = false;
+      else this.enabledSign = true;
       this.isLoadingDetail = false;
     });
     this.detailMultisigRefDialog = this.dialog.open(this.detailMultisigDialog, {
