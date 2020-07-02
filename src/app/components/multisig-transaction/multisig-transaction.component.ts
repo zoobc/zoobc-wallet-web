@@ -30,7 +30,7 @@ export class MultisigTransactionComponent implements OnInit {
 
   form: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(environment.fee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('0');
 

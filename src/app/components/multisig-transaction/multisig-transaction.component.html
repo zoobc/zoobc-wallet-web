@@ -80,12 +80,20 @@
       <div class="col-12 col-md-4">{{ 'Date' | translate }}:</div>
       <div class="col-12 col-md-8">{{ multiSigDetail.timestamp * 1000 | date: 'medium' }}</div>
     </div>
-    <div *ngIf="enabledSign" style="margin: 16px 0 16px;">
-      <mat-checkbox (click)="toogleShowSignForm($event)">Sign the transaction</mat-checkbox>
+    <div class="row">
+      <div class="col-6 col-md-6" style="margin: 16px 0 16px;">
+        <ng-container *ngIf="enabledSign">
+          <mat-checkbox (click)="toogleShowSignForm($event)">Sign this transaction</mat-checkbox>
+        </ng-container>
+      </div>
+      <div class="col-6 col-md-6 text-right participant-info" style="margin: 16px 0 16px;">
+        <ng-container *ngIf="pendingSignatures.length == 0">No participants have signed yet</ng-container>
+        <ng-container *ngIf="pendingSignatures.length > 0">2 of 3 participant has signed</ng-container>
+      </div>
     </div>
     <ng-container *ngIf="showSignForm">
       <div class="row">
-        <div class="col-12 col-md-12">
+        <div class="col-10 col-md-10 offset-1">
           <fee-selector
             [group]="form"
             feeName="fee"
