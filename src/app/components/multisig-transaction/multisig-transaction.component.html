@@ -83,17 +83,24 @@
     <div class="row">
       <div class="col-6 col-md-6" style="margin: 16px 0 16px;">
         <ng-container *ngIf="enabledSign">
-          <mat-checkbox (click)="toogleShowSignForm($event)">Sign this transaction</mat-checkbox>
+          <mat-checkbox (click)="toogleShowSignForm($event)">
+            {{ 'Sign this transaction' || translate }}
+          </mat-checkbox>
         </ng-container>
       </div>
       <div class="col-6 col-md-6 text-right participant-info" style="margin: 16px 0 16px;">
-        <ng-container *ngIf="pendingSignatures.length == 0">No participants have signed yet</ng-container>
-        <ng-container *ngIf="pendingSignatures.length > 0">2 of 3 participant has signed</ng-container>
+        <ng-container *ngIf="pendingSignatures.length == 0">
+          {{ 'No participants have signed yet' || translate }}
+        </ng-container>
+        <ng-container *ngIf="pendingSignatures.length > 0">
+          {{ 'Signed by' | translate }} {{ pendingSignatures.length }} of {{ participants.length }}
+          {{ 'participants' || translate }}
+        </ng-container>
       </div>
     </div>
     <ng-container *ngIf="showSignForm">
       <div class="row">
-        <div class="col-10 col-md-10 offset-1">
+        <div class="col-12 col-md-10 offset-md-1">
           <fee-selector
             [group]="form"
             feeName="fee"

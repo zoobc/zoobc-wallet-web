@@ -8,6 +8,7 @@ import { base64ToHex, getTranslation, truncate } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 
 @Component({
   selector: 'app-multisig-transaction',
@@ -40,6 +41,7 @@ export class MultisigTransactionComponent implements OnInit {
   enabledSign: boolean = true;
   showSignForm: boolean = false;
   pendingSignatures = [];
+  participants = [];
 
   constructor(
     public dialog: MatDialog,
@@ -72,6 +74,7 @@ export class MultisigTransactionComponent implements OnInit {
     const hashHex = base64ToHex(txHash);
     this.isLoadingDetail = true;
     zoobc.MultiSignature.getPendingByTxHash(hashHex).then(res => {
+      console.log(res);
       const list = [];
       list.push(res.pendingtransaction);
       const tx = {
@@ -83,6 +86,7 @@ export class MultisigTransactionComponent implements OnInit {
       this.multiSigDetail = txFilter.pendingtransactionsList[0];
 
       this.pendingSignatures = res.pendingsignaturesList;
+      this.participants = res.multisignatureinfo.addressesList;
       const idx = this.pendingSignatures.findIndex(
         sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
       );
@@ -106,44 +110,53 @@ export class MultisigTransactionComponent implements OnInit {
   }
 
   onAccept() {
-    const account = this.authServ.getCurrAccount();
-    const seed = this.authServ.seed;
-
-    this.isLoadingTx = true;
-    let data: MultiSigInterface = {
-      accountAddress: account.signByAddress,
-      fee: this.feeForm.value,
-      signaturesInfo: {
-        txHash: this.multiSigDetail.transactionhash,
-        participants: [
-          {
-            address: account.signByAddress,
-            signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
+    let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
+      width: '400px',
+      maxHeight: '90vh',
+    });
+    pinRefDialog.afterClosed().subscribe(isPinValid => {
+      if (isPinValid) {
+        const account = this.authServ.getCurrAccount();
+        const seed = this.authServ.seed;
+        this.isLoadingTx = true;
+        let data: MultiSigInterface = {
+          accountAddress: account.signByAddress,
+          fee: this.feeForm.value,
+          signaturesInfo: {
+            txHash: this.multiSigDetail.transactionhash,
+            participants: [
+              {
+                address: account.signByAddress,
+                signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
+              },
+            ],
           },
-        ],
-      },
-    };
-
-    zoobc.MultiSignature.postTransaction(data, seed)
-      .then(async (res: any) => {
-        let message = await getTranslation('Transaction has been accepted', this.translate);
-        Swal.fire({
-          type: 'success',
-          title: message,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      })
-      .catch(async err => {
-        console.log(err.message);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
-        Swal.fire('Opps...', message, 'error');
-      })
-      .finally(() => {
-        this.isLoadingTx = false;
-        this.closeDialog();
-        this.onRefresh();
-      });
+        };
+        zoobc.MultiSignature.postTransaction(data, seed)
+          .then(async (res: any) => {
+            let message = await getTranslation('Transaction has been accepted', this.translate);
+            Swal.fire({
+              type: 'success',
+              title: message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+          .catch(async err => {
+            console.log(err.message);
+            let message = await getTranslation(
+              'An error occurred while processing your request',
+              this.translate
+            );
+            Swal.fire('Opps...', message, 'error');
+          })
+          .finally(() => {
+            this.isLoadingTx = false;
+            this.closeDialog();
+            this.onRefresh();
+          });
+      }
+    });
   }
 
   onClickFeeChoose(value) {
