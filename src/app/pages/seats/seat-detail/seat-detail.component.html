@@ -41,8 +41,9 @@
 
         <mat-label class="title">{{ 'Message' | translate }}</mat-label>
         <mat-form-field appearance="outline" color="accent" class="block">
-          <textarea matInput rows="9" formControlName="message"> </textarea>
-          <mat-hint>34 of 128 bytes</mat-hint>
+          <textarea matInput rows="9" (keydown)="onChangeMessage($event)" formControlName="message">
+          </textarea>
+          <mat-hint>{{ messageSize }} of 256 bytes</mat-hint>
         </mat-form-field>
 
         <ng-container *ngIf="metamask && editable">
