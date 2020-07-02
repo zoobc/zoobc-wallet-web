@@ -47,7 +47,6 @@ export class SendTransactionComponent implements OnInit {
   feeFast = this.feeMedium * 2;
   typeFee: number;
   customFeeValues: number;
-  isValidParticipant: boolean = true;
   isMultiSigAccount: boolean = false;
 
   constructor(
@@ -88,11 +87,6 @@ export class SendTransactionComponent implements OnInit {
       } else {
         this.account.address = accountAddress;
       }
-      const selectedAccount = this.accounts.filter(res => {
-        if (res.address === this.account.address) {
-          this.authServ.switchAccount(res);
-        }
-      });
       this.feeForm.setValue(multisig.fee);
       this.feeFormCurr.setValue(multisig.fee * this.currencyRate.value);
       this.timeoutField.setValue('0');
@@ -158,13 +152,16 @@ export class SendTransactionComponent implements OnInit {
     this.authServ.switchAccount(account);
   }
 
-  onOpenConfirmDialog() {
-    this.validationParticipant();
-    if (this.isValidParticipant) {
+  async onOpenConfirmDialog() {
+    const validationParticipant = this.validationParticipant();
+    if (validationParticipant) {
       this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
         width: '500px',
         maxHeight: '90vh',
       });
+    } else {
+      let message = await getTranslation('This account is not one of your participant', this.translate);
+      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
@@ -182,22 +179,16 @@ export class SendTransactionComponent implements OnInit {
     });
   }
 
-  async validationParticipant() {
-    this.updateSendTransaction();
+  validationParticipant(): boolean {
     const { multisigInfo } = this.multisig;
     const isParticipant = multisigInfo.participants.some(res => {
       if (res !== this.account.address && res !== this.account.signByAddress) {
-        this.isValidParticipant = false;
         return false;
       } else {
-        this.isValidParticipant = true;
         return true;
       }
     });
-    if (!isParticipant) {
-      let message = await getTranslation('This account is not one of your participant', this.translate);
-      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
-    }
+    return isParticipant;
   }
 
   async onSendMultiSignatureTransaction() {
