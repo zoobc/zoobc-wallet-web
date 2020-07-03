@@ -10,7 +10,7 @@ const web3 = new Web3(
   new Web3.providers.WebsocketProvider('wss://goerli.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
 );
 import { abi } from 'src/helpers/abi';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
 
 @Component({
@@ -35,7 +35,8 @@ export class SeatDetailComponent implements OnInit {
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
-  messageField = new FormControl('', Validators.required);
+  messageField = new FormControl('', [Validators.required, this.checkMessageLength.bind(this)]);
+  messageSize: number;
 
   constructor(
     private authServ: AuthService,
@@ -52,7 +53,6 @@ export class SeatDetailComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-
     if (window['ethereum']) {
       const ethereum = window['ethereum'];
       this.metamask = ethereum.isConnected() ? (ethereum.selectedAddress ? true : false) : false;
@@ -75,6 +75,7 @@ export class SeatDetailComponent implements OnInit {
         this.messageField.setValue(seat.message);
 
         this.checkCanEdit();
+        this.messageSize = this.getByteLength(this.messageField.value);
       })
       .catch(err => {
         console.log(err);
@@ -196,5 +197,20 @@ export class SeatDetailComponent implements OnInit {
         }
       }
     );
+  }
+
+  getByteLength(str: string) {
+    const buf = Buffer.from(str);
+    return Buffer.byteLength(buf);
+  }
+
+  checkMessageLength(ctrl: AbstractControl) {
+    const length = this.getByteLength(ctrl.value);
+    if (length > 256) return { invalidLimit: true };
+    return null;
+  }
+
+  onKeyUpMessage(e: any) {
+    this.messageSize = this.getByteLength(e.target.value);
   }
 }
