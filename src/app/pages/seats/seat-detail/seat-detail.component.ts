@@ -55,7 +55,7 @@ export class SeatDetailComponent implements OnInit {
 
     if (window['ethereum']) {
       const ethereum = window['ethereum'];
-      this.metamask = ethereum.isConnected();
+      this.metamask = ethereum.isConnected() ? (ethereum.selectedAddress ? true : false) : false;
       this.selectedAddress = ethereum.selectedAddress;
     }
 
@@ -74,21 +74,32 @@ export class SeatDetailComponent implements OnInit {
         this.nodePubKeyField.setValue(seat.nodePubKey);
         this.messageField.setValue(seat.message);
 
-        const ethereum = window['ethereum'];
-        if (ethereum.selectedAddress.toLowerCase() != seat.ethAddress.toLowerCase()) {
-          this.addressField.disable();
-          this.nodePubKeyField.disable();
-          this.messageField.disable();
-          this.editable = false;
-        } else {
-          this.editable = true;
-        }
+        this.checkCanEdit();
       })
       .catch(err => {
         console.log(err);
         this.isLoading = false;
         this.isError = true;
       });
+  }
+
+  checkCanEdit() {
+    const ethereum = window['ethereum'];
+    if (
+      ethereum &&
+      ethereum.selectedAddress &&
+      ethereum.selectedAddress.toLowerCase() == this.seat.ethAddress.toLowerCase()
+    ) {
+      this.addressField.enable();
+      this.nodePubKeyField.enable();
+      this.messageField.enable();
+      this.editable = true;
+    } else {
+      this.addressField.disable();
+      this.nodePubKeyField.disable();
+      this.messageField.disable();
+      this.editable = false;
+    }
   }
 
   onSwitch(account: SavedAccount) {
@@ -118,8 +129,12 @@ export class SeatDetailComponent implements OnInit {
 
   async connectMetamask() {
     const ethereum = window['ethereum'];
-    await ethereum.enable();
-    this.metamask = ethereum.isConnected();
+    if (ethereum) {
+      await ethereum.enable();
+      this.metamask = ethereum.isConnected();
+
+      this.checkCanEdit();
+    } else Swal.fire({ type: 'error', title: 'Please install Metamask first' });
   }
 
   onOpenPinDialog() {
