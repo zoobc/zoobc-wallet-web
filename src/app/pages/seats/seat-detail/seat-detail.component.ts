@@ -12,7 +12,6 @@ const web3 = new Web3(
 import { abi } from 'src/helpers/abi';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
-import { lengthStringInByte } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-seat-detail',
@@ -36,7 +35,7 @@ export class SeatDetailComponent implements OnInit {
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
-  messageField = new FormControl('', [Validators.required, this.checkMessageLength]);
+  messageField = new FormControl('', [Validators.required, this.checkMessageLength.bind(this)]);
   messageSize: number;
 
   constructor(
@@ -84,7 +83,7 @@ export class SeatDetailComponent implements OnInit {
         } else {
           this.editable = true;
         }
-        this.messageSize = lengthStringInByte(this.messageField.value);
+        this.messageSize = this.getByteLength(this.messageField.value);
       })
       .catch(err => {
         console.log(err);
@@ -185,13 +184,18 @@ export class SeatDetailComponent implements OnInit {
     );
   }
 
+  getByteLength(str: string) {
+    const buf = Buffer.from(str);
+    return Buffer.byteLength(buf);
+  }
+
   checkMessageLength(ctrl: AbstractControl) {
-    const length = lengthStringInByte(ctrl.value);
+    const length = this.getByteLength(ctrl.value);
     if (length > 256) return { invalidLimit: true };
     return null;
   }
 
   onKeyUpMessage(e: any) {
-    this.messageSize = lengthStringInByte(e.target.value);
+    this.messageSize = this.getByteLength(e.target.value);
   }
 }

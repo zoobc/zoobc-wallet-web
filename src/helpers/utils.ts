@@ -44,8 +44,3 @@ export function base64ToHex(str) {
   }
   return result.toUpperCase();
 }
-
-export function lengthStringInByte(str: string) {
-  const buf = Buffer.from(str);
-  return Buffer.byteLength(buf);
-}
