@@ -10,8 +10,9 @@ const web3 = new Web3(
   new Web3.providers.WebsocketProvider('wss://goerli.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
 );
 import { abi } from 'src/helpers/abi';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
+import { lengthStringInByte } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-seat-detail',
@@ -35,7 +36,7 @@ export class SeatDetailComponent implements OnInit {
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
-  messageField = new FormControl('', Validators.required);
+  messageField = new FormControl('', [Validators.required, this.checkMessageLength]);
   messageSize: number;
 
   constructor(
@@ -83,7 +84,7 @@ export class SeatDetailComponent implements OnInit {
         } else {
           this.editable = true;
         }
-        this.calculateMessageSize(this.messageField.value);
+        this.messageSize = lengthStringInByte(this.messageField.value);
       })
       .catch(err => {
         console.log(err);
@@ -184,18 +185,13 @@ export class SeatDetailComponent implements OnInit {
     );
   }
 
-  lengthInUtf8Bytes(str: string) {
-    return Buffer.from(str).length;
+  checkMessageLength(ctrl: AbstractControl) {
+    const length = lengthStringInByte(ctrl.value);
+    if (length > 256) return { invalidLimit: true };
+    return null;
   }
 
-  calculateMessageSize(str: string) {
-    this.messageSize = this.lengthInUtf8Bytes(str);
-    if (this.messageSize > 256) this.messageField.setErrors({ invalid: true });
-    this.messageField.updateValueAndValidity();
-    console.log(this.form);
-  }
-
-  onChangeMessage(e: any) {
-    this.calculateMessageSize(e.target.value);
+  onKeyUpMessage(e: any) {
+    this.messageSize = lengthStringInByte(e.target.value);
   }
 }

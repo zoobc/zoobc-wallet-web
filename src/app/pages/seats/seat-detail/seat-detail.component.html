@@ -41,11 +41,17 @@
 
         <mat-label class="title">{{ 'Message' | translate }}</mat-label>
         <mat-form-field appearance="outline" color="accent" class="block">
-          <textarea matInput rows="9" (keydown)="onChangeMessage($event)" formControlName="message">
-          </textarea>
+          <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message"> </textarea>
           <mat-hint>{{ messageSize }} of 256 bytes</mat-hint>
         </mat-form-field>
-
+        <ng-container *ngIf="messageField.touched">
+          <mat-error *ngIf="messageField.hasError('required')">
+            {{ 'Message is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="messageField.hasError('invalidLimit')">
+            {{ 'Maximum message length is 256 bytes' | translate }}
+          </mat-error>
+        </ng-container>
         <ng-container *ngIf="metamask && editable">
           <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
             <i matPrefix class="fa fa-download"></i>
@@ -58,6 +64,7 @@
             class="block"
             color="primary"
             (click)="onUpdate()"
+            [disabled]="!form.valid"
           >
             <i matPrefix class="fa fa-pen"></i>
             {{ 'Update' | translate }}
