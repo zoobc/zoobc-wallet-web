@@ -106,8 +106,7 @@ export class SeatDetailComponent implements OnInit {
 
     let ec = new EdDSA('ed25519');
     let pairKey = ec.keyFromSecret(seedHash);
-    let nodePubKey = getZBCAdress(pairKey.getPublic());
-    const nodeAddress = nodePubKey.replace(/ZBC/g, 'ZNK');
+    let nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
     this.nodePubKeyField.setValue(nodeAddress);
   }
 
