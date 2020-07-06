@@ -114,6 +114,14 @@ export class SeatDetailComponent implements OnInit {
     const confirmRefDialog = this.dialog.open(ConfirmUpdateComponent, {
       width: '800px',
       maxHeight: '90vh',
+      data: {
+        old: this.seat,
+        new: {
+          zbcAddress: this.addressField.value,
+          nodePubKey: this.nodePubKeyField.value,
+          message: this.messageField.value,
+        },
+      },
     });
 
     confirmRefDialog.afterClosed().subscribe(onConfirm => {
