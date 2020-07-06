@@ -4,12 +4,7 @@ import Swal from 'sweetalert2';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.component';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import Web3 from 'web3';
 import { environment } from 'src/environments/environment';
-const web3 = new Web3(
-  new Web3.providers.WebsocketProvider('wss://goerli.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
-);
-import { abi } from 'src/helpers/abi';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
 
@@ -23,9 +18,9 @@ export class SeatDetailComponent implements OnInit {
   nodePublicKey: string = 'ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7';
 
   metamask: boolean = false;
-  etherscanUrl = environment.etherscan;
 
   isLoading: boolean = false;
+  isLoadingUpdate: boolean = false;
   isError: boolean = false;
   editable: boolean = false;
 
@@ -149,54 +144,34 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onSendTransaction() {
-    const ethereum = window['ethereum'];
+    this.isLoadingUpdate = true;
 
-    const tokenAddress = environment.tokenAddress;
-    const abiItem = abi;
-
-    const address = this.addressField.value;
-    const pubkey = this.nodePubKeyField.value;
-    const message = this.messageField.value;
-
-    let contract = new web3.eth.Contract(abiItem, tokenAddress);
-    const data = contract.methods.setData(this.tokenId, address, pubkey, message).encodeABI();
-    contract.options.from = ethereum.selectedAddress;
-
-    const transactionParameters = {
-      nonce: '0x00',
-      gasPrice: web3.utils.toHex(web3.utils.toWei(environment.gasPrice.toString(), 'gwei')),
-      gas: web3.utils.toHex(environment.gasLimit.toString()),
-      to: tokenAddress,
-      from: ethereum.selectedAddress,
-      value: '0x00',
-      data: data,
-      chainId: environment.chainId,
+    const params: Seat = {
+      tokenId: this.tokenId,
+      ethAddress: this.seat.ethAddress,
+      zbcAddress: this.addressField.value,
+      nodePubKey: this.nodePubKeyField.value,
+      message: this.messageField.value,
     };
-
-    ethereum.sendAsync(
-      {
-        method: 'eth_sendTransaction',
-        params: [transactionParameters],
-        from: ethereum.selectedAddress,
-      },
-      (err, response) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(response);
-          const txHash = response.result;
-          Swal.fire({
-            type: 'success',
-            title: 'Transaction sent!',
-            html:
-              'Click ' +
-              `<a href="${environment.etherscan}tx/${txHash}" target="_blank">here</a> ` +
-              'to check your transaction status in etherscan.io',
-          });
-          this.dialog.closeAll();
-        }
-      }
-    );
+    this.seatServ
+      .update(params)
+      .then((res: any) => {
+        this.isLoadingUpdate = false;
+        const txHash = res.result;
+        Swal.fire({
+          type: 'success',
+          title: 'Transaction sent!',
+          html:
+            'Click ' +
+            `<a href="${environment.etherscan}tx/${txHash}" target="_blank">here</a> ` +
+            'to check your transaction status in etherscan.io',
+        });
+        this.dialog.closeAll();
+      })
+      .catch(err => {
+        this.isLoadingUpdate = false;
+        Swal.fire({ type: 'error', title: err.err.message });
+      });
   }
 
   getByteLength(str: string) {

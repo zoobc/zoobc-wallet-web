@@ -108,4 +108,44 @@ export class SeatService {
       return null;
     }
   }
+
+  update(seat: Seat): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const ethereum = window['ethereum'];
+
+      if (ethereum) {
+        const tokenAddress = environment.tokenAddress;
+        const abiItem = abi;
+
+        let contract = new web3.eth.Contract(abiItem, tokenAddress);
+        const data = contract.methods
+          .setData(seat.tokenId, seat.zbcAddress, seat.nodePubKey, seat.message)
+          .encodeABI();
+        contract.options.from = ethereum.selectedAddress;
+
+        const transactionParameters = {
+          nonce: '0x00',
+          gasPrice: web3.utils.toHex(web3.utils.toWei(environment.gasPrice.toString(), 'gwei')),
+          gas: web3.utils.toHex(environment.gasLimit.toString()),
+          to: tokenAddress,
+          from: ethereum.selectedAddress,
+          value: '0x00',
+          data: data,
+          chainId: environment.chainId,
+        };
+
+        ethereum.sendAsync(
+          {
+            method: 'eth_sendTransaction',
+            params: [transactionParameters],
+            from: ethereum.selectedAddress,
+          },
+          (err, response) => {
+            if (err) return reject(err);
+            else return resolve(response);
+          }
+        );
+      } else return reject({ message: 'Please install Metamask first' });
+    });
+  }
 }

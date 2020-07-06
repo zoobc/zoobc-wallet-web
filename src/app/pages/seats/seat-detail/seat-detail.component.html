@@ -64,9 +64,10 @@
             class="block"
             color="primary"
             (click)="onUpdate()"
-            [disabled]="!form.valid"
+            [disabled]="!form.valid || isLoadingUpdate"
           >
-            <i matPrefix class="fa fa-pen"></i>
+            <i matPrefix class="fa fa-pen" *ngIf="!isLoadingUpdate"></i>
+            <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
             {{ 'Update' | translate }}
           </button>
         </ng-container>
@@ -94,7 +95,11 @@
   </ng-container>
 
   <!-- IF ERROR -->
-  <ng-container></ng-container>
+  <div class="no-content" *ngIf="isError">
+    <i matPrefix class="far fa-frown"></i>
+    <span class="message">Error occured. Please try again</span>
+    <button mat-flat-button color="primary" (click)="getSeat()">Try again</button>
+  </div>
 </ng-container>
 
 <!-- LOADING -->
