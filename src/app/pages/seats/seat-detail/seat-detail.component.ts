@@ -18,8 +18,6 @@ import * as sha256 from 'sha256';
 })
 export class SeatDetailComponent implements OnInit {
   account: SavedAccount;
-  nodePublicKey: string = 'ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7';
-
   metamask: boolean = false;
 
   isLoading: boolean = false;
@@ -33,7 +31,7 @@ export class SeatDetailComponent implements OnInit {
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
-  messageField = new FormControl('', [Validators.required, this.checkMessageLength.bind(this)]);
+  messageField = new FormControl('', [this.checkMessageLength.bind(this)]);
   messageSize: number;
 
   constructor(
@@ -105,8 +103,8 @@ export class SeatDetailComponent implements OnInit {
     this.addressField.setValue(account.address);
   }
 
-  generateRandomNodePublicKey() {
-    let passphrase = ZooKeyring.generateRandomPhrase(24, 'english');
+  generateNodePublicKey() {
+    let passphrase = ZooKeyring.generateRandomPhrase(12, 'english');
     const seedBuffer = new TextEncoder().encode(passphrase);
     const seedHash = sha256(seedBuffer);
 
