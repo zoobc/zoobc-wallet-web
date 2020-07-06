@@ -7,6 +7,9 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
+import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import { eddsa as EdDSA } from 'elliptic';
+import * as sha256 from 'sha256';
 
 @Component({
   selector: 'app-seat-detail',
@@ -102,20 +105,29 @@ export class SeatDetailComponent implements OnInit {
     this.addressField.setValue(account.address);
   }
 
-  generateRandomNodePublicKey(length: number = 44) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return (this.nodePublicKey = result);
+  generateRandomNodePublicKey() {
+    let passphrase = ZooKeyring.generateRandomPhrase(24, 'english');
+    const seedBuffer = new TextEncoder().encode(passphrase);
+    const seedHash = sha256(seedBuffer);
+
+    let ec = new EdDSA('ed25519');
+    let pairKey = ec.keyFromSecret(seedHash);
+    let nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
+    this.nodePubKeyField.setValue(nodeAddress);
   }
 
   onUpdate() {
     const confirmRefDialog = this.dialog.open(ConfirmUpdateComponent, {
       width: '800px',
       maxHeight: '90vh',
+      data: {
+        old: this.seat,
+        new: {
+          zbcAddress: this.addressField.value,
+          nodePubKey: this.nodePubKeyField.value,
+          message: this.messageField.value,
+        },
+      },
     });
 
     confirmRefDialog.afterClosed().subscribe(onConfirm => {
