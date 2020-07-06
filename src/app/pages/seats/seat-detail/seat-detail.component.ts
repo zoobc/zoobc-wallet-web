@@ -4,12 +4,7 @@ import Swal from 'sweetalert2';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.component';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import Web3 from 'web3';
 import { environment } from 'src/environments/environment';
-const web3 = new Web3(
-  new Web3.providers.WebsocketProvider('wss://goerli.infura.io/ws/v3/2ebd28952cb94885bd6924966184dba2')
-);
-import { abi } from 'src/helpers/abi';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
 import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
@@ -23,12 +18,10 @@ import * as sha256 from 'sha256';
 })
 export class SeatDetailComponent implements OnInit {
   account: SavedAccount;
-  nodePublicKey: string = 'ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7';
-
   metamask: boolean = false;
-  etherscanUrl = environment.etherscan;
 
   isLoading: boolean = false;
+  isLoadingUpdate: boolean = false;
   isError: boolean = false;
   editable: boolean = false;
 
@@ -38,7 +31,7 @@ export class SeatDetailComponent implements OnInit {
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
-  messageField = new FormControl('', [Validators.required, this.checkMessageLength.bind(this)]);
+  messageField = new FormControl('', [this.checkMessageLength.bind(this)]);
   messageSize: number;
 
   constructor(
@@ -58,7 +51,7 @@ export class SeatDetailComponent implements OnInit {
     this.account = this.authServ.getCurrAccount();
     if (window['ethereum']) {
       const ethereum = window['ethereum'];
-      this.metamask = ethereum.isConnected();
+      this.metamask = ethereum.isConnected() ? (ethereum.selectedAddress ? true : false) : false;
       this.selectedAddress = ethereum.selectedAddress;
     }
 
@@ -77,15 +70,7 @@ export class SeatDetailComponent implements OnInit {
         this.nodePubKeyField.setValue(seat.nodePubKey);
         this.messageField.setValue(seat.message);
 
-        const ethereum = window['ethereum'];
-        if (ethereum.selectedAddress.toLowerCase() != seat.ethAddress.toLowerCase()) {
-          this.addressField.disable();
-          this.nodePubKeyField.disable();
-          this.messageField.disable();
-          this.editable = false;
-        } else {
-          this.editable = true;
-        }
+        this.checkCanEdit();
         this.messageSize = this.getByteLength(this.messageField.value);
       })
       .catch(err => {
@@ -95,12 +80,31 @@ export class SeatDetailComponent implements OnInit {
       });
   }
 
+  checkCanEdit() {
+    const ethereum = window['ethereum'];
+    if (
+      ethereum &&
+      ethereum.selectedAddress &&
+      ethereum.selectedAddress.toLowerCase() == this.seat.ethAddress.toLowerCase()
+    ) {
+      this.addressField.enable();
+      this.nodePubKeyField.enable();
+      this.messageField.enable();
+      this.editable = true;
+    } else {
+      this.addressField.disable();
+      this.nodePubKeyField.disable();
+      this.messageField.disable();
+      this.editable = false;
+    }
+  }
+
   onSwitch(account: SavedAccount) {
     this.addressField.setValue(account.address);
   }
 
-  generateRandomNodePublicKey() {
-    let passphrase = ZooKeyring.generateRandomPhrase(24, 'english');
+  generateNodePublicKey() {
+    let passphrase = ZooKeyring.generateRandomPhrase(12, 'english');
     const seedBuffer = new TextEncoder().encode(passphrase);
     const seedHash = sha256(seedBuffer);
 
@@ -131,8 +135,12 @@ export class SeatDetailComponent implements OnInit {
 
   async connectMetamask() {
     const ethereum = window['ethereum'];
-    await ethereum.enable();
-    this.metamask = ethereum.isConnected();
+    if (ethereum) {
+      await ethereum.enable();
+      this.metamask = ethereum.isConnected();
+
+      this.checkCanEdit();
+    } else Swal.fire({ type: 'error', title: 'Please install Metamask first' });
   }
 
   onOpenPinDialog() {
@@ -146,54 +154,34 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onSendTransaction() {
-    const ethereum = window['ethereum'];
+    this.isLoadingUpdate = true;
 
-    const tokenAddress = environment.tokenAddress;
-    const abiItem = abi;
-
-    const address = this.addressField.value;
-    const pubkey = this.nodePubKeyField.value;
-    const message = this.messageField.value;
-
-    let contract = new web3.eth.Contract(abiItem, tokenAddress);
-    const data = contract.methods.setData(this.tokenId, address, pubkey, message).encodeABI();
-    contract.options.from = ethereum.selectedAddress;
-
-    const transactionParameters = {
-      nonce: '0x00',
-      gasPrice: web3.utils.toHex(web3.utils.toWei(environment.gasPrice.toString(), 'gwei')),
-      gas: web3.utils.toHex(environment.gasLimit.toString()),
-      to: tokenAddress,
-      from: ethereum.selectedAddress,
-      value: '0x00',
-      data: data,
-      chainId: environment.chainId,
+    const params: Seat = {
+      tokenId: this.tokenId,
+      ethAddress: this.seat.ethAddress,
+      zbcAddress: this.addressField.value,
+      nodePubKey: this.nodePubKeyField.value,
+      message: this.messageField.value,
     };
-
-    ethereum.sendAsync(
-      {
-        method: 'eth_sendTransaction',
-        params: [transactionParameters],
-        from: ethereum.selectedAddress,
-      },
-      (err, response) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(response);
-          const txHash = response.result;
-          Swal.fire({
-            type: 'success',
-            title: 'Transaction sent!',
-            html:
-              'Click ' +
-              `<a href="${environment.etherscan}tx/${txHash}" target="_blank">here</a> ` +
-              'to check your transaction status in etherscan.io',
-          });
-          this.dialog.closeAll();
-        }
-      }
-    );
+    this.seatServ
+      .update(params)
+      .then((res: any) => {
+        this.isLoadingUpdate = false;
+        const txHash = res.result;
+        Swal.fire({
+          type: 'success',
+          title: 'Transaction sent!',
+          html:
+            'Click ' +
+            `<a href="${environment.etherscan}tx/${txHash}" target="_blank">here</a> ` +
+            'to check your transaction status in etherscan.io',
+        });
+        this.dialog.closeAll();
+      })
+      .catch(err => {
+        this.isLoadingUpdate = false;
+        Swal.fire({ type: 'error', title: err.err.message });
+      });
   }
 
   getByteLength(str: string) {

@@ -32,26 +32,45 @@
         </div>
 
         <mat-label class="title">{{ 'Node Public Key' | translate }}</mat-label>
-        <mat-form-field appearance="outline" color="accent" class="block">
-          <input (change)="onChangeTimeOut()" matInput formControlName="nodePubKey" />
-          <button type="button" class="btn-suffix" matSuffix (click)="generateRandomNodePublicKey()">
+        <div style="display: flex;">
+          <div class="address" style="width: calc(100% - 48px);margin-right: 12px;">
+            <wallet-address
+              *ngIf="nodePubKeyField.value"
+              [value]="nodePubKeyField.value"
+              [copyButton]="true"
+            ></wallet-address>
+            <i *ngIf="!nodePubKeyField.value">(No Node Public Key yet)</i>
+          </div>
+          <button
+            type="button"
+            class="btn-suffix"
+            matSuffix
+            (click)="generateNodePublicKey()"
+            matTooltip="Get New Node Public Key"
+            *ngIf="editable"
+          >
             <i class="fas fa-sync"></i>
           </button>
-        </mat-form-field>
+        </div>
 
         <mat-label class="title">{{ 'Message' | translate }}</mat-label>
-        <mat-form-field appearance="outline" color="accent" class="block">
-          <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message"> </textarea>
-          <mat-hint>{{ messageSize }} of 256 bytes</mat-hint>
-        </mat-form-field>
-        <ng-container *ngIf="messageField.touched">
-          <mat-error *ngIf="messageField.hasError('required')">
-            {{ 'Message is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="messageField.hasError('invalidLimit')">
-            {{ 'Maximum message length is 256 bytes' | translate }}
-          </mat-error>
+        <div *ngIf="!editable">
+          {{ seat.message }}
+          <i *ngIf="!messageField.value">(No Message yet)</i>
+        </div>
+        <ng-container *ngIf="editable">
+          <mat-form-field appearance="outline" color="accent" class="block">
+            <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message">
+            </textarea>
+          </mat-form-field>
+          <ng-container *ngIf="messageField.touched">
+            <mat-error *ngIf="messageField.hasError('invalidLimit')">
+              {{ 'Maximum message length is 256 bytes' | translate }}
+            </mat-error>
+          </ng-container>
+          <div class="hint">{{ messageSize }} of 256 bytes</div>
         </ng-container>
+
         <ng-container *ngIf="metamask && editable">
           <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
             <i matPrefix class="fa fa-download"></i>
@@ -64,9 +83,10 @@
             class="block"
             color="primary"
             (click)="onUpdate()"
-            [disabled]="!form.valid"
+            [disabled]="!form.valid || isLoadingUpdate"
           >
-            <i matPrefix class="fa fa-pen"></i>
+            <i matPrefix class="fa fa-pen" *ngIf="!isLoadingUpdate"></i>
+            <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
             {{ 'Update' | translate }}
           </button>
         </ng-container>
@@ -82,10 +102,11 @@
         >
           {{ 'Connect Metamask' | translate }}
         </button>
-        <div class="text-center" style="margin-top: 10px;">
-          <span
-            >{{ 'Need Help?' }} <a href="/">{{ 'Click Here' }}</a></span
-          >
+
+        <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
+          <span>
+            {{ 'Need Help?' }} <a href="/">{{ 'Click Here' }}</a>
+          </span>
         </div>
       </form>
     </div>
@@ -94,7 +115,11 @@
   </ng-container>
 
   <!-- IF ERROR -->
-  <ng-container></ng-container>
+  <div class="no-content" *ngIf="isError">
+    <i matPrefix class="far fa-frown"></i>
+    <span class="message">Error occured. Please try again</span>
+    <button mat-flat-button color="primary" (click)="getSeat()">Try again</button>
+  </div>
 </ng-container>
 
 <!-- LOADING -->
