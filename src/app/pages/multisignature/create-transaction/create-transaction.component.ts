@@ -94,6 +94,7 @@ export class CreateTransactionComponent implements OnInit {
 
       this.multisig = multisig;
       this.removeExport = signaturesInfo !== undefined ? true : false;
+      if (unisgnedTransactions !== null) this.isHasTransactionHash = true;
       if (signaturesInfo) {
         this.isHasTransactionHash = signaturesInfo.txHash !== undefined ? true : false;
       }
@@ -273,7 +274,6 @@ export class CreateTransactionComponent implements OnInit {
         txHash: this.txHash,
         participants: participantAccount,
       };
-
       this.isHasTransactionHash = true;
       this.multisig.generatedSender = this.multisig.transaction.sender;
     }

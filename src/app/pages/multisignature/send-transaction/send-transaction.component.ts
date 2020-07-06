@@ -3,7 +3,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate, getTranslation } from 'src/helpers/utils';
+import { truncate, getTranslation, jsonBufferToString } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -27,6 +27,7 @@ export class SendTransactionComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
   account: SavedAccount;
+  accounts: SavedAccount[];
   formSend: FormGroup;
   minFee = environment.fee;
   feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
@@ -46,6 +47,7 @@ export class SendTransactionComponent implements OnInit {
   feeFast = this.feeMedium * 2;
   typeFee: number;
   customFeeValues: number;
+  isMultiSigAccount: boolean = false;
 
   constructor(
     private authServ: AuthService,
@@ -65,6 +67,8 @@ export class SendTransactionComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    if (this.account.type === 'multisig') this.isMultiSigAccount = true;
+    this.accounts = this.authServ.getAllAccount();
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
@@ -77,8 +81,12 @@ export class SendTransactionComponent implements OnInit {
       if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
-      const { accountAddress, fee } = this.multisig;
-      this.account.address = accountAddress;
+      const { accountAddress, fee, generatedSender } = this.multisig;
+      if (this.isMultiSigAccount) {
+        this.account.address = generatedSender;
+      } else {
+        this.account.address = accountAddress;
+      }
       this.feeForm.setValue(multisig.fee);
       this.feeFormCurr.setValue(multisig.fee * this.currencyRate.value);
       this.timeoutField.setValue('0');
@@ -117,7 +125,11 @@ export class SendTransactionComponent implements OnInit {
   updateSendTransaction() {
     const { fee } = this.formSend.value;
     const multisig = { ...this.multisig };
-    multisig.accountAddress = this.account.address;
+    if (this.isMultiSigAccount) {
+      multisig.accountAddress = this.account.signByAddress;
+    } else {
+      multisig.accountAddress = this.account.address;
+    }
     multisig.fee = fee;
     this.multisigServ.update(multisig);
   }
@@ -137,14 +149,22 @@ export class SendTransactionComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
+    this.authServ.switchAccount(account);
   }
 
-  onOpenConfirmDialog() {
-    this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
-      width: '500px',
-      maxHeight: '90vh',
-    });
+  async onOpenConfirmDialog() {
+    const validationParticipant = this.validationParticipant();
+    if (validationParticipant) {
+      this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
+        width: '500px',
+        maxHeight: '90vh',
+      });
+    } else {
+      let message = await getTranslation('This account is not one of your participant', this.translate);
+      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
+    }
   }
+
   onConfirm() {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
@@ -159,7 +179,20 @@ export class SendTransactionComponent implements OnInit {
     });
   }
 
+  validationParticipant(): boolean {
+    const { multisigInfo } = this.multisig;
+    const isParticipant = multisigInfo.participants.some(res => {
+      if (res !== this.account.address && res !== this.account.signByAddress) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    return isParticipant;
+  }
+
   async onSendMultiSignatureTransaction() {
+    this.updateSendTransaction();
     const {
       accountAddress,
       fee,
@@ -168,22 +201,31 @@ export class SendTransactionComponent implements OnInit {
       signaturesInfo,
       transaction,
     } = this.multisig;
-    const signatureInfoFilter: SignatureInfo = {
-      txHash: signaturesInfo.txHash,
-      participants: [],
-    };
-    signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
-      if (this.jsonBufferToString(pcp.signature).length > 0) return pcp;
-    });
-    this.updateSendTransaction();
-    let data: MultiSigInterface = {
-      accountAddress,
-      fee,
-      multisigInfo,
-      unisgnedTransactions,
-      signaturesInfo: signatureInfoFilter,
-    };
-
+    let data: MultiSigInterface;
+    if (signaturesInfo !== undefined) {
+      const signatureInfoFilter: SignatureInfo = {
+        txHash: signaturesInfo.txHash,
+        participants: [],
+      };
+      signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
+        if (jsonBufferToString(pcp.signature).length > 0) return pcp;
+      });
+      data = {
+        accountAddress,
+        fee,
+        multisigInfo,
+        unisgnedTransactions,
+        signaturesInfo: signatureInfoFilter,
+      };
+    } else {
+      data = {
+        accountAddress,
+        fee,
+        multisigInfo,
+        unisgnedTransactions,
+        signaturesInfo,
+      };
+    }
     const childSeed = this.authServ.seed;
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: any) => {
@@ -207,13 +249,5 @@ export class SendTransactionComponent implements OnInit {
 
   closeDialog() {
     this.dialog.closeAll();
-  }
-  jsonBufferToString(buf: any) {
-    if (!buf) return '';
-    try {
-      return Buffer.from(buf.data, 'base64').toString('base64');
-    } catch (error) {
-      return buf.toString('base64');
-    }
   }
 }
