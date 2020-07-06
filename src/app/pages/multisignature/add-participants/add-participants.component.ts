@@ -220,13 +220,4 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const signature = signTransactionHash(transactionHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
   }
-
-  jsonBufferToString(buf: any) {
-    if (!buf) return '';
-    try {
-      return Buffer.from(buf.data, 'base64').toString('base64');
-    } catch (error) {
-      return buf.toString('base64');
-    }
-  }
 }
