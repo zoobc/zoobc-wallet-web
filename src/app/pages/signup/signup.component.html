@@ -19,20 +19,31 @@
     </mat-menu>
   </div>
   <div class="row passphrase-section">
-    <div class="col-6 col-sm-4" *ngFor="let p of passphrase; let key = index">
+    <div class="col-6 col-sm-4" [class.blur]="!showPassPhrase" *ngFor="let p of passphrase; let key = index">
       <div class="box-passphrase">
         <div class="number">{{ key + 1 }}</div>
         <div class="word">{{ p }}</div>
       </div>
     </div>
+    <div [class.hide]="showPassPhrase" class="cover-passphrase" (click)="tooglePassphrase($event)">
+      <div class="text-cover">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+        <span style="margin-top: 5px;">
+          {{
+            'Click here too see your passphrase. Make sure there is no one else around you will see it too' ||
+              translate
+          }}
+        </span>
+      </div>
+    </div>
   </div>
 
   <div class="btn-grouped">
-    <button mat-flat-button color="primary" (click)="copyPassphrase()">
+    <button [disabled]="!showPassPhrase" mat-flat-button color="primary" (click)="copyPassphrase()">
       <i matPrefix class="fas fa-copy"></i>
       <span class="text">{{ 'Copy Passphrase' | translate }}</span>
     </button>
-    <button mat-flat-button color="primary" (click)="generateNewWallet()">
+    <button [disabled]="!showPassPhrase" mat-flat-button color="primary" (click)="generateNewWallet()">
       <i matPrefix class="fas fa-sync"></i>
       <span class="text">{{ 'Regenerate' | translate }}</span>
     </button>
@@ -43,8 +54,7 @@
       <div
         class="warning-box mat-body-2"
         [innerHTML]="
-          'Remember: Never tell your passphrase. If you lose it, you lose access to your account!'
-            | translate
+          'Remember: Never tell your passphrase. If you lose it, you lose access to your account!' | translate
         "
       ></div>
       <div style="margin-bottom: 8px">
@@ -54,9 +64,7 @@
       </div>
       <div>
         <mat-checkbox formControlName="isAgree">
-          <span
-            [innerHTML]="'I Approve Terms Of Use & Privacy Policy' | translate"
-          ></span>
+          <span [innerHTML]="'I Approve Terms Of Use & Privacy Policy' | translate"></span>
         </mat-checkbox>
       </div>
     </div>
