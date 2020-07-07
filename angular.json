@@ -29,6 +29,38 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/assets/node-list/node-list.json",
+                  "with": "src/assets/node-list/node-list.prod.json"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                },
+                {
+                  "replace": "src/assets/node-list/node-list.json",
+                  "with": "src/assets/node-list/node-list.staging.json"
                 }
               ],
               "optimization": true,
@@ -59,6 +91,9 @@
           "configurations": {
             "production": {
               "browserTarget": "zoobc-wallet-web:build:production"
+            },
+            "staging": {
+              "browserTarget": "zoobc-wallet-web:build:staging"
             }
           }
         },
@@ -103,6 +138,9 @@
           "configurations": {
             "production": {
               "devServerTarget": "zoobc-wallet-web:serve:production"
+            },
+            "staging": {
+              "devServerTarget": "zoobc-wallet-web:serve:staging"
             }
           }
         },
