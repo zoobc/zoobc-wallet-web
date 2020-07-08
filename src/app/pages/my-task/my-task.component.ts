@@ -8,6 +8,8 @@ import zoobc, {
   EscrowTransactionsResponse,
   OrderBy,
   HostInfoResponse,
+  EscrowStatus,
+  PendingTransactionStatus,
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
@@ -61,7 +63,7 @@ export class MyTaskComponent implements OnInit {
       }
       const params: MultisigPendingListParams = {
         address: this.account.address,
-        status: 0,
+        status: PendingTransactionStatus.PENDINGTRANSACTIONPENDING,
         pagination: {
           page: this.pageMultiSig,
           limit: perPage,
@@ -101,7 +103,7 @@ export class MyTaskComponent implements OnInit {
 
       const params: EscrowListParams = {
         approverAddress: this.account.address,
-        statusList: [0],
+        statusList: [EscrowStatus.PENDING],
         pagination: {
           page: this.pageEscrow,
           limit: perPage,

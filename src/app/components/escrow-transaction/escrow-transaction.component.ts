@@ -6,6 +6,7 @@ import zoobc, {
   EscrowTransactionResponse,
   ApprovalEscrowTransactionResponse,
   EscrowApprovalInterface,
+  EscrowApproval,
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
@@ -88,7 +89,7 @@ export class EscrowTransactionComponent implements OnInit {
         const data: EscrowApprovalInterface = {
           approvalAddress: this.account.address,
           fee: this.minFee,
-          approvalCode: 0,
+          approvalCode: EscrowApproval.APPROVE,
           transactionId: id,
         };
         const childSeed = this.authServ.seed;
@@ -144,7 +145,7 @@ export class EscrowTransactionComponent implements OnInit {
         const data: EscrowApprovalInterface = {
           approvalAddress: this.account.address,
           fee: this.minFee,
-          approvalCode: 1,
+          approvalCode: EscrowApproval.REJECT,
           transactionId: id,
         };
         const childSeed = this.authServ.seed;

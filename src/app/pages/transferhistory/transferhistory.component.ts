@@ -8,6 +8,7 @@ import zoobc, {
   toUnconfirmedSendMoneyWallet,
   TransactionsResponse,
   MempoolTransactionsResponse,
+  TransactionType,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -50,7 +51,7 @@ export class TransferhistoryComponent implements OnInit {
 
       const txParam: TransactionListParams = {
         address: this.address,
-        transactionType: 1,
+        transactionType: TransactionType.SENDMONEYTRANSACTION,
         pagination: {
           page: this.page,
           limit: perPage,

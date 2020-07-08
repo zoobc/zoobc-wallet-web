@@ -18,6 +18,7 @@ import zoobc, {
   NodeRegistrationsResponse,
   GenerateNodeKeyResponses,
   NodeHardwareResponse,
+  TransactionType,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 
@@ -76,7 +77,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       address: this.account.address,
     };
     const param: TransactionListParams = {
-      transactionType: 770,
+      transactionType: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION,
       address: this.account.address,
     };
     zoobc.Transactions.getList(param).then((res: TransactionsResponse) => {

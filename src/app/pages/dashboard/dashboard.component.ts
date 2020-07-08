@@ -15,6 +15,7 @@ import zoobc, {
   toUnconfirmedSendMoneyWallet,
   AccountBalanceResponse,
   TransactionsResponse,
+  TransactionType,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -100,7 +101,7 @@ export class DashboardComponent implements OnInit {
 
       const params: TransactionListParams = {
         address: this.currAcc.address,
-        transactionType: 1,
+        transactionType: TransactionType.SENDMONEYTRANSACTION,
         pagination: {
           page: 1,
           limit: 5,
