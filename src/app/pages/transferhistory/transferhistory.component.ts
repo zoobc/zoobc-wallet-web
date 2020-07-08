@@ -6,6 +6,8 @@ import zoobc, {
   toTransactionListWallet,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
+  TransactionsResponse,
+  MempoolTransactionsResponse,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -56,7 +58,7 @@ export class TransferhistoryComponent implements OnInit {
       };
 
       try {
-        let tx = await zoobc.Transactions.getList(txParam).then(res =>
+        let tx = await zoobc.Transactions.getList(txParam).then((res: TransactionsResponse) =>
           toTransactionListWallet(res, this.address)
         );
         tx.transactions.map(recent => {
@@ -67,8 +69,8 @@ export class TransferhistoryComponent implements OnInit {
 
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };
-          this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(res =>
-            toUnconfirmedSendMoneyWallet(res, this.address)
+          this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
+            (res: MempoolTransactionsResponse) => toUnconfirmedSendMoneyWallet(res, this.address)
           );
         }
       } catch {

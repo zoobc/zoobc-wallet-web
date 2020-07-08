@@ -5,11 +5,12 @@ import zoobc, {
   MultisigPendingListParams,
   MultisigPendingTxResponse,
   toGetPendingList,
+  EscrowTransactionsResponse,
+  OrderBy,
+  HostInfoResponse,
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
-import { GetEscrowTransactionsResponse } from 'zoobc-sdk/grpc/model/escrow_pb';
 import { ContactService } from 'src/app/services/contact.service';
-import { OrderBy } from 'zoobc-sdk/grpc/model/pagination_pb';
 
 @Component({
   selector: 'app-my-task',
@@ -109,7 +110,7 @@ export class MyTaskComponent implements OnInit {
         },
       };
       zoobc.Escrows.getList(params)
-        .then((res: GetEscrowTransactionsResponse.AsObject) => {
+        .then((res: EscrowTransactionsResponse) => {
           this.totalEscrow = parseInt(res.total);
           let txFilter = res.escrowsList.filter(tx => {
             if (tx.latest == true) return tx;
@@ -154,7 +155,7 @@ export class MyTaskComponent implements OnInit {
   getBlockHeight() {
     this.isLoadingBlockHeight = true;
     zoobc.Host.getInfo()
-      .then(res => {
+      .then((res: HostInfoResponse) => {
         res.chainstatusesList.filter(chain => {
           if (chain.chaintype === 0) this.blockHeight = chain.height;
         });

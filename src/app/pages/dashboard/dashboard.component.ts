@@ -13,6 +13,8 @@ import zoobc, {
   getZBCAdress,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
+  AccountBalanceResponse,
+  TransactionsResponse,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -76,7 +78,7 @@ export class DashboardComponent implements OnInit {
       this.isErrorBalance = false;
 
       zoobc.Account.getBalance(this.currAcc.address)
-        .then(data => {
+        .then((data: AccountBalanceResponse) => {
           this.accountBalance = data.accountbalance;
           return this.authServ.getAccountsWithBalance();
         })
@@ -106,7 +108,7 @@ export class DashboardComponent implements OnInit {
       };
 
       zoobc.Transactions.getList(params)
-        .then(res => {
+        .then((res: TransactionsResponse) => {
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
           this.recentTx.map(recent => {
