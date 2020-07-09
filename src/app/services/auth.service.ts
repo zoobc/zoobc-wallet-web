@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import zoobc, { BIP32Interface, ZooKeyring, getZBCAdress, TransactionListParams } from 'zoobc-sdk';
+import zoobc, {
+  BIP32Interface,
+  ZooKeyring,
+  getZBCAdress,
+  TransactionListParams,
+  AccountBalancesResponse,
+  TransactionsResponse,
+} from 'zoobc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
 export interface SavedAccount {
@@ -97,7 +104,7 @@ export class AuthService {
       const addresses = accounts.map(acc => acc.address);
 
       zoobc.Account.getBalances(addresses)
-        .then(res => {
+        .then((res: AccountBalancesResponse) => {
           let balances = res.accountbalancesList;
           accounts.map(acc => {
             acc.balance = 0;
@@ -165,7 +172,7 @@ export class AuthService {
             limit: 1,
           },
         };
-        await zoobc.Transactions.getList(params).then(res => {
+        await zoobc.Transactions.getList(params).then((res: TransactionsResponse) => {
           const totalTx = parseInt(res.total);
           accountsTemp.push(account);
           if (totalTx > 0) {

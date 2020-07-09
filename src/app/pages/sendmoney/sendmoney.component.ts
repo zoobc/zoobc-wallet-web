@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 import { truncate, calcMinFee, getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc from 'zoobc-sdk';
+import zoobc, { PostTransactionResponses, HostInfoResponse } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 
@@ -264,7 +264,7 @@ export class SendmoneyComponent implements OnInit {
       const childSeed = this.authServ.seed;
 
       zoobc.Transactions.sendMoney(data, childSeed).then(
-        async (res: any) => {
+        async (res: PostTransactionResponses) => {
           this.isLoading = false;
           let message = await getTranslation('Your Transaction is processing', this.translate);
           let subMessage = await getTranslation('You send coins to', this.translate, {
@@ -301,7 +301,7 @@ export class SendmoneyComponent implements OnInit {
 
   getBlockHeight() {
     zoobc.Host.getInfo()
-      .then(res => {
+      .then((res: HostInfoResponse) => {
         res.chainstatusesList.filter(chain => {
           if (chain.chaintype === 0) this.blockHeight = chain.height;
         });

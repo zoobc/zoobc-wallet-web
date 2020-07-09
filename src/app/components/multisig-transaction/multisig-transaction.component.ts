@@ -3,7 +3,14 @@ import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
-import zoobc, { toGetPendingList, MultiSigInterface, signTransactionHash } from 'zoobc-sdk';
+import zoobc, {
+  toGetPendingList,
+  MultiSigInterface,
+  signTransactionHash,
+  MultisigPendingTxDetailResponse,
+  MultisigPostTransactionResponse,
+  MultisigPendingTxResponse,
+} from 'zoobc-sdk';
 import { base64ToHex, getTranslation, truncate } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
@@ -73,11 +80,10 @@ export class MultisigTransactionComponent implements OnInit {
     this.showSignForm = false;
     const hashHex = base64ToHex(txHash);
     this.isLoadingDetail = true;
-    zoobc.MultiSignature.getPendingByTxHash(hashHex).then(res => {
-      console.log(res);
+    zoobc.MultiSignature.getPendingByTxHash(hashHex).then((res: MultisigPendingTxDetailResponse) => {
       const list = [];
       list.push(res.pendingtransaction);
-      const tx = {
+      const tx: MultisigPendingTxResponse = {
         count: 1,
         page: 1,
         pendingtransactionsList: list,
@@ -133,7 +139,7 @@ export class MultisigTransactionComponent implements OnInit {
           },
         };
         zoobc.MultiSignature.postTransaction(data, seed)
-          .then(async (res: any) => {
+          .then(async (res: MultisigPostTransactionResponse) => {
             let message = await getTranslation('Transaction has been accepted', this.translate);
             Swal.fire({
               type: 'success',

@@ -12,7 +12,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, { MultiSigInterface } from 'zoobc-sdk';
+import zoobc, { MultiSigInterface, MultisigPostTransactionResponse } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 
 @Component({
@@ -228,7 +228,7 @@ export class SendTransactionComponent implements OnInit {
     }
     const childSeed = this.authServ.seed;
     zoobc.MultiSignature.postTransaction(data, childSeed)
-      .then(async (res: any) => {
+      .then(async (res: MultisigPostTransactionResponse) => {
         let message = await getTranslation('Your Transaction is processing', this.translate);
         let subMessage = await getTranslation('You send coins to', this.translate, {
           amount: transaction.amount,
