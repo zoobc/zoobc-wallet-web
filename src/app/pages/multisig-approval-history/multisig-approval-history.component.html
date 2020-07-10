@@ -1,0 +1,13 @@
+<div class="my-multisig-history-container">
+  <div class="row">
+    <div class="col-10">
+      <h2 class="mat-h2">{{ 'Multisignature Approval History' | translate }}</h2>
+    </div>
+    <div class="col-2 text-right" *ngIf="!isError && !isLoading">
+      <button mat-icon-button class="reload-button" (click)="getTx(true)">
+        <i class="fa fa-redo-alt"></i>
+      </button>
+    </div>
+  </div>
+  <mat-card style="padding: 0;"> </mat-card>
+</div>
