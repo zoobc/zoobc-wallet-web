@@ -8,7 +8,12 @@ import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, { SendMoneyInterface, generateTransactionHash, sendMoneyBuilder } from 'zoobc-sdk';
+import zoobc, {
+  SendMoneyInterface,
+  generateTransactionHash,
+  sendMoneyBuilder,
+  AccountBalanceResponse,
+} from 'zoobc-sdk';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
@@ -280,7 +285,7 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   getBalance(address: string) {
-    zoobc.Account.getBalance(address).then(res => {
+    zoobc.Account.getBalance(address).then((res: AccountBalanceResponse) => {
       this.accountBalance = parseInt(res.accountbalance.spendablebalance);
     });
   }

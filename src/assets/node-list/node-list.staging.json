@@ -1,0 +1,10 @@
+{
+  "node": [
+    {
+      "ip": "https://n0.demo.proofofparticipation.network",
+      "default": true,
+      "name": "Staging Testnet"
+    }
+  ],
+  "timestamp": 1594116740000
+}

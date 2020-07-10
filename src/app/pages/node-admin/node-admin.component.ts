@@ -13,6 +13,12 @@ import zoobc, {
   toUnconfirmTransactionNodeWallet,
   MempoolListParams,
   TransactionListParams,
+  TransactionsResponse,
+  MempoolTransactionsResponse,
+  NodeRegistrationsResponse,
+  GenerateNodeKeyResponses,
+  NodeHardwareResponse,
+  TransactionType,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 
@@ -71,14 +77,14 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       address: this.account.address,
     };
     const param: TransactionListParams = {
-      transactionType: 770,
+      transactionType: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION,
       address: this.account.address,
     };
-    zoobc.Transactions.getList(param).then(res => {
+    zoobc.Transactions.getList(param).then((res: TransactionsResponse) => {
       this.lastClaim = res.transactionsList[0] && res.transactionsList[0].timestamp;
     });
     zoobc.Mempool.getList(params)
-      .then(res => {
+      .then((res: MempoolTransactionsResponse) => {
         const pendingTxs = toUnconfirmTransactionNodeWallet(res);
         this.pendingNodeTx = pendingTxs;
         const params: NodeParams = {
@@ -86,7 +92,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
         };
         return zoobc.Node.get(params);
       })
-      .then(res => {
+      .then((res: NodeRegistrationsResponse) => {
         if (res) {
           const { registrationstatus } = res.noderegistration;
           if (registrationstatus == 0) this.registeredNode = res.noderegistration;
@@ -108,7 +114,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       showLoaderOnConfirm: true,
       preConfirm: () => {
         return zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
-          .then(res => {
+          .then((res: GenerateNodeKeyResponses) => {
             this.nodePublicKey = res.nodepublickey.toString();
             this.successRefDialog = this.dialog.open(this.popupPubKey, {
               disableClose: true,
@@ -127,7 +133,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
     this.stream = zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
-      (res: any) => {
+      (res: NodeHardwareResponse) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
       },

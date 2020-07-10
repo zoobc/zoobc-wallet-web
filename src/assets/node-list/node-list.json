@@ -1,0 +1,15 @@
+{
+  "node": [
+    {
+      "ip": "http://85.90.246.90:8002",
+      "default": true,
+      "name": "Dev Testnet 1"
+    },
+    {
+      "ip": "http://45.79.39.58:8002",
+      "default": true,
+      "name": "Dev Testnet 2"
+    }
+  ],
+  "timestamp": 1594116740000
+}
