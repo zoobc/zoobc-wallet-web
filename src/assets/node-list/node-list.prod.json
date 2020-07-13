@@ -1,0 +1,10 @@
+{
+  "node": [
+    {
+      "ip": "https://n1.alpha.proofofparticipation.network",
+      "default": true,
+      "name": "Alpha Testnet"
+    }
+  ],
+  "timestamp": 1594116740000
+}

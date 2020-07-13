@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import zoobc from 'zoobc-sdk';
+import zoobc, { TransactionResponse } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -8,12 +8,12 @@ import zoobc from 'zoobc-sdk';
   styleUrls: ['./transaction-detail.component.scss'],
 })
 export class TransactionDetailComponent implements OnInit {
-  transaction: {};
+  transaction: TransactionResponse;
   isLoading: boolean = true;
   constructor(@Inject(MAT_DIALOG_DATA) public id: any) {}
 
   ngOnInit() {
-    zoobc.Transactions.get(this.id).then((transaction: object) => {
+    zoobc.Transactions.get(this.id).then((transaction: TransactionResponse) => {
       this.transaction = transaction;
       this.isLoading = false;
     });

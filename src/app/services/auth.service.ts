@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import zoobc, {
   BIP32Interface,
   ZooKeyring,
-  AccountBalancesParams,
   getZBCAdress,
   TransactionListParams,
+  AccountBalancesResponse,
+  TransactionsResponse,
 } from 'zoobc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
@@ -101,12 +102,9 @@ export class AuthService {
       let accounts = this.getAllAccount(type);
       if (accounts.length == 0) return resolve(accounts);
       const addresses = accounts.map(acc => acc.address);
-      const params: AccountBalancesParams = {
-        accountAddressList: addresses,
-      };
 
-      zoobc.Account.getBalances(params)
-        .then(res => {
+      zoobc.Account.getBalances(addresses)
+        .then((res: AccountBalancesResponse) => {
           let balances = res.accountbalancesList;
           accounts.map(acc => {
             acc.balance = 0;
@@ -174,7 +172,7 @@ export class AuthService {
             limit: 1,
           },
         };
-        await zoobc.Transactions.getList(params).then(res => {
+        await zoobc.Transactions.getList(params).then((res: TransactionsResponse) => {
           const totalTx = parseInt(res.total);
           accountsTemp.push(account);
           if (totalTx > 0) {

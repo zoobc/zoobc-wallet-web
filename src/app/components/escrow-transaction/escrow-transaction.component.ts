@@ -2,7 +2,12 @@ import { Component, OnInit, ViewChild, TemplateRef, Input, Output, EventEmitter 
 import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc from 'zoobc-sdk';
+import zoobc, {
+  EscrowTransactionResponse,
+  ApprovalEscrowTransactionResponse,
+  EscrowApprovalInterface,
+  EscrowApproval,
+} from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
@@ -22,7 +27,7 @@ export class EscrowTransactionComponent implements OnInit {
   @Output() refresh: EventEmitter<boolean> = new EventEmitter();
   detailEscrowRefDialog: MatDialogRef<any>;
 
-  escrowDetail: object;
+  escrowDetail: EscrowTransactionResponse;
   isLoadingDetail: boolean = false;
   isLoadingTx: boolean = false;
   waitingList = [];
@@ -46,12 +51,13 @@ export class EscrowTransactionComponent implements OnInit {
 
   openDetail(id) {
     this.isLoadingDetail = true;
-    zoobc.Escrows.get(id).then(res => {
+    zoobc.Escrows.get(id).then((res: EscrowTransactionResponse) => {
       this.escrowDetail = res;
       this.isLoadingDetail = false;
     });
     this.detailEscrowRefDialog = this.dialog.open(this.detailEscrow, {
       width: '500px',
+      maxHeight: '90vh',
     });
   }
 
@@ -62,6 +68,7 @@ export class EscrowTransactionComponent implements OnInit {
   onOpenPinDialog(id, approvalCode) {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
+      maxHeight: '90vh',
     });
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {
@@ -79,16 +86,16 @@ export class EscrowTransactionComponent implements OnInit {
     if (this.account.balance / 1e8 >= this.minFee) {
       if (checkWaitList != true) {
         this.isLoadingTx = true;
-        const data = {
+        const data: EscrowApprovalInterface = {
           approvalAddress: this.account.address,
           fee: this.minFee,
-          approvalCode: 0,
+          approvalCode: EscrowApproval.APPROVE,
           transactionId: id,
         };
         const childSeed = this.authServ.seed;
         zoobc.Escrows.approval(data, childSeed)
           .then(
-            async res => {
+            async (res: ApprovalEscrowTransactionResponse) => {
               this.isLoadingTx = false;
               let message = await getTranslation('Transaction has been approved', this.translate);
               Swal.fire({
@@ -135,16 +142,16 @@ export class EscrowTransactionComponent implements OnInit {
     if (this.account.balance / 1e8 >= this.minFee) {
       if (checkWaitList != true) {
         this.isLoadingTx = true;
-        const data = {
+        const data: EscrowApprovalInterface = {
           approvalAddress: this.account.address,
           fee: this.minFee,
-          approvalCode: 1,
+          approvalCode: EscrowApproval.REJECT,
           transactionId: id,
         };
         const childSeed = this.authServ.seed;
         zoobc.Escrows.approval(data, childSeed)
           .then(
-            async res => {
+            async (res: ApprovalEscrowTransactionResponse) => {
               this.isLoadingTx = false;
               let message = await getTranslation('Transaction has been rejected', this.translate);
               Swal.fire({

@@ -60,5 +60,9 @@
     div:nth-child(even) {
       padding: 4px 0;
     }
+
+    .participant-info {
+      color: map-get($accent, 500);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef, MatSnackBar } from '@angular/material';
 import { RegisterNodeComponent } from './register-node/register-node.component';
 import { UpdateNodeComponent } from './update-node/update-node.component';
@@ -13,14 +13,21 @@ import zoobc, {
   toUnconfirmTransactionNodeWallet,
   MempoolListParams,
   TransactionListParams,
+  TransactionsResponse,
+  MempoolTransactionsResponse,
+  NodeRegistrationsResponse,
+  GenerateNodeKeyResponses,
+  NodeHardwareResponse,
+  TransactionType,
 } from 'zoobc-sdk';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-node-admin',
   templateUrl: './node-admin.component.html',
   styleUrls: ['./node-admin.component.scss'],
 })
-export class NodeAdminComponent implements OnInit {
+export class NodeAdminComponent implements OnInit, OnDestroy {
   account: SavedAccount;
   hwInfo: any;
   mbToB = Math.pow(1024, 2);
@@ -36,6 +43,8 @@ export class NodeAdminComponent implements OnInit {
 
   lastClaim: string = undefined;
   nodePublicKey: string = '';
+
+  stream: any;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
@@ -54,6 +63,10 @@ export class NodeAdminComponent implements OnInit {
     this.streamNodeHardwareInfo();
   }
 
+  ngOnDestroy() {
+    if (this.stream) this.stream.unsubscribe();
+  }
+
   getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
@@ -64,14 +77,14 @@ export class NodeAdminComponent implements OnInit {
       address: this.account.address,
     };
     const param: TransactionListParams = {
-      transactionType: 770,
+      transactionType: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION,
       address: this.account.address,
     };
-    zoobc.Transactions.getList(param).then(res => {
-      this.lastClaim = res.transactionsList[0].timestamp;
+    zoobc.Transactions.getList(param).then((res: TransactionsResponse) => {
+      this.lastClaim = res.transactionsList[0] && res.transactionsList[0].timestamp;
     });
     zoobc.Mempool.getList(params)
-      .then(res => {
+      .then((res: MempoolTransactionsResponse) => {
         const pendingTxs = toUnconfirmTransactionNodeWallet(res);
         this.pendingNodeTx = pendingTxs;
         const params: NodeParams = {
@@ -79,7 +92,7 @@ export class NodeAdminComponent implements OnInit {
         };
         return zoobc.Node.get(params);
       })
-      .then(res => {
+      .then((res: NodeRegistrationsResponse) => {
         if (res) {
           const { registrationstatus } = res.noderegistration;
           if (registrationstatus == 0) this.registeredNode = res.noderegistration;
@@ -101,11 +114,12 @@ export class NodeAdminComponent implements OnInit {
       showLoaderOnConfirm: true,
       preConfirm: () => {
         return zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
-          .then(res => {
+          .then((res: GenerateNodeKeyResponses) => {
             this.nodePublicKey = res.nodepublickey.toString();
             this.successRefDialog = this.dialog.open(this.popupPubKey, {
               disableClose: true,
               width: '500px',
+              maxHeight: '90vh',
             });
           })
           .catch(err => {
@@ -118,8 +132,8 @@ export class NodeAdminComponent implements OnInit {
   streamNodeHardwareInfo() {
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
-    zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
-      (res: any) => {
+    this.stream = zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
+      (res: NodeHardwareResponse) => {
         this.isNodeHardwareLoading = false;
         this.hwInfo = res.nodehardware;
       },
@@ -134,6 +148,7 @@ export class NodeAdminComponent implements OnInit {
   openRegisterNode() {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -144,6 +159,7 @@ export class NodeAdminComponent implements OnInit {
   openUpdateNode() {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
       data: this.registeredNode,
     });
 
@@ -155,6 +171,7 @@ export class NodeAdminComponent implements OnInit {
   openClaimNode() {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
       data: this.registeredNode,
     });
 
@@ -166,6 +183,7 @@ export class NodeAdminComponent implements OnInit {
   openRemoveNode() {
     const dialog = this.dialog.open(RemoveNodeComponent, {
       width: '420px',
+      maxHeight: '90vh',
       data: this.registeredNode,
     });
 

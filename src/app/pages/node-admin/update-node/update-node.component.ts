@@ -57,6 +57,7 @@ export class UpdateNodeComponent {
     if (this.formUpdateNode.valid) {
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
+        maxHeight: '90vh',
       });
 
       pinRefDialog.afterClosed().subscribe(isPinValid => {

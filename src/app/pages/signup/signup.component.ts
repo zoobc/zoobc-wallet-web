@@ -36,6 +36,7 @@ export class SignupComponent implements OnInit {
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
+  showPassPhrase: boolean = false;
 
   constructor(private router: Router, private snackbar: MatSnackBar, private translate: TranslateService) {
     this.formTerms = new FormGroup({
@@ -72,5 +73,8 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['confirm-passphrase'], {
       state: { passphrase: this.passphrase },
     });
+  }
+  tooglePassphrase(e: any) {
+    this.showPassPhrase = !this.showPassPhrase;
   }
 }

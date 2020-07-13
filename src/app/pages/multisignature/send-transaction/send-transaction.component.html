@@ -3,7 +3,12 @@
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
       <label>{{ 'From' | translate }}</label>
-      <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+      <div *ngIf="isMultiSigAccount" style="margin-bottom: 16px;">
+        <wallet-address [value]="account.signByAddress" [copyButton]="true"></wallet-address>
+      </div>
+      <ng-container *ngIf="!isMultiSigAccount">
+        <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+      </ng-container>
       <fee-selector
         [group]="formSend"
         feeName="fee"
@@ -50,17 +55,11 @@
         <div class="col-12 col-sm-6 test">
           <div class="label">{{ 'From' | translate }}:</div>
           <div class="address">
-            <wallet-address
-              [value]="multisig.unisgnedTransactions.sender"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="multisig.transaction.sender" [copyButton]="true"></wallet-address>
           </div>
           <div class="label">{{ 'Recipient' | translate }}:</div>
           <div class="address">
-            <wallet-address
-              [value]="multisig.unisgnedTransactions.recipient"
-              [copyButton]="true"
-            ></wallet-address>
+            <wallet-address [value]="multisig.transaction.recipient" [copyButton]="true"></wallet-address>
           </div>
           <ng-container *ngIf="advancedMenu">
             <mat-divider style="margin-bottom: 10px;"></mat-divider>
@@ -89,9 +88,9 @@
         <div class="col-12 col-sm-6 text-right">
           <div class="label">{{ 'Amount' | translate }}:</div>
           <div class="amount">
-            <div class="zbc">{{ multisig.unisgnedTransactions.amount | number: '0.0-8' }} ZBC</div>
+            <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.unisgnedTransactions.amount * currencyRate.value | number: '0.0-2' }}
+              {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -101,9 +100,9 @@
             <span>:</span>
           </div>
           <div class="amount">
-            <div class="zbc">{{ multisig.unisgnedTransactions.fee | number: '0.0-8' }} ZBC</div>
+            <div class="zbc">{{ multisig.transaction.fee | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.unisgnedTransactions.fee * currencyRate.value | number: '0.0-2' }}
+              {{ multisig.transaction.fee * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -117,13 +116,13 @@
           </div>
           <ng-template #not_escrow>
             <div class="zbc">
-              {{ multisig.unisgnedTransactions.amount + multisig.unisgnedTransactions.fee | number: '0.0-8' }}
+              {{ multisig.transaction.amount + multisig.transaction.fee | number: '0.0-8' }}
               ZBC
             </div>
             <div class="currency">
               {{
-                multisig.unisgnedTransactions.amount * currencyRate.value +
-                  multisig.unisgnedTransactions.fee * currencyRate.value | number: '0.0-2'
+                multisig.transaction.amount * currencyRate.value +
+                  multisig.transaction.fee * currencyRate.value | number: '0.0-2'
               }}
               {{ currencyRate.name }}
             </div>
