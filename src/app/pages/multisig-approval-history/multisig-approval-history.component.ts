@@ -41,7 +41,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
 
   async getMultiSigTransaction(reload: boolean = false) {
     if (this.isLoading) return;
-    const perPage = Math.ceil(window.outerHeight / 68);
+    const perPage = Math.ceil(window.outerHeight / 50);
 
     if (reload) {
       this.multisigHistory = null;
