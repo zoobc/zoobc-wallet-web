@@ -7,7 +7,6 @@ import { Buffer } from 'buffer';
 @Component({
   selector: 'app-approval-escrow-history',
   templateUrl: './approval-escrow-history.component.html',
-  styleUrls: ['./approval-escrow-history.component.scss'],
 })
 export class ApprovalEscrowHistoryComponent implements OnInit {
   escrowApprovalList: any[];
