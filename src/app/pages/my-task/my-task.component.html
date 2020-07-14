@@ -31,6 +31,12 @@
               (refresh)="getEscrowTx(true)"
             ></app-escrow-transactions>
           </div>
+          <div class="text-right" style="margin-bottom: 10px;">
+            <label (click)="goToEscrowApprovalHistory()" class="view-history"
+              ><b>{{ 'View History' | translate }}</b></label
+            >
+            <i matPrefix class="fa fa-receipt" style="margin-right: 10px;"></i>
+          </div>
         </mat-tab>
       </ng-container>
       <ng-container *ngIf="account.type === 'multisig'">
@@ -83,6 +89,12 @@
               [isError]="isErrorEscrow"
               (refresh)="getEscrowTx(true)"
             ></app-escrow-transactions>
+          </div>
+          <div class="text-right" style="margin-bottom: 10px;">
+            <label (click)="goToEscrowApprovalHistory()" class="view-history"
+              ><b>{{ 'View History' | translate }}</b></label
+            >
+            <i matPrefix class="fa fa-receipt" style="margin-right: 10px;"></i>
           </div>
         </mat-tab>
       </ng-container>

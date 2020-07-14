@@ -1,0 +1,74 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.approval-escrow-container {
+  .approval-escrow-item {
+    border-bottom: 1px solid #ddd;
+    padding: 16px 6px;
+    margin: 0;
+    align-items: center;
+    &:first-child {
+      border-top: 1px solid #ddd;
+    }
+    @include transition(0.3s ease-in all);
+    &.hover:hover {
+      background-color: #eee;
+      cursor: pointer;
+    }
+    .name {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .address {
+      word-break: break-all;
+      color: $black1;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .date {
+      color: $black2;
+      font-size: 13px;
+    }
+    .approve {
+      border-radius: 20px !important;
+      background: $primary-gradient;
+      padding: 1em;
+      color: white !important;
+      display: inline-flex;
+    }
+    .reject {
+      border-radius: 20px !important;
+      background: $error-gradient;
+      padding: 1em;
+      color: white !important;
+      display: inline-flex;
+    }
+    @media #{$small-and-down} {
+      .message {
+        text-align: center;
+      }
+      .title-task {
+        display: block;
+      }
+    }
+  }
+}
+
+.detail-task-container {
+  .row {
+    color: $black1;
+    padding: 8px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+    word-break: break-all;
+    div:nth-child(odd) {
+      padding: 4px 0;
+      font-size: 13px;
+      font-weight: bold;
+      color: $black2;
+    }
+    div:nth-child(even) {
+      padding: 4px 0;
+    }
+  }
+}

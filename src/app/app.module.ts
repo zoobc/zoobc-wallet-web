@@ -82,6 +82,8 @@ import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-in
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
 import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
+import { ApprovalEscrowHistoryComponent } from './pages/approval-escrow-history/approval-escrow-history.component';
+import { ApprovalEscrowTransactionComponent } from './components/approval-escrow-transaction/approval-escrow-transaction.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -128,6 +130,8 @@ export function getLanguage(languageServ: LanguageService) {
     CreateTransactionComponent,
     MultisignatureComponent,
     AddParticipantsComponent,
+    ApprovalEscrowHistoryComponent,
+    ApprovalEscrowTransactionComponent,
   ],
   imports: [
     BrowserModule,

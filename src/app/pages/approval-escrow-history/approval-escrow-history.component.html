@@ -1,0 +1,29 @@
+<div>
+  <div class="row">
+    <div class="col-10">
+      <h2 class="mat-h2">{{ 'Escrows Approval History' | translate }}</h2>
+    </div>
+    <div class="col-2 text-right" *ngIf="!isError && !isLoading">
+      <button mat-icon-button class="reload-button" (click)="getApprovalList(true)">
+        <i class="fa fa-redo-alt"></i>
+      </button>
+    </div>
+  </div>
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    [scrollWindow]="false"
+    [infiniteScrollContainer]="'.mat-drawer-content'"
+    [fromRoot]="true"
+  >
+    <app-approval-escrow-transaction
+      [approvalEscrowData]="escrowApprovalList"
+      [isLoading]="isLoading"
+      [isError]="isError"
+      (refresh)="getApprovalList(true)"
+      [withDetail]="true"
+    ></app-approval-escrow-transaction>
+  </div>
+</div>
