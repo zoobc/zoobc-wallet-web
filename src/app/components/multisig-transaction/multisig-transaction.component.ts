@@ -105,12 +105,6 @@ export class MultisigTransactionComponent implements OnInit {
 
       const { multisignatureinfo } = res;
       this.multisigInfo = multisignatureinfo;
-      if (multisignatureinfo) {
-        this.multisigInfo.minSigs = multisignatureinfo.minimumsignatures;
-        this.multisigInfo.participants = multisignatureinfo.addressesList;
-        this.multisigInfo.nonce = parseInt(multisignatureinfo.nonce);
-        this.multisigInfo.multisigAddress = multisignatureinfo.multisigaddress;
-      }
     });
     this.detailMultisigRefDialog = this.dialog.open(this.detailMultisigDialog, {
       width: '500px',
@@ -139,7 +133,12 @@ export class MultisigTransactionComponent implements OnInit {
         let data: MultiSigInterface = {
           accountAddress: account.signByAddress,
           fee: this.feeForm.value,
-          multisigInfo: this.multisigInfo,
+          multisigInfo: {
+            participants: this.multisigInfo.addressesList,
+            minSigs: this.multisigInfo.minimumsignatures,
+            nonce: parseInt(this.multisigInfo.nonce),
+            multisigAddress: this.multisigInfo.multisigaddress,
+          },
           signaturesInfo: {
             txHash: this.multiSigDetail.transactionhash,
             participants: [
