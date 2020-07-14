@@ -10,7 +10,6 @@ import zoobc, {
   MultisigPendingTxDetailResponse,
   MultisigPostTransactionResponse,
   MultisigPendingTxResponse,
-  MultiSigInfo,
 } from 'zoobc-sdk';
 import { base64ToHex, getTranslation, truncate } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
