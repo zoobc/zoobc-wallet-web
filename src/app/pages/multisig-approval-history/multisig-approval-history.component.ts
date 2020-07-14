@@ -69,8 +69,6 @@ export class MultisigApprovalHistoryComponent implements OnInit {
       } else {
         this.multisigHistory = this.multisigHistory.concat(multisig);
       }
-      console.log(tx);
-      console.log(this.multisigHistory);
     } catch (err) {
       this.isError = true;
       console.log(err);
@@ -100,7 +98,6 @@ export class MultisigApprovalHistoryComponent implements OnInit {
       };
       const txFilter = toGetPendingList(tx);
       this.transactionDetail = txFilter.pendingtransactionsList[0];
-      console.log(this.transactionDetail);
       this.isLoadingDetail = false;
     });
     this.detailTransactionRefDialog = this.dialog.open(this.detailTransactionDialog, {
