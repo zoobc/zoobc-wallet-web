@@ -10,6 +10,7 @@ import zoobc, {
   MultisigPendingTxDetailResponse,
   MultisigPostTransactionResponse,
   MultisigPendingTxResponse,
+  MultiSigInfo,
 } from 'zoobc-sdk';
 import { base64ToHex, getTranslation, truncate } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -104,6 +105,12 @@ export class MultisigTransactionComponent implements OnInit {
 
       const { multisignatureinfo } = res;
       this.multisigInfo = multisignatureinfo;
+      if (multisignatureinfo) {
+        this.multisigInfo.minSigs = multisignatureinfo.minimumsignatures;
+        this.multisigInfo.participants = multisignatureinfo.addressesList;
+        this.multisigInfo.nonce = parseInt(multisignatureinfo.nonce);
+        this.multisigInfo.multisigAddress = multisignatureinfo.multisigaddress;
+      }
     });
     this.detailMultisigRefDialog = this.dialog.open(this.detailMultisigDialog, {
       width: '500px',
@@ -132,12 +139,7 @@ export class MultisigTransactionComponent implements OnInit {
         let data: MultiSigInterface = {
           accountAddress: account.signByAddress,
           fee: this.feeForm.value,
-          multisigInfo: {
-            participants: this.multisigInfo.participants,
-            nonce: parseInt(this.multisigInfo.nonce),
-            minSigs: this.multisigInfo.minimumsignatures,
-            multisigAddress: this.multisigInfo.multisigAddress,
-          },
+          multisigInfo: this.multisigInfo,
           signaturesInfo: {
             txHash: this.multiSigDetail.transactionhash,
             participants: [
