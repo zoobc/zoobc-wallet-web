@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import zoobc, { TransactionListParams, TransactionType } from 'zoobc-sdk';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import zoobc, { TransactionListParams, TransactionType, EscrowTransactionResponse } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
 import { Buffer } from 'buffer';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-approval-escrow-history',
   templateUrl: './approval-escrow-history.component.html',
+  styleUrls: ['./approval-escrow-history.component.scss'],
 })
 export class ApprovalEscrowHistoryComponent implements OnInit {
   escrowApprovalList: any[];
@@ -17,7 +19,14 @@ export class ApprovalEscrowHistoryComponent implements OnInit {
   finished: boolean = false;
   isLoading: boolean = false;
   isError: boolean = false;
-  constructor(private authServ: AuthService, private contactServ: ContactService) {}
+  @ViewChild('detailEscrow') detailEscrow: TemplateRef<any>;
+  escrowDetail: EscrowTransactionResponse;
+  isLoadingDetail: boolean;
+  constructor(
+    private authServ: AuthService,
+    private contactServ: ContactService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.getApprovalList(true);
@@ -75,5 +84,17 @@ export class ApprovalEscrowHistoryComponent implements OnInit {
       this.page++;
       this.getApprovalList();
     } else this.finished = true;
+  }
+
+  openDetail(id) {
+    this.isLoadingDetail = true;
+    zoobc.Escrows.get(id).then((res: EscrowTransactionResponse) => {
+      this.escrowDetail = res;
+      this.isLoadingDetail = false;
+    });
+    this.dialog.open(this.detailEscrow, {
+      width: '500px',
+      maxHeight: '90vh',
+    });
   }
 }

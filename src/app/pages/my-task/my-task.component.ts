@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import zoobc, {
   EscrowListParams,
@@ -13,7 +13,6 @@ import zoobc, {
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-task',
@@ -45,12 +44,7 @@ export class MyTaskComponent implements OnInit {
   totalMultiSig: number = 0;
   multiSigfinished: boolean = false;
 
-  constructor(
-    public dialog: MatDialog,
-    private authServ: AuthService,
-    private contactServ: ContactService,
-    private router: Router
-  ) {}
+  constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
     this.getEscrowTx(true);
@@ -186,9 +180,5 @@ export class MyTaskComponent implements OnInit {
       this.pageMultiSig++;
       this.getMultiSigPendingList();
     } else this.multiSigfinished = true;
-  }
-
-  goToEscrowApprovalHistory() {
-    this.router.navigateByUrl('/escrowapprovalhistory');
   }
 }
