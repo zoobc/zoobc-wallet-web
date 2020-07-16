@@ -16,12 +16,11 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 export class AccountDatasetComponent implements OnInit {
   subscription: Subscription = new Subscription();
   dataSetList: any[];
-
+  dataSetId: any;
   isLoading: boolean;
   isError: boolean;
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
-
   minFee = environment.fee;
   kindFee: string;
   currencyRate: Currency;
@@ -74,9 +73,15 @@ export class AccountDatasetComponent implements OnInit {
       });
   }
 
-  deleteDataSet() {}
+  deleteDataSet() {
+    this.isLoadingDelete = true;
+    //this.feeRefDialog.close();
+  }
 
   onDelete(index: number) {
+    this.dataSetId = index;
+    this.isErrorDelete = false;
+    this.isLoadingDelete = false;
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
       width: '300px',
       maxHeight: '90vh',
@@ -91,7 +96,6 @@ export class AccountDatasetComponent implements OnInit {
 
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {
-        this.feeRefDialog.close();
         this.deleteDataSet();
       }
     });
