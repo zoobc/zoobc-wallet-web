@@ -3,17 +3,61 @@
   <h3 class="mat-h4 text-center subtitle">Account Data Set</h3>
   <div class="data-set-list">
     <mat-card style="padding: 0">
-      <div class="list-item row">
-        <div class="col-12 col-md-10">
-          <div class="property">
-            Property
+      <ng-container *ngIf="dataSetList && !isLoading">
+        <div class="no-content padding" *ngIf="dataSetList.length <= 0">
+          <i matPrefix class="fa fa-receipt"></i>
+          <span class="message">{{ 'No Dataset Record' | translate }}</span>
+        </div>
+        <div class="list-item row" *ngFor="let data of dataSetList">
+          <div class="col-12 col-md-10">
+            <div class="property">
+              Property
+            </div>
+            <div class="value">
+              Value
+            </div>
           </div>
-          <div class="value">
-            Value
+          <div class="col-12 col-sm-2 text-right">
+            <div class="action">
+              <button
+                mat-flat-button
+                matTooltip="Delete Value"
+                matTooltipPosition="below"
+                class="icon-btn warn"
+                (click)="onDelete(0)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           </div>
         </div>
-        <div class="col-12 col-sm-2 text-right"></div>
+      </ng-container>
+      <ng-container *ngIf="isLoading">
+        <div class="list-item row skeleton" *ngFor="let i of [0, 1, 2]">
+          <div class="col-7 col-sm-8">
+            <div class="skeleton-text" style="width:50%;"></div>
+            <div class="skeleton-text small" style="width:75%;"></div>
+          </div>
+          <div class="col-5 col-sm-4">
+            <div class="skeleton-text small" style="width:30%;float:right"></div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="no-content padding" *ngIf="isError">
+        <i matPrefix class="fa fa-exclamation-triangle"></i>
+        <span class="message">
+          {{ 'An error occurred while processing your request' | translate }}
+        </span>
+        <button mat-flat-button color="primary" (click)="onRefresh()">
+          {{ 'Try Again' | translate }}
+        </button>
       </div>
     </mat-card>
+    <button mat-flat-button color="primary" type="submit" class="block setup">
+      {{ 'Setup New Dataset' | translate }}
+    </button>
   </div>
 </div>
+<ng-template #feedialog>
+  <div>test fee</div>
+</ng-template>
