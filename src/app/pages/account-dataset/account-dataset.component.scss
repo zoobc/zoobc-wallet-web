@@ -1,0 +1,29 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+.account-dataset-list-container {
+  .title {
+    margin-bottom: 0;
+  }
+  .subtitle {
+    color: $black2;
+  }
+  .data-set-list {
+    .list-item {
+      border-bottom: 1px solid #ddd;
+      padding: 16px 6px;
+      margin: 0;
+      align-items: center;
+      @include transition(0.3s ease-in all);
+      .property {
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+      .value {
+        word-break: break-all;
+        color: $black1;
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
