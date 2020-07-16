@@ -59,5 +59,27 @@
   </div>
 </div>
 <ng-template #feedialog>
-  <div>test fee</div>
+  <form [formGroup]="form" (submit)="onOpenPinDialog()">
+    <fee-selector
+      [group]="form"
+      feeName="fee"
+      feeCurrName="feeCurr"
+      [minFee]="minFee"
+      [timeoutField]="timeoutField.value"
+      [required]="true"
+      [currencyRate]="currencyRate"
+      (onClickFeeChoose)="onClickFeeChoose($event)"
+    ></fee-selector>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="block button-margin"
+      [disabled]="form.invalid || isLoadingDelete || isErrorDelete"
+      style="margin-top:10px"
+    >
+      <span *ngIf="isLoadingDelete"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
+      <span>{{ 'Delete' | translate }}</span>
+    </button>
+  </form>
 </ng-template>
