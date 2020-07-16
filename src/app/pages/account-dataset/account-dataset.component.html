@@ -59,6 +59,9 @@
   </div>
 </div>
 <ng-template #feedialog>
+  <h3 class="mat-h3">
+    <b>{{ 'Please Select Fee' | translate }}</b>
+  </h3>
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
     <fee-selector
       [group]="form"
