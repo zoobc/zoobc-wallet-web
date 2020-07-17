@@ -82,7 +82,7 @@ import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-in
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
 import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
-import { MultisigApprovalHistoryComponent } from './pages/multisig-approval-history/multisig-approval-history.component';
+import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
