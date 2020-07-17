@@ -1,5 +1,5 @@
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
 
 .approval-escrow-container {
   .approval-escrow-item {
@@ -26,21 +26,22 @@
       color: $black2;
       font-size: 13px;
     }
-    .approve {
-      border-radius: 20px !important;
-      background: $primary-gradient;
-      padding: 1em;
-      color: white !important;
-      display: inline-flex;
-    }
-    .reject {
-      border-radius: 20px !important;
-      background: $error-gradient;
-      padding: 1em;
-      color: white !important;
-      display: inline-flex;
+    .right-side {
+      padding-top: 40px;
+      text-align: right;
+      .approve {
+        color: map-get($primary, 600);
+        font-weight: bold;
+      }
+      .reject {
+        color: $red;
+        font-weight: bold;
+      }
     }
     @media #{$small-and-down} {
+      .right-side {
+        padding-top: 0;
+      }
       .message {
         text-align: center;
       }
