@@ -20,6 +20,7 @@ import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-in
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
 import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
+import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -36,13 +37,12 @@ const routes: Routes = [
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskComponent },
       { path: 'accounts', component: AccountComponent },
-      { path: 'accounts/:accountBase64', component: AccountComponent },
       { path: 'multisignature', component: MultisignatureComponent },
       { path: 'multisignature/send-transaction', component: SendTransactionComponent },
       { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
       { path: 'multisignature/create-transaction', component: CreateTransactionComponent },
       { path: 'multisignature/add-signatures', component: AddParticipantsComponent },
-
+      { path: 'multisig-approval-history', component: MultisigApprovalHistoryComponent },
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',
