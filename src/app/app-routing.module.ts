@@ -37,7 +37,6 @@ const routes: Routes = [
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskComponent },
       { path: 'accounts', component: AccountComponent },
-      { path: 'accounts/:accountBase64', component: AccountComponent },
       { path: 'multisignature', component: MultisignatureComponent },
       { path: 'multisignature/send-transaction', component: SendTransactionComponent },
       { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
