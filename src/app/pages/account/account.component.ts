@@ -126,6 +126,7 @@ export class AccountComponent implements OnInit {
   test(e, account: SavedAccount) {
     e.stopPropagation();
     this.dialog.open(SetupDatasetComponent, {
+      disableClose: true,
       width: '360px',
       maxHeight: '90vh',
       data: account,

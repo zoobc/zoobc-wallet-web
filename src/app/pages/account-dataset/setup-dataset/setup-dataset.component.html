@@ -1,3 +1,83 @@
-<p>
-  setup-dataset works!
-</p>
+<div class="setup-dataset-container">
+  <h2 class="mat-h2 text-center">{{ 'Setup New Dataset' | translate }}</h2>
+  <form [formGroup]="formGroup" (submit)="onSubmit()">
+    <label>{{ 'Property' | translate }}</label>
+    <mat-form-field appearance="outline" color="accent" class="block">
+      <input matInput type="text" formControlName="property" />
+    </mat-form-field>
+    <ng-container *ngIf="propertyField.touched">
+      <mat-error *ngIf="propertyField.hasError('required')">
+        {{ 'Property is required' | translate }}
+      </mat-error>
+    </ng-container>
+    <label>{{ 'Value' | translate }}</label>
+    <mat-form-field appearance="outline" color="accent" class="block">
+      <input matInput type="text" formControlName="value" />
+    </mat-form-field>
+    <ng-container *ngIf="valueField.touched">
+      <mat-error *ngIf="valueField.hasError('required')">
+        {{ 'Value is required' | translate }}
+      </mat-error>
+    </ng-container>
+    <div style="margin-bottom: 16px;">
+      <mat-checkbox (click)="onClickSetupOther()">
+        {{ 'Setup dataset to other address' | translate }}
+      </mat-checkbox>
+    </div>
+    <ng-container *ngIf="isSetupOther">
+      <label>{{ 'Recipient Address' | translate }}</label>
+      <input-address
+        class="input"
+        label=""
+        formControlName="recipientAddress"
+        placeholder="{{ 'Recipient Address' | translate }}"
+      ></input-address>
+      <ng-container *ngIf="recipientAddressField.touched">
+        <mat-error style="margin-top: 4px;" *ngIf="recipientAddressField.hasError('required')">
+          {{ 'Recipient Address is required' | translate }}
+        </mat-error>
+        <mat-error style="margin-top: 4px;" *ngIf="recipientAddressField.hasError('invalidAddress')">
+          {{ 'Recipient Address is invalid' | translate }}
+        </mat-error>
+      </ng-container>
+      <fee-selector
+        [group]="formGroup"
+        feeName="fee"
+        feeCurrName="feeCurr"
+        [minFee]="minFee"
+        [timeoutField]="timeoutField.value"
+        [required]="true"
+        [currencyRate]="currencyRate"
+        (onClickFeeChoose)="onClickFeeChoose($event)"
+      ></fee-selector>
+    </ng-container>
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <button
+          mat-flat-button
+          color="warn"
+          type="button"
+          class="block button-margin"
+          [disabled]="isLoading"
+          style="margin-top:10px"
+          (click)="onCancel()"
+        >
+          <span>{{ 'Cancel' | translate }}</span>
+        </button>
+      </div>
+      <div class="col-12 col-md-6">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="block button-margin"
+          [disabled]="formGroup.invalid || isLoading"
+          style="margin-top:10px"
+        >
+          <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
+          <span>{{ 'Setup' | translate }}</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
