@@ -211,6 +211,7 @@ export function getLanguage(languageServ: LanguageService) {
     ConfirmSendComponent,
     AddMultisigInfoComponent,
     MultisigInfoComponent,
+    SetupDatasetComponent,
   ],
 })
 export class AppModule {}
