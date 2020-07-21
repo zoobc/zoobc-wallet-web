@@ -51,6 +51,7 @@ export class MyTaskComponent implements OnInit {
     private contactServ: ContactService,
     private router: Router
   ) {}
+
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
     this.getEscrowTx(true);
@@ -190,5 +191,9 @@ export class MyTaskComponent implements OnInit {
 
   goToEscrowApprovalHistoryPage() {
     this.router.navigateByUrl('/escrow-approval-history');
+  }
+
+  onClickMultisigApprovalHistory() {
+    this.router.navigateByUrl('/multisig-approval-history');
   }
 }

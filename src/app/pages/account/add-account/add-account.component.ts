@@ -127,7 +127,7 @@ export class AddAccountComponent implements OnInit {
     this.accountNameField.setValue(`Multisig Account ${len}`);
   }
 
-  toogleMultiSignature(event) {
+  toogleMultiSignature() {
     if (!this.isMultiSignature) this.enableFieldMultiSignature();
     else this.disableFieldMultiSignature();
   }

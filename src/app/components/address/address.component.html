@@ -1,11 +1,8 @@
-<div
-  class="address-template"
-  [ngStyle]="{ 'justify-content': center ? 'center' : 'flex-start' }"
->
-  <span class="start">{{ value | slice: 0:22 }}</span>
+<div class="address-template" [ngStyle]="{ 'justify-content': center ? 'center' : 'flex-start' }">
+  <span class="start">{{ value | slice: 0:halfLen }}</span>
   <span class="end">
     <span class="blank-space">s</span>
-    <span>{{ value | slice: 22:44 }}</span>
+    <span>{{ value | slice: halfLen:len }}</span>
   </span>
   <span class="copy-address" (click)="onCopyText($event)" *ngIf="copyButton">
     <i class="far fa-copy"></i>
