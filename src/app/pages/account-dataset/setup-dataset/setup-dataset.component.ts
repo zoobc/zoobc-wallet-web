@@ -15,7 +15,6 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-setup-dataset',
   templateUrl: './setup-dataset.component.html',
-  styleUrls: ['./setup-dataset.component.scss'],
 })
 export class SetupDatasetComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
