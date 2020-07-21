@@ -95,7 +95,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
         this.dialogRef.close();
         let message = await getTranslation('Your Request is processing', this.translate);
         let subMessage = await getTranslation(
-          '. The dataset will appears when it has been successfully processed on the server',
+          'The dataset will appears when it has been successfully processed on the server',
           this.translate
         );
         Swal.fire(message, subMessage, 'success');
