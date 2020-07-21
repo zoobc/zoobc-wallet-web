@@ -1,48 +1,97 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
-.account-list {
-  .account {
-    border-bottom: 1px solid #ddd;
-    padding: 16px 6px;
-    margin: 0;
-    align-items: center;
-    @include transition(0.3s ease-in all);
-    &:hover {
-      background-color: #eee;
-      cursor: pointer;
+.account {
+  border-bottom: 1px solid #ddd;
+  padding: 16px;
+  margin: 0;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  @include transition(0.3s ease-in all);
+  &:hover {
+    background-color: #eee;
+  }
+
+  .select-address {
+    width: 40px;
+    .btn-select {
+      margin-right: 16px;
+      i {
+        font-size: 24px;
+        color: map-get($accent, 500);
+        cursor: pointer;
+        @include transition(0.3s ease-in all);
+        &:hover {
+          color: map-get($accent, 300);
+        }
+      }
     }
-    .name {
-      font-size: 16px;
-      margin-bottom: 8px;
+  }
+
+  .address-information {
+    width: 55%;
+    @media #{$small-and-down} {
+      width: calc(100% - 40px);
     }
-    .address {
-      word-break: break-all;
-      color: $black1;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-    .icon-btn {
-      font-size: 20px;
-      width: 44px;
-      height: 44px;
-      line-height: 20px;
-      margin-bottom: 8px;
-      margin-left: 8px;
-      color: $black3;
-    }
+
     .label {
-      background-color: map-get($primary, 600);
-      color: white;
+      margin: 4px 0;
+      font-size: 13px;
+      color: $black2;
+    }
+
+    .badge {
+      background-color: map-get($primary, 100);
+      color: map-get($primary, 600);
       padding: 4px 16px;
       border-radius: 15px;
       font-size: 12px;
       margin-left: 8px;
     }
-    p {
-      margin: 4px 0;
+
+    .name {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .address {
+      word-break: break-all;
+      color: $black1;
       font-size: 13px;
-      color: $black2;
+    }
+  }
+
+  .action {
+    padding-top: 8px;
+    width: calc(45% - 40px);
+    text-align: right;
+    align-self: flex-end;
+    @media #{$small-and-down} {
+      width: 100%;
+    }
+
+    .icon-btn {
+      font-size: 14px;
+      padding: 0 !important;
+      min-width: 32px !important;
+      min-height: 32px !important;
+      width: 32px !important;
+      height: 32px !important;
+      line-height: 32px;
+      margin-left: 4px;
+      &.primary {
+        color: map-get($primary, 500);
+        background-color: map-get($primary, 100);
+      }
+      &.accent {
+        color: map-get($accent, 500);
+        background-color: map-get($accent, 100);
+      }
+      &.warn {
+        color: $red;
+        background-color: #ffcdd2;
+      }
     }
   }
 }

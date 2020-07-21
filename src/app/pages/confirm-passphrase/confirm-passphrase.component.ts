@@ -124,6 +124,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
     localStorage.setItem('ACCOUNT', JSON.stringify([account]));
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    localStorage.setItem('IS_RESTORED', 'false');
 
     this.authServ.login(key);
   }

@@ -13,6 +13,7 @@ import zoobc, {
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-task',
@@ -44,7 +45,12 @@ export class MyTaskComponent implements OnInit {
   totalMultiSig: number = 0;
   multiSigfinished: boolean = false;
 
-  constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
+  constructor(
+    public dialog: MatDialog,
+    private authServ: AuthService,
+    private contactServ: ContactService,
+    private router: Router
+  ) {}
   async ngOnInit() {
     this.account = this.authServ.getCurrAccount();
     this.getEscrowTx(true);
@@ -180,5 +186,8 @@ export class MyTaskComponent implements OnInit {
       this.pageMultiSig++;
       this.getMultiSigPendingList();
     } else this.multiSigfinished = true;
+  }
+  onClickMultisigApprovalHistory() {
+    this.router.navigateByUrl('/multisig-approval-history');
   }
 }

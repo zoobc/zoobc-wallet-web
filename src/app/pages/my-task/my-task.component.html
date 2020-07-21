@@ -35,10 +35,19 @@
       </ng-container>
       <ng-container *ngIf="account.type === 'multisig'">
         <mat-tab label="Multisignature">
-          <div class="text-right">
-            <button mat-icon-button class="reload-button" (click)="reload(true)">
-              <i class="fa fa-redo-alt"></i>
-            </button>
+          <div class="row" style="margin: 0;">
+            <div class="col-6 col-md-6">
+              <span (click)="onClickMultisigApprovalHistory()" class="history-link"
+                ><i class="fa fa-history"></i> Approval History
+              </span>
+            </div>
+            <div class="col-6 col-md-6">
+              <div class="text-right">
+                <button mat-icon-button class="reload-button" (click)="reload(true)">
+                  <i class="fa fa-redo-alt"></i>
+                </button>
+              </div>
+            </div>
           </div>
           <div
             infiniteScroll

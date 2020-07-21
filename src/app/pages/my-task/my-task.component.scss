@@ -14,4 +14,16 @@
     font-weight: bold;
     color: map-get($accent, 500);
   }
+
+  .history-link {
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    padding: 0 8px;
+    color: map-get($accent, 500);
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
 }
