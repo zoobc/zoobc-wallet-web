@@ -4,11 +4,14 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate } from 'src/helpers/utils';
+import { truncate, getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc, { BIP32Interface, SetupDatasetResponse } from 'zoobc-sdk';
 import { SetupDatasetInterface } from 'zoobc-sdk/types/helper/transaction-builder/setup-account-dataset';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-setup-dataset',
   templateUrl: './setup-dataset.component.html',
@@ -37,7 +40,8 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private account: SavedAccount,
     private currencyServ: CurrencyRateService,
     private dialogRef: MatDialogRef<SetupDatasetComponent>,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private translate: TranslateService
   ) {
     this.formGroup = new FormGroup({
       property: this.propertyField,
@@ -84,15 +88,24 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
       fee: this.feeForm.value,
     };
     const keyring = this.authServ.keyring;
-    const seed = keyring.calcDerivationPath(this.account.path);
+    const seed: BIP32Interface = keyring.calcDerivationPath(this.account.path);
     zoobc.AccountDataset.setupDataset(param, seed)
-      .then((res: SetupDatasetResponse) => {
+      .then(async (res: SetupDatasetResponse) => {
+        console.log(res);
         this.dialogRef.close();
+        let message = await getTranslation('Your Request is processing', this.translate);
+        let subMessage = await getTranslation(
+          '. The dataset will appears when it has been successfully processed on the server',
+          this.translate
+        );
+        Swal.fire(message, subMessage, 'success');
       })
-      .catch(err => {
+      .catch(async err => {
         this.isError = true;
         this.isLoading = false;
         console.log(err);
+        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        Swal.fire('Opps...', message, 'error');
       })
       .finally(() => {
         this.isLoading = false;
