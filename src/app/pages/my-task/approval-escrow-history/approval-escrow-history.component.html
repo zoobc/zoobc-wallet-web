@@ -1,0 +1,172 @@
+<div class="approval-escrow-history">
+  <div class="row">
+    <div class="col-10">
+      <h2 class="mat-h2">{{ 'Escrows Approval History' | translate }}</h2>
+    </div>
+    <div class="col-2 text-right" *ngIf="!isError && !isLoading">
+      <button mat-icon-button class="reload-button" (click)="getApprovalList(true)">
+        <i class="fa fa-redo-alt"></i>
+      </button>
+    </div>
+  </div>
+  <mat-card style="padding: 0">
+    <div
+      infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()"
+      [scrollWindow]="false"
+      [infiniteScrollContainer]="'.mat-drawer-content'"
+      [fromRoot]="true"
+    >
+      <div class="approval-escrow-container">
+        <ng-container *ngIf="escrowApprovalList">
+          <div class="no-content padding" *ngIf="escrowApprovalList.length <= 0">
+            <i matPrefix class="fa fa-receipt"></i>
+            <span class="message">{{ 'No Escrows Approval Transaction History' | translate }}</span>
+          </div>
+          <div
+            class="approval-escrow-item hover row"
+            *ngFor="let escrow of escrowApprovalList; let i = index"
+            (click)="openDetail(escrow.id)"
+          >
+            <div class="col-12 col-sm-8">
+              <div class="name" *ngIf="escrow.alias">
+                {{ escrow.alias }}
+              </div>
+              <div class="address">
+                <wallet-address [value]="escrow.sender"></wallet-address>
+              </div>
+              <div class="date">
+                {{ escrow.timestamp | dateAgo }}
+              </div>
+            </div>
+            <div class="col-12 col-sm-4 right-side">
+              <ng-container *ngIf="escrow.approvalStatus == 'Approved'">
+                <a class="approve">{{ 'Approved' | translate }}</a>
+              </ng-container>
+              <ng-container *ngIf="escrow.approvalStatus == 'Rejected'">
+                <a class="reject">{{ 'Rejected' | translate }}</a>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isLoading">
+          <div class="approval-escrow-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+            <div class="col-7 col-sm-8">
+              <div class="skeleton-text" style="width:50%;"></div>
+              <div class="skeleton-text small" style="width:75%;"></div>
+              <div class="skeleton-text small" style="width:25%;"></div>
+            </div>
+            <div class="col-5 col-sm-4">
+              <div class="skeleton-text" style="width:71%;float:right"></div>
+              <div class="skeleton-text small" style="width:80%;float:right"></div>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="no-content padding" *ngIf="isError">
+          <i matPrefix class="fa fa-exclamation-triangle"></i>
+          <span class="message">
+            {{ 'An error occurred while processing your request' | translate }}
+          </span>
+          <button mat-flat-button color="primary" (click)="onRefresh()">
+            {{ 'Try Again' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<ng-template #detailEscrow>
+  <div class="detail-task-container" *ngIf="escrowDetail && !isLoadingDetail">
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
+      <div class="col-12 col-md-8">{{ escrowDetail.id }}</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <wallet-address [value]="escrowDetail.senderaddress" [copyButton]="true"></wallet-address>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <wallet-address [value]="escrowDetail.recipientaddress" [copyButton]="true"></wallet-address>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
+      <div class="col-12 col-md-8">{{ escrowDetail.amount / 1e8 | number: '0.0-8' }} ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Commission Fee' | translate }}:</div>
+      <div class="col-12 col-md-8">{{ escrowDetail.commission / 1e8 | number: '0.0-8' }} ZBC</div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">{{ 'Instruction' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        {{ escrowDetail.instruction }}
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-task-container skeleton" *ngIf="isLoadingDetail">
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:20%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:100%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:50%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:30%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:70%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:40%;"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <div class="skeleton-text" style="width:40%;"></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="skeleton-text" style="width:100%;"></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
