@@ -9,10 +9,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
 
-// temporary code
-import { SetupDatasetComponent } from 'src/app/pages/account-dataset/setup-dataset/setup-dataset.component';
-// temprary code
-
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
@@ -121,16 +117,4 @@ export class AccountComponent implements OnInit {
     }
     return false;
   }
-
-  // Temporary Code
-  test(e, account: SavedAccount) {
-    e.stopPropagation();
-    this.dialog.open(SetupDatasetComponent, {
-      disableClose: true,
-      width: '360px',
-      maxHeight: '90vh',
-      data: account,
-    });
-  }
-  //Temporary Code
 }
