@@ -66,15 +66,10 @@ export class RestoreWalletComponent implements OnInit {
     const arrayPhrase = passphrase.split(' ');
     const lang = this.languages[this.selectedLang].value;
     const valid = ZooKeyring.isPassphraseValid(passphrase, lang);
+
     this.wordField.controls = [];
     this.onLoad24Passphrase(arrayPhrase);
-    if (arrayPhrase.length != this.mnemonicNumWords) {
-      // Give some time for load passphrase after then set error
-      setTimeout(() => {
-        this.restoreForm.setErrors({ lengthMnemonic: true });
-      }, 50);
-    } else if (!valid) {
-      // Give some time for load passphrase after then set error
+    if (!valid) {
       setTimeout(() => {
         this.restoreForm.setErrors({ mnemonic: true });
       }, 50);
