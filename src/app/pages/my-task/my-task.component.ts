@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import zoobc, {
   EscrowListParams,
@@ -51,7 +51,8 @@ export class MyTaskComponent implements OnInit {
     private contactServ: ContactService,
     private router: Router
   ) {}
-  async ngOnInit() {
+
+  ngOnInit() {
     this.account = this.authServ.getCurrAccount();
     this.getEscrowTx(true);
     this.getMultiSigPendingList(true);
@@ -187,6 +188,11 @@ export class MyTaskComponent implements OnInit {
       this.getMultiSigPendingList();
     } else this.multiSigfinished = true;
   }
+
+  goToEscrowApprovalHistoryPage() {
+    this.router.navigateByUrl('/escrow-approval-history');
+  }
+
   onClickMultisigApprovalHistory() {
     this.router.navigateByUrl('/multisig-approval-history');
   }

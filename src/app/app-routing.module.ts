@@ -20,6 +20,7 @@ import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-in
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
 import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
+import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 
 const routes: Routes = [
@@ -42,6 +43,7 @@ const routes: Routes = [
       { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
       { path: 'multisignature/create-transaction', component: CreateTransactionComponent },
       { path: 'multisignature/add-signatures', component: AddParticipantsComponent },
+      { path: 'escrow-approval-history', component: ApprovalEscrowHistoryComponent },
       { path: 'multisig-approval-history', component: MultisigApprovalHistoryComponent },
       {
         path: 'settings',

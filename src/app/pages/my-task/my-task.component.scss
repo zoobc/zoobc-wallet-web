@@ -2,9 +2,16 @@
 @import '../../../styles/mixins';
 
 .my-task-container {
+  .approval-history {
+    font-size: 14px;
+    margin-left: 8px;
+    color: map-get($accent, 500);
+    &:hover {
+      opacity: 0.7;
+    }
+  }
   .block-height {
     color: map-get($accent, 500);
-    margin: 16px 16px 16px 0;
   }
   .mat-tab-label {
     font-weight: bold;
