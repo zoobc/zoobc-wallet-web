@@ -51,8 +51,7 @@ export class AccountDatasetComponent implements OnInit {
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
-    this.dataSetList = [1, 2, 3];
-    //this.getDataSetList();
+    this.getDataSetList();
   }
 
   getDataSetList() {
@@ -67,6 +66,7 @@ export class AccountDatasetComponent implements OnInit {
       })
       .catch(err => {
         this.isError = true;
+        console.log(err);
       })
       .finally(() => {
         this.isLoading = false;
