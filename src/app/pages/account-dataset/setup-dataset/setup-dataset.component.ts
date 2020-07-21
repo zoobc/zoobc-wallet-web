@@ -90,7 +90,6 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     const seed: BIP32Interface = keyring.calcDerivationPath(this.account.path);
     zoobc.AccountDataset.setupDataset(param, seed)
       .then(async (res: SetupDatasetResponse) => {
-        console.log(res);
         this.dialogRef.close();
         let message = await getTranslation('Your Request is processing', this.translate);
         let subMessage = await getTranslation(
