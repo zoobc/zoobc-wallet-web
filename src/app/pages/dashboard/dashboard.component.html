@@ -132,6 +132,17 @@
           </div>
         </div>
       </div>
+
+      <div class="button-group">
+        <button mat-flat-button routerLink="/sendmoney">
+          <i matPrefix class="fa fa-paper-plane"></i>
+          <span>{{ 'Send' | translate }}</span>
+        </button>
+        <button mat-flat-button (click)="openReceiveForm()">
+          <i matPrefix class="fa fa-hand-holding-usd"></i>
+          <span>{{ 'Receive' | translate }}</span>
+        </button>
+      </div>
     </ng-container>
   </mat-card>
 
