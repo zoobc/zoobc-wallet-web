@@ -22,7 +22,6 @@ export class EditAccountComponent implements OnInit {
 
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
-  newMultiSigAddress: string;
 
   constructor(
     private authServ: AuthService,
@@ -69,30 +68,21 @@ export class EditAccountComponent implements OnInit {
               minSigs: this.minSignatureField.value,
             };
 
-            this.newMultiSigAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+            const newMultiSigAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+            const oldAddress = accounts[i].address;
 
-            accounts[i].address = this.newMultiSigAddress;
+            accounts[i].address = newMultiSigAddress;
             accounts[i].participants = this.participantsField.value.filter(value => value.length > 0);
             accounts[i].nonce = this.nonceField.value;
             accounts[i].minSig = this.minSignatureField.value;
             accounts[i].signByAddress = this.signBy.address;
             accounts[i].path = this.signBy.path;
+
+            let currAcc = this.authServ.getCurrAccount();
+            if (currAcc.address == oldAddress) this.authServ.switchAccount(accounts[i]);
           }
           break;
         }
-      }
-      let currAcc = this.authServ.getCurrAccount();
-      if (currAcc.address == this.account.address) {
-        currAcc.name = this.accountNameField.value;
-        if (this.isMultiSignature) {
-          currAcc.address = this.newMultiSigAddress;
-          currAcc.participants = this.participantsField.value.filter(value => value.length > 0);
-          currAcc.nonce = this.nonceField.value;
-          currAcc.minSig = this.minSignatureField.value;
-          currAcc.path = this.signBy.path;
-          currAcc.signByAddress = this.signBy.address;
-        }
-        this.authServ.switchAccount(currAcc);
       }
       localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
       this.dialogRef.close(true);

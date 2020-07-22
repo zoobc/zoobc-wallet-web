@@ -5,7 +5,6 @@ import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
 import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
 
@@ -23,24 +22,13 @@ export class AccountComponent implements OnInit {
     private authServ: AuthService,
     public dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private translate: TranslateService,
-    private activeRoute: ActivatedRoute,
-    private router: Router
+    private translate: TranslateService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.accounts = this.authServ.getAllAccount();
   }
 
-  ngOnInit() {
-    if (this.activeRoute.snapshot.params['accountBase64']) {
-      const accountBase64: string = this.activeRoute.snapshot.params['accountBase64'];
-      const accountStr = atob(accountBase64);
-      const account: SavedAccount = JSON.parse(accountStr);
-      setTimeout(() => {
-        this.onOpenAddAccount(account);
-      }, 50);
-    }
-  }
+  ngOnInit() {}
 
   onOpenAddAccount(account: SavedAccount = null) {
     const dialog = this.dialog.open(AddAccountComponent, {
@@ -57,8 +45,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  onOpenEditAccount(e, account: SavedAccount) {
-    e.stopPropagation();
+  onOpenEditAccount(account: SavedAccount) {
     const dialog = this.dialog.open(EditAccountComponent, {
       width: '360px',
       maxHeight: '99vh',
@@ -72,8 +59,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  async onSwitchAccount(e, account: SavedAccount) {
-    e.stopPropagation();
+  async onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
     this.currAcc = account;
 
@@ -81,8 +67,7 @@ export class AccountComponent implements OnInit {
     this.snackbar.open(message, null, { duration: 3000 });
   }
 
-  onOpenMultisigInfoDialog(e, account: SavedAccount) {
-    e.stopPropagation();
+  onOpenMultisigInfoDialog(account: SavedAccount) {
     this.dialog.open(MultisigInfoComponent, {
       width: '300px',
       maxHeight: '90vh',
@@ -112,9 +97,22 @@ export class AccountComponent implements OnInit {
   }
 
   isSavedAccount(obj: any): obj is SavedAccount {
-    if ((obj as SavedAccount).type) {
-      return true;
-    }
+    if ((obj as SavedAccount).type) return true;
     return false;
+  }
+
+  async onDelete(index: number) {
+    const message = await getTranslation('Are you sure want to delete this account?', this.translate);
+    Swal.fire({
+      title: message,
+      showCancelButton: true,
+      preConfirm: () => {
+        const currAccount = this.authServ.getCurrAccount();
+        if (this.accounts[index].address == currAccount.address) this.onSwitchAccount(this.accounts[0]);
+        this.accounts.splice(index, 1);
+        localStorage.setItem('ACCOUNT', JSON.stringify(this.accounts));
+        return true;
+      },
+    });
   }
 }
