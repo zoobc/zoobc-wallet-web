@@ -16,8 +16,6 @@ interface Languages {
   styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent implements OnInit {
-  mnemonicLanguage = 'ENGLISH';
-
   languages: Languages[] = [
     { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
     { value: 'english', viewValue: 'English' },
@@ -29,12 +27,13 @@ export class SignupComponent implements OnInit {
     { value: 'chinese_traditional', viewValue: 'Chinese Traditional' },
   ];
 
-  lang: string;
+  selectedLang: number = 1;
   passphrase: string[];
 
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
+  showPassPhrase: boolean = false;
 
   constructor(private router: Router, private snackbar: MatSnackBar) {
     this.formTerms = new FormGroup({
@@ -47,15 +46,15 @@ export class SignupComponent implements OnInit {
     this.generateNewWallet();
   }
 
-  selectMnemonicLanguage(language) {
-    this.lang = language.value;
-    this.mnemonicLanguage = this.lang;
+  selectMnemonicLanguage(index: number) {
+    this.selectedLang = index;
     this.generateNewWallet();
   }
 
   generateNewWallet() {
-    let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
-    if (this.lang === 'japanese') this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
+    const lang = this.languages[this.selectedLang].value;
+    let phrase = ZooKeyring.generateRandomPhrase(24, lang);
+    if (lang === 'japanese') this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
     else this.passphrase = phrase.split(' ');
   }
 
@@ -71,5 +70,8 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['confirm-passphrase'], {
       state: { passphrase: this.passphrase },
     });
+  }
+  tooglePassphrase() {
+    this.showPassPhrase = !this.showPassPhrase;
   }
 }
