@@ -38,7 +38,7 @@
         </mat-form-field>
       </ng-container>
       <ng-container *ngIf="readOnlyTxHash">
-        <wallet-address [value]="transactionHashField.value" [copyButton]="true"></wallet-address>
+        <wallet-address [value]="transactionHashField.value"></wallet-address>
         <br />
       </ng-container>
       <ng-container *ngIf="transactionHashField.touched">
@@ -130,10 +130,8 @@
           <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
             <div class="participant-field" [formGroupName]="i">
               <div *ngIf="readOnlyAddress">
-                <wallet-address
-                  [value]="participantsSignatureField.controls[i].get('address').value"
-                  [copyButton]="true"
-                ></wallet-address>
+                <wallet-address [value]="participantsSignatureField.controls[i].get('address').value">
+                </wallet-address>
               </div>
               <ng-container *ngIf="!readOnlyAddress">
                 <input-address

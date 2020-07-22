@@ -7,9 +7,7 @@
       </div>
 
       <div
-        [className]="
-          withDetail ? 'transaction-item hover row' : 'transaction-item row'
-        "
+        [className]="withDetail ? 'transaction-item hover row' : 'transaction-item row'"
         *ngFor="let transaction of transactionData; let i = index"
         (click)="openDetail(transaction.id)"
       >
@@ -26,28 +24,21 @@
         </div>
         <div class="col-12 col-sm-4 text-right">
           <ng-container *ngIf="transaction.type == 'send'">
-            <div class="amount-send">
-              - {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC
-            </div>
+            <div class="amount-send">- {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
             <div class="fee" *ngIf="transaction.type == 'send'">
               - {{ transaction.fee / 1e8 | number: '0.0-8' }}
               <small>ZBC {{ 'Fee' | translate }}</small>
             </div>
           </ng-container>
           <ng-container *ngIf="transaction.type == 'receive'">
-            <div class="amount-receive">
-              + {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC
-            </div>
+            <div class="amount-receive">+ {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
           </ng-container>
         </div>
       </div>
     </ng-container>
 
     <ng-container *ngIf="isLoading">
-      <div
-        class="transaction-item row skeleton"
-        *ngFor="let i of [0, 1, 2, 3, 4, 5]"
-      >
+      <div class="transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
         <div class="col-7 col-sm-8">
           <div class="skeleton-text" style="width:50%;"></div>
           <div class="skeleton-text small" style="width:75%;"></div>
