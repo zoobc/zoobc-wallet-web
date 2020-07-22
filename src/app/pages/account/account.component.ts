@@ -90,9 +90,13 @@ export class AccountComponent implements OnInit {
         let message = await getTranslation('You imported the wrong file', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
-      setTimeout(() => {
-        this.onOpenAddAccount(fileResult);
-      }, 50);
+
+      const accountSave: SavedAccount = fileResult;
+      const idx = this.authServ.getAllAccount().findIndex(acc => acc.address == accountSave.address);
+      if (idx >= 0) {
+        let message = await getTranslation('Account with that address is already exist', this.translate);
+        return Swal.fire('Opps...', message, 'error');
+      }
     };
   }
 
