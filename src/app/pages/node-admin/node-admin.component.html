@@ -72,11 +72,11 @@
         <div class="col-12 col-sm-6">
           <div class="label">{{ 'Account Address' | translate }}</div>
           <div class="value">
-            <wallet-address [value]="registeredNode.accountaddress" [copyButton]="true"></wallet-address>
+            <wallet-address [value]="registeredNode.accountaddress"></wallet-address>
           </div>
           <div class="label">{{ 'Node Public Key' | translate }}</div>
           <div class="value">
-            <wallet-address [value]="registeredNode.nodepublickey" [copyButton]="true"></wallet-address>
+            <wallet-address [value]="registeredNode.nodepublickey"></wallet-address>
           </div>
         </div>
         <div class="col-12 col-sm-6">
@@ -185,11 +185,7 @@
       <div class="row">
         <div class="col-6 col-sm-3 cpu-usage" *ngFor="let cpu of hwInfo.cpuinformationList; let i = index">
           <div class="percentage">
-            <mat-progress-spinner
-              [value]="cpu.usedpercent"
-              diameter="80"
-              color="primary"
-            ></mat-progress-spinner>
+            <mat-progress-spinner [value]="cpu.usedpercent" diameter="80" color="primary"></mat-progress-spinner>
             <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
           </div>
           <div class="cpu-number">CPU {{ i + 1 }}</div>
@@ -285,7 +281,7 @@
           <h2 class="title">Success</h2>
           <h4 class="sub-title">New Public Key Address</h4>
           <div class="address">
-            <wallet-address [center]="true" [value]="nodePublicKey" [copyButton]="true"></wallet-address>
+            <wallet-address [center]="true" [value]="nodePublicKey"></wallet-address>
           </div>
         </div>
       </div>

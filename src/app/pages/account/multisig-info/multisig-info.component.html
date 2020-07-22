@@ -9,7 +9,9 @@
       <div class="col-12">
         <div class="label">{{ 'Participants' | translate }}:</div>
         <ul class="participants" *ngFor="let participant of currAcc.participants">
-          <li><wallet-address [value]="participant" [copyButton]="true"></wallet-address></li>
+          <li>
+            <wallet-address [value]="participant"></wallet-address>
+          </li>
         </ul>
         <div class="label nonce">
           {{ 'Nonce' | translate }}: <span>{{ currAcc.nonce }}</span>
@@ -20,7 +22,7 @@
         </div>
         <div class="signed-by">
           <div class="label">{{ 'Signed By' | translate }}:</div>
-          <wallet-address [value]="currAcc.signByAddress" [copyButton]="true"></wallet-address>
+          <wallet-address [value]="currAcc.signByAddress"></wallet-address>
         </div>
         <div class="share-multisig-info">
           <button mat-flat-button color="primary" (click)="onExport()" class="block">
