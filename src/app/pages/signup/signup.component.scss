@@ -11,18 +11,9 @@
     color: $black2;
   }
   .language-selector {
-    @media #{$small-and-down} {
-      margin-left: 10px;
-    }
     text-align: left;
-    margin: 8px 0;
-    margin-left: 75px;
-    i {
-      margin-left: 8px;
-    }
-    span {
-      text-transform: uppercase;
-    }
+    max-width: 600px;
+    margin: 8px auto;
   }
   .passphrase-section {
     position: relative;
