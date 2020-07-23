@@ -16,7 +16,7 @@ export class AddressComponent implements OnInit {
   len: number = 0;
   halfLen: number = 0;
 
-  constructor(private snackbar: MatSnackBar, private translate: TranslateService) { }
+  constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
   ngOnInit() {
     this.len = this.value.length;
