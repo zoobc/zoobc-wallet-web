@@ -24,23 +24,20 @@ export class AccountComponent implements OnInit {
     private snackbar: MatSnackBar,
     private translate: TranslateService
   ) {
-    this.currAcc = this.authServ.getCurrAccount();
-    this.accounts = this.authServ.getAllAccount();
+    this.refreshAccounts();
   }
 
   ngOnInit() {}
 
-  onOpenAddAccount(account: SavedAccount = null) {
+  onOpenAddAccount() {
     const dialog = this.dialog.open(AddAccountComponent, {
       width: '360px',
       maxHeight: '99vh',
-      data: account,
     });
 
     dialog.afterClosed().subscribe((added: boolean) => {
       if (added) {
-        this.accounts = this.authServ.getAllAccount();
-        this.currAcc = this.authServ.getCurrAccount();
+        this.refreshAccounts();
       }
     });
   }
@@ -53,8 +50,7 @@ export class AccountComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((edited: boolean) => {
       if (edited) {
-        this.accounts = this.authServ.getAllAccount();
-        this.currAcc = this.authServ.getCurrAccount();
+        this.refreshAccounts();
       }
     });
   }
@@ -79,6 +75,11 @@ export class AccountComponent implements OnInit {
     this.myInputVariable.nativeElement.click();
   }
 
+  refreshAccounts() {
+    this.accounts = this.authServ.getAllAccount();
+    this.currAcc = this.authServ.getCurrAccount();
+  }
+
   onFileChanged(event) {
     const file = event.target.files[0];
     const fileReader = new FileReader();
@@ -90,10 +91,23 @@ export class AccountComponent implements OnInit {
         let message = await getTranslation('You imported the wrong file', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
-      setTimeout(() => {
-        this.onOpenAddAccount(fileResult);
-      }, 50);
+      const accountSave: SavedAccount = fileResult;
+      const idx = this.authServ.getAllAccount().findIndex(acc => acc.address == accountSave.address);
+      if (idx >= 0) {
+        let message = await getTranslation('Account with that address is already exist', this.translate);
+        return Swal.fire('Opps...', message, 'error');
+      }
+      this.authServ.addAccount(accountSave);
+      let message = await getTranslation('Account has been successfully imported', this.translate);
+      Swal.fire({
+        type: 'success',
+        title: message,
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.refreshAccounts();
     };
+    this.myInputVariable.nativeElement.value = '';
   }
 
   isSavedAccount(obj: any): obj is SavedAccount {
