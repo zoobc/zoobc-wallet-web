@@ -22,6 +22,8 @@ export class ApprovalEscrowHistoryComponent implements OnInit {
   @ViewChild('detailEscrow') detailEscrow: TemplateRef<any>;
   escrowDetail: EscrowTransactionResponse;
   isLoadingDetail: boolean;
+  lastRefresh: number;
+
   constructor(
     private authServ: AuthService,
     private contactServ: ContactService,
@@ -71,7 +73,7 @@ export class ApprovalEscrowHistoryComponent implements OnInit {
           this.isError = true;
           console.log(err);
         })
-        .finally(() => (this.isLoading = false));
+        .finally(() => ((this.isLoading = false), (this.lastRefresh = Date.now())));
     }
   }
 

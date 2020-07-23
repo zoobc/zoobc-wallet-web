@@ -16,6 +16,7 @@ import { ContactService } from 'src/app/services/contact.service';
 @Component({
   selector: 'app-transferhistory',
   templateUrl: './transferhistory.component.html',
+  styles: ['@media (min-width: 600px) {br {display: none;} }'],
 })
 export class TransferhistoryComponent implements OnInit {
   accountHistory: any[];
@@ -29,6 +30,7 @@ export class TransferhistoryComponent implements OnInit {
   address: string = this.authServ.getCurrAccount().address;
   isLoading: boolean = false;
   isError: boolean = false;
+  lastRefresh: number;
 
   constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
@@ -79,6 +81,7 @@ export class TransferhistoryComponent implements OnInit {
         this.unconfirmTx = null;
       } finally {
         this.isLoading = false;
+        this.lastRefresh = Date.now();
       }
     }
   }

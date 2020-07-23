@@ -1,52 +1,59 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-.approval-escrow-container {
-  .approval-escrow-item {
-    border-bottom: 1px solid #ddd;
-    padding: 16px 6px;
-    margin: 0;
-    align-items: center;
-    @include transition(0.3s ease-in all);
-    &.hover:hover {
-      background-color: #eee;
-      cursor: pointer;
+.approval-escrow-history {
+  @media (min-width: 600px) {
+    .br {
+      display: none;
     }
-    .name {
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-    .address {
-      word-break: break-all;
-      color: $black1;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-    .date {
-      color: $black2;
-      font-size: 13px;
-    }
-    .right-side {
-      padding-top: 40px;
-      text-align: right;
-      .approve {
-        color: map-get($primary, 600);
-        font-weight: bold;
+  }
+  .approval-escrow-container {
+    .approval-escrow-item {
+      border-bottom: 1px solid #ddd;
+      padding: 16px 6px;
+      margin: 0;
+      align-items: center;
+      @include transition(0.3s ease-in all);
+      &.hover:hover {
+        background-color: #eee;
+        cursor: pointer;
       }
-      .reject {
-        color: $red;
-        font-weight: bold;
+      .name {
+        font-size: 16px;
+        margin-bottom: 4px;
       }
-    }
-    @media #{$small-and-down} {
+      .address {
+        word-break: break-all;
+        color: $black1;
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      .date {
+        color: $black2;
+        font-size: 13px;
+      }
       .right-side {
-        padding-top: 0;
+        padding-top: 40px;
+        text-align: right;
+        .approve {
+          color: map-get($primary, 600);
+          font-weight: bold;
+        }
+        .reject {
+          color: $red;
+          font-weight: bold;
+        }
       }
-      .message {
-        text-align: center;
-      }
-      .title-task {
-        display: block;
+      @media #{$small-and-down} {
+        .right-side {
+          padding-top: 0;
+        }
+        .message {
+          text-align: center;
+        }
+        .title-task {
+          display: block;
+        }
       }
     }
   }

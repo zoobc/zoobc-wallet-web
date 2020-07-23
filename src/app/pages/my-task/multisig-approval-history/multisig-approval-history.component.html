@@ -1,7 +1,13 @@
 <div class="my-multisig-history-container">
   <div class="row">
     <div class="col-10">
-      <h2 class="mat-h2">{{ 'Multisignature Approval History' | translate }}</h2>
+      <h2 class="mat-h2">
+        {{ 'Multisignature Approval History' | translate }}
+        <br class="br" />
+        <small style="font-size: 12px;" *ngIf="!isError && !isLoading"
+          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</small
+        >
+      </h2>
     </div>
     <div class="col-2 text-right" *ngIf="!isError && !isLoading">
       <button mat-icon-button class="reload-button" (click)="getMultiSigTransaction(true)">
