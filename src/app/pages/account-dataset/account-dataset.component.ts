@@ -8,6 +8,7 @@ import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.se
 import { truncate } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
+import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -107,5 +108,14 @@ export class AccountDatasetComponent implements OnInit {
 
   onRefresh() {
     this.getDataSetList();
+  }
+
+  onSetupNewDataset() {
+    let newRefDialog = this.dialog.open(SetupDatasetComponent, {
+      width: '360px',
+      maxHeight: '99vh',
+      data: this.account,
+      disableClose: true,
+    });
   }
 }
