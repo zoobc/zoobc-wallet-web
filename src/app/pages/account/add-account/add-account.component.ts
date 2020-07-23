@@ -4,7 +4,9 @@ import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, { getZBCAdress, MultiSigAddress } from 'zoobc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
-
+import Swal from 'sweetalert2';
+import { getTranslation } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-add-new-account',
   templateUrl: './add-account.component.html',
@@ -22,7 +24,11 @@ export class AddAccountComponent implements OnInit {
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
 
-  constructor(private authServ: AuthService, private dialogRef: MatDialogRef<AddAccountComponent>) {
+  constructor(
+    private authServ: AuthService,
+    private dialogRef: MatDialogRef<AddAccountComponent>,
+    private translate: TranslateService
+  ) {
     this.formAddAccount = new FormGroup({
       name: this.accountNameField,
       participants: this.participantsField,
@@ -37,49 +43,61 @@ export class AddAccountComponent implements OnInit {
 
   ngOnInit() {}
 
-  onAddAccount() {
-    if (this.formAddAccount.valid) {
-      let account: SavedAccount;
+  async onAddAccount() {
+    let account: SavedAccount;
 
-      if (this.isMultiSignature) {
-        let participants: [string] = this.participantsField.value.filter(value => value.length > 0);
-        participants = participants.sort();
-
-        const multiParam: MultiSigAddress = {
-          participants: participants,
-          nonce: this.nonceField.value,
-          minSigs: this.minSignatureField.value,
-        };
-        const multiSignAddress: string = zoobc.MultiSignature.createMultiSigAddress(multiParam);
-
-        account = {
-          name: this.accountNameField.value,
-          type: 'multisig',
-          path: this.signBy.path,
-          nodeIP: null,
-          address: multiSignAddress,
-          participants: participants,
-          nonce: this.nonceField.value,
-          minSig: this.minSignatureField.value,
-          signByAddress: this.signBy.address,
-        };
-      } else {
-        const keyring = this.authServ.keyring;
-        const path = this.authServ.generateDerivationPath();
-        const childSeed = keyring.calcDerivationPath(path);
-        const accountAddress = getZBCAdress(childSeed.publicKey);
-        account = {
-          name: this.accountNameField.value,
-          type: 'normal',
-          path,
-          nodeIP: null,
-          address: accountAddress,
-        };
-      }
-
+    if (!this.isMultiSignature) {
+      const keyring = this.authServ.keyring;
+      const path = this.authServ.generateDerivationPath();
+      const childSeed = keyring.calcDerivationPath(path);
+      const accountAddress = getZBCAdress(childSeed.publicKey);
+      account = {
+        name: this.accountNameField.value,
+        type: 'normal',
+        path,
+        nodeIP: null,
+        address: accountAddress,
+      };
       this.authServ.addAccount(account);
-      this.dialogRef.close(true);
+      return this.dialogRef.close(true);
     }
+
+    let title = await getTranslation('Are you sure?', this.translate);
+    let message = await getTranslation(
+      'Once you create multisignature address, you will not be able to edit it anymore. But you can still delete it)',
+      this.translate
+    );
+    let buttonText = await getTranslation('Yes, continue it!', this.translate);
+    Swal.fire({
+      title: title,
+      text: message,
+      showCancelButton: true,
+      confirmButtonText: buttonText,
+      type: 'warning',
+    }).then(res => {
+      if (!res.value) return null;
+      let participants: [string] = this.participantsField.value.filter(value => value.length > 0);
+      participants = participants.sort();
+      const multiParam: MultiSigAddress = {
+        participants: participants,
+        nonce: this.nonceField.value,
+        minSigs: this.minSignatureField.value,
+      };
+      const multiSignAddress: string = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+      account = {
+        name: this.accountNameField.value,
+        type: 'multisig',
+        path: this.signBy.path,
+        nodeIP: null,
+        address: multiSignAddress,
+        participants: participants,
+        nonce: this.nonceField.value,
+        minSig: this.minSignatureField.value,
+        signByAddress: this.signBy.address,
+      };
+      this.authServ.addAccount(account);
+      return this.dialogRef.close(true);
+    });
   }
 
   disableFieldMultiSignature() {
