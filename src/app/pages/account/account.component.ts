@@ -29,11 +29,10 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {}
 
-  onOpenAddAccount(account: SavedAccount = null) {
+  onOpenAddAccount() {
     const dialog = this.dialog.open(AddAccountComponent, {
       width: '360px',
       maxHeight: '99vh',
-      data: account,
     });
 
     dialog.afterClosed().subscribe((added: boolean) => {

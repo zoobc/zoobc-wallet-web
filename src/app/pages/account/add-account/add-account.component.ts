@@ -1,6 +1,6 @@
-import { Component, Inject, ViewChild, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, { getZBCAdress, MultiSigAddress } from 'zoobc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
@@ -22,13 +22,7 @@ export class AddAccountComponent implements OnInit {
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
 
-  @ViewChild('refcheck') checkbox;
-
-  constructor(
-    private authServ: AuthService,
-    private dialogRef: MatDialogRef<AddAccountComponent>,
-    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
-  ) {
+  constructor(private authServ: AuthService, private dialogRef: MatDialogRef<AddAccountComponent>) {
     this.formAddAccount = new FormGroup({
       name: this.accountNameField,
       participants: this.participantsField,
@@ -37,26 +31,11 @@ export class AddAccountComponent implements OnInit {
       sign: this.signFormField,
     });
 
-    if (account) {
-      this.enableFieldMultiSignature();
-      this.pushInitParticipant(account.participants.length);
-      this.prefillAccount();
-    } else {
-      this.pushInitParticipant();
-      this.disableFieldMultiSignature();
-    }
+    this.pushInitParticipant();
+    this.disableFieldMultiSignature();
   }
 
-  ngOnInit() {
-    if (this.account && this.isMultiSignature) this.checkbox._checked = true;
-  }
-
-  prefillAccount() {
-    this.participantsField.setValue(this.account.participants);
-    this.nonceField.setValue(this.account.nonce);
-    this.minSignatureField.setValue(this.account.minSig);
-    this.signFormField.setValue(this.account.signByAddress);
-  }
+  ngOnInit() {}
 
   onAddAccount() {
     if (this.formAddAccount.valid) {
