@@ -1,6 +1,6 @@
 <div class="signup-container">
-  <h2 class="mat-h2">{{ 'Create New Account' | translate }}</h2>
-  <h4 class="mat-h4">{{ 'Your Passphrase' | translate }}:</h4>
+  <h2 class="mat-h2">Create New Account</h2>
+  <h4 class="mat-h4">Your Passphrase</h4>
 
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
@@ -30,33 +30,27 @@
   <div class="btn-grouped">
     <button mat-flat-button color="primary" (click)="copyPassphrase()">
       <i matPrefix class="fas fa-copy"></i>
-      <span class="text">{{ 'Copy Passphrase' | translate }}</span>
+      <span class="text">'Copy Passphrase'</span>
     </button>
     <button mat-flat-button color="primary" (click)="generateNewWallet()">
       <i matPrefix class="fas fa-sync"></i>
-      <span class="text">{{ 'Regenerate' | translate }}</span>
+      <span class="text">Regenerate</span>
     </button>
   </div>
 
   <form [formGroup]="formTerms">
     <div class="text-left">
-      <div
-        class="warning-box mat-body-2"
-        [innerHTML]="
-          'Remember: Never tell your passphrase. If you lose it, you lose access to your account!'
-            | translate
-        "
-      ></div>
+      <div class="warning-box mat-body-2">
+        Remember: Never tell your passphrase. If you lose it, you lose access to your account!
+      </div>
       <div style="margin-bottom: 8px">
-        <mat-checkbox formControlName="isWrittenDown">
-          {{ 'I have written or saved my passphrase safely' | translate }}
+        <mat-checkbox formControlName="isWrittenDown"
+          >I have written or saved my passphrase safely
         </mat-checkbox>
       </div>
       <div>
         <mat-checkbox formControlName="isAgree">
-          <span
-            [innerHTML]="'I Approve Terms Of Use & Privacy Policy' | translate"
-          ></span>
+          <span>I Approve Terms Of Use & Privacy Policy</span>
         </mat-checkbox>
       </div>
     </div>
@@ -70,7 +64,7 @@
         [disabled]="!isWrittenDown.value || !isAgree.value"
       >
         <i matPrefix class="fas fa-wallet"></i>
-        <span class="text">{{ 'Create Wallet' | translate }}</span>
+        <span class="text">Create Wallet</span>
       </button>
     </div>
   </form>

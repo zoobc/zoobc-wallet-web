@@ -2,7 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { SavedAccount } from 'src/app/services/auth.service';
 import { MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
 import { onCopyText } from 'src/helpers/utils';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-multisig-info',
@@ -14,7 +13,6 @@ export class MultisigInfoComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<MultisigInfoComponent>,
-    private translate: TranslateService,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public account: SavedAccount
   ) {
@@ -31,11 +29,7 @@ export class MultisigInfoComponent implements OnInit {
 
     onCopyText(url);
 
-    let message: string;
-    await this.translate
-      .get('Multisig Info copied to clipboard')
-      .toPromise()
-      .then(res => (message = res));
+    let message: string = 'Multisig Info copied to clipboard';
     this.snackBar.open(message, null, { duration: 3000 });
   }
 }

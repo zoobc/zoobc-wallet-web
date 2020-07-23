@@ -1,11 +1,11 @@
 <div class="account-container">
   <div class="row">
     <div class="col-4">
-      <h2 class="mat-h2">{{ 'Accounts' | translate }}</h2>
+      <h2 class="mat-h2">Accounts</h2>
     </div>
     <div class="col-8 text-right">
       <button mat-flat-button color="primary" (click)="onOpenAddAccount()">
-        <span>{{ 'Add New Account' | translate }}</span>
+        <span>Add New Account</span>
       </button>
     </div>
   </div>
@@ -43,7 +43,7 @@
                     class="small"
                     (click)="onSwitchAccount($event, acc)"
                   >
-                    <span>{{ 'Select' | translate }}</span>
+                    <span>Select</span>
                   </button>
                 </ng-container>
                 <ng-template #elseAcc>
@@ -53,7 +53,7 @@
                     class="small"
                     (click)="onSwitchAccount($event, acc)"
                   >
-                    <span>{{ 'Selected' | translate }}</span>
+                    <span>Selected</span>
                   </button>
                 </ng-template>
               </div>
@@ -70,11 +70,11 @@
                 </span>
               </div>
               <div class="address">
-                <p>{{ 'Address' | translate }}:</p>
+                <p>Address:</p>
                 <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
               </div>
               <div class="address">
-                <p>{{ 'Signed By' | translate }}:</p>
+                <p>Signed By:</p>
                 <wallet-address [value]="acc.signByAddress" [copyButton]="true"></wallet-address>
               </div>
             </div>
@@ -107,7 +107,7 @@
                     class="small"
                     (click)="onSwitchAccount($event, acc)"
                   >
-                    <span>{{ 'Select' | translate }}</span>
+                    <span>Select</span>
                   </button>
                 </ng-container>
                 <ng-template #elseAcc>
@@ -117,7 +117,7 @@
                     class="small"
                     (click)="onSwitchAccount($event, acc)"
                   >
-                    <span>{{ 'Selected' | translate }}</span>
+                    <span>Selected</span>
                   </button>
                 </ng-template>
               </div>

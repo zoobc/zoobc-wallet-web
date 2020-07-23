@@ -21,19 +21,15 @@
     <div class="from-account" *ngIf="isLoading">
       <div style="vertical-align: middle">
         <i class="fas fa-circle-notch fa-spin" style="font-size: 16px"></i>&nbsp;
-        <span>{{ 'Getting your accounts...' | translate }}</span>
+        <span>Getting your accounts...</span>
       </div>
     </div>
 
     <div class="from-account" *ngIf="isError">
       <div class="text-center" style="width: 100%;">
         <i matPrefix class="fa fa-exclamation-triangle"></i>
-        <div style="margin-bottom: 8px;">
-          {{ 'An error occurred while processing your request' | translate }}
-        </div>
-        <button mat-flat-button class="small" color="primary" (click)="getAccounts()">
-          {{ 'Try Again' | translate }}
-        </button>
+        <div style="margin-bottom: 8px;">An error occurred while processing your request'</div>
+        <button mat-flat-button class="small" color="primary" (click)="getAccounts()">Try Again</button>
       </div>
     </div>
   </div>
@@ -41,7 +37,7 @@
 
 <ng-template #accountDialog>
   <h2 class="mat-h2">
-    <b>{{ 'Your Accounts' | translate }}</b>
+    <b>Your Accounts</b>
   </h2>
 
   <ng-container *ngIf="accounts">
