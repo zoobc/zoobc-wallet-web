@@ -64,6 +64,7 @@ import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-in
 import { SeatsComponent } from './pages/seats/seats.component';
 import { SeatDetailComponent } from './pages/seats/seat-detail/seat-detail.component';
 import { ConfirmUpdateComponent } from './pages/seats/confirm-update/confirm-update.component';
+import { DownloadCertificateComponent } from './pages/seats/download-certificate/download-certificate.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -95,6 +96,7 @@ export function getLanguage(languageServ: LanguageService) {
     SeatsComponent,
     SeatDetailComponent,
     ConfirmUpdateComponent,
+    DownloadCertificateComponent,
   ],
   imports: [
     BrowserModule,
@@ -167,6 +169,7 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigInfoComponent,
     SeatDetailComponent,
     ConfirmUpdateComponent,
+    DownloadCertificateComponent,
   ],
 })
 export class AppModule {}
