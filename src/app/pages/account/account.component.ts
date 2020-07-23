@@ -4,7 +4,6 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
 import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
-import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -20,7 +19,6 @@ export class AccountComponent implements OnInit {
     private authServ: AuthService,
     public dialog: MatDialog,
     private snackbar: MatSnackBar,
-    private translate: TranslateService,
     private activeRoute: ActivatedRoute
   ) {
     this.currAcc = this.authServ.getCurrAccount();
@@ -73,11 +71,7 @@ export class AccountComponent implements OnInit {
     this.authServ.switchAccount(account);
     this.currAcc = account;
 
-    let message: string;
-    await this.translate
-      .get(`${this.currAcc.name} selected`)
-      .toPromise()
-      .then(res => (message = res));
+    let message: string = `${this.currAcc.name} selected`;
     this.snackbar.open(message, null, { duration: 3000 });
   }
 

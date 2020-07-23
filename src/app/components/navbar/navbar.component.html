@@ -28,23 +28,19 @@
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
           <button mat-menu-item (click)="onComingSoonPage()">
-            <i class="fab fa-usb"></i>
-            {{ 'Connect Hardware Wallet' | translate }}
+            <i class="fab fa-usb"></i>Connect Hardware Wallet
           </button>
           <mat-divider></mat-divider>
-          <button mat-menu-item routerLink="/settings/about">
-            <i class="fas fa-info"></i>
-            {{ 'Info & Help' | translate }}
-          </button>
+          <button mat-menu-item routerLink="/settings/about"><i class="fas fa-info"></i>Info & Help</button>
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/settings/general">
             <i class="fa fa-cog"></i>
-            {{ 'Settings' | translate }}
+            Settings
           </button>
           <mat-divider></mat-divider>
           <button (click)="onLogout()" mat-menu-item>
             <i class="fas fa-sign-out-alt"></i>
-            {{ 'Logout' | translate }}
+            Logout
           </button>
         </div>
       </mat-menu>

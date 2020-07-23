@@ -1,13 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-
-import { LanguageService, LANGUAGES } from 'src/app/services/language.service';
 import { AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { TranslateService } from '@ngx-translate/core';
 import { RevealPassphraseComponent } from '../reveal-passphrase/reveal-passphrase.component';
 
 @Component({
@@ -18,9 +15,6 @@ import { RevealPassphraseComponent } from '../reveal-passphrase/reveal-passphras
 export class NavbarComponent implements OnInit {
   @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
-  languages = [];
-  activeLanguage = 'en';
-
   isLoggedIn: boolean = false;
 
   account: SavedAccount;
@@ -29,12 +23,10 @@ export class NavbarComponent implements OnInit {
   routerEvent: Subscription;
 
   constructor(
-    private langServ: LanguageService,
     private authServ: AuthService,
     private router: Router,
     private dialog: MatDialog,
-    private appServ: AppService,
-    private translate: TranslateService
+    private appServ: AppService
   ) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -45,10 +37,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.languages = LANGUAGES;
-    this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.routerEvent.unsubscribe();
@@ -58,11 +47,6 @@ export class NavbarComponent implements OnInit {
     this.appServ.toggle();
   }
 
-  selectActiveLanguage(lang) {
-    this.langServ.setLanguage(lang);
-    this.activeLanguage = lang;
-  }
-
   onOpenRevealPassphrase() {
     this.dialog.open(RevealPassphraseComponent, {
       width: '420px',
@@ -70,11 +54,7 @@ export class NavbarComponent implements OnInit {
   }
 
   async onComingSoonPage() {
-    let message: string;
-    await this.translate
-      .get('Coming Soon')
-      .toPromise()
-      .then(res => (message = res));
+    let message: string = 'Coming Soon';
     Swal.fire({
       type: 'info',
       title: message,
@@ -84,12 +64,7 @@ export class NavbarComponent implements OnInit {
   }
 
   async onLogout() {
-    let message: string;
-    await this.translate
-      .get('Are you sure want to logout?')
-      .toPromise()
-      .then(res => (message = res));
-
+    let message: string = 'Are you sure want to logout?';
     Swal.fire({
       title: message,
       showCancelButton: true,

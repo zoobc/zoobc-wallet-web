@@ -6,7 +6,6 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
-import { TranslateService } from '@ngx-translate/core';
 import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 
 interface Languages {
@@ -49,7 +48,6 @@ export class RestoreWalletComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private authServ: AuthService,
-    private translate: TranslateService,
     private fb: FormBuilder
   ) {
     this.restoreForm = this.fb.group({
@@ -70,21 +68,23 @@ export class RestoreWalletComponent implements OnInit {
   }
 
   validatePassphrase() {
-    let phraseWord = this.mnemonic.split(' ');
-    const valid = ZooKeyring.isPassphraseValid(this.mnemonic, this.lang);
-    this.wordField.controls = [];
-    this.onLoad24Passphrase(phraseWord);
-    if (phraseWord.length != this.mnemonicWordLengtEnv) {
-      // Give some time for load passphrase after then set error
-      setTimeout(() => {
-        this.restoreForm.setErrors({ lengthMnemonic: true });
-      }, 50);
-    }
-    if (!valid) {
-      // Give some time for load passphrase after then set error
-      setTimeout(() => {
-        this.restoreForm.setErrors({ mnemonic: true });
-      }, 50);
+    if (this.mnemonic != undefined) {
+      let phraseWord = this.mnemonic.split(' ');
+      const valid = ZooKeyring.isPassphraseValid(this.mnemonic, this.lang);
+      this.wordField.controls = [];
+      this.onLoad24Passphrase(phraseWord);
+      if (phraseWord.length != this.mnemonicWordLengtEnv) {
+        // Give some time for load passphrase after then set error
+        setTimeout(() => {
+          this.restoreForm.setErrors({ lengthMnemonic: true });
+        }, 50);
+      }
+      if (!valid) {
+        // Give some time for load passphrase after then set error
+        setTimeout(() => {
+          this.restoreForm.setErrors({ mnemonic: true });
+        }, 50);
+      }
     }
   }
 
@@ -120,11 +120,7 @@ export class RestoreWalletComponent implements OnInit {
   async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
-        let message: string;
-        await this.translate
-          .get('Your old wallet will be removed from this device')
-          .toPromise()
-          .then(res => (message = res));
+        let message: string = 'Your old wallet will be removed from this device';
         Swal.fire({
           title: message,
           confirmButtonText: 'Continue',

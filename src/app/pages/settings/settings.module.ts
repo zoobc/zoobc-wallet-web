@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -27,23 +26,12 @@ import {
   MatChipsModule,
   MatDividerModule,
 } from '@angular/material';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
 import { AboutComponent } from './about/about.component';
 import { NetworkComponent } from './network/network.component';
 import { GeneralComponent } from './general/general.component';
 import { NetworkModule } from 'src/app/components/network/network.module';
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(
-    httpClient,
-    './assets/languages/locales/',
-    '.json'
-  );
-}
 
 const routes: Routes = [
   {
@@ -59,25 +47,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    SettingsComponent,
-    AboutComponent,
-    GeneralComponent,
-    NetworkComponent,
-  ],
+  declarations: [SettingsComponent, AboutComponent, GeneralComponent, NetworkComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     NetworkModule,
     RouterModule.forChild(routes),
-    TranslateModule.forChild({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
     MatButtonModule,
     MatCheckboxModule,
     MatGridListModule,

@@ -9,12 +9,12 @@
     <!-- CONTAINS DATA -->
     <div class="seat-detail-container" *ngIf="seat">
       <form [formGroup]="form">
-        <mat-label class="title">{{ 'ETH Address' | translate }}</mat-label>
+        <mat-label class="title">ETH Address</mat-label>
         <div class="address">
           <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
         </div>
 
-        <mat-label class="title">{{ 'ZooBC Address' | translate }}</mat-label>
+        <mat-label class="title">ZooBC Address</mat-label>
         <div class="zoobc-address">
           <div class="address">
             <wallet-address
@@ -31,7 +31,7 @@
           </account-selector>
         </div>
 
-        <mat-label class="title">{{ 'Node Public Key' | translate }}</mat-label>
+        <mat-label class="title">Node Public Key</mat-label>
         <div style="display: flex;">
           <div class="address" style="width: calc(100% - 48px);margin-right: 12px;">
             <wallet-address
@@ -53,7 +53,7 @@
           </button>
         </div>
 
-        <mat-label class="title">{{ 'Message' | translate }}</mat-label>
+        <mat-label class="title">Message</mat-label>
         <div *ngIf="!editable">
           {{ seat.message }}
           <i *ngIf="!messageField.value">(No Message yet)</i>
@@ -65,7 +65,7 @@
           </mat-form-field>
           <ng-container *ngIf="messageField.touched">
             <mat-error *ngIf="messageField.hasError('invalidLimit')">
-              {{ 'Maximum message length is 256 bytes' | translate }}
+              Maximum message length is 256 bytes
             </mat-error>
           </ng-container>
           <div class="hint">{{ messageSize }} of 256 bytes</div>
@@ -74,7 +74,7 @@
         <ng-container *ngIf="metamask && editable">
           <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
             <i matPrefix class="fa fa-download"></i>
-            {{ 'Download Certificate' | translate }}
+            Download Certificate
           </button>
           <button
             style="margin-top: 10px;"
@@ -87,7 +87,7 @@
           >
             <i matPrefix class="fa fa-pen" *ngIf="!isLoadingUpdate"></i>
             <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
-            {{ 'Update' | translate }}
+            Update
           </button>
         </ng-container>
 
@@ -100,13 +100,11 @@
           (click)="connectMetamask()"
           *ngIf="!metamask"
         >
-          {{ 'Connect Metamask' | translate }}
+          Connect Metamask
         </button>
 
         <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
-          <span>
-            {{ 'Need Help?' }} <a href="/">{{ 'Click Here' }}</a>
-          </span>
+          <span> Need Help? <a href="/">Click Here</a> </span>
         </div>
       </form>
     </div>

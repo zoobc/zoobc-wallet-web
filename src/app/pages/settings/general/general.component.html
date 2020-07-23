@@ -1,40 +1,22 @@
 <div class="general-container">
   <div class="setting-section">
     <p class="title">
-      <span>{{ 'General' | translate }}</span>
+      <span>Network</span>
     </p>
 
-    <p class="subtitle">{{ 'Language' | translate }}</p>
-    <mat-form-field appearance="outline" color="accent">
-      <mat-select
-        [value]="activeLanguage"
-        (selectionChange)="changeLanguage($event.value)"
-      >
-        <mat-option *ngFor="let language of languages" [value]="language.code">
-          {{ language.country }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-  <div class="setting-section">
-    <p class="title">
-      <span>{{ 'Network' | translate }}</span>
-    </p>
-
-    <p class="subtitle">{{ 'Select Network' | translate }}</p>
+    <p class="subtitle">Select Network</p>
     <network></network>
   </div>
 
   <div class="setting-section">
     <p class="title">
-      <span>{{ 'Security & Privacy' | translate }}</span>
+      <span>Security & Privacy</span>
     </p>
 
-    <p class="subtitle">{{ 'Reveal Passphrase' | translate }}</p>
+    <p class="subtitle">Reveal Passphrase</p>
     <button mat-flat-button (click)="onOpenRevealPassphrase()" color="primary">
       <i matPrefix class="fa fa-eye"></i>
-      {{ 'Reveal Passphrase' | translate }}
+      Reveal Passphrase
     </button>
   </div>
 </div>
