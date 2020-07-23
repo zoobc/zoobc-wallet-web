@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { onCopyText } from 'src/helpers/utils';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
-import { TranslateService } from '@ngx-translate/core';
 import zoobc from 'zoobc-sdk';
 
 @Component({
@@ -17,11 +16,7 @@ export class RevealPassphraseComponent implements OnInit {
   phrase: string;
   arrPhrase: string[];
 
-  constructor(
-    public dialogRef: MatDialogRef<RevealPassphraseComponent>,
-    private translate: TranslateService,
-    private snackBar: MatSnackBar
-  ) {
+  constructor(public dialogRef: MatDialogRef<RevealPassphraseComponent>, private snackBar: MatSnackBar) {
     this.formConfirmPin = new FormGroup({ pin: this.pinField });
   }
 
@@ -34,10 +29,7 @@ export class RevealPassphraseComponent implements OnInit {
       setTimeout(() => {
         const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
 
-        this.phrase = zoobc.Wallet.decryptPassphrase(
-          encPassphrase,
-          this.pinField.value
-        );
+        this.phrase = zoobc.Wallet.decryptPassphrase(encPassphrase, this.pinField.value);
         if (this.phrase) this.arrPhrase = this.phrase.split(' ');
         else this.formConfirmPin.setErrors({ invalid: true });
         this.isConfirmPinLoading = false;
@@ -52,11 +44,7 @@ export class RevealPassphraseComponent implements OnInit {
   async copyPhrase() {
     onCopyText(this.phrase);
 
-    let message: string;
-    await this.translate
-      .get('Passphrase Copied')
-      .toPromise()
-      .then(res => (message = res));
+    let message: string = 'Passphrase Copied';
     this.snackBar.open(message, null, { duration: 3000 });
   }
 }

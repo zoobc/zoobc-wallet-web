@@ -35,7 +35,6 @@ import {
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LanguageService } from './services/language.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ParentComponent } from './components/parent/parent.component';
@@ -44,8 +43,6 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { PinsComponent } from './components/pins/pins.component';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AddAccountComponent } from './pages/account/add-account/add-account.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
@@ -65,15 +62,6 @@ import { SeatsComponent } from './pages/seats/seats.component';
 import { SeatDetailComponent } from './pages/seats/seat-detail/seat-detail.component';
 import { ConfirmUpdateComponent } from './pages/seats/confirm-update/confirm-update.component';
 import { DownloadCertificateComponent } from './pages/seats/download-certificate/download-certificate.component';
-
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
-}
-
-export function getLanguage(languageServ: LanguageService) {
-  return languageServ.selected;
-}
 
 @NgModule({
   declarations: [
@@ -109,14 +97,6 @@ export function getLanguage(languageServ: LanguageService) {
     InfiniteScrollModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
-
     AddressModule,
     DateAgoModule,
     AccountSelectorModule,
@@ -152,14 +132,7 @@ export function getLanguage(languageServ: LanguageService) {
     MatStepperModule,
   ],
   bootstrap: [AppComponent],
-  providers: [
-    {
-      provide: LOCALE_ID,
-      deps: [LanguageService],
-      useFactory: getLanguage,
-    },
-    { provide: 'global', useFactory: () => window },
-  ],
+  providers: [{ provide: 'global', useFactory: () => window }],
   entryComponents: [
     AddAccountComponent,
     PinSetupDialogComponent,

@@ -1,13 +1,9 @@
 <div class="seats-container">
-  <h2 class="mat-h2">{{ 'Seat List' | translate }}</h2>
+  <h2 class="mat-h2">Seat List</h2>
   <mat-card style="padding: 0;">
     <form class="form-search" [formGroup]="form" (submit)="onSearch()">
       <mat-form-field appearance="outline" color="accent" class="block">
-        <input
-          formControlName="search"
-          matInput
-          placeholder="{{ 'Search for Seat ID or ETH Address' | translate }}"
-        />
+        <input formControlName="search" matInput placeholder="Search for Seat ID or ETH Address" />
         <button type="submit" class="btn-suffix" matSuffix>
           <i class="fa fa-search"></i>
         </button>

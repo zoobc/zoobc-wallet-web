@@ -2,43 +2,27 @@
   <img src="/assets/img/zbc-color-text.svg" alt="" />
   <h2 class="mat-h2">Wallet</h2>
   <ng-container *ngIf="!hasAccount">
-    <a routerLink="/signup" mat-flat-button color="primary">
-      {{ 'Create New Wallet' | translate }}
-    </a>
-    <a routerLink="/open-wallet" mat-flat-button color="primary">
-      {{ 'Open Wallet' | translate }}
-    </a>
+    <a routerLink="/signup" mat-flat-button color="primary">Create New Wallet </a>
+    <a routerLink="/open-wallet" mat-flat-button color="primary">Open Wallet </a>
   </ng-container>
 
   <ng-container *ngIf="hasAccount && !isLoggedIn">
     <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
-      <mat-label>{{ 'Please Enter Your Pin' | translate }}</mat-label>
+      <mat-label>Please Enter Your Pin</mat-label>
       <br />
       <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
-      <mat-error *ngIf="pinForm.hasError('invalid')">
-        {{ 'Pin invalid' | translate }}
-      </mat-error>
+      <mat-error *ngIf="pinForm.hasError('invalid')">Pin invalid </mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
         <i matPrefix class="fas fa-check" *ngIf="!isLoading"></i>
         <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
-        <span class="text">{{ 'Login' | translate }}</span>
+        <span class="text">Login</span>
       </button>
 
-      <button
-        style="margin-top: 8px;"
-        routerLink="/signup"
-        mat-flat-button
-        color="primary"
-      >
-        {{ 'Create New Wallet' | translate }}
+      <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
+        Create New Wallet
       </button>
-      <button
-        style="margin-top: 8px;"
-        routerLink="/open-wallet"
-        mat-flat-button
-        color="primary"
-      >
-        {{ 'Open Another Wallet' | translate }}
+      <button style="margin-top: 8px;" routerLink="/open-wallet" mat-flat-button color="primary">
+        Open Another Wallet
       </button>
     </form>
   </ng-container>

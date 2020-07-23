@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { onCopyText } from '../../../helpers/utils';
-import { TranslateService } from '@ngx-translate/core';
 import { ZooKeyring } from 'zoobc-sdk';
 
 interface Languages {
@@ -37,11 +36,7 @@ export class SignupComponent implements OnInit {
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
 
-  constructor(
-    private router: Router,
-    private snackbar: MatSnackBar,
-    private translate: TranslateService
-  ) {
+  constructor(private router: Router, private snackbar: MatSnackBar) {
     this.formTerms = new FormGroup({
       isWrittenDown: this.isWrittenDown,
       isAgree: this.isAgree,
@@ -60,8 +55,7 @@ export class SignupComponent implements OnInit {
 
   generateNewWallet() {
     let phrase = ZooKeyring.generateRandomPhrase(24, this.lang);
-    if (this.lang === 'japanese')
-      this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
+    if (this.lang === 'japanese') this.passphrase = phrase.split(`${String.fromCharCode(12288)}`);
     else this.passphrase = phrase.split(' ');
   }
 
@@ -69,11 +63,7 @@ export class SignupComponent implements OnInit {
     const passphrase = this.passphrase.join(' ');
     onCopyText(passphrase);
 
-    let message: string;
-    await this.translate
-      .get('Passphrase Copied')
-      .toPromise()
-      .then(res => (message = res));
+    let message: string = 'Passphrase Copied';
     this.snackbar.open(message, null, { duration: 3000 });
   }
 

@@ -1,24 +1,22 @@
 <div class="add-account-container">
-  <h2 class="mat-h2 text-center">{{ 'Add New Account' | translate }}</h2>
+  <h2 class="mat-h2 text-center">Add New Account</h2>
   <form [formGroup]="formAddAccount" (submit)="onAddAccount()">
-    <label>{{ 'Account Name' | translate }}</label>
+    <label>Account Name</label>
     <mat-form-field appearance="outline" color="accent" class="block">
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">
-      <mat-error *ngIf="accountNameField.hasError('required')">
-        {{ 'Account name is required' | translate }}
-      </mat-error>
+      <mat-error *ngIf="accountNameField.hasError('required')">Account name is required </mat-error>
     </ng-container>
 
     <div style="margin-bottom: 16px;">
-      <mat-checkbox [value]="isMultiSignature" (click)="toogleMultiSignature()">
-        {{ 'Multisignature Account' }}
+      <mat-checkbox [value]="isMultiSignature" (click)="toogleMultiSignature()"
+        >Multisignature Account
       </mat-checkbox>
     </div>
 
     <ng-container *ngIf="isMultiSignature">
-      <label>{{ 'Participants' }}</label>
+      <label>Participants</label>
       <div formArrayName="participants">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index">
           <ng-container *ngIf="i > 1">
@@ -97,7 +95,7 @@
     </ng-container>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid" class="block">
-      {{ 'Add' | translate }}
+      Add
     </button>
   </form>
 </div>
