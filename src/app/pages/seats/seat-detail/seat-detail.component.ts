@@ -10,6 +10,7 @@ import { Seat, SeatService } from 'src/app/services/seat.service';
 import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 import { eddsa as EdDSA } from 'elliptic';
 import * as sha256 from 'sha256';
+import { DownloadCertificateComponent } from '../download-certificate/download-certificate.component';
 
 @Component({
   selector: 'app-seat-detail',
@@ -33,6 +34,8 @@ export class SeatDetailComponent implements OnInit {
   nodePubKeyField = new FormControl('', Validators.required);
   messageField = new FormControl('', [this.checkMessageLength.bind(this)]);
   messageSize: number;
+
+  passphrase: string;
 
   constructor(
     private authServ: AuthService,
@@ -104,14 +107,21 @@ export class SeatDetailComponent implements OnInit {
   }
 
   generateNodePublicKey() {
-    let passphrase = ZooKeyring.generateRandomPhrase(12, 'english');
-    const seedBuffer = new TextEncoder().encode(passphrase);
+    this.passphrase = ZooKeyring.generateRandomPhrase(12, 'english');
+    const seedBuffer = new TextEncoder().encode(this.passphrase);
     const seedHash = sha256(seedBuffer);
-
-    let ec = new EdDSA('ed25519');
-    let pairKey = ec.keyFromSecret(seedHash);
-    let nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
+    const ec = new EdDSA('ed25519');
+    const pairKey = ec.keyFromSecret(seedHash);
+    const nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
     this.nodePubKeyField.setValue(nodeAddress);
+  }
+
+  onDownload() {
+    this.dialog.open(DownloadCertificateComponent, {
+      width: '420px',
+      maxHeight: '90vh',
+      data: { passphrase: this.passphrase, address: this.addressField.value },
+    });
   }
 
   onUpdate() {

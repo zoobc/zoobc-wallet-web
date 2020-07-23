@@ -72,7 +72,14 @@
         </ng-container>
 
         <ng-container *ngIf="metamask && editable">
-          <button mat-flat-button type="button" class="block" color="primary" (click)="onComingSoon()">
+          <button
+            mat-flat-button
+            type="button"
+            class="block"
+            color="primary"
+            (click)="onDownload()"
+            [disabled]="!passphrase"
+          >
             <i matPrefix class="fa fa-download"></i>
             Download Certificate
           </button>
