@@ -6,13 +6,25 @@
     <mat-tab-group mat-align-tabs="center" color="accent">
       <ng-container *ngIf="account.type === 'normal'">
         <mat-tab label="{{ 'Escrow Approval' | translate }}">
-          <div class="text-right">
-            <button mat-icon-button class="reload-button" (click)="reload(true)">
-              <i class="fa fa-redo-alt"></i>
-            </button>
-            <label class="block-height" *ngIf="!isLoadingBlockHeight"
-              ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
-            >
+          <div class="row" style="margin: 0;">
+            <div class="col-6 col-md-6">
+              <button mat-icon-button (click)="goToEscrowApprovalHistoryPage()">
+                <i class="fa fa-history" aria-hidden="true"></i>
+                <span class="approval-history"
+                  ><b>{{ 'Approval History' | translate }}</b></span
+                >
+              </button>
+            </div>
+            <div class="col-6 col-md-6">
+              <div class="text-right">
+                <button mat-icon-button class="reload-button" (click)="reload(true)">
+                  <i class="fa fa-redo-alt"></i>
+                </button>
+                <label class="block-height" *ngIf="!isLoadingBlockHeight"
+                  ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+                >
+              </div>
+            </div>
           </div>
           <div
             infiniteScroll
@@ -68,13 +80,25 @@
           </div>
         </mat-tab>
         <mat-tab label="{{ 'Escrow Approval' | translate }}">
-          <div class="text-right">
-            <button mat-icon-button class="reload-button" (click)="reload(true)">
-              <i class="fa fa-redo-alt"></i>
-            </button>
-            <label class="block-height" *ngIf="!isLoadingBlockHeight"
-              ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
-            >
+          <div class="row" style="margin: 0;">
+            <div class="col-6 col-md-6">
+              <button mat-icon-button (click)="goToEscrowApprovalHistoryPage()">
+                <i class="fa fa-history" aria-hidden="true"></i>
+                <span class="approval-history"
+                  ><b>{{ 'Approval History' | translate }}</b></span
+                >
+              </button>
+            </div>
+            <div class="col-6 col-md-6">
+              <div class="text-right">
+                <button mat-icon-button class="reload-button" (click)="reload(true)">
+                  <i class="fa fa-redo-alt"></i>
+                </button>
+                <label class="block-height" *ngIf="!isLoadingBlockHeight"
+                  ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+                >
+              </div>
+            </div>
           </div>
           <div
             infiniteScroll

@@ -25,7 +25,7 @@
     <form [formGroup]="createTransactionForm" (submit)="next()">
       <label>{{ 'From' | translate }}</label>
       <div *ngIf="multisig.generatedSender" style="margin-bottom: 16px;">
-        <wallet-address [value]="multisig.generatedSender" [copyButton]="true"></wallet-address>
+        <wallet-address [value]="multisig.generatedSender"></wallet-address>
       </div>
       <ng-container *ngIf="!multisig.generatedSender">
         <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
