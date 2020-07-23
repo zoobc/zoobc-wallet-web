@@ -44,7 +44,6 @@
               <span class="badge" color="primary" *ngIf="acc.type == 'multisig'">MultiSignature</span>
             </div>
             <div class="address" *ngIf="acc.type == 'normal'">
-              <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
               <wallet-address [value]="acc.address"></wallet-address>
             </div>
 
