@@ -110,7 +110,6 @@ export class SeatDetailComponent implements OnInit {
     this.passphrase = ZooKeyring.generateRandomPhrase(12, 'english');
     const seedBuffer = new TextEncoder().encode(this.passphrase);
     const seedHash = sha256(seedBuffer);
-
     const ec = new EdDSA('ed25519');
     const pairKey = ec.keyFromSecret(seedHash);
     const nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
