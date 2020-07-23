@@ -2,6 +2,20 @@
   <h2 class="mat-h2 text-center title">{{ account.name }}</h2>
   <h3 class="mat-h4 text-center subtitle">Account Data Set</h3>
   <div class="data-set-list">
+    <div class="text-right" *ngIf="!isError">
+      <button
+        mat-icon-button
+        matTooltip="Reload"
+        matTooltipPosition="below"
+        class="reload-button"
+        (click)="onRefresh()"
+        [disabled]="isLoading"
+        style="margin-bottom: 5px;"
+      >
+        <i *ngIf="!isLoading" class="fa fa-redo-alt"></i>
+        <i *ngIf="isLoading" class="fas fa-circle-notch fa-spin"></i>
+      </button>
+    </div>
     <mat-card style="padding: 0">
       <ng-container *ngIf="dataSetList && !isLoading">
         <div class="no-content padding" *ngIf="dataSetList.length <= 0">
@@ -11,10 +25,10 @@
         <div class="list-item row" *ngFor="let data of dataSetList">
           <div class="col-12 col-md-10">
             <div class="property">
-              Property
+              {{ data.property }}
             </div>
             <div class="value">
-              Value
+              {{ data.value }}
             </div>
           </div>
           <div class="col-12 col-sm-2 text-right">
@@ -24,7 +38,7 @@
                 matTooltip="Delete Value"
                 matTooltipPosition="below"
                 class="icon-btn warn"
-                (click)="onDelete(0)"
+                (click)="onDelete(data)"
               >
                 <i class="fas fa-trash"></i>
               </button>

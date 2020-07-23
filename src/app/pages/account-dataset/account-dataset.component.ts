@@ -1,14 +1,21 @@
 import { Component, OnInit, Inject, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
-import { SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { AccountDatasetListParams, AccountDatasetsResponse } from 'zoobc-sdk';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
+import zoobc, {
+  AccountDatasetListParams,
+  AccountDatasetsResponse,
+  RemoveDatasetInterface,
+  BIP32Interface,
+} from 'zoobc-sdk';
 import { environment } from 'src/environments/environment';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate } from 'src/helpers/utils';
+import { truncate, getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -17,7 +24,7 @@ import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 export class AccountDatasetComponent implements OnInit {
   subscription: Subscription = new Subscription();
   dataSetList: any[];
-  dataSetId: any;
+  dataSet: any;
   isLoading: boolean;
   isError: boolean;
   isLoadingDelete: boolean;
@@ -37,6 +44,8 @@ export class AccountDatasetComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private currencyServ: CurrencyRateService,
+    private authServ: AuthService,
+    private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) private account: SavedAccount
   ) {
     this.form = new FormGroup({
@@ -76,11 +85,43 @@ export class AccountDatasetComponent implements OnInit {
 
   deleteDataSet() {
     this.isLoadingDelete = true;
-    //this.feeRefDialog.close();
+    this.isErrorDelete = false;
+
+    const keyring = this.authServ.keyring;
+    const seed: BIP32Interface = keyring.calcDerivationPath(this.account.path);
+
+    let param: RemoveDatasetInterface = {
+      setterAccountAddress: this.dataSet.setteraccountaddress,
+      recipientAccountAddress: this.dataSet.recipientaccountaddress,
+      property: this.dataSet.property,
+      value: this.dataSet.value,
+      fee: this.feeForm.value,
+    };
+
+    zoobc.AccountDataset.removeDataset(param, seed)
+      .then(async res => {
+        let message = await getTranslation('Your Request is processing', this.translate);
+        let subMessage = await getTranslation(
+          'The dataset will remove when it has been successfully processed on the server',
+          this.translate
+        );
+        Swal.fire(message, subMessage, 'success');
+      })
+      .catch(async err => {
+        console.log(err);
+        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        Swal.fire('Opps...', message, 'error');
+        this.isErrorDelete = true;
+        this.isLoadingDelete = false;
+      })
+      .finally(() => {
+        this.isLoadingDelete = false;
+      });
+    this.feeRefDialog.close();
   }
 
-  onDelete(index: number) {
-    this.dataSetId = index;
+  onDelete(dataset: any) {
+    this.dataSet = dataset;
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeRefDialog = this.dialog.open(this.feeDialog, {

@@ -119,7 +119,7 @@ export class AccountComponent implements OnInit {
 
   onOpenAccDataSet(account: SavedAccount) {
     this.dialog.open(AccountDatasetComponent, {
-      width: '360px',
+      width: '400px',
       maxHeight: '99vh',
       data: account,
     });
