@@ -8,6 +8,7 @@
           <i class="fa fa-search"></i>
         </button>
       </mat-form-field>
+      <div class="page-label" *ngIf="next || prev">Page {{ page }}</div>
     </form>
 
     <!-- NOT LOADING -->
@@ -36,6 +37,38 @@
             <div class="col-12 col-md-4 text-right">
               <div class="label">Seat ID</div>
               <div class="seat-no">#{{ seat.tokenId | number }}</div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="next || prev">
+            <div class="col-4">
+              <a
+                href="#"
+                (click)="goTo($event, page - 1)"
+                mat-flat-button
+                color="accent"
+                style="margin: 16px;"
+                *ngIf="prev"
+              >
+                <i matPrefix class="fa fa-chevron-left"></i>
+                <span>Prev</span>
+              </a>
+            </div>
+            <div class="col-4 page-label" style="text-align: center; align-self: center;">
+              Page {{ page }}
+            </div>
+            <div class="col-4 text-right">
+              <a
+                href="#"
+                (click)="goTo($event, page + 1)"
+                mat-flat-button
+                color="accent"
+                style="margin: 16px;"
+                *ngIf="next"
+              >
+                <span>Next</span>
+                <i matSuffix class="fa fa-chevron-right"></i>
+              </a>
             </div>
           </div>
 

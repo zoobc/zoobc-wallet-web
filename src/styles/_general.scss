@@ -146,6 +146,10 @@ button[mat-stroked-button] {
     margin-right: 12px;
   }
 
+  *[matSuffix] {
+    margin-left: 12px;
+  }
+
   &.block {
     width: 100%;
   }
