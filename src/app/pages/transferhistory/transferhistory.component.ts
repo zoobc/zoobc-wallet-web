@@ -16,7 +16,6 @@ import { ContactService } from 'src/app/services/contact.service';
 @Component({
   selector: 'app-transferhistory',
   templateUrl: './transferhistory.component.html',
-  styles: ['@media (min-width: 600px) {br {display: none;} }'],
 })
 export class TransferhistoryComponent implements OnInit {
   accountHistory: any[];

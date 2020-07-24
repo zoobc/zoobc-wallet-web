@@ -107,10 +107,10 @@
           background-color: $black3;
         }
       }
-    }
-    @media (max-width: $small-and-down) {
       .message {
-        text-align: center;
+        @media #{$small-and-down} {
+          text-align: center;
+        }
       }
     }
   }
