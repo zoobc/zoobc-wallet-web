@@ -12,36 +12,43 @@ export interface Seat {
   message?: string;
 }
 
+export interface SeatsResponse {
+  seats: Seat[];
+  prev: boolean;
+  next: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class SeatService {
   constructor() {}
 
-  async search(search: string): Promise<Seat[]> {
+  async search(search: string, page: number = 1): Promise<SeatsResponse> {
     return new Promise((resolve, reject) => {
       if (search.match(/^0x[a-fA-F0-9]{40}$/))
-        this.searchByAddress(search)
+        this.searchByAddress(search, page)
           .then(res => resolve(res))
           .catch(err => reject(err));
-      else if (Number(search) > 0)
+      else if (search != '' && Number(search) > -1)
         this.searchByTokenId(Number(search))
           .then(res => resolve(res))
           .catch(err => reject(err));
+      else resolve(null);
     });
   }
 
-  private async searchByAddress(address: string): Promise<Seat[]> {
+  private async searchByAddress(address: string, page: number): Promise<SeatsResponse> {
     return new Promise(async (resolve, reject) => {
       const tokenAddress = environment.tokenAddress;
       const abiItem = abi;
       const contract = new web3.eth.Contract(abiItem, tokenAddress);
 
+      const itemPerPage = 10;
       let seats = [];
-      let index = -1;
+      let index = (page - 1) * itemPerPage;
       let tokenId = null;
       do {
-        index++;
         try {
           tokenId = await contract.methods.tokenOfOwnerByIndex(address, index).call();
           seats.push({ tokenId, ethAddress: address });
@@ -49,7 +56,8 @@ export class SeatService {
           console.log(err);
           break;
         }
-      } while (tokenId);
+        index++;
+      } while (tokenId && index < itemPerPage * page);
 
       seats.forEach((seat, i) => {
         try {
@@ -62,11 +70,19 @@ export class SeatService {
           return reject(err);
         }
       });
-      return resolve(seats);
+
+      tokenId = await contract.methods
+        .tokenOfOwnerByIndex(address, index)
+        .call()
+        .catch(() => {});
+      const prev = page == 1 ? false : true;
+      const next = tokenId ? true : false;
+      const result: SeatsResponse = { prev, next, seats };
+      return resolve(result);
     });
   }
 
-  private searchByTokenId(tokenId: number): Promise<Seat[]> {
+  private searchByTokenId(tokenId: number): Promise<SeatsResponse> {
     return new Promise(async (resolve, reject) => {
       const tokenAddress = environment.tokenAddress;
       const abiItem = abi;
@@ -78,9 +94,14 @@ export class SeatService {
           const zbcAddress = await contract.methods.getAccountAddress(tokenId).call();
           const ethAddress = await contract.methods.ownerOf(tokenId).call();
 
-          return resolve([{ zbcAddress, ethAddress, tokenId }]);
+          const result = {
+            next: false,
+            prev: false,
+            seats: [{ zbcAddress, ethAddress, tokenId }],
+          };
+          return resolve(result);
         }
-        return resolve([]);
+        return resolve(null);
       } catch (err) {
         return reject(err);
       }
