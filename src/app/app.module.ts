@@ -220,6 +220,7 @@ export function getLanguage(languageServ: LanguageService) {
     AddMultisigInfoComponent,
     MultisigInfoComponent,
     SetupDatasetComponent,
+    QrScannerComponent,
   ],
 })
 export class AppModule {}

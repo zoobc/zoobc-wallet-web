@@ -1,3 +1,16 @@
-<p>
-  qr-scanner works!
-</p>
+<div class="qr-scanner-container">
+  <h2 class="mat-h2 text-center">{{ 'Point The Camera to QR Code' | translate }}</h2>
+  <div class="scanner">
+    <zxing-scanner #scanner [device]="currentDevice" (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+  </div>
+  <button
+    style="margin-top: 16px;"
+    mat-flat-button
+    (click)="onClose()"
+    color="warn"
+    type="button"
+    class="block"
+  >
+    {{ 'Close' | translate }}
+  </button>
+</div>
