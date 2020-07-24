@@ -1,34 +1,27 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-.my-multisig-history-container {
-  @media (min-width: 600px) {
-    .br {
-      display: none;
+.multisig-list-container {
+  .multisig-transaction-item {
+    border-bottom: 1px solid #ddd;
+    padding: 16px 6px;
+    margin: 0;
+    align-items: center;
+    @include transition(0.3s ease-in all);
+    &.hover:hover {
+      background-color: #eee;
+      cursor: pointer;
     }
-  }
-  .multisig-list-container {
-    .multisig-transaction-item {
-      border-bottom: 1px solid #ddd;
-      padding: 16px 6px;
-      margin: 0;
-      align-items: center;
-      @include transition(0.3s ease-in all);
-      &.hover:hover {
-        background-color: #eee;
-        cursor: pointer;
-      }
-      .transaction-id {
-        word-break: break-all;
-        color: $black2;
-        font-size: 14px;
-        margin-bottom: 8px;
-      }
+    .transaction-id {
+      word-break: break-all;
+      color: $black2;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
 
-      .date {
-        color: $black2;
-        font-size: 13px;
-      }
+    .date {
+      color: $black2;
+      font-size: 13px;
     }
   }
 }

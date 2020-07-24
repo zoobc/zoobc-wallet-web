@@ -108,20 +108,10 @@
         }
       }
     }
-    @media (max-width: 600px) {
+    @media (max-width: $small-and-down) {
       .message {
         text-align: center;
       }
-      .mat-h2 {
-        .br {
-          display: none !important;
-        }
-      }
-    }
-  }
-  @media (min-width: 600px) {
-    .br {
-      display: none;
     }
   }
 }

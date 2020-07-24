@@ -1,11 +1,10 @@
 <div class="my-multisig-history-container">
   <div class="row">
     <div class="col-10">
-      <h2 class="mat-h2">
+      <h2 class="mat-h2 title">
         {{ 'Multisignature Approval History' | translate }}
-        <br class="br" />
-        <small style="font-size: 12px;" *ngIf="!isError && !isLoading"
-          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</small
+        <span class="text-refresh" *ngIf="!isError && !isLoading"
+          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
         >
       </h2>
     </div>
