@@ -82,6 +82,19 @@
       }
     }
 
+    .button-group {
+      text-align: center;
+      button {
+        margin: 0 4px;
+        background-color: rgba(black, 0.3);
+        color: $white1;
+        @include transition(0.3s ease-in all);
+        &:hover {
+          background-color: rgba(black, 0.5);
+        }
+      }
+    }
+
     .no-content {
       color: white;
       padding: 0;
@@ -94,10 +107,10 @@
           background-color: $black3;
         }
       }
-    }
-    @media (max-width: 600px) {
       .message {
-        text-align: center;
+        @media #{$small-and-down} {
+          text-align: center;
+        }
       }
     }
   }

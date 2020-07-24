@@ -93,15 +93,15 @@
               <div class="row">
                 <div class="col-12 col-md-6" *ngIf="draft.transaction">
                   <div class="label">{{ 'From' | translate }}</div>
-                  <wallet-address [value]="draft.transaction.sender" [copyButton]="true"></wallet-address>
+                  <wallet-address [value]="draft.transaction.sender"></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.transaction">
                   <div class="label">{{ 'To' | translate }}</div>
-                  <wallet-address [value]="draft.transaction.recipient" [copyButton]="true"></wallet-address>
+                  <wallet-address [value]="draft.transaction.recipient"></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
                   <div class="label">{{ 'Transaction Hash' | translate }}</div>
-                  <wallet-address [value]="draft.signaturesInfo.txHash" [copyButton]="true"></wallet-address>
+                  <wallet-address [value]="draft.signaturesInfo.txHash"></wallet-address>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
                   <div class="signed">

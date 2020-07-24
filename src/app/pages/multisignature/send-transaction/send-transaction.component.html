@@ -4,7 +4,7 @@
     <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
       <label>{{ 'From' | translate }}</label>
       <div *ngIf="isMultiSigAccount" style="margin-bottom: 16px;">
-        <wallet-address [value]="account.signByAddress" [copyButton]="true"></wallet-address>
+        <wallet-address [value]="account.signByAddress"></wallet-address>
       </div>
       <ng-container *ngIf="!isMultiSigAccount">
         <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
@@ -20,7 +20,8 @@
         (onClickFeeChoose)="onClickFeeChoose($event)"
         [typeFees]="typeFee"
         [customFeeValue]="customFeeValues"
-      ></fee-selector>
+      >
+      </fee-selector>
       <button mat-flat-button color="warn" type="button" (click)="back()">
         {{ 'Back' | translate }}
       </button>
@@ -55,17 +56,17 @@
         <div class="col-12 col-sm-6 test">
           <div class="label">{{ 'From' | translate }}:</div>
           <div class="address">
-            <wallet-address [value]="multisig.transaction.sender" [copyButton]="true"></wallet-address>
+            <wallet-address [value]="multisig.transaction.sender"></wallet-address>
           </div>
           <div class="label">{{ 'Recipient' | translate }}:</div>
           <div class="address">
-            <wallet-address [value]="multisig.transaction.recipient" [copyButton]="true"></wallet-address>
+            <wallet-address [value]="multisig.transaction.recipient"></wallet-address>
           </div>
           <ng-container *ngIf="advancedMenu">
             <mat-divider style="margin-bottom: 10px;"></mat-divider>
             <div class="label">{{ 'Approver Address' | translate }}:</div>
             <div class="address">
-              <wallet-address [value]="account.address" [copyButton]="true"></wallet-address>
+              <wallet-address [value]="account.address"></wallet-address>
             </div>
             <div class="label">{{ 'Approver Commission' | translate }}:</div>
             <div class="amount">

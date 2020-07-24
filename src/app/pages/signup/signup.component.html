@@ -4,14 +4,14 @@
 
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
-      <span>{{ mnemonicLanguage }}</span>
-      <i class="fa fa-caret-down"></i>
+      <span>{{ languages[selectedLang].viewValue }}</span>
+      <i matSuffix class="fa fa-caret-down"></i>
     </button>
     <mat-menu #language="matMenu">
       <button
-        *ngFor="let language of languages"
+        *ngFor="let language of languages; index as i"
         [value]="language.value"
-        (click)="selectMnemonicLanguage(language)"
+        (click)="selectMnemonicLanguage(i)"
         mat-menu-item
       >
         {{ language.viewValue }}
@@ -25,13 +25,13 @@
         <div class="word">{{ p }}</div>
       </div>
     </div>
-    <div [class.hide]="showPassPhrase" class="cover-passphrase" (click)="tooglePassphrase($event)">
+    <div [class.hide]="showPassPhrase" class="cover-passphrase" (click)="tooglePassphrase()">
       <div class="text-cover">
         <i class="fa fa-lock" aria-hidden="true"></i>
         <span style="margin-top: 5px;">
           {{
-            'Click here too see your passphrase. Make sure there is no one else around you will see it too' ||
-              translate
+            'Click here too see your passphrase. Make sure there is no one else around you will see it too'
+              | translate
           }}
         </span>
       </div>

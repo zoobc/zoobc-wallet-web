@@ -1,12 +1,7 @@
 <div class="contacts-container">
   <h2 class="mat-h2">{{ 'Address Book' | translate }}</h2>
   <div class="text-right" style="margin-bottom: 8px">
-    <button
-      mat-flat-button
-      color="primary"
-      type="button"
-      (click)="onOpenAddContact()"
-    >
+    <button mat-flat-button color="primary" type="button" (click)="onOpenAddContact()">
       <i matPrefix class="fa fa-plus"></i> {{ 'Add Address' | translate }}
     </button>
   </div>
@@ -23,25 +18,14 @@
           <div class="col-12 col-sm-8">
             <p class="alias">{{ contact.alias }}</p>
             <p class="address">
-              <wallet-address
-                [copyButton]="true"
-                [value]="contact.address"
-              ></wallet-address>
+              <wallet-address [value]="contact.address"></wallet-address>
             </p>
           </div>
           <div class="col-12 col-sm-4 action-row">
-            <button
-              mat-flat-button
-              color="primary"
-              (click)="onOpenEditContact(contact)"
-            >
+            <button mat-flat-button color="primary" (click)="onOpenEditContact(contact)">
               {{ 'Edit' | translate }}
             </button>
-            <button
-              mat-flat-button
-              color="warn"
-              (click)="deleteContact(contact)"
-            >
+            <button mat-flat-button color="warn" (click)="deleteContact(contact)">
               {{ 'Delete' | translate }}
             </button>
           </div>

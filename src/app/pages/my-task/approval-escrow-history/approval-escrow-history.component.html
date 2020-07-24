@@ -1,7 +1,12 @@
 <div class="approval-escrow-history">
   <div class="row">
     <div class="col-10">
-      <h2 class="mat-h2">{{ 'Escrows Approval History' | translate }}</h2>
+      <h2 class="mat-h2 title">
+        {{ 'Escrows Approval History' | translate }}
+        <span class="text-refresh" *ngIf="!isError && !isLoading"
+          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
+        >
+      </h2>
     </div>
     <div class="col-2 text-right" *ngIf="!isError && !isLoading">
       <button mat-icon-button class="reload-button" (click)="getApprovalList(true)">
@@ -89,13 +94,13 @@
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="escrowDetail.senderaddress" [copyButton]="true"></wallet-address>
+        <wallet-address [value]="escrowDetail.senderaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="escrowDetail.recipientaddress" [copyButton]="true"></wallet-address>
+        <wallet-address [value]="escrowDetail.recipientaddress"></wallet-address>
       </div>
     </div>
     <div class="row">

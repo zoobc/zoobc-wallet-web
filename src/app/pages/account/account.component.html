@@ -44,17 +44,17 @@
               <span class="badge" color="primary" *ngIf="acc.type == 'multisig'">MultiSignature</span>
             </div>
             <div class="address" *ngIf="acc.type == 'normal'">
-              <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
+              <wallet-address [value]="acc.address"></wallet-address>
             </div>
 
             <ng-container *ngIf="acc.type == 'multisig'">
               <div class="address">
                 <p class="label">{{ 'Address' | translate }}:</p>
-                <wallet-address [value]="acc.address" [copyButton]="true"></wallet-address>
+                <wallet-address [value]="acc.address"></wallet-address>
               </div>
               <div class="address">
                 <p class="label">{{ 'Signed By' | translate }}:</p>
-                <wallet-address [value]="acc.signByAddress" [copyButton]="true"></wallet-address>
+                <wallet-address [value]="acc.signByAddress"></wallet-address>
               </div>
             </ng-container>
           </div>
@@ -79,17 +79,17 @@
             >
               <i class="fas fa-file-signature"></i>
             </button>
-
-            <button
-              mat-flat-button
-              matTooltip="Edit"
-              matTooltipPosition="below"
-              class="icon-btn primary"
-              (click)="onOpenEditAccount(acc)"
-            >
-              <i class="fas fa-pen"></i>
-            </button>
-
+            <ng-container *ngIf="acc.type != 'multisig'">
+              <button
+                mat-flat-button
+                matTooltip="Edit"
+                matTooltipPosition="below"
+                class="icon-btn primary"
+                (click)="onOpenEditAccount(acc)"
+              >
+                <i class="fas fa-pen"></i>
+              </button>
+            </ng-container>
             <button
               mat-flat-button
               matTooltip="Delete Account"

@@ -100,6 +100,16 @@ a:not([href='']) {
   border-radius: 8px !important;
   color: $black1;
 }
+
+.title {
+  .text-refresh {
+    font-size: 12px;
+    @media #{$small-and-down} {
+      display: block;
+    }
+  }
+}
+
 // ========================= END GENERAL ============================
 
 // ======================== ACCORDION ==============================
@@ -144,6 +154,10 @@ button[mat-stroked-button] {
 
   *[matPrefix] {
     margin-right: 12px;
+  }
+
+  *[matSuffix] {
+    margin-left: 12px;
   }
 
   &.block {
