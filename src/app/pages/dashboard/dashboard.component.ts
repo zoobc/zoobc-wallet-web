@@ -19,6 +19,7 @@ import zoobc, {
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
+import { ReceiveComponent } from '../receive/receive.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -131,6 +132,10 @@ export class DashboardComponent implements OnInit {
         })
         .finally(() => ((this.isLoadingRecentTx = false), (this.lastRefresh = Date.now())));
     }
+  }
+
+  openReceiveForm() {
+    this.dialog.open(ReceiveComponent, { width: '480px' });
   }
 
   onChangeRate(rate) {

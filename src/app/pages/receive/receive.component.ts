@@ -29,7 +29,7 @@ export class ReceiveComponent implements OnInit {
 
     this.address = this.authServ.getCurrAccount().address;
     this.urlReqCoin = `${window.location.origin}/request/${this.address}`;
-    this.qrCodeStr = JSON.stringify({ address: this.address, amount: '' });
+    this.qrCodeStr = this.address + '||' + this.amountField.value;
   }
 
   ngOnInit() {}
@@ -41,8 +41,7 @@ export class ReceiveComponent implements OnInit {
       this.urlReqCoin = `${window.location.origin}/request/${this.address}`;
     }
 
-    const qrCode = { address: this.address, amount };
-    this.qrCodeStr = JSON.stringify(qrCode);
+    this.qrCodeStr = this.address + '||' + this.amountField.value;
   }
 
   async onCopyText(e) {
