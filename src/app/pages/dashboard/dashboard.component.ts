@@ -176,7 +176,15 @@ export class DashboardComponent implements OnInit {
   }
   // Temprary Code
   openScannerForm() {
-    this.dialog.open(QrScannerComponent, { width: '480px' });
+    const dialog = this.dialog.open(QrScannerComponent, {
+      width: '480px',
+      maxHeight: '99vh',
+      data: 'string',
+      disableClose: true,
+    });
+    dialog.afterClosed().subscribe((data: any) => {
+      if (data) this.router.navigateByUrl('/request/' + data[0] + '/' + data[1] + '');
+    });
   }
   // Temporary Code
 }
