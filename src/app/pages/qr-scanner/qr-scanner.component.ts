@@ -1,24 +1,26 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, OnDestroy } from '@angular/core';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
-import { MatDialogRef } from '@angular/material';
-import { Router } from '@angular/router';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.component.html',
   styleUrls: ['./qr-scanner.component.scss'],
 })
-export class QrScannerComponent implements OnInit {
+export class QrScannerComponent implements OnInit, OnDestroy {
   @ViewChild('scanner') scanner: ZXingScannerComponent;
   availableDevices: MediaDeviceInfo[];
   currentDevice: MediaDeviceInfo = null;
-  hasDevice = true;
-
-  constructor(private dialogRef: MatDialogRef<QrScannerComponent>, private router: Router) {}
+  subscription: Subscription;
+  constructor(
+    private dialogRef: MatDialogRef<QrScannerComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: 'json' | 'string'
+  ) {}
 
   ngOnInit() {
-    this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
+    this.subscription = this.scanner.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
       this.availableDevices = devices;
-      if (this.availableDevices.length <= 0) return (this.hasDevice = false);
       const defaultCamera = this.availableDevices.filter(d => {
         if (d.label.toLocaleLowerCase().includes('back')) return d;
       });
@@ -27,16 +29,30 @@ export class QrScannerComponent implements OnInit {
     });
   }
 
-  onCodeResult(resultString: string) {
-    let json = JSON.parse(resultString);
-    const address = json.address;
-    const amount = json.amount;
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
-    this.router.navigateByUrl('/request/' + address + '/' + amount + '');
-    this.dialogRef.close();
+  onCodeResult(resultString: string) {
+    let result: any;
+    if (this.data == 'string') result = resultString.split('||');
+    else result = JSON.parse(resultString);
+    this.dialogRef.close(result);
   }
 
   onClose() {
-    this.dialogRef.close();
+    this.currentDevice = null;
+    navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
+      const stream = mediaStream;
+      const tracks = stream.getTracks();
+      tracks[0].stop();
+      this.dialogRef.close();
+    });
+  }
+
+  onSwitch() {
+    const curIndex = this.availableDevices.findIndex(dvc => dvc.deviceId == this.currentDevice.deviceId);
+    if (curIndex == this.availableDevices.length - 1) this.currentDevice = this.availableDevices[0];
+    else this.currentDevice = this.availableDevices[curIndex + 1];
   }
 }
