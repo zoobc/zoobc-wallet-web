@@ -7,6 +7,7 @@ import { EditAccountComponent } from './edit-account/edit-account.component';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
+import { AccountDatasetComponent } from '../account-dataset/account-dataset.component';
 
 @Component({
   selector: 'app-account',
@@ -127,6 +128,14 @@ export class AccountComponent implements OnInit {
         localStorage.setItem('ACCOUNT', JSON.stringify(this.accounts));
         return true;
       },
+    });
+  }
+
+  onOpenAccDataSet(account: SavedAccount) {
+    this.dialog.open(AccountDatasetComponent, {
+      width: '400px',
+      maxHeight: '99vh',
+      data: account,
     });
   }
 }
