@@ -28,6 +28,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   isLoadingDetail: boolean = false;
   transactionDetail: any;
   transactionId: string;
+  lastRefresh: number;
 
   detailTransactionRefDialog: MatDialogRef<any>;
   @ViewChild('detailTransaction') detailTransactionDialog: TemplateRef<any>;
@@ -74,6 +75,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
       console.log(err);
     } finally {
       this.isLoading = false;
+      this.lastRefresh = Date.now();
     }
   }
 

@@ -29,6 +29,7 @@ export class TransferhistoryComponent implements OnInit {
   address: string = this.authServ.getCurrAccount().address;
   isLoading: boolean = false;
   isError: boolean = false;
+  lastRefresh: number;
 
   constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
@@ -79,6 +80,7 @@ export class TransferhistoryComponent implements OnInit {
         this.unconfirmTx = null;
       } finally {
         this.isLoading = false;
+        this.lastRefresh = Date.now();
       }
     }
   }

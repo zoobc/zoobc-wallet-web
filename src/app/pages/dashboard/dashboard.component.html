@@ -132,6 +132,17 @@
           </div>
         </div>
       </div>
+
+      <div class="button-group">
+        <button mat-flat-button routerLink="/sendmoney">
+          <i matPrefix class="fa fa-paper-plane"></i>
+          <span>{{ 'Send' | translate }}</span>
+        </button>
+        <button mat-flat-button (click)="openReceiveForm()">
+          <i matPrefix class="fa fa-hand-holding-usd"></i>
+          <span>{{ 'Receive' | translate }}</span>
+        </button>
+      </div>
     </ng-container>
   </mat-card>
 
@@ -152,7 +163,12 @@
 
   <div class="row">
     <div class="col-10">
-      <h2 class="mat-h2">{{ 'Recent Transactions' | translate }}</h2>
+      <h2 class="mat-h2 title">
+        {{ 'Recent Transactions' | translate }}
+        <span class="text-refresh" *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
+          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
+        >
+      </h2>
     </div>
     <div class="col-2 text-right" *ngIf="!isErrorRecentTx && !isLoadingRecentTx">
       <button mat-icon-button class="reload-button" (click)="getTransactions()">

@@ -10,15 +10,18 @@
         </button>
       </div>
     </div>
-    <app-transaction-table
-      [transactionData]="unconfirmTx"
-    ></app-transaction-table>
+    <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
     <br />
   </ng-container>
 
   <div class="row">
     <div class="col-10">
-      <h2 class="mat-h2">{{ 'Transaction History' | translate }}</h2>
+      <h2 class="mat-h2 title">
+        {{ 'Transaction History' | translate }}
+        <span class="text-refresh" *ngIf="!isError && !isLoading"
+          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
+        >
+      </h2>
     </div>
     <div class="col-2 text-right" *ngIf="!isError && !isLoading">
       <button mat-icon-button class="reload-button" (click)="getTx(true)">
