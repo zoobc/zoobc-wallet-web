@@ -75,6 +75,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   }
 
   setupDataset() {
+    this.authServ.switchAccount(this.account);
     this.isError = false;
     this.isLoading = true;
     let receipient = this.recipientAddressField.value;
@@ -86,8 +87,8 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
       recipientAccountAddress: receipient,
       fee: this.feeForm.value,
     };
-    const keyring = this.authServ.keyring;
-    const seed: BIP32Interface = keyring.calcDerivationPath(this.account.path);
+
+    const seed: BIP32Interface = this.authServ.seed;
     zoobc.AccountDataset.setupDataset(param, seed)
       .then(async (res: SetupDatasetResponse) => {
         this.dialogRef.close();
