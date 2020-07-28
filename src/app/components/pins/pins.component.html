@@ -2,7 +2,18 @@
   <div *ngFor="let index of pins" #pinDigit [id]="'pin' + index" class="col-2">
     <mat-form-field appearance="outline" color="accent">
       <input
+        *ngIf="index == 0"
         autofocus
+        matInput
+        type="password"
+        (keyup)="onChange(index, $event)"
+        (focus)="$event.target.select()"
+        maxlength="1"
+        pattern="[0-9]*"
+        inputmode="numeric"
+      />
+      <input
+        *ngIf="index != 0"
         matInput
         type="password"
         (keyup)="onChange(index, $event)"

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { PinsComponent } from 'src/app/components/pins/pins.component';
 
 @Component({
   selector: 'app-login',
@@ -11,18 +12,12 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('pin') pin: PinsComponent;
+
   encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
   isLoggedIn: boolean;
   isLoading: boolean = false;
   hasAccount = this.encPassphrase ? true : false;
-
-  formSetPin: FormGroup;
-  setPinForm = new FormControl('', [
-    Validators.required,
-    Validators.minLength(6),
-    Validators.maxLength(6),
-    Validators.pattern('^[0-9]*$'),
-  ]);
 
   formLoginPin: FormGroup;
   pinForm = new FormControl('', [
@@ -32,9 +27,6 @@ export class LoginComponent implements OnInit {
     Validators.pattern('^[0-9]*$'),
   ]);
 
-  formLoginMnemonic: FormGroup;
-  passPhraseForm = new FormControl('', Validators.required);
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -43,14 +35,6 @@ export class LoginComponent implements OnInit {
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
-    });
-
-    this.formLoginMnemonic = new FormGroup({
-      passPhrase: this.passPhraseForm,
-    });
-
-    this.formSetPin = new FormGroup({
-      pin: this.setPinForm,
     });
   }
 
@@ -73,7 +57,10 @@ export class LoginComponent implements OnInit {
             const redirect = params.redirect || '/dashboard';
             this.router.navigateByUrl(redirect);
           });
-        } else this.pinForm.setErrors({ invalid: true });
+        } else {
+          this.pinForm.setErrors({ invalid: true });
+          this.pin.onReset();
+        }
         this.isLoading = false;
       }, 50);
     }
