@@ -25,6 +25,7 @@
     "@angular/router": "~7.2.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@zxing/ngx-scanner": "^3.0.0",
     "file-saver": "^2.0.2",
     "google-protobuf": "^3.8.0",
     "ng-pick-datetime": "^7.0.0",
