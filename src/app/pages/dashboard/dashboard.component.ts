@@ -20,9 +20,7 @@ import zoobc, {
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
-//Temporary Code
 import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
-// Temporary Code
 
 @Component({
   selector: 'app-dashboard',
@@ -174,7 +172,6 @@ export class DashboardComponent implements OnInit {
       if (edited) this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
     });
   }
-  // Temprary Code
   openScannerForm() {
     const dialog = this.dialog.open(QrScannerComponent, {
       width: '480px',
@@ -186,5 +183,4 @@ export class DashboardComponent implements OnInit {
       if (data) this.router.navigateByUrl('/request/' + data[0] + '/' + data[1] + '');
     });
   }
-  // Temporary Code
 }

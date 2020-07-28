@@ -3,12 +3,7 @@
   <form [formGroup]="addForm" (submit)="onSubmit()" class="grid">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Name' | translate }}</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="alias"
-        placeholder="{{ 'Name' | translate }}"
-      />
+      <input matInput type="text" formControlName="alias" placeholder="{{ 'Name' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">
@@ -24,6 +19,9 @@
         placeholder="{{ 'Address' | translate }}"
         (keyup)="onAddressValidation()"
       />
+      <button mat-icon-button matSuffix (click)="openScannerForm()">
+        <i matPrefix class="fa fa-qrcode"></i>
+      </button>
     </mat-form-field>
     <ng-container *ngIf="addressField.touched">
       <mat-error *ngIf="addressField.hasError('required')">
