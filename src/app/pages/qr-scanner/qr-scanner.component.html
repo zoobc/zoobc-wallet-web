@@ -6,7 +6,6 @@
         <mat-icon>cached</mat-icon>
       </button>
     </ng-container>
-
     <zxing-scanner #scanner [device]="currentDevice" (scanSuccess)="onCodeResult($event)"></zxing-scanner>
   </div>
   <button
