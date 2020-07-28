@@ -1,14 +1,9 @@
 <div class="addcontact-container">
-  <h2 class="mat-h2">{{ 'New Address' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'New Contact' | translate }}</h2>
   <form [formGroup]="addForm" (submit)="onSubmit()" class="grid">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Name' | translate }}</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="alias"
-        placeholder="{{ 'Name' | translate }}"
-      />
+      <input matInput type="text" formControlName="alias" placeholder="{{ 'Name' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">

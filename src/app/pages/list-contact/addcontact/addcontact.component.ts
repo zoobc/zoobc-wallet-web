@@ -41,7 +41,7 @@ export class AddcontactComponent implements OnInit {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
       if (isDuplicate) {
         let message = await getTranslation(
-          'The address you entered is already in your Address Book',
+          'The address you entered is already in your Contact',
           this.translate
         );
         Swal.fire({
