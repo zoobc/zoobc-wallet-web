@@ -87,8 +87,8 @@ export class AccountDatasetComponent implements OnInit {
     this.isLoadingDelete = true;
     this.isErrorDelete = false;
 
-    const keyring = this.authServ.keyring;
-    const seed: BIP32Interface = keyring.calcDerivationPath(this.account.path);
+    this.authServ.switchAccount(this.account);
+    const seed: BIP32Interface = this.authServ.seed;
 
     let param: RemoveDatasetInterface = {
       setterAccountAddress: this.dataSet.setteraccountaddress,
