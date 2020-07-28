@@ -46,6 +46,7 @@ export class DashboardComponent implements OnInit {
   currAcc: SavedAccount;
   accounts: SavedAccount[];
   lastRefresh: number;
+  lastRefreshAccount: number;
 
   constructor(
     private authServ: AuthService,
@@ -89,7 +90,7 @@ export class DashboardComponent implements OnInit {
         .catch(e => {
           this.isErrorBalance = true;
         })
-        .finally(() => (this.isLoadingBalance = false));
+        .finally(() => ((this.isLoadingBalance = false), (this.lastRefreshAccount = Date.now())));
     }
   }
 
