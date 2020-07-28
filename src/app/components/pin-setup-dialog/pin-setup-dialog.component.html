@@ -6,12 +6,7 @@
     <form [formGroup]="formSetPin" (submit)="onSetPin()">
       <field-pins formControlName="pin"></field-pins>
       <div class="text-right">
-        <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          [disabled]="formSetPin.invalid"
-        >
+        <button mat-flat-button color="primary" type="submit" [disabled]="formSetPin.invalid">
           {{ 'Set Pin' | translate }}
         </button>
       </div>
@@ -22,10 +17,7 @@
       <b>{{ 'Confirm Your Pin' | translate }}</b>
     </h3>
     <form [formGroup]="formConfirmPin" (submit)="onConfirmPin()">
-      <field-pins
-        formControlName="pin"
-        (change)="onResetPinValidation()"
-      ></field-pins>
+      <field-pins formControlName="pin" (change)="onResetPinValidation()"></field-pins>
       <mat-error *ngIf="isPinMatched == false">
         {{ 'Pin does not match' | translate }}
       </mat-error>
@@ -33,12 +25,7 @@
         <button mat-flat-button color="warn" type="button" (click)="onBack()">
           {{ 'Back' | translate }}
         </button>
-        <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          [disabled]="formConfirmPin.invalid"
-        >
+        <button mat-flat-button color="primary" type="submit" [disabled]="formConfirmPin.invalid">
           {{ 'Confirm Pin' | translate }}
         </button>
       </div>
