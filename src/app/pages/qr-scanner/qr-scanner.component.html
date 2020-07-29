@@ -1,0 +1,41 @@
+<div class="qr-scanner-container">
+  <h2 class="mat-h2 text-center">{{ 'Point the Camera to QR Code' | translate }}</h2>
+  <div class="scanner">
+    <ng-container *ngIf="availableDevices && availableDevices.length > 1">
+      <button color="basic" class="btn-switch" (click)="onSwitch()" mat-mini-fab>
+        <mat-icon>cached</mat-icon>
+      </button>
+    </ng-container>
+    <zxing-scanner
+      #scanner
+      [device]="currentDevice"
+      (permissionResponse)="onHasPermission($event)"
+      (scanSuccess)="onCodeResult($event)"
+    ></zxing-scanner>
+    <ng-container *ngIf="hasPermission === undefined">
+      <div class="permision">
+        <div class="text-permision">
+          <i class="fas fa-circle-notch fa-spin"></i> {{ 'Waiting for permission' | translate }}
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="hasPermission == false">
+      <div class="permision">
+        <div class="text-permision">
+          <i class="fa fa-ban" aria-hidden="true"></i> {{ 'Camera permission denied' | translate }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <button
+    *ngIf="availableDevices || hasPermission == false"
+    style="margin-top: 16px;"
+    mat-flat-button
+    (click)="onClose()"
+    color="warn"
+    type="button"
+    class="block"
+  >
+    {{ 'Close' | translate }}
+  </button>
+</div>

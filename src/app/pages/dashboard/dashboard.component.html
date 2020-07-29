@@ -142,6 +142,10 @@
           <i matPrefix class="fa fa-hand-holding-usd"></i>
           <span>{{ 'Receive' | translate }}</span>
         </button>
+        <button mat-flat-button (click)="openScannerForm()">
+          <i matPrefix class="fa fa-qrcode"></i>
+          <span>{{ 'Scan' | translate }}</span>
+        </button>
       </div>
     </ng-container>
     <div class="text-right">
