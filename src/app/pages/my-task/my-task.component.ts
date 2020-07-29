@@ -188,12 +188,4 @@ export class MyTaskComponent implements OnInit {
       this.getMultiSigPendingList();
     } else this.multiSigfinished = true;
   }
-
-  goToEscrowApprovalHistoryPage() {
-    this.router.navigateByUrl('/escrow-approval-history');
-  }
-
-  onClickMultisigApprovalHistory() {
-    this.router.navigateByUrl('/multisig-approval-history');
-  }
 }
