@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { isZBCPublicKeyValid, ClaimNodeInterface } from 'zoobc-sdk';
+import zoobc, { ClaimNodeInterface, isZBCAddressValid, ZBCAddressToBytes } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-claim-node',
@@ -38,7 +38,7 @@ export class ClaimNodeComponent {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
+    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -52,7 +52,7 @@ export class ClaimNodeComponent {
         if (isPinValid) {
           const data: ClaimNodeInterface = {
             accountAddress: this.account.address,
-            nodePublicKey: this.nodePublicKeyForm.value,
+            nodePublicKey: ZBCAddressToBytes(this.nodePublicKeyForm.value),
             fee: this.feeForm.value,
             nodeAddress: this.ipAddressForm.value,
           };
