@@ -28,7 +28,7 @@
     </ng-container>
   </div>
   <button
-    *ngIf="availableDevices || !hasPermission"
+    *ngIf="availableDevices || hasPermission == false"
     style="margin-top: 16px;"
     mat-flat-button
     (click)="onClose()"
