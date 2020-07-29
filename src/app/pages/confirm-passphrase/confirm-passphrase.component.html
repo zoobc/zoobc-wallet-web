@@ -1,5 +1,5 @@
 <div class="confirm-passphrase-container">
-  <h2 class="mat-h2">{{ 'Confirm Your Passphrase' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'Confirm Your Seed Phrase' | translate }}</h2>
   <p class="mat-body-1">
     {{ 'Fill The Missing Phrase Word to Complete Create New Wallet!' | translate }}
   </p>
@@ -14,10 +14,10 @@
     </div>
     <div style="height: 25px" class="text-center">
       <mat-error *ngIf="confirmForm.hasError('required')">
-        {{ 'Please fill all of the passphrase' | translate }}
+        {{ 'Please fill all of the seed phrase' | translate }}
       </mat-error>
       <mat-error *ngIf="confirmForm.hasError('mnemonic')">
-        {{ 'The passphrase is not matched' | translate }}
+        {{ 'The seed phrase is not matched' | translate }}
       </mat-error>
     </div>
     <div class="btn-grouped">

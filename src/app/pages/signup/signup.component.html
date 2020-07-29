@@ -1,6 +1,6 @@
 <div class="signup-container">
   <h2 class="mat-h2">{{ 'Create New Account' | translate }}</h2>
-  <h4 class="mat-h4">{{ 'Your Passphrase' | translate }}:</h4>
+  <h4 class="mat-h4">{{ 'Your Seed Phrase' | translate }}:</h4>
 
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
@@ -30,7 +30,7 @@
         <i class="fa fa-lock" aria-hidden="true"></i>
         <span style="margin-top: 5px;">
           {{
-            'Click here too see your passphrase. Make sure there is no one else around you will see it too'
+            'Click here too see your seed phrase. Make sure there is no one else around you will see it too'
               | translate
           }}
         </span>
@@ -41,7 +41,7 @@
   <div class="btn-grouped">
     <button [disabled]="!showPassPhrase" mat-flat-button color="primary" (click)="copyPassphrase()">
       <i matPrefix class="fas fa-copy"></i>
-      <span class="text">{{ 'Copy Passphrase' | translate }}</span>
+      <span class="text">{{ 'Copy Seed Phrase' | translate }}</span>
     </button>
     <button [disabled]="!showPassPhrase" mat-flat-button color="primary" (click)="generateNewWallet()">
       <i matPrefix class="fas fa-sync"></i>
@@ -54,12 +54,13 @@
       <div
         class="warning-box mat-body-2"
         [innerHTML]="
-          'Remember: Never tell your passphrase. If you lose it, you lose access to your account!' | translate
+          'Remember: Never tell your seed phrase. If you lose it, you lose access to your account!'
+            | translate
         "
       ></div>
       <div style="margin-bottom: 8px">
         <mat-checkbox formControlName="isWrittenDown">
-          {{ 'I have written or saved my passphrase safely' | translate }}
+          {{ 'I have written or saved my seed phrase safely' | translate }}
         </mat-checkbox>
       </div>
       <div>

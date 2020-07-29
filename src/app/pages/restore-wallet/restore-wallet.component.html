@@ -1,5 +1,5 @@
 <div class="restore-wallet-container">
-  <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'Please Enter Your Seed Phrase' | translate }}</h2>
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
       <span>{{ languages[selectedLang].viewValue }}</span>
@@ -32,7 +32,7 @@
       </div>
     </div>
     <mat-error *ngIf="restoreForm.hasError('mnemonic')">
-      {{ 'Passphrase is invalid' | translate }}
+      {{ 'Seed phrase is invalid' | translate }}
     </mat-error>
     <button mat-stroked-button type="button" (click)="onClearPassphrase()" class="block" color="warn">
       <i matPrefix class="fa fa-times" aria-hidden="true"></i>

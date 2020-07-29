@@ -120,6 +120,8 @@ export class MyTaskComponent implements OnInit {
       };
       zoobc.Escrows.getList(params)
         .then((res: EscrowTransactionsResponse) => {
+          console.log(res);
+
           this.totalEscrow = parseInt(res.total);
           let txFilter = res.escrowsList.filter(tx => {
             if (tx.latest == true) return tx;

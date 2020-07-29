@@ -188,7 +188,8 @@ export class SendmoneyComponent implements OnInit {
   async onOpenDialogDetailSendMoney() {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
-    if (this.account.balance / 1e8 >= total) {
+    const balance = this.account.balance / 1e8;
+    if (balance >= total) {
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         maxHeight: '90vh',
@@ -208,7 +209,10 @@ export class SendmoneyComponent implements OnInit {
         }
       });
     } else {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = await getTranslation(
+        `Your balances are not enough for this transaction. Max amount is ${balance - this.feeForm.value}`,
+        this.translate
+      );
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }

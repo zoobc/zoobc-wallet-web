@@ -114,6 +114,8 @@ export class DashboardComponent implements OnInit {
 
       zoobc.Transactions.getList(params)
         .then((res: TransactionsResponse) => {
+          console.log(res);
+
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
           this.recentTx.map(recent => {
