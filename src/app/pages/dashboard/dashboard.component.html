@@ -150,6 +150,11 @@
         <!-- Temporary Code -->
       </div>
     </ng-container>
+    <div class="text-right">
+      <span style="font-size: 12px;" *ngIf="!isLoadingBalance && !isErrorBalance"
+        ><i>{{ 'Last Refresh' | translate }}: {{ lastRefreshAccount | dateAgo }}</i></span
+      >
+    </div>
   </mat-card>
 
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
