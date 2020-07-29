@@ -42,12 +42,17 @@ export class QrScannerComponent implements OnInit, OnDestroy {
 
   onClose() {
     this.currentDevice = null;
-    navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
-      const stream = mediaStream;
-      const tracks = stream.getTracks();
-      tracks[0].stop();
-      this.dialogRef.close();
-    });
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(mediaStream => {
+        const stream = mediaStream;
+        const tracks = stream.getTracks();
+        tracks[0].stop();
+        this.dialogRef.close();
+      })
+      .catch(err => {
+        this.dialogRef.close();
+      });
   }
 
   onSwitch() {
