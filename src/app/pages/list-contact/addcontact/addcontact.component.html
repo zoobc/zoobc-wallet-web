@@ -19,7 +19,13 @@
         placeholder="{{ 'Address' | translate }}"
         (keyup)="onAddressValidation()"
       />
-      <button mat-icon-button matSuffix (click)="openScannerForm()">
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="openScannerForm()"
+        matTooltip="{{ 'Scan QR Code' | translate }}"
+        matTooltipPosition="above"
+      >
         <i matPrefix class="fa fa-qrcode"></i>
       </button>
     </mat-form-field>

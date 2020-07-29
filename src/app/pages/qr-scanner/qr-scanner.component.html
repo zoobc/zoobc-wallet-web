@@ -6,10 +6,29 @@
         <mat-icon>cached</mat-icon>
       </button>
     </ng-container>
-    <zxing-scanner #scanner [device]="currentDevice" (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+    <zxing-scanner
+      #scanner
+      [device]="currentDevice"
+      (permissionResponse)="onHasPermission($event)"
+      (scanSuccess)="onCodeResult($event)"
+    ></zxing-scanner>
+    <ng-container *ngIf="hasPermission === undefined">
+      <div class="permision">
+        <div class="text-permision">
+          <i class="fas fa-circle-notch fa-spin"></i> {{ 'Waiting for permission' | translate }}
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="hasPermission == false">
+      <div class="permision">
+        <div class="text-permision">
+          <i class="fa fa-ban" aria-hidden="true"></i> {{ 'Camera permission denied' | translate }}
+        </div>
+      </div>
+    </ng-container>
   </div>
   <button
-    *ngIf="availableDevices"
+    *ngIf="availableDevices || hasPermission == false"
     style="margin-top: 16px;"
     mat-flat-button
     (click)="onClose()"

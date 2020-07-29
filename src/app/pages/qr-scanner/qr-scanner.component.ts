@@ -13,6 +13,7 @@ export class QrScannerComponent implements OnInit, OnDestroy {
   availableDevices: MediaDeviceInfo[];
   currentDevice: MediaDeviceInfo = null;
   subscription: Subscription;
+  hasPermission: boolean;
   constructor(
     private dialogRef: MatDialogRef<QrScannerComponent>,
     @Inject(MAT_DIALOG_DATA) private data: 'json' | 'string'
@@ -42,17 +43,26 @@ export class QrScannerComponent implements OnInit, OnDestroy {
 
   onClose() {
     this.currentDevice = null;
-    navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
-      const stream = mediaStream;
-      const tracks = stream.getTracks();
-      tracks[0].stop();
-      this.dialogRef.close();
-    });
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then(mediaStream => {
+        const stream = mediaStream;
+        const tracks = stream.getTracks();
+        tracks[0].stop();
+        this.dialogRef.close();
+      })
+      .catch(err => {
+        this.dialogRef.close();
+      });
   }
 
   onSwitch() {
     const curIndex = this.availableDevices.findIndex(dvc => dvc.deviceId == this.currentDevice.deviceId);
     if (curIndex == this.availableDevices.length - 1) this.currentDevice = this.availableDevices[0];
     else this.currentDevice = this.availableDevices[curIndex + 1];
+  }
+
+  onHasPermission(e: boolean) {
+    this.hasPermission = e;
   }
 }

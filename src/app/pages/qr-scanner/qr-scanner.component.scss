@@ -12,6 +12,28 @@
       margin-right: 10px;
       cursor: pointer;
     }
+    .permision {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 3;
+      background-color: #f2f3f4;
+
+      .text-permision {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+
+        i {
+          margin-right: 4px;
+        }
+      }
+    }
   }
 }
 

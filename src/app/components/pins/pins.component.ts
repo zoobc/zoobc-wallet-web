@@ -6,6 +6,7 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
+  AfterViewInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -21,12 +22,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     },
   ],
 })
-export class PinsComponent implements OnInit, ControlValueAccessor {
+export class PinsComponent implements OnInit, ControlValueAccessor, AfterViewInit {
   @Input() digit: number = 6;
   @ViewChildren('pinDigit') pinDigit: QueryList<ElementRef>;
 
   pins = [];
-  value = '';
   values: any = {};
 
   constructor() {}
@@ -37,13 +37,17 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const child = this.pinDigit.first.nativeElement.children[0].children[0].children[0].children[2]
+        .children[0];
+      child.focus();
+    }, 50);
+  }
+
   private _onChange = (value: any) => {};
 
-  writeValue(value: any) {
-    if (value) {
-      this.value = value;
-    }
-  }
+  writeValue(value: any) {}
 
   registerOnChange(fn: any) {
     this._onChange = fn;
@@ -61,9 +65,7 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
       const prevDigit = this.pinDigit.find((element, i) => i + 1 == index);
 
       if (prevDigit) {
-        const children =
-          prevDigit.nativeElement.children[0].children[0].children[0]
-            .children[2].children[0];
+        const children = prevDigit.nativeElement.children[0].children[0].children[0].children[2].children[0];
         children.focus();
       }
     }
@@ -73,9 +75,7 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
       this.pinDigit.forEach((el: ElementRef, key) => {
         // focus to next field
         if (key == index + 1) {
-          const children =
-            el.nativeElement.children[0].children[0].children[0].children[2]
-              .children[0];
+          const children = el.nativeElement.children[0].children[0].children[0].children[2].children[0];
 
           children.focus();
         }
@@ -85,9 +85,7 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
       this.pinDigit.forEach((el: ElementRef, key) => {
         // clear current field
         if (key == index) {
-          const children =
-            el.nativeElement.children[0].children[0].children[0].children[2]
-              .children[0];
+          const children = el.nativeElement.children[0].children[0].children[0].children[2].children[0];
           children.value = '';
         }
       });
@@ -110,5 +108,19 @@ export class PinsComponent implements OnInit, ControlValueAccessor {
     }
 
     this._onChange(value);
+  }
+
+  onReset() {
+    this.pinDigit.forEach((el: ElementRef, key) => {
+      const children = el.nativeElement.children[0].children[0].children[0].children[2].children[0];
+      children.value = '';
+    });
+    this.values = [];
+
+    setTimeout(() => {
+      const child = this.pinDigit.first.nativeElement.children[0].children[0].children[0].children[2]
+        .children[0];
+      child.focus();
+    }, 50);
   }
 }
