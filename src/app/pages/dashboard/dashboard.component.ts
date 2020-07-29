@@ -20,6 +20,7 @@ import zoobc, {
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
+import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -46,6 +47,7 @@ export class DashboardComponent implements OnInit {
   currAcc: SavedAccount;
   accounts: SavedAccount[];
   lastRefresh: number;
+  lastRefreshAccount: number;
 
   constructor(
     private authServ: AuthService,
@@ -89,7 +91,7 @@ export class DashboardComponent implements OnInit {
         .catch(e => {
           this.isErrorBalance = true;
         })
-        .finally(() => (this.isLoadingBalance = false));
+        .finally(() => ((this.isLoadingBalance = false), (this.lastRefreshAccount = Date.now())));
     }
   }
 
@@ -169,6 +171,17 @@ export class DashboardComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((edited: boolean) => {
       if (edited) this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
+    });
+  }
+  openScannerForm() {
+    const dialog = this.dialog.open(QrScannerComponent, {
+      width: '480px',
+      maxHeight: '99vh',
+      data: 'string',
+      disableClose: true,
+    });
+    dialog.afterClosed().subscribe((data: any) => {
+      if (data) this.router.navigateByUrl('/request/' + data[0] + '/' + data[1] + '');
     });
   }
 }

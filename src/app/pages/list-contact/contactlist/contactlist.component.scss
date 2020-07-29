@@ -15,15 +15,32 @@
       color: $black2;
       margin: 0;
     }
-    .action-row {
-      align-self: flex-end;
+    .action {
+      padding-top: 8px;
+      width: calc(80% - -40px);
       text-align: right;
-      padding-top: 16px;
-      button {
-        margin: 0 4px;
-        height: 28px;
-        font-size: 12px;
-        line-height: 28px;
+      align-self: flex-end;
+      @media #{$small-and-down} {
+        width: 100%;
+      }
+
+      .icon-btn {
+        font-size: 14px;
+        padding: 0 !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+        width: 32px !important;
+        height: 32px !important;
+        line-height: 32px;
+        margin-left: 4px;
+        &.primary {
+          color: map-get($primary, 500);
+          background-color: map-get($primary, 100);
+        }
+        &.warn {
+          color: $red;
+          background-color: #ffcdd2;
+        }
       }
     }
   }

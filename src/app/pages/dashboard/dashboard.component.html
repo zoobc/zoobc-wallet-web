@@ -142,8 +142,17 @@
           <i matPrefix class="fa fa-hand-holding-usd"></i>
           <span>{{ 'Receive' | translate }}</span>
         </button>
+        <button mat-flat-button (click)="openScannerForm()">
+          <i matPrefix class="fa fa-qrcode"></i>
+          <span>{{ 'Scan' | translate }}</span>
+        </button>
       </div>
     </ng-container>
+    <div class="text-right">
+      <span style="font-size: 12px;" *ngIf="!isLoadingBalance && !isErrorBalance"
+        ><i>{{ 'Last Refresh' | translate }}: {{ lastRefreshAccount | dateAgo }}</i></span
+      >
+    </div>
   </mat-card>
 
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">

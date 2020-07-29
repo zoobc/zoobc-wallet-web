@@ -4,7 +4,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { RegisterNodeInterface, isZBCPublicKeyValid } from 'zoobc-sdk';
+import zoobc, { RegisterNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 
 @Component({
@@ -42,7 +42,7 @@ export class RegisterNodeComponent {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCPublicKeyValid(this.nodePublicKeyForm.value);
+    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -60,7 +60,7 @@ export class RegisterNodeComponent {
 
           let data: RegisterNodeInterface = {
             accountAddress: this.account.address,
-            nodePublicKey: this.nodePublicKeyForm.value,
+            nodePublicKey: ZBCAddressToBytes(this.nodePublicKeyForm.value),
             nodeAddress: this.ipAddressForm.value,
             fee: this.feeForm.value,
             funds: this.lockedBalanceForm.value,

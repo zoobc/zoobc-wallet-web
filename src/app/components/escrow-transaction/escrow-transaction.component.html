@@ -11,15 +11,15 @@
     >
       <div class="col-12 col-sm-8">
         <div class="title-task">
-          <b style="margin-right: 8px;">{{ 'Sender' | translate }}:</b>
-          <wallet-address [value]="escrow.senderaddress"></wallet-address>
+          {{ 'Sender' | translate }}:
+          <wallet-address class="address" [value]="escrow.senderaddress"></wallet-address>
         </div>
         <div class="title-task">
-          <b style="margin-right: 8px;">{{ 'Recipient' | translate }}:</b>
-          <wallet-address [value]="escrow.recipientaddress"></wallet-address>
+          {{ 'Recipient' | translate }}:
+          <wallet-address class="address" [value]="escrow.recipientaddress"></wallet-address>
         </div>
         <div class="timeout">
-          {{ 'Expired after block height' | translate }} : {{ escrow.timeout + escrow.blockheight | number }}
+          {{ 'expired after block height' | translate }} : {{ escrow.timeout + escrow.blockheight | number }}
         </div>
       </div>
       <div class="col-12 col-sm-4 text-right">
