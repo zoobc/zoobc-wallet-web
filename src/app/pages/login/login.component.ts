@@ -5,6 +5,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
 
+import * as CryptoJS from 'crypto-js';
+import { saveAs } from 'file-saver';
+const GibberishAES = require('../../../helpers/gibberish-aes.js');
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -57,6 +61,25 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     let isLoggedIn: boolean = this.appServ.isLoggedIn();
     if (isLoggedIn) this.router.navigateByUrl('/dashboard');
+
+    const key = 'abcdefgh12345678';
+    const cert = {
+      nodeKey: 'evolve list approve kangaroo fringe romance space kit idle shop major open',
+      ownerAccount: 'ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7',
+    };
+    const plaintText = JSON.stringify(cert);
+
+    let enc: string = GibberishAES.enc(plaintText, key);
+    enc = enc.replace(/(\r\n|\n|\r)/gm, '');
+    console.log(enc);
+
+    const data = {
+      encrypted: enc,
+    };
+    // {"encrypted":"U2FsdGVkX18ycE8+0gEr3qXPSNJd42+AtviYCnDda5pAioKZRgweJqgqD1GC5+5W+iz9+72woESwI0EnChAl2Zd8h27EWkiu7+ocXIuFfXefsOgpX0KGyRuypVjtEjKNUP8pgKDCE0pT5/JXPRBVK3tJTENIIr97SxYGTmbLD4gQ8NsBMU+P769a/agBXtPj7kEzkuyp8SMxjNUQFVU3iHUG6o2KjBveDpA8zaBIh1I9YEVqifrnJWix91Tf80MjtyUq5qbdMmS+I/tRy/sBmg==","iv":"6ccc2efcaf5b05a01adf38c5dbf4d808"}
+
+    const blob = new Blob([enc]);
+    saveAs(blob, 'Certificate.zbc');
   }
 
   onChangePin() {

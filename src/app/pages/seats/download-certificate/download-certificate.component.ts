@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { saveAs } from 'file-saver';
 import * as CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
+import * as sha256 from 'sha256';
 
 @Component({
   selector: 'app-download-certificate',
@@ -37,10 +38,38 @@ export class DownloadCertificateComponent {
           'Are you sure you will remember your password? You will lose your certificate if not. Continue?',
         showCancelButton: true,
         preConfirm: () => {
-          const string = JSON.stringify(this.data);
-          const encrypted = CryptoJS.AES.encrypt(string, this.passwordField.value).toString();
-          const blob = new Blob([encrypted]);
-          saveAs(blob, 'Certificate.zbc');
+          const jsondata = `{"nodeKey":"evolve list approve kangaroo fringe romance space kit idle shop major open","ownerAccount":"ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7"}`;
+          const string = JSON.stringify(jsondata);
+          // console.log('data: ', string);
+
+          // const key = CryptoJS.MD5(this.passwordField.value).toString();
+          const key = CryptoJS.PBKDF2(this.passwordField.value, 'salt', {
+            keySize: 8,
+            iterations: 10000,
+          }).toString();
+          console.log('hash key: ', key);
+
+          const encrypted = CryptoJS.AES.encrypt(string, key);
+          console.log('encrypted', encrypted.toString());
+          console.log('encrypted key: ', encrypted.key.toString());
+          console.log('encrypted iv: ', encrypted.iv.toString());
+          console.log('encrypted salt: ', encrypted.salt.toString());
+          console.log('encrypted chiper: ', encrypted.ciphertext.toString());
+
+          const data = {
+            encrypted: encrypted.toString(),
+            iv: encrypted.iv.toString(),
+          };
+          // {"encrypted":"U2FsdGVkX18ycE8+0gEr3qXPSNJd42+AtviYCnDda5pAioKZRgweJqgqD1GC5+5W+iz9+72woESwI0EnChAl2Zd8h27EWkiu7+ocXIuFfXefsOgpX0KGyRuypVjtEjKNUP8pgKDCE0pT5/JXPRBVK3tJTENIIr97SxYGTmbLD4gQ8NsBMU+P769a/agBXtPj7kEzkuyp8SMxjNUQFVU3iHUG6o2KjBveDpA8zaBIh1I9YEVqifrnJWix91Tf80MjtyUq5qbdMmS+I/tRy/sBmg==","iv":"6ccc2efcaf5b05a01adf38c5dbf4d808"}
+
+          const blob = new Blob([JSON.stringify(data)]);
+          saveAs(blob, 'Certificate.json');
+
+          const hashPass = CryptoJS.MD5('12345678').toString();
+          const decrypted = CryptoJS.AES.decrypt(data.encrypted, hashPass).toString(CryptoJS.enc.Utf8);
+
+          console.log(JSON.parse(decrypted));
+          // {"nodeKey":"evolve list approve kangaroo fringe romance space kit idle shop major open","ownerAccount":"ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7"}
 
           this.dialogref.close();
         },

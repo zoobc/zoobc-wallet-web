@@ -120,7 +120,7 @@ export class SeatDetailComponent implements OnInit {
     this.dialog.open(DownloadCertificateComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: { passphrase: this.passphrase, address: this.addressField.value },
+      data: { nodeKey: this.passphrase, ownerAccount: this.addressField.value },
     });
   }
 
