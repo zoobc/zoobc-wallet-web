@@ -119,7 +119,7 @@ export class DashboardComponent implements OnInit {
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
           this.recentTx.map(recent => {
-            recent['alias'] = this.contactServ.get(recent.address).alias || '';
+            recent['alias'] = this.contactServ.get(recent.address).name || '';
           });
           this.totalTx = tx.total;
 

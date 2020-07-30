@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export interface Contact {
-  alias: string;
+  name: string;
   address: string;
 }
 
@@ -16,16 +16,14 @@ export class ContactService {
   }
 
   get(address: string): Contact {
-    const contacts: Contact[] =
-      JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
+    const contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
 
-    const empty = { address: '', alias: '' };
+    const empty = { address: '', name: '' };
     return contacts.find(c => c.address == address) || empty;
   }
 
   add(contact: Contact): Contact[] {
-    let contacts: Contact[] =
-      JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
+    let contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
     contacts.push(contact);
     localStorage.setItem('CONTACT_LIST', JSON.stringify(contacts));
     return contacts;
@@ -49,8 +47,7 @@ export class ContactService {
   }
 
   isDuplicate(address: string): boolean {
-    const contacts: Contact[] =
-      JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
+    const contacts: Contact[] = JSON.parse(localStorage.getItem('CONTACT_LIST')) || [];
     return contacts.some(c => c.address === address);
   }
 }

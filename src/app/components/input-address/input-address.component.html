@@ -25,7 +25,7 @@
       *ngFor="let contact of filteredContacts"
       [value]="contact.address"
     >
-      <span>{{ contact.alias }}</span> |
+      <span>{{ contact.name }}</span> |
       <small>{{ contact.address }}</small>
     </mat-option>
   </mat-autocomplete>

@@ -75,7 +75,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
     if (value) {
       const filterValue = value.toLowerCase();
       return this.contacts.filter((contact: Contact) =>
-        contact.alias.toLocaleLowerCase().includes(filterValue)
+        contact.name.toLocaleLowerCase().includes(filterValue)
       );
     } else if (value == '') return this.contacts;
   }
@@ -87,7 +87,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
     this.accounts.forEach(account => {
       const contact: Contact = {
         address: account.address,
-        alias: account.name,
+        name: account.name,
       };
       this.contacts.push(contact);
     });

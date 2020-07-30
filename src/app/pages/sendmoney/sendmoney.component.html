@@ -20,7 +20,7 @@
       </ng-container>
       <div class="address-alias" *ngIf="!showSaveAddressBtn">
         <span>{{ 'Address' | translate }}: </span>
-        <b>{{ contact.alias }}</b>
+        <b>{{ contact.name }}</b>
       </div>
       <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
         <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">

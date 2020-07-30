@@ -20,7 +20,7 @@ export class EditcontactComponent implements OnInit {
   constructor(
     private contactServ: ContactService,
     public dialogRef: MatDialogRef<EditcontactComponent>,
-    @Inject(MAT_DIALOG_DATA) public contact: any,
+    @Inject(MAT_DIALOG_DATA) public contact: Contact,
     private translate: TranslateService,
     private dialog: MatDialog
   ) {}
@@ -33,7 +33,7 @@ export class EditcontactComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.aliasField = new FormControl(this.contact.alias, Validators.required);
+    this.aliasField = new FormControl(this.contact.name, Validators.required);
     this.addressField = new FormControl(this.contact.address, Validators.required);
 
     this.editForm = new FormGroup({
