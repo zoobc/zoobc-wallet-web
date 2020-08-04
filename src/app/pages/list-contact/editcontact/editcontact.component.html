@@ -3,7 +3,7 @@
   <form [formGroup]="editForm" (submit)="onSubmit()" class="grid">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'Name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="alias" placeholder="{{ 'Name' | translate }}" />
+      <input matInput type="text" formControlName="name" placeholder="{{ 'Name' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">
@@ -23,6 +23,7 @@
       <button
         mat-icon-button
         matSuffix
+        type="button"
         (click)="openScannerForm()"
         matTooltip="{{ 'Scan QR Code' | translate }}"
         matTooltipPosition="above"

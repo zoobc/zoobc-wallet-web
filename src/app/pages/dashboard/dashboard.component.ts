@@ -10,7 +10,6 @@ import { EditAccountComponent } from '../account/edit-account/edit-account.compo
 import zoobc, {
   TransactionListParams,
   toTransactionListWallet,
-  getZBCAdress,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
   AccountBalanceResponse,

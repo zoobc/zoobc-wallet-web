@@ -37,7 +37,7 @@ export class EditcontactComponent implements OnInit {
     this.addressField = new FormControl(this.contact.address, Validators.required);
 
     this.editForm = new FormGroup({
-      alias: this.aliasField,
+      name: this.aliasField,
       address: this.addressField,
     });
   }
@@ -51,11 +51,7 @@ export class EditcontactComponent implements OnInit {
           'The address you entered is already in your Address Book',
           this.translate
         );
-        Swal.fire({
-          type: 'error',
-          title: 'Oops...',
-          text: message,
-        });
+        Swal.fire({ type: 'error', title: 'Oops...', text: message });
       } else {
         const contacts: Contact[] = this.contactServ.update(this.editForm.value, this.contact.address);
         this.dialogRef.close(contacts);

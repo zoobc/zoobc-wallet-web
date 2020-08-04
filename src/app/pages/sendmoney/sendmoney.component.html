@@ -9,6 +9,7 @@
         classList="block"
         formControlName="recipient"
         placeholder="{{ 'Recipient Address' | translate }}..."
+        (change)="isAddressInContacts()"
       ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">

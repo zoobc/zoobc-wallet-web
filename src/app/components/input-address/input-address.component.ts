@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 import { Contact, ContactService } from 'src/app/services/contact.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
@@ -25,6 +25,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   @Input() classList: string;
   @Input() readonly: boolean = false;
   @Input() exceptContact: SavedAccount;
+  @Output() change = new EventEmitter();
 
   value: string;
   tempVal: string[];
@@ -43,9 +44,10 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
   ngOnInit() {
     this.contacts = this.contactServ.getList() || [];
     this.getAccounts();
+    this.filteredContacts = this.contacts;
   }
 
-  writeValue(value: any) {
+  writeValue(value: string) {
     this.value = value ? value : '';
   }
 
@@ -61,13 +63,17 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onChange(value: any) {
-    this.filteredContacts = this.filterContacts(value);
-    this._onChange(value);
-    this._onTouched(value);
+  onChange(value: string) {
+    if (value != this.value) {
+      this.filteredContacts = this.filterContacts(value);
+      this._onChange(value);
+      this._onTouched(value);
+      this.change.emit(value);
+    }
+    this.value = value;
   }
 
-  onOptionClick(address: any) {
+  onOptionClick(address: string) {
     this._onChange(address);
   }
 
@@ -95,15 +101,10 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
 
   validate({ value }: FormControl) {
     let result: boolean = false;
-    if (value) {
-      result = isZBCAddressValid(value);
-    } else {
-      return null;
-    }
+    if (value) result = isZBCAddressValid(value);
+    else return null;
 
-    if (!result) {
-      return { invalidAddress: true };
-    }
+    if (!result) return { invalidAddress: true };
     return null;
   }
 }
