@@ -38,7 +38,7 @@ export class SendmoneyComponent implements OnInit {
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl('', [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
   addressApproverField = new FormControl('', Validators.required);
@@ -112,17 +112,13 @@ export class SendmoneyComponent implements OnInit {
 
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-
       const minCurrency = truncate(this.minFee * rate.value, 8);
-
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
-
     this.account = this.authServ.getCurrAccount();
     this.getAccounts();
-
     this.getBlockHeight();
   }
 
