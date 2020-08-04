@@ -82,7 +82,7 @@ export class MyTaskComponent implements OnInit {
           this.totalMultiSig = tx.count;
           const pendingList = tx.pendingtransactionsList;
           pendingList.map(res => {
-            res['alias'] = this.contactServ.get(res.senderaddress).alias || '';
+            res['alias'] = this.contactServ.get(res.senderaddress).name || '';
           });
           if (reload) {
             this.multiSigPendingList = pendingList;
@@ -125,7 +125,7 @@ export class MyTaskComponent implements OnInit {
             if (tx.latest == true) return tx;
           });
           let txMap = txFilter.map(tx => {
-            const alias = this.contactServ.get(tx.recipientaddress).alias || '';
+            const alias = this.contactServ.get(tx.recipientaddress).name || '';
             return {
               id: tx.id,
               alias: alias,

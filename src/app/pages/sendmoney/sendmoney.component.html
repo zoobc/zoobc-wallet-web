@@ -9,6 +9,7 @@
         classList="block"
         formControlName="recipient"
         placeholder="{{ 'recipient address' | translate }}..."
+        (change)="isAddressInContacts()"
       ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
@@ -20,7 +21,7 @@
       </ng-container>
       <div class="address-alias" *ngIf="!showSaveAddressBtn">
         <span>{{ 'address' | translate }}: </span>
-        <b>{{ contact.alias }}</b>
+        <b>{{ contact.name }}</b>
       </div>
       <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
         <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">

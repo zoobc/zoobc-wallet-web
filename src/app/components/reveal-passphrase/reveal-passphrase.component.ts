@@ -49,7 +49,7 @@ export class RevealPassphraseComponent implements OnInit {
   async copyPhrase() {
     onCopyText(this.phrase);
 
-    let message = getTranslation('passphrase copied', this.translate);
+    let message = getTranslation('seed phrase copied', this.translate);
     this.snackBar.open(message, null, { duration: 3000 });
   }
 }

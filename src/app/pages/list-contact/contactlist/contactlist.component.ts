@@ -104,9 +104,9 @@ export class ContactlistComponent implements OnInit {
               Swal.fire('Opps...', message, 'error');
               this.myInputVariable.nativeElement.value = '';
             } else {
-              if (!newContact.alias) {
+              if (!newContact.name) {
                 const index = i + 1;
-                newContact.alias = 'New Contact ' + index;
+                newContact.name = 'New Contact ' + index;
               }
               this.contactServ.add(newContact);
               this.contacts = this.contactServ.getList();

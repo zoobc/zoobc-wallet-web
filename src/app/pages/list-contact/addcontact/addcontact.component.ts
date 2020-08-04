@@ -24,7 +24,7 @@ export class AddcontactComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.addForm = new FormGroup({
-      alias: this.aliasField,
+      name: this.aliasField,
       address: this.addressField,
     });
   }

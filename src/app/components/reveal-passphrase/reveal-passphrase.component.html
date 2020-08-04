@@ -3,7 +3,7 @@
     <b>{{ 'confirm your pin' | translate }}</b>
   </h3>
   <h3 class="mat-h3" id="modal-basic-title" *ngIf="phrase">
-    <b>{{ 'here your passphrase' | translate }}</b>
+    <b>{{ 'here your seed phrase' | translate }}</b>
   </h3>
   <form [formGroup]="formConfirmPin" class="form-pin" *ngIf="!phrase">
     <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
@@ -27,7 +27,7 @@
   <div class="btn-grouped" *ngIf="phrase">
     <button mat-flat-button color="primary" (click)="copyPhrase()">
       <i matPrefix class="fas fa-copy"></i>
-      <span class="text">{{ 'copy passphrase' | translate }}</span>
+      <span class="text">{{ 'copy seed phrase' | translate }}</span>
     </button>
   </div>
 

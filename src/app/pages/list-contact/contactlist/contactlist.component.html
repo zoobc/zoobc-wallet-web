@@ -41,7 +41,7 @@
       <div class="contacts-list" *ngFor="let contact of contacts">
         <div class="row">
           <div class="col-12 col-sm-8">
-            <p class="alias">{{ contact.alias }}</p>
+            <p class="alias">{{ contact.name }}</p>
             <p class="address">
               <wallet-address [value]="contact.address"></wallet-address>
             </p>

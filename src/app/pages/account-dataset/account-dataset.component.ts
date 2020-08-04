@@ -38,6 +38,8 @@ export class AccountDatasetComponent implements OnInit {
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   customFee: boolean = false;
 
+  account: SavedAccount;
+
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
@@ -46,12 +48,14 @@ export class AccountDatasetComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private authServ: AuthService,
     private translate: TranslateService,
-    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
+    @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
     });
+
+    this.account = data;
   }
 
   ngOnInit() {

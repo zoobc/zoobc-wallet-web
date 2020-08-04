@@ -20,7 +20,7 @@ export class EditcontactComponent implements OnInit {
   constructor(
     private contactServ: ContactService,
     public dialogRef: MatDialogRef<EditcontactComponent>,
-    @Inject(MAT_DIALOG_DATA) public contact: any,
+    @Inject(MAT_DIALOG_DATA) public contact: Contact,
     private translate: TranslateService,
     private dialog: MatDialog
   ) {}
@@ -33,11 +33,11 @@ export class EditcontactComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.aliasField = new FormControl(this.contact.alias, Validators.required);
+    this.aliasField = new FormControl(this.contact.name, Validators.required);
     this.addressField = new FormControl(this.contact.address, Validators.required);
 
     this.editForm = new FormGroup({
-      alias: this.aliasField,
+      name: this.aliasField,
       address: this.addressField,
     });
   }
@@ -48,11 +48,7 @@ export class EditcontactComponent implements OnInit {
       const isChanged = this.addressField.value != this.contact.address ? true : false;
       if (isDuplicate && isChanged) {
         let message = getTranslation('the address you entered is already in your contact', this.translate);
-        Swal.fire({
-          type: 'error',
-          title: 'Oops...',
-          text: message,
-        });
+        Swal.fire({ type: 'error', title: 'Oops...', text: message });
       } else {
         const contacts: Contact[] = this.contactServ.update(this.editForm.value, this.contact.address);
         this.dialogRef.close(contacts);

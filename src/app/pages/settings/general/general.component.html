@@ -12,6 +12,13 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <br /><br />
+
+    <p class="subtitle">{{ 'Setting and Data' | translate }}</p>
+    <button mat-flat-button (click)="resetData()" color="primary">
+      <i matPrefix class="fa fa-sync"></i>
+      {{ 'Reset Data' | translate }}
+    </button>
   </div>
 
   <div class="setting-section">
@@ -28,10 +35,10 @@
       <span>{{ 'security & privacy' | translate }}</span>
     </p>
 
-    <p class="subtitle">{{ 'reveal passphrase' | translate }}</p>
+    <p class="subtitle">{{ 'reveal seed phrase' | translate }}</p>
     <button mat-flat-button (click)="onOpenRevealPassphrase()" color="primary">
       <i matPrefix class="fa fa-eye"></i>
-      {{ 'reveal passphrase' | translate }}
+      {{ 'reveal seed phrase' | translate }}
     </button>
   </div>
 </div>

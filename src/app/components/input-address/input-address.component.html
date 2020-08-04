@@ -5,9 +5,8 @@
   <input
     matInput
     [disabled]="disabled"
-    (focus)="onChange($event.target.value)"
+    (input)="onChange($event.target.value)"
     (blur)="onChange($event.target.value)"
-    (keyup)="onChange($event.target.value)"
     [value]="value"
     [matAutocomplete]="auto"
     placeholder="{{ placeholder }}"
@@ -21,11 +20,11 @@
     </mat-option>
     <mat-option
       #matOption
-      (click)="onOptionClick(contact.address)"
+      (click)="onChange(contact.address)"
       *ngFor="let contact of filteredContacts"
       [value]="contact.address"
     >
-      <span>{{ contact.alias }}</span> |
+      <span>{{ contact.name }}</span> |
       <small>{{ contact.address }}</small>
     </mat-option>
   </mat-autocomplete>
