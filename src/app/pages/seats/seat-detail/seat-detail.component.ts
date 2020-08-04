@@ -37,17 +37,21 @@ export class SeatDetailComponent implements OnInit {
 
   passphrase: string;
 
+  tokenId: number;
+
   constructor(
     private authServ: AuthService,
     public dialog: MatDialog,
     private seatServ: SeatService,
-    @Inject(MAT_DIALOG_DATA) private tokenId: number
+    @Inject(MAT_DIALOG_DATA) dataToken: number
   ) {
     this.form = new FormGroup({
       address: this.addressField,
       nodePubKey: this.nodePubKeyField,
       message: this.messageField,
     });
+
+    this.tokenId = dataToken;
   }
 
   ngOnInit() {
@@ -120,7 +124,7 @@ export class SeatDetailComponent implements OnInit {
     this.dialog.open(DownloadCertificateComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: { passphrase: this.passphrase, address: this.addressField.value },
+      data: { nodeKey: this.passphrase, ownerAccount: this.addressField.value },
     });
   }
 

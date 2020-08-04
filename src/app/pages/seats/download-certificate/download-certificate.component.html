@@ -1,7 +1,7 @@
 <div class="mat-h2">Download Certificate</div>
 
 <div style="margin-bottom: 8px;">Secure your certificate by using password</div>
-<form [formGroup]="form" (submit)="onSetPassword($event)">
+<form [formGroup]="form" (submit)="onSetPassword()">
   <mat-form-field appearance="outline" color="accent" class="block">
     <mat-label>Password</mat-label>
     <input formControlName="password" matInput type="password" placeholder="Password" />
@@ -31,7 +31,7 @@
     </mat-error>
   </ng-container>
 
-  <button mat-flat-button color="primary" [disabled]="form.invalid || isLoading" class="block">
+  <button mat-flat-button color="primary" [disabled]="form.invalid" class="block">
     <i matPrefix class="fa fa-download"></i>
     Download
   </button>

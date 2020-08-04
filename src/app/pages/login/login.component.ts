@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-
-import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -35,12 +33,7 @@ export class LoginComponent implements OnInit {
   formLoginMnemonic: FormGroup;
   passPhraseForm = new FormControl('', Validators.required);
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private appServ: AppService,
-    private authServ: AuthService
-  ) {
+  constructor(private router: Router, private route: ActivatedRoute, private authServ: AuthService) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
     });
@@ -54,10 +47,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    let isLoggedIn: boolean = this.appServ.isLoggedIn();
-    if (isLoggedIn) this.router.navigateByUrl('/dashboard');
-  }
+  ngOnInit() {}
 
   onChangePin() {
     if (this.pinForm.value.length == 6) this.onLogin();
