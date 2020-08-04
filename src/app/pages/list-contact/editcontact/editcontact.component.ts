@@ -47,10 +47,7 @@ export class EditcontactComponent implements OnInit {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
       const isChanged = this.addressField.value != this.contact.address ? true : false;
       if (isDuplicate && isChanged) {
-        let message = await getTranslation(
-          'The address you entered is already in your Address Book',
-          this.translate
-        );
+        let message = getTranslation('the address you entered is already in your contact', this.translate);
         Swal.fire({ type: 'error', title: 'Oops...', text: message });
       } else {
         const contacts: Contact[] = this.contactServ.update(this.editForm.value, this.contact.address);

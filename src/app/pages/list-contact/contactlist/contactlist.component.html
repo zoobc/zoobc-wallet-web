@@ -1,11 +1,11 @@
 <div class="contacts-container">
   <div class="row">
     <div class="col-6">
-      <h2 class="mat-h2">{{ 'Contacts' | translate }}</h2>
+      <h2 class="mat-h2">{{ 'contacts' | translate }}</h2>
     </div>
     <div class="col-6 text-right">
       <button mat-flat-button color="primary" type="button" (click)="onOpenAddContact()">
-        <i matPrefix class="fa fa-plus"></i> {{ 'Add Contact' | translate }}
+        <i matPrefix class="fa fa-plus"></i> {{ 'add contact' | translate }}
       </button>
     </div>
   </div>
@@ -24,17 +24,17 @@
       type="button"
       (click)="onImportContact()"
     >
-      <i matPrefix class="fa fa-file-import"></i> {{ 'Import' | translate }}
+      <i matPrefix class="fa fa-file-import"></i> {{ 'import' | translate }}
     </button>
     <button mat-flat-button color="accent" type="button" (click)="onExportContact()">
-      <i matPrefix class="fa fa-file-export"></i> {{ 'Export' | translate }}
+      <i matPrefix class="fa fa-file-export"></i> {{ 'export' | translate }}
     </button>
   </div>
 
   <mat-card style="padding: 0">
     <div class="no-content padding" *ngIf="!contacts || contacts.length <= 0">
       <i matPrefix class="fa fa-address-book"></i>
-      <span class="message">{{ 'No Contacts Available' | translate }}</span>
+      <span class="message">{{ 'no contacts available' | translate }}</span>
     </div>
 
     <ng-container *ngIf="contacts && contacts.length > 0">

@@ -2,7 +2,7 @@
   <ng-container *ngIf="pendingListMultiSig">
     <div class="no-content padding" *ngIf="pendingListMultiSig.length <= 0">
       <i matPrefix class="fa fa-receipt"></i>
-      <span class="message">{{ 'No Pending Multisignature Transaction' | translate }}</span>
+      <span class="message">{{ 'no pending multisignature transaction' | translate }}</span>
     </div>
     <div
       [className]="withDetail ? 'multisig-transaction-item hover row' : 'multisig-transaction-item hover'"
@@ -42,10 +42,10 @@
   <div class="no-content padding" *ngIf="isError">
     <i matPrefix class="fa fa-exclamation-triangle"></i>
     <span class="message">
-      {{ 'An error occurred while processing your request' | translate }}
+      {{ 'an error occurred while processing your request' | translate }}
     </span>
     <button mat-flat-button color="primary" (click)="onRefresh()">
-      {{ 'Try Again' | translate }}
+      {{ 'try again' | translate }}
     </button>
   </div>
 </div>
@@ -53,48 +53,49 @@
 <ng-template #detailMultisig>
   <div class="detail-multisig-container" *ngIf="multiSigDetail && !isLoadingDetail">
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="multiSigDetail.senderaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="multiSigDetail.recipientaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'amount' | translate }}:</div>
       <div class="col-12 col-md-8">{{ multiSigDetail.amount / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Fee' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'fee' | translate }}:</div>
       <div class="col-12 col-md-8">{{ multiSigDetail.fee / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Blockheight' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'blockheight' | translate }}:</div>
       <div class="col-12 col-md-8">{{ multiSigDetail.blockheight }}</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Date' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
       <div class="col-12 col-md-8">{{ multiSigDetail.timestamp * 1000 | date: 'medium' }}</div>
     </div>
     <div class="row">
       <div class="col-6 col-md-6" style="margin: 16px 0 16px;">
         <ng-container *ngIf="enabledSign">
           <mat-checkbox (click)="toogleShowSignForm($event)">
-            {{ 'Sign this transaction' || translate }}
+            {{ 'sign this transaction' || translate }}
           </mat-checkbox>
         </ng-container>
       </div>
       <div class="col-6 col-md-6 text-right participant-info" style="margin: 16px 0 16px;">
         <ng-container *ngIf="pendingSignatures.length == 0">
-          {{ 'No participants have signed yet' || translate }}
+          {{ 'no participants have signed yet' || translate }}
         </ng-container>
         <ng-container *ngIf="pendingSignatures.length > 0">
-          {{ 'Signed by' | translate }} {{ pendingSignatures.length }} of {{ participants.length }}
-          {{ 'participants' || translate }}
+          {{
+            'signed by' | translate: { pendingSign: pendingSignatures.length, totalSign: participants.length }
+          }}
         </ng-container>
       </div>
     </div>
@@ -124,10 +125,10 @@
           style="margin-right: 8px"
           (click)="onIgnore()"
         >
-          {{ 'Ignore' | translate }}
+          {{ 'ignore' | translate }}
         </button>
         <button [disabled]="isLoadingTx || !form.valid" mat-flat-button color="primary" (click)="onAccept()">
-          {{ 'Accept' | translate }}
+          {{ 'accept' | translate }}
         </button>
       </div>
     </ng-container>

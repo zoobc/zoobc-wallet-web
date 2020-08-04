@@ -209,10 +209,9 @@ export class SendmoneyComponent implements OnInit {
         }
       });
     } else {
-      let message = await getTranslation(
-        `Your balances are not enough for this transaction. Max amount is ${balance - this.feeForm.value}`,
-        this.translate
-      );
+      let message = getTranslation('your balances are not enough for this transaction', this.translate, {
+        amount: balance - this.feeForm.value,
+      });
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
@@ -250,7 +249,7 @@ export class SendmoneyComponent implements OnInit {
     this.approverCommissionCurrField.enable();
   }
 
-  async onSendMoney() {
+  onSendMoney() {
     if (this.formSend.valid) {
       this.isLoading = true;
 
@@ -270,8 +269,8 @@ export class SendmoneyComponent implements OnInit {
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
           this.isLoading = false;
-          let message = await getTranslation('Your Transaction is processing', this.translate);
-          let subMessage = await getTranslation('You send coins to', this.translate, {
+          let message = getTranslation('your transaction is processing', this.translate);
+          let subMessage = getTranslation('you send coins to', this.translate, {
             amount: data.amount,
             currencyValue: truncate(this.amountCurrencyForm.value, 2),
             currencyName: this.currencyRate.name,
@@ -293,10 +292,7 @@ export class SendmoneyComponent implements OnInit {
           this.isLoading = false;
           console.log(err);
 
-          let message = await getTranslation(
-            'An error occurred while processing your request',
-            this.translate
-          );
+          let message = getTranslation('an error occurred while processing your request', this.translate);
           Swal.fire('Opps...', message, 'error');
         }
       );

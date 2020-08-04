@@ -11,7 +11,7 @@ import zoobc, {
   EscrowStatus,
   PendingTransactionStatus,
 } from 'zoobc-sdk';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
 import { Router } from '@angular/router';
 
@@ -29,8 +29,8 @@ export class MyTaskComponent implements OnInit {
   // Multisignature input
   @Input() isLoadingMultisig: boolean = false;
   @Input() isErrorMultiSig: boolean = false;
-  account;
-  timeout;
+  account: SavedAccount;
+  timeout: number;
 
   escrowTransactions;
   blockHeight: number;

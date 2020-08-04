@@ -63,7 +63,7 @@ export class SignupComponent implements OnInit {
     const passphrase = this.passphrase.join(' ');
     onCopyText(passphrase);
 
-    let message = await getTranslation('Seed Phrase Copied', this.translate);
+    let message = getTranslation('seed phrase copied', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 

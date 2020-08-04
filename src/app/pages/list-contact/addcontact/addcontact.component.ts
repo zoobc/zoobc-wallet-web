@@ -42,10 +42,7 @@ export class AddcontactComponent implements OnInit {
     if (this.addForm.valid) {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
       if (isDuplicate) {
-        let message = await getTranslation(
-          'The address you entered is already in your Contact',
-          this.translate
-        );
+        let message = getTranslation('the address you entered is already in your contact', this.translate);
         Swal.fire({
           type: 'error',
           title: 'Oops...',
