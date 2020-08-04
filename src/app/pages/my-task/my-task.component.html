@@ -7,12 +7,10 @@
       <ng-container *ngIf="account.type === 'normal'">
         <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 10px;">
-              <a routerLink="/escrow-approval-history">
+            <div class="col-6 col-md-6" style="margin-top: 8px;">
+              <a routerLink="/escrow-approval-history" class="approval-history">
                 <i class="fa fa-history" aria-hidden="true"></i>
-                <span class="approval-history"
-                  ><b>{{ 'approval history' | translate }}</b></span
-                >
+                <b>{{ 'Approval history' | translate }}</b>
               </a>
             </div>
             <div class="col-6 col-md-6">
@@ -48,9 +46,10 @@
       <ng-container *ngIf="account.type === 'multisig'">
         <mat-tab label="Multisignature">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6">
-              <a routerLink="/multisig-approval-history" class="history-link"
-                ><i class="fa fa-history"></i> {{ 'approval history' | translate }}
+            <div class="col-6 col-md-6" style="margin-top: 8px;">
+              <a routerLink="/multisig-approval-history" class="approval-history">
+                <i class="fa fa-history"></i>
+                <b>{{ 'Approval History' | translate }}</b>
               </a>
             </div>
             <div class="col-6 col-md-6">
@@ -81,12 +80,10 @@
         </mat-tab>
         <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 10px;">
-              <a routerLink="/escrow-approval-history">
+            <div class="col-6 col-md-6" style="margin-top: 8px;">
+              <a routerLink="/escrow-approval-history" class="approval-history">
                 <i class="fa fa-history" aria-hidden="true"></i>
-                <span class="approval-history"
-                  ><b>{{ 'approval history' | translate }}</b></span
-                >
+                <b>{{ 'Approval History' | translate }}</b>
               </a>
             </div>
             <div class="col-6 col-md-6">
