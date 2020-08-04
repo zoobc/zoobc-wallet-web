@@ -43,7 +43,6 @@ export class MultisigTransactionComponent implements OnInit {
   typeFeeField = new FormControl('ZBC');
 
   currencyRate: Currency;
-  kindFee: string;
   advancedMenu: boolean = false;
   enabledSign: boolean = true;
   showSignForm: boolean = false;
@@ -163,10 +162,6 @@ export class MultisigTransactionComponent implements OnInit {
           });
       }
     });
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   toogleShowSignForm() {
