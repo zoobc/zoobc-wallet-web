@@ -52,17 +52,14 @@ export class ContactUsComponent {
         })
         .toPromise()
         .then(async () => {
-          let message = await getTranslation('Thank you for your feedback!', this.translate);
+          let message = getTranslation('thank you for your feedback!', this.translate);
           this.snackbar.open(message, null, { duration: 3000 });
 
           this.router.navigateByUrl('/dashboard');
         })
         .catch(async err => {
           console.error(err);
-          let message = await getTranslation(
-            'An error occurred while processing your request',
-            this.translate
-          );
+          let message = getTranslation('an error occurred while processing your request', this.translate);
           this.snackbar.open(message, null, { duration: 3000 });
         });
     }

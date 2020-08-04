@@ -4,8 +4,10 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { RegisterNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { RegisterNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
+import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-register-node',
@@ -28,7 +30,8 @@ export class RegisterNodeComponent {
     private authServ: AuthService,
     private nodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<RegisterNodeComponent>
+    private dialogRef: MatDialogRef<RegisterNodeComponent>,
+    private translate: TranslateService
   ) {
     this.formRegisterNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -42,7 +45,7 @@ export class RegisterNodeComponent {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
+    let isValid = ZBCAddressToBytes(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -68,7 +71,8 @@ export class RegisterNodeComponent {
 
           zoobc.Node.register(data, this.authServ.seed)
             .then(() => {
-              Swal.fire('Success', 'Your node will be registered soon', 'success');
+              let message = getTranslation('your node will be registered soon', this.translate);
+              Swal.fire('Success', message, 'success');
 
               // change IP if has different value
               if (this.ipAddressForm.value != this.account.nodeIP)

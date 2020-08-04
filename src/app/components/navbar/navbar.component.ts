@@ -79,8 +79,8 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  async onComingSoonPage() {
-    let message = await getTranslation('Coming Soon', this.translate);
+  onComingSoonPage() {
+    let message = getTranslation('coming soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,
@@ -89,8 +89,8 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  async onLogout() {
-    let message = await getTranslation('Are you sure want to logout?', this.translate);
+  onLogout() {
+    let message = getTranslation('are you sure want to logout?', this.translate);
     Swal.fire({
       title: message,
       showCancelButton: true,

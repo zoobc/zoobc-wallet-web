@@ -62,12 +62,12 @@ export class AddAccountComponent implements OnInit {
       return this.dialogRef.close(true);
     }
 
-    let title = await getTranslation('Are you sure?', this.translate);
-    let message = await getTranslation(
-      'Once you create multisignature address, you will not be able to edit it anymore. But you can still delete it)',
+    let title = getTranslation('are you sure?', this.translate);
+    let message = getTranslation(
+      'once you create multisignature address, you will not be able to edit it anymore. but you can still delete it',
       this.translate
     );
-    let buttonText = await getTranslation('Yes, continue it!', this.translate);
+    let buttonText = getTranslation('yes, continue it!', this.translate);
     Swal.fire({
       title: title,
       text: message,

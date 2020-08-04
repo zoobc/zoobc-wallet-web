@@ -4,7 +4,9 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { ClaimNodeInterface, isZBCAddressValid, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { ZBCAddressToBytes, ClaimNodeInterface } from 'zoobc-sdk';
+import { getTranslation } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-claim-node',
@@ -24,7 +26,8 @@ export class ClaimNodeComponent {
   constructor(
     private authServ: AuthService,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<ClaimNodeComponent>
+    public dialogRef: MatDialogRef<ClaimNodeComponent>,
+    private translate: TranslateService
   ) {
     this.formClaimNode = new FormGroup({
       fee: this.feeForm,
@@ -38,7 +41,7 @@ export class ClaimNodeComponent {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
+    let isValid = ZBCAddressToBytes(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -60,7 +63,8 @@ export class ClaimNodeComponent {
 
           zoobc.Node.claim(data, seed)
             .then(() => {
-              Swal.fire('Success', 'Your node will be claimed soon', 'success');
+              let message = getTranslation('your node will be claimed soon', this.translate);
+              Swal.fire('Success', message, 'success');
               this.dialogRef.close(true);
             })
             .catch(err => {

@@ -4,8 +4,10 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { UpdateNodeInterface, isZBCAddressValid, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { UpdateNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
+import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-update-node',
@@ -28,7 +30,8 @@ export class UpdateNodeComponent {
     private NodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
-    @Inject(MAT_DIALOG_DATA) public node: any
+    @Inject(MAT_DIALOG_DATA) public node: any,
+    private translate: TranslateService
   ) {
     this.formUpdateNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -49,7 +52,7 @@ export class UpdateNodeComponent {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
+    let isValid = ZBCAddressToBytes(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -75,7 +78,8 @@ export class UpdateNodeComponent {
 
           zoobc.Node.update(data, this.authServ.seed)
             .then(() => {
-              Swal.fire('Success', 'Your node will be updated soon', 'success');
+              let message = getTranslation('your node will be updated soon', this.translate);
+              Swal.fire('Success', message, 'success');
 
               // change IP if has different value
               if (this.ipAddressForm.value != this.account.nodeIP)

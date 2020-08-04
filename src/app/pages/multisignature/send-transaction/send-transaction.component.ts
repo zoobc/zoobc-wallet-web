@@ -160,7 +160,7 @@ export class SendTransactionComponent implements OnInit {
         maxHeight: '90vh',
       });
     } else {
-      let message = await getTranslation('This account is not one of your participant', this.translate);
+      let message = getTranslation('this account is not one of your participant', this.translate);
       return Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
@@ -229,8 +229,8 @@ export class SendTransactionComponent implements OnInit {
     const childSeed = this.authServ.seed;
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
-        let message = await getTranslation('Your Transaction is processing', this.translate);
-        let subMessage = await getTranslation('You send coins to', this.translate, {
+        let message = getTranslation('your transaction is processing', this.translate);
+        let subMessage = getTranslation('you send coins to', this.translate, {
           amount: transaction.amount,
           currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
           currencyName: this.currencyRate.name,
@@ -242,7 +242,7 @@ export class SendTransactionComponent implements OnInit {
       })
       .catch(async err => {
         console.log(err.message);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       });
   }

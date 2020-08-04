@@ -3,7 +3,7 @@
     <li [ngClass]="menu == 'dashboard' && 'active'">
       <a routerLink="/dashboard" (click)="onToggle()">
         <i class="fa fa-home"></i>
-        <span>{{ 'Dashboard' | translate }}</span>
+        <span>{{ 'dashboard' | translate }}</span>
       </a>
     </li>
 
@@ -11,7 +11,7 @@
       <li [ngClass]="menu == 'nodeadmin' && 'active'">
         <a routerLink="/nodeadmin" (click)="onToggle()">
           <i class="fa fa-desktop"></i>
-          <span>{{ 'Node Admin' | translate }}</span>
+          <span>{{ 'node admin' | translate }}</span>
         </a>
       </li>
     </ng-template>
@@ -19,7 +19,7 @@
     <li [ngClass]="menu == 'transferhistory' && 'active'">
       <a routerLink="/transferhistory" (click)="onToggle()">
         <i class="fa fa-receipt"></i>
-        <span>{{ 'History' | translate }}</span>
+        <span>{{ 'history' | translate }}</span>
       </a>
     </li>
 
@@ -27,7 +27,7 @@
       <li [ngClass]="menu == 'sendmoney' && 'active'">
         <a routerLink="/sendmoney" (click)="onToggle()">
           <i class="fa fa-paper-plane"></i>
-          <span>{{ 'Send' | translate }}</span>
+          <span>{{ 'send' | translate }}</span>
         </a>
       </li>
     </ng-container>
@@ -35,35 +35,35 @@
     <li [ngClass]="menu == 'multisignature' && 'active'">
       <a routerLink="/multisignature" (click)="onToggle()">
         <i class="fa fa-file-signature"></i>
-        <span>{{ 'Multi Signature' | translate }}</span>
+        <span>{{ 'multisignature' | translate }}</span>
       </a>
     </li>
 
     <li [ngClass]="menu == 'receive' && 'active'">
       <a (click)="openReceiveForm()">
         <i class="fas fa-hand-holding-usd"></i>
-        <span>{{ 'Receive' | translate }}</span>
+        <span>{{ 'receive' | translate }}</span>
       </a>
     </li>
 
     <li [ngClass]="menu == 'my-tasks' && 'active'">
       <a routerLink="/my-tasks" (click)="onToggle()">
         <i class="fas fa-tasks"></i>
-        <span>{{ 'My Tasks' | translate }}</span>
+        <span>{{ 'my tasks' | translate }}</span>
       </a>
     </li>
 
     <li [ngClass]="menu == 'contact-list' && 'active'">
       <a routerLink="/contact-list" (click)="onToggle()">
         <i class="fa fa-address-book"></i>
-        <span>{{ 'Contacts' | translate }}</span>
+        <span>{{ 'contacts' | translate }}</span>
       </a>
     </li>
 
     <li [ngClass]="menu == 'apps' && 'active'">
       <a routerLink="/apps" (click)="onToggle()">
         <i class="fa fa-puzzle-piece"></i>
-        <span>{{ 'Apps' | translate }}</span>
+        <span>{{ 'apps' | translate }}</span>
       </a>
     </li>
   </ul>

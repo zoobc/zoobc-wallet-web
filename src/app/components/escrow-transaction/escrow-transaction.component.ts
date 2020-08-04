@@ -97,7 +97,7 @@ export class EscrowTransactionComponent implements OnInit {
           .then(
             async (res: ApprovalEscrowTransactionResponse) => {
               this.isLoadingTx = false;
-              let message = await getTranslation('Transaction has been approved', this.translate);
+              let message = getTranslation('transaction has been approved', this.translate);
               Swal.fire({
                 type: 'success',
                 title: message,
@@ -110,10 +110,7 @@ export class EscrowTransactionComponent implements OnInit {
             async err => {
               this.isLoadingTx = false;
               console.log('err', err);
-              let message = await getTranslation(
-                'An error occurred while processing your request',
-                this.translate
-              );
+              let message = getTranslation('an error occurred while processing your request', this.translate);
               Swal.fire('Opps...', message, 'error');
             }
           )
@@ -121,7 +118,7 @@ export class EscrowTransactionComponent implements OnInit {
             this.closeDialog(), this.onRefresh();
           });
       } else {
-        let message = await getTranslation('Transaction has been processed', this.translate);
+        let message = getTranslation('transaction has been processed', this.translate);
         Swal.fire({
           type: 'info',
           title: message,
@@ -132,7 +129,7 @@ export class EscrowTransactionComponent implements OnInit {
         });
       }
     } else {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
@@ -153,7 +150,7 @@ export class EscrowTransactionComponent implements OnInit {
           .then(
             async (res: ApprovalEscrowTransactionResponse) => {
               this.isLoadingTx = false;
-              let message = await getTranslation('Transaction has been rejected', this.translate);
+              let message = getTranslation('transaction has been rejected', this.translate);
               Swal.fire({
                 type: 'success',
                 title: message,
@@ -166,10 +163,7 @@ export class EscrowTransactionComponent implements OnInit {
             async err => {
               this.isLoadingTx = false;
               console.log('err', err);
-              let message = await getTranslation(
-                'An error occurred while processing your request',
-                this.translate
-              );
+              let message = getTranslation('an error occurred while processing your request', this.translate);
               Swal.fire('Opps...', message, 'error');
             }
           )
@@ -177,7 +171,7 @@ export class EscrowTransactionComponent implements OnInit {
             this.closeDialog(), this.onRefresh();
           });
       } else {
-        let message = await getTranslation('Transaction has been processed', this.translate);
+        let message = getTranslation('transaction has been processed', this.translate);
         Swal.fire({
           type: 'info',
           title: message,
@@ -188,7 +182,7 @@ export class EscrowTransactionComponent implements OnInit {
         });
       }
     } else {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
