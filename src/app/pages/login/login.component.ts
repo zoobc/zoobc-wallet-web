@@ -62,24 +62,24 @@ export class LoginComponent implements OnInit {
     let isLoggedIn: boolean = this.appServ.isLoggedIn();
     if (isLoggedIn) this.router.navigateByUrl('/dashboard');
 
-    const key = 'abcdefgh12345678';
-    const cert = {
-      nodeKey: 'evolve list approve kangaroo fringe romance space kit idle shop major open',
-      ownerAccount: 'ZBC_RERG3XD7_GAKOZZKY_VMZP2SQE_LBP45DC6_VDFGDTFK_3BZFBQGK_JMWELLO7',
-    };
-    const plaintText = JSON.stringify(cert);
+    // const key = 'abcdefgh12345678';
+    // const cert = {
+    //   nodeKey: 'gun poverty squeeze hold cruise reopen daughter tortoise noise multiply foot few',
+    //   ownerAccount: 'ZBC_ABMJHKVF_7X3EMF4M_WFESOYAW_XMZIVZZ4_LBIT2T47_JJ33HKLO_WZDBCG4H',
+    // };
+    // const plaintText = JSON.stringify(cert);
 
-    let enc: string = GibberishAES.enc(plaintText, key);
-    enc = enc.replace(/(\r\n|\n|\r)/gm, '');
-    console.log(enc);
+    // let enc: string = GibberishAES.enc(plaintText, key);
+    // enc = enc.replace(/(\r\n|\n|\r)/gm, '');
+    // console.log(enc);
 
-    const data = {
-      encrypted: enc,
-    };
-    // {"encrypted":"U2FsdGVkX18ycE8+0gEr3qXPSNJd42+AtviYCnDda5pAioKZRgweJqgqD1GC5+5W+iz9+72woESwI0EnChAl2Zd8h27EWkiu7+ocXIuFfXefsOgpX0KGyRuypVjtEjKNUP8pgKDCE0pT5/JXPRBVK3tJTENIIr97SxYGTmbLD4gQ8NsBMU+P769a/agBXtPj7kEzkuyp8SMxjNUQFVU3iHUG6o2KjBveDpA8zaBIh1I9YEVqifrnJWix91Tf80MjtyUq5qbdMmS+I/tRy/sBmg==","iv":"6ccc2efcaf5b05a01adf38c5dbf4d808"}
+    // const data = {
+    //   encrypted: enc,
+    // };
+    // // {"encrypted":"U2FsdGVkX18ycE8+0gEr3qXPSNJd42+AtviYCnDda5pAioKZRgweJqgqD1GC5+5W+iz9+72woESwI0EnChAl2Zd8h27EWkiu7+ocXIuFfXefsOgpX0KGyRuypVjtEjKNUP8pgKDCE0pT5/JXPRBVK3tJTENIIr97SxYGTmbLD4gQ8NsBMU+P769a/agBXtPj7kEzkuyp8SMxjNUQFVU3iHUG6o2KjBveDpA8zaBIh1I9YEVqifrnJWix91Tf80MjtyUq5qbdMmS+I/tRy/sBmg==","iv":"6ccc2efcaf5b05a01adf38c5dbf4d808"}
 
-    const blob = new Blob([enc]);
-    saveAs(blob, 'Certificate.zbc');
+    // const blob = new Blob([enc]);
+    // saveAs(blob, 'Certificate.zbc');
   }
 
   onChangePin() {
