@@ -1,7 +1,7 @@
 <div class="confirmation-dialog">
   <div class="row">
     <div class="col-12 col-sm-6">
-      <div class="title">{{ 'Confirm Send Money' | translate }}</div>
+      <div class="title">{{ 'confirm send money' | translate }}</div>
     </div>
     <div class="col-12 col-sm-6 text-right">
       <a class="brand">
@@ -16,21 +16,21 @@
   <div class="content">
     <div class="row">
       <div class="col-12 col-sm-6 test">
-        <div class="label">{{ 'From' | translate }}:</div>
+        <div class="label">{{ 'from' | translate }}:</div>
         <div class="address">
           <wallet-address [value]="account.address"></wallet-address>
         </div>
-        <div class="label">{{ 'Recepient' | translate }}:</div>
+        <div class="label">{{ 'recipient' | translate }}:</div>
         <div class="address">
           <wallet-address [value]="form.recipient"></wallet-address>
         </div>
         <ng-container *ngIf="advancedMenu">
           <mat-divider style="margin-bottom: 10px;"></mat-divider>
-          <div class="label">{{ 'Approver Address' | translate }}:</div>
+          <div class="label">{{ 'approver address' | translate }}:</div>
           <div class="address">
             <wallet-address [value]="form.addressApprover"></wallet-address>
           </div>
-          <div class="label">{{ 'Approver Commission' | translate }}:</div>
+          <div class="label">{{ 'approver commission' | translate }}:</div>
           <div class="amount">
             <div class="zbc">{{ form.approverCommission | number: '0.0-8' }} ZBC</div>
             <div class="currency">
@@ -38,18 +38,18 @@
               {{ currencyRateName }}
             </div>
           </div>
-          <div class="label">{{ 'Timeout' | translate }}:</div>
+          <div class="label">{{ 'timeout' | translate }}:</div>
           <div class="amount">
             {{ form.timeout }}
           </div>
-          <div class="label">{{ 'Instruction' | translate }}:</div>
+          <div class="label">{{ 'instruction' | translate }}:</div>
           <div class="instruction">
             {{ form.instruction }}
           </div>
         </ng-container>
       </div>
       <div class="col-12 col-sm-6 text-right">
-        <div class="label">{{ 'Amount' | translate }}:</div>
+        <div class="label">{{ 'amount' | translate }}:</div>
         <div class="amount">
           <div class="zbc">{{ form.amount | number: '0.0-8' }} ZBC</div>
           <div class="currency">
@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="label">
-          <span>Fee</span>
+          <span>{{ 'fee' | translate }}</span>
           <span> - {{ kindFee }}</span>
           <span>:</span>
         </div>
@@ -66,7 +66,7 @@
           <div class="zbc">{{ form.fee | number: '0.0-8' }} ZBC</div>
           <div class="currency">{{ form.feeCurr | number: '0.0-2' }} {{ currencyRateName }}</div>
         </div>
-        <div class="label">{{ 'Total' | translate }} :</div>
+        <div class="label">{{ 'total' | translate }} :</div>
         <div class="total" *ngIf="advancedMenu; else not_escrow">
           <div class="zbc">{{ form.amount + form.fee + form.approverCommission | number: '0.0-8' }} ZBC</div>
           <div class="currency">
@@ -88,10 +88,10 @@
 
   <div class="text-right" style="margin-top: 8px">
     <button mat-flat-button color="warn" (click)="closeDialog()" style="margin-right: 8px">
-      {{ 'Cancel' | translate }}
+      {{ 'cancel' | translate }}
     </button>
     <button mat-flat-button color="primary" (click)="onConfirm()">
-      {{ 'Confirm' | translate }}
+      {{ 'confirm' | translate }}
     </button>
   </div>
 </div>

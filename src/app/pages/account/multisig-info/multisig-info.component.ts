@@ -28,7 +28,7 @@ export class MultisigInfoComponent implements OnInit {
     let accountJson = JSON.stringify(this.currAcc);
     const blob = new Blob([accountJson], { type: 'application/JSON' });
     saveAs(blob, `Multisignature-info-${this.currAcc.name}`);
-    let message = await getTranslation('Multisig Info successfully exported', this.translate);
+    let message = getTranslation('multisig Info successfully exported', this.translate);
     this.snackBar.open(message, null, { duration: 3000 });
   }
 }

@@ -1,8 +1,8 @@
 <div class="add-node-admin-container">
-  <h2 class="mat-h2 text-center">{{ 'Add Node Admin' | translate }}</h2>
+  <h2 class="mat-h2 text-center">{{ 'add node admin' | translate }}</h2>
   <form [formGroup]="formAddNodeAdmin" (submit)="onAddNodeAdmin()" class="grid">
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ "Node's IP Address" | translate }}</mat-label>
+      <mat-label>{{ "node's ip address" | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -12,15 +12,15 @@
     </mat-form-field>
     <ng-container *ngIf="ipAddressField.touched">
       <mat-error *ngIf="ipAddressField.hasError('required')">
-        {{ 'IP address is required' | translate }}
+        {{ 'ip address is required' | translate }}
       </mat-error>
       <mat-error *ngIf="ipAddressField.hasError('pattern')">
-        {{ 'Invalid IP address format' | translate }}
+        {{ 'invalid ip address format' | translate }}
       </mat-error>
     </ng-container>
     <button mat-flat-button color="primary" type="submit" [disabled]="isLoading || formAddNodeAdmin.invalid">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-      <span>{{ 'Add' | translate }}</span>
+      <span>{{ 'add' | translate }}</span>
     </button>
     <button
       mat-button
@@ -29,7 +29,7 @@
       color="accent"
       style="margin-top: 8px; margin-bottom: -8px;"
     >
-      {{ 'See the Node Admin Demo' | translate }}
+      {{ 'see the node admin demo' | translate }}
     </button>
   </form>
 </div>

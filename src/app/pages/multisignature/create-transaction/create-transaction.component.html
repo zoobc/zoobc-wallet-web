@@ -1,29 +1,29 @@
 <div class="create-transaction-container">
-  <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <div class="stepper">
       <ng-container *ngIf="stepper.multisigInfo">
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'Add Multisig Info' | translate }}</span>
+          <span class="step-label">{{ 'add multisig info' | translate }}</span>
         </div>
         <div class="stepper-line"></div>
       </ng-container>
       <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">{{ 'Create Transaction' | translate }}</span>
+        <span class="step-label">{{ 'create transaction' | translate }}</span>
       </div>
       <ng-container *ngIf="stepper.signatures">
         <div class="stepper-line"></div>
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'Add Signatures' | translate }}</span>
+          <span class="step-label">{{ 'add signatures' | translate }}</span>
         </div>
       </ng-container>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
     <form [formGroup]="createTransactionForm" (submit)="next()">
-      <label>{{ 'From' | translate }}</label>
+      <label>{{ 'from' | translate }}</label>
       <div *ngIf="multisig.generatedSender" style="margin-bottom: 16px;">
         <wallet-address [value]="multisig.generatedSender"></wallet-address>
       </div>
@@ -31,17 +31,17 @@
         <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
       </ng-container>
       <input-address
-        label="{{ 'Recipient Address' | translate }}"
+        label="{{ 'recipient address' | translate }}"
         classList="block"
         formControlName="recipient"
-        placeholder="{{ 'Recipient Address' | translate }}..."
+        placeholder="{{ 'recipient address' | translate }}..."
       ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
-          {{ 'Recipient is required' | translate }}
+          {{ 'recipient is required' | translate }}
         </mat-error>
         <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
-          {{ 'ZBC Address is invalid' | translate }}
+          {{ 'zbc address is invalid' | translate }}
         </mat-error>
       </ng-container>
       <input-amount
@@ -51,7 +51,7 @@
         amountName="amount"
         [displayConverter]="true"
         [currencyRate]="currencyRate"
-        label="{{ 'Coin Amount' | translate }}"
+        label="{{ 'coin amount' | translate }}"
       >
       </input-amount>
       <div class="row">
@@ -59,18 +59,18 @@
         <div class="col-8 col-sm-9">
           <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
             <mat-error *ngIf="amountForm.hasError('required')">
-              {{ 'Amount is required' | translate }}
+              {{ 'amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountForm.hasError('min')">
-              {{ 'Minimum amount is' | translate: { val: '0.00000001' } }}
+              {{ 'minimum amount is' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
           <ng-container *ngIf="amountCurrencyForm.touched && typeCoinField.value === 'Fiat'">
             <mat-error *ngIf="amountCurrencyForm.hasError('required')">
-              {{ 'Amount is required' | translate }}
+              {{ 'amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{ 'Minimum amount in ZBC must be ZBC' | translate: { val: '0.00000001' } }}
+              {{ 'minimum amount in zbc must be zbc' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
         </div>
@@ -97,23 +97,23 @@
         (click)="generateDownloadJsonUri()"
         [disabled]="createTransactionForm.invalid"
       >
-        {{ 'Export Draft Multi Signature' | translate }}
+        {{ 'export draft multi signature' | translate }}
       </button>
 
       <div class="row" style="margin-top: 10px;">
         <div class="col">
           <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
-            {{ 'Back' | translate }}
+            {{ 'back' | translate }}
           </button>
         </div>
         <div class="col">
           <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
-            {{ 'Save' | translate }}
+            {{ 'save' | translate }}
           </button>
         </div>
         <div class="col">
           <button mat-flat-button color="primary" class="block" [disabled]="createTransactionForm.invalid">
-            {{ 'Next' | translate }}
+            {{ 'next' | translate }}
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 <div class="restore-wallet-container">
-  <h2 class="mat-h2">{{ 'Please Enter Your Passphrase' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'please enter your passphrase' | translate }}</h2>
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
       <span>{{ languages[selectedLang].viewValue }}</span>
@@ -32,24 +32,24 @@
       </div>
     </div>
     <mat-error *ngIf="restoreForm.hasError('mnemonic')">
-      {{ 'Passphrase is invalid' | translate }}
+      {{ 'passphrase is invalid' | translate }}
     </mat-error>
     <button mat-stroked-button type="button" (click)="onClearPassphrase()" class="block" color="warn">
       <i matPrefix class="fa fa-times" aria-hidden="true"></i>
-      <span class="text">{{ 'Clear' | translate }}</span>
+      <span class="text">{{ 'clear' | translate }}</span>
     </button>
     <br /><br />
     <div class="row">
       <div class="col">
         <a mat-flat-button color="warn" routerLink="/login" class="block">
           <i matPrefix class="fas fa-arrow-left"></i>
-          <span class="text">{{ 'Back' | translate }}</span>
+          <span class="text">{{ 'back' | translate }}</span>
         </a>
       </div>
       <div class="col">
         <button mat-flat-button color="primary" type="submit" [disabled]="restoreForm.invalid" class="block">
           <i matPrefix class="fas fa-check"></i>
-          <span class="text">{{ 'Open Wallet' | translate }}</span>
+          <span class="text">{{ 'open wallet' | translate }}</span>
         </button>
       </div>
     </div>

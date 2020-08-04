@@ -41,7 +41,7 @@ export class AddNodeAdminComponent {
 
       zoobc.Poown.request(auth, this.ipAddressField.value)
         .then(async () => {
-          let message = await getTranslation('Node Admin Added!', this.translate);
+          let message = getTranslation('node admin added!', this.translate);
           this.isLoading = false;
           this.nodeAdminServ.addNodeAdmin(this.ipAddressField.value);
           Swal.fire('', message, 'success').then(() => {

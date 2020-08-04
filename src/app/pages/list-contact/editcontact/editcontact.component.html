@@ -1,30 +1,30 @@
 <div class="editcontact-container">
-  <h2 class="mat-h2">{{ 'Edit Contact' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'edit contact' | translate }}</h2>
   <form [formGroup]="editForm" (submit)="onSubmit()" class="grid">
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'Name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="alias" placeholder="{{ 'Name' | translate }}" />
+      <mat-label>{{ 'name' | translate }}</mat-label>
+      <input matInput type="text" formControlName="alias" placeholder="{{ 'name' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">
-        {{ 'Name is required' | translate }}
+        {{ 'name is required' | translate }}
       </mat-error>
     </ng-container>
 
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'Address' | translate }}</mat-label>
+      <mat-label>{{ 'address' | translate }}</mat-label>
       <input
         matInput
         type="text"
         formControlName="address"
-        placeholder="{{ 'Address' | translate }}"
+        placeholder="{{ 'address' | translate }}"
         (keyup)="onAddressValidation()"
       />
       <button
         mat-icon-button
         matSuffix
         (click)="openScannerForm()"
-        matTooltip="{{ 'Scan QR Code' | translate }}"
+        matTooltip="{{ 'scan qr code' | translate }}"
         matTooltipPosition="above"
       >
         <i matPrefix class="fa fa-qrcode"></i>
@@ -32,15 +32,15 @@
     </mat-form-field>
     <ng-container *ngIf="addressField.touched">
       <mat-error *ngIf="addressField.hasError('required')">
-        {{ 'Address is required' | translate }}
+        {{ 'address is required' | translate }}
       </mat-error>
       <mat-error *ngIf="addressField.hasError('invalidAddress')">
-        {{ 'ZBC Address is invalid' | translate }}
+        {{ 'zbc address is invalid' | translate }}
       </mat-error>
     </ng-container>
 
     <button mat-flat-button color="primary" type="submit">
-      {{ 'Save' | translate }}
+      {{ 'save' | translate }}
     </button>
   </form>
 </div>

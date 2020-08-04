@@ -1,9 +1,9 @@
 <div class="reveal-passphrase-container">
   <h3 class="mat-h3" id="modal-basic-title" *ngIf="!phrase">
-    <b>{{ 'Confirm Your Pin' | translate }}</b>
+    <b>{{ 'confirm your pin' | translate }}</b>
   </h3>
   <h3 class="mat-h3" id="modal-basic-title" *ngIf="phrase">
-    <b>{{ 'Here your Passphrase' | translate }}</b>
+    <b>{{ 'here your passphrase' | translate }}</b>
   </h3>
   <form [formGroup]="formConfirmPin" class="form-pin" *ngIf="!phrase">
     <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
@@ -11,7 +11,7 @@
       <i class="fas fa-circle-notch fa-spin"></i>
     </div>
     <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-      <span class="text-center">{{ 'Pin is not match' | translate }}</span>
+      <span class="text-center">{{ 'pin is not match' | translate }}</span>
     </mat-error>
   </form>
 
@@ -27,7 +27,7 @@
   <div class="btn-grouped" *ngIf="phrase">
     <button mat-flat-button color="primary" (click)="copyPhrase()">
       <i matPrefix class="fas fa-copy"></i>
-      <span class="text">{{ 'Copy Passphrase' | translate }}</span>
+      <span class="text">{{ 'copy passphrase' | translate }}</span>
     </button>
   </div>
 
@@ -35,7 +35,7 @@
     <div
       class="warning-box mat-body-2"
       [innerHTML]="
-        'Remember: DO NOT share this phrase with anyone! These words can be used to steal all your accounts.'
+        'remember: do not share this phrase with anyone! these words can be used to steal all your accounts.'
           | translate
       "
     ></div>
