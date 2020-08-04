@@ -42,7 +42,6 @@ export class CreateTransactionComponent implements OnInit {
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
 
-  customFeeValues: number;
   txHash: string;
   isMultiSignature: boolean = false;
   isHasTransactionHash: boolean = false;
