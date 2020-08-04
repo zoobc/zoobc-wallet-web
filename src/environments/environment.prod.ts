@@ -4,7 +4,7 @@ export const environment = {
   mnemonicNumWords: 24,
   fee: 0.01,
   etherscan: 'https://goerli.etherscan.io/',
-  tokenAddress: '0xD76983d4C7F232ABa485De98C75bdd076546B44A',
+  tokenAddress: '0xE705a0eC17735f1d4D72F0BD2e1421Fc4a95Ea26',
   gasPrice: 3,
   gasLimit: 100000,
   chainId: 5,

@@ -37,17 +37,21 @@ export class SeatDetailComponent implements OnInit {
 
   passphrase: string;
 
+  tokenId: number;
+
   constructor(
     private authServ: AuthService,
     public dialog: MatDialog,
     private seatServ: SeatService,
-    @Inject(MAT_DIALOG_DATA) private tokenId: number
+    @Inject(MAT_DIALOG_DATA) dataToken: number
   ) {
     this.form = new FormGroup({
       address: this.addressField,
       nodePubKey: this.nodePubKeyField,
       message: this.messageField,
     });
+
+    this.tokenId = dataToken;
   }
 
   ngOnInit() {

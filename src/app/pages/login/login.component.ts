@@ -1,13 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-
-import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
-
-import * as CryptoJS from 'crypto-js';
-import { saveAs } from 'file-saver';
-const GibberishAES = require('../../../helpers/gibberish-aes.js');
 
 @Component({
   selector: 'app-login',
@@ -39,12 +33,7 @@ export class LoginComponent implements OnInit {
   formLoginMnemonic: FormGroup;
   passPhraseForm = new FormControl('', Validators.required);
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private appServ: AppService,
-    private authServ: AuthService
-  ) {
+  constructor(private router: Router, private route: ActivatedRoute, private authServ: AuthService) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
     });
@@ -58,29 +47,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    let isLoggedIn: boolean = this.appServ.isLoggedIn();
-    if (isLoggedIn) this.router.navigateByUrl('/dashboard');
-
-    // const key = 'abcdefgh12345678';
-    // const cert = {
-    //   nodeKey: 'gun poverty squeeze hold cruise reopen daughter tortoise noise multiply foot few',
-    //   ownerAccount: 'ZBC_ABMJHKVF_7X3EMF4M_WFESOYAW_XMZIVZZ4_LBIT2T47_JJ33HKLO_WZDBCG4H',
-    // };
-    // const plaintText = JSON.stringify(cert);
-
-    // let enc: string = GibberishAES.enc(plaintText, key);
-    // enc = enc.replace(/(\r\n|\n|\r)/gm, '');
-    // console.log(enc);
-
-    // const data = {
-    //   encrypted: enc,
-    // };
-    // // {"encrypted":"U2FsdGVkX18ycE8+0gEr3qXPSNJd42+AtviYCnDda5pAioKZRgweJqgqD1GC5+5W+iz9+72woESwI0EnChAl2Zd8h27EWkiu7+ocXIuFfXefsOgpX0KGyRuypVjtEjKNUP8pgKDCE0pT5/JXPRBVK3tJTENIIr97SxYGTmbLD4gQ8NsBMU+P769a/agBXtPj7kEzkuyp8SMxjNUQFVU3iHUG6o2KjBveDpA8zaBIh1I9YEVqifrnJWix91Tf80MjtyUq5qbdMmS+I/tRy/sBmg==","iv":"6ccc2efcaf5b05a01adf38c5dbf4d808"}
-
-    // const blob = new Blob([enc]);
-    // saveAs(blob, 'Certificate.zbc');
-  }
+  ngOnInit() {}
 
   onChangePin() {
     if (this.pinForm.value.length == 6) this.onLogin();

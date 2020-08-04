@@ -40,6 +40,7 @@ export class SeatService {
 
   private async searchByAddress(address: string, page: number): Promise<SeatsResponse> {
     return new Promise(async (resolve, reject) => {
+      if (!web3.utils.isAddress(address)) reject({ error: 'address', message: 'Your address is not valid' });
       const tokenAddress = environment.tokenAddress;
       const abiItem = abi;
       const contract = new web3.eth.Contract(abiItem, tokenAddress);
@@ -101,7 +102,7 @@ export class SeatService {
           };
           return resolve(result);
         }
-        return resolve(null);
+        return resolve({ next: false, prev: false, seats: [] });
       } catch (err) {
         return reject(err);
       }

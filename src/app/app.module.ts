@@ -33,6 +33,8 @@ import {
   MatStepperModule,
 } from '@angular/material';
 
+import { APP_BASE_HREF, LocationStrategy, HashLocationStrategy } from '@angular/common';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -132,7 +134,11 @@ import { DownloadCertificateComponent } from './pages/seats/download-certificate
     MatStepperModule,
   ],
   bootstrap: [AppComponent],
-  providers: [{ provide: 'global', useFactory: () => window }],
+  providers: [
+    { provide: 'global', useFactory: () => window },
+    { provide: APP_BASE_HREF, useValue: '/' },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+  ],
   entryComponents: [
     AddAccountComponent,
     PinSetupDialogComponent,

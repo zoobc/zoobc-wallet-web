@@ -89,7 +89,8 @@
       <!-- IF ERROR -->
       <div class="no-content" *ngIf="isError" style="padding: 32px;">
         <i matPrefix class="far fa-frown"></i>
-        <span class="message">Error occured. Please try again</span>
+        <span class="message" *ngIf="!error">Error occured. Please try again</span>
+        <span class="message" *ngIf="error">{{ error.message }}</span>
       </div>
     </ng-container>
 

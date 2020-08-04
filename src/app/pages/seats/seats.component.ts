@@ -25,6 +25,7 @@ export class SeatsComponent implements OnDestroy {
 
   isLoading = false;
   isError = false;
+  error: any;
 
   routerEvent: Subscription;
 
@@ -66,16 +67,23 @@ export class SeatsComponent implements OnDestroy {
 
     this.isLoading = true;
     this.isError = false;
+    this.error = null;
     this.seatServ
       .search(search, this.page)
       .then(res => {
-        this.seats = res.seats;
-        this.next = res.next;
-        this.prev = res.prev;
+        if (res) {
+          this.seats = res.seats;
+          this.next = res.next;
+          this.prev = res.prev;
+        } else {
+          this.seats = null;
+          this.next = null;
+          this.prev = null;
+        }
         this.isLoading = false;
       })
       .catch(err => {
-        console.log(err);
+        if (err.error) this.error = err;
         this.isLoading = false;
         this.isError = true;
       });
