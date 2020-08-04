@@ -60,16 +60,15 @@ export function uniqueParticipant(formArray: FormArray): ValidationErrors {
   return null;
 }
 
-export async function getTranslation(
+export function getTranslation(
   value: string,
   translateService: TranslateService,
   interpolateParams?: Object
 ) {
   let message: string;
-  await translateService
-    .get(value, interpolateParams)
-    .toPromise()
-    .then(res => (message = res));
+  translateService.get(value, interpolateParams).subscribe(res => {
+    message = res;
+  });
   return message;
 }
 
