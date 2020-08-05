@@ -30,13 +30,11 @@ export class AccountDatasetComponent implements OnInit {
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
   minFee = environment.fee;
-  kindFee: string;
   currencyRate: Currency;
   form: FormGroup;
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl('', [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  customFee: boolean = false;
+  typeFeeField = new FormControl('ZBC');
 
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
@@ -51,6 +49,7 @@ export class AccountDatasetComponent implements OnInit {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
+      typeFee: this.typeFeeField,
     });
   }
 
@@ -125,7 +124,7 @@ export class AccountDatasetComponent implements OnInit {
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
-      width: '300px',
+      width: '360px',
       maxHeight: '90vh',
     });
   }
@@ -141,10 +140,6 @@ export class AccountDatasetComponent implements OnInit {
         this.deleteDataSet();
       }
     });
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   onRefresh() {
