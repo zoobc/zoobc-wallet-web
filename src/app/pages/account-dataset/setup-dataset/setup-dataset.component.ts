@@ -28,7 +28,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   propertyField = new FormControl('', [Validators.required]);
   valueField = new FormControl('', [Validators.required]);
   recipientAddressField = new FormControl('', [Validators.required]);
-  feeForm = new FormControl('', [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   typeFeeField = new FormControl('ZBC');
@@ -55,6 +55,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);

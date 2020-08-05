@@ -38,7 +38,7 @@ export class MultisigTransactionComponent implements OnInit {
 
   form: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl('', [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   typeFeeField = new FormControl('ZBC');
 
@@ -67,6 +67,7 @@ export class MultisigTransactionComponent implements OnInit {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
   }
