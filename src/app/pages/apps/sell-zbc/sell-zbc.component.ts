@@ -19,7 +19,7 @@ export class SellZbcComponent implements OnInit {
 
   onSelect(account) {}
   async onOpenComingSoon() {
-    let message = await getTranslation('Coming Soon', this.translate);
+    let message = getTranslation('coming soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,

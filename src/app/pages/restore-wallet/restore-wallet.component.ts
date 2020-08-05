@@ -103,10 +103,7 @@ export class RestoreWalletComponent implements OnInit {
   async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
-        let message = await getTranslation(
-          'Your old wallet will be removed from this device',
-          this.translate
-        );
+        let message = getTranslation('your old wallet will be removed from this device', this.translate);
         Swal.fire({
           title: message,
           confirmButtonText: 'Continue',

@@ -4,7 +4,9 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { RemoveNodeInterface, isZBCAddressValid, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
+import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-remove-node',
@@ -24,7 +26,8 @@ export class RemoveNodeComponent {
     private authServ: AuthService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<RemoveNodeComponent>,
-    @Inject(MAT_DIALOG_DATA) public node: any
+    @Inject(MAT_DIALOG_DATA) public node: any,
+    private translate: TranslateService
   ) {
     this.formRemoveNode = new FormGroup({
       fee: this.feeForm,
@@ -36,7 +39,7 @@ export class RemoveNodeComponent {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
+    let isValid = ZBCAddressToBytes(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
@@ -60,7 +63,8 @@ export class RemoveNodeComponent {
 
           zoobc.Node.remove(data, this.authServ.seed)
             .then(() => {
-              Swal.fire('Success', 'Your node will be removed soon', 'success');
+              let message = getTranslation('your node will be removed soon', this.translate);
+              Swal.fire('Success', message, 'success');
               this.dialogRef.close(true);
             })
             .catch(err => {

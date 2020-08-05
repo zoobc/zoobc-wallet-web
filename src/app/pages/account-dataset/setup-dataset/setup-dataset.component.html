@@ -1,43 +1,43 @@
 <div class="setup-dataset-container">
-  <h2 class="mat-h2 text-center">{{ 'Setup New Dataset' | translate }}</h2>
+  <h2 class="mat-h2 text-center">{{ 'setup new dataset' | translate }}</h2>
   <form [formGroup]="formGroup" (submit)="onSubmit()">
-    <label>{{ 'Property' | translate }}</label>
+    <label>{{ 'property' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
       <input matInput type="text" formControlName="property" />
     </mat-form-field>
     <ng-container *ngIf="propertyField.touched">
       <mat-error *ngIf="propertyField.hasError('required')">
-        {{ 'Property is required' | translate }}
+        {{ 'property is required' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'Value' | translate }}</label>
+    <label>{{ 'value' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
       <input matInput type="text" formControlName="value" />
     </mat-form-field>
     <ng-container *ngIf="valueField.touched">
       <mat-error *ngIf="valueField.hasError('required')">
-        {{ 'Value is required' | translate }}
+        {{ 'value is required' | translate }}
       </mat-error>
     </ng-container>
     <div style="margin-bottom: 16px;">
       <mat-checkbox (click)="onClickSetupOther()">
-        {{ 'Setup dataset to other address' | translate }}
+        {{ 'setup dataset to other address' | translate }}
       </mat-checkbox>
     </div>
     <ng-container *ngIf="isSetupOther">
-      <label>{{ 'Recipient Address' | translate }}</label>
+      <label>{{ 'recipient address' | translate }}</label>
       <input-address
         class="input"
         label=""
         formControlName="recipientAddress"
-        placeholder="{{ 'Recipient Address' | translate }}"
+        placeholder="{{ 'recipient address' | translate }}"
       ></input-address>
       <ng-container *ngIf="recipientAddressField.touched">
         <mat-error style="margin-top: 4px;" *ngIf="recipientAddressField.hasError('required')">
-          {{ 'Recipient Address is required' | translate }}
+          {{ 'recipient address is required' | translate }}
         </mat-error>
         <mat-error style="margin-top: 4px;" *ngIf="recipientAddressField.hasError('invalidAddress')">
-          {{ 'Recipient Address is invalid' | translate }}
+          {{ 'recipient address is invalid' | translate }}
         </mat-error>
       </ng-container>
     </ng-container>
@@ -83,7 +83,7 @@
           style="margin-top:10px"
           (click)="onCancel()"
         >
-          <span>{{ 'Cancel' | translate }}</span>
+          <span>{{ 'cancel' | translate }}</span>
         </button>
       </div>
       <div class="col-12 col-md-6">
@@ -96,7 +96,7 @@
           style="margin-top:10px"
         >
           <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-          <span>{{ 'Setup' | translate }}</span>
+          <span>{{ 'setup' | translate }}</span>
         </button>
       </div>
     </div>

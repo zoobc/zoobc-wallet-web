@@ -1,4 +1,4 @@
-<label>{{ 'Fee' | translate }}</label>
+<label>{{ 'fee' | translate }}</label>
 <div class="choose-fee">
   <button
     mat-flat-button
@@ -8,7 +8,7 @@
     [class.fee-choosen]="activeButton === 1"
   >
     <div class="fee-button">
-      <div class="label">{{ 'Slow' | translate }}</div>
+      <div class="label">{{ 'slow' | translate }}</div>
       <div class="zbc-currency">{{ feeSlow }} ZBC</div>
       <div class="fiat-currency">
         {{ feeSlow * currencyRate.value | number: '0.0-2' }}
@@ -24,7 +24,7 @@
     [class.fee-choosen]="activeButton === 2"
   >
     <div class="fee-button">
-      <div class="label">{{ 'Average' | translate }}</div>
+      <div class="label">{{ 'average' | translate }}</div>
       <div class="zbc-currency">{{ feeMedium }} ZBC</div>
       <div class="fiat-currency">
         {{ feeMedium * currencyRate.value | number: '0.0-2' }}
@@ -40,7 +40,7 @@
     [class.fee-choosen]="activeButton === 3"
   >
     <div class="fee-button">
-      <div class="label">{{ 'Fast' | translate }}</div>
+      <div class="label">{{ 'fast' | translate }}</div>
       <div class="zbc-currency">{{ feeFast }} ZBC</div>
       <div class="fiat-currency">
         {{ feeFast * currencyRate.value | number: '0.0-2' }}
@@ -56,7 +56,7 @@
     (click)="toggleCustomFee($event)"
     [disableRipple]="readonly"
   >
-    {{ 'Custom Fee' | translate }}
+    {{ 'custom fee' | translate }}
   </mat-checkbox>
 </div>
 
@@ -67,7 +67,7 @@
       {{ group.get(feeCurrName).value | number: '0.0-2' }} {{ currencyRate.name }}
     </div>
   </div>
-  <label>{{ 'Custom Fee' | translate }}</label>
+  <label>{{ 'custom fee' | translate }}</label>
   <div [formGroup]="group">
     <div class="row">
       <div class="col-4 col-sm-3">
@@ -84,17 +84,17 @@
             matInput
             type="number"
             formControlName="{{ feeName }}"
-            placeholder="{{ 'Fee' | translate }}"
+            placeholder="{{ 'fee' | translate }}"
             (input)="onChangeFeeField($event.target.value)"
             (keyup)="onChangeFeeField($event.target.value)"
           />
         </mat-form-field>
         <ng-container *ngIf="this.group.get(this.feeName).touched && typeFee === 'ZBC'">
           <mat-error *ngIf="this.group.get(this.feeName).hasError('required')">
-            {{ 'Fee is required' | translate }}
+            {{ 'fee is required' | translate }}
           </mat-error>
           <mat-error *ngIf="this.group.get(this.feeName).hasError('min')">
-            {{ 'Minimum fee is' | translate: { val: feeSlow } }}
+            {{ 'minimum fee is' | translate: { val: feeSlow } }}
           </mat-error>
         </ng-container>
         <mat-form-field appearance="outline" class="block" *ngIf="typeFee === 'Fiat'" color="accent">
@@ -102,17 +102,17 @@
             matInput
             type="number"
             formControlName="{{ feeCurrName }}"
-            placeholder="{{ 'Fee' | translate }}"
+            placeholder="{{ 'fee' | translate }}"
             (input)="onChangeFeeCurrencyField($event.target.value)"
             (keyup)="onChangeFeeCurrencyField($event.target.value)"
           />
         </mat-form-field>
         <ng-container *ngIf="this.group.get(this.feeCurrName).touched && typeFee === 'Fiat'">
           <mat-error *ngIf="this.group.get(this.feeCurrName).hasError('required')">
-            {{ 'Fee is required' | translate }}
+            {{ 'fee is required' | translate }}
           </mat-error>
           <mat-error *ngIf="this.group.get(this.feeCurrName).hasError('min')">
-            {{ 'Minimum amount of fee in ZBC must be ZBC' | translate: { val: feeSlow } }}
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: feeSlow } }}
           </mat-error>
         </ng-container>
       </div>

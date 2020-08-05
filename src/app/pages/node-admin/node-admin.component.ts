@@ -113,9 +113,14 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   generateNewPubKey() {
     // todo: create loader and display the result
+    let title = getTranslation('are you sure want to generate new node public key?', this.translate);
+    let text = getTranslation(
+      'you need to update your node registration or your node will stop smithing',
+      this.translate
+    );
     Swal.fire({
-      title: 'Are you sure want to generate new node public key?',
-      text: 'You need to update your node registration or your node will stop smithing',
+      title: title,
+      text: text,
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -205,7 +210,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   async onCopyUrl(url: string) {
     onCopyText(url);
 
-    let message = await getTranslation('Address copied to clipboard', this.translate);
+    let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }

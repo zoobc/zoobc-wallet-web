@@ -1,36 +1,36 @@
 <div class="breadcrumb">
-  <a routerLink="/dashboard">{{ 'Dashboard' | translate }}</a>
+  <a routerLink="/dashboard">{{ 'dashboard' | translate }}</a>
   <i class="fa fa-chevron-right"></i>
-  <a routerLink="/apps">{{ 'Apps' | translate }}</a>
+  <a routerLink="/apps">{{ 'apps' | translate }}</a>
   <i class="fa fa-chevron-right"></i>
-  <span>{{ 'Sell ZooBC' | translate }}</span>
+  <span>{{ 'sell zoobc' | translate }}</span>
 </div>
 
 <div class="sell-zbc-app-container">
   <h2 class="mat-h2">
-    {{ 'Sell ZooBC' | translate }} <i>({{ 'Coming Soon' | translate }})</i>
+    {{ 'sell zoobc' | translate }} <i>({{ 'coming soon' | translate }})</i>
   </h2>
 
   <mat-card>
     <form>
-      <label>{{ 'Sell From Account' | translate }}</label>
+      <label>{{ 'sell from account' | translate }}</label>
       <account-selector (select)="onSelect($event)"></account-selector>
 
-      <label>{{ 'Buyer Address' | translate }}</label>
+      <label>{{ 'buyer address' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
-        <input matInput placeholder="{{ 'Buyer Address' | translate }}..." />
+        <input matInput placeholder="{{ 'buyer address' | translate }}..." />
       </mat-form-field>
 
-      <label>{{ 'Amount Sell (ZBC)' | translate }}</label>
+      <label>{{ 'amount sell (zbc)' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
-        <input type="number" matInput placeholder="{{ 'Amount' | translate }}..." />
+        <input type="number" matInput placeholder="{{ 'amount' | translate }}..." />
       </mat-form-field>
 
-      <label>{{ 'Amount you will get' | translate }}</label>
+      <label>{{ 'amount you will get' | translate }}</label>
       <div class="row">
         <div class="col-8 col-sm-9">
           <mat-form-field appearance="outline" class="block" color="accent">
-            <input matInput type="number" placeholder="{{ 'Amount' | translate }}" />
+            <input matInput type="number" placeholder="{{ 'amount' | translate }}" />
           </mat-form-field>
         </div>
         <div class="col-4 col-sm-3">
@@ -43,19 +43,19 @@
         </div>
       </div>
 
-      <label>{{ 'Fee' | translate }}</label>
+      <label>{{ 'fee' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
         <input type="number" matInput placeholder="{{ 'Fee' | translate }}..." />
       </mat-form-field>
 
-      <label>{{ 'Timeout' | translate }}</label>
+      <label>{{ 'timeout' | translate }}</label>
       <mat-form-field appearance="outline" class="block" color="accent">
         <input matInput [min]="minDate" [max]="maxDate" [owlDateTime]="dt8" [owlDateTimeTrigger]="dt8" />
         <owl-date-time #dt8></owl-date-time>
       </mat-form-field>
 
       <button mat-flat-button color="primary" type="submit" class="block" (click)="onOpenComingSoon()">
-        <span>{{ 'Send' | translate }}</span>
+        <span>{{ 'send' | translate }}</span>
       </button>
     </form>
   </mat-card>

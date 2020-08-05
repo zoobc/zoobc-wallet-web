@@ -29,7 +29,7 @@ export class ContactlistComponent implements OnInit {
   }
 
   async deleteContact(contact) {
-    let sentence = await getTranslation('Are you sure want to delete?', this.translate, {
+    let sentence = getTranslation('are you sure want to delete?', this.translate, {
       alias: contact.alias,
     });
     Swal.fire({
@@ -91,7 +91,7 @@ export class ContactlistComponent implements OnInit {
         let fileResult = JSON.parse(fileReader.result.toString());
         const validation = this.validationFile(fileResult);
         if (!validation) {
-          let message = await getTranslation('You imported the wrong file', this.translate);
+          let message = getTranslation('you imported the wrong file', this.translate);
           Swal.fire('Opps...', message, 'error');
         } else {
           let newContact: Contact;
@@ -100,21 +100,18 @@ export class ContactlistComponent implements OnInit {
             newContact = res;
             checkExistContact = this.contactServ.isDuplicate(newContact.address);
             if (checkExistContact === true) {
-              let message = await getTranslation(
-                'All the new address already in your contact',
-                this.translate
-              );
+              let message = getTranslation('all the new address already in your contact', this.translate);
               Swal.fire('Opps...', message, 'error');
               this.myInputVariable.nativeElement.value = '';
             } else {
-              if (!newContact.alias) {
+              if (!newContact.name) {
                 const index = i + 1;
-                newContact.alias = 'New Contact ' + index;
+                newContact.name = 'New Contact ' + index;
               }
               this.contactServ.add(newContact);
               this.contacts = this.contactServ.getList();
-              let message = await getTranslation('Contact Updated', this.translate);
-              let subMessage = await getTranslation('Your new contact has been saved', this.translate);
+              let message = getTranslation('contact updated', this.translate);
+              let subMessage = getTranslation('your new contact has been saved', this.translate);
               Swal.fire(message, subMessage, 'success');
               this.myInputVariable.nativeElement.value = '';
             }
@@ -123,7 +120,7 @@ export class ContactlistComponent implements OnInit {
       };
       fileReader.onerror = async err => {
         console.log(err);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       };
     }

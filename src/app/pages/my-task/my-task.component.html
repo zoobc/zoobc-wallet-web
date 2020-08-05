@@ -1,11 +1,11 @@
 <div class="my-task-container">
   <h2 class="mat-h2">
-    {{ 'My Tasks' | translate }}
+    {{ 'my tasks' | translate }}
   </h2>
   <mat-card style="padding: 0;">
     <mat-tab-group mat-align-tabs="center" color="accent">
       <ng-container *ngIf="account.type === 'normal'">
-        <mat-tab label="{{ 'Escrow Approval' | translate }}">
+        <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
             <div class="col-6 col-md-6" style="margin-top: 10px;">
               <a routerLink="/escrow-approval-history">
@@ -21,7 +21,7 @@
                   <i class="fa fa-redo-alt"></i>
                 </button>
                 <label class="block-height" *ngIf="!isLoadingBlockHeight"
-                  ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+                  ><b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b></label
                 >
               </div>
             </div>
@@ -79,7 +79,7 @@
             ></app-multisig-transaction>
           </div>
         </mat-tab>
-        <mat-tab label="{{ 'Escrow Approval' | translate }}">
+        <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
             <div class="col-6 col-md-6" style="margin-top: 10px;">
               <a routerLink="/escrow-approval-history">
@@ -95,7 +95,7 @@
                   <i class="fa fa-redo-alt"></i>
                 </button>
                 <label class="block-height" *ngIf="!isLoadingBlockHeight"
-                  ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+                  ><b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b></label
                 >
               </div>
             </div>

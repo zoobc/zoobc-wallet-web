@@ -36,7 +36,7 @@
     "sweetalert2": "^8.11.7",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26",
-    "zoobc-sdk": "github:zoobc/zoobc-sdk#develop"
+    "zoobc-sdk": "github:zoobc/zoobc-sdk#experimental"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

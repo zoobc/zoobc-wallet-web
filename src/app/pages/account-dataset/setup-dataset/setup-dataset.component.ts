@@ -92,9 +92,9 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     zoobc.AccountDataset.setupDataset(param, seed)
       .then(async (res: SetupDatasetResponse) => {
         this.dialogRef.close();
-        let message = await getTranslation('Your Request is processing', this.translate);
-        let subMessage = await getTranslation(
-          'The dataset will appears when it has been successfully processed on the server',
+        let message = getTranslation('your request is processing', this.translate);
+        let subMessage = getTranslation(
+          'the dataset will appears when it has been successfully processed on the server',
           this.translate
         );
         Swal.fire(message, subMessage, 'success');
@@ -103,7 +103,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
         this.isError = true;
         this.isLoading = false;
         console.log(err);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       })
       .finally(() => {

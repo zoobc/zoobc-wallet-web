@@ -15,7 +15,7 @@ export class CurrencyRateService {
   private sourceRate = new BehaviorSubject(this.defaultRate);
   rate: Observable<Currency> = this.sourceRate.asObservable();
 
-  zbcPriceInUsd = 0.69;
+  zbcPriceInUsd = 1;
 
   constructor(private http: HttpClient) {
     const rate = JSON.parse(localStorage.getItem('RATE')) || this.defaultRate;
@@ -46,7 +46,7 @@ export class CurrencyRateService {
   }
 
   getRates(): Promise<Currency[]> {
-    const url = 'https://api.exchangeratesapi.io/latest?base=USD';
+    const url = 'https://api.exchangeratesapi.io/latest?base=USD&symbols=USD';
     return new Promise((resolve, reject) => {
       this.http
         .get(url)
@@ -57,8 +57,7 @@ export class CurrencyRateService {
               name: currencyName,
               value: res.rates[currencyName] * this.zbcPriceInUsd,
             };
-            if (this.sourceRate.getValue().name == currencyName)
-              this.updateRate(rate);
+            if (this.sourceRate.getValue().name == currencyName) this.updateRate(rate);
             return rate;
           });
           rates.sort((a, b) => {

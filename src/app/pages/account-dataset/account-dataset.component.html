@@ -1,6 +1,6 @@
 <div class="account-dataset-list-container">
   <h2 class="mat-h2 text-center title">{{ account.name }}</h2>
-  <h3 class="mat-h4 text-center subtitle">Account Data Set</h3>
+  <h3 class="mat-h4 text-center subtitle">{{ 'account data set' | translate }}</h3>
   <div class="data-set-list">
     <div class="text-right" *ngIf="!isError">
       <button
@@ -20,7 +20,7 @@
       <ng-container *ngIf="dataSetList && !isLoading">
         <div class="no-content padding" *ngIf="dataSetList.length <= 0">
           <i matPrefix class="fa fa-receipt"></i>
-          <span class="message">{{ 'No Dataset Record' | translate }}</span>
+          <span class="message">{{ 'no dataset record' | translate }}</span>
         </div>
         <div class="list-item row" *ngFor="let data of dataSetList">
           <div class="col-12 col-md-10">
@@ -60,21 +60,21 @@
       <div class="no-content padding" *ngIf="isError">
         <i matPrefix class="fa fa-exclamation-triangle"></i>
         <span class="message">
-          {{ 'An error occurred while processing your request' | translate }}
+          {{ 'an error occurred while processing your request' | translate }}
         </span>
         <button mat-flat-button color="primary" (click)="onRefresh()">
-          {{ 'Try Again' | translate }}
+          {{ 'try again' | translate }}
         </button>
       </div>
     </mat-card>
     <button (click)="onSetupNewDataset()" mat-flat-button color="primary" type="submit" class="block setup">
-      {{ 'Setup New Dataset' | translate }}
+      {{ 'setup new dataset' | translate }}
     </button>
   </div>
 </div>
 <ng-template #feedialog>
   <h3 class="mat-h3">
-    <b>{{ 'Please Select Fee' | translate }}</b>
+    <b>{{ 'please select fee' | translate }}</b>
   </h3>
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
     <input-amount
@@ -117,7 +117,7 @@
       style="margin-top:10px"
     >
       <span *ngIf="isLoadingDelete"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-      <span>{{ 'Delete' | translate }}</span>
+      <span>{{ 'delete' | translate }}</span>
     </button>
   </form>
 </ng-template>

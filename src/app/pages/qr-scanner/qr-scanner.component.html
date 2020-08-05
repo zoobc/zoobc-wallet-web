@@ -1,5 +1,5 @@
 <div class="qr-scanner-container">
-  <h2 class="mat-h2 text-center">{{ 'Point the Camera to QR Code' | translate }}</h2>
+  <h2 class="mat-h2 text-center">{{ 'point the camera to qr code' | translate }}</h2>
   <div class="scanner">
     <ng-container *ngIf="availableDevices && availableDevices.length > 1">
       <button color="basic" class="btn-switch" (click)="onSwitch()" mat-mini-fab>
@@ -15,14 +15,14 @@
     <ng-container *ngIf="hasPermission === undefined">
       <div class="permision">
         <div class="text-permision">
-          <i class="fas fa-circle-notch fa-spin"></i> {{ 'Waiting for permission' | translate }}
+          <i class="fas fa-circle-notch fa-spin"></i> {{ 'waiting for permission' | translate }}
         </div>
       </div>
     </ng-container>
     <ng-container *ngIf="hasPermission == false">
       <div class="permision">
         <div class="text-permision">
-          <i class="fa fa-ban" aria-hidden="true"></i> {{ 'Camera permission denied' | translate }}
+          <i class="fa fa-ban" aria-hidden="true"></i> {{ 'camera permission denied' | translate }}
         </div>
       </div>
     </ng-container>
@@ -36,6 +36,6 @@
     type="button"
     class="block"
   >
-    {{ 'Close' | translate }}
+    {{ 'close' | translate }}
   </button>
 </div>

@@ -60,7 +60,7 @@ export class AccountComponent implements OnInit {
     this.authServ.switchAccount(account);
     this.currAcc = account;
 
-    let message = await getTranslation(`${this.currAcc.name} selected`, this.translate);
+    let message = getTranslation('account selected', this.translate, { account: this.currAcc.name });
     this.snackbar.open(message, null, { duration: 3000 });
   }
 
@@ -89,17 +89,17 @@ export class AccountComponent implements OnInit {
     fileReader.onload = async () => {
       let fileResult = JSON.parse(fileReader.result.toString());
       if (!this.isSavedAccount(fileResult)) {
-        let message = await getTranslation('You imported the wrong file', this.translate);
+        let message = getTranslation('you imported the wrong file', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
       const accountSave: SavedAccount = fileResult;
       const idx = this.authServ.getAllAccount().findIndex(acc => acc.address == accountSave.address);
       if (idx >= 0) {
-        let message = await getTranslation('Account with that address is already exist', this.translate);
+        let message = getTranslation('account with that address is already exist', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
       this.authServ.addAccount(accountSave);
-      let message = await getTranslation('Account has been successfully imported', this.translate);
+      let message = getTranslation('account has been successfully imported', this.translate);
       Swal.fire({
         type: 'success',
         title: message,
@@ -117,7 +117,7 @@ export class AccountComponent implements OnInit {
   }
 
   async onDelete(index: number) {
-    const message = await getTranslation('Are you sure want to delete this account?', this.translate);
+    const message = getTranslation('are you sure want to delete this account?', this.translate);
     Swal.fire({
       title: message,
       showCancelButton: true,

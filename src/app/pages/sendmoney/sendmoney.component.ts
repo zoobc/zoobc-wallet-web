@@ -131,7 +131,7 @@ export class SendmoneyComponent implements OnInit {
     this.accounts.forEach(account => {
       const contact: Contact = {
         address: account.address,
-        alias: account.name,
+        name: account.name,
       };
       this.contacts.push(contact);
     });
@@ -144,7 +144,7 @@ export class SendmoneyComponent implements OnInit {
   filterContacts(value: string): Contact[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      return this.contacts.filter((contact: Contact) => contact.alias.toLowerCase().includes(filterValue));
+      return this.contacts.filter((contact: Contact) => contact.name.toLowerCase().includes(filterValue));
     } else if (value == '') return this.contacts;
   }
 
@@ -184,7 +184,8 @@ export class SendmoneyComponent implements OnInit {
   async onOpenDialogDetailSendMoney() {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
-    if (this.account.balance / 1e8 >= total) {
+    const balance = this.account.balance / 1e8;
+    if (balance >= total) {
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         maxHeight: '90vh',
@@ -204,7 +205,9 @@ export class SendmoneyComponent implements OnInit {
         }
       });
     } else {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = getTranslation('your balances are not enough for this transaction', this.translate, {
+        amount: balance - this.feeForm.value,
+      });
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
@@ -238,7 +241,7 @@ export class SendmoneyComponent implements OnInit {
     this.approverCommissionCurrField.enable();
   }
 
-  async onSendMoney() {
+  onSendMoney() {
     if (this.formSend.valid) {
       this.isLoading = true;
 
@@ -258,8 +261,8 @@ export class SendmoneyComponent implements OnInit {
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
           this.isLoading = false;
-          let message = await getTranslation('Your Transaction is processing', this.translate);
-          let subMessage = await getTranslation('You send coins to', this.translate, {
+          let message = getTranslation('your transaction is processing', this.translate);
+          let subMessage = getTranslation('you send coins to', this.translate, {
             amount: data.amount,
             currencyValue: truncate(this.amountCurrencyForm.value, 2),
             currencyName: this.currencyRate.name,
@@ -269,8 +272,8 @@ export class SendmoneyComponent implements OnInit {
 
           // save address
           if (this.saveAddress) {
-            const newContact = {
-              alias: this.aliasField.value,
+            const newContact: Contact = {
+              name: this.aliasField.value,
               address: this.recipientForm.value,
             };
             this.contacts = this.contactServ.add(newContact);
@@ -281,10 +284,7 @@ export class SendmoneyComponent implements OnInit {
           this.isLoading = false;
           console.log(err);
 
-          let message = await getTranslation(
-            'An error occurred while processing your request',
-            this.translate
-          );
+          let message = getTranslation('an error occurred while processing your request', this.translate);
           Swal.fire('Opps...', message, 'error');
         }
       );

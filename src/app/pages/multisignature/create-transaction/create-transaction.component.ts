@@ -121,9 +121,9 @@ export class CreateTransactionComponent implements OnInit {
 
   async generateDownloadJsonUri() {
     if (!this.isHasTransactionHash) {
-      let title = await getTranslation('Are you sure?', this.translate);
-      let message = await getTranslation('You will not be able to update the form anymore!', this.translate);
-      let buttonText = await getTranslation('Yes, continue it!', this.translate);
+      let title = getTranslation('are you sure?', this.translate);
+      let message = getTranslation('you will not be able to update the form anymore!', this.translate);
+      let buttonText = getTranslation('yes, continue it!', this.translate);
       Swal.fire({
         title: title,
         text: message,
@@ -160,18 +160,15 @@ export class CreateTransactionComponent implements OnInit {
     const total = this.amountForm.value + this.feeForm.value;
     if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
     if (this.accountBalance / 1e8 < total) {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = getTranslation('your balances are not enough for this transaction', this.translate);
       return Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
     if (this.createTransactionForm.valid) {
       const { signaturesInfo } = this.multisig;
       if (!this.multisig.unisgnedTransactions) {
-        let title = await getTranslation('Are you sure?', this.translate);
-        let message = await getTranslation(
-          'You will not be able to update the form anymore!',
-          this.translate
-        );
-        let buttonText = await getTranslation('Yes, continue it!', this.translate);
+        let title = getTranslation('are you sure?', this.translate);
+        let message = getTranslation('you will not be able to update the form anymore!', this.translate);
+        let buttonText = getTranslation('yes, continue it!', this.translate);
         Swal.fire({
           title: title,
           text: message,

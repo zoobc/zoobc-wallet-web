@@ -139,7 +139,7 @@ export class MultisigTransactionComponent implements OnInit {
         };
         zoobc.MultiSignature.postTransaction(data, seed)
           .then(async (res: MultisigPostTransactionResponse) => {
-            let message = await getTranslation('Transaction has been accepted', this.translate);
+            let message = getTranslation('transaction has been accepted', this.translate);
             Swal.fire({
               type: 'success',
               title: message,
@@ -149,10 +149,7 @@ export class MultisigTransactionComponent implements OnInit {
           })
           .catch(async err => {
             console.log(err.message);
-            let message = await getTranslation(
-              'An error occurred while processing your request',
-              this.translate
-            );
+            let message = getTranslation('an error occurred while processing your request', this.translate);
             Swal.fire('Opps...', message, 'error');
           })
           .finally(() => {

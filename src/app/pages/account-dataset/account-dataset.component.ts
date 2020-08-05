@@ -36,6 +36,8 @@ export class AccountDatasetComponent implements OnInit {
   feeFormCurr = new FormControl('', Validators.required);
   typeFeeField = new FormControl('ZBC');
 
+  account: SavedAccount;
+
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
@@ -44,13 +46,15 @@ export class AccountDatasetComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private authServ: AuthService,
     private translate: TranslateService,
-    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
+    @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
       typeFee: this.typeFeeField,
     });
+
+    this.account = data;
   }
 
   ngOnInit() {
@@ -98,17 +102,17 @@ export class AccountDatasetComponent implements OnInit {
     };
 
     zoobc.AccountDataset.removeDataset(param, seed)
-      .then(async res => {
-        let message = await getTranslation('Your Request is processing', this.translate);
-        let subMessage = await getTranslation(
-          'The dataset will remove when it has been successfully processed on the server',
+      .then(res => {
+        let message = getTranslation('your request is processing', this.translate);
+        let subMessage = getTranslation(
+          'the dataset will remove when it has been successfully processed on the server',
           this.translate
         );
         Swal.fire(message, subMessage, 'success');
       })
       .catch(async err => {
         console.log(err);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
         this.isErrorDelete = true;
         this.isLoadingDelete = false;

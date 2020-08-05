@@ -11,7 +11,7 @@ import zoobc, {
   EscrowStatus,
   PendingTransactionStatus,
 } from 'zoobc-sdk';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
 import { Router } from '@angular/router';
 
@@ -29,8 +29,8 @@ export class MyTaskComponent implements OnInit {
   // Multisignature input
   @Input() isLoadingMultisig: boolean = false;
   @Input() isErrorMultiSig: boolean = false;
-  account;
-  timeout;
+  account: SavedAccount;
+  timeout: number;
 
   escrowTransactions;
   blockHeight: number;
@@ -82,7 +82,7 @@ export class MyTaskComponent implements OnInit {
           this.totalMultiSig = tx.count;
           const pendingList = tx.pendingtransactionsList;
           pendingList.map(res => {
-            res['alias'] = this.contactServ.get(res.senderaddress).alias || '';
+            res['alias'] = this.contactServ.get(res.senderaddress).name || '';
           });
           if (reload) {
             this.multiSigPendingList = pendingList;
@@ -125,7 +125,7 @@ export class MyTaskComponent implements OnInit {
             if (tx.latest == true) return tx;
           });
           let txMap = txFilter.map(tx => {
-            const alias = this.contactServ.get(tx.recipientaddress).alias || '';
+            const alias = this.contactServ.get(tx.recipientaddress).name || '';
             return {
               id: tx.id,
               alias: alias,
