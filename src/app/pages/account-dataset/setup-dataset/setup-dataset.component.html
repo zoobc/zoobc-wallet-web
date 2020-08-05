@@ -48,7 +48,7 @@
       amountName="fee"
       [displayConverter]="true"
       [currencyRate]="currencyRate"
-      label="{{ 'Fee' | translate }}"
+      label="{{ 'fee' | translate }}"
     >
     </input-amount>
     <div class="row">
@@ -56,18 +56,18 @@
       <div class="col-8 col-sm-9">
         <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
           <mat-error *ngIf="feeForm.hasError('required')">
-            {{ 'Fee is required' | translate }}
+            {{ 'fee is required' | translate }}
           </mat-error>
           <mat-error *ngIf="feeForm.hasError('min')">
-            {{ 'Minimum fee is' | translate: { val: minFee } }}
+            {{ 'minimum fee is' | translate: { val: minFee } }}
           </mat-error>
         </ng-container>
         <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
           <mat-error *ngIf="feeFormCurr.hasError('required')">
-            {{ 'Fee is required' | translate }}
+            {{ 'fee is required' | translate }}
           </mat-error>
           <mat-error *ngIf="feeFormCurr.hasError('min')">
-            {{ 'Minimum amount of fee in ZBC must be ZBC' | translate: { val: minFee } }}
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
           </mat-error>
         </ng-container>
       </div>
