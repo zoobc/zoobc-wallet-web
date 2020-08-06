@@ -4,9 +4,20 @@
       <h2 class="mat-h2">Accounts</h2>
     </div>
     <div class="col-12 col-md-9 text-right">
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileChanged($event)"
+        style="display: none"
+        accept="application/JSON"
+      />
       <button mat-flat-button color="primary" (click)="onOpenAddAccount()">
         <i matPrefix class="fa fa-plus"></i>
         <span>Add New Account</span>
+      </button>
+      <button style="margin-left: 10px;" mat-flat-button color="primary" (click)="onImportAccount()">
+        <i matPrefix class="fa fa-file-import"></i>
+        <span>Import</span>
       </button>
     </div>
   </div>
@@ -21,7 +32,7 @@
               <i class="fa fa-check-circle"></i>
             </div>
             <ng-template #elseAcc>
-              <div class="btn-select" (click)="onSwitchAccount($event, acc)">
+              <div class="btn-select" (click)="onSwitchAccount(acc)">
                 <i class="far fa-circle"></i>
               </div>
             </ng-template>
@@ -42,7 +53,7 @@
                 <wallet-address [value]="acc.address"></wallet-address>
               </div>
               <div class="address">
-                <p class="label">Signedby:</p>
+                <p class="label">Signedby</p>
                 <wallet-address [value]="acc.signByAddress"></wallet-address>
               </div>
             </ng-container>
@@ -51,12 +62,34 @@
           <div class="action">
             <button
               mat-flat-button
-              matTooltip="Edit"
+              matTooltip="Multi Signature Detail"
               matTooltipPosition="below"
-              class="icon-btn primary"
-              (click)="onOpenEditAccount($event, acc)"
+              class="icon-btn accent"
+              (click)="onOpenMultisigInfoDialog(acc)"
+              *ngIf="acc.type == 'multisig'"
             >
-              <i class="fas fa-pen"></i>
+              <i class="fas fa-file-signature"></i>
+            </button>
+            <ng-container *ngIf="acc.type != 'multisig'">
+              <button
+                mat-flat-button
+                matTooltip="Edit"
+                matTooltipPosition="below"
+                class="icon-btn primary"
+                (click)="onOpenEditAccount(acc)"
+              >
+                <i class="fas fa-pen"></i>
+              </button>
+            </ng-container>
+            <button
+              mat-flat-button
+              matTooltip="Delete Account"
+              matTooltipPosition="below"
+              class="icon-btn warn"
+              *ngIf="acc.type == 'multisig'"
+              (click)="onDelete(i)"
+            >
+              <i class="fas fa-trash"></i>
             </button>
           </div>
         </div>

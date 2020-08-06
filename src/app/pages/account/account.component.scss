@@ -41,6 +41,15 @@
       color: $black2;
     }
 
+    .badge {
+      background-color: map-get($primary, 100);
+      color: map-get($primary, 600);
+      padding: 4px 16px;
+      border-radius: 15px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
     .name {
       font-size: 16px;
       margin-bottom: 8px;
@@ -74,6 +83,14 @@
       &.primary {
         color: map-get($primary, 500);
         background-color: map-get($primary, 100);
+      }
+      &.accent {
+        color: map-get($accent, 500);
+        background-color: map-get($accent, 100);
+      }
+      &.warn {
+        color: $red;
+        background-color: #ffcdd2;
       }
     }
   }
