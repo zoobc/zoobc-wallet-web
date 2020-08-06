@@ -326,6 +326,8 @@ export class SendmoneyComponent implements OnInit {
     this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
     this.feeForm.updateValueAndValidity();
     this.feeFormCurr.updateValueAndValidity();
+    this.feeForm.markAsTouched();
+    this.feeFormCurr.markAsTouched();
   }
 
   onChangeTimeOut() {

@@ -128,6 +128,10 @@ export class AccountDatasetComponent implements OnInit {
     this.dataSet = dataset;
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
+    this.feeForm.patchValue(this.minFee);
+    const minCurrency = truncate(this.minFee * this.currencyRate.value, 8);
+    this.feeFormCurr.patchValue(minCurrency);
+    this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
       width: '360px',
       maxHeight: '90vh',
