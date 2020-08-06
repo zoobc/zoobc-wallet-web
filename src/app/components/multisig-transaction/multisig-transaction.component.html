@@ -114,7 +114,10 @@
           </input-amount>
         </div>
       </div>
-      <div class="row">
+      <div
+        class="row"
+        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+      >
         <div class="col-12 col-md-10 offset-md-1">
           <div class="row" style="border-bottom: none; margin-top: -30px; font-weight: initial;">
             <div class="col-4 col-sm-3">&nbsp;</div>

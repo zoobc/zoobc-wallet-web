@@ -54,7 +54,13 @@
         label="{{ 'coin amount' | translate }}"
       >
       </input-amount>
-      <div class="row">
+      <div
+        class="row"
+        *ngIf="
+          (amountForm.touched && amountForm.invalid) ||
+          (amountCurrencyForm.touched && amountCurrencyForm.invalid)
+        "
+      >
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
           <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
@@ -85,7 +91,10 @@
         label="{{ 'fee' | translate }}"
       >
       </input-amount>
-      <div class="row">
+      <div
+        class="row"
+        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+      >
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
           <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
