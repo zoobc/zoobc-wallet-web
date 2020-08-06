@@ -3,7 +3,7 @@
   <form [formGroup]="addForm" (submit)="onSubmit()" class="grid">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="alias" placeholder="{{ 'name' | translate }}" />
+      <input matInput type="text" formControlName="name" placeholder="{{ 'name' | translate }}" />
     </mat-form-field>
     <ng-container *ngIf="aliasField.touched">
       <mat-error *ngIf="aliasField.hasError('required')">
@@ -20,6 +20,7 @@
         (keyup)="onAddressValidation()"
       />
       <button
+        style="display: inline-flex; align-items: center; justify-content: center;"
         mat-icon-button
         matSuffix
         type="button"
