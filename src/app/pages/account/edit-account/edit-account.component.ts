@@ -34,11 +34,12 @@ export class EditAccountComponent implements OnInit {
         const account = accounts[i];
         if (account.address == this.account.address) {
           accounts[i].name = this.accountNameField.value;
+          localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+          localStorage.setItem('CURR_ACCOUNT', JSON.stringify(accounts[i]));
+          this.dialogRef.close(accounts[i]);
           break;
         }
       }
-      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
-      this.dialogRef.close(true);
     }
   }
 }
