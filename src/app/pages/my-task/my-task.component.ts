@@ -10,11 +10,15 @@ import zoobc, {
   HostInfoResponse,
   EscrowStatus,
   PendingTransactionStatus,
+  MempoolListParams,
+  TransactionType,
+  readInt64,
+  MultisigPendingTxDetailResponse,
+  bufferToBase64,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
-import { Router } from '@angular/router';
-
+import { base64ToHex } from 'src/helpers/utils';
 @Component({
   selector: 'app-my-task',
   templateUrl: './my-task.component.html',
@@ -44,13 +48,12 @@ export class MyTaskComponent implements OnInit {
   perPageMultiSig: number = 10;
   totalMultiSig: number = 0;
   multiSigfinished: boolean = false;
+  pendingIdEscrow: string;
+  txHash: any;
+  txHashSignature: any;
+  visible: boolean = false;
 
-  constructor(
-    public dialog: MatDialog,
-    private authServ: AuthService,
-    private contactServ: ContactService,
-    private router: Router
-  ) {}
+  constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
@@ -61,6 +64,7 @@ export class MyTaskComponent implements OnInit {
 
   getMultiSigPendingList(reload: boolean = false) {
     if (!this.isLoadingMultisig) {
+      this.getPendingMultisigTx();
       this.isLoadingMultisig = true;
       const perPage = Math.ceil(window.outerHeight / 72);
 
@@ -77,13 +81,12 @@ export class MyTaskComponent implements OnInit {
         },
       };
       zoobc.MultiSignature.getPendingList(params)
-        .then((res: MultisigPendingTxResponse) => {
+        .then(async (res: MultisigPendingTxResponse) => {
           const tx = toGetPendingList(res);
           this.totalMultiSig = tx.count;
-          const pendingList = tx.pendingtransactionsList;
-          pendingList.map(res => {
-            res['alias'] = this.contactServ.get(res.senderaddress).name || '';
-          });
+          let pendingList = tx.pendingtransactionsList;
+          pendingList = await this.checkVisibleMultisig(pendingList);
+          if (this.txHash) pendingList = pendingList.filter(res => res.transactionhash != this.txHash);
           if (reload) {
             this.multiSigPendingList = pendingList;
           } else {
@@ -100,6 +103,7 @@ export class MyTaskComponent implements OnInit {
 
   getEscrowTx(reload: boolean = false) {
     if (!this.isLoadingEscrow) {
+      this.getPendingEscrowTx();
       this.isLoadingEscrow = true;
       const perPage = Math.ceil(window.outerHeight / 72);
 
@@ -141,6 +145,9 @@ export class MyTaskComponent implements OnInit {
               instruction: tx.instruction,
             };
           });
+          txMap = txMap.filter(tx => {
+            if (tx.id !== this.pendingIdEscrow) return tx;
+          });
           if (reload) {
             this.escrowTransactions = txMap;
           } else {
@@ -153,6 +160,81 @@ export class MyTaskComponent implements OnInit {
         })
         .finally(() => (this.isLoadingEscrow = false));
     }
+  }
+
+  getPendingEscrowTx() {
+    const params: MempoolListParams = {
+      address: this.account.address,
+    };
+    zoobc.Mempool.getList(params).then(res => {
+      let id: any = res.mempooltransactionsList.filter(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        if (bytes.readInt32LE(0) == TransactionType.APPROVALESCROWTRANSACTION) return tx;
+      });
+      id = id.map(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        const bodyBytes = bytes.slice(165, 177);
+        const res = readInt64(bodyBytes, 4);
+        this.pendingIdEscrow = res;
+        return res;
+      });
+    });
+  }
+
+  getPendingMultisigTx() {
+    const params: MempoolListParams = {
+      address: this.account.signByAddress,
+    };
+    zoobc.Mempool.getList(params).then(res => {
+      let id: any = res.mempooltransactionsList.filter(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        if (bytes.readInt32LE(0) == TransactionType.MULTISIGNATURETRANSACTION) return tx;
+      });
+      id = id.map(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        const bodyBytes = bytes.slice(173, 355);
+        const txHashBytes = bodyBytes.slice(4, 36);
+        this.txHash = bufferToBase64(txHashBytes);
+        return this.txHash;
+      });
+    });
+  }
+
+  async getSignatureMultisig(txHash) {
+    const hashHex = base64ToHex(txHash);
+    await zoobc.MultiSignature.getPendingByTxHash(hashHex).then((res: MultisigPendingTxDetailResponse) => {
+      const list = [];
+      list.push(res.pendingtransaction);
+      const tx: MultisigPendingTxResponse = {
+        count: 1,
+        page: 1,
+        pendingtransactionsList: list,
+      };
+      let pendingSignatures = res.pendingsignaturesList;
+      let idx = pendingSignatures.findIndex(
+        sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
+      );
+      if (idx >= 0) {
+        this.visible = false;
+        this.txHashSignature = txHash;
+      } else {
+        this.visible = true;
+        this.txHashSignature = '';
+      }
+    });
+  }
+
+  async checkVisibleMultisig(pendingList) {
+    let list = [];
+    for (let i = 0; i <= this.totalMultiSig; i++) {
+      if (pendingList[i] != undefined) {
+        await this.getSignatureMultisig(pendingList[i].transactionhash);
+        if (this.visible) {
+          list.push(pendingList[i]);
+        }
+      }
+    }
+    return list;
   }
 
   reload(load: boolean = false) {
