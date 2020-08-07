@@ -1,7 +1,7 @@
 {
   "node": [
     {
-      "ip": "https://n100.demo.proofofparticipation.network:7001",
+      "ip": "http://n100.demo.proofofparticipation.network:7001",
       "default": true,
       "name": "Experimental Testnet"
     },
@@ -16,5 +16,5 @@
       "name": "Dev Testnet 2"
     }
   ],
-  "timestamp": 1596044984448
+  "timestamp": 1596763102000
 }
