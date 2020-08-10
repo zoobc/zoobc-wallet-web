@@ -2,7 +2,7 @@
   <b>Confirm Your Pin</b>
 </h3>
 <form [formGroup]="formConfirmPin" class="form-pin-confirmation">
-  <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
+  <field-pins #pin formControlName="pin" (keyup)="onTypePin()"></field-pins>
   <div class="text-center">
     <mat-error *ngIf="formConfirmPin.hasError('invalid')">
       <span class="text-center">Pin does not match</span>
