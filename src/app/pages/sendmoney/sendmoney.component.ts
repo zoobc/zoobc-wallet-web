@@ -38,7 +38,7 @@ export class SendmoneyComponent implements OnInit {
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   aliasField = new FormControl('', Validators.required);
   addressApproverField = new FormControl('', Validators.required);
@@ -47,6 +47,7 @@ export class SendmoneyComponent implements OnInit {
   instructionField = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   typeCoinField = new FormControl('ZBC');
+  typeFeeField = new FormControl('ZBC');
   typeCommissionField = new FormControl('ZBC');
 
   sendMoneyRefDialog: MatDialogRef<any>;
@@ -56,8 +57,6 @@ export class SendmoneyComponent implements OnInit {
 
   account: SavedAccount;
   accounts: SavedAccount[];
-
-  typeFee = 'ZBC';
 
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
@@ -83,6 +82,7 @@ export class SendmoneyComponent implements OnInit {
       alias: this.aliasField,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
+      typeFee: this.typeFeeField,
       addressApprover: this.addressApproverField,
       approverCommission: this.approverCommissionField,
       approverCommissionCurr: this.approverCommissionCurrField,
@@ -112,17 +112,14 @@ export class SendmoneyComponent implements OnInit {
 
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-
       const minCurrency = truncate(this.minFee * rate.value, 8);
-
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
-
     this.account = this.authServ.getCurrAccount();
     this.getAccounts();
-
     this.getBlockHeight();
   }
 
@@ -229,10 +226,6 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  onClickFeeChoose(value) {
-    this.kindFee = value;
-  }
-
   disableFieldAdvancedMenu() {
     this.addressApproverField.disable();
     this.approverCommissionField.disable();
@@ -331,6 +324,10 @@ export class SendmoneyComponent implements OnInit {
     const feeCurrency = truncate(fee * this.currencyRate.value, 8);
     this.feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
     this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
+    this.feeForm.updateValueAndValidity();
+    this.feeFormCurr.updateValueAndValidity();
+    this.feeForm.markAsTouched();
+    this.feeFormCurr.markAsTouched();
   }
 
   onChangeTimeOut() {

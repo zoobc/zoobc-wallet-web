@@ -25,7 +25,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class CreateTransactionComponent implements OnInit {
   minFee = environment.fee;
   currencyRate: Currency;
-  kindFee: string;
   subscription: Subscription = new Subscription();
   account: SavedAccount;
 
@@ -35,19 +34,14 @@ export class CreateTransactionComponent implements OnInit {
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('');
   typeCoinField = new FormControl('ZBC');
+  typeFeeField = new FormControl('ZBC');
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
 
-  feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 2;
-  feeFast = this.feeMedium * 2;
-  typeFee: number;
-  customFeeValues: number;
   txHash: string;
   isMultiSignature: boolean = false;
   isHasTransactionHash: boolean = false;
@@ -74,8 +68,8 @@ export class CreateTransactionComponent implements OnInit {
       amountCurrency: this.amountCurrencyForm,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
-      timeout: this.timeoutField,
       typeCoin: this.typeCoinField,
+      typeFee: this.typeFeeField,
     });
     this.account = this.authServ.getCurrAccount();
     this.isMultiSignature = this.account.type == 'multisig' ? true : false;
@@ -85,9 +79,8 @@ export class CreateTransactionComponent implements OnInit {
     // Currency Subscriptions
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-
       const minCurrency = truncate(this.minFee * rate.value, 8);
-
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
@@ -114,16 +107,6 @@ export class CreateTransactionComponent implements OnInit {
         this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
         this.feeForm.setValue(fee);
         this.feeFormCurr.setValue(fee * this.currencyRate.value);
-        this.timeoutField.setValue('0');
-        if (fee === this.feeSlow) {
-          this.typeFee = 1;
-        } else if (fee === this.feeMedium) {
-          this.typeFee = 2;
-        } else if (fee === this.feeFast) {
-          this.typeFee = 3;
-        } else {
-          this.customFeeValues = fee;
-        }
       } else if (this.isMultiSignature) {
         this.multisig.generatedSender = this.account.address;
         this.senderForm.setValue(this.account.address);
@@ -167,10 +150,6 @@ export class CreateTransactionComponent implements OnInit {
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.multisigSubs.unsubscribe();
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   onSwitchAccount(account: SavedAccount) {
