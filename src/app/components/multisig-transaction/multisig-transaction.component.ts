@@ -38,12 +38,11 @@ export class MultisigTransactionComponent implements OnInit {
 
   form: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl(environment.fee, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('0');
+  typeFeeField = new FormControl('ZBC');
 
   currencyRate: Currency;
-  kindFee: string;
   advancedMenu: boolean = false;
   enabledSign: boolean = true;
   showSignForm: boolean = false;
@@ -59,7 +58,7 @@ export class MultisigTransactionComponent implements OnInit {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
-      timeout: this.timeoutField,
+      typeFee: this.typeFeeField,
     });
   }
 
@@ -68,6 +67,7 @@ export class MultisigTransactionComponent implements OnInit {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
   }
@@ -160,10 +160,6 @@ export class MultisigTransactionComponent implements OnInit {
           });
       }
     });
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   toogleShowSignForm() {

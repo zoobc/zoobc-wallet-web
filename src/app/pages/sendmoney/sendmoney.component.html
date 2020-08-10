@@ -50,7 +50,13 @@
         label="{{ 'coin amount' | translate }}"
       >
       </input-amount>
-      <div class="row">
+      <div
+        class="row"
+        *ngIf="
+          (amountForm.touched && amountForm.invalid) ||
+          (amountCurrencyForm.touched && amountCurrencyForm.invalid)
+        "
+      >
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
           <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
@@ -71,17 +77,40 @@
           </ng-container>
         </div>
       </div>
-      <fee-selector
+      <input-amount
         [group]="formSend"
-        feeName="fee"
-        feeCurrName="feeCurr"
-        [minFee]="minFee"
-        [timeoutField]="timeoutField.value"
-        [required]="true"
+        typeCoinName="typeFee"
+        amountCurrencyName="feeCurr"
+        amountName="fee"
+        [displayConverter]="true"
         [currencyRate]="currencyRate"
-        (onClickFeeChoose)="onClickFeeChoose($event)"
-      ></fee-selector>
-
+        label="{{ 'fee' | translate }}"
+      >
+      </input-amount>
+      <div
+        class="row"
+        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+      >
+        <div class="col-4 col-sm-3">&nbsp;</div>
+        <div class="col-8 col-sm-9">
+          <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+            <mat-error *ngIf="feeForm.hasError('required')">
+              {{ 'fee is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="feeForm.hasError('min')">
+              {{ 'minimum fee is' | translate: { val: minFee } }}
+            </mat-error>
+          </ng-container>
+          <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+            <mat-error *ngIf="feeFormCurr.hasError('required')">
+              {{ 'fee is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="feeFormCurr.hasError('min')">
+              {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+            </mat-error>
+          </ng-container>
+        </div>
+      </div>
       <span class="sub-title">
         {{ 'advanced option' | translate }}
       </span>
