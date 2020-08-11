@@ -14,8 +14,6 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import zoobc, { MultiSigInterface, MultisigPostTransactionResponse } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
-import { FeeVoteCommitmentVote } from 'zoobc-sdk/grpc/model/feeVote_pb';
-import { FeeSelectorModule } from 'src/app/components/fee-selector/fee-selector.module';
 
 @Component({
   selector: 'app-send-transaction',
