@@ -40,7 +40,6 @@ export class EscrowTransactionComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    this.getBalance();
   }
 
   onRefresh() {
@@ -79,13 +78,14 @@ export class EscrowTransactionComponent implements OnInit {
     });
   }
 
-  getBalance() {
-    zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
+  async getBalance() {
+    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
       this.accountBalance = data.accountbalance;
     });
   }
 
-  onConfirm(id) {
+  async onConfirm(id) {
+    await this.getBalance();
     const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
     if (balance >= this.minFee) {
       this.isLoadingTx = true;
@@ -125,7 +125,8 @@ export class EscrowTransactionComponent implements OnInit {
     }
   }
 
-  onReject(id) {
+  async onReject(id) {
+    await this.getBalance();
     const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
     if (balance >= this.minFee) {
       this.isLoadingTx = true;
