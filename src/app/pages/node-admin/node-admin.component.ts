@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 import zoobc, {
   NodeParams,
   toUnconfirmTransactionNodeWallet,
@@ -53,12 +54,18 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private authServ: AuthService,
     private snackbar: MatSnackBar,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router
   ) {
     this.account = authServ.getCurrAccount();
   }
 
   ngOnInit() {
+    if (this.account.type == 'multisig') {
+      let message = getTranslation('please use normal account to use this feature', this.translate);
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      this.router.navigateByUrl('/dashboard');
+    }
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
   }
