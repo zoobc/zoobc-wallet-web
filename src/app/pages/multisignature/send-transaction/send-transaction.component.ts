@@ -12,7 +12,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, { MultiSigInterface, MultisigPostTransactionResponse } from 'zoobc-sdk';
+import zoobc, { MultiSigInterface, MultisigPostTransactionResponse, sendMoneyBuilder } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 
 @Component({
@@ -24,7 +24,7 @@ export class SendTransactionComponent implements OnInit {
   @ViewChild('confirmDialog') confirmDialog: TemplateRef<any>;
   confirmRefDialog: MatDialogRef<any>;
 
-  subscription: Subscription = new Subscription();
+  currencySubs: Subscription;
 
   account: SavedAccount;
   accounts: SavedAccount[];
@@ -69,12 +69,11 @@ export class SendTransactionComponent implements OnInit {
     this.account = this.authServ.getCurrAccount();
     if (this.account.type === 'multisig') this.isMultiSigAccount = true;
     this.accounts = this.authServ.getAllAccount();
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
-    this.subscription.add(subsRate);
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo } = multisig;
@@ -139,7 +138,7 @@ export class SendTransactionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
   }
 
@@ -227,6 +226,10 @@ export class SendTransactionComponent implements OnInit {
       };
     }
     const childSeed = this.authServ.seed;
+
+    if (data.signaturesInfo === undefined)
+      data.unisgnedTransactions = sendMoneyBuilder(this.multisig.transaction);
+
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);

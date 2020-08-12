@@ -111,19 +111,12 @@
           </button>
         </div>
         <div class="col">
-          <button
-            mat-flat-button
-            color="primary"
-            class="block"
-            [disabled]="!form.valid"
-            type="button"
-            (click)="saveDraft()"
-          >
-            {{ 'save to draft' | translate }}
+          <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
+            {{ 'save' | translate }}
           </button>
         </div>
         <div class="col">
-          <button mat-flat-button color="primary" class="block" [disabled]="!form.valid">
+          <button mat-flat-button color="primary" class="block" [disabled]="form.invalid">
             {{ 'next' | translate }}
           </button>
         </div>
