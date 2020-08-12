@@ -10,7 +10,7 @@
     <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
       <mat-label>Please Enter Your Pin</mat-label>
       <br />
-      <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
+      <field-pins #pin formControlName="pin" (keyup)="onChangePin()"></field-pins>
       <mat-error *ngIf="pinForm.hasError('invalid')">Pin invalid </mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
         <i matPrefix class="fas fa-check" *ngIf="!isLoading"></i>
