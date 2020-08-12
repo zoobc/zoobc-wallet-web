@@ -1,17 +1,7 @@
 {
   "node": [
     {
-      "ip": "http://n1.alpha.proofofparticipation.network:7003",
-      "default": true,
-      "name": "Alpha Testnet"
-    },
-    {
-      "ip": "http://172.104.62.181:7001",
-      "default": true,
-      "name": "Experimental Testnet"
-    },
-    {
-      "ip": "http://85.90.246.90:8002",
+      "ip": "http://85.90.246.90:7001",
       "default": true,
       "name": "Dev Testnet 1"
     },
@@ -19,7 +9,22 @@
       "ip": "http://45.79.39.58:8002",
       "default": true,
       "name": "Dev Testnet 2"
+    },
+    {
+      "ip": "http://172.104.34.10:7001",
+      "default": true,
+      "name": "Dev Testnet 3"
+    },
+    {
+      "ip": "http://n0.alpha.proofofparticipation.network:7003",
+      "default": true,
+      "name": "Alpha Testnet"
+    },
+    {
+      "ip": "http://172.104.62.181:7001",
+      "default": true,
+      "name": "Experimental Testnet"
     }
   ],
-  "timestamp": 1597210769000
+  "timestamp": 1597220133000
 }
