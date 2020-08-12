@@ -121,10 +121,7 @@ export class MyTaskComponent implements OnInit {
       zoobc.Escrows.getList(params)
         .then((res: EscrowTransactionsResponse) => {
           this.totalEscrow = parseInt(res.total);
-          let txFilter = res.escrowsList.filter(tx => {
-            if (tx.latest == true) return tx;
-          });
-          let txMap = txFilter.map(tx => {
+          let txMap = res.escrowsList.map(tx => {
             const alias = this.contactServ.get(tx.recipientaddress).name || '';
             return {
               id: tx.id,
