@@ -30,8 +30,8 @@
       </div>
 
       <ng-container *ngIf="saveAddress">
-        <label>{{ 'name' | translate }}</label>
         <mat-form-field appearance="outline" color="accent" class="block">
+          <mat-label>{{ 'name' | translate }}</mat-label>
           <input matInput type="text" formControlName="alias" placeholder="{{ 'name' | translate }}" />
         </mat-form-field>
         <ng-container *ngIf="aliasField.touched">
@@ -167,8 +167,9 @@
         <label class="block-height"
           ><b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b></label
         >
-        <label>{{ 'timeout' | translate }}</label>
+
         <mat-form-field appearance="outline" class="block" color="accent">
+          <mat-label>{{ 'timeout' | translate }}</mat-label>
           <input
             (change)="onChangeTimeOut()"
             matInput
@@ -188,8 +189,8 @@
             {{ 'maximum timeout is 720' | translate }}
           </mat-error>
         </ng-container>
-        <label>{{ 'instruction' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">
+          <mat-label>{{ 'instruction' | translate }}</mat-label>
           <textarea matInput formControlName="instruction" rows="5"></textarea>
         </mat-form-field>
         <ng-container *ngIf="instructionField.touched">
