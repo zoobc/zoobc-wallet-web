@@ -78,8 +78,9 @@
           {{ 'add participants' }}
         </button>
       </div>
-      <label>{{ 'nonce' }}</label>
+
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'nonce' }}</mat-label>
         <input formControlName="nonce" matInput type="number" [readonly]="this.isMultiSignature" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
@@ -91,8 +92,8 @@
         </mat-error>
       </ng-container>
 
-      <label>{{ 'minimum signature' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'minimum signature' | translate }}</mat-label>
         <input formControlName="minSigs" matInput type="number" [readonly]="this.isMultiSignature" />
       </mat-form-field>
       <ng-container *ngIf="minSignatureField.touched">
