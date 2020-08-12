@@ -7,7 +7,7 @@
     </div>
   </div>
 </div>
-<label>{{ label }}</label>
+
 <form [formGroup]="group">
   <div class="row">
     <div class="col-4 col-sm-3">
@@ -25,6 +25,7 @@
         *ngIf="group.get(typeCoinName).value === 'ZBC'"
         color="accent"
       >
+        <mat-label>{{ label }}</mat-label>
         <input
           matInput
           (keyup)="onChangeAmountField($event.target.value)"
