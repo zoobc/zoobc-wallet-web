@@ -1,8 +1,8 @@
 <div class="setup-dataset-container">
   <h2 class="mat-h2 text-center">{{ 'setup new dataset' | translate }}</h2>
   <form [formGroup]="formGroup" (submit)="onSubmit()">
-    <label>{{ 'property' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'property' | translate }}</mat-label>
       <input matInput type="text" formControlName="property" />
     </mat-form-field>
     <ng-container *ngIf="propertyField.touched">
@@ -10,8 +10,8 @@
         {{ 'property is required' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'value' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'value' | translate }}</mat-label>
       <input matInput type="text" formControlName="value" />
     </mat-form-field>
     <ng-container *ngIf="valueField.touched">
