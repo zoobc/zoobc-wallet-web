@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { MultisigInfoComponent } from './multisig-info/multisig-info.component';
 import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-account',
@@ -14,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 export class AccountComponent implements OnInit {
   currAcc: SavedAccount;
   accounts: SavedAccount[];
+  @ViewChild('fileInput') myInputVariable: ElementRef;
 
   constructor(
     private authServ: AuthService,
@@ -51,8 +53,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  onOpenEditAccount(e, account: SavedAccount) {
-    e.stopPropagation();
+  onOpenEditAccount(account: SavedAccount) {
     const dialog = this.dialog.open(EditAccountComponent, {
       width: '360px',
       maxHeight: '99vh',
@@ -66,8 +67,7 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  async onSwitchAccount(e, account: SavedAccount) {
-    e.stopPropagation();
+  async onSwitchAccount(account: SavedAccount) {
     this.authServ.switchAccount(account);
     this.currAcc = account;
 
@@ -75,11 +75,65 @@ export class AccountComponent implements OnInit {
     this.snackbar.open(message, null, { duration: 3000 });
   }
 
-  onOpenMultisigInfoDialog(e, account: SavedAccount) {
-    e.stopPropagation();
+  onOpenMultisigInfoDialog(account: SavedAccount) {
     this.dialog.open(MultisigInfoComponent, {
       width: '300px',
       data: account,
     });
+  }
+
+  async onDelete(index: number) {
+    Swal.fire({
+      title: 'Are you sure want to delete this account?',
+      showCancelButton: true,
+      preConfirm: () => {
+        const currAccount = this.authServ.getCurrAccount();
+        if (this.accounts[index].address == currAccount.address) this.onSwitchAccount(this.accounts[0]);
+        this.accounts.splice(index, 1);
+        localStorage.setItem('ACCOUNT', JSON.stringify(this.accounts));
+        return true;
+      },
+    });
+  }
+
+  onImportAccount() {
+    this.myInputVariable.nativeElement.click();
+  }
+
+  refreshAccounts() {
+    this.accounts = this.authServ.getAllAccount();
+    this.currAcc = this.authServ.getCurrAccount();
+  }
+
+  isSavedAccount(obj: any): obj is SavedAccount {
+    if ((obj as SavedAccount).type) return true;
+    return false;
+  }
+
+  onFileChanged(event) {
+    const file = event.target.files[0];
+    const fileReader = new FileReader();
+    if (file == undefined) return null;
+    fileReader.readAsText(file, 'JSON');
+    fileReader.onload = async () => {
+      let fileResult = JSON.parse(fileReader.result.toString());
+      if (!this.isSavedAccount(fileResult)) {
+        return Swal.fire('Opps...', 'You mported the wrong file', 'error');
+      }
+      const accountSave: SavedAccount = fileResult;
+      const idx = this.authServ.getAllAccount().findIndex(acc => acc.address == accountSave.address);
+      if (idx >= 0) {
+        return Swal.fire('Opps...', 'Account with that address is already exist', 'error');
+      }
+      this.authServ.addAccount(accountSave);
+      Swal.fire({
+        type: 'success',
+        title: 'Account has been successfully imported',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.refreshAccounts();
+    };
+    this.myInputVariable.nativeElement.value = '';
   }
 }
