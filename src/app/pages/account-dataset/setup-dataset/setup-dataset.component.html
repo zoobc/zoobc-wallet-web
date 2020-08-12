@@ -25,10 +25,9 @@
       </mat-checkbox>
     </div>
     <ng-container *ngIf="isSetupOther">
-      <label>{{ 'recipient address' | translate }}</label>
       <input-address
         class="input"
-        label=""
+        label="{{ 'recipient address' | translate }}"
         formControlName="recipientAddress"
         placeholder="{{ 'recipient address' | translate }}"
       ></input-address>
