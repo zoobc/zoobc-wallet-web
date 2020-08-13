@@ -30,13 +30,11 @@ export class AccountDatasetComponent implements OnInit {
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
   minFee = environment.fee;
-  kindFee: string;
   currencyRate: Currency;
   form: FormGroup;
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  customFee: boolean = false;
+  typeFeeField = new FormControl('ZBC');
 
   account: SavedAccount;
 
@@ -53,6 +51,7 @@ export class AccountDatasetComponent implements OnInit {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
+      typeFee: this.typeFeeField,
     });
 
     this.account = data;
@@ -62,6 +61,7 @@ export class AccountDatasetComponent implements OnInit {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
@@ -128,8 +128,12 @@ export class AccountDatasetComponent implements OnInit {
     this.dataSet = dataset;
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
+    this.feeForm.patchValue(this.minFee);
+    const minCurrency = truncate(this.minFee * this.currencyRate.value, 8);
+    this.feeFormCurr.patchValue(minCurrency);
+    this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
-      width: '300px',
+      width: '360px',
       maxHeight: '90vh',
     });
   }
@@ -145,10 +149,6 @@ export class AccountDatasetComponent implements OnInit {
         this.deleteDataSet();
       }
     });
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   onRefresh() {
