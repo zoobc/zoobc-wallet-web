@@ -20,7 +20,7 @@ export class AddressComponent implements OnInit {
 
   ngOnInit() {
     this.len = this.value.length;
-    this.halfLen = Math.round(this.value.length / 2 - 2);
+    this.halfLen = Math.round(this.value.length / 2);
   }
 
   onCopyText(e) {
