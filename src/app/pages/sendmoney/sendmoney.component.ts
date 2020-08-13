@@ -102,6 +102,12 @@ export class SendmoneyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.account = this.authServ.getCurrAccount();
+    if (this.account.type == 'multisig') {
+      let message = getTranslation('please use normal account to use this feature', this.translate);
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      this.router.navigateByUrl('/dashboard');
+    }
     this.contacts = this.contactServ.getList() || [];
 
     // set filtered contacts function
@@ -118,7 +124,7 @@ export class SendmoneyComponent implements OnInit {
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
-    this.account = this.authServ.getCurrAccount();
+
     this.getAccounts();
     this.getBlockHeight();
   }
@@ -320,9 +326,10 @@ export class SendmoneyComponent implements OnInit {
     this.minFee = fee;
 
     this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
-
+    if (fee > this.feeForm.value) this.feeForm.patchValue(fee);
     const feeCurrency = truncate(fee * this.currencyRate.value, 8);
     this.feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
+    this.feeFormCurr.patchValue(feeCurrency);
     this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
     this.feeForm.updateValueAndValidity();
     this.feeFormCurr.updateValueAndValidity();

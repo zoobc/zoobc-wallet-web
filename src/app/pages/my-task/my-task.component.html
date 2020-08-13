@@ -9,10 +9,7 @@
           <div class="row" style="margin: 0;">
             <div class="col-6 col-md-6" style="margin-top: 10px;">
               <a routerLink="/escrow-approval-history">
-                <i class="fa fa-history" aria-hidden="true"></i>
-                <span class="approval-history"
-                  ><b>{{ 'approval history' | translate }}</b></span
-                >
+                <i class="fa fa-history" aria-hidden="true"></i> {{ 'approval history' | translate }}
               </a>
             </div>
             <div class="col-6 col-md-6">
@@ -48,8 +45,8 @@
       <ng-container *ngIf="account.type === 'multisig'">
         <mat-tab label="Multisignature">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6">
-              <a routerLink="/multisig-approval-history" class="history-link"
+            <div class="col-6 col-md-6" style="margin-top: 10px;">
+              <a routerLink="/multisig-approval-history"
                 ><i class="fa fa-history"></i> {{ 'approval history' | translate }}
               </a>
             </div>
@@ -74,7 +71,7 @@
               [pendingListMultiSig]="multiSigPendingList"
               [withDetail]="true"
               [isLoading]="isLoadingMultisig"
-              [isError]="isError"
+              [isError]="isErrorMultiSig"
               (refresh)="getMultiSigPendingList(true)"
             ></app-multisig-transaction>
           </div>
@@ -84,9 +81,7 @@
             <div class="col-6 col-md-6" style="margin-top: 10px;">
               <a routerLink="/escrow-approval-history">
                 <i class="fa fa-history" aria-hidden="true"></i>
-                <span class="approval-history"
-                  ><b>{{ 'approval history' | translate }}</b></span
-                >
+                {{ 'approval history' | translate }}
               </a>
             </div>
             <div class="col-6 col-md-6">

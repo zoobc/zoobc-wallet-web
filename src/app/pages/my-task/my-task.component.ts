@@ -10,11 +10,15 @@ import zoobc, {
   HostInfoResponse,
   EscrowStatus,
   PendingTransactionStatus,
+  MempoolListParams,
+  TransactionType,
+  readInt64,
+  MultisigPendingTxDetailResponse,
+  bufferToBase64,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
-import { Router } from '@angular/router';
-
+import { base64ToHex } from 'src/helpers/utils';
 @Component({
   selector: 'app-my-task',
   templateUrl: './my-task.component.html',
@@ -45,12 +49,7 @@ export class MyTaskComponent implements OnInit {
   totalMultiSig: number = 0;
   multiSigfinished: boolean = false;
 
-  constructor(
-    public dialog: MatDialog,
-    private authServ: AuthService,
-    private contactServ: ContactService,
-    private router: Router
-  ) {}
+  constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
@@ -77,13 +76,11 @@ export class MyTaskComponent implements OnInit {
         },
       };
       zoobc.MultiSignature.getPendingList(params)
-        .then((res: MultisigPendingTxResponse) => {
+        .then(async (res: MultisigPendingTxResponse) => {
           const tx = toGetPendingList(res);
           this.totalMultiSig = tx.count;
-          const pendingList = tx.pendingtransactionsList;
-          pendingList.map(res => {
-            res['alias'] = this.contactServ.get(res.senderaddress).name || '';
-          });
+          let pendingList = tx.pendingtransactionsList;
+          if (pendingList.length > 0) pendingList = await this.checkVisibleMultisig(pendingList);
           if (reload) {
             this.multiSigPendingList = pendingList;
           } else {
@@ -119,12 +116,9 @@ export class MyTaskComponent implements OnInit {
         },
       };
       zoobc.Escrows.getList(params)
-        .then((res: EscrowTransactionsResponse) => {
+        .then(async (res: EscrowTransactionsResponse) => {
           this.totalEscrow = parseInt(res.total);
-          let txFilter = res.escrowsList.filter(tx => {
-            if (tx.latest == true) return tx;
-          });
-          let txMap = txFilter.map(tx => {
+          let txMap = res.escrowsList.map(tx => {
             const alias = this.contactServ.get(tx.recipientaddress).name || '';
             return {
               id: tx.id,
@@ -141,6 +135,7 @@ export class MyTaskComponent implements OnInit {
               instruction: tx.instruction,
             };
           });
+          if (txMap.length > 0) txMap = await this.checkVisibleEscrow(txMap);
           if (reload) {
             this.escrowTransactions = txMap;
           } else {
@@ -152,6 +147,101 @@ export class MyTaskComponent implements OnInit {
           console.log(err);
         })
         .finally(() => (this.isLoadingEscrow = false));
+    }
+  }
+
+  async getPendingEscrowApproval() {
+    const params: MempoolListParams = {
+      address: this.account.address,
+    };
+    let list: string[] = await zoobc.Mempool.getList(params).then(res => {
+      let id: any = res.mempooltransactionsList.filter(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        if (bytes.readInt32LE(0) == TransactionType.APPROVALESCROWTRANSACTION) return tx;
+      });
+      id = id.map(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        const bodyBytes = bytes.slice(165, 177);
+        const res = readInt64(bodyBytes, 4);
+        return res;
+      });
+      return id;
+    });
+    return list;
+  }
+
+  async getPendingMultisigApproval() {
+    const params: MempoolListParams = {
+      address: this.account.signByAddress,
+    };
+    let list: string[] = await zoobc.Mempool.getList(params).then(res => {
+      let txHash: any = res.mempooltransactionsList.filter(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        if (bytes.readInt32LE(0) == TransactionType.MULTISIGNATURETRANSACTION) return tx;
+      });
+      txHash = txHash.map(tx => {
+        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
+        const bodyBytes = bytes.slice(173, 355);
+        const txHashBytes = bodyBytes.slice(4, 36);
+        const result = bufferToBase64(txHashBytes);
+        return result;
+      });
+      return txHash;
+    });
+    return list;
+  }
+
+  async getSignatureMultisig(txHash) {
+    const hashHex = base64ToHex(txHash);
+    let visible = await zoobc.MultiSignature.getPendingByTxHash(hashHex).then(
+      (res: MultisigPendingTxDetailResponse) => {
+        let idx = res.pendingsignaturesList.findIndex(
+          sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
+        );
+        if (idx >= 0) return false;
+        else return true;
+      }
+    );
+    return visible;
+  }
+
+  async checkVisibleMultisig(pendingList) {
+    let list = [];
+    let pendingApprovalList = await this.getPendingMultisigApproval();
+    if (pendingApprovalList.length > 0) {
+      for (let i = 0; i < pendingList.length; i++) {
+        let onPending = pendingApprovalList.includes(pendingList[i].transactionhash);
+        if (!onPending) {
+          let visible = await this.getSignatureMultisig(pendingList[i].transactionhash);
+          if (visible) {
+            list.push(pendingList[i]);
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < pendingList.length; i++) {
+        let visible = await this.getSignatureMultisig(pendingList[i].transactionhash);
+        if (visible) {
+          list.push(pendingList[i]);
+        }
+      }
+    }
+    return list;
+  }
+
+  async checkVisibleEscrow(escrowsList) {
+    let list = [];
+    let pendingApprovalList = await this.getPendingEscrowApproval();
+    if (pendingApprovalList.length > 0) {
+      for (let i = 0; i < escrowsList.length; i++) {
+        let onPending = pendingApprovalList.includes(escrowsList[i].id);
+        if (!onPending) {
+          list.push(escrowsList[i]);
+        }
+      }
+      return list;
+    } else {
+      return escrowsList;
     }
   }
 

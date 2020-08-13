@@ -1,20 +1,43 @@
 <div class="remove-node-container">
   <h2 class="mat-h2">{{ 'remove node' | translate }}</h2>
   <form [formGroup]="formRemoveNode" (submit)="onRemoveNode()" class="grid">
-    <label>{{ 'fee' | translate }}</label>
-    <mat-form-field appearance="outline" color="accent">
-      <input matInput type="number" formControlName="fee" placeholder="{{ 'fee' | translate }}" />
-    </mat-form-field>
-    <ng-container *ngIf="feeForm.touched">
-      <mat-error *ngIf="feeForm.hasError('required')">
-        {{ 'fee is required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="feeForm.hasError('min')">
-        {{ 'minimum fee is 0.00000001' | translate }}
-      </mat-error>
-    </ng-container>
+    <input-amount
+      [group]="formRemoveNode"
+      typeCoinName="typeFee"
+      amountCurrencyName="feeCurr"
+      amountName="fee"
+      [displayConverter]="true"
+      [currencyRate]="currencyRate"
+      label="{{ 'fee' | translate }}"
+    >
+    </input-amount>
+    <div
+      class="row"
+      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+    >
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+          <mat-error *ngIf="feeForm.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeForm.hasError('min')">
+            {{ 'minimum fee is' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+          <mat-error *ngIf="feeFormCurr.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeFormCurr.hasError('min')">
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
     <label>{{ 'node public key' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'node public key' | translate }}</mat-label>
       <input
         matInput
         type="text"
