@@ -11,11 +11,13 @@ export class NodeAdminService {
     let account: SavedAccount = this.authServ.getCurrAccount();
     let accounts: SavedAccount[] = this.authServ.getAllAccount();
 
-    account.nodeIP = ip;
-    accounts = accounts.map((acc: SavedAccount) => {
-      if (acc.path == account.path) acc = account;
-      return acc;
-    });
+    for (let i = 0; i < accounts.length; i++) {
+      const acc = accounts[i];
+      if (acc.address == account.address) {
+        account.nodeIP = accounts[i].nodeIP = ip;
+        break;
+      }
+    }
 
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
     localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
@@ -25,9 +27,12 @@ export class NodeAdminService {
     let account = this.authServ.getCurrAccount();
     let accounts = this.authServ.getAllAccount();
 
-    account.nodeIP = newIp;
     for (let i = 0; i < accounts.length; i++) {
-      if (accounts[i].path == account.path) accounts[i] = account;
+      const acc = accounts[i];
+      if (acc.address == account.address) {
+        account.nodeIP = accounts[i].nodeIP = newIp;
+        break;
+      }
     }
 
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));

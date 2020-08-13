@@ -22,14 +22,12 @@
       </ng-container>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
+
     <form [formGroup]="createTransactionForm" (submit)="next()">
       <label>{{ 'from' | translate }}</label>
-      <div *ngIf="multisig.generatedSender" style="margin-bottom: 16px;">
-        <wallet-address [value]="multisig.generatedSender"></wallet-address>
+      <div style="margin-bottom: 16px;">
+        <wallet-address [value]="senderForm.value"></wallet-address>
       </div>
-      <ng-container *ngIf="!multisig.generatedSender">
-        <account-selector (select)="onSwitchAccount($event)" type="multisig"></account-selector>
-      </ng-container>
       <input-address
         label="{{ 'recipient address' | translate }}"
         classList="block"
@@ -116,7 +114,7 @@
         </div>
       </div>
       <button
-        *ngIf="removeExport"
+        *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button
         type="button"
         class="block"
