@@ -25,9 +25,10 @@
     <form [formGroup]="form">
       <ng-template matStepLabel>{{ 'add signatures' | translate</ng-template>
 
-      <label class="label-margin">{{ 'transaction hash' | translate }}</label>
+      <label *ngIf="readOnlyTxHash" class="label-margin">{{ 'transaction hash' | translate }}</label>
       <ng-container *ngIf="!readOnlyTxHash">
         <mat-form-field style="width: 100%;" appearance="outline" color="accent">
+          <mat-label>{{ 'transaction hash' | translate }}</mat-label>
           <input
             [readonly]="readOnlyTxHash"
             placeholder="{{ 'transaction hash' | translate }}"

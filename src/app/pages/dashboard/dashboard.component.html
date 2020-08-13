@@ -134,15 +134,19 @@
       </div>
 
       <div class="button-group">
-        <button mat-flat-button routerLink="/sendmoney">
+        <button *ngIf="currAcc.type == 'normal'" mat-flat-button routerLink="/sendmoney">
           <i matPrefix class="fa fa-paper-plane"></i>
           <span>{{ 'send' | translate }}</span>
+        </button>
+        <button *ngIf="currAcc.type == 'multisig'" mat-flat-button routerLink="/multisignature">
+          <i matPrefix class="fa fa-file-signature"></i>
+          <span>{{ 'multisignature' | translate }}</span>
         </button>
         <button mat-flat-button (click)="openReceiveForm()">
           <i matPrefix class="fa fa-hand-holding-usd"></i>
           <span>{{ 'receive' | translate }}</span>
         </button>
-        <button mat-flat-button (click)="openScannerForm()">
+        <button *ngIf="currAcc.type == 'normal'" mat-flat-button (click)="openScannerForm()">
           <i matPrefix class="fa fa-qrcode"></i>
           <span>{{ 'scan' | translate }}</span>
         </button>

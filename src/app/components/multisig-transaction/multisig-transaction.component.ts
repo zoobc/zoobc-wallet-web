@@ -38,12 +38,11 @@ export class MultisigTransactionComponent implements OnInit {
 
   form: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl(environment.fee, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('0');
+  typeFeeField = new FormControl('ZBC');
 
   currencyRate: Currency;
-  kindFee: string;
   advancedMenu: boolean = false;
   enabledSign: boolean = true;
   showSignForm: boolean = false;
@@ -59,7 +58,7 @@ export class MultisigTransactionComponent implements OnInit {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
-      timeout: this.timeoutField,
+      typeFee: this.typeFeeField,
     });
   }
 
@@ -68,6 +67,7 @@ export class MultisigTransactionComponent implements OnInit {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
   }
@@ -139,7 +139,7 @@ export class MultisigTransactionComponent implements OnInit {
           },
         };
         zoobc.MultiSignature.postTransaction(data, seed)
-          .then(async (res: MultisigPostTransactionResponse) => {
+          .then((res: MultisigPostTransactionResponse) => {
             let message = getTranslation('transaction has been accepted', this.translate);
             Swal.fire({
               type: 'success',
@@ -147,8 +147,12 @@ export class MultisigTransactionComponent implements OnInit {
               showConfirmButton: false,
               timer: 1500,
             });
+
+            this.pendingListMultiSig = this.pendingListMultiSig.filter(
+              tx => tx.transactionhash != this.multiSigDetail.transactionhash
+            );
           })
-          .catch(async err => {
+          .catch(err => {
             console.log(err.message);
             let message = getTranslation('an error occurred while processing your request', this.translate);
             Swal.fire('Opps...', message, 'error');
@@ -156,14 +160,9 @@ export class MultisigTransactionComponent implements OnInit {
           .finally(() => {
             this.isLoadingTx = false;
             this.closeDialog();
-            this.onRefresh();
           });
       }
     });
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   toogleShowSignForm() {

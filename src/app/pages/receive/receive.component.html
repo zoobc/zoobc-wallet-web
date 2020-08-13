@@ -17,6 +17,7 @@
 
   <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'amount' | translate }}</mat-label>
       <input
         matInput
         type="text"

@@ -22,17 +22,16 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   isLoading: boolean;
   isError: boolean;
   minFee = environment.fee;
-  kindFee: string;
   currencyRate: Currency;
-  customFee: boolean = false;
 
   formGroup: FormGroup;
   propertyField = new FormControl('', [Validators.required]);
   valueField = new FormControl('', [Validators.required]);
   recipientAddressField = new FormControl('', [Validators.required]);
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
+  typeFeeField = new FormControl('ZBC');
 
   constructor(
     public dialog: MatDialog,
@@ -48,6 +47,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
       recipientAddress: this.recipientAddressField,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
+      typeFee: this.typeFeeField,
     });
   }
 
@@ -55,6 +55,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
@@ -117,9 +118,6 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     this.enableSetupOther();
   }
 
-  onClickFeeChoose(value) {
-    this.kindFee = value;
-  }
   onCancel() {
     this.dialogRef.close();
   }

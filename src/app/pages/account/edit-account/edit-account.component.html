@@ -1,8 +1,8 @@
 <div class="edit-account-container">
   <h2 class="mat-h2 text-center">{{ 'edit account' | translate }}</h2>
   <form [formGroup]="formEditAccount" (submit)="onEditAccount()">
-    <label>{{ 'account name' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'account name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">

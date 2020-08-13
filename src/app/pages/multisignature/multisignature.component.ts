@@ -59,7 +59,7 @@ export class MultisignatureComponent implements OnInit {
 
   onEditDraft(idx: number) {
     let multisig: MultiSigDraft = this.multiSigDrafts[idx];
-    multisig.unisgnedTransactions = Buffer.from(multisig.unisgnedTransactions);
+    multisig.unisgnedTransactions = Buffer.from(multisig.unisgnedTransactions || []);
     this.multisigServ.update(multisig);
 
     const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
@@ -84,7 +84,6 @@ export class MultisignatureComponent implements OnInit {
         minSigs: this.account.minSig,
         nonce: this.account.nonce,
         participants: this.account.participants,
-        multisigAddress: '',
       };
       const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
       multisig.generatedSender = address;

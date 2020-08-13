@@ -4,7 +4,7 @@ import { MultisigService, MultiSigDraft } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { SavedAccount, AuthService } from 'src/app/services/auth.service';
+import { SavedAccount } from 'src/app/services/auth.service';
 import zoobc from 'zoobc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
 
@@ -14,12 +14,10 @@ import { uniqueParticipant } from '../../../../helpers/utils';
   styleUrls: ['./add-multisig-info.component.scss'],
 })
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
-  isMultiSignature: boolean = false;
   stepper = {
     transaction: false,
     signatures: false,
   };
-  account: SavedAccount;
 
   form: FormGroup;
   participantsField = new FormArray([], uniqueParticipant);
@@ -29,20 +27,12 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
 
-  constructor(
-    private multisigServ: MultisigService,
-    private router: Router,
-    private location: Location,
-    authServ: AuthService
-  ) {
+  constructor(private multisigServ: MultisigService, private router: Router, private location: Location) {
     this.form = new FormGroup({
       participants: this.participantsField,
       nonce: this.nonceField,
       minSigs: this.minSignatureField,
     });
-
-    this.account = authServ.getCurrAccount();
-    this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
   ngOnInit() {
@@ -58,12 +48,9 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
         this.patchParticipant(participants);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
-      } else if (this.isMultiSignature) {
-        const { participants, minSig, nonce } = this.account;
-        this.patchParticipant(participants);
-        this.nonceField.setValue(nonce);
-        this.minSignatureField.setValue(minSig);
       }
+
+      if (signaturesInfo && signaturesInfo.txHash) this.form.disable();
 
       this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -114,6 +101,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   }
 
   next() {
+    this.form.enable();
     if (this.form.valid) {
       this.updateMultisig();
 
@@ -140,7 +128,6 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       minSigs: parseInt(minSigs),
       nonce: parseInt(nonce),
       participants: participants,
-      multisigAddress: '',
     };
     const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
     multisig.generatedSender = address;

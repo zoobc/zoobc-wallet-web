@@ -7,10 +7,9 @@
       <ng-container *ngIf="account.type === 'normal'">
         <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 8px;">
+            <div class="col-6 col-md-6" style="margin-top: 10px;">
               <a routerLink="/escrow-approval-history" class="approval-history">
-                <i class="fa fa-history" aria-hidden="true"></i>
-                <b>{{ 'Approval history' | translate }}</b>
+                <i class="fa fa-history" aria-hidden="true"></i> {{ 'approval history' | translate }}
               </a>
             </div>
             <div class="col-6 col-md-6">
@@ -46,10 +45,9 @@
       <ng-container *ngIf="account.type === 'multisig'">
         <mat-tab label="Multisignature">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 8px;">
+            <div class="col-6 col-md-6" style="margin-top: 10px;">
               <a routerLink="/multisig-approval-history" class="approval-history">
-                <i class="fa fa-history"></i>
-                <b>{{ 'Approval History' | translate }}</b>
+                <i class="fa fa-history"></i> {{ 'approval history' | translate }}
               </a>
             </div>
             <div class="col-6 col-md-6">
@@ -73,7 +71,7 @@
               [pendingListMultiSig]="multiSigPendingList"
               [withDetail]="true"
               [isLoading]="isLoadingMultisig"
-              [isError]="isError"
+              [isError]="isErrorMultiSig"
               (refresh)="getMultiSigPendingList(true)"
             ></app-multisig-transaction>
           </div>
@@ -83,7 +81,7 @@
             <div class="col-6 col-md-6" style="margin-top: 8px;">
               <a routerLink="/escrow-approval-history" class="approval-history">
                 <i class="fa fa-history" aria-hidden="true"></i>
-                <b>{{ 'Approval History' | translate }}</b>
+                {{ 'approval history' | translate }}
               </a>
             </div>
             <div class="col-6 col-md-6">

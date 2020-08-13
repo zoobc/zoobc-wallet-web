@@ -1,8 +1,8 @@
 <div class="setup-dataset-container">
   <h2 class="mat-h2 text-center">{{ 'setup new dataset' | translate }}</h2>
   <form [formGroup]="formGroup" (submit)="onSubmit()">
-    <label>{{ 'property' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'property' | translate }}</mat-label>
       <input matInput type="text" formControlName="property" />
     </mat-form-field>
     <ng-container *ngIf="propertyField.touched">
@@ -10,8 +10,8 @@
         {{ 'property is required' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'value' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'value' | translate }}</mat-label>
       <input matInput type="text" formControlName="value" />
     </mat-form-field>
     <ng-container *ngIf="valueField.touched">
@@ -25,10 +25,9 @@
       </mat-checkbox>
     </div>
     <ng-container *ngIf="isSetupOther">
-      <label>{{ 'recipient address' | translate }}</label>
       <input-address
         class="input"
-        label=""
+        label="{{ 'recipient address' | translate }}"
         formControlName="recipientAddress"
         placeholder="{{ 'recipient address' | translate }}"
       ></input-address>
@@ -41,16 +40,40 @@
         </mat-error>
       </ng-container>
     </ng-container>
-    <fee-selector
+    <input-amount
       [group]="formGroup"
-      feeName="fee"
-      feeCurrName="feeCurr"
-      [minFee]="minFee"
-      [timeoutField]="timeoutField.value"
-      [required]="true"
+      typeCoinName="typeFee"
+      amountCurrencyName="feeCurr"
+      amountName="fee"
+      [displayConverter]="true"
       [currencyRate]="currencyRate"
-      (onClickFeeChoose)="onClickFeeChoose($event)"
-    ></fee-selector>
+      label="{{ 'fee' | translate }}"
+    >
+    </input-amount>
+    <div
+      class="row"
+      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+    >
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+          <mat-error *ngIf="feeForm.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeForm.hasError('min')">
+            {{ 'minimum fee is' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+          <mat-error *ngIf="feeFormCurr.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeFormCurr.hasError('min')">
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
     <div class="row">
       <div class="col-12 col-md-6">
         <button
