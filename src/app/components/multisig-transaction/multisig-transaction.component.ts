@@ -139,7 +139,7 @@ export class MultisigTransactionComponent implements OnInit {
           },
         };
         zoobc.MultiSignature.postTransaction(data, seed)
-          .then(async (res: MultisigPostTransactionResponse) => {
+          .then((res: MultisigPostTransactionResponse) => {
             let message = getTranslation('transaction has been accepted', this.translate);
             Swal.fire({
               type: 'success',
@@ -147,8 +147,12 @@ export class MultisigTransactionComponent implements OnInit {
               showConfirmButton: false,
               timer: 1500,
             });
+
+            this.pendingListMultiSig = this.pendingListMultiSig.filter(
+              tx => tx.transactionhash != this.multiSigDetail.transactionhash
+            );
           })
-          .catch(async err => {
+          .catch(err => {
             console.log(err.message);
             let message = getTranslation('an error occurred while processing your request', this.translate);
             Swal.fire('Opps...', message, 'error');
@@ -156,7 +160,6 @@ export class MultisigTransactionComponent implements OnInit {
           .finally(() => {
             this.isLoadingTx = false;
             this.closeDialog();
-            this.onRefresh();
           });
       }
     });
