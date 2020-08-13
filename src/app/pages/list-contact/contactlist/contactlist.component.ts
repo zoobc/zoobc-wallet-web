@@ -30,7 +30,7 @@ export class ContactlistComponent implements OnInit {
 
   async deleteContact(contact) {
     let sentence = getTranslation('are you sure want to delete?', this.translate, {
-      alias: contact.alias,
+      alias: contact.name,
     });
     Swal.fire({
       title: sentence,
@@ -94,20 +94,20 @@ export class ContactlistComponent implements OnInit {
           let message = getTranslation('you imported the wrong file', this.translate);
           Swal.fire('Opps...', message, 'error');
         } else {
-          let newContact: Contact;
+          let listNewContact = [];
           let checkExistContact: boolean;
-          fileResult.forEach(async (res, i) => {
-            newContact = res;
-            checkExistContact = this.contactServ.isDuplicate(newContact.address);
-            if (checkExistContact === true) {
-              let message = getTranslation('all the new address already in your contact', this.translate);
-              Swal.fire('Opps...', message, 'error');
-              this.myInputVariable.nativeElement.value = '';
-            } else {
-              if (!newContact.name) {
-                const index = i + 1;
-                newContact.name = 'New Contact ' + index;
-              }
+          for (let i = 0; i < fileResult.length; i++) {
+            checkExistContact = this.contactServ.isDuplicate(fileResult[i].address);
+            if (!checkExistContact) {
+              listNewContact.push(fileResult[i]);
+            }
+          }
+          if (listNewContact.length === 0) {
+            let message = getTranslation('all the new address already in your contact', this.translate);
+            Swal.fire('Opps...', message, 'error');
+            this.myInputVariable.nativeElement.value = '';
+          } else {
+            for (const newContact of listNewContact) {
               this.contactServ.add(newContact);
               this.contacts = this.contactServ.getList();
               let message = getTranslation('contact updated', this.translate);
@@ -115,7 +115,7 @@ export class ContactlistComponent implements OnInit {
               Swal.fire(message, subMessage, 'success');
               this.myInputVariable.nativeElement.value = '';
             }
-          });
+          }
         }
       };
       fileReader.onerror = async err => {
