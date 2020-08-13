@@ -30,23 +30,17 @@ export class SendTransactionComponent implements OnInit {
   accounts: SavedAccount[];
   formSend: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('0');
+  typeFeeField = new FormControl('ZBC');
 
   currencyRate: Currency;
-  kindFee: string;
   advancedMenu: boolean = false;
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
   multiSigDrafts: MultiSigDraft[];
 
-  feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 2;
-  feeFast = this.feeMedium * 2;
-  typeFee: number;
-  customFeeValues: number;
   isMultiSigAccount: boolean = false;
 
   constructor(
@@ -61,7 +55,7 @@ export class SendTransactionComponent implements OnInit {
     this.formSend = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
-      timeout: this.timeoutField,
+      typeFee: this.typeFeeField,
     });
   }
 
@@ -73,6 +67,7 @@ export class SendTransactionComponent implements OnInit {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+      this.feeFormCurr.patchValue(minCurrency);
     });
     this.subscription.add(subsRate);
 
@@ -87,21 +82,11 @@ export class SendTransactionComponent implements OnInit {
       } else {
         this.account.address = accountAddress;
       }
-      this.feeForm.setValue(multisig.fee);
-      this.feeFormCurr.setValue(multisig.fee * this.currencyRate.value);
-      this.timeoutField.setValue('0');
-      if (fee === this.feeSlow) {
-        this.typeFee = 1;
-        this.kindFee = 'Slow';
-      } else if (fee === this.feeMedium) {
-        this.typeFee = 2;
-        this.kindFee = 'Average';
-      } else if (fee === this.feeFast) {
-        this.typeFee = 3;
-        this.kindFee = 'Fast';
-      } else {
-        this.customFeeValues = multisig.fee;
-        this.kindFee = 'Custom';
+      if (fee >= this.minFee) {
+        this.feeForm.setValue(fee);
+        this.feeFormCurr.setValue(fee * this.currencyRate.value);
+        this.feeForm.markAsTouched();
+        this.feeFormCurr.markAsTouched();
       }
     });
     this.getMultiSigDraft();
@@ -141,10 +126,6 @@ export class SendTransactionComponent implements OnInit {
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.multisigSubs.unsubscribe();
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   onSwitchAccount(account: SavedAccount) {
