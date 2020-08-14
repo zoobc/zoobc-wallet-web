@@ -1,10 +1,11 @@
 <div class="receive-container">
   <h2 class="mat-h2 text-center">{{ 'your zoobc address' | translate }}</h2>
   <div class="address-text">
-    <span>{{ urlReqCoin }}</span>
+    <wallet-address [value]="urlReqCoin"></wallet-address>
+    <!-- <span>{{ urlReqCoin }}</span>
     <span class="copy-address" (click)="onCopyText($event)">
       <i class="far fa-copy"></i>
-    </span>
+    </span> -->
   </div>
   <div class="qrcode-container">
     <ngx-qrcode qrc-element-type="canvas" [qrc-value]="qrCodeStr"></ngx-qrcode>

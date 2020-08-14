@@ -1,8 +1,8 @@
 <div class="update-node-container">
   <h2 class="mat-h2">{{ 'update node' | translate }}</h2>
   <form [formGroup]="formUpdateNode" (submit)="onUpdateNode()" class="grid">
-    <label>{{ 'ip address' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'ip address' | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -18,8 +18,8 @@
         {{ 'invalid ip address format' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'locked balance' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'locked balance' | translate }}</mat-label>
       <input
         matInput
         type="number"
@@ -69,8 +69,8 @@
         </ng-container>
       </div>
     </div>
-    <label>{{ 'node public key' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'node public key' | translate }}</mat-label>
       <input
         matInput
         type="text"

@@ -66,7 +66,7 @@ export class AccountComponent implements OnInit {
 
   onOpenMultisigInfoDialog(account: SavedAccount) {
     this.dialog.open(MultisigInfoComponent, {
-      width: '300px',
+      width: '360px',
       maxHeight: '90vh',
       data: account,
     });

@@ -84,7 +84,6 @@ export class MultisignatureComponent implements OnInit {
         minSigs: this.account.minSig,
         nonce: this.account.nonce,
         participants: this.account.participants,
-        multisigAddress: '',
       };
       const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
       multisig.generatedSender = address;
