@@ -1,8 +1,8 @@
 <div class="add-account-container">
   <h2 class="mat-h2 text-center">{{ 'add new account' | translate }}</h2>
   <form [formGroup]="formAddAccount" (submit)="onAddAccount()">
-    <label>{{ 'account name' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'account name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">
@@ -65,9 +65,8 @@
           {{ 'add participants' | translate }}
         </button>
       </div>
-
-      <label>{{ 'nonce' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'nonce' | translate }}</mat-label>
         <input formControlName="nonce" matInput type="number" placeholder="{{ 'nonce' | translate }}" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
@@ -79,8 +78,8 @@
         </mat-error>
       </ng-container>
 
-      <label>{{ 'minimum signature' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'minimum signature' | translate }}</mat-label>
         <input
           formControlName="minimumSignature"
           matInput

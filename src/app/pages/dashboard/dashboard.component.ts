@@ -168,8 +168,11 @@ export class DashboardComponent implements OnInit {
       maxHeight: '99vh',
       data: account,
     });
-    dialog.afterClosed().subscribe((edited: boolean) => {
-      if (edited) this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
+    dialog.afterClosed().subscribe((account: SavedAccount) => {
+      if (account) {
+        this.currAcc = account;
+        this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
+      }
     });
   }
   openScannerForm() {

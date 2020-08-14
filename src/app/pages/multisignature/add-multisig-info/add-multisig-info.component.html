@@ -78,8 +78,8 @@
           {{ 'add participants' }}
         </button>
       </div>
-      <label>{{ 'nonce' }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'nonce' }}</mat-label>
         <input formControlName="nonce" matInput type="number" [readonly]="this.isMultiSignature" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
@@ -90,9 +90,8 @@
           {{ 'minimum nonce is 1' | translate }}
         </mat-error>
       </ng-container>
-
-      <label>{{ 'minimum signature' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'minimum signature' | translate }}</mat-label>
         <input formControlName="minSigs" matInput type="number" [readonly]="this.isMultiSignature" />
       </mat-form-field>
       <ng-container *ngIf="minSignatureField.touched">
@@ -111,19 +110,12 @@
           </button>
         </div>
         <div class="col">
-          <button
-            mat-flat-button
-            color="primary"
-            class="block"
-            [disabled]="!form.valid"
-            type="button"
-            (click)="saveDraft()"
-          >
-            {{ 'save to draft' | translate }}
+          <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
+            {{ 'save' | translate }}
           </button>
         </div>
         <div class="col">
-          <button mat-flat-button color="primary" class="block" [disabled]="!form.valid">
+          <button mat-flat-button color="primary" class="block" [disabled]="form.invalid">
             {{ 'next' | translate }}
           </button>
         </div>
