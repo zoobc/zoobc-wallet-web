@@ -99,6 +99,7 @@ export class CreateTransactionComponent implements OnInit {
   async generateDownloadJsonUri() {
     const { signaturesInfo } = this.multisig;
     if (signaturesInfo === null) {
+      this.updateCreateTransaction();
       const title = getTranslation('are you sure?', this.translate);
       const message = getTranslation('you will not be able to update the form anymore!', this.translate);
       const buttonText = getTranslation('yes, continue it!', this.translate);
@@ -141,6 +142,7 @@ export class CreateTransactionComponent implements OnInit {
         return Swal.fire({ type: 'error', title: 'Oops...', text: message });
       }
       if (this.createTransactionForm.valid) {
+        this.updateCreateTransaction();
         const { signaturesInfo } = this.multisig;
         if (this.multisig.signaturesInfo === null) {
           const title = getTranslation('are you sure?', this.translate);
@@ -162,7 +164,6 @@ export class CreateTransactionComponent implements OnInit {
           if (!isConfirm) return false;
         }
 
-        this.updateCreateTransaction();
         if (signaturesInfo === undefined) this.router.navigate(['/multisignature/send-transaction']);
         else this.router.navigate(['/multisignature/add-signatures']);
       }
