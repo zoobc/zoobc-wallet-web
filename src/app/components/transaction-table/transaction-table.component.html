@@ -18,8 +18,14 @@
           <div class="address">
             <wallet-address [value]="transaction.address"></wallet-address>
           </div>
-          <div class="date">
-            {{ transaction.timestamp | dateAgo }}
+          <div class="description">
+            <div class="date">
+              {{ transaction.timestamp | dateAgo }}
+            </div>
+            <div class="chips">
+              <div class="chip" *ngIf="transaction.multisigchild">{{ 'multisignature' | translate }}</div>
+              <div class="chip" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
+            </div>
           </div>
         </div>
         <div class="col-12 col-sm-4 text-right">

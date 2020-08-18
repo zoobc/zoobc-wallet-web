@@ -15,6 +15,8 @@ import zoobc, {
   AccountBalanceResponse,
   TransactionsResponse,
   TransactionType,
+  EscrowListParams,
+  EscrowStatus,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -47,7 +49,6 @@ export class DashboardComponent implements OnInit {
   accounts: SavedAccount[];
   lastRefresh: number;
   lastRefreshAccount: number;
-
   constructor(
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
@@ -94,7 +95,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getTransactions() {
+  async getTransactions() {
     if (!this.isLoadingRecentTx) {
       this.recentTx = null;
       this.unconfirmTx = null;
@@ -111,27 +112,57 @@ export class DashboardComponent implements OnInit {
         },
       };
 
-      zoobc.Transactions.getList(params)
-        .then((res: TransactionsResponse) => {
-          const tx = toTransactionListWallet(res, this.currAcc.address);
-          this.recentTx = tx.transactions;
-          this.recentTx.map(recent => {
-            recent['alias'] = this.contactServ.get(recent.address).name || '';
-          });
-          this.totalTx = tx.total;
+      try {
+        const trxList = await zoobc.Transactions.getList(params);
 
-          const params: MempoolListParams = {
-            address: this.currAcc.address,
-          };
-          return zoobc.Mempool.getList(params);
-        })
-        .then(
-          unconfirmTx => (this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address))
-        )
-        .catch(e => {
-          this.isErrorRecentTx = true;
-        })
-        .finally(() => ((this.isLoadingRecentTx = false), (this.lastRefresh = Date.now())));
+        let lastHeight = 0;
+        let firstHeight = 0;
+        if (parseInt(trxList.total) > 0) {
+          lastHeight = trxList.transactionsList[0].height;
+          firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
+        }
+
+        const multisigTx = trxList.transactionsList
+          .filter(trx => trx.multisigchild == true)
+          .map(trx => trx.id);
+
+        const paramEscrowSend: EscrowListParams = {
+          sender: this.currAcc.address,
+          blockHeightStart: firstHeight,
+          blockHeightEnd: lastHeight,
+        };
+        const paramEscrowReceive: EscrowListParams = {
+          recipient: this.currAcc.address,
+          blockHeightStart: firstHeight,
+          blockHeightEnd: lastHeight,
+        };
+
+        const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
+        const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
+
+        const escrowId = escrowSend.escrowsList.concat(escrowReceive.escrowsList).map(arr => arr.id);
+        const tx = toTransactionListWallet(trxList, this.currAcc.address);
+
+        this.recentTx = tx.transactions;
+        this.totalTx = tx.total;
+        this.recentTx.map(recent => {
+          recent['alias'] = this.contactServ.get(recent.address).name || '';
+          recent['escrow'] = escrowId.includes(recent.id);
+          recent['multisigchild'] = multisigTx.includes(recent.id);
+          return recent;
+        });
+        const paramPool: MempoolListParams = {
+          address: this.currAcc.address,
+        };
+        const unconfirmTx = await zoobc.Mempool.getList(paramPool);
+        this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address);
+      } catch (error) {
+        console.log(error);
+        this.isErrorRecentTx = true;
+      } finally {
+        this.isLoadingRecentTx = false;
+        this.lastRefresh = Date.now();
+      }
     }
   }
 

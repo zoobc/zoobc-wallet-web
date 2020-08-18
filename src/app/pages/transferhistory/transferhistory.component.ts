@@ -9,6 +9,7 @@ import zoobc, {
   TransactionsResponse,
   MempoolTransactionsResponse,
   TransactionType,
+  EscrowListParams,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -60,11 +61,41 @@ export class TransferhistoryComponent implements OnInit {
       };
 
       try {
-        let tx = await zoobc.Transactions.getList(txParam).then((res: TransactionsResponse) =>
-          toTransactionListWallet(res, this.address)
-        );
+        let trxList = await zoobc.Transactions.getList(txParam);
+
+        let lastHeight = 0;
+        let firstHeight = 0;
+        if (parseInt(trxList.total) > 0) {
+          lastHeight = trxList.transactionsList[0].height;
+          firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
+        }
+
+        const multisigTx = trxList.transactionsList
+          .filter(trx => trx.multisigchild == true)
+          .map(trx => trx.id);
+
+        const paramEscrowSend: EscrowListParams = {
+          sender: this.address,
+          blockHeightStart: firstHeight,
+          blockHeightEnd: lastHeight,
+        };
+        const paramEscrowReceive: EscrowListParams = {
+          recipient: this.address,
+          blockHeightStart: firstHeight,
+          blockHeightEnd: lastHeight,
+        };
+
+        const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
+        const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
+
+        const escrowId = escrowSend.escrowsList.concat(escrowReceive.escrowsList).map(arr => arr.id);
+
+        let tx = toTransactionListWallet(trxList, this.address);
         tx.transactions.map(recent => {
           recent['alias'] = this.contactServ.get(recent.address).name || '';
+          recent['escrow'] = escrowId.includes(recent.id);
+          recent['multisigchild'] = multisigTx.includes(recent.id);
+          return recent;
         });
         this.total = tx.total;
         this.accountHistory = reload ? tx.transactions : this.accountHistory.concat(tx.transactions);
