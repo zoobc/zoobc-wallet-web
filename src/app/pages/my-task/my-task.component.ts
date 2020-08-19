@@ -171,10 +171,7 @@ export class MyTaskComponent implements OnInit {
   }
 
   async getPendingMultisigApproval() {
-    const params: MempoolListParams = {
-      address: this.account.signByAddress,
-    };
-    let list: string[] = await zoobc.Mempool.getList(params).then(res => {
+    let list: string[] = await zoobc.Mempool.getList().then(res => {
       let txHash: any = res.mempooltransactionsList.filter(tx => {
         const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
         if (bytes.readInt32LE(0) == TransactionType.MULTISIGNATURETRANSACTION) return tx;
@@ -195,11 +192,15 @@ export class MyTaskComponent implements OnInit {
     const hashHex = base64ToHex(txHash);
     let visible = await zoobc.MultiSignature.getPendingByTxHash(hashHex).then(
       (res: MultisigPendingTxDetailResponse) => {
-        let idx = res.pendingsignaturesList.findIndex(
-          sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
-        );
-        if (idx >= 0) return false;
-        else return true;
+        let participants = res.multisignatureinfo.addressesList;
+        if (res.pendingsignaturesList) {
+          for (let i = 0; i < res.pendingsignaturesList.length; i++) {
+            participants = participants.filter(ptp => ptp != res.pendingsignaturesList[i].accountaddress);
+          }
+          const idx = this.authServ.getAllAccount().filter(acc => participants.includes(acc.address));
+          if (idx.length > 0) return true;
+          else return false;
+        }
       }
     );
     return visible;

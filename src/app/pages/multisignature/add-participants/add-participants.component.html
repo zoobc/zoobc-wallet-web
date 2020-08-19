@@ -189,17 +189,38 @@
           </div>
         </ng-container>
       </div>
-      <br />
-      <button
-        (click)="onAddSignature()"
-        [disabled]="transactionHashField.value.length <= 0"
-        mat-flat-button
-        color="primary"
-        type="button"
-        style="width: 100%;"
-      >
-        {{ 'add your signature' | translate }}
-      </button>
+      <div class="signatures-section">
+        <div [class.blur]="!disableSign">
+          <label>{{ 'get signature' | translate }}</label>
+          <account-selector
+            (select)="onSwitchAccount($event)"
+            type="normal"
+            [participants]="participants"
+            [switchAccount]="true"
+            [withBalance]="false"
+          ></account-selector>
+          <br />
+          <button
+            (click)="onAddSignature()"
+            [disabled]="transactionHashField.value.length <= 0 || !disableSign"
+            mat-flat-button
+            color="primary"
+            type="button"
+            style="width: 100%;"
+          >
+            {{ 'add your signature' | translate }}
+          </button>
+        </div>
+
+        <div [class.hide]="disableSign" class="cover-signature">
+          <div class="text-cover">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+            <span>
+              {{ 'you dont have any account that in participant list' | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="row" style="margin-top: 20px;">
         <div class="col">
           <button (click)="onBack()" mat-flat-button color="warn" class="block" type="button">
@@ -213,7 +234,7 @@
         </div>
         <div class="col">
           <button
-            [disabled]="form.invalid"
+            [disabled]="form.invalid || !disableSign"
             (click)="onNext()"
             mat-flat-button
             color="primary"

@@ -14,6 +14,16 @@
       </button>
     </div>
   </div>
+  <div>
+    <mat-label>{{ 'signedby' | translate }}</mat-label>
+    <account-selector
+      (select)="onSwitchAccount($event)"
+      type="normal"
+      [participants]="participants"
+      [switchAccount]="true"
+      [withBalance]="false"
+    ></account-selector>
+  </div>
   <mat-card style="padding: 0;">
     <div
       infiniteScroll

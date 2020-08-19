@@ -94,7 +94,7 @@
         </ng-container>
         <ng-container *ngIf="pendingSignatures.length > 0">
           {{
-            'signed by' | translate: { pendingSign: pendingSignatures.length, totalSign: participants.length }
+            'signed by' | translate: { pendingSign: pendingSignatures.length, totalSign: totalParticpants }
           }}
         </ng-container>
       </div>
@@ -102,6 +102,13 @@
     <ng-container *ngIf="showSignForm">
       <div class="row" style="border-bottom: none;">
         <div class="col-12 col-md-10 offset-md-1">
+          <label>{{ 'sign by' | translate }}</label>
+          <account-selector
+            (select)="onSwitchAccount($event)"
+            type="normal"
+            [participants]="participants"
+            [switchAccount]="true"
+          ></account-selector>
           <input-amount
             [group]="form"
             typeCoinName="typeFee"
