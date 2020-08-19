@@ -30,13 +30,13 @@ export class AccountDatasetComponent implements OnInit {
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
   minFee = environment.fee;
-  kindFee: string;
   currencyRate: Currency;
   form: FormGroup;
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  customFee: boolean = false;
+  typeFeeField = new FormControl('ZBC');
+
+  account: SavedAccount;
 
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
@@ -46,18 +46,22 @@ export class AccountDatasetComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private authServ: AuthService,
     private translate: TranslateService,
-    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
+    @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
     this.form = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
+      typeFee: this.typeFeeField,
     });
+
+    this.account = data;
   }
 
   ngOnInit() {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
@@ -99,17 +103,17 @@ export class AccountDatasetComponent implements OnInit {
     };
 
     zoobc.AccountDataset.removeDataset(param, seed)
-      .then(async res => {
-        let message = await getTranslation('Your Request is processing', this.translate);
-        let subMessage = await getTranslation(
-          'The dataset will remove when it has been successfully processed on the server',
+      .then(res => {
+        let message = getTranslation('your request is processing', this.translate);
+        let subMessage = getTranslation(
+          'the dataset will remove when it has been successfully processed on the server',
           this.translate
         );
         Swal.fire(message, subMessage, 'success');
       })
       .catch(async err => {
         console.log(err);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
         this.isErrorDelete = true;
         this.isLoadingDelete = false;
@@ -124,8 +128,12 @@ export class AccountDatasetComponent implements OnInit {
     this.dataSet = dataset;
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
+    this.feeForm.patchValue(this.minFee);
+    const minCurrency = truncate(this.minFee * this.currencyRate.value, 8);
+    this.feeFormCurr.patchValue(minCurrency);
+    this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
-      width: '300px',
+      width: '360px',
       maxHeight: '90vh',
     });
   }
@@ -141,10 +149,6 @@ export class AccountDatasetComponent implements OnInit {
         this.deleteDataSet();
       }
     });
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
   }
 
   onRefresh() {

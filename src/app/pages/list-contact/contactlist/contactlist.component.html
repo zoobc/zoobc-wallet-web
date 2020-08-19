@@ -1,33 +1,72 @@
 <div class="contacts-container">
-  <h2 class="mat-h2">{{ 'Address Book' | translate }}</h2>
+  <div class="row">
+    <div class="col-6">
+      <h2 class="mat-h2">{{ 'contacts' | translate }}</h2>
+    </div>
+    <div class="col-6 text-right">
+      <button mat-flat-button color="primary" type="button" (click)="onOpenAddContact()">
+        <i matPrefix class="fa fa-plus"></i> {{ 'add contact' | translate }}
+      </button>
+    </div>
+  </div>
   <div class="text-right" style="margin-bottom: 8px">
-    <button mat-flat-button color="primary" type="button" (click)="onOpenAddContact()">
-      <i matPrefix class="fa fa-plus"></i> {{ 'Add Address' | translate }}
+    <input
+      #fileInput
+      type="file"
+      (change)="onFileChanged($event)"
+      style="display: none"
+      accept="application/JSON"
+    />
+    <button
+      style="margin-right: 10px"
+      mat-flat-button
+      color="accent"
+      type="button"
+      (click)="onImportContact()"
+    >
+      <i matPrefix class="fa fa-file-import"></i> {{ 'import' | translate }}
+    </button>
+    <button mat-flat-button color="accent" type="button" (click)="onExportContact()">
+      <i matPrefix class="fa fa-file-export"></i> {{ 'export' | translate }}
     </button>
   </div>
 
   <mat-card style="padding: 0">
     <div class="no-content padding" *ngIf="!contacts || contacts.length <= 0">
       <i matPrefix class="fa fa-address-book"></i>
-      <span class="message">{{ 'No Address Available' | translate }}</span>
+      <span class="message">{{ 'no contacts available' | translate }}</span>
     </div>
 
     <ng-container *ngIf="contacts && contacts.length > 0">
       <div class="contacts-list" *ngFor="let contact of contacts">
         <div class="row">
           <div class="col-12 col-sm-8">
-            <p class="alias">{{ contact.alias }}</p>
+            <p class="alias">{{ contact.name }}</p>
             <p class="address">
               <wallet-address [value]="contact.address"></wallet-address>
             </p>
           </div>
-          <div class="col-12 col-sm-4 action-row">
-            <button mat-flat-button color="primary" (click)="onOpenEditContact(contact)">
-              {{ 'Edit' | translate }}
-            </button>
-            <button mat-flat-button color="warn" (click)="deleteContact(contact)">
-              {{ 'Delete' | translate }}
-            </button>
+          <div class="col-12 col-sm-4">
+            <div class="action">
+              <button
+                mat-flat-button
+                matTooltip="Edit Contact"
+                matTooltipPosition="below"
+                class="icon-btn primary"
+                (click)="onOpenEditContact(contact)"
+              >
+                <i class="fas fa-pen"></i>
+              </button>
+              <button
+                mat-flat-button
+                matTooltip="Delete Contact"
+                matTooltipPosition="below"
+                class="icon-btn warn"
+                (click)="deleteContact(contact)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

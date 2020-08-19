@@ -1,6 +1,6 @@
 <div class="account-dataset-list-container">
   <h2 class="mat-h2 text-center title">{{ account.name }}</h2>
-  <h3 class="mat-h4 text-center subtitle">Account Data Set</h3>
+  <h3 class="mat-h4 text-center subtitle">{{ 'account data set' | translate }}</h3>
   <div class="data-set-list">
     <div class="text-right" *ngIf="!isError">
       <button
@@ -20,7 +20,7 @@
       <ng-container *ngIf="dataSetList && !isLoading">
         <div class="no-content padding" *ngIf="dataSetList.length <= 0">
           <i matPrefix class="fa fa-receipt"></i>
-          <span class="message">{{ 'No Dataset Record' | translate }}</span>
+          <span class="message">{{ 'no dataset record' | translate }}</span>
         </div>
         <div class="list-item row" *ngFor="let data of dataSetList">
           <div class="col-12 col-md-10">
@@ -60,33 +60,57 @@
       <div class="no-content padding" *ngIf="isError">
         <i matPrefix class="fa fa-exclamation-triangle"></i>
         <span class="message">
-          {{ 'An error occurred while processing your request' | translate }}
+          {{ 'an error occurred while processing your request' | translate }}
         </span>
         <button mat-flat-button color="primary" (click)="onRefresh()">
-          {{ 'Try Again' | translate }}
+          {{ 'try again' | translate }}
         </button>
       </div>
     </mat-card>
     <button (click)="onSetupNewDataset()" mat-flat-button color="primary" type="submit" class="block setup">
-      {{ 'Setup New Dataset' | translate }}
+      {{ 'setup new dataset' | translate }}
     </button>
   </div>
 </div>
 <ng-template #feedialog>
   <h3 class="mat-h3">
-    <b>{{ 'Please Select Fee' | translate }}</b>
+    <b>{{ 'please select fee' | translate }}</b>
   </h3>
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
-    <fee-selector
+    <input-amount
       [group]="form"
-      feeName="fee"
-      feeCurrName="feeCurr"
-      [minFee]="minFee"
-      [timeoutField]="timeoutField.value"
-      [required]="true"
+      typeCoinName="typeFee"
+      amountCurrencyName="feeCurr"
+      amountName="fee"
+      [displayConverter]="true"
       [currencyRate]="currencyRate"
-      (onClickFeeChoose)="onClickFeeChoose($event)"
-    ></fee-selector>
+      label="{{ 'fee' | translate }}"
+    >
+    </input-amount>
+    <div
+      class="row"
+      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+    >
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+          <mat-error *ngIf="feeForm.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeForm.hasError('min')">
+            {{ 'minimum fee is' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+          <mat-error *ngIf="feeFormCurr.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeFormCurr.hasError('min')">
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
     <button
       mat-flat-button
       color="primary"
@@ -96,7 +120,7 @@
       style="margin-top:10px"
     >
       <span *ngIf="isLoadingDelete"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-      <span>{{ 'Delete' | translate }}</span>
+      <span>{{ 'delete' | translate }}</span>
     </button>
   </form>
 </ng-template>

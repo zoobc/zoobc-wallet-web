@@ -194,7 +194,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       this.updateMultiStorage();
       return this.router.navigate(['/multisignature/send-transaction']);
     }
-    let message = await getTranslation('At least 1 signature must be filled', this.translate);
+    let message = getTranslation('at least 1 signature must be filled', this.translate);
     Swal.fire('Error', message, 'error');
   }
 
@@ -215,7 +215,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.address);
     if (curAcc.type === 'multisig' && idx == -1)
       idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.signByAddress);
-    if (idx == -1) return Swal.fire('Error', 'This account is not in Participant List', 'error');
+    let message = getTranslation('this account is not in participant list', this.translate);
+    if (idx == -1) return Swal.fire('Error', message, 'error');
     const seed = this.authServ.seed;
     const signature = signTransactionHash(transactionHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));

@@ -58,7 +58,7 @@ export class ApprovalEscrowHistoryComponent implements OnInit {
           this.total = parseInt(res.total);
           let txMap = res.transactionsList.map(tx => {
             let approvalStatus = tx.approvalescrowtransactionbody.approval === 0 ? 'Approved' : 'Rejected';
-            const alias = this.contactServ.get(tx.senderaccountaddress).alias || '';
+            const alias = this.contactServ.get(tx.senderaccountaddress).name || '';
             return {
               id: tx.approvalescrowtransactionbody.transactionid,
               alias: alias,

@@ -23,15 +23,16 @@
       font-weight: bold;
     }
     .title-task {
-      color: $black1;
+      color: $black2;
       font-size: 13px;
       margin-bottom: 8px;
-      display: flex;
+      .address {
+        color: $black1;
+      }
     }
     .timeout {
       color: $black1;
       font-size: 13px;
-      font-weight: bold;
     }
     .commission-receive {
       color: map-get($accent, 500);

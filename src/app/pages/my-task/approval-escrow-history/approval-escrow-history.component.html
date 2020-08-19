@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-10">
       <h2 class="mat-h2 title">
-        {{ 'Escrows Approval History' | translate }}
+        {{ 'escrow approval history' | translate }}
         <span class="text-refresh" *ngIf="!isError && !isLoading"
-          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
+          >( {{ 'last refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
         >
       </h2>
     </div>
@@ -28,7 +28,7 @@
         <ng-container *ngIf="escrowApprovalList">
           <div class="no-content padding" *ngIf="escrowApprovalList.length <= 0">
             <i matPrefix class="fa fa-receipt"></i>
-            <span class="message">{{ 'No Escrows Approval Transaction History' | translate }}</span>
+            <span class="message">{{ 'no escrow approval transaction history' | translate }}</span>
           </div>
           <div
             class="approval-escrow-item hover row"
@@ -48,10 +48,10 @@
             </div>
             <div class="col-12 col-sm-4 right-side">
               <ng-container *ngIf="escrow.approvalStatus == 'Approved'">
-                <a class="approve">{{ 'Approved' | translate }}</a>
+                <a class="approve">{{ 'approved' | translate }}</a>
               </ng-container>
               <ng-container *ngIf="escrow.approvalStatus == 'Rejected'">
-                <a class="reject">{{ 'Rejected' | translate }}</a>
+                <a class="reject">{{ 'rejected' | translate }}</a>
               </ng-container>
             </div>
           </div>
@@ -74,10 +74,10 @@
         <div class="no-content padding" *ngIf="isError">
           <i matPrefix class="fa fa-exclamation-triangle"></i>
           <span class="message">
-            {{ 'An error occurred while processing your request' | translate }}
+            {{ 'an error occurred while processing your request' | translate }}
           </span>
           <button mat-flat-button color="primary" (click)="onRefresh()">
-            {{ 'Try Again' | translate }}
+            {{ 'try again' | translate }}
           </button>
         </div>
       </div>
@@ -88,31 +88,31 @@
 <ng-template #detailEscrow>
   <div class="detail-task-container" *ngIf="escrowDetail && !isLoadingDetail">
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
       <div class="col-12 col-md-8">{{ escrowDetail.id }}</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="escrowDetail.senderaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="escrowDetail.recipientaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'amount' | translate }}:</div>
       <div class="col-12 col-md-8">{{ escrowDetail.amount / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Commission Fee' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'commission fee' | translate }}:</div>
       <div class="col-12 col-md-8">{{ escrowDetail.commission / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Instruction' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'instruction' | translate }}:</div>
       <div class="col-12 col-md-8">
         {{ escrowDetail.instruction }}
       </div>

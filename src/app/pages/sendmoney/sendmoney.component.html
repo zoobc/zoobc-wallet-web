@@ -1,41 +1,42 @@
 <div class="sendmoney-container">
-  <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
-      <label>{{ 'From' | translate }}</label>
+      <label>{{ 'from' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
       <input-address
-        label="{{ 'Recipient Address' | translate }}"
+        label="{{ 'recipient address' | translate }}"
         classList="block"
         formControlName="recipient"
-        placeholder="{{ 'Recipient Address' | translate }}..."
+        placeholder="{{ 'recipient address' | translate }}..."
+        (change)="isAddressInContacts()"
       ></input-address>
       <ng-container *ngIf="recipientForm.touched">
         <mat-error *ngIf="recipientForm.hasError('required')">
-          {{ 'Recipient is required' | translate }}
+          {{ 'recipient address is required' | translate }}
         </mat-error>
         <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
-          {{ 'ZBC Address is invalid' | translate }}
+          {{ 'zbc address is invalid' | translate }}
         </mat-error>
       </ng-container>
       <div class="address-alias" *ngIf="!showSaveAddressBtn">
-        <span>{{ 'Address' | translate }}: </span>
-        <b>{{ contact.alias }}</b>
+        <span>{{ 'address' | translate }}: </span>
+        <b>{{ contact.name }}</b>
       </div>
       <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
         <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
-          {{ 'Save to Address Book' | translate }}
+          {{ 'save to contact' | translate }}
         </mat-checkbox>
       </div>
 
       <ng-container *ngIf="saveAddress">
-        <label>{{ 'Name' | translate }}</label>
         <mat-form-field appearance="outline" color="accent" class="block">
-          <input matInput type="text" formControlName="alias" placeholder="{{ 'Name' | translate }}" />
+          <mat-label>{{ 'name' | translate }}</mat-label>
+          <input matInput type="text" formControlName="alias" placeholder="{{ 'name' | translate }}" />
         </mat-form-field>
         <ng-container *ngIf="aliasField.touched">
           <mat-error *ngIf="aliasField.hasError('required')">
-            {{ 'Name is required' | translate }}
+            {{ 'name is required' | translate }}
           </mat-error>
         </ng-container>
       </ng-container>
@@ -46,60 +47,89 @@
         amountName="amount"
         [displayConverter]="true"
         [currencyRate]="currencyRate"
-        label="{{ 'Coin Amount' | translate }}"
+        label="{{ 'coin amount' | translate }}"
       >
       </input-amount>
-      <div class="row">
+      <div
+        class="row"
+        *ngIf="
+          (amountForm.touched && amountForm.invalid) ||
+          (amountCurrencyForm.touched && amountCurrencyForm.invalid)
+        "
+      >
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
           <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
             <mat-error *ngIf="amountForm.hasError('required')">
-              {{ 'Amount is required' | translate }}
+              {{ 'amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountForm.hasError('min')">
-              {{ 'Minimum amount is' | translate: { val: '0.00000001' } }}
+              {{ 'minimum amount is' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
           <ng-container *ngIf="amountCurrencyForm.touched && typeCoinField.value === 'Fiat'">
             <mat-error *ngIf="amountCurrencyForm.hasError('required')">
-              {{ 'Amount is required' | translate }}
+              {{ 'amount is required' | translate }}
             </mat-error>
             <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{ 'Minimum amount in ZBC must be ZBC' | translate: { val: '0.00000001' } }}
+              {{ 'minimum amount in zbc must be zbc' | translate: { val: '0.00000001' } }}
             </mat-error>
           </ng-container>
         </div>
       </div>
-      <fee-selector
+      <input-amount
         [group]="formSend"
-        feeName="fee"
-        feeCurrName="feeCurr"
-        [minFee]="minFee"
-        [timeoutField]="timeoutField.value"
-        [required]="true"
+        typeCoinName="typeFee"
+        amountCurrencyName="feeCurr"
+        amountName="fee"
+        [displayConverter]="true"
         [currencyRate]="currencyRate"
-        (onClickFeeChoose)="onClickFeeChoose($event)"
-      ></fee-selector>
-
+        label="{{ 'fee' | translate }}"
+      >
+      </input-amount>
+      <div
+        class="row"
+        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+      >
+        <div class="col-4 col-sm-3">&nbsp;</div>
+        <div class="col-8 col-sm-9">
+          <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+            <mat-error *ngIf="feeForm.hasError('required')">
+              {{ 'fee is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="feeForm.hasError('min')">
+              {{ 'minimum fee is' | translate: { val: minFee } }}
+            </mat-error>
+          </ng-container>
+          <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+            <mat-error *ngIf="feeFormCurr.hasError('required')">
+              {{ 'fee is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="feeFormCurr.hasError('min')">
+              {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+            </mat-error>
+          </ng-container>
+        </div>
+      </div>
       <span class="sub-title">
-        {{ 'Advanced Option' | translate }}
+        {{ 'advanced option' | translate }}
       </span>
       <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
-        {{ 'Escrow Transaction' | translate }}
+        {{ 'escrow transaction' | translate }}
       </mat-checkbox>
       <div class="zbc-form-item" *ngIf="advancedMenu">
         <input-address
-          label="{{ 'Approver Address' | translate }}"
+          label="{{ 'approver address' | translate }}"
           classList="block"
           formControlName="addressApprover"
-          placeholder="{{ 'Approver Address' | translate }}..."
+          placeholder="{{ 'approver address' | translate }}..."
         ></input-address>
         <ng-container *ngIf="addressApproverField.touched">
           <mat-error *ngIf="addressApproverField.hasError('required')">
-            {{ 'Address for Approver is required' | translate }}
+            {{ 'address for approver is required' | translate }}
           </mat-error>
           <mat-error *ngIf="addressApproverField.hasError('invalidAddress')">
-            {{ 'ZBC Address is invalid' | translate }}
+            {{ 'zbc address is invalid' | translate }}
           </mat-error>
         </ng-container>
         <input-amount
@@ -109,7 +139,7 @@
           amountName="approverCommission"
           [displayConverter]="false"
           [currencyRate]="currencyRate"
-          label="{{ 'Approver Commission' | translate }}"
+          label="{{ 'approver commission' | translate }}"
         >
         </input-amount>
         <div class="row">
@@ -117,54 +147,55 @@
           <div class="col-8 col-sm-9">
             <ng-container *ngIf="approverCommissionField.touched && typeCommissionField.value === 'ZBC'">
               <mat-error *ngIf="approverCommissionField.hasError('required')">
-                {{ 'Commission for approver is required' | translate }}
+                {{ 'commission for approver is required' | translate }}
               </mat-error>
               <mat-error *ngIf="approverCommissionField.hasError('min')">
-                {{ 'Minimum commission is' | translate: { val: '0.00000001' } }}
+                {{ 'minimum commission is' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
 
             <ng-container *ngIf="approverCommissionCurrField.touched && typeCommissionField.value === 'Fiat'">
               <mat-error *ngIf="approverCommissionCurrField.hasError('required')">
-                {{ 'Commission for approver is required' | translate }}
+                {{ 'commission for approver is required' | translate }}
               </mat-error>
               <mat-error *ngIf="approverCommissionCurrField.hasError('min')">
-                {{ 'Minimum Commission for approver in ZBC must be ZBC' | translate: { val: '0.00000001' } }}
+                {{ 'minimum commission for approver in zbc must be zbc' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
           </div>
         </div>
         <label class="block-height"
-          ><b>{{ 'Block Height' | translate }} : {{ blockHeight | number }}</b></label
+          ><b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b></label
         >
-        <label>{{ 'Timeout' | translate }}</label>
+
         <mat-form-field appearance="outline" class="block" color="accent">
+          <mat-label>{{ 'timeout' | translate }}</mat-label>
           <input
             (change)="onChangeTimeOut()"
             matInput
             type="number"
             formControlName="timeout"
-            placeholder="{{ 'Timeout' | translate }}"
+            placeholder="{{ 'timeout' | translate }}"
           />
         </mat-form-field>
         <ng-container *ngIf="timeoutField.touched">
           <mat-error *ngIf="timeoutField.hasError('required')">{{
-            'Timeout is required' | translate
+            'timeout is required' | translate
           }}</mat-error>
           <mat-error *ngIf="timeoutField.hasError('min')">
-            {{ 'Minimum timeout is 1' | translate }}
+            {{ 'minimum timeout is 1' | translate }}
           </mat-error>
           <mat-error *ngIf="timeoutField.hasError('max')">
-            {{ 'Maximum timeout is 720' | translate }}
+            {{ 'maximum timeout is 720' | translate }}
           </mat-error>
         </ng-container>
-        <label>{{ 'Instruction' | translate }}</label>
         <mat-form-field appearance="outline" class="block" color="accent">
+          <mat-label>{{ 'instruction' | translate }}</mat-label>
           <textarea matInput formControlName="instruction" rows="5"></textarea>
         </mat-form-field>
         <ng-container *ngIf="instructionField.touched">
           <mat-error *ngIf="instructionField.hasError('required')">
-            {{ 'Instruction is required' | translate }}
+            {{ 'instruction is required' | translate }}
           </mat-error>
         </ng-container>
       </div>
@@ -177,7 +208,7 @@
         [disabled]="formSend.invalid || isLoading || isError"
       >
         <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-        <span>{{ 'Send' | translate }}</span>
+        <span>{{ 'send' | translate }}</span>
       </button>
     </form>
   </mat-card>

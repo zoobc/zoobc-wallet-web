@@ -64,7 +64,7 @@ export class TransferhistoryComponent implements OnInit {
           toTransactionListWallet(res, this.address)
         );
         tx.transactions.map(recent => {
-          recent['alias'] = this.contactServ.get(recent.address).alias || '';
+          recent['alias'] = this.contactServ.get(recent.address).name || '';
         });
         this.total = tx.total;
         this.accountHistory = reload ? tx.transactions : this.accountHistory.concat(tx.transactions);
