@@ -2,6 +2,12 @@
 @import '../../../styles/mixins';
 
 .my-task-container {
+  .approval-history {
+    margin: 8px;
+    i {
+      margin-right: 8px;
+    }
+  }
   .block-height {
     color: map-get($accent, 500);
   }

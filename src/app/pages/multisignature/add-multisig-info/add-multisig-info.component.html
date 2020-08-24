@@ -24,12 +24,7 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="form" (submit)="next()">
-      <account-selector
-        (select)="onSwitchAccount($event)"
-        type="multisig"
-        [switchAccount]="false"
-        *ngIf="!isMultiSignature"
-      >
+      <account-selector (select)="onSwitchAccount($event)" type="multisig" [switchAccount]="false">
         <button mat-flat-button color="primary" class="block" type="button" style="margin-bottom: 16px;">
           {{ 'import my multisignature account' | translate }}
         </button>
@@ -73,14 +68,14 @@
           {{ 'participant must be unique' | translate }}
         </mat-error>
       </ng-container>
-      <div class="text-right" *ngIf="!isMultiSignature">
+      <div class="text-right">
         <button (click)="addParticipant()" mat-flat-button class="small" color="primary" type="button">
           {{ 'add participants' }}
         </button>
       </div>
       <mat-form-field appearance="outline" color="accent" class="block">
         <mat-label>{{ 'nonce' }}</mat-label>
-        <input formControlName="nonce" matInput type="number" [readonly]="this.isMultiSignature" />
+        <input formControlName="nonce" matInput type="number" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
         <mat-error *ngIf="nonceField.hasError('required')">
@@ -92,7 +87,7 @@
       </ng-container>
       <mat-form-field appearance="outline" color="accent" class="block">
         <mat-label>{{ 'minimum signature' | translate }}</mat-label>
-        <input formControlName="minSigs" matInput type="number" [readonly]="this.isMultiSignature" />
+        <input formControlName="minSigs" matInput type="number" />
       </mat-form-field>
       <ng-container *ngIf="minSignatureField.touched">
         <mat-error *ngIf="minSignatureField.hasError('required')">

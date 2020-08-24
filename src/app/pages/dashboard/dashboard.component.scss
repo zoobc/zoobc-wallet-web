@@ -85,7 +85,7 @@
     .button-group {
       text-align: center;
       button {
-        margin: 0 4px;
+        margin: 4px;
         background-color: rgba(black, 0.3);
         color: $white1;
         @include transition(0.3s ease-in all);
