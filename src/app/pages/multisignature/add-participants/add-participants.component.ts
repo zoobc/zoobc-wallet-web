@@ -33,7 +33,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   };
 
   participants = [];
-  disableSign: boolean = true;
+  getSignature: boolean = false;
 
   constructor(
     private multisigServ: MultisigService,
@@ -59,9 +59,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
     this.patchValue(this.multisig);
     this.participants = this.multisig.multisigInfo.participants;
-    const idx = this.authServ.getAllAccount().filter(res => this.participants.includes(res.address));
-    if (idx.length > 0) this.disableSign = true;
-    else this.disableSign = false;
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
@@ -230,5 +227,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
     this.authServ.switchAccount(account);
+  }
+
+  toggleGetSignature() {
+    this.getSignature = !this.getSignature;
   }
 }

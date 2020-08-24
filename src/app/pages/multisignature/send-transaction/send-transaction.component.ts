@@ -48,7 +48,6 @@ export class SendTransactionComponent implements OnInit {
 
   isMultiSigAccount: boolean = false;
   participants = [];
-  disableSign: boolean = true;
   accountBalance: any;
 
   constructor(
@@ -91,9 +90,6 @@ export class SendTransactionComponent implements OnInit {
       }
     });
     this.participants = this.multisig.multisigInfo.participants;
-    const idx = this.authServ.getAllAccount().filter(res => this.participants.includes(res.address));
-    if (idx.length > 0) this.disableSign = true;
-    else this.disableSign = false;
     this.getMultiSigDraft();
   }
 

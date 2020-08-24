@@ -52,7 +52,13 @@ export class AuthService {
 
   generateDerivationPath(): number {
     const accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
-    return accounts.length;
+    const highestPath = Math.max.apply(
+      Math,
+      accounts.map(res => {
+        return res.path;
+      })
+    );
+    return highestPath + 1;
   }
 
   login(key: string): boolean {
@@ -81,7 +87,7 @@ export class AuthService {
     if (account) {
       localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
       if (account.type == 'multisig') localStorage.setItem('CURR_MULTISIG', JSON.stringify(account));
-      if (account.path) {
+      if (account.path != null) {
         this._keyring.calcDerivationPath(account.path);
         this._seed = this._keyring.calcDerivationPath(account.path);
       }

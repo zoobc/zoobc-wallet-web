@@ -188,24 +188,6 @@ export class MyTaskComponent implements OnInit {
     return list;
   }
 
-  async getSignatureMultisig(txHash) {
-    const hashHex = base64ToHex(txHash);
-    let visible = await zoobc.MultiSignature.getPendingByTxHash(hashHex).then(
-      (res: MultisigPendingTxDetailResponse) => {
-        let participants = res.multisignatureinfo.addressesList;
-        if (res.pendingsignaturesList) {
-          for (let i = 0; i < res.pendingsignaturesList.length; i++) {
-            participants = participants.filter(ptp => ptp != res.pendingsignaturesList[i].accountaddress);
-          }
-          const idx = this.authServ.getAllAccount().filter(acc => participants.includes(acc.address));
-          if (idx.length > 0) return true;
-          else return false;
-        }
-      }
-    );
-    return visible;
-  }
-
   async checkVisibleMultisig(pendingList) {
     let list = [];
     let pendingApprovalList = await this.getPendingMultisigApproval();
@@ -213,21 +195,13 @@ export class MyTaskComponent implements OnInit {
       for (let i = 0; i < pendingList.length; i++) {
         let onPending = pendingApprovalList.includes(pendingList[i].transactionhash);
         if (!onPending) {
-          let visible = await this.getSignatureMultisig(pendingList[i].transactionhash);
-          if (visible) {
-            list.push(pendingList[i]);
-          }
-        }
-      }
-    } else {
-      for (let i = 0; i < pendingList.length; i++) {
-        let visible = await this.getSignatureMultisig(pendingList[i].transactionhash);
-        if (visible) {
           list.push(pendingList[i]);
         }
       }
+      return list;
+    } else {
+      return pendingList;
     }
-    return list;
   }
 
   async checkVisibleEscrow(escrowsList) {

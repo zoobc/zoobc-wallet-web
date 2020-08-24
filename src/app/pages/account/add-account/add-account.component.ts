@@ -138,8 +138,4 @@ export class AddAccountComponent implements OnInit {
   removeParticipant(index: number) {
     this.participantsField.removeAt(index);
   }
-
-  onSwitchSignBy(account: SavedAccount) {
-    this.account = account;
-  }
 }

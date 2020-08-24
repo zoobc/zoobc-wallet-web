@@ -49,12 +49,9 @@
               <wallet-address [value]="acc.address"></wallet-address>
             </div>
 
-            <ng-container *ngIf="acc.type == 'multisig'">
-              <div class="address">
-                <p class="label">{{ 'address' | translate }}:</p>
-                <wallet-address [value]="acc.address"></wallet-address>
-              </div>
-            </ng-container>
+            <div class="address" *ngIf="acc.type == 'multisig'">
+              <wallet-address [value]="acc.address"></wallet-address>
+            </div>
           </div>
 
           <div class="action">

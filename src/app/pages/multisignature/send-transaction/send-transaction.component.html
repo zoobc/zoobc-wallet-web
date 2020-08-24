@@ -2,25 +2,13 @@
   <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
-      <div class="from-section">
-        <div [class.blur]="!disableSign">
-          <label>{{ 'from' | translate }}</label>
-          <account-selector
-            (select)="onSwitchAccount($event)"
-            type="normal"
-            [participants]="participants"
-            [switchAccount]="true"
-          ></account-selector>
-        </div>
-        <div [class.hide]="disableSign" class="cover-from">
-          <div class="text-cover">
-            <i class="fa fa-lock" aria-hidden="true"></i>
-            <span>
-              {{ 'you dont have any account that in participant list' | translate }}
-            </span>
-          </div>
-        </div>
-      </div>
+      <label>{{ 'from' | translate }}</label>
+      <account-selector
+        (select)="onSwitchAccount($event)"
+        type="normal"
+        [addresses]="participants"
+        [switchAccount]="true"
+      ></account-selector>
       <input-amount
         [group]="formSend"
         typeCoinName="typeFee"
@@ -61,7 +49,7 @@
       <button mat-flat-button color="primary" type="button" (click)="saveDraft()">
         {{ 'save' | translate }}
       </button>
-      <button [disabled]="!formSend.valid || !disableSign" mat-flat-button color="primary">
+      <button [disabled]="!formSend.valid" mat-flat-button color="primary">
         {{ 'send' | translate }}
       </button>
     </form>
