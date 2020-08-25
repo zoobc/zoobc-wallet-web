@@ -1,3 +1,148 @@
-<p>
-  seat-detail works!
-</p>
+<div class="text-center">
+  <h1 class="mat-h1">Seat #{{ tokenId }}</h1>
+</div>
+
+<!-- NOT LOADING -->
+<ng-container *ngIf="!isLoading">
+  <!-- IF SUCCEED -->
+  <ng-container *ngIf="!isError">
+    <!-- CONTAINS DATA -->
+    <div class="seat-detail-container" *ngIf="seat">
+      <form [formGroup]="form">
+        <mat-label class="title">ETH Address</mat-label>
+        <div class="address">
+          <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
+        </div>
+
+        <mat-label class="title">ZooBC Address</mat-label>
+        <div class="zoobc-address">
+          <div class="address">
+            <wallet-address
+              *ngIf="addressField.value"
+              [value]="addressField.value"
+              [copyButton]="true"
+            ></wallet-address>
+            <i *ngIf="!addressField.value">(No ZBC Address yet)</i>
+          </div>
+          <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false" *ngIf="editable">
+            <button mat-flat-button type="button" class="block" color="primary">
+              Change Address
+            </button>
+          </account-selector>
+        </div>
+
+        <mat-label class="title">Node Public Key</mat-label>
+        <div style="display: flex;">
+          <div class="address" style="width: calc(100% - 48px);margin-right: 12px;">
+            <wallet-address
+              *ngIf="nodePubKeyField.value"
+              [value]="nodePubKeyField.value"
+              [copyButton]="true"
+            ></wallet-address>
+            <i *ngIf="!nodePubKeyField.value">(No Node Public Key yet)</i>
+          </div>
+          <button
+            type="button"
+            class="btn-suffix"
+            matSuffix
+            (click)="generateNodePublicKey()"
+            matTooltip="Get New Node Public Key"
+            *ngIf="editable"
+          >
+            <i class="fas fa-sync"></i>
+          </button>
+        </div>
+
+        <mat-label class="title">Message</mat-label>
+        <div *ngIf="!editable">
+          {{ seat.message }}
+          <i *ngIf="!messageField.value">(No Message yet)</i>
+        </div>
+        <ng-container *ngIf="editable">
+          <mat-form-field appearance="outline" color="accent" class="block">
+            <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message">
+            </textarea>
+          </mat-form-field>
+          <ng-container *ngIf="messageField.touched">
+            <mat-error *ngIf="messageField.hasError('invalidLimit')">
+              Maximum message length is 256 bytes
+            </mat-error>
+          </ng-container>
+          <div class="hint">{{ messageSize }} of 256 bytes</div>
+        </ng-container>
+
+        <ng-container *ngIf="metamask && editable">
+          <button
+            mat-flat-button
+            type="button"
+            class="block"
+            color="primary"
+            (click)="onDownload()"
+            [disabled]="!passphrase"
+          >
+            <i matPrefix class="fa fa-download"></i>
+            Download Certificate
+          </button>
+          <button
+            style="margin-top: 10px;"
+            mat-flat-button
+            type="button"
+            class="block"
+            color="primary"
+            (click)="onUpdate()"
+            [disabled]="!form.valid || isLoadingUpdate"
+          >
+            <i matPrefix class="fa fa-pen" *ngIf="!isLoadingUpdate"></i>
+            <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
+            Update
+          </button>
+        </ng-container>
+
+        <button
+          style="margin-top: 10px;"
+          mat-flat-button
+          type="button"
+          class="block"
+          color="primary"
+          (click)="connectMetamask()"
+          *ngIf="!metamask"
+        >
+          Connect Metamask
+        </button>
+
+        <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
+          <span> Need Help? <a href="/">Click Here</a> </span>
+        </div>
+      </form>
+    </div>
+
+    <!-- GOT NO DATA -->
+  </ng-container>
+
+  <!-- IF ERROR -->
+  <div class="no-content" *ngIf="isError">
+    <i matPrefix class="far fa-frown"></i>
+    <span class="message">Error occured. Please try again</span>
+    <button mat-flat-button color="primary" (click)="getSeat()">Try again</button>
+  </div>
+</ng-container>
+
+<!-- LOADING -->
+<ng-container *ngIf="isLoading">
+  <div class="skeleton">
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;margin-bottom: 24px;"></div>
+
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;margin-bottom: 24px;"></div>
+
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;margin-bottom: 24px;"></div>
+
+    <div class="skeleton-text small" style="width: 40%;"></div>
+    <div class="skeleton-text" style="width: 100%;"></div>
+    <div class="skeleton-text" style="width: 100%;"></div>
+    <div class="skeleton-text" style="width: 100%;"></div>
+    <div class="skeleton-text" style="width: 30%;"></div>
+  </div>
+</ng-container>

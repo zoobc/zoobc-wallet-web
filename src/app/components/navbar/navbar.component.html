@@ -5,7 +5,7 @@
         <i class="fa fa-bars" style="font-size: 18px"></i>
       </button>
       <a routerLink="/" class="brand-text">
-        <img src="/assets/img/zbc-white.png" alt="" />
+        <img src="assets/img/zbc-white.png" alt="" />
         <h3><b>ZooBC</b><span> Registration</span></h3>
       </a>
     </div>
@@ -18,7 +18,7 @@
         target="_blank"
         *ngIf="isLoggedIn"
       >
-        <i class="fas fa-address-card"></i>
+        <i class="fa fa-id-card-alt"></i>
       </button>
 
       <!-- account menu -->
@@ -28,23 +28,19 @@
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
           <button mat-menu-item (click)="onComingSoonPage()">
-            <i class="fab fa-usb"></i>
-            {{ 'Connect Hardware Wallet' | translate }}
+            <i class="fab fa-usb"></i>Connect Hardware Wallet
           </button>
           <mat-divider></mat-divider>
-          <button mat-menu-item routerLink="/settings/about">
-            <i class="fas fa-info"></i>
-            {{ 'Info & Help' | translate }}
-          </button>
+          <button mat-menu-item routerLink="/settings/about"><i class="fas fa-info"></i>Info & Help</button>
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/settings/general">
             <i class="fa fa-cog"></i>
-            {{ 'Settings' | translate }}
+            Settings
           </button>
           <mat-divider></mat-divider>
           <button (click)="onLogout()" mat-menu-item>
             <i class="fas fa-sign-out-alt"></i>
-            {{ 'Logout' | translate }}
+            Logout
           </button>
         </div>
       </mat-menu>

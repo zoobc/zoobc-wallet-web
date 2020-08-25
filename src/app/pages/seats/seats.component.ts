@@ -1,15 +1,108 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { SeatDetailComponent } from './seat-detail/seat-detail.component';
+import { FormGroup, FormControl } from '@angular/forms';
+import { SeatService, Seat } from 'src/app/services/seat.service';
+import { Router, ActivatedRoute, NavigationEnd, NavigationExtras } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-seats',
   templateUrl: './seats.component.html',
-  styleUrls: ['./seats.component.scss']
+  styleUrls: ['./seats.component.scss'],
 })
-export class SeatsComponent implements OnInit {
+export class SeatsComponent implements OnDestroy {
+  withDetail: boolean = true;
+  detailSetRefDialog: MatDialogRef<any>;
 
-  constructor() { }
+  form: FormGroup;
+  searchField = new FormControl('');
 
-  ngOnInit() {
+  seats: Seat[] = null;
+  page: number = 1;
+  next: boolean = false;
+  prev: boolean = false;
+
+  isLoading = false;
+  isError = false;
+  error: any;
+
+  routerEvent: Subscription;
+
+  constructor(
+    public dialog: MatDialog,
+    private seatServ: SeatService,
+    private router: Router,
+    private activeRoute: ActivatedRoute
+  ) {
+    this.form = new FormGroup({
+      search: this.searchField,
+    });
+
+    this.routerEvent = router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.activeRoute.queryParams.subscribe(res => {
+          this.page = parseInt(res.page) || 1;
+          this.searchField.setValue(res.search || '');
+        });
+        this.getSeats();
+      }
+    });
   }
 
+  ngOnDestroy() {
+    this.routerEvent.unsubscribe();
+  }
+
+  onOpenDetailSeat(tokenId: number) {
+    this.detailSetRefDialog = this.dialog.open(SeatDetailComponent, {
+      width: '420px',
+      maxHeight: '90vh',
+      data: tokenId,
+    });
+  }
+
+  getSeats() {
+    const search = this.searchField.value;
+
+    this.isLoading = true;
+    this.isError = false;
+    this.error = null;
+    this.seatServ
+      .search(search, this.page)
+      .then(res => {
+        if (res) {
+          this.seats = res.seats;
+          this.next = res.next;
+          this.prev = res.prev;
+        } else {
+          this.seats = null;
+          this.next = null;
+          this.prev = null;
+        }
+        this.isLoading = false;
+      })
+      .catch(err => {
+        if (err.error) this.error = err;
+        this.isLoading = false;
+        this.isError = true;
+      });
+  }
+
+  onSearch() {
+    let params = {
+      search: this.searchField.value,
+      page: 1,
+    };
+
+    this.router.navigate(['dashboard'], { queryParams: params });
+  }
+
+  goTo(e, pageIdx) {
+    e.preventDefault();
+    let navigationExtras: NavigationExtras = {
+      queryParams: { page: pageIdx, search: this.searchField.value },
+    };
+    this.router.navigate(['/dashboard'], navigationExtras);
+  }
 }

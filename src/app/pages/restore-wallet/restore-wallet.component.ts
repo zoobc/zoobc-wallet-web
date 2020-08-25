@@ -6,7 +6,6 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
-import { TranslateService } from '@ngx-translate/core';
 import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 
 interface Languages {
@@ -20,8 +19,6 @@ interface Languages {
   styleUrls: ['./restore-wallet.component.scss'],
 })
 export class RestoreWalletComponent implements OnInit {
-  mnemonicLanguage = 'ENGLISH';
-
   languages: Languages[] = [
     { value: 'chinese_simplified', viewValue: 'Chinese Simplified' },
     { value: 'english', viewValue: 'English' },
@@ -33,98 +30,77 @@ export class RestoreWalletComponent implements OnInit {
     { value: 'chinese_traditional', viewValue: 'Chinese Traditional' },
   ];
 
-  lang: string;
-  mnemonic: string;
-  totalTx: number = 0;
-  mnemonicWordLengtEnv: number = environment.mnemonicNumWords;
+  selectedLang: number = 1;
+  mnemonicNumWords = environment.mnemonicNumWords;
 
   restoreForm: FormGroup;
   passphraseField = new FormControl('', Validators.required);
   errorOpenWallet: boolean = false;
 
-  word: string;
   wordField: FormArray;
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private authServ: AuthService,
-    private translate: TranslateService,
     private fb: FormBuilder
   ) {
-    this.restoreForm = this.fb.group({
-      words: this.fb.array([]),
-    });
+    this.restoreForm = this.fb.group({ words: this.fb.array([]) });
   }
 
   ngOnInit() {
-    this.onLoad24Passphrase('');
+    this.onLoad24Passphrase();
   }
 
-  onLoad24Passphrase(phrase: any) {
-    const phraseWord = phrase;
-    for (let i = 0; i < this.mnemonicWordLengtEnv; i++) {
+  onLoad24Passphrase(phrase: string[] = []) {
+    for (let i = 0; i < this.mnemonicNumWords; i++) {
       this.wordField = this.restoreForm.get('words') as FormArray;
-      this.wordField.push(this.fb.group({ word: [phraseWord[i], Validators.required] }));
+      this.wordField.push(this.fb.group({ word: [phrase[i], Validators.required] }));
     }
   }
 
-  validatePassphrase() {
-    let phraseWord = this.mnemonic.split(' ');
-    const valid = ZooKeyring.isPassphraseValid(this.mnemonic, this.lang);
+  validatePassphrase(passphrase: string) {
+    const arrayPhrase = passphrase.split(' ');
+    const lang = this.languages[this.selectedLang].value;
+    const valid = ZooKeyring.isPassphraseValid(passphrase, lang);
+
     this.wordField.controls = [];
-    this.onLoad24Passphrase(phraseWord);
-    if (phraseWord.length != this.mnemonicWordLengtEnv) {
-      // Give some time for load passphrase after then set error
-      setTimeout(() => {
-        this.restoreForm.setErrors({ lengthMnemonic: true });
-      }, 50);
-    }
+    this.onLoad24Passphrase(arrayPhrase);
     if (!valid) {
-      // Give some time for load passphrase after then set error
       setTimeout(() => {
         this.restoreForm.setErrors({ mnemonic: true });
       }, 50);
     }
   }
 
-  selectMnemonicLanguage(language) {
-    this.lang = language.value;
-    this.mnemonicLanguage = this.lang;
-    this.validatePassphrase();
+  selectMnemonicLanguage(index: number) {
+    let passphrase: string = this.restoreForm.value.words.map(form => form.word).join(' ');
+    this.selectedLang = index;
+    this.validatePassphrase(passphrase);
   }
 
   onPaste(event: ClipboardEvent) {
     let clipboardData = event.clipboardData;
     let passphrase = clipboardData.getData('text').toLowerCase();
-    this.mnemonic = passphrase;
-    this.validatePassphrase();
+    this.validatePassphrase(passphrase);
   }
 
   onClearPassphrase() {
     this.wordField.controls = [];
-    this.onLoad24Passphrase('');
+    this.onLoad24Passphrase();
   }
 
   onChangeMnemonic() {
-    let passphrase: string = this.restoreForm.value.words
-      .map(form => form.word)
-      .join(' ')
-      .replace(/\s\s+/g, ' ')
-      .toLowerCase()
-      .trim();
-    const valid = ZooKeyring.isPassphraseValid(passphrase);
+    let passphrase: string = this.restoreForm.value.words.map(form => form.word).join(' ');
+    const lang = this.languages[this.selectedLang].value;
+    const valid = ZooKeyring.isPassphraseValid(passphrase, lang);
     if (!valid) this.restoreForm.setErrors({ mnemonic: true });
   }
 
   async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
-        let message: string;
-        await this.translate
-          .get('Your old wallet will be removed from this device')
-          .toPromise()
-          .then(res => (message = res));
+        let message: string = 'Your old wallet will be removed from this device';
         Swal.fire({
           title: message,
           confirmButtonText: 'Continue',

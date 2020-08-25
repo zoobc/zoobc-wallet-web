@@ -1,3 +1,55 @@
-<p>
-  confirm-update works!
-</p>
+<div>
+  <h2 class="mat-h2 text-center">Confirm Update</h2>
+
+  <div class="label">Seat ID</div>
+  <div class="seat-id">#{{ data.old.tokenId | number }}</div>
+  <div class="label">ETH Address</div>
+  <div class="value">
+    <wallet-address value="{{ data.old.ethAddress }}" [copyButton]="true"></wallet-address>
+  </div>
+  <div class="content-change">
+    <div class="before">
+      <div class="label">ZooBC Address</div>
+      <div class="value">
+        <wallet-address value="{{ data.old.zbcAddress }}" [copyButton]="true"></wallet-address>
+      </div>
+
+      <div class="label">Node Public Key</div>
+      <div class="value">
+        <wallet-address value="{{ data.old.nodePubKey }}" [copyButton]="true"></wallet-address>
+      </div>
+
+      <div class="label">Message</div>
+      <div class="value">
+        {{ data.old.message }}
+      </div>
+    </div>
+    <div class="arrow">
+      <i class="fa fa-arrow-right"></i>
+    </div>
+    <div class="after">
+      <div class="label">ZooBC Address</div>
+      <div class="value">
+        <wallet-address value="{{ data.new.zbcAddress }}" [copyButton]="true"></wallet-address>
+      </div>
+
+      <div class="label">Node Public Key</div>
+      <div class="value">
+        <wallet-address value="{{ data.new.nodePubKey }}" [copyButton]="true"></wallet-address>
+      </div>
+
+      <div class="label">Message</div>
+      <div class="value">
+        {{ data.new.message }}
+      </div>
+    </div>
+  </div>
+  <div class="text-right">
+    <button mat-flat-button color="warn" (click)="closeDialog()" style="margin-right: 8px">
+      Cancel
+    </button>
+    <button mat-flat-button color="primary" (click)="onConfirm()">
+      Confirm
+    </button>
+  </div>
+</div>

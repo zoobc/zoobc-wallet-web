@@ -2,29 +2,29 @@
   <ul class="sidenav-menu">
     <li [ngClass]="menu == 'dashboard' && 'active'">
       <a routerLink="/dashboard" (click)="onToggle()">
-        <i class="fa fa-couch"></i>
-        <span>{{ 'Seats' | translate }}</span>
+        <i class="fa fa-ticket-alt"></i>
+        <span>Seats</span>
       </a>
     </li>
 
     <li [ngClass]="menu == 'accounts' && 'active'">
       <a routerLink="/accounts" (click)="onToggle()">
         <i class="fa fa-address-card"></i>
-        <span>{{ 'Account' | translate }}</span>
+        <span>Accounts</span>
       </a>
     </li>
 
     <li [ngClass]="menu == 'account' && 'active'">
       <a (click)="onComingSoonPage()">
         <i class="fab fa-usb"></i>
-        <span>{{ 'Hardware Wallet' | translate }}</span>
+        <span>Hardware Wallet</span>
       </a>
     </li>
 
     <li>
       <a (click)="openRevealPassphrase()">
         <i class="fa fa-eye"></i>
-        <span>{{ 'Reveal Passphrase' | translate }}</span>
+        <span>Reveal Passphrase</span>
       </a>
     </li>
   </ul>

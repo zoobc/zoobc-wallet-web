@@ -1,17 +1,17 @@
 <div class="signup-container">
-  <h2 class="mat-h2">{{ 'Create New Account' | translate }}</h2>
-  <h4 class="mat-h4">{{ 'Your Passphrase' | translate }}:</h4>
+  <h2 class="mat-h2">Create New Account</h2>
+  <h4 class="mat-h4">Your Passphrase</h4>
 
   <div class="language-selector">
     <button mat-flat-button color="primary" [matMenuTriggerFor]="language">
-      <span>{{ mnemonicLanguage }}</span>
-      <i class="fa fa-caret-down"></i>
+      <span>{{ languages[selectedLang].viewValue }}</span>
+      <i matSuffix class="fa fa-caret-down"></i>
     </button>
     <mat-menu #language="matMenu">
       <button
-        *ngFor="let language of languages"
+        *ngFor="let language of languages; index as i"
         [value]="language.value"
-        (click)="selectMnemonicLanguage(language)"
+        (click)="selectMnemonicLanguage(i)"
         mat-menu-item
       >
         {{ language.viewValue }}
@@ -19,44 +19,49 @@
     </mat-menu>
   </div>
   <div class="row passphrase-section">
-    <div class="col-6 col-sm-4" *ngFor="let p of passphrase; let key = index">
+    <div class="col-6 col-sm-4" [class.blur]="!showPassPhrase" *ngFor="let p of passphrase; let key = index">
       <div class="box-passphrase">
         <div class="number">{{ key + 1 }}</div>
         <div class="word">{{ p }}</div>
       </div>
     </div>
+    <div [class.hide]="showPassPhrase" class="cover-passphrase" (click)="tooglePassphrase()">
+      <div class="text-cover">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+        <span style="margin-top: 5px;">
+          {{
+            'Click here too see your passphrase. Make sure there is no one else around you will see it too' ||
+              translate
+          }}
+        </span>
+      </div>
+    </div>
   </div>
 
   <div class="btn-grouped">
-    <button mat-flat-button color="primary" (click)="copyPassphrase()">
+    <button [disabled]="!showPassPhrase" mat-flat-button color="primary" (click)="copyPassphrase()">
       <i matPrefix class="fas fa-copy"></i>
-      <span class="text">{{ 'Copy Passphrase' | translate }}</span>
+      <span class="text">'Copy Passphrase'</span>
     </button>
-    <button mat-flat-button color="primary" (click)="generateNewWallet()">
+    <button [disabled]="!showPassPhrase" mat-flat-button color="primary" (click)="generateNewWallet()">
       <i matPrefix class="fas fa-sync"></i>
-      <span class="text">{{ 'Regenerate' | translate }}</span>
+      <span class="text">Regenerate</span>
     </button>
   </div>
 
   <form [formGroup]="formTerms">
     <div class="text-left">
-      <div
-        class="warning-box mat-body-2"
-        [innerHTML]="
-          'Remember: Never tell your passphrase. If you lose it, you lose access to your account!'
-            | translate
-        "
-      ></div>
+      <div class="warning-box mat-body-2">
+        Remember: Never tell your passphrase. If you lose it, you lose access to your account!
+      </div>
       <div style="margin-bottom: 8px">
-        <mat-checkbox formControlName="isWrittenDown">
-          {{ 'I have written or saved my passphrase safely' | translate }}
+        <mat-checkbox formControlName="isWrittenDown"
+          >I have written or saved my passphrase safely
         </mat-checkbox>
       </div>
       <div>
         <mat-checkbox formControlName="isAgree">
-          <span
-            [innerHTML]="'I Approve Terms Of Use & Privacy Policy' | translate"
-          ></span>
+          <span>I Approve Terms Of Use & Privacy Policy</span>
         </mat-checkbox>
       </div>
     </div>
@@ -70,7 +75,7 @@
         [disabled]="!isWrittenDown.value || !isAgree.value"
       >
         <i matPrefix class="fas fa-wallet"></i>
-        <span class="text">{{ 'Create Wallet' | translate }}</span>
+        <span class="text">Create Wallet</span>
       </button>
     </div>
   </form>

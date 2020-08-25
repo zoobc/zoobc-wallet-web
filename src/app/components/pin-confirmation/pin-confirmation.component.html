@@ -1,16 +1,12 @@
 <h3 class="mat-h3">
-  <b>{{ 'Confirm Your Pin' | translate }}</b>
+  <b>Confirm Your Pin</b>
 </h3>
 <form [formGroup]="formConfirmPin" class="form-pin-confirmation">
-  <field-pins formControlName="pin" (keyup)="onTypePin()"></field-pins>
+  <field-pins #pin formControlName="pin" (keyup)="onTypePin()"></field-pins>
   <div class="text-center">
     <mat-error *ngIf="formConfirmPin.hasError('invalid')">
-      <span class="text-center">{{ 'Pin does not match' | translate }}</span>
+      <span class="text-center">Pin does not match</span>
     </mat-error>
-    <i
-      matPrefix
-      class="fas fa-circle-notch fa-spin"
-      *ngIf="isConfirmPinLoading"
-    ></i>
+    <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isConfirmPinLoading"></i>
   </div>
 </form>

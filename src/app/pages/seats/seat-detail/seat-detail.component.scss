@@ -1,0 +1,35 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.mat-h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: map-get($primary, 500);
+  margin-bottom: 12px;
+}
+
+.seat-detail-container {
+  .title {
+    color: $black2;
+  }
+  .address {
+    margin-top: 4px;
+    margin-bottom: 16px;
+    display: block;
+    word-break: break-all;
+    color: $black1;
+  }
+  .zoobc-address {
+    margin-bottom: 16px;
+    > .address {
+      margin-bottom: 8px;
+    }
+  }
+
+  .hint {
+    font-size: 12px;
+    color: $black2;
+    margin-bottom: 12px;
+    text-align: right;
+  }
+}
