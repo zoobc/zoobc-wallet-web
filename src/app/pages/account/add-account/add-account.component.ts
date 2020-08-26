@@ -18,11 +18,10 @@ export class AddAccountComponent implements OnInit {
   participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
-  signFormField = new FormControl('', [Validators.required]);
-  signBy: SavedAccount;
 
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
+  account: SavedAccount;
 
   constructor(
     private authServ: AuthService,
@@ -34,7 +33,6 @@ export class AddAccountComponent implements OnInit {
       participants: this.participantsField,
       nonce: this.nonceField,
       minimumSignature: this.minSignatureField,
-      sign: this.signFormField,
     });
 
     this.pushInitParticipant();
@@ -87,13 +85,12 @@ export class AddAccountComponent implements OnInit {
       account = {
         name: this.accountNameField.value,
         type: 'multisig',
-        path: this.signBy.path,
+        path: null,
         nodeIP: null,
         address: multiSignAddress,
         participants: participants,
         nonce: this.nonceField.value,
         minSig: this.minSignatureField.value,
-        signByAddress: this.signBy.address,
       };
       this.authServ.addAccount(account);
       return this.dialogRef.close(true);
@@ -106,7 +103,6 @@ export class AddAccountComponent implements OnInit {
     this.participantsField.disable();
     this.nonceField.disable();
     this.minSignatureField.disable();
-    this.signFormField.disable();
 
     const len = this.authServ.getAllAccount('normal').length + 1;
     this.accountNameField.setValue(`Account ${len}`);
@@ -118,7 +114,6 @@ export class AddAccountComponent implements OnInit {
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
-    this.signFormField.enable();
 
     const len = this.authServ.getAllAccount('multisig').length + 1;
     this.accountNameField.setValue(`Multisig Account ${len}`);
@@ -142,10 +137,5 @@ export class AddAccountComponent implements OnInit {
 
   removeParticipant(index: number) {
     this.participantsField.removeAt(index);
-  }
-
-  onSwitchSignBy(account: SavedAccount) {
-    this.signBy = account;
-    if (account) this.signFormField.setValue(account.address);
   }
 }

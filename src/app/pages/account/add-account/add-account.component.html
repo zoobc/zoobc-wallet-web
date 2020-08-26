@@ -95,14 +95,6 @@
           {{ 'minimum signature is 2' | translate }}
         </mat-error>
       </ng-container>
-
-      <label>{{ 'sign by' | translate }}</label>
-      <account-selector
-        [type]="'normal'"
-        [switchAccount]="false"
-        [selectedValue]="account ? account.signByAddress : undefined"
-        (select)="onSwitchSignBy($event)"
-      ></account-selector>
     </ng-container>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid" class="block">

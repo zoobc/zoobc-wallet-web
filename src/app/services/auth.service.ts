@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface SavedAccount {
   name: string;
-  path: number;
+  path?: number;
   type: 'normal' | 'multisig';
   nodeIP: string;
   address: string;
@@ -19,7 +19,6 @@ export interface SavedAccount {
   nonce?: number;
   minSig?: number;
   balance?: number;
-  signByAddress?: string;
 }
 
 @Injectable({
@@ -53,7 +52,13 @@ export class AuthService {
 
   generateDerivationPath(): number {
     const accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
-    return accounts.length;
+    const highestPath = Math.max.apply(
+      Math,
+      accounts.map(res => {
+        return res.path;
+      })
+    );
+    return highestPath + 1;
   }
 
   login(key: string): boolean {
@@ -79,10 +84,20 @@ export class AuthService {
   }
 
   switchAccount(account: SavedAccount) {
-    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
-    this._keyring.calcDerivationPath(account.path);
-    this._seed = this._keyring.calcDerivationPath(account.path);
-    this.sourceCurrAccount.next(account);
+    if (account) {
+      localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+      if (account.type == 'multisig') localStorage.setItem('CURR_MULTISIG', JSON.stringify(account));
+      if (account.path != null) {
+        this._keyring.calcDerivationPath(account.path);
+        this._seed = this._keyring.calcDerivationPath(account.path);
+      }
+      this.sourceCurrAccount.next(account);
+    }
+  }
+
+  switchMultisigAccount() {
+    const account = JSON.parse(localStorage.getItem('CURR_MULTISIG'));
+    this.switchAccount(account);
   }
 
   getCurrAccount(): SavedAccount {
