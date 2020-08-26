@@ -13,16 +13,13 @@ import zoobc, {
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
   AccountBalanceResponse,
-  TransactionsResponse,
   TransactionType,
   EscrowListParams,
-  EscrowStatus,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
 import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
-import { Console } from 'console';
 
 @Component({
   selector: 'app-dashboard',

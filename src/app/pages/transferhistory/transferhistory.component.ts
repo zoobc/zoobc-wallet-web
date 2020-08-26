@@ -6,7 +6,6 @@ import zoobc, {
   toTransactionListWallet,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
-  TransactionsResponse,
   MempoolTransactionsResponse,
   TransactionType,
   EscrowListParams,
