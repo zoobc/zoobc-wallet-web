@@ -266,6 +266,25 @@ mat-form-field {
   & ~ .mat-error {
     margin-top: -8px;
   }
+
+  .btn-suffix {
+    width: 32px;
+    height: 32px;
+    padding: 8px !important;
+    margin: -8px 0 0 0;
+    background-color: map-get($accent, 500);
+    border: 0;
+    border-radius: 24px;
+    vertical-align: middle;
+    color: white;
+    outline: none;
+    @include transition(0.3s ease-in all);
+    &:hover {
+      color: $white1;
+      background-color: map-get($accent, 400);
+      cursor: pointer;
+    }
+  }
 }
 
 .mat-form-field-appearance-outline .mat-form-field-wrapper {

@@ -11,18 +11,27 @@
     <div class="before">
       <div class="label">ZooBC Address</div>
       <div class="value">
-        <wallet-address value="{{ data.old.zbcAddress }}" [copyButton]="true"></wallet-address>
+        <wallet-address
+          *ngIf="data.old.zbcAddress"
+          value="{{ data.old.zbcAddress }}"
+          [copyButton]="true"
+        ></wallet-address>
+        <i *ngIf="!data.old.zbcAddress">(No ZBC Address yet)</i>
       </div>
 
       <div class="label">Node Public Key</div>
       <div class="value">
-        <wallet-address value="{{ data.old.nodePubKey }}" [copyButton]="true"></wallet-address>
+        <wallet-address
+          *ngIf="data.old.nodePubKey"
+          value="{{ data.old.nodePubKey }}"
+          [copyButton]="true"
+        ></wallet-address>
+        <i *ngIf="!data.old.nodePubKey">(No Node Public Key yet)</i>
       </div>
 
       <div class="label">Message</div>
-      <div class="value">
-        {{ data.old.message }}
-      </div>
+      <div class="value" *ngIf="data.old.message">{{ data.old.message }}</div>
+      <div class="value" *ngIf="!data.old.message"><i>(No Message yet)</i></div>
     </div>
     <div class="arrow">
       <i class="fa fa-arrow-right"></i>
@@ -39,9 +48,8 @@
       </div>
 
       <div class="label">Message</div>
-      <div class="value">
-        {{ data.new.message }}
-      </div>
+      <div class="value" *ngIf="data.new.message">{{ data.new.message }}</div>
+      <div class="value" *ngIf="!data.new.message"><i>(No Message yet)</i></div>
     </div>
   </div>
   <div class="text-right">

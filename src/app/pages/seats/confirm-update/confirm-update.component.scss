@@ -33,7 +33,7 @@
   .after {
     border: 1px solid map-get($accent, 500);
     border-radius: 8px;
-    max-width: calc(50% - 44px);
+    width: calc(50% - 44px);
     padding: 16px;
   }
 }

@@ -64,6 +64,7 @@ import { SeatsComponent } from './pages/seats/seats.component';
 import { SeatDetailComponent } from './pages/seats/seat-detail/seat-detail.component';
 import { ConfirmUpdateComponent } from './pages/seats/confirm-update/confirm-update.component';
 import { DownloadCertificateComponent } from './pages/seats/download-certificate/download-certificate.component';
+import { GenesisComponent } from './pages/genesis/genesis.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { DownloadCertificateComponent } from './pages/seats/download-certificate
     SeatDetailComponent,
     ConfirmUpdateComponent,
     DownloadCertificateComponent,
+    GenesisComponent,
   ],
   imports: [
     BrowserModule,
