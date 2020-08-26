@@ -22,6 +22,7 @@ import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
 import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-dashboard',
@@ -114,7 +115,6 @@ export class DashboardComponent implements OnInit {
 
       try {
         const trxList = await zoobc.Transactions.getList(params);
-
         let lastHeight = 0;
         let firstHeight = 0;
         if (parseInt(trxList.total) > 0) {
@@ -128,24 +128,25 @@ export class DashboardComponent implements OnInit {
 
         const paramEscrowSend: EscrowListParams = {
           sender: this.currAcc.address,
-          blockHeightStart: firstHeight,
-          blockHeightEnd: lastHeight,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
           statusList: [0, 1, 2, 3],
         };
         const paramEscrowReceive: EscrowListParams = {
           recipient: this.currAcc.address,
-          blockHeightStart: firstHeight,
-          blockHeightEnd: lastHeight,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
           statusList: [0, 1, 2, 3],
         };
         const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
         const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
-        const escrowId = escrowSend.escrowsList.concat(escrowReceive.escrowsList).map(arr => arr.id);
+        const escrowList = escrowSend.escrowsList.concat(escrowReceive.escrowsList);
         const tx = toTransactionListWallet(trxList, this.currAcc.address);
         let rTx = tx.transactions;
         rTx.map(recent => {
           recent['alias'] = this.contactServ.get(recent.address).name || '';
-          recent['escrow'] = escrowId.includes(recent.id);
+          recent['escrow'] = this.checkIdOnEscrow(recent.id, escrowList);
+          if (recent['escrow']) recent['escrowStatus'] = this.getEscrowStatus(recent.id, escrowList);
           recent['multisigchild'] = multisigTx.includes(recent.id);
           return recent;
         });
@@ -217,5 +218,14 @@ export class DashboardComponent implements OnInit {
     dialog.afterClosed().subscribe((data: any) => {
       if (data) this.router.navigateByUrl('/request/' + data[0] + '/' + data[1] + '');
     });
+  }
+  checkIdOnEscrow(id: any, escrowArr: any[]) {
+    const filter = escrowArr.filter(arr => arr.id == id);
+    if (filter.length > 0) return true;
+    return false;
+  }
+  getEscrowStatus(id: any, escrowArr: any[]) {
+    const idx = escrowArr.findIndex(esc => esc.id == id);
+    return escrowArr[idx].status;
   }
 }

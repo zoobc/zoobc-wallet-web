@@ -32,4 +32,29 @@ export class TransactionTableComponent implements OnInit {
       });
     }
   }
+
+  getColorByEscrowStatus(status) {
+    let color = 'red';
+    if (status == '0') return (color = 'orange');
+    if (status == '1') return (color = 'green');
+    return color;
+  }
+
+  getTextByEscrowStatus(status) {
+    let text = '';
+    switch (status) {
+      case 0:
+        text = 'pending';
+        break;
+      case 1:
+        text = 'approved';
+        break;
+      case 2:
+        text = 'rejected';
+        break;
+      default:
+        text = 'expired';
+    }
+    return text;
+  }
 }

@@ -76,24 +76,27 @@ export class TransferhistoryComponent implements OnInit {
 
         const paramEscrowSend: EscrowListParams = {
           sender: this.address,
-          blockHeightStart: firstHeight,
-          blockHeightEnd: lastHeight,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
+          statusList: [0, 1, 2, 3],
         };
         const paramEscrowReceive: EscrowListParams = {
           recipient: this.address,
-          blockHeightStart: firstHeight,
-          blockHeightEnd: lastHeight,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
+          statusList: [0, 1, 2, 3],
         };
 
         const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
         const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
 
-        const escrowId = escrowSend.escrowsList.concat(escrowReceive.escrowsList).map(arr => arr.id);
+        const escrowList = escrowSend.escrowsList.concat(escrowReceive.escrowsList);
 
         let tx = toTransactionListWallet(trxList, this.address);
         tx.transactions.map(recent => {
           recent['alias'] = this.contactServ.get(recent.address).name || '';
-          recent['escrow'] = escrowId.includes(recent.id);
+          recent['escrow'] = recent['escrow'] = this.checkIdOnEscrow(recent.id, escrowList);
+          if (recent['escrow']) recent['escrowStatus'] = this.getEscrowStatus(recent.id, escrowList);
           recent['multisigchild'] = multisigTx.includes(recent.id);
           return recent;
         });
@@ -121,5 +124,15 @@ export class TransferhistoryComponent implements OnInit {
       this.page++;
       this.getTx();
     } else this.finished = true;
+  }
+
+  checkIdOnEscrow(id: any, escrowArr: any[]) {
+    const filter = escrowArr.filter(arr => arr.id == id);
+    if (filter.length > 0) return true;
+    return false;
+  }
+  getEscrowStatus(id: any, escrowArr: any[]) {
+    const idx = escrowArr.findIndex(esc => esc.id == id);
+    return escrowArr[idx].status;
   }
 }

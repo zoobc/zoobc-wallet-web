@@ -22,15 +22,11 @@
       font-size: 13px;
       margin-bottom: 8px;
     }
-    .description {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      .date {
-        color: $black2;
-        font-size: 13px;
-        margin-right: 10px;
-      }
+
+    .date {
+      color: $black2;
+      font-size: 13px;
+      margin-right: 10px;
     }
 
     .amount-send {
@@ -46,6 +42,19 @@
     .fee {
       color: #f44336;
       font-size: 14px;
+    }
+
+    .description {
+      display: flex;
+      align-items: center;
+      float: right;
+      .small {
+        font-size: 11px !important;
+        padding: 4px 8px !important;
+      }
+      .status {
+        margin-left: 4px;
+      }
     }
   }
   @media (max-width: 600px) {
