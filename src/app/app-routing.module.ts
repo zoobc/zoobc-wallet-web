@@ -10,6 +10,7 @@ import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.co
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { AccountComponent } from './pages/account/account.component';
 import { SeatsComponent } from './pages/seats/seats.component';
+import { GenesisComponent } from './pages/genesis/genesis.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,7 +22,6 @@ const routes: Routes = [
       { path: 'dashboard', component: SeatsComponent },
       { path: 'accounts', component: AccountComponent },
       { path: 'accounts/:accountBase64', component: AccountComponent },
-
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',
@@ -37,6 +37,7 @@ const routes: Routes = [
       { path: 'open-wallet', component: RestoreWalletComponent },
       { path: 'confirm-passphrase', component: ConfirmPassphraseComponent },
       { path: 'info', loadChildren: './pages/info/info.module#InfoModule' },
+      { path: 'genesis', component: GenesisComponent },
     ],
   },
 ];

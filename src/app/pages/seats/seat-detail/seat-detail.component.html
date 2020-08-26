@@ -24,6 +24,11 @@
             ></wallet-address>
             <i *ngIf="!addressField.value">(No ZBC Address yet)</i>
           </div>
+
+          <mat-error *ngIf="addressField.hasError('required')">
+            ZBC Address is required. Please select one of your addresses by click "Change Address" button
+          </mat-error>
+
           <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false" *ngIf="editable">
             <button mat-flat-button type="button" class="block" color="primary">
               Change Address
@@ -40,7 +45,15 @@
               [copyButton]="true"
             ></wallet-address>
             <i *ngIf="!nodePubKeyField.value">(No Node Public Key yet)</i>
+
+            <mat-error
+              *ngIf="nodePubKeyField.hasError('required')"
+              style="margin-top: 4px;word-break: normal;"
+            >
+              Node Public Key is required. Please click button on the right to generate new node public key
+            </mat-error>
           </div>
+
           <button
             type="button"
             class="btn-suffix"
@@ -65,10 +78,13 @@
           </mat-form-field>
           <ng-container *ngIf="messageField.touched">
             <mat-error *ngIf="messageField.hasError('invalidLimit')">
-              Maximum message length is 256 bytes
+              Maximum message length is 100 bytes
+            </mat-error>
+            <mat-error *ngIf="messageField.hasError('pattern')">
+              Message only support alphanumeric and space characters
             </mat-error>
           </ng-container>
-          <div class="hint">{{ messageSize }} of 256 bytes</div>
+          <div class="hint">{{ messageSize }} of 100 bytes</div>
         </ng-container>
 
         <ng-container *ngIf="metamask && editable">
@@ -110,9 +126,9 @@
           Connect Metamask
         </button>
 
-        <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
+        <!-- <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
           <span> Need Help? <a href="/">Click Here</a> </span>
-        </div>
+        </div> -->
       </form>
     </div>
 

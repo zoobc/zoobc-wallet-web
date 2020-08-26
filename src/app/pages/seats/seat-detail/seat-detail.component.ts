@@ -32,7 +32,10 @@ export class SeatDetailComponent implements OnInit {
   form: FormGroup;
   addressField = new FormControl('', Validators.required);
   nodePubKeyField = new FormControl('', Validators.required);
-  messageField = new FormControl('', [this.checkMessageLength.bind(this)]);
+  messageField = new FormControl('', [
+    this.checkMessageLength.bind(this),
+    Validators.pattern('^[a-zA-Z0-9 ]*$'),
+  ]);
   messageSize: number;
 
   passphrase: string;
@@ -190,7 +193,6 @@ export class SeatDetailComponent implements OnInit {
             `<a href="${environment.etherscan}tx/${txHash}" target="_blank">here</a> ` +
             'to check your transaction status in etherscan.io',
         });
-        this.dialog.closeAll();
       })
       .catch(err => {
         this.isLoadingUpdate = false;
@@ -205,7 +207,7 @@ export class SeatDetailComponent implements OnInit {
 
   checkMessageLength(ctrl: AbstractControl) {
     const length = this.getByteLength(ctrl.value);
-    if (length > 256) return { invalidLimit: true };
+    if (length > 100) return { invalidLimit: true };
     return null;
   }
 
