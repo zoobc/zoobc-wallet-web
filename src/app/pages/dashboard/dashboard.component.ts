@@ -10,7 +10,6 @@ import { EditAccountComponent } from '../account/edit-account/edit-account.compo
 import zoobc, {
   TransactionListParams,
   toTransactionListWallet,
-  getZBCAdress,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
   AccountBalanceResponse,
@@ -20,6 +19,7 @@ import zoobc, {
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
+import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -46,6 +46,7 @@ export class DashboardComponent implements OnInit {
   currAcc: SavedAccount;
   accounts: SavedAccount[];
   lastRefresh: number;
+  lastRefreshAccount: number;
 
   constructor(
     private authServ: AuthService,
@@ -89,7 +90,7 @@ export class DashboardComponent implements OnInit {
         .catch(e => {
           this.isErrorBalance = true;
         })
-        .finally(() => (this.isLoadingBalance = false));
+        .finally(() => ((this.isLoadingBalance = false), (this.lastRefreshAccount = Date.now())));
     }
   }
 
@@ -115,7 +116,7 @@ export class DashboardComponent implements OnInit {
           const tx = toTransactionListWallet(res, this.currAcc.address);
           this.recentTx = tx.transactions;
           this.recentTx.map(recent => {
-            recent['alias'] = this.contactServ.get(recent.address).alias || '';
+            recent['alias'] = this.contactServ.get(recent.address).name || '';
           });
           this.totalTx = tx.total;
 
@@ -167,8 +168,22 @@ export class DashboardComponent implements OnInit {
       maxHeight: '99vh',
       data: account,
     });
-    dialog.afterClosed().subscribe((edited: boolean) => {
-      if (edited) this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
+    dialog.afterClosed().subscribe((account: SavedAccount) => {
+      if (account) {
+        this.currAcc = account;
+        this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
+      }
+    });
+  }
+  openScannerForm() {
+    const dialog = this.dialog.open(QrScannerComponent, {
+      width: '480px',
+      maxHeight: '99vh',
+      data: 'string',
+      disableClose: true,
+    });
+    dialog.afterClosed().subscribe((data: any) => {
+      if (data) this.router.navigateByUrl('/request/' + data[0] + '/' + data[1] + '');
     });
   }
 }

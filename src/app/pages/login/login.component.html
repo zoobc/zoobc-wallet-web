@@ -3,42 +3,32 @@
   <h2 class="mat-h2">Wallet</h2>
   <ng-container *ngIf="!hasAccount">
     <a routerLink="/signup" mat-flat-button color="primary">
-      {{ 'Create New Wallet' | translate }}
+      {{ 'create new wallet' | translate }}
     </a>
     <a routerLink="/open-wallet" mat-flat-button color="primary">
-      {{ 'Open Wallet' | translate }}
+      {{ 'open wallet' | translate }}
     </a>
   </ng-container>
 
   <ng-container *ngIf="hasAccount && !isLoggedIn">
     <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
-      <mat-label>{{ 'Please Enter Your Pin' | translate }}</mat-label>
+      <mat-label>{{ 'please enter your pin' | translate }}</mat-label>
       <br />
-      <field-pins formControlName="pin" (keyup)="onChangePin()"></field-pins>
+      <field-pins #pin formControlName="pin" (keyup)="onChangePin()"></field-pins>
       <mat-error *ngIf="pinForm.hasError('invalid')">
-        {{ 'Pin invalid' | translate }}
+        {{ 'pin invalid' | translate }}
       </mat-error>
       <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
         <i matPrefix class="fas fa-check" *ngIf="!isLoading"></i>
         <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
-        <span class="text">{{ 'Login' | translate }}</span>
+        <span class="text">{{ 'login' | translate }}</span>
       </button>
 
-      <button
-        style="margin-top: 8px;"
-        routerLink="/signup"
-        mat-flat-button
-        color="primary"
-      >
-        {{ 'Create New Wallet' | translate }}
+      <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
+        {{ 'create new wallet' | translate }}
       </button>
-      <button
-        style="margin-top: 8px;"
-        routerLink="/open-wallet"
-        mat-flat-button
-        color="primary"
-      >
-        {{ 'Open Another Wallet' | translate }}
+      <button style="margin-top: 8px;" routerLink="/open-wallet" mat-flat-button color="primary">
+        {{ 'open another wallet' | translate }}
       </button>
     </form>
   </ng-container>

@@ -1,0 +1,57 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+.account-dataset-list-container {
+  .title {
+    margin-bottom: 0;
+  }
+  .subtitle {
+    color: $black2;
+  }
+  .data-set-list {
+    .list-item {
+      border-bottom: 1px solid #ddd;
+      padding: 16px 6px;
+      margin: 0;
+      align-items: center;
+      @include transition(0.3s ease-in all);
+      .property {
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      .value {
+        word-break: break-all;
+        color: $black1;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .action {
+        width: calc(45% - 40px);
+        text-align: right;
+        align-self: flex-end;
+        @media #{$small-and-down} {
+          width: 100%;
+        }
+
+        .icon-btn {
+          font-size: 14px;
+          padding: 0 !important;
+          min-width: 32px !important;
+          min-height: 32px !important;
+          width: 32px !important;
+          height: 32px !important;
+          line-height: 32px;
+          margin-left: 4px;
+
+          &.warn {
+            color: $red;
+            background-color: #ffcdd2;
+          }
+        }
+      }
+    }
+
+    .setup {
+      margin: 16px 0;
+    }
+  }
+}

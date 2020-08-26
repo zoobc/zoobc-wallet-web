@@ -23,11 +23,11 @@ export class AddressComponent implements OnInit {
     this.halfLen = Math.round(this.value.length / 2);
   }
 
-  async onCopyText(e) {
+  onCopyText(e) {
     e.stopPropagation();
     onCopyText(this.value);
 
-    let message = await getTranslation('Successfully copied to clipboard', this.translate);
+    let message = getTranslation('successfully copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }

@@ -1,8 +1,8 @@
 <div class="register-node-container">
-  <h2 class="mat-h2">{{ 'Register Node' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'register node' | translate }}</h2>
   <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()" class="grid">
-    <label>{{ 'IP Address' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'ip address' | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -12,62 +12,84 @@
     </mat-form-field>
     <ng-container *ngIf="ipAddressForm.touched">
       <mat-error *ngIf="ipAddressForm.hasError('required')">
-        {{ 'IP Address is required' | translate }}
+        {{ 'ip address is required' | translate }}
       </mat-error>
       <mat-error *ngIf="ipAddressForm.hasError('pattern')">
-        {{ 'Invalid IP address format' | translate }}
+        {{ 'invalid ip address format' | translate }}
       </mat-error>
     </ng-container>
-    <label>{{ 'Locked Balance' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'locked balance' | translate }}</mat-label>
       <input
         matInput
         type="number"
-        placeholder="{{ 'Locked Balance' | translate }}"
+        placeholder="{{ 'locked balance' | translate }}"
         formControlName="lockedBalance"
       />
     </mat-form-field>
     <ng-container *ngIf="lockedBalanceForm.touched">
       <mat-error *ngIf="lockedBalanceForm.hasError('required')">
-        {{ 'Locked Balance is required' | translate }}
+        {{ 'locked balance is required' | translate }}
       </mat-error>
       <mat-error *ngIf="lockedBalanceForm.hasError('min')">
-        {{ 'Minimum Locked Balance is' | translate: { val: '0.00000001' } }}
+        {{ 'minimum locked balance is' | translate: { val: '0.00000001' } }}
       </mat-error>
     </ng-container>
-    <label>{{ 'Fee' | translate }}</label>
+    <input-amount
+      [group]="formRegisterNode"
+      typeCoinName="typeFee"
+      amountCurrencyName="feeCurr"
+      amountName="fee"
+      [displayConverter]="true"
+      [currencyRate]="currencyRate"
+      label="{{ 'fee' | translate }}"
+    >
+    </input-amount>
+    <div
+      class="row"
+      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+    >
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+          <mat-error *ngIf="feeForm.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeForm.hasError('min')">
+            {{ 'minimum fee is' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+          <mat-error *ngIf="feeFormCurr.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeFormCurr.hasError('min')">
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
     <mat-form-field appearance="outline" color="accent">
-      <input matInput type="number" formControlName="fee" placeholder="{{ 'Fee' | translate }}" />
-    </mat-form-field>
-    <ng-container *ngIf="feeForm.touched">
-      <mat-error *ngIf="feeForm.hasError('required')">
-        {{ 'Fee is required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="feeForm.hasError('min')">
-        {{ 'Minimum fee is' | translate: { val: '0.00000001' } }}
-      </mat-error>
-    </ng-container>
-    <label>{{ 'Node Public Key' | translate }}</label>
-    <mat-form-field appearance="outline" color="accent">
+      <mat-label>{{ 'node public key' | translate }}</mat-label>
       <input
         matInput
         type="text"
-        placeholder="{{ 'Node Public Key' | translate }}"
+        placeholder="{{ 'node public key' | translate }}"
         formControlName="nodePublicKey"
         (keyup)="onChangeNodePublicKey()"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">
       <mat-error *ngIf="nodePublicKeyForm.hasError('required')">
-        {{ 'Node Public Key is required' | translate }}
+        {{ 'node public key is required' | translate }}
       </mat-error>
       <mat-error *ngIf="nodePublicKeyForm.hasError('invalidAddress')">
-        {{ 'Node Public Key is invalid' | translate }}
+        {{ 'node public key is invalid' | translate }}
       </mat-error>
     </ng-container>
     <br />
     <button mat-flat-button color="primary" type="submit" [disabled]="formRegisterNode.invalid || isLoading">
-      {{ 'Register' | translate }}
+      {{ 'register' | translate }}
     </button>
   </form>
 </div>

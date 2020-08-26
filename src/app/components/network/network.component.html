@@ -16,30 +16,30 @@
   </mat-form-field>
 
   <button mat-flat-button color="primary" style="margin-left: 16px;" (click)="openDialog($event, 'add')">
-    {{ 'Add Network' | translate }}
+    {{ 'add network' | translate }}
   </button>
 </div>
 
 <ng-template #detailDialog>
   <h2 class="mat-h3" *ngIf="currAction == 'add'">
-    {{ 'Add Network' | translate }}
+    {{ 'add network' | translate }}
   </h2>
   <h2 class="mat-h3" *ngIf="currAction == 'edit'">
-    {{ 'Edit Network' | translate }}
+    {{ 'edit network' | translate }}
   </h2>
   <form [formGroup]="formNetwork" style="display: grid;" (submit)="submitNetwork()">
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'Network Name' | translate }}</mat-label>
+      <mat-label>{{ 'network name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="nameField.touched">
       <mat-error *ngIf="nameField.hasError('required')">
-        {{ 'Network Name is Required' | translate }}
+        {{ 'network name is required' | translate }}
       </mat-error>
     </ng-container>
 
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'Node Address' | translate }}</mat-label>
+      <mat-label>{{ 'node address' | translate }}</mat-label>
       <input
         matInput
         type="text"
@@ -49,16 +49,16 @@
     </mat-form-field>
     <ng-container *ngIf="ipField.touched">
       <mat-error *ngIf="ipField.hasError('required')">
-        {{ 'Node address is required' | translate }}
+        {{ 'node address is required' | translate }}
       </mat-error>
       <mat-error *ngIf="ipField.hasError('pattern')">
-        {{ 'Invalid Node address format' | translate }}
+        {{ 'invalid node address format' | translate }}
       </mat-error>
     </ng-container>
 
     <button mat-flat-button color="primary" type="submit">
-      <span *ngIf="currAction == 'add'">{{ 'Add' | translate }}</span>
-      <span *ngIf="currAction == 'edit'">{{ 'Edit' | translate }}</span>
+      <span *ngIf="currAction == 'add'">{{ 'add' | translate }}</span>
+      <span *ngIf="currAction == 'edit'">{{ 'edit' | translate }}</span>
     </button>
   </form>
 </ng-template>

@@ -20,12 +20,12 @@
         routerLink="/feedback"
         target="_blank"
       >
-        <span>{{ 'Feedback' | translate }}</span>
+        <span>{{ 'feedback' | translate }}</span>
       </button>
 
       <button
         mat-icon-button
-        matTooltip="{{ 'Accounts' | translate }}"
+        matTooltip="{{ 'accounts' | translate }}"
         class="address-card"
         routerLink="/accounts"
         target="_blank"
@@ -58,7 +58,7 @@
           <ng-container *ngIf="!node">
             <button mat-menu-item (click)="onOpenAddNodeAdmin()">
               <i class="fas fa-plus"></i>
-              <span>{{ 'Add Node Admin' | translate }}</span>
+              <span>{{ 'add node admin' | translate }}</span>
             </button>
             <mat-divider></mat-divider>
           </ng-container>
@@ -68,22 +68,22 @@
           </button> -->
           <button mat-menu-item (click)="onComingSoonPage()">
             <i class="fab fa-usb"></i>
-            {{ 'Connect Hardware Wallet' | translate }}
+            {{ 'connect hardware wallet' | translate }}
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/settings/about">
             <i class="fas fa-info"></i>
-            {{ 'Info & Help' | translate }}
+            {{ 'info & help' | translate }}
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="/settings/general">
             <i class="fa fa-cog"></i>
-            {{ 'Settings' | translate }}
+            {{ 'settings' | translate }}
           </button>
           <mat-divider></mat-divider>
           <button (click)="onLogout()" mat-menu-item>
             <i class="fas fa-sign-out-alt"></i>
-            {{ 'Logout' | translate }}
+            {{ 'logout' | translate }}
           </button>
         </div>
       </mat-menu>

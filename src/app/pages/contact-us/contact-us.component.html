@@ -1,45 +1,45 @@
 <div class="feedback-container">
-  <h2 class="mat-h2">{{ 'Feedback' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'feedback' | translate }}</h2>
   <mat-card>
     <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
       <!-- Name -->
       <mat-form-field appearance="outline" color="accent">
-        <mat-label>{{ 'Name' | translate }}</mat-label>
+        <mat-label>{{ 'name' | translate }}</mat-label>
         <input matInput type="text" formControlName="name" />
       </mat-form-field>
       <ng-container *ngIf="nameField.touched">
         <mat-error *ngIf="nameField.hasError('required')">
-          {{ 'Name is required' | translate }}
+          {{ 'name is required' | translate }}
         </mat-error>
       </ng-container>
 
       <!-- Email -->
       <mat-form-field appearance="outline" color="accent">
-        <mat-label>{{ 'Email' | translate }}</mat-label>
+        <mat-label>{{ 'email' | translate }}</mat-label>
         <input matInput type="email" formControlName="email" />
       </mat-form-field>
       <ng-container *ngIf="emailField.touched">
         <mat-error *ngIf="emailField.hasError('required')">
-          {{ 'Email is required' | translate }}
+          {{ 'email is required' | translate }}
         </mat-error>
         <mat-error *ngIf="emailField.hasError('email')">
-          {{ 'Incorrect email format' | translate }}
+          {{ 'incorrect email format' | translate }}
         </mat-error>
       </ng-container>
 
       <!-- Message -->
       <mat-form-field appearance="outline" color="accent">
-        <mat-label>{{ 'Message' | translate }}</mat-label>
+        <mat-label>{{ 'message' | translate }}</mat-label>
         <textarea matInput formControlName="message" rows="9"></textarea>
       </mat-form-field>
       <ng-container *ngIf="messageField.touched">
         <mat-error *ngIf="messageField.hasError('required')">
-          {{ 'Message is required' | translate }}
+          {{ 'message is required' | translate }}
         </mat-error>
       </ng-container>
 
       <!--File Upload-->
-      <div>
+      <div class="uploader">
         <input
           #fileInput
           type="file"
@@ -55,14 +55,12 @@
           [disabled]="isUploadLoading"
         >
           <span *ngIf="isUploadLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-          {{ 'Add Attachment' | translate }}
+          {{ 'add attachment' | translate }}
         </button>
         <span class="mat-body-1" *ngIf="isUploadSuccess" style="color: #4caf50;">
-          {{ 'Attachment Added' | translate }}
+          {{ 'attachment added' | translate }}
         </span>
       </div>
-      <br />
-
       <!-- Send button -->
       <button
         mat-flat-button
@@ -71,7 +69,7 @@
         [disabled]="contactForm.invalid || isFeedbackLoading"
       >
         <span *ngIf="isFeedbackLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-        {{ 'Send' | translate }}
+        {{ 'send' | translate }}
       </button>
     </form>
   </mat-card>

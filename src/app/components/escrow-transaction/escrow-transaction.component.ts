@@ -7,6 +7,7 @@ import zoobc, {
   ApprovalEscrowTransactionResponse,
   EscrowApprovalInterface,
   EscrowApproval,
+  AccountBalanceResponse,
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
@@ -33,16 +34,12 @@ export class EscrowTransactionComponent implements OnInit {
   waitingList = [];
   account;
   minFee = environment.fee;
+  accountBalance: any;
 
   constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {}
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    this.waitingList = JSON.parse(localStorage.getItem('WAITING_LIST')) || [];
-    if (this.waitingList.length > 50) {
-      const reset = [];
-      localStorage.setItem('WAITING_LIST', JSON.stringify(reset));
-    }
   }
 
   onRefresh() {
@@ -81,114 +78,90 @@ export class EscrowTransactionComponent implements OnInit {
     });
   }
 
+  async getBalance() {
+    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
+      this.accountBalance = data.accountbalance;
+    });
+  }
+
   async onConfirm(id) {
-    const checkWaitList = this.waitingList.includes(id);
-    if (this.account.balance / 1e8 >= this.minFee) {
-      if (checkWaitList != true) {
-        this.isLoadingTx = true;
-        const data: EscrowApprovalInterface = {
-          approvalAddress: this.account.address,
-          fee: this.minFee,
-          approvalCode: EscrowApproval.APPROVE,
-          transactionId: id,
-        };
-        const childSeed = this.authServ.seed;
-        zoobc.Escrows.approval(data, childSeed)
-          .then(
-            async (res: ApprovalEscrowTransactionResponse) => {
-              this.isLoadingTx = false;
-              let message = await getTranslation('Transaction has been approved', this.translate);
-              Swal.fire({
-                type: 'success',
-                title: message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              this.waitingList.push(id);
-              localStorage.setItem('WAITING_LIST', JSON.stringify(this.waitingList));
-            },
-            async err => {
-              this.isLoadingTx = false;
-              console.log('err', err);
-              let message = await getTranslation(
-                'An error occurred while processing your request',
-                this.translate
-              );
-              Swal.fire('Opps...', message, 'error');
-            }
-          )
-          .finally(() => {
-            this.closeDialog(), this.onRefresh();
-          });
-      } else {
-        let message = await getTranslation('Transaction has been processed', this.translate);
-        Swal.fire({
-          type: 'info',
-          title: message,
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          this.closeDialog(), this.onRefresh();
+    await this.getBalance();
+    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    if (balance >= this.minFee) {
+      this.isLoadingTx = true;
+      const data: EscrowApprovalInterface = {
+        approvalAddress: this.account.address,
+        fee: this.minFee,
+        approvalCode: EscrowApproval.APPROVE,
+        transactionId: id,
+      };
+      const childSeed = this.authServ.seed;
+      zoobc.Escrows.approval(data, childSeed)
+        .then(
+          (res: ApprovalEscrowTransactionResponse) => {
+            this.isLoadingTx = false;
+            let message = getTranslation('transaction has been approved', this.translate);
+            Swal.fire({
+              type: 'success',
+              title: message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.escrowTransactionsData = this.escrowTransactionsData.filter(tx => tx.id != id);
+          },
+          err => {
+            this.isLoadingTx = false;
+            console.log('err', err);
+            let message = getTranslation('an error occurred while processing your request', this.translate);
+            Swal.fire('Opps...', message, 'error');
+          }
+        )
+        .finally(() => {
+          this.closeDialog();
         });
-      }
     } else {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
   async onReject(id) {
-    const checkWaitList = this.waitingList.includes(id);
-    if (this.account.balance / 1e8 >= this.minFee) {
-      if (checkWaitList != true) {
-        this.isLoadingTx = true;
-        const data: EscrowApprovalInterface = {
-          approvalAddress: this.account.address,
-          fee: this.minFee,
-          approvalCode: EscrowApproval.REJECT,
-          transactionId: id,
-        };
-        const childSeed = this.authServ.seed;
-        zoobc.Escrows.approval(data, childSeed)
-          .then(
-            async (res: ApprovalEscrowTransactionResponse) => {
-              this.isLoadingTx = false;
-              let message = await getTranslation('Transaction has been rejected', this.translate);
-              Swal.fire({
-                type: 'success',
-                title: message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              this.waitingList.push(id);
-              localStorage.setItem('WAITING_LIST', JSON.stringify(this.waitingList));
-            },
-            async err => {
-              this.isLoadingTx = false;
-              console.log('err', err);
-              let message = await getTranslation(
-                'An error occurred while processing your request',
-                this.translate
-              );
-              Swal.fire('Opps...', message, 'error');
-            }
-          )
-          .finally(() => {
-            this.closeDialog(), this.onRefresh();
-          });
-      } else {
-        let message = await getTranslation('Transaction has been processed', this.translate);
-        Swal.fire({
-          type: 'info',
-          title: message,
-          showConfirmButton: false,
-          timer: 1500,
-        }).then(() => {
-          this.closeDialog(), this.onRefresh();
+    await this.getBalance();
+    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    if (balance >= this.minFee) {
+      this.isLoadingTx = true;
+      const data: EscrowApprovalInterface = {
+        approvalAddress: this.account.address,
+        fee: this.minFee,
+        approvalCode: EscrowApproval.REJECT,
+        transactionId: id,
+      };
+      const childSeed = this.authServ.seed;
+      zoobc.Escrows.approval(data, childSeed)
+        .then(
+          (res: ApprovalEscrowTransactionResponse) => {
+            this.isLoadingTx = false;
+            let message = getTranslation('transaction has been rejected', this.translate);
+            Swal.fire({
+              type: 'success',
+              title: message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            this.escrowTransactionsData = this.escrowTransactionsData.filter(tx => tx.id != id);
+          },
+          err => {
+            this.isLoadingTx = false;
+            console.log('err', err);
+            let message = getTranslation('an error occurred while processing your request', this.translate);
+            Swal.fire('Opps...', message, 'error');
+          }
+        )
+        .finally(() => {
+          this.closeDialog();
         });
-      }
     } else {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
+      let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }

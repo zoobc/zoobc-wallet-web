@@ -1,0 +1,126 @@
+<div class="account-dataset-list-container">
+  <h2 class="mat-h2 text-center title">{{ account.name }}</h2>
+  <h3 class="mat-h4 text-center subtitle">{{ 'account data set' | translate }}</h3>
+  <div class="data-set-list">
+    <div class="text-right" *ngIf="!isError">
+      <button
+        mat-icon-button
+        matTooltip="Reload"
+        matTooltipPosition="below"
+        class="reload-button"
+        (click)="onRefresh()"
+        [disabled]="isLoading"
+        style="margin-bottom: 5px;"
+      >
+        <i *ngIf="!isLoading" class="fa fa-redo-alt"></i>
+        <i *ngIf="isLoading" class="fas fa-circle-notch fa-spin"></i>
+      </button>
+    </div>
+    <mat-card style="padding: 0">
+      <ng-container *ngIf="dataSetList && !isLoading">
+        <div class="no-content padding" *ngIf="dataSetList.length <= 0">
+          <i matPrefix class="fa fa-receipt"></i>
+          <span class="message">{{ 'no dataset record' | translate }}</span>
+        </div>
+        <div class="list-item row" *ngFor="let data of dataSetList">
+          <div class="col-12 col-md-10">
+            <div class="property">
+              {{ data.property }}
+            </div>
+            <div class="value">
+              {{ data.value }}
+            </div>
+          </div>
+          <div class="col-12 col-sm-2 text-right">
+            <div class="action">
+              <button
+                mat-flat-button
+                matTooltip="Delete Value"
+                matTooltipPosition="below"
+                class="icon-btn warn"
+                (click)="onDelete(data)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isLoading">
+        <div class="list-item row skeleton" *ngFor="let i of [0, 1]">
+          <div class="col-7 col-sm-8">
+            <div class="skeleton-text" style="width:50%;"></div>
+            <div class="skeleton-text small" style="width:75%;"></div>
+          </div>
+          <div class="col-5 col-sm-4">
+            <div class="skeleton-text small" style="width:30%;float:right"></div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="no-content padding" *ngIf="isError">
+        <i matPrefix class="fa fa-exclamation-triangle"></i>
+        <span class="message">
+          {{ 'an error occurred while processing your request' | translate }}
+        </span>
+        <button mat-flat-button color="primary" (click)="onRefresh()">
+          {{ 'try again' | translate }}
+        </button>
+      </div>
+    </mat-card>
+    <button (click)="onSetupNewDataset()" mat-flat-button color="primary" type="submit" class="block setup">
+      {{ 'setup new dataset' | translate }}
+    </button>
+  </div>
+</div>
+<ng-template #feedialog>
+  <h3 class="mat-h3">
+    <b>{{ 'please select fee' | translate }}</b>
+  </h3>
+  <form [formGroup]="form" (submit)="onOpenPinDialog()">
+    <input-amount
+      [group]="form"
+      typeCoinName="typeFee"
+      amountCurrencyName="feeCurr"
+      amountName="fee"
+      [displayConverter]="true"
+      [currencyRate]="currencyRate"
+      label="{{ 'fee' | translate }}"
+    >
+    </input-amount>
+    <div
+      class="row"
+      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+    >
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+          <mat-error *ngIf="feeForm.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeForm.hasError('min')">
+            {{ 'minimum fee is' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+          <mat-error *ngIf="feeFormCurr.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeFormCurr.hasError('min')">
+            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="block button-margin"
+      [disabled]="form.invalid || isLoadingDelete || isErrorDelete"
+      style="margin-top:10px"
+    >
+      <span *ngIf="isLoadingDelete"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
+      <span>{{ 'delete' | translate }}</span>
+    </button>
+  </form>
+</ng-template>

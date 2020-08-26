@@ -1,5 +1,5 @@
 <div class="node-admin-container">
-  <h2 class="mat-h2">{{ 'Node Admin' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'node admin' | translate }}</h2>
   <div class="row">
     <div class="col-12 col-sm-6">
       <mat-card class="status-card" *ngIf="!isNodeHardwareError">
@@ -8,7 +8,7 @@
           <div class="label">Online</div>
         </div>
         <div class="status" *ngIf="account.nodeIP">
-          <div class="label">{{ 'IP Address' | translate }}</div>
+          <div class="label">{{ 'ip address' | translate }}</div>
           <div class="value flex">
             <div class="ip-address">{{ account.nodeIP }}</div>
             <div class="copy-ip" (click)="onCopyUrl(account.nodeIP)">
@@ -16,7 +16,7 @@
             </div>
           </div>
           <button mat-flat-button (click)="generateNewPubKey()" *ngIf="hwInfo">
-            {{ 'Generate New Public Key' | translate }}
+            {{ 'generate new public key' | translate }}
           </button>
         </div>
       </mat-card>
@@ -27,7 +27,7 @@
           <div class="label">Offline</div>
         </div>
         <div class="status" *ngIf="account.nodeIP">
-          <div class="label">{{ 'IP Address' | translate }}</div>
+          <div class="label">{{ 'ip address' | translate }}</div>
           <div class="value flex">
             <div class="ip-address">{{ account.nodeIP }}</div>
             <div class="copy-ip" (click)="onCopyUrl(account.nodeIP)">
@@ -45,9 +45,9 @@
           <div class="label">&nbsp;</div>
         </div>
         <div class="status">
-          <div class="label">{{ 'Blocks Created' | translate }}</div>
+          <div class="label">{{ 'blocks created' | translate }}</div>
           <div class="value">
-            <i>({{ 'Coming Soon' | translate }})</i>
+            <i>({{ 'coming soon' | translate }})</i>
           </div>
         </div>
       </mat-card>
@@ -57,7 +57,7 @@
   <!-- REGISTERED NODE -->
   <div class="row">
     <div class="col-10">
-      <h2 class="mat-h2">{{ 'Registered Node' | translate }}</h2>
+      <h2 class="mat-h2">{{ 'registered node' | translate }}</h2>
     </div>
     <div class="col-2 text-right">
       <button mat-icon-button class="reload-button" (click)="getRegisteredNode()">
@@ -70,36 +70,36 @@
     <ng-container *ngIf="registeredNode">
       <div class="row">
         <div class="col-12 col-sm-6">
-          <div class="label">{{ 'Account Address' | translate }}</div>
+          <div class="label">{{ 'account address' | translate }}</div>
           <div class="value">
             <wallet-address [value]="registeredNode.accountaddress"></wallet-address>
           </div>
-          <div class="label">{{ 'Node Public Key' | translate }}</div>
+          <div class="label">{{ 'node public key' | translate }}</div>
           <div class="value">
             <wallet-address [value]="registeredNode.nodepublickey"></wallet-address>
           </div>
         </div>
         <div class="col-12 col-sm-6">
-          <div class="label">{{ 'Locked Balance' | translate }}</div>
+          <div class="label">{{ 'locked balance' | translate }}</div>
           <div class="value big">{{ registeredNode.lockedbalance / 1e8 | number: '0.0-8' }} ZBC</div>
-          <div class="label">{{ 'Height' | translate }}</div>
+          <div class="label">{{ 'height' | translate }}</div>
           <div class="value big">{{ registeredNode.height }}</div>
-          <div class="label">{{ 'Registration Height' | translate }}</div>
+          <div class="label">{{ 'registration height' | translate }}</div>
           <div class="value big">{{ registeredNode.registrationheight }}</div>
         </div>
       </div>
       <div class="text-right">
         <ng-container *ngIf="!pendingNodeTx">
           <button mat-flat-button color="primary" style="margin-right: 8px" (click)="openUpdateNode()">
-            {{ 'Update Node' | translate }}
+            {{ 'update node' | translate }}
           </button>
           <button mat-flat-button color="warn" (click)="openRemoveNode()">
-            {{ 'Remove Node' | translate }}
+            {{ 'remove node' | translate }}
           </button>
         </ng-container>
         <ng-container *ngIf="pendingNodeTx">
           <span class="pending-label">
-            Pending: <b>{{ pendingNodeTx.type }}</b>
+            {{ 'pending' | translate }}: <b>{{ pendingNodeTx.type }}</b>
           </span>
         </ng-container>
       </div>
@@ -129,26 +129,26 @@
     <div class="not-registered-node" *ngIf="!registeredNode && !isNodeLoading && !isNodeError">
       <i matPrefix class="fa fa-desktop"></i>
       <span class="message">
-        {{ 'Your node is not registered yet' | translate }}
+        {{ 'your node is not registered yet' | translate }}
       </span>
       <div class="text-center" style="margin:8px 0;">
         <ng-container *ngIf="!pendingNodeTx">
           <button mat-flat-button color="primary" style="margin: 8px 8px 8px 0" (click)="openRegisterNode()">
-            {{ 'Register Your Node' | translate }}
+            {{ 'register your node' | translate }}
           </button>
           <button mat-flat-button color="accent" (click)="openClaimNode()">
-            {{ 'Claim Your Node' | translate }}
+            {{ 'claim your node' | translate }}
           </button>
         </ng-container>
 
         <ng-container *ngIf="pendingNodeTx">
           <span class="pending-label">
-            Pending: <b>{{ pendingNodeTx.type }}</b>
+            {{ 'pending' | translate }}: <b>{{ pendingNodeTx.type }}</b>
           </span>
         </ng-container>
       </div>
       <ng-container *ngIf="lastClaim">
-        Last claiming: {{ lastClaim * 1000 | date: 'dd MMMM yyyy HH:mm:ss' }}
+        {{ 'last claiming' | translate }}: {{ lastClaim * 1000 | date: 'dd MMMM yyyy HH:mm:ss' }}
       </ng-container>
     </div>
 
@@ -156,26 +156,26 @@
     <div class="no-content" *ngIf="isNodeError">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
-        {{ 'An error occurred while processing your request' | translate }}
+        {{ 'an error occurred while processing your request' | translate }}
       </span>
       <button mat-flat-button color="primary" (click)="getRegisteredNode()">
-        {{ 'Try Again' | translate }}
+        {{ 'try again' | translate }}
       </button>
     </div>
   </mat-card>
   <br />
 
   <!-- NODE USAGE -->
-  <h2 class="mat-h2">{{ 'Node Usage' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'node usage' | translate }}</h2>
   <mat-card>
     <!-- NODE USAGE ERROR -->
     <div class="no-content" *ngIf="isNodeHardwareError">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
-        {{ 'An error occurred while processing your request' | translate }}
+        {{ 'an error occurred while processing your request' | translate }}
       </span>
       <button mat-flat-button color="primary" (click)="streamNodeHardwareInfo()">
-        {{ 'Try Again' | translate }}
+        {{ 'try again' | translate }}
       </button>
     </div>
 
@@ -185,7 +185,11 @@
       <div class="row">
         <div class="col-6 col-sm-3 cpu-usage" *ngFor="let cpu of hwInfo.cpuinformationList; let i = index">
           <div class="percentage">
-            <mat-progress-spinner [value]="cpu.usedpercent" diameter="80" color="primary"></mat-progress-spinner>
+            <mat-progress-spinner
+              [value]="cpu.usedpercent"
+              diameter="80"
+              color="primary"
+            ></mat-progress-spinner>
             <div class="label">{{ cpu.usedpercent | number: '0.0-2' }}%</div>
           </div>
           <div class="cpu-number">CPU {{ i + 1 }}</div>
@@ -195,21 +199,21 @@
 
       <div class="row node-spec">
         <div class="col-12 col-sm-6">
-          <p class="label">{{ 'CPU index number' | translate }}:</p>
+          <p class="label">{{ 'cpu index number' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList[0].cpuindex }}</p>
-          <p class="label">{{ 'Vendor ID' | translate }}:</p>
+          <p class="label">{{ 'vendor id' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList[0].vendorid }}</p>
-          <p class="label">{{ 'Number of cores' | translate }}:</p>
+          <p class="label">{{ 'number of cores' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList.length }}</p>
-          <p class="label">{{ 'Model Name' | translate }}:</p>
+          <p class="label">{{ 'model name' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList[0].modelname }}</p>
-          <p class="label">{{ 'Speed' | translate }}:</p>
+          <p class="label">{{ 'speed' | translate }}:</p>
           <p class="value">{{ hwInfo.cpuinformationList[0].mhz }} MHz</p>
         </div>
         <div class="col-12 col-sm-6">
-          <p class="label">{{ 'Hostname' | translate }}:</p>
+          <p class="label">{{ 'hostname' | translate }}:</p>
           <p class="value">{{ hwInfo.hostinformation.hostname }}</p>
-          <p class="label">{{ 'Number of processes running' | translate }}:</p>
+          <p class="label">{{ 'number of processes running' | translate }}:</p>
           <p class="value">
             {{ hwInfo.hostinformation.numberofrunningprocess }}
           </p>
@@ -225,9 +229,9 @@
 
       <div class="row">
         <div class="col-12 col-sm-6">
-          <h2 class="mat-h2">{{ 'Memory' | translate }}</h2>
+          <h2 class="mat-h2">{{ 'memory' | translate }}</h2>
           <div class="memory-usage">
-            <div class="label">{{ 'Usage' | translate }}</div>
+            <div class="label">{{ 'usage' | translate }}</div>
             <div class="usage">
               <span> {{ hwInfo.memoryinformation.used / gbToB | number: '0.0-2' }}GB/ </span>
               <span> {{ hwInfo.memoryinformation.total / gbToB | number: '0.0-2' }}GB </span>
@@ -241,9 +245,9 @@
         </div>
 
         <div class="col-12 col-sm-6">
-          <h2 class="mat-h2">{{ 'Storage' | translate }}</h2>
+          <h2 class="mat-h2">{{ 'storage' | translate }}</h2>
           <div class="memory-usage">
-            <div class="label">{{ 'Usage' | translate }}</div>
+            <div class="label">{{ 'usage' | translate }}</div>
             <div class="usage">
               <span> {{ hwInfo.storageinformation.used / gbToB | number: '0.0-2' }}GB/ </span>
               <span> {{ hwInfo.storageinformation.total / gbToB | number: '0.0-2' }}GB </span>
@@ -278,8 +282,8 @@
       <div class="row">
         <div class="col-12">
           <i class="far fa-check-circle fa-7x icon-check"></i>
-          <h2 class="title">Success</h2>
-          <h4 class="sub-title">New Public Key Address</h4>
+          <h2 class="title">{{ 'success' | translate }}</h2>
+          <h4 class="sub-title">{{ 'new public key address' | translate }}</h4>
           <div class="address">
             <wallet-address [center]="true" [value]="nodePublicKey"></wallet-address>
           </div>
@@ -287,7 +291,7 @@
       </div>
     </div>
     <div class="text-center footer" style="margin-top: 10px">
-      <button (click)="onCloseDialog()" mat-flat-button class="btncustom">{{ 'Ok' }}</button>
+      <button (click)="onCloseDialog()" mat-flat-button class="btncustom">{{ 'okay' | translate }}</button>
     </div>
   </div>
 </ng-template>

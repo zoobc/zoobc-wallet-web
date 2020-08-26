@@ -59,7 +59,7 @@ export class MultisignatureComponent implements OnInit {
 
   onEditDraft(idx: number) {
     let multisig: MultiSigDraft = this.multiSigDrafts[idx];
-    multisig.unisgnedTransactions = Buffer.from(multisig.unisgnedTransactions);
+    multisig.unisgnedTransactions = Buffer.from(multisig.unisgnedTransactions || []);
     this.multisigServ.update(multisig);
 
     const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
@@ -84,7 +84,6 @@ export class MultisignatureComponent implements OnInit {
         minSigs: this.account.minSig,
         nonce: this.account.nonce,
         participants: this.account.participants,
-        multisigAddress: '',
       };
       const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
       multisig.generatedSender = address;
@@ -102,7 +101,7 @@ export class MultisignatureComponent implements OnInit {
 
   async onDeleteDraft(e, id: number) {
     e.stopPropagation();
-    let sentence = await getTranslation('Are you sure want to delete?', this.translate, {
+    let sentence = getTranslation('are you sure want to delete?', this.translate, {
       alias: id,
     });
     Swal.fire({
@@ -141,7 +140,7 @@ export class MultisignatureComponent implements OnInit {
         let fileResult = JSON.parse(fileReader.result.toString());
         const validation = this.validationFile(fileResult);
         if (!validation) {
-          let message = await getTranslation('You imported the wrong file', this.translate);
+          let message = getTranslation('you imported the wrong file', this.translate);
           Swal.fire('Opps...', message, 'error');
         } else {
           this.multisigServ.update(fileResult);
@@ -149,20 +148,20 @@ export class MultisignatureComponent implements OnInit {
           const checkExistDraft = listdraft.some(res => res.id === fileResult.id);
 
           if (checkExistDraft === true) {
-            let message = await getTranslation('There is same id in your draft', this.translate);
+            let message = getTranslation('there is same id in your draft', this.translate);
             Swal.fire('Opps...', message, 'error');
           } else {
             this.multisigServ.saveDraft();
             this.getMultiSigDraft();
-            let message = await getTranslation('Draft Saved', this.translate);
-            let subMessage = await getTranslation('Your Draft has been saved', this.translate);
+            let message = getTranslation('draft saved', this.translate);
+            let subMessage = getTranslation('your draft has been saved', this.translate);
             Swal.fire(message, subMessage, 'success');
           }
         }
       };
       fileReader.onerror = async err => {
         console.log(err);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       };
     }

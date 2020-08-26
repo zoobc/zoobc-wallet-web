@@ -3,7 +3,6 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
-import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
@@ -25,34 +24,20 @@ import { TranslateService } from '@ngx-translate/core';
 export class CreateTransactionComponent implements OnInit {
   minFee = environment.fee;
   currencyRate: Currency;
-  kindFee: string;
-  subscription: Subscription = new Subscription();
-  account: SavedAccount;
+  currencySubs: Subscription;
 
-  isCompleted = true;
   createTransactionForm: FormGroup;
   senderForm = new FormControl('', Validators.required);
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('');
   typeCoinField = new FormControl('ZBC');
+  typeFeeField = new FormControl('ZBC');
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
-
-  feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 2;
-  feeFast = this.feeMedium * 2;
-  typeFee: number;
-  customFeeValues: number;
-  txHash: string;
-  isMultiSignature: boolean = false;
-  isHasTransactionHash: boolean = false;
-  removeExport: boolean = false;
-  accountBalance: number;
 
   stepper = {
     multisigInfo: false,
@@ -60,7 +45,6 @@ export class CreateTransactionComponent implements OnInit {
   };
 
   constructor(
-    private authServ: AuthService,
     private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,
     private router: Router,
@@ -74,63 +58,38 @@ export class CreateTransactionComponent implements OnInit {
       amountCurrency: this.amountCurrencyForm,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
-      timeout: this.timeoutField,
       typeCoin: this.typeCoinField,
+      typeFee: this.typeFeeField,
     });
-    this.account = this.authServ.getCurrAccount();
-    this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
   ngOnInit() {
     // Currency Subscriptions
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
-
       const minCurrency = truncate(this.minFee * rate.value, 8);
-
+      this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
-    this.subscription.add(subsRate);
     // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo, unisgnedTransactions, signaturesInfo, transaction } = multisig;
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
-      this.removeExport = signaturesInfo !== undefined ? true : false;
-      if (unisgnedTransactions !== null) this.isHasTransactionHash = true;
-      if (signaturesInfo) {
-        this.isHasTransactionHash = signaturesInfo.txHash !== undefined ? true : false;
-      }
-      if (this.isHasTransactionHash) this.createTransactionForm.disable();
+      if (signaturesInfo && signaturesInfo.txHash) this.createTransactionForm.disable();
 
-      if (unisgnedTransactions) {
+      this.senderForm.setValue(multisig.generatedSender);
+
+      if (transaction) {
         const { sender, recipient, amount, fee } = transaction;
-        this.account.address = sender;
         this.senderForm.setValue(sender);
         this.recipientForm.setValue(recipient);
         this.amountForm.setValue(amount);
         this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
         this.feeForm.setValue(fee);
         this.feeFormCurr.setValue(fee * this.currencyRate.value);
-        this.timeoutField.setValue('0');
-        if (fee === this.feeSlow) {
-          this.typeFee = 1;
-        } else if (fee === this.feeMedium) {
-          this.typeFee = 2;
-        } else if (fee === this.feeFast) {
-          this.typeFee = 3;
-        } else {
-          this.customFeeValues = fee;
-        }
-      } else if (this.isMultiSignature) {
-        this.multisig.generatedSender = this.account.address;
-        this.senderForm.setValue(this.account.address);
-        this.getBalance(this.account.address);
-      } else {
-        this.senderForm.setValue(this.multisig.generatedSender);
-        this.getBalance(this.multisig.generatedSender);
       }
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -138,11 +97,13 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   async generateDownloadJsonUri() {
-    if (!this.isHasTransactionHash) {
-      let title = await getTranslation('Are you sure?', this.translate);
-      let message = await getTranslation('You will not be able to update the form anymore!', this.translate);
-      let buttonText = await getTranslation('Yes, continue it!', this.translate);
-      Swal.fire({
+    const { signaturesInfo } = this.multisig;
+    if (signaturesInfo === null) {
+      this.updateCreateTransaction();
+      const title = getTranslation('are you sure?', this.translate);
+      const message = getTranslation('you will not be able to update the form anymore!', this.translate);
+      const buttonText = getTranslation('yes, continue it!', this.translate);
+      const isConfirm = await Swal.fire({
         title: title,
         text: message,
         showCancelButton: true,
@@ -151,66 +112,64 @@ export class CreateTransactionComponent implements OnInit {
       }).then(result => {
         if (result.value) {
           this.generatedTxHash();
-          this.updateCreateTransaction();
-          let theJSON = JSON.stringify(this.multisig);
-          const blob = new Blob([theJSON], { type: 'application/JSON' });
-          saveAs(blob, 'Multisignature-Draft.json');
-        }
+          this.createTransactionForm.disable();
+          return true;
+        } else return false;
       });
-    } else {
-      let theJSON = JSON.stringify(this.multisig);
-      const blob = new Blob([theJSON], { type: 'application/JSON' });
-      saveAs(blob, 'Multisignature-Draft.json');
+      if (!isConfirm) return false;
     }
+
+    let theJSON = JSON.stringify(this.multisig);
+    const blob = new Blob([theJSON], { type: 'application/JSON' });
+    saveAs(blob, 'Multisignature-Draft.json');
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
   }
 
-  onClickFeeChoose(value) {
-    this.kindFee = value;
-  }
-
-  onSwitchAccount(account: SavedAccount) {
-    this.account = account;
-    this.senderForm.setValue(account);
-  }
-
   async next() {
-    const total = this.amountForm.value + this.feeForm.value;
-    if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
-    if (this.accountBalance / 1e8 < total) {
-      let message = await getTranslation('Your balances are not enough for this transaction', this.translate);
-      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
-    }
-    if (this.createTransactionForm.valid) {
-      const { signaturesInfo } = this.multisig;
-      if (!this.multisig.unisgnedTransactions) {
-        let title = await getTranslation('Are you sure?', this.translate);
-        let message = await getTranslation(
-          'You will not be able to update the form anymore!',
-          this.translate
-        );
-        let buttonText = await getTranslation('Yes, continue it!', this.translate);
-        Swal.fire({
-          title: title,
-          text: message,
-          showCancelButton: true,
-          confirmButtonText: buttonText,
-          type: 'warning',
-        }).then(result => {
-          if (result.value) {
-            this.generatedTxHash();
-            this.updateCreateTransaction();
+    try {
+      if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
 
-            if (signaturesInfo === undefined) this.router.navigate(['/multisignature/send-transaction']);
-            else this.router.navigate(['/multisignature/add-signatures']);
-          }
-        });
-      } else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
-      else this.router.navigate(['/multisignature/send-transaction']);
+      const total = this.amountForm.value + this.feeForm.value;
+      const balance = await zoobc.Account.getBalance(this.senderForm.value).then(
+        (res: AccountBalanceResponse) => parseInt(res.accountbalance.spendablebalance) / 1e8
+      );
+      if (balance < total) {
+        const message = getTranslation('your balances are not enough for this transaction', this.translate);
+        return Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      }
+      if (this.createTransactionForm.valid) {
+        this.updateCreateTransaction();
+        const { signaturesInfo } = this.multisig;
+        if (this.multisig.signaturesInfo === null) {
+          const title = getTranslation('are you sure?', this.translate);
+          const message = getTranslation('you will not be able to update the form anymore!', this.translate);
+          const buttonText = getTranslation('yes, continue it!', this.translate);
+
+          const isConfirm = await Swal.fire({
+            title: title,
+            text: message,
+            showCancelButton: true,
+            confirmButtonText: buttonText,
+            type: 'warning',
+          }).then(result => {
+            if (result.value) {
+              this.generatedTxHash();
+              return true;
+            } else return false;
+          });
+          if (!isConfirm) return false;
+        }
+
+        if (signaturesInfo === undefined) this.router.navigate(['/multisignature/send-transaction']);
+        else this.router.navigate(['/multisignature/add-signatures']);
+      }
+    } catch (err) {
+      console.log(err);
+      return Swal.fire({ type: 'error', title: 'Oops...', text: err.message });
     }
   }
 
@@ -222,16 +181,10 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   updateCreateTransaction() {
-    const { recipient, amount, fee } = this.createTransactionForm.value;
+    const { recipient, amount, fee, sender } = this.createTransactionForm.value;
     const multisig = { ...this.multisig };
-    const address = this.multisig.generatedSender || this.account.address;
 
-    multisig.transaction = {
-      sender: address,
-      amount: amount,
-      fee: fee,
-      recipient: recipient,
-    };
+    multisig.transaction = { sender, amount, fee, recipient };
     this.multisigServ.update(multisig);
   }
 
@@ -240,53 +193,19 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   generatedTxHash() {
-    this.updateCreateTransaction();
-    const { amount, fee, recipient, sender } = this.multisig.transaction;
-    const data: SendMoneyInterface = {
-      sender: sender,
-      recipient: recipient,
-      fee: fee,
-      amount: amount,
-    };
-    const accounts = this.authServ.getAllAccount();
-    const account = accounts.find(acc => acc.address == sender);
-    let participantAccount = [];
+    const { recipient, amount, fee, sender } = this.createTransactionForm.value;
+    const { unisgnedTransactions, multisigInfo } = this.multisig;
+    const data: SendMoneyInterface = { sender, recipient, fee, amount };
 
-    if (this.multisig.unisgnedTransactions !== undefined) {
-      this.multisig.unisgnedTransactions = sendMoneyBuilder(data);
-    }
+    if (unisgnedTransactions === null) this.multisig.unisgnedTransactions = sendMoneyBuilder(data);
 
     if (this.multisig.signaturesInfo !== undefined) {
-      if (account) {
-        for (let i = 0; i < account.participants.length; i++) {
-          let participant = {
-            address: account.participants[i],
-            signature: stringToBuffer(''),
-          };
-          participantAccount.push(participant);
-        }
-      } else {
-        for (let i = 0; i < this.multisig.multisigInfo.participants.length; i++) {
-          let participant = {
-            address: this.multisig.multisigInfo.participants[i],
-            signature: stringToBuffer(''),
-          };
-          participantAccount.push(participant);
-        }
-      }
-      this.txHash = generateTransactionHash(data);
-      this.multisig.signaturesInfo = {
-        txHash: this.txHash,
-        participants: participantAccount,
-      };
-      this.isHasTransactionHash = true;
-      this.multisig.generatedSender = this.multisig.transaction.sender;
+      const txHash = generateTransactionHash(data);
+      const participants = multisigInfo.participants.map(address => ({
+        address,
+        signature: stringToBuffer(''),
+      }));
+      this.multisig.signaturesInfo = { txHash, participants };
     }
-  }
-
-  getBalance(address: string) {
-    zoobc.Account.getBalance(address).then((res: AccountBalanceResponse) => {
-      this.accountBalance = parseInt(res.accountbalance.spendablebalance);
-    });
   }
 }
