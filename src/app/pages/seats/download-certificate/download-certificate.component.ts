@@ -53,7 +53,7 @@ export class DownloadCertificateComponent {
           const blob = new Blob([enc]);
           saveAs(blob, 'wallet.zbc');
 
-          this.dialogref.close();
+          this.dialogref.close(true);
         },
       });
     }

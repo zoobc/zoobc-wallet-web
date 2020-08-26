@@ -92,26 +92,48 @@
             mat-flat-button
             type="button"
             class="block"
+            [ngClass]="isDownloaded && 'done'"
             color="primary"
             (click)="onDownload()"
             [disabled]="!passphrase"
           >
-            <i matPrefix class="fa fa-download"></i>
+            <i matPrefix class="fa fa-check" *ngIf="isDownloaded"></i>
+            <i matPrefix class="fa fa-download" *ngIf="!isDownloaded"></i>
             Download Certificate
           </button>
-          <button
-            style="margin-top: 10px;"
-            mat-flat-button
-            type="button"
-            class="block"
-            color="primary"
-            (click)="onUpdate()"
-            [disabled]="!form.valid || isLoadingUpdate"
-          >
-            <i matPrefix class="fa fa-pen" *ngIf="!isLoadingUpdate"></i>
-            <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
-            Update
-          </button>
+          <div class="row">
+            <div class="col">
+              <button
+                style="margin-top: 10px;"
+                mat-flat-button
+                type="button"
+                class="block"
+                color="warn"
+                (click)="onCancel()"
+              >
+                <i matPrefix class="fa fa-times"></i> Close
+              </button>
+            </div>
+            <div class="col">
+              <button
+                style="margin-top: 10px;"
+                mat-flat-button
+                type="button"
+                class="block"
+                [ngClass]="isUpdated && 'done'"
+                color="primary"
+                (click)="onUpdate()"
+                [disabled]="!form.valid || isLoadingUpdate"
+              >
+                <ng-container *ngIf="!isLoadingUpdate">
+                  <i matPrefix class="fa fa-pen" *ngIf="!isUpdated"></i>
+                  <i matPrefix class="fa fa-check" *ngIf="isUpdated"></i>
+                </ng-container>
+                <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
+                Update
+              </button>
+            </div>
+          </div>
         </ng-container>
 
         <button

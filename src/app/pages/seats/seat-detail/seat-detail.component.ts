@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.component';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
@@ -36,15 +36,18 @@ export class SeatDetailComponent implements OnInit {
     this.checkMessageLength.bind(this),
     Validators.pattern('^[a-zA-Z0-9 ]*$'),
   ]);
+
   messageSize: number;
-
   passphrase: string;
-
   tokenId: number;
+
+  isDownloaded: boolean = false;
+  isUpdated: boolean = false;
 
   constructor(
     private authServ: AuthService,
     public dialog: MatDialog,
+    public dialogRef: MatDialogRef<SeatDetailComponent>,
     private seatServ: SeatService,
     @Inject(MAT_DIALOG_DATA) dataToken: number
   ) {
@@ -101,11 +104,13 @@ export class SeatDetailComponent implements OnInit {
       this.nodePubKeyField.enable();
       this.messageField.enable();
       this.editable = true;
+      this.dialogRef.disableClose = true;
     } else {
       this.addressField.disable();
       this.nodePubKeyField.disable();
       this.messageField.disable();
       this.editable = false;
+      this.dialogRef.disableClose = false;
     }
   }
 
@@ -124,10 +129,14 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onDownload() {
-    this.dialog.open(DownloadCertificateComponent, {
+    const dialog = this.dialog.open(DownloadCertificateComponent, {
       width: '420px',
       maxHeight: '90vh',
       data: { nodeKey: this.passphrase, ownerAccount: this.addressField.value },
+    });
+
+    dialog.afterClosed().subscribe(download => {
+      if (download) this.isDownloaded = true;
     });
   }
 
@@ -148,6 +157,20 @@ export class SeatDetailComponent implements OnInit {
     confirmRefDialog.afterClosed().subscribe(onConfirm => {
       if (onConfirm) this.onOpenPinDialog();
     });
+  }
+
+  onCancel() {
+    if (this.isDownloaded != this.isUpdated) {
+      Swal.fire({
+        html: `<b>WARNING</b>: you must update the smart contract AND download the certificate to complete your registration. <br>
+          If you close this window before both of these things are done, your registration will be incomplete and your node will not run correctly. <br>
+          <b>ARE YOU SURE YOU WANT TO CLOSE???</b>`,
+        showCancelButton: true,
+        preConfirm: () => {
+          this.dialogRef.close();
+        },
+      });
+    } else this.dialogRef.close();
   }
 
   async connectMetamask() {
@@ -184,6 +207,7 @@ export class SeatDetailComponent implements OnInit {
       .update(params)
       .then((res: any) => {
         this.isLoadingUpdate = false;
+        this.isUpdated = true;
         const txHash = res.result;
         Swal.fire({
           type: 'success',
