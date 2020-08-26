@@ -67,7 +67,14 @@
         </button>
       </div>
     </mat-card>
-    <button (click)="onSetupNewDataset()" mat-flat-button color="primary" type="submit" class="block setup">
+    <button
+      *ngIf="account.type == 'normal'"
+      (click)="onSetupNewDataset()"
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="block setup"
+    >
       {{ 'setup new dataset' | translate }}
     </button>
   </div>

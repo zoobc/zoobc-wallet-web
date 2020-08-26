@@ -189,17 +189,29 @@
           </div>
         </ng-container>
       </div>
-      <br />
-      <button
-        (click)="onAddSignature()"
-        [disabled]="transactionHashField.value.length <= 0"
-        mat-flat-button
-        color="primary"
-        type="button"
-        style="width: 100%;"
-      >
-        {{ 'add your signature' | translate }}
-      </button>
+      <mat-checkbox class="checkbox-margin" (click)="toggleGetSignature()">
+        {{ 'get signature' | translate }}
+      </mat-checkbox>
+      <div *ngIf="getSignature">
+        <account-selector
+          (select)="onSwitchAccount($event)"
+          type="normal"
+          [addresses]="participants"
+          [switchAccount]="true"
+          [withBalance]="false"
+        ></account-selector>
+        <br />
+        <button
+          (click)="onAddSignature()"
+          [disabled]="transactionHashField.value.length <= 0"
+          mat-flat-button
+          color="primary"
+          type="button"
+          style="width: 100%;"
+        >
+          {{ 'add your signature' | translate }}
+        </button>
+      </div>
       <div class="row" style="margin-top: 20px;">
         <div class="col">
           <button (click)="onBack()" mat-flat-button color="warn" class="block" type="button">

@@ -171,10 +171,7 @@ export class MyTaskComponent implements OnInit {
   }
 
   async getPendingMultisigApproval() {
-    const params: MempoolListParams = {
-      address: this.account.signByAddress,
-    };
-    let list: string[] = await zoobc.Mempool.getList(params).then(res => {
+    let list: string[] = await zoobc.Mempool.getList().then(res => {
       let txHash: any = res.mempooltransactionsList.filter(tx => {
         const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
         if (bytes.readInt32LE(0) == TransactionType.MULTISIGNATURETRANSACTION) return tx;
@@ -191,20 +188,6 @@ export class MyTaskComponent implements OnInit {
     return list;
   }
 
-  async getSignatureMultisig(txHash) {
-    const hashHex = base64ToHex(txHash);
-    let visible = await zoobc.MultiSignature.getPendingByTxHash(hashHex).then(
-      (res: MultisigPendingTxDetailResponse) => {
-        let idx = res.pendingsignaturesList.findIndex(
-          sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
-        );
-        if (idx >= 0) return false;
-        else return true;
-      }
-    );
-    return visible;
-  }
-
   async checkVisibleMultisig(pendingList) {
     let list = [];
     let pendingApprovalList = await this.getPendingMultisigApproval();
@@ -212,21 +195,13 @@ export class MyTaskComponent implements OnInit {
       for (let i = 0; i < pendingList.length; i++) {
         let onPending = pendingApprovalList.includes(pendingList[i].transactionhash);
         if (!onPending) {
-          let visible = await this.getSignatureMultisig(pendingList[i].transactionhash);
-          if (visible) {
-            list.push(pendingList[i]);
-          }
-        }
-      }
-    } else {
-      for (let i = 0; i < pendingList.length; i++) {
-        let visible = await this.getSignatureMultisig(pendingList[i].transactionhash);
-        if (visible) {
           list.push(pendingList[i]);
         }
       }
+      return list;
+    } else {
+      return pendingList;
     }
-    return list;
   }
 
   async checkVisibleEscrow(escrowsList) {
