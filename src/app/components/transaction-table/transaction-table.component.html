@@ -33,6 +33,25 @@
           <ng-container *ngIf="transaction.type == 'receive'">
             <div class="amount-receive">+ {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
           </ng-container>
+          <div class="description">
+            <div class="chips">
+              <div class="chip small" *ngIf="transaction.multisigchild">
+                {{ 'multisignature' | translate }}
+              </div>
+              <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
+            </div>
+            <div
+              class="status"
+              [style.color]="getColorByEscrowStatus(transaction.escrowStatus)"
+              *ngIf="transaction.escrow"
+            >
+              <i
+                class="fas fa-dot-circle"
+                [matTooltip]="getTextByEscrowStatus(transaction.escrowStatus) | translate"
+                matTooltipPosition="above"
+              ></i>
+            </div>
+          </div>
         </div>
       </div>
     </ng-container>
