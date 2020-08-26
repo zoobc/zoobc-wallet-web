@@ -32,6 +32,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     transaction: false,
   };
 
+  participants = [];
+  getSignature: boolean = false;
+
   constructor(
     private multisigServ: MultisigService,
     private router: Router,
@@ -50,13 +53,12 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo, unisgnedTransactions } = multisig;
       this.multisig = multisig;
-
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
     });
-
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
     this.patchValue(this.multisig);
+    this.participants = this.multisig.multisigInfo.participants;
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
@@ -64,6 +66,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
+    this.authServ.switchMultisigAccount();
   }
 
   createParticipant(address: string, signature: string, required: boolean): FormGroup {
@@ -210,15 +213,23 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   onAddSignature() {
     const { transactionHash, participantsSignature } = this.form.value;
-    const curAcc = this.authServ.getCurrAccount();
     let idx: number;
-    idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.address);
-    if (curAcc.type === 'multisig' && idx == -1)
-      idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.signByAddress);
+    idx = participantsSignature.findIndex(pcp => pcp.address == this.account.address);
+    if (this.account.type === 'multisig' && idx == -1)
+      idx = participantsSignature.findIndex(pcp => pcp.address == this.account.address);
     let message = getTranslation('this account is not in participant list', this.translate);
     if (idx == -1) return Swal.fire('Error', message, 'error');
     const seed = this.authServ.seed;
     const signature = signTransactionHash(transactionHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
+    this.authServ.switchAccount(account);
+  }
+
+  toggleGetSignature() {
+    this.getSignature = !this.getSignature;
   }
 }

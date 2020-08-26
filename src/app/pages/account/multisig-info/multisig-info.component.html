@@ -20,10 +20,6 @@
           {{ 'min signature' | translate }}:
           <span class="min-signature">{{ currAcc.minSig }} address(es)</span>
         </div>
-        <div class="signed-by">
-          <div class="label">{{ 'signedby' | translate }}:</div>
-          <wallet-address [value]="currAcc.signByAddress"></wallet-address>
-        </div>
         <div class="share-multisig-info">
           <button mat-flat-button color="primary" (click)="onExport()" class="block">
             <span><i class="fa fa-share-alt"></i> &nbsp;</span>

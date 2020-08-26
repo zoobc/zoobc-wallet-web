@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef, Input, Output, EventEmitter 
 import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, {
   toGetPendingList,
   MultiSigInterface,
@@ -44,10 +44,11 @@ export class MultisigTransactionComponent implements OnInit {
 
   currencyRate: Currency;
   advancedMenu: boolean = false;
-  enabledSign: boolean = true;
   showSignForm: boolean = false;
+  enabledSign: boolean = true;
   pendingSignatures = [];
   participants = [];
+  totalParticpants: number;
 
   constructor(
     public dialog: MatDialog,
@@ -72,6 +73,10 @@ export class MultisigTransactionComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.authServ.switchMultisigAccount();
+  }
+
   onRefresh() {
     this.refresh.emit(true);
   }
@@ -93,11 +98,17 @@ export class MultisigTransactionComponent implements OnInit {
 
       this.pendingSignatures = res.pendingsignaturesList;
       this.participants = res.multisignatureinfo.addressesList;
-      const idx = this.pendingSignatures.findIndex(
-        sign => sign.accountaddress == this.authServ.getCurrAccount().signByAddress
-      );
-      if (idx >= 0) this.enabledSign = false;
-      else this.enabledSign = true;
+      this.totalParticpants = res.multisignatureinfo.addressesList.length;
+      if (this.pendingSignatures) {
+        for (let i = 0; i < this.pendingSignatures.length; i++) {
+          this.participants = this.participants.filter(
+            res => res != this.pendingSignatures[i].accountaddress
+          );
+        }
+        const idx = this.authServ.getAllAccount().filter(res => this.participants.includes(res.address));
+        if (idx.length > 0) this.enabledSign = true;
+        else this.enabledSign = false;
+      }
 
       this.isLoadingDetail = false;
     });
@@ -126,13 +137,13 @@ export class MultisigTransactionComponent implements OnInit {
         const seed = this.authServ.seed;
         this.isLoadingTx = true;
         let data: MultiSigInterface = {
-          accountAddress: account.signByAddress,
+          accountAddress: account.address,
           fee: this.feeForm.value,
           signaturesInfo: {
             txHash: this.multiSigDetail.transactionhash,
             participants: [
               {
-                address: account.signByAddress,
+                address: account.address,
                 signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
               },
             ],
@@ -167,5 +178,10 @@ export class MultisigTransactionComponent implements OnInit {
 
   toogleShowSignForm() {
     this.showSignForm = !this.showSignForm;
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
+    this.authServ.switchAccount(account);
   }
 }
