@@ -13,8 +13,8 @@ import zoobc, {
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
   AccountBalanceResponse,
-  TransactionsResponse,
   TransactionType,
+  EscrowListParams,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -46,7 +46,6 @@ export class DashboardComponent implements OnInit {
   accounts: SavedAccount[];
   lastRefresh: number;
   lastRefreshAccount: number;
-
   constructor(
     private authServ: AuthService,
     private currencyServ: CurrencyRateService,
@@ -93,7 +92,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getTransactions() {
+  async getTransactions() {
     if (!this.isLoadingRecentTx) {
       this.recentTx = null;
       this.unconfirmTx = null;
@@ -110,27 +109,58 @@ export class DashboardComponent implements OnInit {
         },
       };
 
-      zoobc.Transactions.getList(params)
-        .then((res: TransactionsResponse) => {
-          const tx = toTransactionListWallet(res, this.currAcc.address);
-          this.recentTx = tx.transactions;
-          this.recentTx.map(recent => {
-            recent['alias'] = this.contactServ.get(recent.address).name || '';
-          });
-          this.totalTx = tx.total;
+      try {
+        const trxList = await zoobc.Transactions.getList(params);
+        let lastHeight = 0;
+        let firstHeight = 0;
+        if (parseInt(trxList.total) > 0) {
+          lastHeight = trxList.transactionsList[0].height;
+          firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
+        }
 
-          const params: MempoolListParams = {
-            address: this.currAcc.address,
-          };
-          return zoobc.Mempool.getList(params);
-        })
-        .then(
-          unconfirmTx => (this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address))
-        )
-        .catch(e => {
-          this.isErrorRecentTx = true;
-        })
-        .finally(() => ((this.isLoadingRecentTx = false), (this.lastRefresh = Date.now())));
+        const multisigTx = trxList.transactionsList
+          .filter(trx => trx.multisigchild == true)
+          .map(trx => trx.id);
+
+        const paramEscrowSend: EscrowListParams = {
+          sender: this.currAcc.address,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
+          statusList: [0, 1, 2, 3],
+        };
+        const paramEscrowReceive: EscrowListParams = {
+          recipient: this.currAcc.address,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
+          statusList: [0, 1, 2, 3],
+        };
+        const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
+        const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
+        const escrowList = escrowSend.escrowsList.concat(escrowReceive.escrowsList);
+        const tx = toTransactionListWallet(trxList, this.currAcc.address);
+        let rTx = tx.transactions;
+        rTx.map(recent => {
+          recent['alias'] = this.contactServ.get(recent.address).name || '';
+          recent['escrow'] = this.checkIdOnEscrow(recent.id, escrowList);
+          if (recent['escrow']) recent['escrowStatus'] = this.getEscrowStatus(recent.id, escrowList);
+          recent['multisigchild'] = multisigTx.includes(recent.id);
+          return recent;
+        });
+        this.recentTx = rTx;
+        this.totalTx = tx.total;
+
+        const paramPool: MempoolListParams = {
+          address: this.currAcc.address,
+        };
+        const unconfirmTx = await zoobc.Mempool.getList(paramPool);
+        this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address);
+      } catch (error) {
+        console.log(error);
+        this.isErrorRecentTx = true;
+      } finally {
+        this.isLoadingRecentTx = false;
+        this.lastRefresh = Date.now();
+      }
     }
   }
 
@@ -178,5 +208,14 @@ export class DashboardComponent implements OnInit {
   reloadBalanceTx() {
     this.getBalance();
     this.getTransactions();
+  }
+  checkIdOnEscrow(id: any, escrowArr: any[]) {
+    const filter = escrowArr.filter(arr => arr.id == id);
+    if (filter.length > 0) return true;
+    return false;
+  }
+  getEscrowStatus(id: any, escrowArr: any[]) {
+    const idx = escrowArr.findIndex(esc => esc.id == id);
+    return escrowArr[idx].status;
   }
 }
