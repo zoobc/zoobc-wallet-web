@@ -2,7 +2,7 @@
   <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
-      <label>{{ 'from' | translate }}</label>
+      <label>{{ 'sender' | translate }}</label>
       <div *ngIf="isMultiSigAccount" style="margin-bottom: 16px;">
         <wallet-address [value]="account.signByAddress"></wallet-address>
       </div>
@@ -76,7 +76,7 @@
     <div class="content">
       <div class="row">
         <div class="col-12 col-sm-6 test">
-          <div class="label">{{ 'from' | translate }}:</div>
+          <div class="label">{{ 'sender' | translate }}:</div>
           <div class="address">
             <wallet-address [value]="multisig.transaction.sender"></wallet-address>
           </div>
