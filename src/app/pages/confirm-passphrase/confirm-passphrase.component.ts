@@ -105,8 +105,7 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
-    const pass = 'p4ssphr4se';
-    this.zooKeyring = new ZooKeyring(this.words, pass);
+    this.zooKeyring = new ZooKeyring(this.words);
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(this.words, key);
     const childSeed = this.zooKeyring.calcDerivationPath(0);

@@ -2,7 +2,7 @@
   <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
-      <label>{{ 'from' | translate }}</label>
+      <label>{{ 'sender' | translate }}</label>
       <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
       <input-address
         label="{{ 'recipient address' | translate }}"

@@ -24,7 +24,7 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="createTransactionForm" (submit)="next()">
-      <label>{{ 'from' | translate }}</label>
+      <label>{{ 'sender' | translate }}</label>
       <div style="margin-bottom: 16px;">
         <wallet-address [value]="senderForm.value"></wallet-address>
       </div>
