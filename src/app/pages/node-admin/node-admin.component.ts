@@ -20,6 +20,7 @@ import zoobc, {
   NodeHardwareResponse,
   TransactionType,
   getZBCAdress,
+  Subscription,
 } from 'zoobc-sdk';
 
 @Component({
@@ -44,7 +45,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   lastClaim: string = undefined;
   nodePublicKey: string = '';
 
-  stream: any;
+  stream: Subscription;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
