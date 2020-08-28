@@ -133,9 +133,10 @@ export class RestoreWalletComponent implements OnInit {
     let passphrase: string = this.restoreForm.value.words.map(form => form.word).join(' ');
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
-    const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
+    const keyring = new ZooKeyring(passphrase);
     const childSeed = keyring.calcDerivationPath(0);
     const address = getZBCAdress(childSeed.publicKey);
+    console.log(childSeed.publicKey.toString('hex'));
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,

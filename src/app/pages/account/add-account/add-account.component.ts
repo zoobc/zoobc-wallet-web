@@ -51,6 +51,7 @@ export class AddAccountComponent implements OnInit {
       const path = this.authServ.generateDerivationPath();
       const childSeed = keyring.calcDerivationPath(path);
       const accountAddress = getZBCAdress(childSeed.publicKey);
+      console.log(childSeed.publicKey.toString('hex'));
       account = {
         name: this.accountNameField.value,
         type: 'normal',
