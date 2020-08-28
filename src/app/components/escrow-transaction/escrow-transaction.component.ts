@@ -12,7 +12,9 @@ import zoobc, {
 import { AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
-import { getTranslation } from 'src/helpers/utils';
+import { getTranslation, truncate } from 'src/helpers/utils';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -28,18 +30,42 @@ export class EscrowTransactionComponent implements OnInit {
   @Output() refresh: EventEmitter<boolean> = new EventEmitter();
   detailEscrowRefDialog: MatDialogRef<any>;
 
+  form: FormGroup;
+  minFee = environment.fee;
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
+  feeFormCurr = new FormControl('', Validators.required);
+  typeFeeField = new FormControl('ZBC');
+  showProcessForm: boolean = false;
   escrowDetail: EscrowTransactionResponse;
   isLoadingDetail: boolean = false;
   isLoadingTx: boolean = false;
   waitingList = [];
   account;
-  minFee = environment.fee;
   accountBalance: any;
+  currencyRate: Currency;
+  minCurrency: number;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {}
+  constructor(
+    public dialog: MatDialog,
+    private translate: TranslateService,
+    private authServ: AuthService,
+    private currencyServ: CurrencyRateService
+  ) {
+    this.form = new FormGroup({
+      fee: this.feeForm,
+      feeCurr: this.feeFormCurr,
+      typeFee: this.typeFeeField,
+    });
+  }
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+      this.currencyRate = rate;
+      this.minCurrency = truncate(this.minFee * rate.value, 8);
+      this.feeFormCurr.patchValue(this.minCurrency);
+      this.feeFormCurr.setValidators([Validators.required, Validators.min(this.minCurrency)]);
+    });
   }
 
   onRefresh() {
@@ -47,6 +73,11 @@ export class EscrowTransactionComponent implements OnInit {
   }
 
   openDetail(id) {
+    this.showProcessForm = false;
+    this.feeForm.patchValue(this.minFee);
+    this.minCurrency = truncate(this.minFee * this.currencyRate.value, 8);
+    this.feeFormCurr.patchValue(this.minCurrency);
+    this.feeFormCurr.setValidators([Validators.required, Validators.min(this.minCurrency)]);
     this.isLoadingDetail = true;
     zoobc.Escrows.get(id).then((res: EscrowTransactionResponse) => {
       this.escrowDetail = res;
@@ -87,11 +118,11 @@ export class EscrowTransactionComponent implements OnInit {
   async onConfirm(id) {
     await this.getBalance();
     const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
-    if (balance >= this.minFee) {
+    if (balance >= this.feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
         approvalAddress: this.account.address,
-        fee: this.minFee,
+        fee: this.feeForm.value,
         approvalCode: EscrowApproval.APPROVE,
         transactionId: id,
       };
@@ -128,11 +159,11 @@ export class EscrowTransactionComponent implements OnInit {
   async onReject(id) {
     await this.getBalance();
     const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
-    if (balance >= this.minFee) {
+    if (balance >= this.feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
         approvalAddress: this.account.address,
-        fee: this.minFee,
+        fee: this.feeForm.value,
         approvalCode: EscrowApproval.REJECT,
         transactionId: id,
       };
@@ -164,5 +195,9 @@ export class EscrowTransactionComponent implements OnInit {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
+  }
+
+  toogleShowProcessForm(e) {
+    this.showProcessForm = !this.showProcessForm;
   }
 }
