@@ -110,7 +110,6 @@ export class ConfirmPassphraseComponent implements OnInit {
     const encPassphrase = zoobc.Wallet.encryptPassphrase(this.words, key);
     const childSeed = this.zooKeyring.calcDerivationPath(0);
     const accountAddress = getZBCAdress(childSeed.publicKey);
-    console.log(childSeed.publicKey.toString('hex'));
 
     const account: SavedAccount = {
       name: 'Account 1',

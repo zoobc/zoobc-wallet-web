@@ -136,7 +136,6 @@ export class RestoreWalletComponent implements OnInit {
     const keyring = new ZooKeyring(passphrase);
     const childSeed = keyring.calcDerivationPath(0);
     const address = getZBCAdress(childSeed.publicKey);
-    console.log(childSeed.publicKey.toString('hex'));
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,

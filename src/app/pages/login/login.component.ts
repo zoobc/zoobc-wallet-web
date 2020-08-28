@@ -5,7 +5,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinsComponent } from 'src/app/components/pins/pins.component';
-import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-login',
@@ -42,24 +41,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     let isLoggedIn: boolean = this.appServ.isLoggedIn();
     if (isLoggedIn) this.router.navigateByUrl('/dashboard');
-
-    let accounts = [];
-    for (let i = 0; i < 50; i++) {
-      // const phrase =
-      //   'very tooth oxygen lucky fat wolf demise arrest video squeeze hybrid sock siege galaxy remain radar panda loyal culture virus goose dolphin learn throw';
-      const phrase = ZooKeyring.generateRandomPhrase(24);
-      const keyring = new ZooKeyring(phrase);
-      const childSeed = keyring.calcDerivationPath(0);
-      const accountAddress = getZBCAdress(childSeed.publicKey);
-      const account = {
-        AccountAddress: accountAddress,
-        AccountSeed: phrase,
-      };
-
-      accounts.push(account);
-    }
-
-    console.log(JSON.stringify(accounts));
   }
 
   onChangePin() {
