@@ -88,8 +88,19 @@ export class MultisignatureComponent implements OnInit {
       const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
       multisig.generatedSender = address;
       this.multisigServ.update(multisig);
-      if (transaction) this.router.navigate(['/multisignature/create-transaction']);
-      else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+      let isOneParticpants: boolean = false;
+      const idx = this.authServ
+        .getAllAccount()
+        .filter(res => multisig.multisigInfo.participants.includes(res.address));
+      if (idx.length > 0) isOneParticpants = true;
+      else isOneParticpants = false;
+      if (!isOneParticpants) {
+        let message = getTranslation('you dont have any account that in participant list', this.translate);
+        Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      } else {
+        if (transaction) this.router.navigate(['/multisignature/create-transaction']);
+        else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+      }
     } else {
       this.multisigServ.update(multisig);
 

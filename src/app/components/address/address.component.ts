@@ -19,8 +19,10 @@ export class AddressComponent implements OnInit {
   constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
   ngOnInit() {
-    this.len = this.value.length;
-    this.halfLen = Math.round(this.value.length / 2);
+    if (this.value) {
+      this.len = this.value.length;
+      this.halfLen = Math.round(this.value.length / 2);
+    }
   }
 
   onCopyText(e) {
