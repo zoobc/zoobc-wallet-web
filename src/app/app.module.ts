@@ -86,8 +86,6 @@ import { AccountDatasetComponent } from './pages/account-dataset/account-dataset
 import { SetupDatasetComponent } from './pages/account-dataset/setup-dataset/setup-dataset.component';
 import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
-import { QrScannerComponent } from './pages/qr-scanner/qr-scanner.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -138,7 +136,6 @@ export function getLanguage(languageServ: LanguageService) {
     SetupDatasetComponent,
     ApprovalEscrowHistoryComponent,
     MultisigApprovalHistoryComponent,
-    QrScannerComponent,
   ],
   imports: [
     BrowserModule,
@@ -195,7 +192,6 @@ export function getLanguage(languageServ: LanguageService) {
     InputAddressModule,
     InputAmountModule,
     MatStepperModule,
-    ZXingScannerModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -223,7 +219,6 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigInfoComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
-    QrScannerComponent,
   ],
 })
 export class AppModule {}

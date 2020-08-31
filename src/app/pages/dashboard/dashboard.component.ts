@@ -19,7 +19,6 @@ import zoobc, {
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
-import { QrScannerComponent } from '../qr-scanner/qr-scanner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -175,15 +174,9 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-  openScannerForm() {
-    const dialog = this.dialog.open(QrScannerComponent, {
-      width: '480px',
-      maxHeight: '99vh',
-      data: 'string',
-      disableClose: true,
-    });
-    dialog.afterClosed().subscribe((data: any) => {
-      if (data) this.router.navigateByUrl('/request/' + data[0] + '/' + data[1] + '');
-    });
+
+  reloadBalanceTx() {
+    this.getBalance();
+    this.getTransactions();
   }
 }

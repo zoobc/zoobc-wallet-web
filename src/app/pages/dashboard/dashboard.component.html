@@ -28,7 +28,7 @@
       <span class="message">
         {{ 'an error occurred while processing your request' | translate }}
       </span>
-      <button mat-flat-button color="primary" (click)="getBalance()">
+      <button mat-flat-button color="primary" (click)="reloadBalanceTx()">
         {{ 'try again' | translate }}
       </button>
     </div>
@@ -79,7 +79,7 @@
           </span>
         </div>
         <div class="col-2 text-right">
-          <button mat-icon-button class="reload-button" (click)="getBalance()">
+          <button mat-icon-button class="reload-button" (click)="reloadBalanceTx()">
             <i class="fa fa-redo-alt"></i>
           </button>
         </div>
@@ -146,10 +146,6 @@
           <i matPrefix class="fa fa-hand-holding-usd"></i>
           <span>{{ 'receive' | translate }}</span>
         </button>
-        <button *ngIf="currAcc.type == 'normal'" mat-flat-button (click)="openScannerForm()">
-          <i matPrefix class="fa fa-qrcode"></i>
-          <span>{{ 'scan' | translate }}</span>
-        </button>
       </div>
     </ng-container>
     <div class="text-right">
@@ -161,13 +157,8 @@
 
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
     <div class="row">
-      <div class="col-10">
+      <div class="col-12">
         <h2 class="mat-h2">{{ 'pending transaction' | translate }}</h2>
-      </div>
-      <div class="col-2 text-right">
-        <button mat-icon-button class="reload-button" (click)="getTransactions()">
-          <i class="fa fa-redo-alt"></i>
-        </button>
       </div>
     </div>
     <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
@@ -175,7 +166,7 @@
   </ng-container>
 
   <div class="row">
-    <div class="col-10">
+    <div class="col-12">
       <h2 class="mat-h2 title">
         {{ 'recent transactions' | translate }}
         <span class="text-refresh" *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
@@ -183,17 +174,12 @@
         >
       </h2>
     </div>
-    <div class="col-2 text-right" *ngIf="!isErrorRecentTx && !isLoadingRecentTx">
-      <button mat-icon-button class="reload-button" (click)="getTransactions()">
-        <i class="fa fa-redo-alt"></i>
-      </button>
-    </div>
   </div>
   <app-transaction-table
     [withDetail]="true"
     [isLoading]="isLoadingRecentTx"
     [isError]="isErrorRecentTx"
-    (refresh)="getTransactions()"
+    (refresh)="reloadBalanceTx()"
     [transactionData]="recentTx"
   >
   </app-transaction-table>
