@@ -6,6 +6,7 @@ import { AddAccountComponent } from './add-account/add-account.component';
 import { EditAccountComponent } from './edit-account/edit-account.component';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-account',
@@ -90,7 +91,11 @@ export class AccountComponent implements OnInit {
         const currAccount = this.authServ.getCurrAccount();
         if (this.accounts[index].address == currAccount.address) this.onSwitchAccount(this.accounts[0]);
         this.accounts.splice(index, 1);
-        localStorage.setItem('ACCOUNT', JSON.stringify(this.accounts));
+        if (environment.production) {
+          localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(this.accounts));
+        } else {
+          localStorage.setItem('ACCOUNT_TEST', JSON.stringify(this.accounts));
+        }
         return true;
       },
     });

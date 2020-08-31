@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinsComponent } from 'src/app/components/pins/pins.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -14,10 +15,10 @@ import { PinsComponent } from 'src/app/components/pins/pins.component';
 export class LoginComponent implements OnInit {
   @ViewChild('pin') pin: PinsComponent;
 
-  encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+  encPassphrase: string;
   isLoggedIn: boolean;
   isLoading: boolean = false;
-  hasAccount = this.encPassphrase ? true : false;
+  hasAccount: boolean = false;
 
   formLoginPin: FormGroup;
   pinForm = new FormControl('', [
@@ -36,6 +37,12 @@ export class LoginComponent implements OnInit {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
     });
+    if (environment.production) {
+      this.encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
+    } else {
+      this.encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
+    }
+    this.hasAccount = this.encPassphrase ? true : false;
   }
 
   ngOnInit() {

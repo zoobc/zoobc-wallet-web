@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import zoobc, { BIP32Interface, ZooKeyring, getZBCAdress, TransactionListParams } from 'zoobc-sdk';
+import { environment } from 'src/environments/environment';
 
 export interface SavedAccount {
   name: string;
@@ -38,13 +39,29 @@ export class AuthService {
   }
 
   generateDerivationPath(): number {
-    const accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
-    return accounts.length;
+    let accounts: SavedAccount[];
+    if (environment.production) {
+      accounts = JSON.parse(localStorage.getItem('ACCOUNT_MAIN')) || [];
+    } else {
+      accounts = JSON.parse(localStorage.getItem('ACCOUNT_TEST')) || [];
+    }
+    const highestPath = Math.max.apply(
+      Math,
+      accounts.map(res => {
+        return res.path;
+      })
+    );
+    return highestPath + 1;
   }
 
   login(key: string): boolean {
     // give some delay so that the dom have time to render the spinner
-    const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+    let encPassphrase;
+    if (environment.production) {
+      encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
+    } else {
+      encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
+    }
     const passphrase = zoobc.Wallet.decryptPassphrase(encPassphrase, key);
 
     if (passphrase) {
@@ -64,18 +81,27 @@ export class AuthService {
   }
 
   switchAccount(account: SavedAccount) {
-    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    if (environment.production) {
+      localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(account));
+    } else {
+      localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(account));
+    }
     this._keyring.calcDerivationPath(account.path);
     this._seed = this._keyring.calcDerivationPath(account.path);
   }
 
   getCurrAccount(): SavedAccount {
-    return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
+    if (environment.production) return JSON.parse(localStorage.getItem('CURR_ACCOUNT_MAIN'));
+    else return JSON.parse(localStorage.getItem('CURR_ACCOUNT_TEST'));
   }
 
   getAllAccount(type?: 'normal' | 'multisig'): SavedAccount[] {
-    let accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
-
+    let accounts: SavedAccount[];
+    if (environment.production) {
+      accounts = JSON.parse(localStorage.getItem('ACCOUNT_MAIN')) || [];
+    } else {
+      accounts = JSON.parse(localStorage.getItem('ACCOUNT_TEST')) || [];
+    }
     if (type == 'normal') return accounts.filter(acc => acc.type == 'normal');
     else if (type == 'multisig') return accounts.filter(acc => acc.type == 'multisig');
     return accounts;
@@ -120,7 +146,11 @@ export class AuthService {
 
     if (!isDuplicate) {
       accounts.push(account);
-      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+      if (environment.production) {
+        localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(accounts));
+      } else {
+        localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
+      }
       this.switchAccount(account);
     }
   }
@@ -167,9 +197,12 @@ export class AuthService {
         accountPath++;
         counter++;
       }
-      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+      if (environment.production) {
+        localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(accounts));
+      } else {
+        localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
+      }
       localStorage.setItem('IS_RESTORED', 'true');
-
       this.restoring = false;
     }
   }

@@ -4,6 +4,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AddAccountComponent } from '../add-account/add-account.component';
 import zoobc, { MultiSigAddress } from 'zoobc-sdk';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-edit-account',
@@ -91,9 +92,17 @@ export class EditAccountComponent implements OnInit {
           currAcc.path = this.signBy.path;
           currAcc.signByAddress = this.signBy.address;
         }
-        localStorage.setItem('CURR_ACCOUNT', JSON.stringify(currAcc));
+        if (environment.production) {
+          localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(currAcc));
+        } else {
+          localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(currAcc));
+        }
       }
-      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+      if (environment.production) {
+        localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(accounts));
+      } else {
+        localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
+      }
       this.dialogRef.close(true);
     }
   }
