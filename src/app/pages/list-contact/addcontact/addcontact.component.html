@@ -19,16 +19,6 @@
         placeholder="{{ 'address' | translate }}"
         (keyup)="onAddressValidation()"
       />
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        (click)="openScannerForm()"
-        matTooltip="{{ 'scan qr code' | translate }}"
-        matTooltipPosition="above"
-      >
-        <i matPrefix class="fa fa-qrcode"></i>
-      </button>
     </mat-form-field>
     <ng-container *ngIf="addressField.touched">
       <mat-error *ngIf="addressField.hasError('required')">
