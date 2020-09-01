@@ -36,6 +36,8 @@ export class SeatDetailComponent implements OnInit {
     this.checkMessageLength.bind(this),
     Validators.pattern('^[a-zA-Z0-9 ]*$'),
   ]);
+  passwordField = new FormControl('', Validators.required);
+  confirmPassField = new FormControl('', Validators.required);
 
   messageSize: number;
   passphrase: string;
@@ -55,6 +57,8 @@ export class SeatDetailComponent implements OnInit {
       address: this.addressField,
       nodePubKey: this.nodePubKeyField,
       message: this.messageField,
+      password: this.passwordField,
+      confirmPass: this.confirmPassField,
     });
 
     this.tokenId = dataToken;
