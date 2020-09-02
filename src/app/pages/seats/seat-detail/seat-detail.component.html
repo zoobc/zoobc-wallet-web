@@ -7,8 +7,8 @@
   <!-- IF SUCCEED -->
   <ng-container *ngIf="!isError">
     <!-- CONTAINS DATA -->
-    <div class="seat-detail-container" *ngIf="seat">
-      <form [formGroup]="form">
+    <div class="seat-detail-container" *ngIf="seat && !readonly">
+      <form [formGroup]="form" (submit)="onUpdate()">
         <mat-label class="title">ETH Address</mat-label>
         <div class="address">
           <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
@@ -32,12 +32,7 @@
                 ZBC Address is required. Please select one of your addresses by click "Change Address" button
               </mat-error>
 
-              <account-selector
-                (select)="onSwitch($event)"
-                type="normal"
-                switchAccount="false"
-                *ngIf="editable"
-              >
+              <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false">
                 <button mat-flat-button type="button" class="block" color="primary">
                   <i matPrefix class="fas fa-exchange-alt"></i>
                   <span>Change Address</span>
@@ -83,25 +78,19 @@
           <div style="width: 32px;"><div class="numbering">3</div></div>
           <div style="width: calc(100% - 32px)">
             <mat-label class="title">Message</mat-label>
-            <div *ngIf="!editable">
-              {{ seat.message }}
-              <i *ngIf="!messageField.value">(No Message yet)</i>
-            </div>
-            <ng-container *ngIf="editable">
-              <mat-form-field appearance="outline" color="accent" class="block">
-                <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message">
-                </textarea>
-              </mat-form-field>
-              <ng-container *ngIf="messageField.touched">
-                <mat-error *ngIf="messageField.hasError('invalidLimit')">
-                  Maximum message length is 100 bytes
-                </mat-error>
-                <mat-error *ngIf="messageField.hasError('pattern')">
-                  Message only support alphanumeric and space characters
-                </mat-error>
-              </ng-container>
-              <div class="hint">{{ messageSize }} of 100 bytes</div>
+            <mat-form-field appearance="outline" color="accent" class="block">
+              <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message">
+              </textarea>
+            </mat-form-field>
+            <ng-container *ngIf="messageField.touched">
+              <mat-error *ngIf="messageField.hasError('invalidLimit')">
+                Maximum message length is 100 bytes
+              </mat-error>
+              <mat-error *ngIf="messageField.hasError('pattern')">
+                Message only support alphanumeric and space characters
+              </mat-error>
             </ng-container>
+            <div class="hint">{{ messageSize }} of 100 bytes</div>
           </div>
         </div>
 
@@ -114,7 +103,13 @@
 
             <mat-form-field appearance="outline" color="accent" class="block">
               <mat-label>Password</mat-label>
-              <input formControlName="password" matInput type="password" placeholder="Password" />
+              <input
+                formControlName="password"
+                matInput
+                type="password"
+                placeholder="Password"
+                (keyup)="changeConfirmPass()"
+              />
             </mat-form-field>
             <ng-container *ngIf="passwordField.touched">
               <mat-error *ngIf="passwordField.hasError('required')">
@@ -143,20 +138,7 @@
           </div>
         </div>
 
-        <ng-container *ngIf="metamask && editable">
-          <button
-            mat-flat-button
-            type="button"
-            class="block"
-            [ngClass]="isDownloaded && 'done'"
-            color="primary"
-            (click)="onDownload()"
-            [disabled]="!passphrase"
-          >
-            <i matPrefix class="fa fa-check" *ngIf="isDownloaded"></i>
-            <i matPrefix class="fa fa-download" *ngIf="!isDownloaded"></i>
-            Download Certificate
-          </button>
+        <ng-container *ngIf="metamask">
           <div class="row">
             <div class="col">
               <button
@@ -167,18 +149,16 @@
                 color="warn"
                 (click)="onCancel()"
               >
-                <i matPrefix class="fa fa-times"></i> Close
+                <i matPrefix class="fa fa-times"></i> Cancel
               </button>
             </div>
             <div class="col">
               <button
                 style="margin-top: 10px;"
                 mat-flat-button
-                type="button"
                 class="block"
                 [ngClass]="isUpdated && 'done'"
                 color="primary"
-                (click)="onUpdate()"
                 [disabled]="!form.valid || isLoadingUpdate"
               >
                 <ng-container *ngIf="!isLoadingUpdate">
@@ -186,7 +166,7 @@
                   <i matPrefix class="fa fa-check" *ngIf="isUpdated"></i>
                 </ng-container>
                 <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
-                Update
+                Register
               </button>
             </div>
           </div>
@@ -203,11 +183,59 @@
         >
           Connect Metamask
         </button>
-
-        <!-- <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
-          <span> Need Help? <a href="/">Click Here</a> </span>
-        </div> -->
       </form>
+    </div>
+
+    <!-- READ ONLY -->
+    <div class="seat-detail-container" *ngIf="seat && readonly">
+      <mat-label class="title">ETH Address</mat-label>
+      <div class="address">
+        <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
+      </div>
+
+      <mat-label class="title">ZooBC Address</mat-label>
+      <div class="zoobc-address">
+        <div class="address">
+          <wallet-address *ngIf="seat.zbcAddress" [value]="seat.zbcAddress"></wallet-address>
+          <i *ngIf="!seat.zbcAddress">(No ZBC Address yet)</i>
+        </div>
+      </div>
+
+      <mat-label class="title">Node Public Key</mat-label>
+      <div class="zoobc-address">
+        <div class="address">
+          <wallet-address *ngIf="seat.nodePubKey" [value]="seat.nodePubKey"></wallet-address>
+          <i *ngIf="!seat.nodePubKey">(No Node Public Key yet)</i>
+        </div>
+      </div>
+
+      <mat-label class="title">Message</mat-label>
+      <div class="zoobc-address">
+        <div class="address">{{ seat.message }}<i *ngIf="!seat.message">(No Message yet)</i></div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button
+          mat-flat-button
+          type="button"
+          class="block"
+          color="primary"
+          (click)="openEdit()"
+          *ngIf="editable"
+        >
+          Register
+        </button>
+        <button
+          mat-flat-button
+          type="button"
+          class="block"
+          color="primary"
+          (click)="connectMetamask()"
+          *ngIf="!metamask"
+        >
+          Connect Metamask
+        </button>
+      </div>
     </div>
 
     <!-- GOT NO DATA -->

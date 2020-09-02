@@ -1,0 +1,30 @@
+<p>Update...</p>
+
+<p>Status: {{ status }}</p>
+
+<div class="row">
+  <div class="col">
+    <button
+      mat-flat-button
+      type="button"
+      class="block"
+      color="warn"
+      (click)="onCancel()"
+      [disabled]="!canCancel"
+    >
+      <i matPrefix class="fa fa-times"></i> Cancel
+    </button>
+  </div>
+  <div class="col">
+    <button
+      mat-flat-button
+      type="button"
+      class="block"
+      color="primary"
+      (click)="onDownload()"
+      [disabled]="!canDownload"
+    >
+      <i matPrefix class="fa fa-times"></i> Download
+    </button>
+  </div>
+</div>

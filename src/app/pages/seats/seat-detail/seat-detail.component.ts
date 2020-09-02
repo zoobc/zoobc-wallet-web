@@ -4,13 +4,12 @@ import Swal from 'sweetalert2';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.component';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
 import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
 import { eddsa as EdDSA } from 'elliptic';
 import * as sha256 from 'sha256';
-import { DownloadCertificateComponent } from '../download-certificate/download-certificate.component';
+import { WaitingDialogComponent } from '../waiting-dialog/waiting-dialog.component';
 
 @Component({
   selector: 'app-seat-detail',
@@ -25,6 +24,7 @@ export class SeatDetailComponent implements OnInit {
   isLoadingUpdate: boolean = false;
   isError: boolean = false;
   editable: boolean = false;
+  readonly: boolean = true;
 
   seat: Seat;
   selectedAddress: string;
@@ -42,9 +42,6 @@ export class SeatDetailComponent implements OnInit {
   messageSize: number;
   passphrase: string;
   tokenId: number;
-
-  isDownloaded: boolean = false;
-  isUpdated: boolean = false;
 
   constructor(
     private authServ: AuthService,
@@ -83,11 +80,7 @@ export class SeatDetailComponent implements OnInit {
       .then(seat => {
         this.isLoading = false;
         this.seat = seat;
-        this.addressField.setValue(seat.zbcAddress);
-        this.nodePubKeyField.setValue(seat.nodePubKey);
-        this.messageField.setValue(seat.message);
-
-        this.checkCanEdit();
+        this.checkMetamask();
         this.messageSize = this.getByteLength(this.messageField.value);
       })
       .catch(err => {
@@ -97,25 +90,34 @@ export class SeatDetailComponent implements OnInit {
       });
   }
 
-  checkCanEdit() {
+  checkMetamask() {
     const ethereum = window['ethereum'];
     if (
       ethereum &&
       ethereum.selectedAddress &&
       ethereum.selectedAddress.toLowerCase() == this.seat.ethAddress.toLowerCase()
     ) {
-      this.addressField.enable();
-      this.nodePubKeyField.enable();
-      this.messageField.enable();
       this.editable = true;
-      this.dialogRef.disableClose = true;
-    } else {
-      this.addressField.disable();
-      this.nodePubKeyField.disable();
-      this.messageField.disable();
-      this.editable = false;
-      this.dialogRef.disableClose = false;
+      if (!this.seat.zbcAddress) {
+        this.readonly = false;
+        this.dialogRef.disableClose = true;
+      }
     }
+  }
+
+  openEdit() {
+    this.readonly = false;
+  }
+
+  checkCanEdit() {
+    const ethereum = window['ethereum'];
+    if (
+      ethereum &&
+      ethereum.selectedAddress &&
+      ethereum.selectedAddress.toLowerCase() == this.seat.ethAddress.toLowerCase()
+    )
+      this.editable = true;
+    else this.editable = false;
   }
 
   onSwitch(account: SavedAccount) {
@@ -132,16 +134,10 @@ export class SeatDetailComponent implements OnInit {
     this.nodePubKeyField.setValue(nodeAddress);
   }
 
-  onDownload() {
-    const dialog = this.dialog.open(DownloadCertificateComponent, {
-      width: '420px',
-      maxHeight: '90vh',
-      data: { nodeKey: this.passphrase, ownerAccount: this.addressField.value },
-    });
-
-    dialog.afterClosed().subscribe(download => {
-      if (download) this.isDownloaded = true;
-    });
+  changeConfirmPass() {
+    if (this.passwordField.value != this.confirmPassField.value) {
+      this.form.get('confirmPass').setErrors({ notmatch: true });
+    }
   }
 
   onUpdate() {
@@ -164,17 +160,17 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onCancel() {
-    if (this.isDownloaded != this.isUpdated) {
-      Swal.fire({
-        html: `<b>WARNING</b>: you must update the smart contract AND download the certificate to complete your registration. <br>
-          If you close this window before both of these things are done, your registration will be incomplete and your node will not run correctly. <br>
-          <b>ARE YOU SURE YOU WANT TO CLOSE???</b>`,
-        showCancelButton: true,
-        preConfirm: () => {
-          this.dialogRef.close();
-        },
-      });
-    } else this.dialogRef.close();
+    this.dialogRef.close();
+
+    // Swal.fire({
+    //   html: `<b>WARNING</b>: you must update the smart contract AND download the certificate to complete your registration. <br>
+    //       If you close this window before both of these things are done, your registration will be incomplete and your node will not run correctly. <br>
+    //       <b>ARE YOU SURE YOU WANT TO CLOSE???</b>`,
+    //   showCancelButton: true,
+    //   preConfirm: () => {
+    //     this.dialogRef.close();
+    //   },
+    // });
   }
 
   async connectMetamask() {
@@ -198,34 +194,19 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onSendTransaction() {
-    this.isLoadingUpdate = true;
-
-    const params: Seat = {
+    const seat: Seat = {
       tokenId: this.tokenId,
       ethAddress: this.seat.ethAddress,
       zbcAddress: this.addressField.value,
       nodePubKey: this.nodePubKeyField.value,
       message: this.messageField.value,
     };
-    this.seatServ
-      .update(params)
-      .then((res: any) => {
-        this.isLoadingUpdate = false;
-        this.isUpdated = true;
-        const txHash = res.result;
-        Swal.fire({
-          type: 'success',
-          title: 'Transaction sent!',
-          html:
-            'Click ' +
-            `<a href="${environment.etherscan}tx/${txHash}" target="_blank">here</a> ` +
-            'to check your transaction status in etherscan.io',
-        });
-      })
-      .catch(err => {
-        this.isLoadingUpdate = false;
-        Swal.fire({ type: 'error', title: err.err.message });
-      });
+
+    this.dialog.open(WaitingDialogComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { seat, nodeKey: this.passphrase, password: this.passwordField.value },
+    });
   }
 
   getByteLength(str: string) {
