@@ -7,7 +7,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 
 interface Languages {
@@ -135,7 +135,7 @@ export class RestoreWalletComponent implements OnInit {
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     const keyring = new ZooKeyring(passphrase);
     const childSeed = keyring.calcDerivationPath(0);
-    const address = getZBCAdress(childSeed.publicKey);
+    const address = getZBCAddress(childSeed.publicKey);
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,
