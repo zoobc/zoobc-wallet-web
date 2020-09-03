@@ -31,6 +31,7 @@ import { CommonModule } from '@angular/common';
 import { FaqComponent } from './faq/faq.component';
 import { TermsOfUseComponent } from './terms-of-use/terms-of-use.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { InfoComponent } from './info.component';
 
 const routes: Routes = [
   { path: 'faq', component: FaqComponent },
@@ -39,7 +40,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [FaqComponent, TermsOfUseComponent, PrivacyPolicyComponent],
+  declarations: [FaqComponent, TermsOfUseComponent, PrivacyPolicyComponent, InfoComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

@@ -65,6 +65,7 @@ import { SeatDetailComponent } from './pages/seats/seat-detail/seat-detail.compo
 import { ConfirmUpdateComponent } from './pages/seats/confirm-update/confirm-update.component';
 import { GenesisComponent } from './pages/genesis/genesis.component';
 import { WaitingDialogComponent } from './pages/seats/waiting-dialog/waiting-dialog.component';
+import { InfoComponent } from './pages/info/info.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { WaitingDialogComponent } from './pages/seats/waiting-dialog/waiting-dia
     ConfirmUpdateComponent,
     GenesisComponent,
     WaitingDialogComponent,
+    InfoComponent,
   ],
   imports: [
     BrowserModule,
