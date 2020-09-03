@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import zoobc from 'zoobc-sdk';
 import { PinsComponent } from '../pins/pins.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-pin-confirmation',
@@ -32,7 +33,12 @@ export class PinConfirmationComponent implements OnInit {
 
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
-        const encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
+        let encPassphrase;
+        if (environment.production) {
+          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
+        } else {
+          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
+        }
         const isPinValid = zoobc.Wallet.decryptPassphrase(encPassphrase, this.pinField.value);
         if (isPinValid) this.dialogRef.close(true);
         else {

@@ -139,13 +139,15 @@ export class RestoreWalletComponent implements OnInit {
       nodeIP: null,
       address: address,
     };
-
-    localStorage.removeItem('ACCOUNT');
-    localStorage.removeItem('CURR_ACCOUNT');
-    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
-    localStorage.setItem('ACCOUNT', JSON.stringify([account]));
-    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
-
+    if (environment.production) {
+      localStorage.setItem('ENC_PASSPHRASE_SEED_MAIN', encPassphrase);
+      localStorage.setItem('ACCOUNT_MAIN', JSON.stringify([account]));
+      localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(account));
+    } else {
+      localStorage.setItem('ENC_PASSPHRASE_SEED_TEST', encPassphrase);
+      localStorage.setItem('ACCOUNT_TEST', JSON.stringify([account]));
+      localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(account));
+    }
     this.authServ.login(key);
     this.router.navigate(['dashboard'], {
       state: { loadAccount: true },

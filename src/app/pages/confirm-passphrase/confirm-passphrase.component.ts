@@ -117,11 +117,17 @@ export class ConfirmPassphraseComponent implements OnInit {
       nodeIP: null,
       address: accountAddress,
     };
-
-    localStorage.removeItem('ACCOUNT');
-    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
-    localStorage.setItem('ACCOUNT', JSON.stringify([account]));
-    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    if (environment.production) {
+      localStorage.removeItem('ACCOUNT_MAIN');
+      localStorage.setItem('ENC_PASSPHRASE_SEED_MAIN', encPassphrase);
+      localStorage.setItem('ACCOUNT_MAIN', JSON.stringify([account]));
+      localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(account));
+    } else {
+      localStorage.removeItem('ACCOUNT_TEST');
+      localStorage.setItem('ENC_PASSPHRASE_SEED_TEST', encPassphrase);
+      localStorage.setItem('ACCOUNT_TEST', JSON.stringify([account]));
+      localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(account));
+    }
 
     this.authServ.login(key);
   }
