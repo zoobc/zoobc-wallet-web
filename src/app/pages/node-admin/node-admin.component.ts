@@ -19,7 +19,7 @@ import zoobc, {
   GenerateNodeKeyResponses,
   NodeHardwareResponse,
   TransactionType,
-  getZBCAdress,
+  getZBCAddress,
   Subscription,
 } from 'zoobc-sdk';
 
@@ -98,7 +98,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
           const { registrationstatus } = res.noderegistration;
           if (registrationstatus == 0) {
             const pubKeyBytes = Buffer.from(String(res.noderegistration.nodepublickey), 'base64');
-            const pubKey = getZBCAdress(pubKeyBytes, 'ZNK');
+            const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
             res.noderegistration.nodepublickey = pubKey;
 
             this.registeredNode = res.noderegistration;
