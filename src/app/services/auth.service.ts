@@ -53,7 +53,13 @@ export class AuthService {
 
   generateDerivationPath(): number {
     const accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
-    return accounts.length;
+    const highestPath = Math.max.apply(
+      Math,
+      accounts.map(res => {
+        return res.path;
+      })
+    );
+    return highestPath + 1;
   }
 
   login(key: string): boolean {
