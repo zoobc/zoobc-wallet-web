@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   isLoggedIn: boolean;
   isLoading: boolean = false;
   hasAccount: boolean = false;
+  isProd: boolean = environment.production;
 
   formLoginPin: FormGroup;
   pinForm = new FormControl('', [
