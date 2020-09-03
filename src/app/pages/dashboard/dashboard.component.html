@@ -166,13 +166,18 @@
   </ng-container>
 
   <div class="row">
-    <div class="col-12">
+    <div class="col-10">
       <h2 class="mat-h2 title">
         {{ 'recent transactions' | translate }}
         <span class="text-refresh" *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
           >( {{ 'last refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
         >
       </h2>
+    </div>
+    <div class="col-2 text-right">
+      <button mat-icon-button class="reload-button" (click)="reloadBalanceTx()">
+        <i class="fa fa-redo-alt"></i>
+      </button>
     </div>
   </div>
   <app-transaction-table
