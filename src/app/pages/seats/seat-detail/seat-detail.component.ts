@@ -107,6 +107,7 @@ export class SeatDetailComponent implements OnInit {
 
   openEdit() {
     this.readonly = false;
+    this.dialogRef.disableClose = true;
   }
 
   checkCanEdit() {
