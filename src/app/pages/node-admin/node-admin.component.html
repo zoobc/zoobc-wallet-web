@@ -41,13 +41,13 @@
     <div class="col-12 col-sm-6">
       <mat-card class="status-card">
         <div class="icon">
-          <i class="fa fa-hammer"></i>
+          <i class="fa fa-award"></i>
           <div class="label">&nbsp;</div>
         </div>
         <div class="status">
-          <div class="label">{{ 'blocks created' | translate }}</div>
-          <div class="value">
-            <i>({{ 'coming soon' | translate }})</i>
+          <div class="label">{{ 'participation score' | translate }}</div>
+          <div class="value" style="font-size: 22px;">
+            {{ score || 0 | number }}
           </div>
         </div>
       </mat-card>
