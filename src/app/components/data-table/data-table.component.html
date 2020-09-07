@@ -1,5 +1,16 @@
 <div class="layout-data-table">
-  <table *ngIf="!isLoading && !isError" style="width:100%" mat-table [dataSource]="dataSource" matSort>
+  <div class="no-content padding" *ngIf="!isLoading && dataSource.data.length == 0 && !isError">
+    <i matPrefix class="fa fa-receipt"></i>
+    <span class="message">{{ 'no transaction record' | translate }}</span>
+  </div>
+  <table
+    *ngIf="tableData && tableData.length > 0 && !isError"
+    style="width:100%;"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="table"
+  >
     <ng-container matColumnDef="no">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'No' | translate }}</th>
       <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>

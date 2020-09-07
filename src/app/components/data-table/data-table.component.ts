@@ -20,6 +20,7 @@ export class DataTableComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.displayCol = this.displayedColumns.map(dc => dc.id);
     if (this.isShowAutomaticNumber) this.displayCol.unshift('no');
+    this.dataSource = new MatTableDataSource(this.tableData);
   }
 
   ngOnChanges() {
@@ -28,10 +29,5 @@ export class DataTableComponent implements OnInit, OnChanges {
 
   onRefresh() {
     this.refresh.emit(true);
-  }
-
-  getDate(pDate: number) {
-    const newDate = new Date(pDate);
-    return newDate;
   }
 }
