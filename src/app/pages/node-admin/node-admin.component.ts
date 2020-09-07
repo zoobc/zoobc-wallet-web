@@ -6,6 +6,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
+import { NodeRewardListComponent } from '../../components/node-reward-list/node-reward-list.component';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
@@ -21,6 +22,7 @@ import zoobc, {
   TransactionType,
   getZBCAdress,
   Subscription,
+  AccountLedgerListParams,
 } from 'zoobc-sdk';
 
 @Component({
@@ -41,11 +43,34 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   isNodeHardwareError: boolean = false;
   isNodeLoading: boolean = false;
   isNodeError: boolean = false;
+  isNodeRewardLoading: boolean = false;
+  isNodeRewardError: boolean = false;
 
   lastClaim: string = undefined;
   nodePublicKey: string = '';
-
+  totalNodeReward: number;
   stream: Subscription;
+
+  showAutomaticNumber: boolean = true;
+  displayedColumns = [
+    {
+      id: 'balancechange',
+      format: 'money',
+      caption: 'reward',
+    },
+    {
+      id: 'blockheight',
+      format: 'number',
+      caption: 'height',
+    },
+    {
+      id: 'timestamp',
+      format: 'timestamp',
+      caption: 'timestamp',
+    },
+  ];
+
+  tableData = [];
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
@@ -62,6 +87,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
+    this.getRewardNode();
   }
 
   ngOnDestroy() {
@@ -213,5 +239,37 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
     let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
+  }
+
+  async getRewardNode() {
+    this.tableData = [];
+    this.isNodeRewardLoading = true;
+    this.isNodeRewardError = false;
+    this.totalNodeReward = 0;
+    let param: AccountLedgerListParams = {
+      accountAddress: this.account.address,
+      eventType: 8,
+      pagination: {
+        page: 1,
+        limit: 5,
+        orderBy: 1,
+      },
+    };
+    try {
+      const accLedger = await zoobc.AccountLedger.getList(param);
+      this.totalNodeReward = parseInt(accLedger.total);
+      this.tableData = accLedger.accountledgersList;
+    } catch (err) {
+      this.isNodeRewardError = true;
+      console.log(err);
+    } finally {
+      this.isNodeRewardLoading = false;
+    }
+  }
+  getMoreReward() {
+    const dialog = this.dialog.open(NodeRewardListComponent, {
+      width: '600px',
+      maxHeight: '90vh',
+    });
   }
 }
