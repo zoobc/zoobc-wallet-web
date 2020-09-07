@@ -6,7 +6,7 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
-import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 
 interface Languages {
   value: string;
@@ -131,7 +131,7 @@ export class RestoreWalletComponent implements OnInit {
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
     const keyring = new ZooKeyring(passphrase);
     const childSeed = keyring.calcDerivationPath(0);
-    const address = getZBCAdress(childSeed.publicKey);
+    const address = getZBCAddress(childSeed.publicKey);
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,

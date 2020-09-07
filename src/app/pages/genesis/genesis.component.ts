@@ -6,7 +6,7 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider(environment.infuraPro
 import { saveAs } from 'file-saver';
 import { eddsa as EdDSA } from 'elliptic';
 import * as sha256 from 'sha256';
-import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 import * as CryptoJS from 'crypto-js';
 import SHA3 from 'sha3';
 
@@ -46,7 +46,7 @@ export class GenesisComponent implements OnInit {
 
     const ec = new EdDSA('ed25519');
     const pairKey = ec.keyFromSecret(seedHash);
-    const nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
+    const nodeAddress = getZBCAddress(pairKey.getPublic(), 'ZNK');
     console.log(nodeAddress);
     console.log(pairKey._privBytes);
   }
