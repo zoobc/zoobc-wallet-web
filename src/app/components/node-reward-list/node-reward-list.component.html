@@ -1,0 +1,19 @@
+<div #rewardlist style="height:90vh;">
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onLoadMore()"
+    [scrollWindow]="false"
+    [infiniteScrollContainer]="'.mat-dialog-container'"
+    [fromRoot]="true"
+  >
+    <app-data-table
+      [tableData]="tableData"
+      [displayedColumns]="displayedColumns"
+      [isLoading]="isLoading"
+      [isError]="isError"
+      [isShowAutomaticNumber]="showAutomaticNumber"
+    ></app-data-table>
+  </div>
+</div>

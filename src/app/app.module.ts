@@ -223,6 +223,7 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigInfoComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
+    NodeRewardListComponent,
   ],
 })
 export class AppModule {}
