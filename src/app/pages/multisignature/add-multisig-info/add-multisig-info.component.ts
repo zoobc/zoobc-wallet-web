@@ -4,9 +4,11 @@ import { MultisigService, MultiSigDraft } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { SavedAccount } from 'src/app/services/auth.service';
+import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc from 'zoobc-sdk';
-import { uniqueParticipant } from '../../../../helpers/utils';
+import { uniqueParticipant, getTranslation } from '../../../../helpers/utils';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -27,7 +29,13 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
 
-  constructor(private multisigServ: MultisigService, private router: Router, private location: Location) {
+  constructor(
+    private multisigServ: MultisigService,
+    private router: Router,
+    private location: Location,
+    private authServ: AuthService,
+    private translate: TranslateService
+  ) {
     this.form = new FormGroup({
       participants: this.participantsField,
       nonce: this.nonceField,
@@ -106,9 +114,20 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       this.updateMultisig();
 
       const { unisgnedTransactions, signaturesInfo } = this.multisig;
-      if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
-      else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
-      else this.router.navigate(['/multisignature/send-transaction']);
+      let isOneParticpants: boolean = false;
+      const idx = this.authServ
+        .getAllAccount()
+        .filter(res => this.multisig.multisigInfo.participants.includes(res.address));
+      if (idx.length > 0) isOneParticpants = true;
+      else isOneParticpants = false;
+      if (!isOneParticpants) {
+        let message = getTranslation('you dont have any account that in participant list', this.translate);
+        Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      } else {
+        if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
+        else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+        else this.router.navigate(['/multisignature/send-transaction']);
+      }
     }
   }
 

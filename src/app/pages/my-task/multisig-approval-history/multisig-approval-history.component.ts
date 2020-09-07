@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, {
   TransactionType,
   TransactionsResponse,
@@ -24,11 +24,13 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
   finished: boolean = false;
-  multisigHistory: any[];
+  multisigHistory: any[] = [];
   isLoadingDetail: boolean = false;
   transactionDetail: any;
   transactionId: string;
   lastRefresh: number;
+  account: SavedAccount;
+  participants: string[] = [];
 
   detailTransactionRefDialog: MatDialogRef<any>;
   @ViewChild('detailTransaction') detailTransactionDialog: TemplateRef<any>;
@@ -36,12 +38,17 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   constructor(private authServ: AuthService, public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.address = this.authServ.getCurrAccount().signByAddress || this.authServ.getCurrAccount().address;
-    this.getMultiSigTransaction(true);
+    const multisigAccount = JSON.parse(localStorage.getItem('CURR_MULTISIG'));
+    this.participants = multisigAccount.participants;
+  }
+
+  ngOnDestroy() {
+    this.authServ.switchMultisigAccount();
   }
 
   async getMultiSigTransaction(reload: boolean = false) {
     if (this.isLoading) return;
+    if (this.account == undefined) return;
     const perPage = Math.ceil(window.outerHeight / 50);
 
     if (reload) {
@@ -53,14 +60,13 @@ export class MultisigApprovalHistoryComponent implements OnInit {
     this.isError = false;
 
     const txParam: TransactionListParams = {
-      address: this.address,
+      address: this.account.address,
       transactionType: TransactionType.MULTISIGNATURETRANSACTION,
       pagination: {
         page: this.page,
         limit: perPage,
       },
     };
-
     try {
       let tx = await zoobc.Transactions.getList(txParam).then((res: TransactionsResponse) => res);
       const multisig = tx.transactionsList.filter(mh => mh.multisignaturetransactionbody.signatureinfo);
@@ -110,5 +116,10 @@ export class MultisigApprovalHistoryComponent implements OnInit {
 
   redirect() {
     window.open('https://zoobc.net/transactions/' + this.transactionId, '_blank');
+  }
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
+    this.authServ.switchAccount(account);
+    this.getMultiSigTransaction(true);
   }
 }

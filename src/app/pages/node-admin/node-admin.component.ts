@@ -20,7 +20,7 @@ import zoobc, {
   GenerateNodeKeyResponses,
   NodeHardwareResponse,
   TransactionType,
-  getZBCAdress,
+  getZBCAddress,
   Subscription,
   AccountLedgerListParams,
   EventType,
@@ -73,6 +73,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   ];
 
   tableData = [];
+  score: number;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
@@ -126,10 +127,11 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
           const { registrationstatus } = res.noderegistration;
           if (registrationstatus == 0) {
             const pubKeyBytes = Buffer.from(String(res.noderegistration.nodepublickey), 'base64');
-            const pubKey = getZBCAdress(pubKeyBytes, 'ZNK');
+            const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
             res.noderegistration.nodepublickey = pubKey;
 
             this.registeredNode = res.noderegistration;
+            this.getTotalScore();
           }
         }
       })
@@ -138,6 +140,12 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
         this.isNodeError = true;
       })
       .finally(() => (this.isNodeLoading = false));
+  }
+
+  getTotalScore() {
+    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeid)
+      .then(res => (this.score = parseInt(res.score) / 1e8))
+      .catch(err => console.log(err));
   }
 
   generateNewPubKey() {
