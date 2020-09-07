@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material';
 })
 export class AddressComponent implements OnInit {
   @Input() value: string;
-  @Input() copyButton: boolean = false;
+  @Input() copyButton: boolean = true;
   @Input() center: boolean = false;
 
   len: number = 0;

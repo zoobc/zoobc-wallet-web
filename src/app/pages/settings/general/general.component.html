@@ -1,11 +1,14 @@
 <div class="general-container">
   <div class="setting-section">
     <p class="title">
-      <span>Network</span>
+      <span>General</span>
     </p>
 
-    <p class="subtitle">Select Network</p>
-    <network></network>
+    <p class="subtitle">Setting and Data</p>
+    <button mat-flat-button (click)="resetData()" color="primary">
+      <i matPrefix class="fa fa-sync"></i>
+      Reset Data
+    </button>
   </div>
 
   <div class="setting-section">

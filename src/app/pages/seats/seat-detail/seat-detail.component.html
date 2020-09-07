@@ -7,111 +7,169 @@
   <!-- IF SUCCEED -->
   <ng-container *ngIf="!isError">
     <!-- CONTAINS DATA -->
-    <div class="seat-detail-container" *ngIf="seat">
-      <form [formGroup]="form">
+    <div class="seat-detail-container" *ngIf="seat && !readonly">
+      <form [formGroup]="form" (submit)="onUpdate()">
         <mat-label class="title">ETH Address</mat-label>
         <div class="address">
           <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
         </div>
 
-        <mat-label class="title">ZooBC Address</mat-label>
-        <div class="zoobc-address">
-          <div class="address">
-            <wallet-address
-              *ngIf="addressField.value"
-              [value]="addressField.value"
-              [copyButton]="true"
-            ></wallet-address>
-            <i *ngIf="!addressField.value">(No ZBC Address yet)</i>
-          </div>
-
-          <mat-error *ngIf="addressField.hasError('required')">
-            ZBC Address is required. Please select one of your addresses by click "Change Address" button
-          </mat-error>
-
-          <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false" *ngIf="editable">
-            <button mat-flat-button type="button" class="block" color="primary">
-              Change Address
-            </button>
-          </account-selector>
-        </div>
-
-        <mat-label class="title">Node Public Key</mat-label>
         <div style="display: flex;">
-          <div class="address" style="width: calc(100% - 48px);margin-right: 12px;">
-            <wallet-address
-              *ngIf="nodePubKeyField.value"
-              [value]="nodePubKeyField.value"
-              [copyButton]="true"
-            ></wallet-address>
-            <i *ngIf="!nodePubKeyField.value">(No Node Public Key yet)</i>
+          <div style="width: 32px;"><div class="numbering">1</div></div>
+          <div style="width: calc(100% - 32px)">
+            <mat-label class="title">ZooBC Address</mat-label>
+            <div class="zoobc-address">
+              <div class="address">
+                <wallet-address
+                  *ngIf="addressField.value"
+                  [value]="addressField.value"
+                  [copyButton]="true"
+                ></wallet-address>
+                <i *ngIf="!addressField.value">(No ZBC Address yet)</i>
+              </div>
 
-            <mat-error
-              *ngIf="nodePubKeyField.hasError('required')"
-              style="margin-top: 4px;word-break: normal;"
-            >
-              Node Public Key is required. Please click button on the right to generate new node public key
-            </mat-error>
+              <mat-error *ngIf="addressField.hasError('required')">
+                ZBC Address is required. Please select one of your addresses by click "Change Address" button
+              </mat-error>
+
+              <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false">
+                <button mat-flat-button type="button" class="block" color="primary">
+                  <i matPrefix class="fas fa-exchange-alt"></i>
+                  <span style="text-transform: initial;">CHOOSE ZooBC ADDRESS</span>
+                </button>
+              </account-selector>
+            </div>
           </div>
-
-          <button
-            type="button"
-            class="btn-suffix"
-            matSuffix
-            (click)="generateNodePublicKey()"
-            matTooltip="Get New Node Public Key"
-            *ngIf="editable"
-          >
-            <i class="fas fa-sync"></i>
-          </button>
         </div>
 
-        <mat-label class="title">Message</mat-label>
-        <div *ngIf="!editable">
-          {{ seat.message }}
-          <i *ngIf="!messageField.value">(No Message yet)</i>
-        </div>
-        <ng-container *ngIf="editable">
-          <mat-form-field appearance="outline" color="accent" class="block">
-            <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message">
-            </textarea>
-          </mat-form-field>
-          <ng-container *ngIf="messageField.touched">
-            <mat-error *ngIf="messageField.hasError('invalidLimit')">
-              Maximum message length is 100 bytes
-            </mat-error>
-            <mat-error *ngIf="messageField.hasError('pattern')">
-              Message only support alphanumeric and space characters
-            </mat-error>
-          </ng-container>
-          <div class="hint">{{ messageSize }} of 100 bytes</div>
-        </ng-container>
+        <div style="display: flex;">
+          <div style="width: 32px;"><div class="numbering">2</div></div>
+          <div style="width: calc(100% - 32px)">
+            <mat-label class="title">Node Public Key</mat-label>
+            <div class="zoobc-address">
+              <div class="address">
+                <wallet-address
+                  *ngIf="nodePubKeyField.value"
+                  [value]="nodePubKeyField.value"
+                  [copyButton]="true"
+                ></wallet-address>
+                <i *ngIf="!nodePubKeyField.value">(No Node Public Key yet)</i>
+              </div>
 
-        <ng-container *ngIf="metamask && editable">
-          <button
-            mat-flat-button
-            type="button"
-            class="block"
-            color="primary"
-            (click)="onDownload()"
-            [disabled]="!passphrase"
-          >
-            <i matPrefix class="fa fa-download"></i>
-            Download Certificate
-          </button>
-          <button
-            style="margin-top: 10px;"
-            mat-flat-button
-            type="button"
-            class="block"
-            color="primary"
-            (click)="onUpdate()"
-            [disabled]="!form.valid || isLoadingUpdate"
-          >
-            <i matPrefix class="fa fa-pen" *ngIf="!isLoadingUpdate"></i>
-            <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
-            Update
-          </button>
+              <mat-error *ngIf="nodePubKeyField.hasError('required')">
+                Node Public Key is required. Please click button on the right to generate new node public key
+              </mat-error>
+
+              <button
+                mat-flat-button
+                type="button"
+                class="block"
+                color="primary"
+                (click)="generateNodePublicKey()"
+              >
+                <i matPrefix class="fas fa-sync"></i>
+                <span>Generate Node Public Key</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex;">
+          <div style="width: 32px;"><div class="numbering">3</div></div>
+          <div style="width: calc(100% - 32px)">
+            <mat-label class="title">Message</mat-label>
+            <mat-form-field appearance="outline" color="accent" class="block">
+              <textarea matInput rows="9" (keyup)="onKeyUpMessage($event)" formControlName="message">
+              </textarea>
+            </mat-form-field>
+            <ng-container *ngIf="messageField.touched">
+              <mat-error *ngIf="messageField.hasError('invalidLimit')">
+                Maximum message length is 100 bytes
+              </mat-error>
+              <mat-error *ngIf="messageField.hasError('pattern')">
+                Message only support alphanumeric and space characters
+              </mat-error>
+            </ng-container>
+            <div class="hint">{{ messageSize }} of 100 bytes</div>
+          </div>
+        </div>
+
+        <div style="display: flex;">
+          <div style="width: 32px;"><div class="numbering">4</div></div>
+          <div style="width: calc(100% - 32px)">
+            <div class="title" style="margin-bottom: 8px;">
+              Secure your certificate by using password
+            </div>
+
+            <mat-form-field appearance="outline" color="accent" class="block">
+              <mat-label>Password</mat-label>
+              <input
+                formControlName="password"
+                matInput
+                type="password"
+                placeholder="Password"
+                (keyup)="changeConfirmPass()"
+              />
+            </mat-form-field>
+            <ng-container *ngIf="passwordField.touched">
+              <mat-error *ngIf="passwordField.hasError('required')">
+                Password is required
+              </mat-error>
+            </ng-container>
+
+            <mat-form-field appearance="outline" color="accent" class="block">
+              <mat-label>Confirm Password</mat-label>
+              <input
+                formControlName="confirmPass"
+                matInput
+                type="password"
+                placeholder="Confirm Password"
+                (keyup)="changeConfirmPass()"
+              />
+            </mat-form-field>
+            <ng-container *ngIf="confirmPassField.touched">
+              <mat-error *ngIf="confirmPassField.hasError('required')">
+                Password must be confirm
+              </mat-error>
+              <mat-error *ngIf="confirmPassField.hasError('notmatch')">
+                Password is not matched
+              </mat-error>
+            </ng-container>
+          </div>
+        </div>
+
+        <ng-container *ngIf="metamask">
+          <div class="row">
+            <div class="col">
+              <button
+                style="margin-top: 10px;"
+                mat-flat-button
+                type="button"
+                class="block"
+                color="warn"
+                (click)="onCancel()"
+              >
+                <i matPrefix class="fa fa-times"></i> Cancel
+              </button>
+            </div>
+            <div class="col">
+              <button
+                style="margin-top: 10px;"
+                mat-flat-button
+                class="block"
+                [ngClass]="isUpdated && 'done'"
+                color="primary"
+                [disabled]="!form.valid || isLoadingUpdate"
+              >
+                <ng-container *ngIf="!isLoadingUpdate">
+                  <i matPrefix class="fa fa-pen" *ngIf="!isUpdated"></i>
+                  <i matPrefix class="fa fa-check" *ngIf="isUpdated"></i>
+                </ng-container>
+                <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingUpdate"></i>
+                Register
+              </button>
+            </div>
+          </div>
         </ng-container>
 
         <button
@@ -125,11 +183,59 @@
         >
           Connect Metamask
         </button>
-
-        <!-- <div class="text-center" style="margin-top: 10px;" *ngIf="editable">
-          <span> Need Help? <a href="/">Click Here</a> </span>
-        </div> -->
       </form>
+    </div>
+
+    <!-- READ ONLY -->
+    <div class="seat-detail-container" *ngIf="seat && readonly">
+      <mat-label class="title">ETH Address</mat-label>
+      <div class="address">
+        <wallet-address [value]="seat.ethAddress" [copyButton]="true"></wallet-address>
+      </div>
+
+      <mat-label class="title">ZooBC Address</mat-label>
+      <div class="zoobc-address">
+        <div class="address">
+          <wallet-address *ngIf="seat.zbcAddress" [value]="seat.zbcAddress"></wallet-address>
+          <i *ngIf="!seat.zbcAddress">(No ZBC Address yet)</i>
+        </div>
+      </div>
+
+      <mat-label class="title">Node Public Key</mat-label>
+      <div class="zoobc-address">
+        <div class="address">
+          <wallet-address *ngIf="seat.nodePubKey" [value]="seat.nodePubKey"></wallet-address>
+          <i *ngIf="!seat.nodePubKey">(No Node Public Key yet)</i>
+        </div>
+      </div>
+
+      <mat-label class="title">Message</mat-label>
+      <div class="zoobc-address">
+        <div class="address">{{ seat.message }}<i *ngIf="!seat.message">(No Message yet)</i></div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button
+          mat-flat-button
+          type="button"
+          class="block"
+          color="primary"
+          (click)="openEdit()"
+          *ngIf="editable"
+        >
+          Register
+        </button>
+        <button
+          mat-flat-button
+          type="button"
+          class="block"
+          color="primary"
+          (click)="connectMetamask()"
+          *ngIf="!metamask"
+        >
+          Connect Metamask
+        </button>
+      </div>
     </div>
 
     <!-- GOT NO DATA -->

@@ -1,6 +1,7 @@
 <div class="login-container">
   <img src="assets/img/zbc-color-text.svg" alt="" />
-  <h2 class="mat-h2">Wallet</h2>
+  <h2 class="mat-h2">Registration Wallet</h2>
+  <div *ngIf="!isProd" class="testnet-label">ZooBC Testnet</div>
   <ng-container *ngIf="!hasAccount">
     <a routerLink="/signup" mat-flat-button color="primary">Create New Wallet </a>
     <a routerLink="/open-wallet" mat-flat-button color="primary">Open Wallet </a>

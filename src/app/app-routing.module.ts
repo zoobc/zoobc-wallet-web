@@ -11,6 +11,7 @@ import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-p
 import { AccountComponent } from './pages/account/account.component';
 import { SeatsComponent } from './pages/seats/seats.component';
 import { GenesisComponent } from './pages/genesis/genesis.component';
+import { InfoComponent } from './pages/info/info.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: SeatsComponent },
       { path: 'accounts', component: AccountComponent },
+      { path: 'info', component: InfoComponent },
       { path: 'accounts/:accountBase64', component: AccountComponent },
       {
         path: 'settings',

@@ -6,6 +6,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { RevealPassphraseComponent } from '../reveal-passphrase/reveal-passphrase.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,7 @@ export class NavbarComponent implements OnInit {
   @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
   isLoggedIn: boolean = false;
+  isProd = environment.production;
 
   account: SavedAccount;
   node: string = '';

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { RevealPassphraseComponent } from 'src/app/components/reveal-passphrase/reveal-passphrase.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-general',
@@ -15,6 +16,15 @@ export class GeneralComponent implements OnInit {
   onOpenRevealPassphrase() {
     this.dialog.open(RevealPassphraseComponent, {
       width: '420px',
+    });
+  }
+
+  resetData() {
+    const sentence =
+      'You will reset your setting and data. You will need to restore your recovery seed phrase. Continue?';
+    Swal.fire({ text: sentence, showCancelButton: true }).then(() => {
+      localStorage.clear();
+      window.location.reload();
     });
   }
 }

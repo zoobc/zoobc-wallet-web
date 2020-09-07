@@ -16,7 +16,7 @@
     margin-top: 4px;
     margin-bottom: 16px;
     display: block;
-    word-break: break-all;
+    // word-break: break-all;
     color: $black1;
   }
   .zoobc-address {
@@ -32,4 +32,18 @@
     margin-bottom: 12px;
     text-align: right;
   }
+}
+
+.done {
+  background-color: #4caf50 !important;
+}
+
+.numbering {
+  border-radius: 24px;
+  height: 24px;
+  width: 24px;
+  border: 2px solid map-get($primary, 500);
+  padding: 2px 6px;
+  color: #1261a1;
+  font-size: 13px;
 }
