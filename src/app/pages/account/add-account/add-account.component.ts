@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { getZBCAdress, MultiSigAddress } from 'zoobc-sdk';
+import zoobc, { getZBCAddress, MultiSigAddress } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-add-new-account',
@@ -79,7 +79,7 @@ export class AddAccountComponent {
         const keyring = this.authServ.keyring;
         const path = this.authServ.generateDerivationPath();
         const childSeed = keyring.calcDerivationPath(path);
-        const accountAddress = getZBCAdress(childSeed.publicKey);
+        const accountAddress = getZBCAddress(childSeed.publicKey);
         account = {
           name: this.accountNameField.value,
           type: 'normal',

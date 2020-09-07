@@ -6,7 +6,7 @@ import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.compone
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
-import { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 import { eddsa as EdDSA } from 'elliptic';
 import * as sha256 from 'sha256';
 import { WaitingDialogComponent } from '../waiting-dialog/waiting-dialog.component';
@@ -131,7 +131,7 @@ export class SeatDetailComponent implements OnInit {
     const seedHash = sha256(seedBuffer);
     const ec = new EdDSA('ed25519');
     const pairKey = ec.keyFromSecret(seedHash);
-    const nodeAddress = getZBCAdress(pairKey.getPublic(), 'ZNK');
+    const nodeAddress = getZBCAddress(pairKey.getPublic(), 'ZNK');
     this.nodePubKeyField.setValue(nodeAddress);
   }
 

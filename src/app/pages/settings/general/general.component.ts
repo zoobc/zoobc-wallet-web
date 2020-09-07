@@ -22,9 +22,11 @@ export class GeneralComponent implements OnInit {
   resetData() {
     const sentence =
       'You will reset your setting and data. You will need to restore your recovery seed phrase. Continue?';
-    Swal.fire({ text: sentence, showCancelButton: true }).then(() => {
-      localStorage.clear();
-      window.location.reload();
+    Swal.fire({ text: sentence, showCancelButton: true }).then(result => {
+      if (result.value) {
+        localStorage.clear();
+        window.location.reload();
+      }
     });
   }
 }

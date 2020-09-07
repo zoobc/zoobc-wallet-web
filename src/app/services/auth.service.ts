@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import zoobc, { BIP32Interface, ZooKeyring, getZBCAdress, TransactionListParams } from 'zoobc-sdk';
+import zoobc, { BIP32Interface, ZooKeyring, getZBCAddress, TransactionListParams } from 'zoobc-sdk';
 import { environment } from 'src/environments/environment';
 
 export interface SavedAccount {
@@ -169,7 +169,7 @@ export class AuthService {
       while (counter < 20) {
         const childSeed = keyring.calcDerivationPath(accountPath);
         const publicKey = childSeed.publicKey;
-        const address = getZBCAdress(publicKey);
+        const address = getZBCAddress(publicKey);
         const account: SavedAccount = {
           name: 'Account '.concat((accountPath + 1).toString()),
           path: accountPath,
