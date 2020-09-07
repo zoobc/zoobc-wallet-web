@@ -47,7 +47,7 @@
         <div class="status">
           <div class="label">{{ 'participation score' | translate }}</div>
           <div class="value" style="font-size: 22px;">
-            {{ score | number }}
+            {{ score || 0 | number }}
           </div>
         </div>
       </mat-card>

@@ -117,13 +117,8 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   getTotalScore() {
     zoobc.ParticipationScore.getLatest(this.registeredNode.nodeid)
-      .then(res => {
-        // console.log(parseInt(res.score) / 1e10);
-        this.score = parseInt(res.score) / 1e8;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+      .then(res => (this.score = parseInt(res.score) / 1e8))
+      .catch(err => console.log(err));
   }
 
   generateNewPubKey() {
