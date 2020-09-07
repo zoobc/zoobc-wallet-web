@@ -11,7 +11,7 @@
       "name": "Dev Testnet 2"
     },
     {
-      "ip": "http://172.104.34.10:7001",
+      "ip": "http://172.104.34.10:8002",
       "default": true,
       "name": "Dev Testnet 3"
     },
@@ -26,5 +26,5 @@
       "name": "Experimental Testnet"
     }
   ],
-  "timestamp": 1597220133001
+  "timestamp": 1599467980000
 }
