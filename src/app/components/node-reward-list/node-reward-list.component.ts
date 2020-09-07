@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import zoobc, { AccountLedgerListParams } from 'zoobc-sdk';
+import zoobc, { AccountLedgerListParams, EventType, OrderBy } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-node-reward-list',
@@ -56,11 +56,11 @@ export class NodeRewardListComponent implements OnInit {
 
     const param: AccountLedgerListParams = {
       accountAddress: this.account.address,
-      eventType: 8,
+      eventType: EventType.EVENTREWARD,
       pagination: {
         page: this.page,
         limit: this.perPage,
-        orderBy: 1,
+        orderBy: OrderBy.DESC,
       },
     };
 

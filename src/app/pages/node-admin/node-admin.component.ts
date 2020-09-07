@@ -23,6 +23,8 @@ import zoobc, {
   getZBCAdress,
   Subscription,
   AccountLedgerListParams,
+  EventType,
+  OrderBy,
 } from 'zoobc-sdk';
 
 @Component({
@@ -248,11 +250,11 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     this.totalNodeReward = 0;
     let param: AccountLedgerListParams = {
       accountAddress: this.account.address,
-      eventType: 8,
+      eventType: EventType.EVENTREWARD,
       pagination: {
         page: 1,
         limit: 5,
-        orderBy: 1,
+        orderBy: OrderBy.DESC,
       },
     };
     try {
