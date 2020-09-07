@@ -3,13 +3,12 @@
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
       <label>{{ 'sender' | translate }}</label>
-      <div *ngIf="isMultiSigAccount" style="margin-bottom: 16px;">
-        <wallet-address [value]="account.signByAddress"></wallet-address>
-      </div>
-      <ng-container *ngIf="!isMultiSigAccount">
-        <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
-      </ng-container>
-
+      <account-selector
+        (select)="onSwitchAccount($event)"
+        type="normal"
+        [addresses]="participants"
+        [switchAccount]="true"
+      ></account-selector>
       <input-amount
         [group]="formSend"
         typeCoinName="typeFee"
