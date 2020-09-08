@@ -262,6 +262,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       pagination: {
         page: 1,
         limit: 5,
+        orderField: 'timestamp',
         orderBy: OrderBy.DESC,
       },
     };

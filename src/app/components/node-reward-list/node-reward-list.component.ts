@@ -60,6 +60,7 @@ export class NodeRewardListComponent implements OnInit {
       pagination: {
         page: this.page,
         limit: this.perPage,
+        orderField: 'timestamp',
         orderBy: OrderBy.DESC,
       },
     };
