@@ -47,6 +47,11 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   stream: Subscription;
 
+  isNodeInQueue: boolean;
+  streamQueue: Subscription;
+  queueLockBalance: number;
+  curentLockBalance: number;
+
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
 
@@ -66,6 +71,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.stream) this.stream.unsubscribe();
+    if (this.streamQueue) this.streamQueue.unsubscribe();
   }
 
   getRegisteredNode() {
@@ -100,7 +106,6 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
             const pubKeyBytes = Buffer.from(String(res.noderegistration.nodepublickey), 'base64');
             const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
             res.noderegistration.nodepublickey = pubKey;
-
             this.registeredNode = res.noderegistration;
           }
         }
@@ -164,7 +169,13 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     });
 
     dialog.afterClosed().subscribe(success => {
-      if (success) this.getRegisteredNode();
+      if (success) {
+        this.getRegisteredNode();
+        if (!this.streamNodeRegistrationQueue) {
+          this.isNodeInQueue = true;
+          this.streamNodeRegistrationQueue();
+        }
+      }
     });
   }
 
@@ -213,5 +224,29 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
     let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
+  }
+
+  streamNodeRegistrationQueue() {
+    this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
+      async res => {
+        console.log('test');
+        console.log(res);
+        if (res.noderegistrationsList.length > 0) {
+          const { lockedbalance, nodeid } = res.noderegistrationsList[0];
+          this.queueLockBalance = Number(lockedbalance);
+          const params: NodeParams = {
+            owner: this.account.address,
+          };
+          const curentNode = await zoobc.Node.get(params);
+          this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
+        } else {
+          if (this.registeredNode) {
+            this.streamQueue.unsubscribe();
+            this.isNodeInQueue = false;
+          }
+        }
+      },
+      err => {}
+    );
   }
 }
