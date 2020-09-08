@@ -113,9 +113,39 @@
     margin: 8px 0;
   }
 
+  .icon {
+    width: 56px;
+
+    .label {
+      font-size: 13px;
+      color: $white1;
+      text-align: center;
+      padding-top: 4px;
+    }
+
+    i {
+      padding: 16px;
+      font-size: 22px;
+      text-align: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 56px;
+      background-color: $primary-gradient;
+    }
+  }
+
   .message {
     font-size: 1.1rem;
     margin: 0.5rem 0;
+    color: $black2;
+
+    .sub-message {
+      color: $black1;
+    }
+  }
+
+  .text-right {
+    align-self: flex-end;
   }
 }
 

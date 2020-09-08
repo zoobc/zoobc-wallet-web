@@ -166,11 +166,26 @@
       </button>
     </div>
 
-    <div class="node-in-queue" *ngIf="isNodeInQueue">
-      <i matPrefix class="fa fa-desktop"></i>
-    </div>
-
     <!-- NODE IN QUEUE -->
+    <div class="not-registered-node" *ngIf="isNodeInQueue && !isNodeLoading">
+      <div class="icon">
+        <i class="fa fa-hammer"></i>
+        <div class="label">&nbsp;</div>
+      </div>
+      <div class="message">
+        {{ 'highest locked balance' | translate }} :
+        <span class="sub-message">{{ queueLockBalance / 1e8 | number: '0.0-8' }} </span>
+      </div>
+      <div class="message">
+        {{ 'your locked balance' | translate }} :
+        <span class="sub-message"> {{ curentLockBalance / 1e8 | number: '0.0-8' }}</span>
+      </div>
+      <div class="text-right">
+        <button mat-flat-button color="primary" style="margin-right: 8px" (click)="openUpdateNode()">
+          {{ 'update node' | translate }}
+        </button>
+      </div>
+    </div>
   </mat-card>
   <br />
 

@@ -246,10 +246,6 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
             this.isNodeInQueue = false;
           }
         }
-        // else {
-        //   this.streamQueue.unsubscribe();
-        //   this.isNodeInQueue = false;
-        // }
       },
       err => {}
     );
