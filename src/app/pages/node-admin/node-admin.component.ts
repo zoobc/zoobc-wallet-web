@@ -47,6 +47,8 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   stream: Subscription;
 
+  score: number;
+
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
 
@@ -102,6 +104,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
             res.noderegistration.nodepublickey = pubKey;
 
             this.registeredNode = res.noderegistration;
+            this.getTotalScore();
           }
         }
       })
@@ -110,6 +113,12 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
         this.isNodeError = true;
       })
       .finally(() => (this.isNodeLoading = false));
+  }
+
+  getTotalScore() {
+    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeid)
+      .then(res => (this.score = parseInt(res.score) / 1e8))
+      .catch(err => console.log(err));
   }
 
   generateNewPubKey() {
