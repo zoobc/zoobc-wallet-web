@@ -47,7 +47,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   stream: Subscription;
 
-  isNodeInQueue: boolean;
+  isNodeInQueue: boolean = false;
   streamQueue: Subscription;
   queueLockBalance: number;
   curentLockBalance: number;
@@ -107,6 +107,8 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
             const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
             res.noderegistration.nodepublickey = pubKey;
             this.registeredNode = res.noderegistration;
+          } else if (registrationstatus == 1) {
+            if (!this.isNodeInQueue) this.streamNodeRegistrationQueue();
           }
         }
       })
@@ -172,7 +174,6 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       if (success) {
         this.getRegisteredNode();
         if (!this.streamNodeRegistrationQueue) {
-          this.isNodeInQueue = true;
           this.streamNodeRegistrationQueue();
         }
       }
@@ -227,6 +228,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   }
 
   streamNodeRegistrationQueue() {
+    this.isNodeInQueue = true;
     this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
       async res => {
         console.log('test');
@@ -239,12 +241,15 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
           };
           const curentNode = await zoobc.Node.get(params);
           this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
-        } else {
-          if (this.registeredNode) {
+          if (curentNode.noderegistration.registrationstatus == 0) {
             this.streamQueue.unsubscribe();
             this.isNodeInQueue = false;
           }
         }
+        // else {
+        //   this.streamQueue.unsubscribe();
+        //   this.isNodeInQueue = false;
+        // }
       },
       err => {}
     );

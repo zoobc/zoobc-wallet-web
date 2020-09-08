@@ -126,7 +126,10 @@
     </ng-container>
 
     <!-- NODE NOT REGISTERED -->
-    <div class="not-registered-node" *ngIf="!registeredNode && !isNodeLoading && !isNodeError">
+    <div
+      class="not-registered-node"
+      *ngIf="!registeredNode && !isNodeLoading && !isNodeError && !isNodeInQueue"
+    >
       <i matPrefix class="fa fa-desktop"></i>
       <span class="message">
         {{ 'your node is not registered yet' | translate }}
@@ -162,6 +165,12 @@
         {{ 'try again' | translate }}
       </button>
     </div>
+
+    <div class="node-in-queue" *ngIf="isNodeInQueue">
+      <i matPrefix class="fa fa-desktop"></i>
+    </div>
+
+    <!-- NODE IN QUEUE -->
   </mat-card>
   <br />
 
