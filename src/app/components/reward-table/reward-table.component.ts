@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 @Component({
-  selector: 'app-data-table',
-  templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss'],
+  selector: 'reward-table',
+  templateUrl: './reward-table.component.html',
+  styleUrls: ['./reward-table.component.scss'],
 })
-export class DataTableComponent implements OnInit, OnChanges {
+export class RewardTableComponent implements OnInit, OnChanges {
   constructor() {}
   @Input() tableData;
   @Input() displayedColumns: any;

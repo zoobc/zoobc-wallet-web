@@ -129,9 +129,9 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
             const pubKeyBytes = Buffer.from(String(res.noderegistration.nodepublickey), 'base64');
             const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
             res.noderegistration.nodepublickey = pubKey;
-
             this.registeredNode = res.noderegistration;
             this.getTotalScore();
+            this.getRewardNode();
           }
         }
       })
@@ -253,6 +253,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   async getRewardNode() {
     this.tableData = [];
+    if (!this.registeredNode) return null;
     this.isNodeRewardLoading = true;
     this.isNodeRewardError = false;
     this.totalNodeReward = 0;

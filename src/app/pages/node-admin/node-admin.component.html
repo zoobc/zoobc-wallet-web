@@ -176,14 +176,14 @@
     </div>
   </div>
   <mat-card class="rewards">
-    <app-data-table
+    <reward-table
       [tableData]="tableData"
       [displayedColumns]="displayedColumns"
       [isLoading]="isNodeRewardLoading"
       [isError]="isNodeRewardError"
       [isShowAutomaticNumber]="showAutomaticNumber"
       (refresh)="getRewardNode()"
-    ></app-data-table>
+    ></reward-table>
     <ng-container *ngIf="totalNodeReward > 5">
       <div class="text-center">
         <a (click)="getMoreReward()" mat-flat-button class="btn-view-all">

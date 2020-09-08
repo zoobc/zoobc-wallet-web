@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatButtonModule, MatProgressSpinnerModule } from '@angular/material';
-import { DataTableComponent } from './data-table.component';
+import { RewardTableComponent } from './reward-table.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +11,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 }
 
 @NgModule({
-  declarations: [DataTableComponent],
+  declarations: [RewardTableComponent],
   imports: [
     CommonModule,
     TranslateModule.forChild({
@@ -26,6 +26,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DateAgoModule,
     MatProgressSpinnerModule,
   ],
-  exports: [DataTableComponent],
+  exports: [RewardTableComponent],
 })
-export class DataTableModule {}
+export class RewardTableModule {}
