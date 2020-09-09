@@ -145,13 +145,20 @@
     }
   }
 
+  .title {
+    color: $black1;
+    font-size: 18px;
+    margin: 10px 0px 20px;
+  }
+
   .message {
     font-size: 1.1rem;
     margin: 0.5rem 0;
     color: $black2;
 
     .sub-message {
-      color: $black1;
+      color: #4caf50;
+      font-weight: bold;
     }
   }
 

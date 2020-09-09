@@ -79,6 +79,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   streamQueue: Subscription;
   queueLockBalance: number;
   curentLockBalance: number;
+  curentNode: any;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
@@ -221,7 +222,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: this.registeredNode,
+      data: this.registeredNode ? this.registeredNode : this.curentNode,
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -268,19 +269,19 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     this.isNodeInQueue = true;
     this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
       async res => {
-        console.log('test');
-        console.log(res);
         if (res.noderegistrationsList.length > 0) {
-          const { lockedbalance, nodeid } = res.noderegistrationsList[0];
+          const { lockedbalance } = res.noderegistrationsList[0];
           this.queueLockBalance = Number(lockedbalance);
           const params: NodeParams = {
             owner: this.account.address,
           };
           const curentNode = await zoobc.Node.get(params);
+          this.curentNode = curentNode;
           this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
           if (curentNode.noderegistration.registrationstatus == 0) {
             this.streamQueue.unsubscribe();
             this.isNodeInQueue = false;
+            this.getRegisteredNode();
           }
         }
       },

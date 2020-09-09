@@ -168,17 +168,15 @@
 
     <!-- NODE IN QUEUE -->
     <div class="not-registered-node" *ngIf="isNodeInQueue && !isNodeLoading">
-      <div class="icon">
-        <i class="fa fa-hammer"></i>
-        <div class="label">&nbsp;</div>
-      </div>
+      <i matPrefix class="fas fa-hourglass-half"></i>
+      <span class="title">{{ 'your node are still in queue' | translate }}</span>
       <div class="message">
         {{ 'highest locked balance' | translate }} :
-        <span class="sub-message">{{ queueLockBalance / 1e8 | number: '0.0-8' }} </span>
+        <span class="sub-message">{{ queueLockBalance / 1e8 | number: '0.0-8' }} ZBC</span>
       </div>
       <div class="message">
         {{ 'your locked balance' | translate }} :
-        <span class="sub-message"> {{ curentLockBalance / 1e8 | number: '0.0-8' }}</span>
+        <span class="sub-message"> {{ curentLockBalance / 1e8 | number: '0.0-8' }} ZBC</span>
       </div>
       <div class="text-right">
         <button mat-flat-button color="primary" style="margin-right: 8px" (click)="openUpdateNode()">
