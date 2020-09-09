@@ -1,0 +1,19 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.layout-data-table {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .table {
+    margin-bottom: 10px;
+  }
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+  }
+}

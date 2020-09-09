@@ -23,7 +23,7 @@
 
       i {
         padding: 16px;
-        font-size: 22px;
+        font-size: 28px;
         text-align: center;
         width: 56px;
         height: 56px;
@@ -98,6 +98,17 @@
       padding: 8px 16px;
       margin-bottom: 8px;
       font-size: 13px;
+    }
+  }
+
+  .rewards {
+    .btn-view-all {
+      color: #fff;
+      background: $accent-gradient !important;
+      margin-top: 16px;
+      text-align: center;
+      text-decoration: none;
+      width: 150px;
     }
   }
 }

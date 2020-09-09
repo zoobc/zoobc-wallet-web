@@ -41,13 +41,13 @@
     <div class="col-12 col-sm-6">
       <mat-card class="status-card">
         <div class="icon">
-          <i class="fa fa-hammer"></i>
+          <i class="fa fa-award"></i>
           <div class="label">&nbsp;</div>
         </div>
         <div class="status">
-          <div class="label">{{ 'blocks created' | translate }}</div>
-          <div class="value">
-            <i>({{ 'coming soon' | translate }})</i>
+          <div class="label">{{ 'participation score' | translate }}</div>
+          <div class="value" style="font-size: 22px;">
+            {{ score || 0 | number }}
           </div>
         </div>
       </mat-card>
@@ -188,7 +188,35 @@
     </div>
   </mat-card>
   <br />
-
+  <!-- REWARDS NODE -->
+  <div class="row">
+    <div class="col-10">
+      <h2 class="mat-h2">{{ 'rewards' | translate }}</h2>
+    </div>
+    <div class="col-2 text-right">
+      <button mat-icon-button class="reload-button" (click)="getRewardNode()">
+        <i class="fa fa-redo-alt"></i>
+      </button>
+    </div>
+  </div>
+  <mat-card class="rewards">
+    <reward-table
+      [tableData]="tableData"
+      [displayedColumns]="displayedColumns"
+      [isLoading]="isNodeRewardLoading"
+      [isError]="isNodeRewardError"
+      [isShowAutomaticNumber]="showAutomaticNumber"
+      (refresh)="getRewardNode()"
+    ></reward-table>
+    <ng-container *ngIf="totalNodeReward > 5">
+      <div class="text-center">
+        <a (click)="getMoreReward()" mat-flat-button class="btn-view-all">
+          {{ 'show more' | translate }}
+        </a>
+      </div>
+    </ng-container>
+  </mat-card>
+  <br />
   <!-- NODE USAGE -->
   <h2 class="mat-h2">{{ 'node usage' | translate }}</h2>
   <mat-card>

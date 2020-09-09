@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AddressModule } from 'src/app/components/address/address.module';
 import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
+import { RewardTableModule } from 'src/app/components/reward-table/reward-table.module';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -97,6 +98,7 @@ const routes: Routes = [
     MatDividerModule,
     MatAutocompleteModule,
     InputAmountModule,
+    RewardTableModule,
   ],
   entryComponents: [RegisterNodeComponent, UpdateNodeComponent, ClaimNodeComponent, RemoveNodeComponent],
 })
