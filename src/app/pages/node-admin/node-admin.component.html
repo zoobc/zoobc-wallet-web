@@ -187,34 +187,36 @@
   </mat-card>
   <br />
   <!-- REWARDS NODE -->
-  <div class="row">
-    <div class="col-10">
-      <h2 class="mat-h2">{{ 'rewards' | translate }}</h2>
-    </div>
-    <div class="col-2 text-right">
-      <button mat-icon-button class="reload-button" (click)="getRewardNode()">
-        <i class="fa fa-redo-alt"></i>
-      </button>
-    </div>
-  </div>
-  <mat-card class="rewards">
-    <reward-table
-      [tableData]="tableData"
-      [displayedColumns]="displayedColumns"
-      [isLoading]="isNodeRewardLoading"
-      [isError]="isNodeRewardError"
-      [isShowAutomaticNumber]="showAutomaticNumber"
-      (refresh)="getRewardNode()"
-    ></reward-table>
-    <ng-container *ngIf="totalNodeReward > 5">
-      <div class="text-center">
-        <a (click)="getMoreReward()" mat-flat-button class="btn-view-all">
-          {{ 'show more' | translate }}
-        </a>
+  <ng-template *ngIf="registeredNode">
+    <div class="row">
+      <div class="col-10">
+        <h2 class="mat-h2">{{ 'rewards' | translate }}</h2>
       </div>
-    </ng-container>
-  </mat-card>
-  <br />
+      <div class="col-2 text-right">
+        <button mat-icon-button class="reload-button" (click)="getRewardNode()">
+          <i class="fa fa-redo-alt"></i>
+        </button>
+      </div>
+    </div>
+    <mat-card class="rewards">
+      <reward-table
+        [tableData]="tableData"
+        [displayedColumns]="displayedColumns"
+        [isLoading]="isNodeRewardLoading"
+        [isError]="isNodeRewardError"
+        [isShowAutomaticNumber]="showAutomaticNumber"
+        (refresh)="getRewardNode()"
+      ></reward-table>
+      <ng-container *ngIf="totalNodeReward > 5">
+        <div class="text-center">
+          <a (click)="getMoreReward()" mat-flat-button class="btn-view-all">
+            {{ 'show more' | translate }}
+          </a>
+        </div>
+      </ng-container>
+    </mat-card>
+    <br />
+  </ng-template>
   <!-- NODE USAGE -->
   <h2 class="mat-h2">{{ 'node usage' | translate }}</h2>
   <mat-card>
