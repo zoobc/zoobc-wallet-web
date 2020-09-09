@@ -6,9 +6,9 @@ import zoobc, {
   toTransactionListWallet,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
-  TransactionsResponse,
   MempoolTransactionsResponse,
   TransactionType,
+  EscrowListParams,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -60,11 +60,44 @@ export class TransferhistoryComponent implements OnInit {
       };
 
       try {
-        let tx = await zoobc.Transactions.getList(txParam).then((res: TransactionsResponse) =>
-          toTransactionListWallet(res, this.address)
-        );
+        let trxList = await zoobc.Transactions.getList(txParam);
+
+        let lastHeight = 0;
+        let firstHeight = 0;
+        if (parseInt(trxList.total) > 0) {
+          lastHeight = trxList.transactionsList[0].height;
+          firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
+        }
+
+        const multisigTx = trxList.transactionsList
+          .filter(trx => trx.multisigchild == true)
+          .map(trx => trx.id);
+
+        const paramEscrowSend: EscrowListParams = {
+          sender: this.address,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
+          statusList: [0, 1, 2, 3],
+        };
+        const paramEscrowReceive: EscrowListParams = {
+          recipient: this.address,
+          // blockHeightStart: firstHeight,
+          // blockHeightEnd: lastHeight,
+          statusList: [0, 1, 2, 3],
+        };
+
+        const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
+        const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
+
+        const escrowList = escrowSend.escrowsList.concat(escrowReceive.escrowsList);
+
+        let tx = toTransactionListWallet(trxList, this.address);
         tx.transactions.map(recent => {
           recent['alias'] = this.contactServ.get(recent.address).name || '';
+          recent['escrow'] = recent['escrow'] = this.checkIdOnEscrow(recent.id, escrowList);
+          if (recent['escrow']) recent['escrowStatus'] = this.getEscrowStatus(recent.id, escrowList);
+          recent['multisigchild'] = multisigTx.includes(recent.id);
+          return recent;
         });
         this.total = tx.total;
         this.accountHistory = reload ? tx.transactions : this.accountHistory.concat(tx.transactions);
@@ -90,5 +123,15 @@ export class TransferhistoryComponent implements OnInit {
       this.page++;
       this.getTx();
     } else this.finished = true;
+  }
+
+  checkIdOnEscrow(id: any, escrowArr: any[]) {
+    const filter = escrowArr.filter(arr => arr.id == id);
+    if (filter.length > 0) return true;
+    return false;
+  }
+  getEscrowStatus(id: any, escrowArr: any[]) {
+    const idx = escrowArr.findIndex(esc => esc.id == id);
+    return escrowArr[idx].status;
   }
 }

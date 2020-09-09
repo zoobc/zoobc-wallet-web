@@ -86,6 +86,8 @@ import { AccountDatasetComponent } from './pages/account-dataset/account-dataset
 import { SetupDatasetComponent } from './pages/account-dataset/setup-dataset/setup-dataset.component';
 import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
+import { RewardTableModule } from './components/reward-table/reward-table.module';
+import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -136,6 +138,7 @@ export function getLanguage(languageServ: LanguageService) {
     SetupDatasetComponent,
     ApprovalEscrowHistoryComponent,
     MultisigApprovalHistoryComponent,
+    NodeRewardListComponent,
   ],
   imports: [
     BrowserModule,
@@ -192,6 +195,7 @@ export function getLanguage(languageServ: LanguageService) {
     InputAddressModule,
     InputAmountModule,
     MatStepperModule,
+    RewardTableModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -219,6 +223,7 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigInfoComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
+    NodeRewardListComponent,
   ],
 })
 export class AppModule {}
