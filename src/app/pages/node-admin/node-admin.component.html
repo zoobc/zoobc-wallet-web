@@ -167,7 +167,7 @@
     </div>
 
     <!-- NODE IN QUEUE -->
-    <div class="not-registered-node" *ngIf="isNodeInQueue && !isNodeLoading">
+    <div class="not-registered-node" *ngIf="!registeredNode && isNodeInQueue && !isNodeLoading">
       <i matPrefix class="fas fa-hourglass-half"></i>
       <span class="title">{{ 'your node are still in queue' | translate }}</span>
       <div class="message">
@@ -187,7 +187,7 @@
   </mat-card>
   <br />
   <!-- REWARDS NODE -->
-  <ng-template *ngIf="registeredNode">
+  <div *ngIf="registeredNode && registeredNode.registrationstatus == 0">
     <div class="row">
       <div class="col-10">
         <h2 class="mat-h2">{{ 'rewards' | translate }}</h2>
@@ -216,7 +216,7 @@
       </ng-container>
     </mat-card>
     <br />
-  </ng-template>
+  </div>
   <!-- NODE USAGE -->
   <h2 class="mat-h2">{{ 'node usage' | translate }}</h2>
   <mat-card>
