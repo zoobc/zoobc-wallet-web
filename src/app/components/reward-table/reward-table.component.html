@@ -12,20 +12,24 @@
     class="table"
   >
     <ng-container matColumnDef="no">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'No' | translate }}</th>
+      <th [style.width.%]="widthColumn" mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'No' | translate }}
+      </th>
       <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
     </ng-container>
     <ng-container [matColumnDef]="tableData.id" *ngFor="let tableData of displayedColumns">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ tableData.caption | translate }}</th>
+      <th [style.width.%]="widthColumn" mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ tableData.caption | translate }}
+      </th>
       <td mat-cell *matCellDef="let element">
         <ng-container *ngIf="tableData.format == 'number'">{{ element[tableData.id] | number }}</ng-container>
         <ng-container *ngIf="tableData.format == 'text'">{{ element[tableData.id] }}</ng-container>
-        <ng-container *ngIf="tableData.format == 'timestamp'">{{
-          element[tableData.id] * 1000 | dateAgo
-        }}</ng-container>
-        <ng-container *ngIf="tableData.format == 'money'">{{
-          element[tableData.id] / 1e8 | number: '0.0-8'
-        }}</ng-container>
+        <ng-container *ngIf="tableData.format == 'timestamp'">
+          {{ getDate(element[tableData.id] * 1000) | date: 'short' }}
+        </ng-container>
+        <ng-container *ngIf="tableData.format == 'money'"
+          >{{ element[tableData.id] / 1e8 | number: '0.0-8' }} ZBC</ng-container
+        >
       </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayCol"></tr>
