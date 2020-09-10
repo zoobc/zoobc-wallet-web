@@ -19,7 +19,13 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/_redirects"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets/node-list",
+              "src/assets/languages",
+              "src/assets/img",
+              "src/_redirects"
+            ],
             "styles": ["src/styles.scss"],
             "es5BrowserSupport": true
           },

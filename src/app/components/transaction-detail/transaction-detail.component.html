@@ -1,14 +1,10 @@
 <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
   <div class="row">
-    <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
+    <div class="col-12 col-md-4">{{ 'transaction hash' | translate }}:</div>
     <div class="col-12 col-md-8">
-      {{ transaction.id }}
-      <span class="icon-redirect" (click)="redirect()"
-        ><i
-          class="fas fa-external-link-alt"
-          title="{{ 'Click Here to view on ZooBC Explorer' | translate }}"
-        ></i
-      ></span>
+      <a [href]="'https://zoobc.net/transactions/' + transaction.id" target="_blank">
+        <wallet-address [value]="transaction.transactionhash"></wallet-address>
+      </a>
     </div>
   </div>
   <div class="row">
