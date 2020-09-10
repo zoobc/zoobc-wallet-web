@@ -20,9 +20,9 @@
       <td mat-cell *matCellDef="let element">
         <ng-container *ngIf="tableData.format == 'number'">{{ element[tableData.id] | number }}</ng-container>
         <ng-container *ngIf="tableData.format == 'text'">{{ element[tableData.id] }}</ng-container>
-        <ng-container *ngIf="tableData.format == 'timestamp'">{{
-          element[tableData.id] * 1000 | dateAgo
-        }}</ng-container>
+        <ng-container *ngIf="tableData.format == 'timestamp'">
+          {{ element[tableData.id] * 1000 | dateAgo }}</ng-container
+        >
         <ng-container *ngIf="tableData.format == 'money'">{{
           element[tableData.id] / 1e8 | number: '0.0-8'
         }}</ng-container>
