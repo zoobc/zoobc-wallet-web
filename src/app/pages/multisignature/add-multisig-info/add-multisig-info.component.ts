@@ -49,6 +49,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
+
       this.pushInitParticipant();
 
       if (multisigInfo) {
