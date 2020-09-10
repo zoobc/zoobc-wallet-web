@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
 import zoobc, { ZBCAddressToBytes, ClaimNodeInterface } from 'zoobc-sdk';
@@ -34,7 +34,8 @@ export class ClaimNodeComponent implements OnInit {
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<ClaimNodeComponent>,
     private translate: TranslateService,
-    private currencyServ: CurrencyRateService
+    private currencyServ: CurrencyRateService,
+    @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
     this.formClaimNode = new FormGroup({
       fee: this.feeForm,
@@ -56,6 +57,7 @@ export class ClaimNodeComponent implements OnInit {
       this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
+    if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
   }
 
   onChangeNodePublicKey() {

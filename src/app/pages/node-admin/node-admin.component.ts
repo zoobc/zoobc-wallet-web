@@ -236,7 +236,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: this.registeredNode,
+      data: this.nodePublicKey,
     });
 
     dialog.afterClosed().subscribe(success => {
