@@ -11,11 +11,11 @@
     >
       <div class="col-12 col-sm-8">
         <div class="title-task">
-          {{ 'sender' | translate }}:
+          {{ 'sender' | translate }}: <br />
           <wallet-address class="address" [value]="escrow.senderaddress"></wallet-address>
         </div>
         <div class="title-task">
-          {{ 'recipient' | translate }}:
+          {{ 'recipient' | translate }}: <br />
           <wallet-address class="address" [value]="escrow.recipientaddress"></wallet-address>
         </div>
         <div class="timeout">
