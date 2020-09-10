@@ -75,6 +75,12 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   tableData = [];
   score: number;
 
+  isNodeInQueue: boolean = false;
+  streamQueue: Subscription;
+  queueLockBalance: number;
+  curentLockBalance: number;
+  curentNodeQueue: any;
+
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
 
@@ -96,6 +102,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.stream) this.stream.unsubscribe();
+    if (this.streamQueue) this.streamQueue.unsubscribe();
   }
 
   getRegisteredNode() {
@@ -133,6 +140,9 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
             this.registeredNode = res.noderegistration;
             this.getTotalScore();
             this.getRewardNode();
+          } else if (registrationstatus == 1) {
+            if (!this.streamQueue || (this.streamQueue && this.streamQueue.closed))
+              this.streamNodeRegistrationQueue();
           }
         }
       })
@@ -202,7 +212,12 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     });
 
     dialog.afterClosed().subscribe(success => {
-      if (success) this.getRegisteredNode();
+      if (success) {
+        this.getRegisteredNode();
+        if (!this.streamNodeRegistrationQueue) {
+          this.streamNodeRegistrationQueue();
+        }
+      }
     });
   }
 
@@ -210,7 +225,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: this.registeredNode,
+      data: this.registeredNode ? this.registeredNode : this.curentNodeQueue,
     });
     dialog.afterClosed().subscribe(success => {
       if (success) this.getRegisteredNode();
@@ -250,6 +265,32 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
 
     let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
+  }
+
+  streamNodeRegistrationQueue() {
+    this.isNodeInQueue = true;
+    const params: NodeParams = {
+      owner: this.account.address,
+    };
+    this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
+      async res => {
+        if (res.noderegistrationsList.length > 0) {
+          const { lockedbalance } = res.noderegistrationsList[0];
+          this.queueLockBalance = Number(lockedbalance);
+          const curentNode = await zoobc.Node.get(params);
+          this.curentNodeQueue = curentNode;
+          this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
+        } else {
+          const curentNode = await zoobc.Node.get(params);
+          if (curentNode.noderegistration.registrationstatus == 0) {
+            this.streamQueue.unsubscribe();
+            this.isNodeInQueue = false;
+            this.getRegisteredNode();
+          }
+        }
+      },
+      err => {}
+    );
   }
 
   async getRewardNode() {

@@ -16,10 +16,12 @@ export class RewardTableComponent implements OnInit, OnChanges {
 
   dataSource;
   displayCol: string[];
+  widthColumn: any;
 
   ngOnInit() {
     this.displayCol = this.displayedColumns.map(dc => dc.id);
     if (this.isShowAutomaticNumber) this.displayCol.unshift('no');
+    this.widthColumn = 100 / this.displayCol.length;
     this.dataSource = new MatTableDataSource(this.tableData);
   }
 
@@ -29,5 +31,10 @@ export class RewardTableComponent implements OnInit, OnChanges {
 
   onRefresh() {
     this.refresh.emit(true);
+  }
+
+  getDate(timestamp: any) {
+    const newDate = new Date(timestamp);
+    return newDate;
   }
 }
