@@ -6,7 +6,7 @@
     <div class="from-account" (click)="openAccountList()" *ngIf="accounts">
       <ng-container *ngIf="account">
         <div class="name">
-          {{ account.name }}
+          {{ account.name }} <br />
           <small>
             <wallet-address [value]="account.address"></wallet-address>
           </small>

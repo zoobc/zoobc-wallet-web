@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgxPopperModule } from 'ngx-popper';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -148,6 +149,7 @@ export function getLanguage(languageServ: LanguageService) {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxPopperModule.forRoot({ trigger: 'hover', placement: 'bottom', applyClass: 'pooper-style' }),
     InfiniteScrollModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
