@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
 import zoobc, { RegisterNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
@@ -38,7 +38,8 @@ export class RegisterNodeComponent implements OnInit {
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<RegisterNodeComponent>,
     private translate: TranslateService,
-    private currencyServ: CurrencyRateService
+    private currencyServ: CurrencyRateService,
+    @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
     this.formRegisterNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -60,6 +61,7 @@ export class RegisterNodeComponent implements OnInit {
       this.feeFormCurr.patchValue(minCurrency);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
+    if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
   }
 
   onChangeNodePublicKey() {

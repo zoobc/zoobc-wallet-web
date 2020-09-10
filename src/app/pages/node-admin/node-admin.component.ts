@@ -88,6 +88,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getMyNodePublicKey();
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
     this.getRewardNode();
@@ -197,6 +198,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
+      data: this.nodePublicKey,
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -210,7 +212,6 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       maxHeight: '90vh',
       data: this.registeredNode,
     });
-
     dialog.afterClosed().subscribe(success => {
       if (success) this.getRegisteredNode();
     });
@@ -282,6 +283,11 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(NodeRewardListComponent, {
       width: '600px',
       maxHeight: '90vh',
+    });
+  }
+  getMyNodePublicKey() {
+    zoobc.Node.getMyNodePublicKey(this.account.nodeIP).then(res => {
+      this.nodePublicKey = getZBCAddress(Buffer.from(res.nodepublickey.toString(), 'base64'), 'ZNK');
     });
   }
 }
