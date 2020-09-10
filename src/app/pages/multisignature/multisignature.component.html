@@ -75,7 +75,7 @@
           <div class="row">
             <div class="col-12 col-sm-8">
               <div class="id">{{ 'draft id' | translate }} . {{ draft.id }}</div>
-              <div class="date">{{ getDate(draft.id) | dateAgo }}</div>
+              <div class="date font-roboto-mono">{{ getDate(draft.id) | dateAgo }}</div>
               <div class="chips">
                 <div class="chip" *ngIf="draft.multisigInfo">{{ 'multisig info' | translate }}</div>
                 <div class="chip" *ngIf="draft.transaction">{{ 'transaction' | translate }}</div>

@@ -1,7 +1,7 @@
 <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
   <div class="row">
     <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8 font-roboto-mono">
       {{ transaction.id }}
       <span class="icon-redirect" (click)="redirect()"
         ><i
@@ -13,7 +13,7 @@
   </div>
   <div class="row">
     <div class="col-12 col-md-4">{{ 'block id' | translate }}:</div>
-    <div class="col-12 col-md-8">{{ transaction.blockid }}</div>
+    <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.blockid }}</div>
   </div>
 
   <div class="row">
@@ -54,7 +54,7 @@
 
   <div class="row">
     <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8 font-roboto-mono">
       {{ transaction.timestamp * 1000 | date: 'dd MMMM yyyy HH:mm:ss' }}
     </div>
   </div>
