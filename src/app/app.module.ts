@@ -66,6 +66,7 @@ import { ConfirmUpdateComponent } from './pages/seats/confirm-update/confirm-upd
 import { GenesisComponent } from './pages/genesis/genesis.component';
 import { WaitingDialogComponent } from './pages/seats/waiting-dialog/waiting-dialog.component';
 import { InfoComponent } from './pages/info/info.component';
+import { NgxPopperModule } from 'ngx-popper';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { InfoComponent } from './pages/info/info.component';
     InputAddressModule,
     InputAmountModule,
     MatStepperModule,
+    NgxPopperModule.forRoot({ trigger: 'hover', placement: 'bottom', applyClass: 'pooper-style' }),
   ],
   bootstrap: [AppComponent],
   providers: [
