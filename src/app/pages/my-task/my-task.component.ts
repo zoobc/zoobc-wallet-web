@@ -114,6 +114,7 @@ export class MyTaskComponent implements OnInit {
           orderBy: OrderBy.DESC,
           orderField: 'timeout',
         },
+        latest: true,
       };
       zoobc.Escrows.getList(params)
         .then(async (res: EscrowTransactionsResponse) => {
