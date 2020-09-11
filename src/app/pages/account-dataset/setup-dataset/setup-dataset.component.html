@@ -40,36 +40,16 @@
         </mat-error>
       </ng-container>
     </ng-container>
-    <input-amount
-      [group]="formGroup"
-      typeCoinName="typeFee"
-      amountCurrencyName="feeCurr"
-      amountName="fee"
-      [displayConverter]="true"
-      [currencyRate]="currencyRate"
-      label="{{ 'fee' | translate }}"
-    >
-    </input-amount>
-    <div
-      class="row"
-      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
-    >
+    <input-amount [group]="formGroup" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
+    <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
       <div class="col-4 col-sm-3">&nbsp;</div>
       <div class="col-8 col-sm-9">
-        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+        <ng-container *ngIf="feeForm.touched">
           <mat-error *ngIf="feeForm.hasError('required')">
             {{ 'fee is required' | translate }}
           </mat-error>
           <mat-error *ngIf="feeForm.hasError('min')">
             {{ 'minimum fee is' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
-          <mat-error *ngIf="feeFormCurr.hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="feeFormCurr.hasError('min')">
-            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
           </mat-error>
         </ng-container>
       </div>

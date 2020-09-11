@@ -20,8 +20,8 @@ export class RegisterNodeComponent implements OnInit {
   ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
   lockedBalanceForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
+  // feeFormCurr = new FormControl('', Validators.required);
+  // typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
 
   account: SavedAccount;
@@ -30,7 +30,7 @@ export class RegisterNodeComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  currencyRate: Currency;
+  // currencyRate: Currency;
 
   constructor(
     private authServ: AuthService,
@@ -38,15 +38,15 @@ export class RegisterNodeComponent implements OnInit {
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<RegisterNodeComponent>,
     private translate: TranslateService,
-    private currencyServ: CurrencyRateService,
+    // private currencyServ: CurrencyRateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
     this.formRegisterNode = new FormGroup({
       ipAddress: this.ipAddressForm,
       lockedBalance: this.lockedBalanceForm,
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
+      // feeCurr: this.feeFormCurr,
+      // typeFee: this.typeFeeField,
       nodePublicKey: this.nodePublicKeyForm,
     });
 
@@ -55,12 +55,12 @@ export class RegisterNodeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
+    // const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    //   this.currencyRate = rate;
+    //   const minCurrency = truncate(this.minFee * rate.value, 8);
+    //   this.feeFormCurr.patchValue(minCurrency);
+    //   this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+    // });
     if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
   }
 

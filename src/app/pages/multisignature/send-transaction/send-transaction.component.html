@@ -9,36 +9,16 @@
         [addresses]="participants"
         [switchAccount]="true"
       ></account-selector>
-      <input-amount
-        [group]="formSend"
-        typeCoinName="typeFee"
-        amountCurrencyName="feeCurr"
-        amountName="fee"
-        [displayConverter]="true"
-        [currencyRate]="currencyRate"
-        label="{{ 'fee' | translate }}"
-      >
-      </input-amount>
-      <div
-        class="row"
-        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
-      >
+      <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
+      <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
-          <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+          <ng-container *ngIf="feeForm.touched">
             <mat-error *ngIf="feeForm.hasError('required')">
               {{ 'fee is required' | translate }}
             </mat-error>
             <mat-error *ngIf="feeForm.hasError('min')">
               {{ 'minimum fee is' | translate: { val: minFee } }}
-            </mat-error>
-          </ng-container>
-          <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
-            <mat-error *ngIf="feeFormCurr.hasError('required')">
-              {{ 'fee is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="feeFormCurr.hasError('min')">
-              {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
             </mat-error>
           </ng-container>
         </div>
@@ -93,8 +73,8 @@
             <div class="amount">
               <div class="zbc">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
               <div class="currency">
-                {{ feeFormCurr.value | number: '0.0-2' }}
-                {{ currencyRate.name }}
+                <!-- {{ feeFormCurr.value | number: '0.0-2' }}
+                {{ currencyRate.name }} -->
               </div>
             </div>
             <div class="label">{{ 'timeout' | translate }}:</div>
@@ -112,28 +92,28 @@
           <div class="amount">
             <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
-              {{ currencyRate.name }}
+              <!-- {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
+              {{ currencyRate.name }} -->
             </div>
           </div>
           <div class="label">
             <span>{{ 'fee' | translate }}</span>
-            <span> - {{ kindFee }}</span>
+            <!-- <span> - {{ kindFee }}</span> -->
             <span>:</span>
           </div>
           <div class="amount">
             <div class="zbc">{{ multisig.transaction.fee | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.transaction.fee * currencyRate.value | number: '0.0-2' }}
-              {{ currencyRate.name }}
+              <!-- {{ multisig.transaction.fee * currencyRate.value | number: '0.0-2' }}
+              {{ currencyRate.name }} -->
             </div>
           </div>
           <div class="label">{{ 'total' | translate }} :</div>
           <div class="total" *ngIf="advancedMenu; else not_escrow">
             <div class="zbc">{{ feeForm.value + feeForm.value + feeForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ feeFormCurr.value + feeFormCurr.value + feeFormCurr.value | number: '0.0-2' }}
-              {{ currencyRate.name }}
+              <!-- {{ feeFormCurr.value + feeFormCurr.value + feeFormCurr.value | number: '0.0-2' }}
+              {{ currencyRate.name }} -->
             </div>
           </div>
           <ng-template #not_escrow>
@@ -142,11 +122,11 @@
               ZBC
             </div>
             <div class="currency">
-              {{
+              <!-- {{
                 multisig.transaction.amount * currencyRate.value +
                   multisig.transaction.fee * currencyRate.value | number: '0.0-2'
               }}
-              {{ currencyRate.name }}
+              {{ currencyRate.name }} -->
             </div>
           </ng-template>
         </div>

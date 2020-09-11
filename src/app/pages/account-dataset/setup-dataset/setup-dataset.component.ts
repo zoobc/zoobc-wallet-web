@@ -16,22 +16,22 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-setup-dataset',
   templateUrl: './setup-dataset.component.html',
 })
-export class SetupDatasetComponent implements OnInit, OnDestroy {
-  subscription: Subscription = new Subscription();
+export class SetupDatasetComponent implements OnInit {
+  // subscription: Subscription = new Subscription();
   isSetupOther: boolean;
   isLoading: boolean;
   isError: boolean;
   minFee = environment.fee;
-  currencyRate: Currency;
+  // currencyRate: Currency;
 
   formGroup: FormGroup;
   propertyField = new FormControl('', [Validators.required]);
   valueField = new FormControl('', [Validators.required]);
   recipientAddressField = new FormControl('', [Validators.required]);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
+  // feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  typeFeeField = new FormControl('ZBC');
+  // typeFeeField = new FormControl('ZBC');
 
   constructor(
     public dialog: MatDialog,
@@ -46,26 +46,26 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
       value: this.valueField,
       recipientAddress: this.recipientAddressField,
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
+      // feeCurr: this.feeFormCurr,
+      // typeFee: this.typeFeeField,
     });
   }
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    this.subscription.add(subsRate);
+    // const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    //   this.currencyRate = rate;
+    //   const minCurrency = truncate(this.minFee * rate.value, 8);
+    //   this.feeFormCurr.patchValue(minCurrency);
+    //   this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+    // });
+    // this.subscription.add(subsRate);
     this.isSetupOther = false;
     this.disableSetupOther();
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+  // ngOnDestroy() {
+  //   this.subscription.unsubscribe();
+  // }
 
   enableSetupOther() {
     this.recipientAddressField.enable();

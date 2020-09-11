@@ -42,14 +42,9 @@
       </ng-container>
       <input-amount
         [group]="formSend"
-        typeCoinName="typeCoin"
-        amountCurrencyName="amountCurrency"
         amountName="amount"
-        [displayConverter]="true"
-        [currencyRate]="currencyRate"
         label="{{ 'coin amount' | translate }}"
-      >
-      </input-amount>
+      ></input-amount>
       <div class="row" *ngIf="amountForm.touched && amountForm.invalid">
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
@@ -63,16 +58,7 @@
           </ng-container>
         </div>
       </div>
-      <input-amount
-        [group]="formSend"
-        typeCoinName="typeFee"
-        amountCurrencyName="feeCurr"
-        amountName="fee"
-        [displayConverter]="true"
-        [currencyRate]="currencyRate"
-        label="{{ 'fee' | translate }}"
-      >
-      </input-amount>
+      <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
       <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
         <div class="col-4 col-sm-3">&nbsp;</div>
         <div class="col-8 col-sm-9">
@@ -109,32 +95,20 @@
         </ng-container>
         <input-amount
           [group]="formSend"
-          typeCoinName="typeCommission"
-          amountCurrencyName="approverCommissionCurr"
           amountName="approverCommission"
           [displayConverter]="false"
-          [currencyRate]="currencyRate"
           label="{{ 'approver commission' | translate }}"
         >
         </input-amount>
         <div class="row">
           <div class="col-4 col-sm-3">&nbsp;</div>
           <div class="col-8 col-sm-9">
-            <ng-container *ngIf="approverCommissionField.touched && typeCommissionField.value === 'ZBC'">
+            <ng-container *ngIf="approverCommissionField.touched">
               <mat-error *ngIf="approverCommissionField.hasError('required')">
                 {{ 'commission for approver is required' | translate }}
               </mat-error>
               <mat-error *ngIf="approverCommissionField.hasError('min')">
                 {{ 'minimum commission is' | translate: { val: '0.00000001' } }}
-              </mat-error>
-            </ng-container>
-
-            <ng-container *ngIf="approverCommissionCurrField.touched && typeCommissionField.value === 'Fiat'">
-              <mat-error *ngIf="approverCommissionCurrField.hasError('required')">
-                {{ 'commission for approver is required' | translate }}
-              </mat-error>
-              <mat-error *ngIf="approverCommissionCurrField.hasError('min')">
-                {{ 'minimum commission for approver in zbc must be zbc' | translate: { val: '0.00000001' } }}
               </mat-error>
             </ng-container>
           </div>

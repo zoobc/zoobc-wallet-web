@@ -3,7 +3,7 @@
     <div class="primary-amount">{{ group.get(amountName).value | number: '0.0-8' }} ZBC</div>
     <div class="secondary-amount">
       {{ amountCurrency | number: '0.0-2' }}
-      {{ currencyRate2.name }}
+      {{ currencyRate.name }}
     </div>
   </div>
 </div>
@@ -32,6 +32,7 @@
       </mat-form-field>
 
       <mat-form-field *ngIf="typeCoinName === 'Fiat'" appearance="outline" class="block" color="accent">
+        <mat-label>{{ label }}</mat-label>
         <input
           matInput
           (keyup)="onChangeAmountCurrencyField($event.target.value)"

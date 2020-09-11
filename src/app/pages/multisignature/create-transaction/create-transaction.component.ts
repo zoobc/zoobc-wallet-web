@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
+import { CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
-import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
+import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -23,18 +23,12 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class CreateTransactionComponent implements OnInit {
   minFee = environment.fee;
-  currencyRate: Currency;
-  currencySubs: Subscription;
 
   createTransactionForm: FormGroup;
   senderForm = new FormControl('', Validators.required);
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-  amountCurrencyForm = new FormControl('', Validators.required);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeCoinField = new FormControl('ZBC');
-  typeFeeField = new FormControl('ZBC');
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
@@ -55,24 +49,11 @@ export class CreateTransactionComponent implements OnInit {
       sender: this.senderForm,
       recipient: this.recipientForm,
       amount: this.amountForm,
-      amountCurrency: this.amountCurrencyForm,
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeCoin: this.typeCoinField,
-      typeFee: this.typeFeeField,
     });
   }
 
   ngOnInit() {
-    // Currency Subscriptions
-    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo, unisgnedTransactions, signaturesInfo, transaction } = multisig;
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
@@ -87,9 +68,7 @@ export class CreateTransactionComponent implements OnInit {
         this.senderForm.setValue(sender);
         this.recipientForm.setValue(recipient);
         this.amountForm.setValue(amount);
-        this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
         this.feeForm.setValue(fee);
-        this.feeFormCurr.setValue(fee * this.currencyRate.value);
       }
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -125,7 +104,6 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
   }
 

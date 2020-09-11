@@ -39,10 +39,10 @@ export class MultisigTransactionComponent implements OnInit {
   form: FormGroup;
   minFee = environment.fee;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
+  // feeFormCurr = new FormControl('', Validators.required);
+  // typeFeeField = new FormControl('ZBC');
 
-  currencyRate: Currency;
+  // currencyRate: Currency;
   advancedMenu: boolean = false;
   showSignForm: boolean = false;
   enabledSign: boolean = true;
@@ -53,24 +53,24 @@ export class MultisigTransactionComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private translate: TranslateService,
-    private authServ: AuthService,
-    private currencyServ: CurrencyRateService
-  ) {
+    private authServ: AuthService
+  ) // private currencyServ: CurrencyRateService
+  {
     this.form = new FormGroup({
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
+      // feeCurr: this.feeFormCurr,
+      // typeFee: this.typeFeeField,
     });
   }
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
+    // const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    //   this.currencyRate = rate;
+    //   const minCurrency = truncate(this.minFee * rate.value, 8);
+    //   this.feeFormCurr.patchValue(minCurrency);
+    //   this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+    // });
   }
 
   ngOnDestroy() {
