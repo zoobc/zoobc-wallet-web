@@ -1,7 +1,4 @@
-<div
-  class="address-template font-roboto-mono"
-  [ngStyle]="{ 'justify-content': center ? 'center' : 'flex-start' }"
->
+<div class="address-template" [ngStyle]="{ 'justify-content': center ? 'center' : 'flex-start' }">
   <span class="start">{{ value | slice: 0:halfLen }}</span>
   <span class="end">
     <span class="blank-space">s</span>
