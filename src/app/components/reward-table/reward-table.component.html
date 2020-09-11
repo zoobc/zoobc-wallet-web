@@ -25,7 +25,7 @@
         <ng-container *ngIf="tableData.format == 'number'">{{ element[tableData.id] | number }}</ng-container>
         <ng-container *ngIf="tableData.format == 'text'">{{ element[tableData.id] }}</ng-container>
         <ng-container *ngIf="tableData.format == 'timestamp'">
-          {{ getDate(element[tableData.id] * 1000) | date: 'short' }}
+          <span class="font-roboto-mono">{{ getDate(element[tableData.id] * 1000) | date: 'short' }}</span>
         </ng-container>
         <ng-container *ngIf="tableData.format == 'money'"
           >{{ element[tableData.id] / 1e8 | number: '0.0-8' }} ZBC</ng-container

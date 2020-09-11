@@ -408,6 +408,9 @@ mat-form-field {
   }
 }
 
+.font-roboto-mono {
+  font-family: 'Roboto Mono', monospace !important;
+}
 .pooper-style {
   background-color: white;
   box-shadow: 0 0 40px rgba(52, 61, 72, 0.2);
@@ -415,4 +418,5 @@ mat-form-field {
   border: 0 !important;
   word-break: break-all;
   z-index: 9999 !important;
+  font-family: 'Roboto Mono', monospace !important;
 }

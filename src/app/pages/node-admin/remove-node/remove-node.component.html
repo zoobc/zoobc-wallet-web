@@ -43,6 +43,7 @@
         placeholder="{{ 'node public key' | translate }}"
         formControlName="nodePublicKey"
         (keyup)="onChangeNodePublicKey()"
+        class="font-roboto-mono"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">
