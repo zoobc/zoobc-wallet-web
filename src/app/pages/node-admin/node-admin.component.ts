@@ -65,13 +65,13 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       id: 'blockheight',
       format: 'number',
       caption: 'height',
-      width: 20,
+      width: 15,
     },
     {
       id: 'timestamp',
       format: 'timestamp',
       caption: 'timestamp',
-      width: 25,
+      width: 30,
       align: 'right',
     },
   ];
