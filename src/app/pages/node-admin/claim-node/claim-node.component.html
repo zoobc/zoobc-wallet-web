@@ -44,7 +44,6 @@
         </ng-container>
       </div>
     </div>
-    <label>{{ 'node public key' | translate }}</label>
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'node public key' | translate }}</mat-label>
       <input
@@ -53,6 +52,7 @@
         placeholder="{{ 'node public key' | translate }}"
         formControlName="nodePublicKey"
         (keyup)="onChangeNodePublicKey()"
+        class="font-roboto-mono"
       />
     </mat-form-field>
     <ng-container *ngIf="nodePublicKeyForm.touched">

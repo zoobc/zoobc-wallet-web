@@ -9,6 +9,7 @@
     [matAutocomplete]="auto"
     placeholder="{{ placeholder }}"
     [readonly]="readonly"
+    class="font-roboto-mono"
   />
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option disabled>
@@ -23,7 +24,7 @@
       [value]="contact.address"
     >
       <span>{{ contact.name }}</span> |
-      <small>{{ contact.address }}</small>
+      <small class="font-roboto-mono">{{ contact.address }}</small>
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

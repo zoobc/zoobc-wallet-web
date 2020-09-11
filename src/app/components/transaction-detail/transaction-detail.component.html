@@ -1,19 +1,15 @@
 <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
   <div class="row">
-    <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
+    <div class="col-12 col-md-4">{{ 'transaction hash' | translate }}:</div>
     <div class="col-12 col-md-8">
-      {{ transaction.id }}
-      <span class="icon-redirect" (click)="redirect()"
-        ><i
-          class="fas fa-external-link-alt"
-          title="{{ 'Click Here to view on ZooBC Explorer' | translate }}"
-        ></i
-      ></span>
+      <a [href]="'https://zoobc.net/transactions/' + transaction.id" target="_blank">
+        <wallet-address [value]="transaction.transactionhash"></wallet-address>
+      </a>
     </div>
   </div>
   <div class="row">
     <div class="col-12 col-md-4">{{ 'block id' | translate }}:</div>
-    <div class="col-12 col-md-8">{{ transaction.blockid }}</div>
+    <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.blockid }}</div>
   </div>
 
   <div class="row">
@@ -44,7 +40,7 @@
 
   <div class="row">
     <div class="col-12 col-md-4">{{ 'height' | translate }}:</div>
-    <div class="col-12 col-md-8">{{ transaction.height }}</div>
+    <div class="col-12 col-md-8">{{ transaction.height | number }}</div>
   </div>
 
   <div class="row">
@@ -54,7 +50,7 @@
 
   <div class="row">
     <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
-    <div class="col-12 col-md-8">
+    <div class="col-12 col-md-8 font-roboto-mono">
       {{ transaction.timestamp * 1000 | date: 'dd MMMM yyyy HH:mm:ss' }}
     </div>
   </div>
