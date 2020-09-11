@@ -24,7 +24,12 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="form" (submit)="next()">
-      <account-selector (select)="onSwitchAccount($event)" type="multisig" [switchAccount]="false">
+      <account-selector
+        *ngIf="!multisig.signaturesInfo || !multisig.signaturesInfo.txHash"
+        (select)="onSwitchAccount($event)"
+        type="multisig"
+        [switchAccount]="false"
+      >
         <button mat-flat-button color="primary" class="block" type="button" style="margin-bottom: 16px;">
           {{ 'import my multisignature account' | translate }}
         </button>
@@ -69,7 +74,14 @@
         </mat-error>
       </ng-container>
       <div class="text-right">
-        <button (click)="addParticipant()" mat-flat-button class="small" color="primary" type="button">
+        <button
+          *ngIf="!multisig.signaturesInfo || !multisig.signaturesInfo.txHash"
+          (click)="addParticipant()"
+          mat-flat-button
+          class="small"
+          color="primary"
+          type="button"
+        >
           {{ 'add participants' }}
         </button>
       </div>

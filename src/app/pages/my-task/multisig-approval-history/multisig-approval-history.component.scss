@@ -17,6 +17,9 @@
       color: $black2;
       font-size: 14px;
       margin-bottom: 8px;
+      .tx-id {
+        font-family: 'Roboto Mono', monospace;
+      }
     }
 
     .date {
