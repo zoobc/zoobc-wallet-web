@@ -8,7 +8,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Seat, SeatService } from 'src/app/services/seat.service';
 import { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 import { eddsa as EdDSA } from 'elliptic';
-import * as sha256 from 'sha256';
+import SHA3 from 'sha3';
 import { WaitingDialogComponent } from '../waiting-dialog/waiting-dialog.component';
 
 @Component({
@@ -127,12 +127,20 @@ export class SeatDetailComponent implements OnInit {
 
   generateNodePublicKey() {
     this.passphrase = ZooKeyring.generateRandomPhrase(12, 'english');
-    const seedBuffer = new TextEncoder().encode(this.passphrase);
-    const seedHash = sha256(seedBuffer);
+    const seedBuffer = Buffer.from(this.passphrase);
+    const seedHash = this.hash(seedBuffer);
     const ec = new EdDSA('ed25519');
     const pairKey = ec.keyFromSecret(seedHash);
     const nodeAddress = getZBCAddress(pairKey.getPublic(), 'ZNK');
     this.nodePubKeyField.setValue(nodeAddress);
+  }
+
+  hash(str: any, format: string = 'buffer') {
+    const h = new SHA3(256);
+    h.update(str);
+    const b = h.digest();
+    if (format == 'buffer') return b;
+    return b.toString(format);
   }
 
   changeConfirmPass() {

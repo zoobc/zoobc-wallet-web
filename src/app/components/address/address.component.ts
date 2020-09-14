@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { onCopyText } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { shortenHash } from 'zoobc-sdk';
@@ -8,7 +8,7 @@ import { shortenHash } from 'zoobc-sdk';
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss'],
 })
-export class AddressComponent implements OnInit {
+export class AddressComponent implements OnChanges {
   @Input() value: string;
   @Input() copyButton: boolean = true;
   @Input() center: boolean = false;
@@ -19,19 +19,21 @@ export class AddressComponent implements OnInit {
 
   constructor(private snackbar: MatSnackBar) {}
 
-  ngOnInit() {
-    if (this.value) {
+  ngOnChanges(changes: SimpleChanges): void {
+    const value = changes.value.currentValue;
+
+    if (value) {
       const prefixDefault = ['ZBC', 'ZNK', 'ZBL', 'ZTX'];
-      const prefixValue = this.value.slice(0, 3);
+      const prefixValue = value.slice(0, 3);
       const valid = prefixDefault.indexOf(prefixValue) > -1;
       if (valid) {
-        this.len = this.value.length;
-        this.halfLen = Math.round(this.value.length / 2);
-        this.shortValue = shortenHash(this.value);
+        this.len = value.length;
+        this.halfLen = Math.round(value.length / 2);
+        this.shortValue = shortenHash(value);
       } else {
-        this.len = this.value.length;
-        this.halfLen = Math.round(this.value.length / 2);
-        this.shortValue = this.value;
+        this.len = value.length;
+        this.halfLen = Math.round(value.length / 2);
+        this.shortValue = value;
       }
     }
   }
