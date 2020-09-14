@@ -5,7 +5,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { signTransactionHash } from 'zoobc-sdk';
+import { signTransactionHash, getZBCAddress, ZBCAddressToBytes, toBase64Url } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';
@@ -121,7 +121,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (!signaturesInfo || signaturesInfo == null) return false;
     if (!unisgnedTransactions) return false;
     const txHash = signaturesInfo.txHash;
-    this.transactionHashField.patchValue(txHash);
+    const txHashFormatted = getZBCAddress(Buffer.from(txHash, 'base64'), 'ZTX');
+    this.transactionHashField.patchValue(txHashFormatted);
     return true;
   }
 
@@ -194,6 +195,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       sign => sign.signature !== null && sign.signature.length > 0
     );
     if (signatures.length > 0) {
+      const { txHash } = this.multisig.signaturesInfo;
+      this.transactionHashField.patchValue(txHash);
       this.updateMultiStorage();
       return this.router.navigate(['/multisignature/send-transaction']);
     }
@@ -220,7 +223,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     let message = getTranslation('this account is not in participant list', this.translate);
     if (idx == -1) return Swal.fire('Error', message, 'error');
     const seed = this.authServ.seed;
-    const signature = signTransactionHash(transactionHash, seed);
+    const backTxHash = toBase64Url(ZBCAddressToBytes(transactionHash).toString('base64'));
+    const signature = signTransactionHash(backTxHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
   }
 
