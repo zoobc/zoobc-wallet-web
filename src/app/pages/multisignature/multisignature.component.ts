@@ -11,7 +11,6 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-multisignature',
   templateUrl: './multisignature.component.html',
-  styleUrls: ['./multisignature.component.scss'],
 })
 export class MultisignatureComponent implements OnInit {
   multiSigDrafts: MultiSigDraft[];

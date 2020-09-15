@@ -1,0 +1,71 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.multisinature-container {
+  .check-title {
+    font-weight: bold;
+    color: $black2;
+  }
+
+  .check-desciption {
+    color: $black2;
+  }
+
+  .column-check {
+    margin-right: 4px;
+    margin-bottom: 8px;
+  }
+
+  .multisignature-drafts {
+    .transaction-item {
+      border-bottom: 1px solid #ddd;
+      padding: 16px;
+      margin: 0;
+      align-items: center;
+      @include transition(0.3s ease-in all);
+
+      &.hover:hover {
+        background-color: #eee;
+        cursor: pointer;
+      }
+
+      .label {
+        color: $black3;
+        margin: 8px 0 4px 0;
+      }
+
+      .id {
+        color: $black2;
+        margin-bottom: 4px;
+      }
+      .amount {
+        color: #f44336;
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      .signed {
+        color: $black2;
+        margin-top: 16px;
+      }
+      .date {
+        color: $black2;
+        font-style: italic;
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+
+      .right {
+        align-self: stretch;
+        min-height: 32px;
+        text-align: right;
+      }
+
+      .btn-delete {
+        position: absolute;
+        bottom: 0px;
+        right: 8px;
+      }
+    }
+  }
+}
