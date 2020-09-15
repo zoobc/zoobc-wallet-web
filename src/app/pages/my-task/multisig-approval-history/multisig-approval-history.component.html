@@ -50,9 +50,9 @@
           "
         >
           <div class="col-12 col-sm-12">
-            <div class="transaction-id">
+            <div class="transaction-id ">
               {{ 'transaction' | translate }}
-              {{ multisig.id }}
+              <span class="tx-id">{{ multisig.id }}</span>
             </div>
             <div class="date">
               {{ multisig.timestamp * 1000 | dateAgo }}
@@ -91,7 +91,7 @@
   <div class="detail-transaction-container" *ngIf="transactionDetail && !isLoadingDetail">
     <div class="row">
       <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
-      <div class="col-12 col-md-8">
+      <div class="col-12 col-md-8 font-roboto-mono">
         {{ transactionId }}
         <span class="icon-redirect" (click)="redirect()"
           ><i
@@ -123,11 +123,13 @@
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'blockheight' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transactionDetail.blockheight }}</div>
+      <div class="col-12 col-md-8">{{ transactionDetail.blockheight | number }}</div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transactionDetail.timestamp * 1000 | date: 'medium' }}</div>
+      <div class="col-12 col-md-8">
+        {{ transactionDetail.timestamp * 1000 | date: 'medium' }}
+      </div>
     </div>
   </div>
   <div class="detail-transaction-container skeleton" *ngIf="isLoadingDetail">
