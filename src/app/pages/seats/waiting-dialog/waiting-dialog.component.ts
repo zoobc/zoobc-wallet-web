@@ -68,12 +68,18 @@ export class WaitingDialogComponent implements OnInit {
   onDownload() {
     const key = this.data.password;
     const cert = {
-      nodeKey: this.data.nodeKey,
+      nodeSeed: this.data.nodeKey,
       ownerAccount: this.data.seat.zbcAddress,
+      nodePublicKey: this.data.seat.nodePubKey,
     };
-    const plaintText = JSON.stringify(cert);
 
-    let enc: string = GibberishAES.enc(plaintText, key);
+    let plainText = JSON.stringify(cert);
+    console.log(plainText);
+    while (plainText.length < 512) {
+      plainText += ' ';
+    }
+
+    let enc: string = GibberishAES.enc(plainText, key);
     enc = enc.replace(/(\r\n|\n|\r)/gm, '');
 
     const address = cert.ownerAccount.slice(0, 21);
