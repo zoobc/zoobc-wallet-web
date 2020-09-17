@@ -9,6 +9,7 @@ import zoobc, {
   MempoolTransactionsResponse,
   TransactionType,
   EscrowListParams,
+  OrderBy,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -30,7 +31,7 @@ export class TransferhistoryComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
   lastRefresh: number;
-
+  startMatch: number = 0;
   constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
   ngOnInit() {
@@ -73,29 +74,30 @@ export class TransferhistoryComponent implements OnInit {
           .filter(trx => trx.multisigchild == true)
           .map(trx => trx.id);
 
-        const paramEscrowSend: EscrowListParams = {
-          sender: this.address,
-          // blockHeightStart: firstHeight,
-          // blockHeightEnd: lastHeight,
-          statusList: [0, 1, 2, 3],
-        };
-        const paramEscrowReceive: EscrowListParams = {
+        const paramEscrow: EscrowListParams = {
+          blockHeightStart: firstHeight,
+          blockHeightEnd: lastHeight,
           recipient: this.address,
-          // blockHeightStart: firstHeight,
-          // blockHeightEnd: lastHeight,
           statusList: [0, 1, 2, 3],
+          latest: false,
+          pagination: {
+            orderBy: OrderBy.DESC,
+            orderField: 'block_height',
+          },
         };
-
-        const escrowSend = await zoobc.Escrows.getList(paramEscrowSend);
-        const escrowReceive = await zoobc.Escrows.getList(paramEscrowReceive);
-
-        const escrowList = escrowSend.escrowsList.concat(escrowReceive.escrowsList);
+        this.startMatch = 0;
+        const escrowTx = await zoobc.Escrows.getList(paramEscrow);
+        const escrowList = escrowTx.escrowsList;
+        const escrowGroup = this.groupEscrowList(escrowList);
 
         let tx = toTransactionListWallet(trxList, this.address);
         tx.transactions.map(recent => {
+          let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
           recent['alias'] = this.contactServ.get(recent.address).name || '';
-          recent['escrow'] = recent['escrow'] = this.checkIdOnEscrow(recent.id, escrowList);
-          if (recent['escrow']) recent['escrowStatus'] = this.getEscrowStatus(recent.id, escrowList);
+          if (escStatus) {
+            recent['escrow'] = true;
+            recent['escrowStatus'] = escStatus.status;
+          } else recent['escrow'] = false;
           recent['multisigchild'] = multisigTx.includes(recent.id);
           return recent;
         });
@@ -125,13 +127,30 @@ export class TransferhistoryComponent implements OnInit {
     } else this.finished = true;
   }
 
-  checkIdOnEscrow(id: any, escrowArr: any[]) {
-    const filter = escrowArr.filter(arr => arr.id == id);
-    if (filter.length > 0) return true;
-    return false;
+  groupEscrowList(escrowList: any[]) {
+    const escrowCopy = escrowList.map(x => Object.assign({}, x));
+    let escrowGroup = [];
+    for (let i = 0; i < escrowCopy.length; i++) {
+      let idx = escrowGroup.findIndex(eg => eg.id == escrowCopy[i].id);
+      if (idx < 0) escrowGroup.push(escrowCopy[i]);
+      else {
+        if (escrowGroup[idx].blockheight > escrowCopy[i].blockheight)
+          escrowGroup[idx]['blockheight'] = escrowCopy[i].blockheight;
+      }
+    }
+    escrowGroup.sort(function(a, b) {
+      return b.blockheight - a.blockheight;
+    });
+    return escrowGroup;
   }
-  getEscrowStatus(id: any, escrowArr: any[]) {
-    const idx = escrowArr.findIndex(esc => esc.id == id);
-    return escrowArr[idx].status;
+  matchEscrowGroup(blockheight, escrowList: any[]) {
+    let escrowObj: any;
+    for (let i = this.startMatch; i < escrowList.length; i++) {
+      if (escrowList[i].blockheight == blockheight) {
+        escrowObj = Object.assign({}, escrowList[i]);
+        this.startMatch = i;
+      }
+    }
+    return escrowObj;
   }
 }

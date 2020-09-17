@@ -4,7 +4,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { RegisterNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { RegisterNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation, truncate } from 'src/helpers/utils';
@@ -65,7 +65,7 @@ export class RegisterNodeComponent implements OnInit {
   }
 
   onChangeNodePublicKey() {
-    let isValid = ZBCAddressToBytes(this.nodePublicKeyForm.value);
+    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 

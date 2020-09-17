@@ -59,16 +59,20 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       id: 'balancechange',
       format: 'money',
       caption: 'reward',
+      width: 40,
     },
     {
       id: 'blockheight',
       format: 'number',
       caption: 'height',
+      width: 15,
     },
     {
       id: 'timestamp',
       format: 'timestamp',
       caption: 'timestamp',
+      width: 30,
+      align: 'right',
     },
   ];
 

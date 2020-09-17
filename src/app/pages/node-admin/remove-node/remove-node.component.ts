@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { RemoveNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation, truncate } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
@@ -57,7 +57,7 @@ export class RemoveNodeComponent implements OnInit {
   }
 
   onChangeNodePublicKey() {
-    let isValid = ZBCAddressToBytes(this.nodePublicKeyForm.value);
+    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
