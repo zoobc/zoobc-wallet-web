@@ -7,9 +7,8 @@ import Swal from 'sweetalert2';
 import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
-import { getTranslation, truncate } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-update-node',
@@ -21,16 +20,12 @@ export class UpdateNodeComponent implements OnInit {
   ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
   lockedAmountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  // feeFormCurr = new FormControl('', Validators.required);
-  // typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
 
   account: SavedAccount;
 
   isLoading: boolean = false;
   isError: boolean = false;
-
-  // currencyRate: Currency;
 
   constructor(
     private authServ: AuthService,
@@ -39,14 +34,11 @@ export class UpdateNodeComponent implements OnInit {
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
     @Inject(MAT_DIALOG_DATA) public node: any,
     private translate: TranslateService
-  ) // private currencyServ: CurrencyRateService
-  {
+  ) {
     this.formUpdateNode = new FormGroup({
       ipAddress: this.ipAddressForm,
       lockedAmount: this.lockedAmountForm,
       fee: this.feeForm,
-      // feeCurr: this.feeFormCurr,
-      // typeFee: this.typeFeeField,
       nodePublicKey: this.nodePublicKeyForm,
     });
 
@@ -61,14 +53,7 @@ export class UpdateNodeComponent implements OnInit {
     ]);
   }
 
-  ngOnInit() {
-    // const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-    //   this.currencyRate = rate;
-    //   const minCurrency = truncate(this.minFee * rate.value, 8);
-    //   this.feeFormCurr.patchValue(minCurrency);
-    //   this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    // });
-  }
+  ngOnInit() {}
 
   onChangeNodePublicKey() {
     let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');

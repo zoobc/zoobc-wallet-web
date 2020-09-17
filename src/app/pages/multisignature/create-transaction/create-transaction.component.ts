@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
@@ -39,7 +38,6 @@ export class CreateTransactionComponent implements OnInit {
   };
 
   constructor(
-    private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,

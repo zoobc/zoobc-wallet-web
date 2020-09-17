@@ -11,10 +11,9 @@ import zoobc, {
   MultisigPostTransactionResponse,
   MultisigPendingTxResponse,
 } from 'zoobc-sdk';
-import { base64ToHex, getTranslation, truncate } from 'src/helpers/utils';
+import { base64ToHex, getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 
 @Component({
@@ -39,10 +38,7 @@ export class MultisigTransactionComponent implements OnInit {
   form: FormGroup;
   minFee = environment.fee;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  // feeFormCurr = new FormControl('', Validators.required);
-  // typeFeeField = new FormControl('ZBC');
 
-  // currencyRate: Currency;
   advancedMenu: boolean = false;
   showSignForm: boolean = false;
   enabledSign: boolean = true;
@@ -50,27 +46,14 @@ export class MultisigTransactionComponent implements OnInit {
   participants = [];
   totalParticpants: number;
 
-  constructor(
-    public dialog: MatDialog,
-    private translate: TranslateService,
-    private authServ: AuthService
-  ) // private currencyServ: CurrencyRateService
-  {
+  constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
     this.form = new FormGroup({
       fee: this.feeForm,
-      // feeCurr: this.feeFormCurr,
-      // typeFee: this.typeFeeField,
     });
   }
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    // const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-    //   this.currencyRate = rate;
-    //   const minCurrency = truncate(this.minFee * rate.value, 8);
-    //   this.feeFormCurr.patchValue(minCurrency);
-    //   this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    // });
   }
 
   ngOnDestroy() {
