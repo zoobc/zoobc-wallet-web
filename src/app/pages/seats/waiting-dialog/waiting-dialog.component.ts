@@ -74,7 +74,6 @@ export class WaitingDialogComponent implements OnInit {
     };
 
     let plainText = JSON.stringify(cert);
-    console.log(plainText);
     while (plainText.length < 512) {
       plainText += ' ';
     }
