@@ -2,7 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { abi } from 'src/helpers/abi';
 import Web3 from 'web3';
-const web3 = new Web3(new Web3.providers.WebsocketProvider(environment.infuraProvider));
+const provider = new Web3.providers.WebsocketProvider(environment.infuraProvider, {
+  reconnect: {
+    auto: true,
+    delay: 1000,
+    maxAttempts: 10,
+  },
+});
+const web3 = new Web3(provider);
 import { saveAs } from 'file-saver';
 import { eddsa as EdDSA } from 'elliptic';
 import * as sha256 from 'sha256';

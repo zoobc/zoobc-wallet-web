@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { abi } from 'src/helpers/abi';
 import Web3 from 'web3';
-const web3 = new Web3(new Web3.providers.WebsocketProvider(environment.infuraProvider));
+const provider = new Web3.providers.WebsocketProvider(environment.infuraProvider, {
+  reconnect: {
+    auto: true,
+    delay: 1000,
+    maxAttempts: 10,
+  },
+});
+const web3 = new Web3(provider);
 
 export interface Seat {
   tokenId: number;
@@ -52,6 +59,7 @@ export class SeatService {
       do {
         try {
           tokenId = await contract.methods.tokenOfOwnerByIndex(address, index).call();
+          //console.log(tokenId);
           seats.push({ tokenId, ethAddress: address });
         } catch (err) {
           console.log(err);
