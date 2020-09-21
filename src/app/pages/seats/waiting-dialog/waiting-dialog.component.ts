@@ -5,7 +5,14 @@ import { environment } from 'src/environments/environment';
 import Web3 from 'web3';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
-const web3 = new Web3(new Web3.providers.WebsocketProvider(environment.infuraProvider));
+const provider = new Web3.providers.WebsocketProvider(environment.infuraProvider, {
+  reconnect: {
+    auto: true,
+    delay: 1000,
+    maxAttempts: 10,
+  },
+});
+const web3 = new Web3(provider);
 const GibberishAES = require('../../../../helpers/gibberish-aes.js');
 
 @Component({
