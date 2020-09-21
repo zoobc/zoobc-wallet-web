@@ -59,7 +59,6 @@ export class SeatService {
       do {
         try {
           tokenId = await contract.methods.tokenOfOwnerByIndex(address, index).call();
-          //console.log(tokenId);
           seats.push({ tokenId, ethAddress: address });
         } catch (err) {
           console.log(err);
