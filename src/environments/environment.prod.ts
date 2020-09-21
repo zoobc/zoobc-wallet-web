@@ -8,5 +8,5 @@ export const environment = {
   gasPrice: 3,
   gasLimit: 500000,
   chainId: 5,
-  infuraProvider: 'wss://infura.io/ws/v3/02b8b87e84ed4293845926d6d2f473ff',
+  infuraProvider: 'wss://mainnet.infura.io/ws/v3/02b8b87e84ed4293845926d6d2f473ff',
 };
