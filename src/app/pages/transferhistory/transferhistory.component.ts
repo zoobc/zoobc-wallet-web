@@ -22,6 +22,8 @@ export class TransferhistoryComponent implements OnInit {
   accountHistory: any[];
   unconfirmTx: any[];
 
+  txType: number = TransactionType.SENDMONEYTRANSACTION;
+
   page: number = 1;
   perPage: number = 10;
   total: number = 0;
@@ -38,7 +40,8 @@ export class TransferhistoryComponent implements OnInit {
     this.getTx(true);
   }
 
-  async getTx(reload: boolean = false) {
+  async getTx(reload: boolean = false, txType = TransactionType.SENDMONEYTRANSACTION) {
+    this.txType = txType;
     if (!this.isLoading) {
       // 72 is transaction item's height
       const perPage = Math.ceil(window.outerHeight / 72);
@@ -53,7 +56,7 @@ export class TransferhistoryComponent implements OnInit {
 
       const txParam: TransactionListParams = {
         address: this.address,
-        transactionType: TransactionType.SENDMONEYTRANSACTION,
+        transactionType: txType,
         pagination: {
           page: this.page,
           limit: perPage,
@@ -62,6 +65,7 @@ export class TransferhistoryComponent implements OnInit {
 
       try {
         let trxList = await zoobc.Transactions.getList(txParam);
+        console.log(trxList);
 
         let lastHeight = 0;
         let firstHeight = 0;
@@ -90,19 +94,21 @@ export class TransferhistoryComponent implements OnInit {
         const escrowList = escrowTx.escrowsList;
         const escrowGroup = this.groupEscrowList(escrowList);
 
-        let tx = toTransactionListWallet(trxList, this.address);
-        tx.transactions.map(recent => {
-          let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent['alias'] = this.contactServ.get(recent.address).name || '';
-          if (escStatus) {
-            recent['escrow'] = true;
-            recent['escrowStatus'] = escStatus.status;
-          } else recent['escrow'] = false;
-          recent['multisigchild'] = multisigTx.includes(recent.id);
-          return recent;
-        });
-        this.total = tx.total;
-        this.accountHistory = reload ? tx.transactions : this.accountHistory.concat(tx.transactions);
+        // let tx = toTransactionListWallet(trxList, this.address);
+        // tx.transactions.map(recent => {
+        //   let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
+        //   recent['alias'] = this.contactServ.get(recent.address).name || '';
+        //   if (escStatus) {
+        //     recent['escrow'] = true;
+        //     recent['escrowStatus'] = escStatus.status;
+        //   } else recent['escrow'] = false;
+        //   recent['multisigchild'] = multisigTx.includes(recent.id);
+        //   return recent;
+        // });
+        this.total = parseInt(trxList.total);
+        this.accountHistory = reload
+          ? trxList.transactionsList
+          : this.accountHistory.concat(trxList.transactionsList);
 
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };

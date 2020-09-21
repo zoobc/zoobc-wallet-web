@@ -1,0 +1,23 @@
+<div class="transaction-item hover row">
+  <div class="col-12 col-sm-8">
+    <div class="label">{{ 'Transaction Hash' | translate }}:</div>
+    <div class="address">
+      <wallet-address [value]="transaction.transactionhash"></wallet-address>
+    </div>
+    <div class="date">
+      {{ transaction.timestamp | dateAgo }}
+    </div>
+  </div>
+  <div class="col-12 col-sm-4 text-right">
+    <div
+      class="status-approval"
+      [ngClass]="getColorByEscrowStatus(transaction.approvalescrowtransactionbody.approval)"
+    >
+      {{ getTextByEscrowStatus(transaction.approvalescrowtransactionbody.approval) }}
+    </div>
+    <div class="fee">
+      - {{ transaction.fee / 1e8 | number: '0.0-8' }}
+      <small>ZBC {{ 'fee' | translate }}</small>
+    </div>
+  </div>
+</div>
