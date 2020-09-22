@@ -1,0 +1,59 @@
+<div class="layout-data-table">
+  <div class="no-content padding" *ngIf="!isLoading && dataSource.data.length == 0 && !isError">
+    <i matPrefix class="fa fa-receipt"></i>
+    <span class="message">{{ 'no transaction record' | translate }}</span>
+  </div>
+  <table
+    *ngIf="tableData && tableData.length > 0 && !isError"
+    style="width:100%;"
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    class="table"
+  >
+    <ng-container matColumnDef="no">
+      <th [style.width.%]="12" mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'No' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+    </ng-container>
+    <ng-container [matColumnDef]="tableData.id" *ngFor="let tableData of displayedColumns">
+      <th
+        [style.text-align]="tableData.align"
+        [style.width.%]="tableData.width"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+      >
+        {{ tableData.caption | translate }}
+      </th>
+      <td [style.text-align]="tableData.align" mat-cell *matCellDef="let element">
+        <ng-container *ngIf="tableData.format == 'number'">{{ element[tableData.id] | number }}</ng-container>
+        <ng-container *ngIf="tableData.format == 'text'">{{ element[tableData.id] }}</ng-container>
+        <ng-container *ngIf="tableData.format == 'timestamp'">
+          <span class="font-roboto-mono">{{ getDate(element[tableData.id] * 1000) | date: 'short' }}</span>
+        </ng-container>
+        <ng-container *ngIf="tableData.format == 'money'"
+          >{{ element[tableData.id] / 1e8 | number: '0.0-8' }} ZBC</ng-container
+        >
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayCol"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayCol"></tr>
+  </table>
+
+  <div class="loader" *ngIf="isLoading">
+    <mat-progress-spinner diameter="60" mode="indeterminate"> </mat-progress-spinner>
+  </div>
+  <div class="error" *ngIf="isError && !isLoading">
+    <div class="no-content padding">
+      <i matPrefix class="fa fa-exclamation-triangle"></i>
+      <span class="message">
+        {{ 'an error occurred while processing your request' | translate }}
+      </span>
+      <button mat-flat-button color="primary" (click)="onRefresh()">
+        {{ 'try again' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

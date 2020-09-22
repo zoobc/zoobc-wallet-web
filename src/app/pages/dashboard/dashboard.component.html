@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <div class="row">
     <div class="col-4">
-      <h2 class="mat-h2">{{ 'Dashboard' | translate }}</h2>
+      <h2 class="mat-h2">{{ 'dashboard' | translate }}</h2>
     </div>
     <div class="col-8 text-right">
       <button mat-button class="rates-dropdown" [matMenuTriggerFor]="rate">
@@ -26,10 +26,10 @@
     <div class="no-content" *ngIf="isErrorBalance">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
-        {{ 'An error occurred while processing your request' | translate }}
+        {{ 'an error occurred while processing your request' | translate }}
       </span>
-      <button mat-flat-button color="primary" (click)="getBalance()">
-        {{ 'Try Again' | translate }}
+      <button mat-flat-button color="primary" (click)="reloadBalanceTx()">
+        {{ 'try again' | translate }}
       </button>
     </div>
 
@@ -46,7 +46,7 @@
               <div class="account-container">
                 <button mat-menu-item (click)="onOpenAddAccount()" class="add-account">
                   <i class="fas fa-plus"></i>
-                  <span>{{ 'Add New Account' | translate }}</span>
+                  <span>{{ 'add new account' | translate }}</span>
                 </button>
                 <mat-divider></mat-divider>
                 <button
@@ -66,7 +66,7 @@
                   <div
                     class="account-right"
                     (click)="onOpenEditAccount($event, acc)"
-                    matTooltip="{{ 'Edit' | translate }}"
+                    matTooltip="{{ 'edit' | translate }}"
                   >
                     <i class="fas fa-pen"></i>
                   </div>
@@ -79,7 +79,7 @@
           </span>
         </div>
         <div class="col-2 text-right">
-          <button mat-icon-button class="reload-button" (click)="getBalance()">
+          <button mat-icon-button class="reload-button" (click)="reloadBalanceTx()">
             <i class="fa fa-redo-alt"></i>
           </button>
         </div>
@@ -91,7 +91,7 @@
             <img src="/assets/img/zbc-white.png" width="48" />
           </div>
           <div class="balance-detail">
-            <div class="label">{{ 'Balance' | translate }}</div>
+            <div class="label">{{ 'balance' | translate }}</div>
             <div class="balance">
               <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
@@ -114,7 +114,7 @@
             <img src="/assets/img/zbc-white.png" width="48" />
           </div>
           <div class="balance-detail">
-            <div class="label">{{ 'Spendable Balance' | translate }}</div>
+            <div class="label">{{ 'spendable balance' | translate }}</div>
             <div class="balance">
               <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
@@ -134,27 +134,31 @@
       </div>
 
       <div class="button-group">
-        <button mat-flat-button routerLink="/sendmoney">
+        <button *ngIf="currAcc.type == 'normal'" mat-flat-button routerLink="/sendmoney">
           <i matPrefix class="fa fa-paper-plane"></i>
-          <span>{{ 'Send' | translate }}</span>
+          <span>{{ 'send' | translate }}</span>
+        </button>
+        <button *ngIf="currAcc.type == 'multisig'" mat-flat-button routerLink="/multisignature">
+          <i matPrefix class="fa fa-file-signature"></i>
+          <span>{{ 'multisignature' | translate }}</span>
         </button>
         <button mat-flat-button (click)="openReceiveForm()">
           <i matPrefix class="fa fa-hand-holding-usd"></i>
-          <span>{{ 'Receive' | translate }}</span>
+          <span>{{ 'receive' | translate }}</span>
         </button>
       </div>
     </ng-container>
+    <div class="text-right">
+      <span style="font-size: 12px;" *ngIf="!isLoadingBalance && !isErrorBalance"
+        ><i>{{ 'last refresh' | translate }}: {{ lastRefreshAccount | dateAgo }}</i></span
+      >
+    </div>
   </mat-card>
 
   <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0">
     <div class="row">
-      <div class="col-10">
-        <h2 class="mat-h2">{{ 'Pending Transaction' | translate }}</h2>
-      </div>
-      <div class="col-2 text-right">
-        <button mat-icon-button class="reload-button" (click)="getTransactions()">
-          <i class="fa fa-redo-alt"></i>
-        </button>
+      <div class="col-12">
+        <h2 class="mat-h2">{{ 'pending transaction' | translate }}</h2>
       </div>
     </div>
     <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
@@ -164,14 +168,14 @@
   <div class="row">
     <div class="col-10">
       <h2 class="mat-h2 title">
-        {{ 'Recent Transactions' | translate }}
+        {{ 'recent transactions' | translate }}
         <span class="text-refresh" *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
-          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
+          >( {{ 'last refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
         >
       </h2>
     </div>
-    <div class="col-2 text-right" *ngIf="!isErrorRecentTx && !isLoadingRecentTx">
-      <button mat-icon-button class="reload-button" (click)="getTransactions()">
+    <div class="col-2 text-right">
+      <button mat-icon-button class="reload-button" (click)="reloadBalanceTx()">
         <i class="fa fa-redo-alt"></i>
       </button>
     </div>
@@ -180,14 +184,14 @@
     [withDetail]="true"
     [isLoading]="isLoadingRecentTx"
     [isError]="isErrorRecentTx"
-    (refresh)="getTransactions()"
+    (refresh)="reloadBalanceTx()"
     [transactionData]="recentTx"
   >
   </app-transaction-table>
   <ng-container *ngIf="totalTx > 5">
     <div class="text-center">
       <a routerLink="/transferhistory" mat-flat-button class="btn-view-all">
-        {{ 'View All' | translate }}
+        {{ 'view all' | translate }}
       </a>
     </div>
   </ng-container>

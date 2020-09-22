@@ -1,39 +1,41 @@
 <div class="add-participant-container">
-  <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <div class="stepper">
       <ng-container *ngIf="stepper.multisigInfo">
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'Add Multisig Info' | translate }}</span>
+          <span class="step-label">{{ 'add multisig info' | translate }}</span>
         </div>
         <div class="stepper-line"></div>
       </ng-container>
       <ng-container *ngIf="stepper.transaction">
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'Create Transaction' | translate }}</span>
+          <span class="step-label">{{ 'create transaction' | translate }}</span>
         </div>
         <div class="stepper-line"></div>
       </ng-container>
       <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">{{ 'Add Signatures' | translate }}</span>
+        <span class="step-label">{{ 'add signatures' | translate }}</span>
       </div>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
     <form [formGroup]="form">
-      <ng-template matStepLabel>{{Add Signatures | translate</ng-template>
+      <ng-template matStepLabel>{{ 'add signatures' | translate</ng-template>
 
-      <label class="label-margin">{{ 'Transaction Hash' | translate }}</label>
+      <label *ngIf="readOnlyTxHash" class="label-margin">{{ 'transaction hash' | translate }}</label>
       <ng-container *ngIf="!readOnlyTxHash">
         <mat-form-field style="width: 100%;" appearance="outline" color="accent">
+          <mat-label>{{ 'transaction hash' | translate }}</mat-label>
           <input
             [readonly]="readOnlyTxHash"
-            placeholder="{{ 'Trasaction Hash' | translate }}"
+            placeholder="{{ 'transaction hash' | translate }}"
             formControlName="transactionHash"
             matInput
             type="text"
+            class="font-roboto-mono"
           />
         </mat-form-field>
       </ng-container>
@@ -43,10 +45,10 @@
       </ng-container>
       <ng-container *ngIf="transactionHashField.touched">
         <mat-error *ngIf="transactionHashField.hasError('required')">
-          {{ 'Transaction Hash is required' | translate }}
+          {{ 'transaction hash is required' | translate }}
         </mat-error>
       </ng-container>
-      <label class="label-margin">{{ 'Participants Signature' | translate }}</label>
+      <label class="label-margin">{{ 'participants signature' | translate }}</label>
       <div formArrayName="participantsSignature">
         <ng-container *ngIf="enabledAddParticipant">
           <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
@@ -55,23 +57,24 @@
                 <input-address
                   label=""
                   formControlName="address"
-                  placeholder="{{ 'Address' | translate }} {{ i + 1 }}"
+                  placeholder="{{ 'address' | translate }} {{ i + 1 }}"
                 >
                 </input-address>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('address').touched">
                   <mat-error
                     *ngIf="participantsSignatureField.controls[i].get('address').hasError('invalidAddress')"
                   >
-                    {{ 'Address is invalid' | translate }}
+                    {{ 'address is invalid' | translate }}
                   </mat-error>
                 </ng-container>
                 <div class="inline-control">
                   <mat-form-field class="custom-input" appearance="outline" color="accent">
                     <input
-                      placeholder="{{ 'Signature ' | translate }} {{ i + 1 }}"
+                      placeholder="{{ 'signature ' | translate }} {{ i + 1 }}"
                       formControlName="signature"
                       matInput
                       type="text"
+                      class="font-roboto-mono"
                     />
                   </mat-form-field>
                   <button
@@ -89,7 +92,7 @@
                 <input-address
                   label=""
                   formControlName="address"
-                  placeholder="{{ 'Address' | translate }} {{ i + 1 }}"
+                  placeholder="{{ 'address' | translate }} {{ i + 1 }}"
                 >
                 </input-address>
                 <ng-container *ngIf="participantsSignatureField.controls[i].get('address').touched">
@@ -97,18 +100,18 @@
                     class="margin-error"
                     *ngIf="participantsSignatureField.controls[i].get('address').hasError('required')"
                   >
-                    {{ 'Address is required' | translate }}
+                    {{ 'address is required' | translate }}
                   </mat-error>
                   <mat-error
                     *ngIf="participantsSignatureField.controls[i].get('address').hasError('invalidAddress')"
                   >
-                    {{ 'Address is invalid' | translate }}
+                    {{ 'address is invalid' | translate }}
                   </mat-error>
                 </ng-container>
 
                 <mat-form-field class="custom-input" appearance="outline" color="accent">
                   <input
-                    placeholder="{{ 'Signature' | translate }} {{ i + 1 }}"
+                    placeholder="{{ 'signature' | translate }} {{ i + 1 }}"
                     formControlName="signature"
                     matInput
                     type="text"
@@ -119,7 +122,7 @@
                     class="margin-error"
                     *ngIf="participantsSignatureField.controls[i].get('signature').hasError('required')"
                   >
-                    {{ 'Signature is required' | translate }}
+                    {{ 'signature is required' | translate }}
                   </mat-error>
                 </ng-container>
               </ng-container>
@@ -137,7 +140,7 @@
                 <input-address
                   label=""
                   formControlName="address"
-                  placeholder="{{ 'Address' | translate }} {{ i + 1 }}"
+                  placeholder="{{ 'address' | translate }} {{ i + 1 }}"
                 >
                 </input-address>
               </ng-container>
@@ -147,18 +150,18 @@
                   class="margin-error"
                   *ngIf="participantsSignatureField.controls[i].get('address').hasError('required')"
                 >
-                  {{ 'Address is required' | translate }}
+                  {{ 'address is required' | translate }}
                 </mat-error>
                 <mat-error
                   *ngIf="participantsSignatureField.controls[i].get('address').hasError('invalidAddress')"
                 >
-                  {{ 'Address is invalid' | translate }}
+                  {{ 'address is invalid' | translate }}
                 </mat-error>
               </ng-container>
 
               <mat-form-field class="custom-input" appearance="outline" color="accent">
                 <input
-                  placeholder="{{ 'Signature' | translate }} {{ i + 1 }}"
+                  placeholder="{{ 'signature' | translate }} {{ i + 1 }}"
                   formControlName="signature"
                   matInput
                   type="text"
@@ -169,7 +172,7 @@
                   class="margin-error"
                   *ngIf="participantsSignatureField.controls[i].get('signature').hasError('required')"
                 >
-                  {{ 'Signature is required' | translate }}
+                  {{ 'signature is required' | translate }}
                 </mat-error>
               </ng-container>
             </div>
@@ -177,37 +180,49 @@
         </ng-container>
         <ng-container *ngIf="participantsSignatureField.touched">
           <mat-error *ngIf="participantsSignatureField.hasError('duplicate')">
-            <span class="center-error">{{ 'Participant must be unique' }}</span>
+            <span class="center-error">{{ 'participant must be unique' }}</span>
           </mat-error>
         </ng-container>
         <ng-container *ngIf="enabledAddParticipant">
           <div class="text-right" style="margin-top: 8px;">
             <button (click)="addParticipant()" mat-flat-button color="primary" type="button" class="small">
-              {{ 'Add Participants' | translate }}
+              {{ 'add participants' | translate }}
             </button>
           </div>
         </ng-container>
       </div>
-      <br />
-      <button
-        (click)="onAddSignature()"
-        [disabled]="transactionHashField.value.length <= 0"
-        mat-flat-button
-        color="primary"
-        type="button"
-        style="width: 100%;"
-      >
-        {{ 'Add your signature' | translate }}
-      </button>
+      <mat-checkbox class="checkbox-margin" (click)="toggleGetSignature()">
+        {{ 'get signature' | translate }}
+      </mat-checkbox>
+      <div *ngIf="getSignature">
+        <account-selector
+          (select)="onSwitchAccount($event)"
+          type="normal"
+          [addresses]="participants"
+          [switchAccount]="true"
+          [withBalance]="false"
+        ></account-selector>
+        <br />
+        <button
+          (click)="onAddSignature()"
+          [disabled]="transactionHashField.value.length <= 0"
+          mat-flat-button
+          color="primary"
+          type="button"
+          style="width: 100%;"
+        >
+          {{ 'add your signature' | translate }}
+        </button>
+      </div>
       <div class="row" style="margin-top: 20px;">
         <div class="col">
           <button (click)="onBack()" mat-flat-button color="warn" class="block" type="button">
-            {{ 'Back' | translate }}
+            {{ 'back' | translate }}
           </button>
         </div>
         <div class="col">
           <button (click)="onSave()" mat-flat-button color="primary" class="block" type="button">
-            {{ 'Save To Draft' | translate }}
+            {{ 'save to draft' | translate }}
           </button>
         </div>
         <div class="col">
@@ -219,7 +234,7 @@
             type="button"
             class="block"
           >
-            {{ 'Next' | translate }}
+            {{ 'next' | translate }}
           </button>
         </div>
       </div>

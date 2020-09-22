@@ -2,7 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 import { FormGroup } from '@angular/forms';
 import { Currency } from 'src/app/services/currency-rate.service';
 import { environment } from 'src/environments/environment';
-import { truncate } from 'src/helpers/utils';
+import { truncate, getTranslation } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'fee-selector',
@@ -33,7 +34,7 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
 
   customFee: boolean = false;
 
-  constructor() {}
+  constructor(private translate: TranslateService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.timeoutField) {
@@ -88,7 +89,7 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
     event.preventDefault();
     this.customFee = !this.customFee;
     if (this.customFee) {
-      this.kindFee = 'Custom';
+      this.kindFee = getTranslation('custom', this.translate);
       this.onClickFeeChoose.emit(this.kindFee);
     } else {
       this.onFeeChoose(this.activeButton);
@@ -99,15 +100,15 @@ export class FeeSelectorComponent implements OnInit, OnChanges {
     let fee: number = 0;
     if (value === 1) {
       fee = this.feeSlow;
-      this.kindFee = 'Slow';
+      this.kindFee = getTranslation('slow', this.translate);
       this.onClickFeeChoose.emit(this.kindFee);
     } else if (value === 2) {
       fee = this.feeMedium;
-      this.kindFee = 'Average';
+      this.kindFee = getTranslation('average', this.translate);
       this.onClickFeeChoose.emit(this.kindFee);
     } else {
       fee = this.feeFast;
-      this.kindFee = 'Fast';
+      this.kindFee = getTranslation('fast', this.translate);
       this.onClickFeeChoose.emit(this.kindFee);
     }
 

@@ -1,17 +1,17 @@
 <div class="edit-account-container">
-  <h2 class="mat-h2 text-center">{{ 'Edit Account' | translate }}</h2>
+  <h2 class="mat-h2 text-center">{{ 'edit account' | translate }}</h2>
   <form [formGroup]="formEditAccount" (submit)="onEditAccount()">
-    <label>{{ 'Account Name' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'account name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">
       <mat-error *ngIf="accountNameField.hasError('required')">
-        {{ 'Account name is required' | translate }}
+        {{ 'account name is required' | translate }}
       </mat-error>
     </ng-container>
     <button mat-flat-button color="primary" type="submit" [disabled]="formEditAccount.invalid" class="block">
-      {{ 'Edit' | translate }}
+      {{ 'edit' | translate }}
     </button>
   </form>
 </div>

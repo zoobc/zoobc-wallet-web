@@ -48,7 +48,7 @@ export class ReceiveComponent implements OnInit {
     e.stopPropagation();
     onCopyText(this.urlReqCoin);
 
-    let message = await getTranslation('Address copied to clipboard', this.translate);
+    let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
   }
 }

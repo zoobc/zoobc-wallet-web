@@ -1,24 +1,24 @@
 <div class="add-account-container">
-  <h2 class="mat-h2 text-center">{{ 'Add New Account' | translate }}</h2>
+  <h2 class="mat-h2 text-center">{{ 'add new account' | translate }}</h2>
   <form [formGroup]="formAddAccount" (submit)="onAddAccount()">
-    <label>{{ 'Account Name' | translate }}</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'account name' | translate }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">
       <mat-error *ngIf="accountNameField.hasError('required')">
-        {{ 'Account name is required' | translate }}
+        {{ 'account name is required' | translate }}
       </mat-error>
     </ng-container>
 
     <div style="margin-bottom: 16px;">
       <mat-checkbox [value]="isMultiSignature" (click)="toogleMultiSignature()">
-        {{ 'Multisignature Account' | translate }}
+        {{ 'multisignature account' | translate }}
       </mat-checkbox>
     </div>
 
     <ng-container *ngIf="isMultiSignature">
-      <label>{{ 'Participants' | translate }}</label>
+      <label>{{ 'participants' | translate }}</label>
       <div formArrayName="participants">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index">
           <ng-container *ngIf="i > 1">
@@ -27,7 +27,7 @@
                 class="input"
                 label=""
                 [formControlName]="i"
-                placeholder="{{ 'Participant' | translate }} {{ i + 1 }}..."
+                placeholder="{{ 'participant' | translate }} {{ i + 1 }}..."
               >
               </input-address>
               <button (click)="removeParticipant(i)" type="button" mat-flat-button color="warn">
@@ -39,16 +39,16 @@
             <input-address
               label=""
               [formControlName]="i"
-              placeholder="{{ 'Participant' | translate }} {{ i + 1 }}..."
+              placeholder="{{ 'participant' | translate }} {{ i + 1 }}..."
             >
             </input-address>
           </ng-container>
           <ng-container *ngIf="participantsField.controls[i].touched">
             <mat-error *ngIf="participantsField.controls[i].hasError('required')">
-              {{ 'Participant is required' | translate }}
+              {{ 'participant is required' | translate }}
             </mat-error>
             <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
-              {{ 'Participant Address is invalid' | translate }}
+              {{ 'participant address is invalid' | translate }}
             </mat-error>
           </ng-container>
         </ng-container>
@@ -56,58 +56,49 @@
       <ng-container *ngIf="participantsField.touched">
         <mat-error *ngIf="participantsField.hasError('duplicate')">
           <br />
-          <span>{{ 'Participant must be unique' | translate }}</span>
+          <span>{{ 'participant must be unique' | translate }}</span>
         </mat-error>
       </ng-container>
 
       <div class="text-right" style="margin-top: 8px;">
         <button (click)="addParticipant()" mat-flat-button color="primary" type="button" class="small">
-          {{ 'Add Participants' | translate }}
+          {{ 'add participants' | translate }}
         </button>
       </div>
-
-      <label>{{ 'Nonce' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
-        <input formControlName="nonce" matInput type="number" placeholder="{{ 'Nonce' | translate }}" />
+        <mat-label>{{ 'nonce' | translate }}</mat-label>
+        <input formControlName="nonce" matInput type="number" placeholder="{{ 'nonce' | translate }}" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
         <mat-error *ngIf="nonceField.hasError('required')">
-          {{ 'Nonce is required' | translate }}
+          {{ 'nonce is required' | translate }}
         </mat-error>
         <mat-error *ngIf="nonceField.hasError('min')">
-          {{ 'Minimum Nonce is 1' | translate }}
+          {{ 'minimum nonce is 1' | translate }}
         </mat-error>
       </ng-container>
 
-      <label>{{ 'Minimum Signature' | translate }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'minimum signature' | translate }}</mat-label>
         <input
           formControlName="minimumSignature"
           matInput
           type="number"
-          placeholder="{{ 'Minimum Signature' | translate }}"
+          placeholder="{{ 'minimum signature' | translate }}"
         />
       </mat-form-field>
       <ng-container *ngIf="minSignatureField.touched">
         <mat-error *ngIf="minSignatureField.hasError('required')">
-          {{ 'Minimum Signature is required' | translate }}
+          {{ 'minimum signature is required' | translate }}
         </mat-error>
         <mat-error *ngIf="minSignatureField.hasError('min')">
-          {{ 'Minimum Signature is 2' | translate }}
+          {{ 'minimum signature is 2' | translate }}
         </mat-error>
       </ng-container>
-
-      <label>{{ 'Sign by' | translate }}</label>
-      <account-selector
-        [type]="'normal'"
-        [switchAccount]="false"
-        [selectedValue]="account ? account.signByAddress : undefined"
-        (select)="onSwitchSignBy($event)"
-      ></account-selector>
     </ng-container>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid" class="block">
-      {{ 'Add' | translate }}
+      {{ 'add' | translate }}
     </button>
   </form>
 </div>

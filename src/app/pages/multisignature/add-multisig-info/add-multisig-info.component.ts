@@ -6,7 +6,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc from 'zoobc-sdk';
-import { uniqueParticipant } from '../../../../helpers/utils';
+import { uniqueParticipant, getTranslation } from '../../../../helpers/utils';
+import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -14,12 +16,10 @@ import { uniqueParticipant } from '../../../../helpers/utils';
   styleUrls: ['./add-multisig-info.component.scss'],
 })
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
-  isMultiSignature: boolean = false;
   stepper = {
     transaction: false,
     signatures: false,
   };
-  account: SavedAccount;
 
   form: FormGroup;
   participantsField = new FormArray([], uniqueParticipant);
@@ -33,16 +33,14 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
-    authServ: AuthService
+    private authServ: AuthService,
+    private translate: TranslateService
   ) {
     this.form = new FormGroup({
       participants: this.participantsField,
       nonce: this.nonceField,
       minSigs: this.minSignatureField,
     });
-
-    this.account = authServ.getCurrAccount();
-    this.isMultiSignature = this.account.type == 'multisig' ? true : false;
   }
 
   ngOnInit() {
@@ -58,12 +56,9 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
         this.patchParticipant(participants);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
-      } else if (this.isMultiSignature) {
-        const { participants, minSig, nonce } = this.account;
-        this.patchParticipant(participants);
-        this.nonceField.setValue(nonce);
-        this.minSignatureField.setValue(minSig);
       }
+
+      if (signaturesInfo && signaturesInfo.txHash) this.form.disable();
 
       this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -114,13 +109,25 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
   }
 
   next() {
+    this.form.enable();
     if (this.form.valid) {
       this.updateMultisig();
 
       const { unisgnedTransactions, signaturesInfo } = this.multisig;
-      if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
-      else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
-      else this.router.navigate(['/multisignature/send-transaction']);
+      let isOneParticpants: boolean = false;
+      const idx = this.authServ
+        .getAllAccount()
+        .filter(res => this.multisig.multisigInfo.participants.includes(res.address));
+      if (idx.length > 0) isOneParticpants = true;
+      else isOneParticpants = false;
+      if (!isOneParticpants) {
+        let message = getTranslation('you dont have any account that in participant list', this.translate);
+        Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      } else {
+        if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
+        else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
+        else this.router.navigate(['/multisignature/send-transaction']);
+      }
     }
   }
 
@@ -140,7 +147,6 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       minSigs: parseInt(minSigs),
       nonce: parseInt(nonce),
       participants: participants,
-      multisigAddress: '',
     };
     const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
     multisig.generatedSender = address;

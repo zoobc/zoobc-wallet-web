@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-10">
       <h2 class="mat-h2 title">
-        {{ 'Multisignature Approval History' | translate }}
+        {{ 'multisignature approval history' | translate }}
         <span class="text-refresh" *ngIf="!isError && !isLoading"
-          >( {{ 'Last Refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
+          >( {{ 'last refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
         >
       </h2>
     </div>
@@ -13,6 +13,16 @@
         <i class="fa fa-redo-alt"></i>
       </button>
     </div>
+  </div>
+  <div>
+    <mat-label>{{ 'signedby' | translate }}</mat-label>
+    <account-selector
+      (select)="onSwitchAccount($event)"
+      type="normal"
+      [addresses]="participants"
+      [switchAccount]="true"
+      [withBalance]="false"
+    ></account-selector>
   </div>
   <mat-card style="padding: 0;">
     <div
@@ -27,7 +37,7 @@
       <div class="multisig-list-container">
         <div class="no-content padding" *ngIf="!isLoading && multisigHistory.length <= 0">
           <i matPrefix class="fa fa-receipt"></i>
-          <span class="message">{{ 'No Multisignature Approval History' | translate }}</span>
+          <span class="message">{{ 'no multisignature approval history' | translate }}</span>
         </div>
         <div
           class="multisig-transaction-item hover row"
@@ -40,9 +50,9 @@
           "
         >
           <div class="col-12 col-sm-12">
-            <div class="transaction-id">
-              {{ 'Transaction' | translate }}
-              {{ multisig.id }}
+            <div class="transaction-id ">
+              {{ 'transaction' | translate }}
+              <span class="tx-id">{{ multisig.id }}</span>
             </div>
             <div class="date">
               {{ multisig.timestamp * 1000 | dateAgo }}
@@ -66,10 +76,10 @@
         <div class="no-content padding" *ngIf="isError">
           <i matPrefix class="fa fa-exclamation-triangle"></i>
           <span class="message">
-            {{ 'An error occurred while processing your request' | translate }}
+            {{ 'an error occurred while processing your request' | translate }}
           </span>
           <button mat-flat-button color="primary" (click)="onRefresh()">
-            {{ 'Try Again' | translate }}
+            {{ 'try again' | translate }}
           </button>
         </div>
       </div>
@@ -80,44 +90,46 @@
 <ng-template #detailTransaction>
   <div class="detail-transaction-container" *ngIf="transactionDetail && !isLoadingDetail">
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'ID' | translate }}:</div>
-      <div class="col-12 col-md-8">
+      <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
+      <div class="col-12 col-md-8 font-roboto-mono">
         {{ transactionId }}
         <span class="icon-redirect" (click)="redirect()"
           ><i
             class="fas fa-external-link-alt"
-            title="{{ 'Click Here to view on ZooBC Explorer' | translate }}"
+            title="{{ 'click here to view on zoobc explorer' | translate }}"
           ></i
         ></span>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Sender' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="transactionDetail.senderaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Recipient' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="transactionDetail.recipientaddress"></wallet-address>
       </div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Amount' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'amount' | translate }}:</div>
       <div class="col-12 col-md-8">{{ transactionDetail.amount / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Fee' | translate }}:</div>
+      <div class="col-12 col-md-4">{{ 'fee' | translate }}:</div>
       <div class="col-12 col-md-8">{{ transactionDetail.fee / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Blockheight' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transactionDetail.blockheight }}</div>
+      <div class="col-12 col-md-4">{{ 'blockheight' | translate }}:</div>
+      <div class="col-12 col-md-8">{{ transactionDetail.blockheight | number }}</div>
     </div>
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'Date' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transactionDetail.timestamp * 1000 | date: 'medium' }}</div>
+      <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        {{ transactionDetail.timestamp * 1000 | date: 'medium' }}
+      </div>
     </div>
   </div>
   <div class="detail-transaction-container skeleton" *ngIf="isLoadingDetail">

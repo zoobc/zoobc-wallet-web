@@ -1,4 +1,6 @@
 import { Pipe, PipeTransform, ChangeDetectorRef, NgZone } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { getTranslation } from 'src/helpers/utils';
 
 @Pipe({
   name: 'dateAgo',
@@ -6,7 +8,11 @@ import { Pipe, PipeTransform, ChangeDetectorRef, NgZone } from '@angular/core';
 })
 export class DateAgoPipe implements PipeTransform {
   private timer: number;
-  constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private translate: TranslateService
+  ) {}
   transform(value: string) {
     this.removeTimer();
     let d = new Date(value);
@@ -27,35 +33,48 @@ export class DateAgoPipe implements PipeTransform {
     let weeks = Math.round(Math.abs(days / 7));
     let months = Math.round(Math.abs(days / 30.416));
     let years = Math.round(Math.abs(days / 365));
+    let justNow: string = getTranslation('just now', this.translate);
+    let oneMinute: string = getTranslation('1 minute ago', this.translate);
+    let minutesAgo: string = getTranslation('minutes ago', this.translate, { minutes: minutes });
+    let oneHour: string = getTranslation('1 hour ago', this.translate);
+    let hourAgo: string = getTranslation('hours ago', this.translate, { hours: hours });
+    let oneDay: string = getTranslation('1 day ago', this.translate);
+    let dayAgo: string = getTranslation('days ago', this.translate, { days: days });
+    let oneWeek: string = getTranslation('1 week ago', this.translate);
+    let weekAgo: string = getTranslation('weeks ago', this.translate, { weeks: weeks });
+    let oneMonth: string = getTranslation('a month ago', this.translate);
+    let monthAgo: string = getTranslation('months ago', this.translate, { months: months });
+    let oneYear: string = getTranslation('a year ago', this.translate);
+    let yearAgo: string = getTranslation('years ago', this.translate, { years: years });
     if (Number.isNaN(seconds)) {
       return '';
     } else if (seconds <= 45) {
-      return 'Just now';
+      return justNow;
     } else if (seconds <= 90) {
-      return '1 minute ago';
+      return oneMinute;
     } else if (minutes <= 45) {
-      return minutes + ' minutes ago';
+      return minutesAgo;
     } else if (minutes <= 90) {
-      return '1 hour ago';
+      return oneHour;
     } else if (hours <= 23) {
-      return hours + ' hours ago';
+      return hourAgo;
     } else if (hours <= 25) {
-      return '1 day ago';
+      return oneDay;
     } else if (days <= 6) {
-      return days + ' days ago';
+      return dayAgo;
     } else if (days <= 13) {
-      return '1 week ago';
+      return oneWeek;
     } else if (weeks <= 3) {
-      return weeks + ' weeks ago';
+      return weekAgo;
     } else if (days <= 45) {
-      return 'a month ago';
+      return oneMonth;
     } else if (days <= 345) {
-      return months + ' months ago';
+      return monthAgo;
     } else if (days <= 545) {
-      return 'a year ago';
+      return oneYear;
     } else {
       // (days > 545)
-      return years + ' years ago';
+      return yearAgo;
     }
   }
   ngOnDestroy(): void {

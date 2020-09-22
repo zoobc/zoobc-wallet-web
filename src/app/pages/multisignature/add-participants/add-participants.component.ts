@@ -5,7 +5,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { signTransactionHash } from 'zoobc-sdk';
+import { signTransactionHash, getZBCAddress, ZBCAddressToBytes, toBase64Url } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';
@@ -32,6 +32,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     transaction: false,
   };
 
+  participants = [];
+  getSignature: boolean = false;
+
   constructor(
     private multisigServ: MultisigService,
     private router: Router,
@@ -50,13 +53,12 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo, unisgnedTransactions } = multisig;
       this.multisig = multisig;
-
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
     });
-
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
     this.patchValue(this.multisig);
+    this.participants = this.multisig.multisigInfo.participants;
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
@@ -64,6 +66,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
+    this.authServ.switchMultisigAccount();
   }
 
   createParticipant(address: string, signature: string, required: boolean): FormGroup {
@@ -118,7 +121,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     if (!signaturesInfo || signaturesInfo == null) return false;
     if (!unisgnedTransactions) return false;
     const txHash = signaturesInfo.txHash;
-    this.transactionHashField.patchValue(txHash);
+    const txHashFormatted = getZBCAddress(Buffer.from(txHash, 'base64'), 'ZTX');
+    this.transactionHashField.patchValue(txHashFormatted);
     return true;
   }
 
@@ -191,10 +195,12 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       sign => sign.signature !== null && sign.signature.length > 0
     );
     if (signatures.length > 0) {
+      const { txHash } = this.multisig.signaturesInfo;
+      this.transactionHashField.patchValue(txHash);
       this.updateMultiStorage();
       return this.router.navigate(['/multisignature/send-transaction']);
     }
-    let message = await getTranslation('At least 1 signature must be filled', this.translate);
+    let message = getTranslation('at least 1 signature must be filled', this.translate);
     Swal.fire('Error', message, 'error');
   }
 
@@ -210,14 +216,24 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   onAddSignature() {
     const { transactionHash, participantsSignature } = this.form.value;
-    const curAcc = this.authServ.getCurrAccount();
     let idx: number;
-    idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.address);
-    if (curAcc.type === 'multisig' && idx == -1)
-      idx = participantsSignature.findIndex(pcp => pcp.address == curAcc.signByAddress);
-    if (idx == -1) return Swal.fire('Error', 'This account is not in Participant List', 'error');
+    idx = participantsSignature.findIndex(pcp => pcp.address == this.account.address);
+    if (this.account.type === 'multisig' && idx == -1)
+      idx = participantsSignature.findIndex(pcp => pcp.address == this.account.address);
+    let message = getTranslation('this account is not in participant list', this.translate);
+    if (idx == -1) return Swal.fire('Error', message, 'error');
     const seed = this.authServ.seed;
-    const signature = signTransactionHash(transactionHash, seed);
+    const backTxHash = toBase64Url(ZBCAddressToBytes(transactionHash).toString('base64'));
+    const signature = signTransactionHash(backTxHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
+    this.authServ.switchAccount(account);
+  }
+
+  toggleGetSignature() {
+    this.getSignature = !this.getSignature;
   }
 }

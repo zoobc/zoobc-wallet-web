@@ -1,7 +1,7 @@
 <div class="confirm-passphrase-container">
-  <h2 class="mat-h2">{{ 'Confirm Your Passphrase' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'confirm your seed phrase' | translate }}</h2>
   <p class="mat-body-1">
-    {{ 'Fill The Missing Phrase Word to Complete Create New Wallet!' | translate }}
+    {{ 'fill the missing phrase word to complete create new wallet!' | translate }}
   </p>
   <form [formGroup]="confirmForm" (submit)="openCreatePin()">
     <div class="row" formArrayName="words">
@@ -14,20 +14,20 @@
     </div>
     <div style="height: 25px" class="text-center">
       <mat-error *ngIf="confirmForm.hasError('required')">
-        {{ 'Please fill all of the passphrase' | translate }}
+        {{ 'please fill all of the seed phrase' | translate }}
       </mat-error>
       <mat-error *ngIf="confirmForm.hasError('mnemonic')">
-        {{ 'The passphrase is not matched' | translate }}
+        {{ 'the seed phrase is not matched' | translate }}
       </mat-error>
     </div>
     <div class="btn-grouped">
       <button mat-flat-button color="warn" (click)="backClicked()">
         <i matPrefix class="fas fa-arrow-left"></i>
-        <span class="text">{{ 'Back' | translate }}</span>
+        <span class="text">{{ 'back' | translate }}</span>
       </button>
       <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
         <i matPrefix class="fas fa-check"></i>
-        <span class="text">{{ 'Confirm' | translate }}</span>
+        <span class="text">{{ 'confirm' | translate }}</span>
       </button>
     </div>
   </form>

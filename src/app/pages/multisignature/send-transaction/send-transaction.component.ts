@@ -12,7 +12,12 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, { MultiSigInterface, MultisigPostTransactionResponse } from 'zoobc-sdk';
+import zoobc, {
+  MultiSigInterface,
+  MultisigPostTransactionResponse,
+  sendMoneyBuilder,
+  AccountBalanceResponse,
+} from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 
 @Component({
@@ -24,30 +29,26 @@ export class SendTransactionComponent implements OnInit {
   @ViewChild('confirmDialog') confirmDialog: TemplateRef<any>;
   confirmRefDialog: MatDialogRef<any>;
 
-  subscription: Subscription = new Subscription();
+  currencySubs: Subscription;
 
   account: SavedAccount;
   accounts: SavedAccount[];
   formSend: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl(this.minFee * 2, [Validators.required, Validators.min(this.minFee)]);
+  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
-  timeoutField = new FormControl('0');
+  typeFeeField = new FormControl('ZBC');
 
   currencyRate: Currency;
-  kindFee: string;
   advancedMenu: boolean = false;
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
   multiSigDrafts: MultiSigDraft[];
 
-  feeSlow = environment.fee;
-  feeMedium = this.feeSlow * 2;
-  feeFast = this.feeMedium * 2;
-  typeFee: number;
-  customFeeValues: number;
   isMultiSigAccount: boolean = false;
+  participants = [];
+  accountBalance: any;
 
   constructor(
     private authServ: AuthService,
@@ -61,7 +62,7 @@ export class SendTransactionComponent implements OnInit {
     this.formSend = new FormGroup({
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
-      timeout: this.timeoutField,
+      typeFee: this.typeFeeField,
     });
   }
 
@@ -69,41 +70,26 @@ export class SendTransactionComponent implements OnInit {
     this.account = this.authServ.getCurrAccount();
     if (this.account.type === 'multisig') this.isMultiSigAccount = true;
     this.accounts = this.authServ.getAllAccount();
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
       this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+      this.feeFormCurr.patchValue(minCurrency);
     });
-    this.subscription.add(subsRate);
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo } = multisig;
-      if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
-
+      if (multisigInfo === undefined) return this.router.navigate(['/multisignature']);
       this.multisig = multisig;
-      const { accountAddress, fee, generatedSender } = this.multisig;
-      if (this.isMultiSigAccount) {
-        this.account.address = generatedSender;
-      } else {
-        this.account.address = accountAddress;
-      }
-      this.feeForm.setValue(multisig.fee);
-      this.feeFormCurr.setValue(multisig.fee * this.currencyRate.value);
-      this.timeoutField.setValue('0');
-      if (fee === this.feeSlow) {
-        this.typeFee = 1;
-        this.kindFee = 'Slow';
-      } else if (fee === this.feeMedium) {
-        this.typeFee = 2;
-        this.kindFee = 'Average';
-      } else if (fee === this.feeFast) {
-        this.typeFee = 3;
-        this.kindFee = 'Fast';
-      } else {
-        this.customFeeValues = multisig.fee;
-        this.kindFee = 'Custom';
+      const { fee } = this.multisig;
+      if (fee >= this.minFee) {
+        this.feeForm.setValue(fee);
+        this.feeFormCurr.setValue(fee * this.currencyRate.value);
+        this.feeForm.markAsTouched();
+        this.feeFormCurr.markAsTouched();
       }
     });
+    this.participants = this.multisig.multisigInfo.participants;
     this.getMultiSigDraft();
   }
 
@@ -125,11 +111,6 @@ export class SendTransactionComponent implements OnInit {
   updateSendTransaction() {
     const { fee } = this.formSend.value;
     const multisig = { ...this.multisig };
-    if (this.isMultiSigAccount) {
-      multisig.accountAddress = this.account.signByAddress;
-    } else {
-      multisig.accountAddress = this.account.address;
-    }
     multisig.fee = fee;
     this.multisigServ.update(multisig);
   }
@@ -139,12 +120,9 @@ export class SendTransactionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
-  }
-
-  onClickFeeChoose(value) {
-    this.kindFee = value;
+    this.authServ.switchMultisigAccount();
   }
 
   onSwitchAccount(account: SavedAccount) {
@@ -153,19 +131,26 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async onOpenConfirmDialog() {
-    const validationParticipant = this.validationParticipant();
-    if (validationParticipant) {
+    await this.getBalance();
+    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    if (balance >= this.minFee) {
       this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
         width: '500px',
         maxHeight: '90vh',
       });
     } else {
-      let message = await getTranslation('This account is not one of your participant', this.translate);
-      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      let message = getTranslation('your balances are not enough for this transaction', this.translate);
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
-  onConfirm() {
+  async getBalance() {
+    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
+      this.accountBalance = data.accountbalance;
+    });
+  }
+
+  async onConfirm() {
     let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
       width: '400px',
       maxHeight: '90vh',
@@ -179,21 +164,9 @@ export class SendTransactionComponent implements OnInit {
     });
   }
 
-  validationParticipant(): boolean {
-    const { multisigInfo } = this.multisig;
-    const isParticipant = multisigInfo.participants.some(res => {
-      if (res !== this.account.address && res !== this.account.signByAddress) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-    return isParticipant;
-  }
-
   async onSendMultiSignatureTransaction() {
     this.updateSendTransaction();
-    const {
+    let {
       accountAddress,
       fee,
       multisigInfo,
@@ -210,6 +183,8 @@ export class SendTransactionComponent implements OnInit {
       signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
         if (jsonBufferToString(pcp.signature).length > 0) return pcp;
       });
+      this.account = this.authServ.getCurrAccount();
+      accountAddress = this.account.address;
       data = {
         accountAddress,
         fee,
@@ -218,6 +193,8 @@ export class SendTransactionComponent implements OnInit {
         signaturesInfo: signatureInfoFilter,
       };
     } else {
+      this.account = this.authServ.getCurrAccount();
+      accountAddress = this.account.address;
       data = {
         accountAddress,
         fee,
@@ -227,10 +204,13 @@ export class SendTransactionComponent implements OnInit {
       };
     }
     const childSeed = this.authServ.seed;
+
+    if (data.signaturesInfo === undefined)
+      data.unisgnedTransactions = sendMoneyBuilder(this.multisig.transaction);
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
-        let message = await getTranslation('Your Transaction is processing', this.translate);
-        let subMessage = await getTranslation('You send coins to', this.translate, {
+        let message = getTranslation('your transaction is processing', this.translate);
+        let subMessage = getTranslation('you send coins to', this.translate, {
           amount: transaction.amount,
           currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
           currencyName: this.currencyRate.name,
@@ -242,7 +222,7 @@ export class SendTransactionComponent implements OnInit {
       })
       .catch(async err => {
         console.log(err.message);
-        let message = await getTranslation('An error occurred while processing your request', this.translate);
+        let message = getTranslation('an error occurred while processing your request', this.translate);
         Swal.fire('Opps...', message, 'error');
       });
   }

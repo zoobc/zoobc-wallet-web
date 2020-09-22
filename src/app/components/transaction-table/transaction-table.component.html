@@ -3,7 +3,7 @@
     <ng-container *ngIf="transactionData">
       <div class="no-content padding" *ngIf="transactionData.length <= 0">
         <i matPrefix class="fa fa-receipt"></i>
-        <span class="message">{{ 'No Transaction Record' | translate }}</span>
+        <span class="message">{{ 'no transaction record' | translate }}</span>
       </div>
 
       <div
@@ -27,12 +27,31 @@
             <div class="amount-send">- {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
             <div class="fee" *ngIf="transaction.type == 'send'">
               - {{ transaction.fee / 1e8 | number: '0.0-8' }}
-              <small>ZBC {{ 'Fee' | translate }}</small>
+              <small>ZBC {{ 'fee' | translate }}</small>
             </div>
           </ng-container>
           <ng-container *ngIf="transaction.type == 'receive'">
             <div class="amount-receive">+ {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
           </ng-container>
+          <div class="description">
+            <div class="chips">
+              <div class="chip small" *ngIf="transaction.multisigchild">
+                {{ 'multisignature' | translate }}
+              </div>
+              <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
+            </div>
+            <div
+              class="status"
+              [style.color]="getColorByEscrowStatus(transaction.escrowStatus)"
+              *ngIf="transaction.escrow"
+            >
+              <i
+                class="fas fa-dot-circle"
+                [matTooltip]="getTextByEscrowStatus(transaction.escrowStatus) | translate"
+                matTooltipPosition="above"
+              ></i>
+            </div>
+          </div>
         </div>
       </div>
     </ng-container>
@@ -54,10 +73,10 @@
     <div class="no-content padding" *ngIf="isError">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
-        {{ 'An error occurred while processing your request' | translate }}
+        {{ 'an error occurred while processing your request' | translate }}
       </span>
       <button mat-flat-button color="primary" (click)="onRefresh()">
-        {{ 'Try Again' | translate }}
+        {{ 'try again' | translate }}
       </button>
     </div>
   </mat-card>

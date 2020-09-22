@@ -22,7 +22,7 @@ export class AddcontactComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.addForm = new FormGroup({
-      alias: this.aliasField,
+      name: this.aliasField,
       address: this.addressField,
     });
   }
@@ -40,10 +40,7 @@ export class AddcontactComponent implements OnInit {
     if (this.addForm.valid) {
       const isDuplicate = this.contactServ.isDuplicate(this.addressField.value);
       if (isDuplicate) {
-        let message = await getTranslation(
-          'The address you entered is already in your Address Book',
-          this.translate
-        );
+        let message = getTranslation('the address you entered is already in your contact', this.translate);
         Swal.fire({
           type: 'error',
           title: 'Oops...',

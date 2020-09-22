@@ -1,35 +1,56 @@
 <div class="send-transaction-container">
-  <h2 class="mat-h2">{{ 'Send Money' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
-      <label>{{ 'From' | translate }}</label>
-      <div *ngIf="isMultiSigAccount" style="margin-bottom: 16px;">
-        <wallet-address [value]="account.signByAddress"></wallet-address>
-      </div>
-      <ng-container *ngIf="!isMultiSigAccount">
-        <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
-      </ng-container>
-      <fee-selector
+      <label>{{ 'sender' | translate }}</label>
+      <account-selector
+        (select)="onSwitchAccount($event)"
+        type="normal"
+        [addresses]="participants"
+        [switchAccount]="true"
+      ></account-selector>
+      <input-amount
         [group]="formSend"
-        feeName="fee"
-        feeCurrName="feeCurr"
-        [minFee]="minFee"
-        [timeoutField]="timeoutField.value"
-        [required]="true"
+        typeCoinName="typeFee"
+        amountCurrencyName="feeCurr"
+        amountName="fee"
+        [displayConverter]="true"
         [currencyRate]="currencyRate"
-        (onClickFeeChoose)="onClickFeeChoose($event)"
-        [typeFees]="typeFee"
-        [customFeeValue]="customFeeValues"
+        label="{{ 'fee' | translate }}"
       >
-      </fee-selector>
+      </input-amount>
+      <div
+        class="row"
+        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
+      >
+        <div class="col-4 col-sm-3">&nbsp;</div>
+        <div class="col-8 col-sm-9">
+          <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
+            <mat-error *ngIf="feeForm.hasError('required')">
+              {{ 'fee is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="feeForm.hasError('min')">
+              {{ 'minimum fee is' | translate: { val: minFee } }}
+            </mat-error>
+          </ng-container>
+          <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
+            <mat-error *ngIf="feeFormCurr.hasError('required')">
+              {{ 'fee is required' | translate }}
+            </mat-error>
+            <mat-error *ngIf="feeFormCurr.hasError('min')">
+              {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+            </mat-error>
+          </ng-container>
+        </div>
+      </div>
       <button mat-flat-button color="warn" type="button" (click)="back()">
-        {{ 'Back' | translate }}
+        {{ 'back' | translate }}
       </button>
       <button mat-flat-button color="primary" type="button" (click)="saveDraft()">
-        {{ 'Save' | translate }}
+        {{ 'save' | translate }}
       </button>
-      <button mat-flat-button color="primary">
-        {{ 'Send' | translate }}
+      <button [disabled]="!formSend.valid" mat-flat-button color="primary">
+        {{ 'send' | translate }}
       </button>
     </form>
   </mat-card>
@@ -39,7 +60,7 @@
   <div class="confirmation-dialog">
     <div class="row">
       <div class="col-12 col-sm-6">
-        <div class="title">{{ 'Confirm Send Money' | translate }}</div>
+        <div class="title">{{ 'confirm send money' | translate }}</div>
       </div>
       <div class="col-12 col-sm-6 text-right">
         <a class="brand">
@@ -54,21 +75,21 @@
     <div class="content">
       <div class="row">
         <div class="col-12 col-sm-6 test">
-          <div class="label">{{ 'From' | translate }}:</div>
+          <div class="label">{{ 'sender' | translate }}:</div>
           <div class="address">
             <wallet-address [value]="multisig.transaction.sender"></wallet-address>
           </div>
-          <div class="label">{{ 'Recipient' | translate }}:</div>
+          <div class="label">{{ 'recipient' | translate }}:</div>
           <div class="address">
             <wallet-address [value]="multisig.transaction.recipient"></wallet-address>
           </div>
           <ng-container *ngIf="advancedMenu">
             <mat-divider style="margin-bottom: 10px;"></mat-divider>
-            <div class="label">{{ 'Approver Address' | translate }}:</div>
+            <div class="label">{{ 'approver address' | translate }}:</div>
             <div class="address">
               <wallet-address [value]="account.address"></wallet-address>
             </div>
-            <div class="label">{{ 'Approver Commission' | translate }}:</div>
+            <div class="label">{{ 'approver commission' | translate }}:</div>
             <div class="amount">
               <div class="zbc">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
               <div class="currency">
@@ -76,18 +97,18 @@
                 {{ currencyRate.name }}
               </div>
             </div>
-            <div class="label">{{ 'Timeout' | translate }}:</div>
+            <div class="label">{{ 'timeout' | translate }}:</div>
             <div class="amount">
               100
             </div>
-            <div class="label">{{ 'Instruction' | translate }}:</div>
+            <div class="label">{{ 'instruction' | translate }}:</div>
             <div class="instruction">
               This is dummy data
             </div>
           </ng-container>
         </div>
         <div class="col-12 col-sm-6 text-right">
-          <div class="label">{{ 'Amount' | translate }}:</div>
+          <div class="label">{{ 'amount' | translate }}:</div>
           <div class="amount">
             <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
             <div class="currency">
@@ -96,7 +117,7 @@
             </div>
           </div>
           <div class="label">
-            <span>{{ 'Fee' | translate }}</span>
+            <span>{{ 'fee' | translate }}</span>
             <span> - {{ kindFee }}</span>
             <span>:</span>
           </div>
@@ -107,7 +128,7 @@
               {{ currencyRate.name }}
             </div>
           </div>
-          <div class="label">{{ 'Total' | translate }} :</div>
+          <div class="label">{{ 'total' | translate }} :</div>
           <div class="total" *ngIf="advancedMenu; else not_escrow">
             <div class="zbc">{{ feeForm.value + feeForm.value + feeForm.value | number: '0.0-8' }} ZBC</div>
             <div class="currency">
@@ -134,10 +155,10 @@
     <mat-divider></mat-divider>
     <div class="text-right" style="margin-top: 8px">
       <button mat-flat-button color="warn" (click)="closeDialog()" style="margin-right: 8px">
-        {{ 'Cancel' | translate }}
+        {{ 'cancel' | translate }}
       </button>
       <button mat-flat-button color="primary" (click)="onConfirm()">
-        {{ 'Confirm' | translate }}
+        {{ 'confirm' | translate }}
       </button>
     </div>
   </div>

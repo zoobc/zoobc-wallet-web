@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { AddressModule } from 'src/app/components/address/address.module';
+import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
+import { RewardTableModule } from 'src/app/components/reward-table/reward-table.module';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -41,11 +43,7 @@ import { DemoNodeAdminComponent } from './demo-node-admin/demo-node-admin.compon
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(
-    httpClient,
-    './assets/languages/locales/',
-    '.json'
-  );
+  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 
 const routes: Routes = [
@@ -99,12 +97,9 @@ const routes: Routes = [
     MatChipsModule,
     MatDividerModule,
     MatAutocompleteModule,
+    InputAmountModule,
+    RewardTableModule,
   ],
-  entryComponents: [
-    RegisterNodeComponent,
-    UpdateNodeComponent,
-    ClaimNodeComponent,
-    RemoveNodeComponent,
-  ],
+  entryComponents: [RegisterNodeComponent, UpdateNodeComponent, ClaimNodeComponent, RemoveNodeComponent],
 })
 export class NodeAdminModule {}

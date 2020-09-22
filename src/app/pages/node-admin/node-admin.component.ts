@@ -6,6 +6,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import Swal from 'sweetalert2';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
+import { NodeRewardListComponent } from '../../components/node-reward-list/node-reward-list.component';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
@@ -19,8 +20,12 @@ import zoobc, {
   GenerateNodeKeyResponses,
   NodeHardwareResponse,
   TransactionType,
+  getZBCAddress,
+  Subscription,
+  AccountLedgerListParams,
+  EventType,
+  OrderBy,
 } from 'zoobc-sdk';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-node-admin',
@@ -40,11 +45,45 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   isNodeHardwareError: boolean = false;
   isNodeLoading: boolean = false;
   isNodeError: boolean = false;
+  isNodeRewardLoading: boolean = false;
+  isNodeRewardError: boolean = false;
 
   lastClaim: string = undefined;
   nodePublicKey: string = '';
+  totalNodeReward: number;
+  stream: Subscription;
 
-  stream: any;
+  showAutomaticNumber: boolean = true;
+  displayedColumns = [
+    {
+      id: 'balancechange',
+      format: 'money',
+      caption: 'reward',
+      width: 40,
+    },
+    {
+      id: 'blockheight',
+      format: 'number',
+      caption: 'height',
+      width: 15,
+    },
+    {
+      id: 'timestamp',
+      format: 'timestamp',
+      caption: 'timestamp',
+      width: 30,
+      align: 'right',
+    },
+  ];
+
+  tableData = [];
+  score: number;
+
+  isNodeInQueue: boolean = false;
+  streamQueue: Subscription;
+  queueLockBalance: number;
+  curentLockBalance: number;
+  curentNodeQueue: any;
 
   @ViewChild('popupPubKey') popupPubKey: TemplateRef<any>;
   successRefDialog: MatDialogRef<any>;
@@ -59,12 +98,15 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getMyNodePublicKey();
     this.getRegisteredNode();
     this.streamNodeHardwareInfo();
+    this.getRewardNode();
   }
 
   ngOnDestroy() {
     if (this.stream) this.stream.unsubscribe();
+    if (this.streamQueue) this.streamQueue.unsubscribe();
   }
 
   getRegisteredNode() {
@@ -95,7 +137,17 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       .then((res: NodeRegistrationsResponse) => {
         if (res) {
           const { registrationstatus } = res.noderegistration;
-          if (registrationstatus == 0) this.registeredNode = res.noderegistration;
+          if (registrationstatus == 0) {
+            const pubKeyBytes = Buffer.from(String(res.noderegistration.nodepublickey), 'base64');
+            const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
+            res.noderegistration.nodepublickey = pubKey;
+            this.registeredNode = res.noderegistration;
+            this.getTotalScore();
+            this.getRewardNode();
+          } else if (registrationstatus == 1) {
+            if (!this.streamQueue || (this.streamQueue && this.streamQueue.closed))
+              this.streamNodeRegistrationQueue();
+          }
         }
       })
       .catch(err => {
@@ -105,11 +157,22 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       .finally(() => (this.isNodeLoading = false));
   }
 
+  getTotalScore() {
+    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeid)
+      .then(res => (this.score = parseInt(res.score) / 1e8))
+      .catch(err => console.log(err));
+  }
+
   generateNewPubKey() {
     // todo: create loader and display the result
+    let title = getTranslation('are you sure want to generate new node public key?', this.translate);
+    let text = getTranslation(
+      'you need to update your node registration or your node will stop smithing',
+      this.translate
+    );
     Swal.fire({
-      title: 'Are you sure want to generate new node public key?',
-      text: 'You need to update your node registration or your node will stop smithing',
+      title: title,
+      text: text,
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -149,10 +212,16 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
+      data: this.nodePublicKey,
     });
 
     dialog.afterClosed().subscribe(success => {
-      if (success) this.getRegisteredNode();
+      if (success) {
+        this.getRegisteredNode();
+        if (!this.streamNodeRegistrationQueue) {
+          this.streamNodeRegistrationQueue();
+        }
+      }
     });
   }
 
@@ -160,9 +229,8 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(UpdateNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: this.registeredNode,
+      data: this.registeredNode ? this.registeredNode : this.curentNodeQueue,
     });
-
     dialog.afterClosed().subscribe(success => {
       if (success) this.getRegisteredNode();
     });
@@ -172,7 +240,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(ClaimNodeComponent, {
       width: '420px',
       maxHeight: '90vh',
-      data: this.registeredNode,
+      data: this.nodePublicKey,
     });
 
     dialog.afterClosed().subscribe(success => {
@@ -199,7 +267,72 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   async onCopyUrl(url: string) {
     onCopyText(url);
 
-    let message = await getTranslation('Address copied to clipboard', this.translate);
+    let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
+  }
+
+  streamNodeRegistrationQueue() {
+    this.isNodeInQueue = true;
+    const params: NodeParams = {
+      owner: this.account.address,
+    };
+    this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
+      async res => {
+        if (res.noderegistrationsList.length > 0) {
+          const { lockedbalance } = res.noderegistrationsList[0];
+          this.queueLockBalance = Number(lockedbalance);
+          const curentNode = await zoobc.Node.get(params);
+          this.curentNodeQueue = curentNode;
+          this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
+        } else {
+          const curentNode = await zoobc.Node.get(params);
+          if (curentNode.noderegistration.registrationstatus == 0) {
+            this.streamQueue.unsubscribe();
+            this.isNodeInQueue = false;
+            this.getRegisteredNode();
+          }
+        }
+      },
+      err => {}
+    );
+  }
+
+  async getRewardNode() {
+    this.tableData = [];
+    if (!this.registeredNode) return null;
+    this.isNodeRewardLoading = true;
+    this.isNodeRewardError = false;
+    this.totalNodeReward = 0;
+    let param: AccountLedgerListParams = {
+      accountAddress: this.account.address,
+      eventType: EventType.EVENTREWARD,
+      pagination: {
+        page: 1,
+        limit: 5,
+        orderField: 'timestamp',
+        orderBy: OrderBy.DESC,
+      },
+    };
+    try {
+      const accLedger = await zoobc.AccountLedger.getList(param);
+      this.totalNodeReward = parseInt(accLedger.total);
+      this.tableData = accLedger.accountledgersList;
+    } catch (err) {
+      this.isNodeRewardError = true;
+      console.log(err);
+    } finally {
+      this.isNodeRewardLoading = false;
+    }
+  }
+  getMoreReward() {
+    const dialog = this.dialog.open(NodeRewardListComponent, {
+      width: '600px',
+      maxHeight: '90vh',
+    });
+  }
+  getMyNodePublicKey() {
+    zoobc.Node.getMyNodePublicKey(this.account.nodeIP).then(res => {
+      this.nodePublicKey = getZBCAddress(Buffer.from(res.nodepublickey.toString(), 'base64'), 'ZNK');
+    });
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { getZBCAdress, MultiSigAddress } from 'zoobc-sdk';
+import zoobc, { getZBCAddress, MultiSigAddress } from 'zoobc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { getTranslation } from 'src/helpers/utils';
@@ -18,11 +18,10 @@ export class AddAccountComponent implements OnInit {
   participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
-  signFormField = new FormControl('', [Validators.required]);
-  signBy: SavedAccount;
 
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
+  account: SavedAccount;
 
   constructor(
     private authServ: AuthService,
@@ -34,7 +33,6 @@ export class AddAccountComponent implements OnInit {
       participants: this.participantsField,
       nonce: this.nonceField,
       minimumSignature: this.minSignatureField,
-      sign: this.signFormField,
     });
 
     this.pushInitParticipant();
@@ -50,7 +48,7 @@ export class AddAccountComponent implements OnInit {
       const keyring = this.authServ.keyring;
       const path = this.authServ.generateDerivationPath();
       const childSeed = keyring.calcDerivationPath(path);
-      const accountAddress = getZBCAdress(childSeed.publicKey);
+      const accountAddress = getZBCAddress(childSeed.publicKey);
       account = {
         name: this.accountNameField.value,
         type: 'normal',
@@ -62,12 +60,12 @@ export class AddAccountComponent implements OnInit {
       return this.dialogRef.close(true);
     }
 
-    let title = await getTranslation('Are you sure?', this.translate);
-    let message = await getTranslation(
-      'Once you create multisignature address, you will not be able to edit it anymore. But you can still delete it)',
+    let title = getTranslation('are you sure?', this.translate);
+    let message = getTranslation(
+      'once you create multisignature address, you will not be able to edit it anymore. but you can still delete it',
       this.translate
     );
-    let buttonText = await getTranslation('Yes, continue it!', this.translate);
+    let buttonText = getTranslation('yes, continue it!', this.translate);
     Swal.fire({
       title: title,
       text: message,
@@ -87,13 +85,12 @@ export class AddAccountComponent implements OnInit {
       account = {
         name: this.accountNameField.value,
         type: 'multisig',
-        path: this.signBy.path,
+        path: null,
         nodeIP: null,
         address: multiSignAddress,
         participants: participants,
         nonce: this.nonceField.value,
         minSig: this.minSignatureField.value,
-        signByAddress: this.signBy.address,
       };
       this.authServ.addAccount(account);
       return this.dialogRef.close(true);
@@ -106,7 +103,6 @@ export class AddAccountComponent implements OnInit {
     this.participantsField.disable();
     this.nonceField.disable();
     this.minSignatureField.disable();
-    this.signFormField.disable();
 
     const len = this.authServ.getAllAccount('normal').length + 1;
     this.accountNameField.setValue(`Account ${len}`);
@@ -118,7 +114,6 @@ export class AddAccountComponent implements OnInit {
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
-    this.signFormField.enable();
 
     const len = this.authServ.getAllAccount('multisig').length + 1;
     this.accountNameField.setValue(`Multisig Account ${len}`);
@@ -142,10 +137,5 @@ export class AddAccountComponent implements OnInit {
 
   removeParticipant(index: number) {
     this.participantsField.removeAt(index);
-  }
-
-  onSwitchSignBy(account: SavedAccount) {
-    this.signBy = account;
-    if (account) this.signFormField.setValue(account.address);
   }
 }

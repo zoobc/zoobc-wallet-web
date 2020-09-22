@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgxPopperModule } from 'ngx-popper';
 import {
   MatButtonModule,
   MatCheckboxModule,
@@ -82,9 +83,12 @@ import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-in
 import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
 import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
 import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
+import { AccountDatasetComponent } from './pages/account-dataset/account-dataset.component';
 import { SetupDatasetComponent } from './pages/account-dataset/setup-dataset/setup-dataset.component';
 import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
+import { RewardTableModule } from './components/reward-table/reward-table.module';
+import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -131,9 +135,11 @@ export function getLanguage(languageServ: LanguageService) {
     CreateTransactionComponent,
     MultisignatureComponent,
     AddParticipantsComponent,
+    AccountDatasetComponent,
     SetupDatasetComponent,
     ApprovalEscrowHistoryComponent,
     MultisigApprovalHistoryComponent,
+    NodeRewardListComponent,
   ],
   imports: [
     BrowserModule,
@@ -143,6 +149,7 @@ export function getLanguage(languageServ: LanguageService) {
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    NgxPopperModule.forRoot({ trigger: 'hover', placement: 'bottom', applyClass: 'pooper-style' }),
     InfiniteScrollModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
@@ -190,6 +197,7 @@ export function getLanguage(languageServ: LanguageService) {
     InputAddressModule,
     InputAmountModule,
     MatStepperModule,
+    RewardTableModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -215,7 +223,9 @@ export function getLanguage(languageServ: LanguageService) {
     ConfirmSendComponent,
     AddMultisigInfoComponent,
     MultisigInfoComponent,
+    AccountDatasetComponent,
     SetupDatasetComponent,
+    NodeRewardListComponent,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import zoobc, { TransactionResponse } from 'zoobc-sdk';
+import zoobc, { TransactionResponse, getZBCAddress } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -14,6 +14,8 @@ export class TransactionDetailComponent implements OnInit {
 
   ngOnInit() {
     zoobc.Transactions.get(this.id).then((transaction: TransactionResponse) => {
+      const pubkey = Buffer.from(transaction.transactionhash.toString(), 'base64');
+      transaction.transactionhash = getZBCAddress(pubkey, 'ZTX');
       this.transaction = transaction;
       this.isLoading = false;
     });

@@ -1,7 +1,7 @@
 <div class="account-container">
   <div class="row">
     <div class="col-12 col-md-3">
-      <h2 class="mat-h2">{{ 'Accounts' | translate }}</h2>
+      <h2 class="mat-h2">{{ 'accounts' | translate }}</h2>
     </div>
     <div class="col-12 col-md-9 text-right">
       <input
@@ -13,11 +13,11 @@
       />
       <button mat-flat-button color="primary" (click)="onOpenAddAccount()">
         <i matPrefix class="fa fa-plus"></i>
-        <span>{{ 'Add New Account' | translate }}</span>
+        <span>{{ 'add new account' | translate }}</span>
       </button>
       <button style="margin-left: 10px;" mat-flat-button color="primary" (click)="onImportAccount()">
         <i matPrefix class="fa fa-file-import"></i>
-        <span>{{ 'Import' | translate }}</span>
+        <span>{{ 'import' | translate }}</span>
       </button>
     </div>
   </div>
@@ -41,22 +41,17 @@
           <div class="address-information">
             <div class="name">
               {{ acc.name }}
-              <span class="badge" color="primary" *ngIf="acc.type == 'multisig'">MultiSignature</span>
+              <span class="badge" color="primary" *ngIf="acc.type == 'multisig'">{{
+                'multisignature' | translate
+              }}</span>
             </div>
             <div class="address" *ngIf="acc.type == 'normal'">
               <wallet-address [value]="acc.address"></wallet-address>
             </div>
 
-            <ng-container *ngIf="acc.type == 'multisig'">
-              <div class="address">
-                <p class="label">{{ 'Address' | translate }}:</p>
-                <wallet-address [value]="acc.address"></wallet-address>
-              </div>
-              <div class="address">
-                <p class="label">{{ 'Signed By' | translate }}:</p>
-                <wallet-address [value]="acc.signByAddress"></wallet-address>
-              </div>
-            </ng-container>
+            <div class="address" *ngIf="acc.type == 'multisig'">
+              <wallet-address [value]="acc.address"></wallet-address>
+            </div>
           </div>
 
           <div class="action">
@@ -65,6 +60,7 @@
               matTooltip="Account Dataset"
               matTooltipPosition="below"
               class="icon-btn accent"
+              (click)="onOpenAccDataSet(acc)"
             >
               <i class="fas fa-address-card"></i>
             </button>
@@ -79,7 +75,7 @@
             >
               <i class="fas fa-file-signature"></i>
             </button>
-            <ng-container *ngIf="acc.type != 'multisig'">
+            <ng-container>
               <button
                 mat-flat-button
                 matTooltip="Edit"

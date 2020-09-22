@@ -2,10 +2,11 @@
 @import '../../../styles/mixins';
 
 .address-template {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-start;
+  font-family: 'Roboto Mono', monospace;
   .start {
     overflow: hidden;
     text-overflow: ellipsis;

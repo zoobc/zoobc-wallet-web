@@ -5,7 +5,7 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 import { Location } from '@angular/common';
 
 @Component({
@@ -105,12 +105,11 @@ export class ConfirmPassphraseComponent implements OnInit {
   }
 
   saveNewAccount(key: string) {
-    const pass = 'p4ssphr4se';
-    this.zooKeyring = new ZooKeyring(this.words, pass);
+    this.zooKeyring = new ZooKeyring(this.words);
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(this.words, key);
     const childSeed = this.zooKeyring.calcDerivationPath(0);
-    const accountAddress = getZBCAdress(childSeed.publicKey);
+    const accountAddress = getZBCAddress(childSeed.publicKey);
 
     const account: SavedAccount = {
       name: 'Account 1',

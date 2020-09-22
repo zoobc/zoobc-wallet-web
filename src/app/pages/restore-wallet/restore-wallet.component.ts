@@ -7,7 +7,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc, { ZooKeyring, getZBCAdress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 
 interface Languages {
@@ -103,10 +103,7 @@ export class RestoreWalletComponent implements OnInit {
   async onRestore() {
     if (this.restoreForm.valid) {
       if (localStorage.getItem('ENC_MASTER_SEED')) {
-        let message = await getTranslation(
-          'Your old wallet will be removed from this device',
-          this.translate
-        );
+        let message = getTranslation('your old wallet will be removed from this device', this.translate);
         Swal.fire({
           title: message,
           confirmButtonText: 'Continue',
@@ -136,9 +133,9 @@ export class RestoreWalletComponent implements OnInit {
     let passphrase: string = this.restoreForm.value.words.map(form => form.word).join(' ');
 
     const encPassphrase = zoobc.Wallet.encryptPassphrase(passphrase, key);
-    const keyring = new ZooKeyring(passphrase, 'p4ssphr4se');
+    const keyring = new ZooKeyring(passphrase);
     const childSeed = keyring.calcDerivationPath(0);
-    const address = getZBCAdress(childSeed.publicKey);
+    const address = getZBCAddress(childSeed.publicKey);
     const account: SavedAccount = {
       name: 'Account 1',
       path: 0,

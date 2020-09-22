@@ -7,6 +7,7 @@ import { EditAccountComponent } from './edit-account/edit-account.component';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
+import { AccountDatasetComponent } from '../account-dataset/account-dataset.component';
 
 @Component({
   selector: 'app-account',
@@ -59,13 +60,13 @@ export class AccountComponent implements OnInit {
     this.authServ.switchAccount(account);
     this.currAcc = account;
 
-    let message = await getTranslation(`${this.currAcc.name} selected`, this.translate);
+    let message = getTranslation('account selected', this.translate, { account: this.currAcc.name });
     this.snackbar.open(message, null, { duration: 3000 });
   }
 
   onOpenMultisigInfoDialog(account: SavedAccount) {
     this.dialog.open(MultisigInfoComponent, {
-      width: '300px',
+      width: '360px',
       maxHeight: '90vh',
       data: account,
     });
@@ -88,17 +89,17 @@ export class AccountComponent implements OnInit {
     fileReader.onload = async () => {
       let fileResult = JSON.parse(fileReader.result.toString());
       if (!this.isSavedAccount(fileResult)) {
-        let message = await getTranslation('You imported the wrong file', this.translate);
+        let message = getTranslation('you imported the wrong file', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
       const accountSave: SavedAccount = fileResult;
       const idx = this.authServ.getAllAccount().findIndex(acc => acc.address == accountSave.address);
       if (idx >= 0) {
-        let message = await getTranslation('Account with that address is already exist', this.translate);
+        let message = getTranslation('account with that address is already exist', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
       this.authServ.addAccount(accountSave);
-      let message = await getTranslation('Account has been successfully imported', this.translate);
+      let message = getTranslation('account has been successfully imported', this.translate);
       Swal.fire({
         type: 'success',
         title: message,
@@ -116,7 +117,7 @@ export class AccountComponent implements OnInit {
   }
 
   async onDelete(index: number) {
-    const message = await getTranslation('Are you sure want to delete this account?', this.translate);
+    const message = getTranslation('are you sure want to delete this account?', this.translate);
     Swal.fire({
       title: message,
       showCancelButton: true,
@@ -127,6 +128,14 @@ export class AccountComponent implements OnInit {
         localStorage.setItem('ACCOUNT', JSON.stringify(this.accounts));
         return true;
       },
+    });
+  }
+
+  onOpenAccDataSet(account: SavedAccount) {
+    this.dialog.open(AccountDatasetComponent, {
+      width: '400px',
+      maxHeight: '99vh',
+      data: account,
     });
   }
 }

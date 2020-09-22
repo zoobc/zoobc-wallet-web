@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "git submodule update --init --recursive"
+    "postinstall": "git submodule update --init --recursive --remote"
   },
   "private": true,
   "dependencies": {
@@ -25,17 +25,20 @@
     "@angular/router": "~7.2.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@zxing/ngx-scanner": "^3.0.0",
     "file-saver": "^2.0.2",
     "google-protobuf": "^3.8.0",
     "ng-pick-datetime": "^7.0.0",
     "ngx-build-plus": "^7.8.3",
     "ngx-infinite-scroll": "^7.0.0",
+    "ngx-popper": "^7.0.0",
     "ngx-qrcode2": "0.0.9",
+    "popper.js": "^1.16.1",
     "rxjs": "^6.3.3",
     "sweetalert2": "^8.11.7",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26",
-    "zoobc-sdk": "github:zoobc/zoobc-sdk#develop"
+    "zoobc-sdk": "github:zoobc/zoobc-sdk#master"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",
