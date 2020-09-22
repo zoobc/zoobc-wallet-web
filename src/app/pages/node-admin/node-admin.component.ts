@@ -282,7 +282,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
           const { lockedbalance } = res.noderegistrationsList[0];
           this.queueLockBalance = Number(lockedbalance);
           const curentNode = await zoobc.Node.get(params);
-          this.curentNodeQueue = curentNode;
+          this.curentNodeQueue = curentNode.noderegistration;
           this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
         } else {
           const curentNode = await zoobc.Node.get(params);
