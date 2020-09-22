@@ -6,61 +6,13 @@
         <span class="message">{{ 'no transaction record' | translate }}</span>
       </div>
 
-      <ng-container *ngIf="txType == 4">
-        <div *ngFor="let transaction of transactionData; let i = index" (click)="openDetail(transaction.id)">
-          <approval-escrow [transaction]="transaction"></approval-escrow>
-        </div>
+      <ng-container *ngIf="txType == 1">
+        <send-money [transaction]="tx" *ngFor="let tx of transactionData"></send-money>
       </ng-container>
 
-      <!-- <div
-        [className]="withDetail ? 'transaction-item hover row' : 'transaction-item row'"
-        *ngFor="let transaction of transactionData; let i = index"
-        (click)="openDetail(transaction.id)"
-      >
-        <approval-escrow></approval-escrow>
-        <div class="col-12 col-sm-8">
-          <div class="name" *ngIf="transaction.alias">
-            {{ transaction.alias }}
-          </div>
-          <div class="address">
-            <wallet-address [value]="transaction.address"></wallet-address>
-          </div>
-          <div class="date">
-            {{ transaction.timestamp | dateAgo }}
-          </div>
-        </div>
-        <div class="col-12 col-sm-4 text-right">
-          <ng-container *ngIf="transaction.type == 'send'">
-            <div class="amount-send">- {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
-            <div class="fee" *ngIf="transaction.type == 'send'">
-              - {{ transaction.fee / 1e8 | number: '0.0-8' }}
-              <small>ZBC {{ 'fee' | translate }}</small>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="transaction.type == 'receive'">
-            <div class="amount-receive">+ {{ transaction.amount / 1e8 | number: '0.0-8' }} ZBC</div>
-          </ng-container>
-          <div class="description">
-            <div class="chips">
-              <div class="chip small" *ngIf="transaction.multisigchild">
-                {{ 'multisignature' | translate }}
-              </div>
-              <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
-            </div>
-            <div
-              class="status"
-              [style.color]="getColorByEscrowStatus(transaction.escrowStatus)"
-              *ngIf="transaction.escrow"
-            >
-              <i
-                class="fas fa-dot-circle"
-                [matTooltip]="getTextByEscrowStatus(transaction.escrowStatus) | translate"
-                matTooltipPosition="above"
-              ></i>
-            </div>
-          </div>
-        </div>
-      </div> -->
+      <ng-container *ngIf="txType == 4">
+        <approval-escrow [transaction]="tx" *ngFor="let tx of transactionData"></approval-escrow>
+      </ng-container>
     </ng-container>
 
     <ng-container *ngIf="isLoading">

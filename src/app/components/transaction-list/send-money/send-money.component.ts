@@ -1,15 +1,20 @@
-import { Component, Input, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'approval-escrow',
-  templateUrl: './approval-escrow.component.html',
+  selector: 'send-money',
+  templateUrl: './send-money.component.html',
 })
-export class ApprovalEscrowComponent {
+export class SendMoneyComponent {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
   @Input() transaction: any;
 
-  constructor(private dialog: MatDialog) {}
+  address: string;
+
+  constructor(private dialog: MatDialog, authServ: AuthService) {
+    this.address = authServ.getCurrAccount().address;
+  }
 
   openDetail(id) {
     this.dialog.open(this.detailDialog, {

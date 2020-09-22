@@ -3,13 +3,13 @@ import { AuthService } from 'src/app/services/auth.service';
 
 import zoobc, {
   TransactionListParams,
-  toTransactionListWallet,
   MempoolListParams,
   toUnconfirmedSendMoneyWallet,
   MempoolTransactionsResponse,
   TransactionType,
   EscrowListParams,
   OrderBy,
+  toTransactions,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -65,7 +65,6 @@ export class TransferhistoryComponent implements OnInit {
 
       try {
         let trxList = await zoobc.Transactions.getList(txParam);
-        console.log(trxList);
 
         let lastHeight = 0;
         let firstHeight = 0;
@@ -91,24 +90,23 @@ export class TransferhistoryComponent implements OnInit {
         };
         this.startMatch = 0;
         const escrowTx = await zoobc.Escrows.getList(paramEscrow);
+
         const escrowList = escrowTx.escrowsList;
         const escrowGroup = this.groupEscrowList(escrowList);
 
-        // let tx = toTransactionListWallet(trxList, this.address);
-        // tx.transactions.map(recent => {
-        //   let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-        //   recent['alias'] = this.contactServ.get(recent.address).name || '';
-        //   if (escStatus) {
-        //     recent['escrow'] = true;
-        //     recent['escrowStatus'] = escStatus.status;
-        //   } else recent['escrow'] = false;
-        //   recent['multisigchild'] = multisigTx.includes(recent.id);
-        //   return recent;
-        // });
+        let txs = toTransactions(trxList.transactionsList);
+        txs.map(recent => {
+          let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
+          // recent['alias'] = this.contactServ.get(recent.address).name || '';
+          if (escStatus) {
+            recent['escrow'] = true;
+            recent['escrowStatus'] = escStatus.status;
+          } else recent['escrow'] = false;
+          recent['multisigchild'] = multisigTx.includes(recent.id);
+          return recent;
+        });
         this.total = parseInt(trxList.total);
-        this.accountHistory = reload
-          ? trxList.transactionsList
-          : this.accountHistory.concat(trxList.transactionsList);
+        this.accountHistory = reload ? txs : this.accountHistory.concat(txs);
 
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };
