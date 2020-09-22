@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
 import zoobc, {
@@ -13,12 +13,14 @@ import zoobc, {
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-transferhistory',
   templateUrl: './transferhistory.component.html',
 })
-export class TransferhistoryComponent implements OnInit {
+export class TransferhistoryComponent implements OnDestroy {
   accountHistory: any[];
   unconfirmTx: any[];
 
@@ -34,14 +36,28 @@ export class TransferhistoryComponent implements OnInit {
   isError: boolean = false;
   lastRefresh: number;
   startMatch: number = 0;
-  constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
-  ngOnInit() {
-    this.getTx(true);
+  routerEvent: Subscription;
+
+  constructor(
+    private authServ: AuthService,
+    private contactServ: ContactService,
+    private router: Router,
+    private activeRoute: ActivatedRoute
+  ) {
+    this.routerEvent = router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.activeRoute.queryParams.subscribe(res => (this.txType = res.type));
+        this.getTx(true);
+      }
+    });
   }
 
-  async getTx(reload: boolean = false, txType = TransactionType.SENDMONEYTRANSACTION) {
-    this.txType = txType;
+  ngOnDestroy() {
+    this.routerEvent.unsubscribe();
+  }
+
+  async getTx(reload: boolean = false) {
     if (!this.isLoading) {
       // 72 is transaction item's height
       const perPage = Math.ceil(window.outerHeight / 72);
@@ -56,7 +72,7 @@ export class TransferhistoryComponent implements OnInit {
 
       const txParam: TransactionListParams = {
         address: this.address,
-        transactionType: txType,
+        transactionType: this.txType,
         pagination: {
           page: this.page,
           limit: perPage,
@@ -111,7 +127,10 @@ export class TransferhistoryComponent implements OnInit {
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
-            (res: MempoolTransactionsResponse) => toUnconfirmedSendMoneyWallet(res, this.address)
+            (res: MempoolTransactionsResponse) => {
+              console.log(res);
+              return toUnconfirmedSendMoneyWallet(res, this.address);
+            }
           );
         }
       } catch {
@@ -122,6 +141,10 @@ export class TransferhistoryComponent implements OnInit {
         this.lastRefresh = Date.now();
       }
     }
+  }
+
+  onFilter(type: number) {
+    this.router.navigate(['/transferhistory'], { queryParams: { type } });
   }
 
   onScroll() {
