@@ -165,8 +165,8 @@ export class MultisigTransactionComponent implements OnInit {
           })
           .catch(err => {
             console.log(err.message);
-            let message = getTranslation('an error occurred while processing your request', this.translate);
-            Swal.fire('Opps...', message, 'error');
+            // let message = getTranslation('an error occurred while processing your request', this.translate);
+            Swal.fire('Opps...', err.message, 'error');
           })
           .finally(() => {
             this.isLoadingTx = false;
