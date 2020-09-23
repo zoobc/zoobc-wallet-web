@@ -6,7 +6,7 @@ import { HttpLoaderFactory } from '../account-selector/account-selector.module';
 import { HttpClient } from '@angular/common/http';
 import { AddressModule } from '../address/address.module';
 import { DateAgoModule } from 'src/app/pipes/date-ago.module';
-import { MatTooltipModule, MatCardModule } from '@angular/material';
+import { MatTooltipModule, MatCardModule, MatButtonModule } from '@angular/material';
 import { ApprovalEscrowComponent } from './approval-escrow/approval-escrow.component';
 import { SendMoneyComponent } from './send-money/send-money.component';
 
@@ -25,6 +25,7 @@ import { SendMoneyComponent } from './send-money/send-money.component';
     DateAgoModule,
     MatTooltipModule,
     MatCardModule,
+    MatButtonModule,
   ],
   exports: [TransactionListComponent],
 })
