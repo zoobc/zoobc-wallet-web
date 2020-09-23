@@ -47,7 +47,9 @@ export class TransferhistoryComponent implements OnDestroy {
   ) {
     this.routerEvent = router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.activeRoute.queryParams.subscribe(res => (this.txType = res.type));
+        this.activeRoute.queryParams.subscribe(
+          res => (this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION)
+        );
         this.getTx(true);
       }
     });
