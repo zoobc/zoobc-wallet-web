@@ -15,11 +15,6 @@ import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { MyTaskComponent } from './pages/my-task/my-task.component';
 import { AccountComponent } from './pages/account/account.component';
-import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
-import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
-import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
-import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
-import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
 import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 
@@ -38,11 +33,10 @@ const routes: Routes = [
       { path: 'contact-list', component: ContactlistComponent },
       { path: 'my-tasks', component: MyTaskComponent },
       { path: 'accounts', component: AccountComponent },
-      { path: 'multisignature', component: MultisignatureComponent },
-      { path: 'multisignature/send-transaction', component: SendTransactionComponent },
-      { path: 'multisignature/add-multisig-info', component: AddMultisigInfoComponent },
-      { path: 'multisignature/create-transaction', component: CreateTransactionComponent },
-      { path: 'multisignature/add-signatures', component: AddParticipantsComponent },
+      {
+        path: 'multisignature',
+        loadChildren: './pages/multisignature/multisignature.module#MultisignatureModule',
+      },
       { path: 'escrow-approval-history', component: ApprovalEscrowHistoryComponent },
       { path: 'multisig-approval-history', component: MultisigApprovalHistoryComponent },
       {

@@ -76,13 +76,8 @@ import { FeeSelectorModule } from './components/fee-selector/fee-selector.module
 import { InputAddressModule } from './components/input-address/input-address.module';
 import { InputAmountModule } from './components/input-amount/input-amount.module';
 import { ConfirmSendComponent } from './pages/sendmoney/confirm-send/confirm-send.component';
-import { SendTransactionComponent } from './pages/multisignature/send-transaction/send-transaction.component';
 import { AccountComponent } from './pages/account/account.component';
 import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-info.component';
-import { AddMultisigInfoComponent } from './pages/multisignature/add-multisig-info/add-multisig-info.component';
-import { CreateTransactionComponent } from './pages/multisignature/create-transaction/create-transaction.component';
-import { MultisignatureComponent } from './pages/multisignature/multisignature.component';
-import { AddParticipantsComponent } from './pages/multisignature/add-participants/add-participants.component';
 import { AccountDatasetComponent } from './pages/account-dataset/account-dataset.component';
 import { SetupDatasetComponent } from './pages/account-dataset/setup-dataset/setup-dataset.component';
 import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
@@ -129,13 +124,8 @@ export function getLanguage(languageServ: LanguageService) {
     AddNodeAdminComponent,
     MyTaskComponent,
     ConfirmSendComponent,
-    SendTransactionComponent,
     AccountComponent,
     MultisigInfoComponent,
-    AddMultisigInfoComponent,
-    CreateTransactionComponent,
-    MultisignatureComponent,
-    AddParticipantsComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
     ApprovalEscrowHistoryComponent,
@@ -223,7 +213,6 @@ export function getLanguage(languageServ: LanguageService) {
     EditAccountComponent,
     AddNodeAdminComponent,
     ConfirmSendComponent,
-    AddMultisigInfoComponent,
     MultisigInfoComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
