@@ -26,24 +26,16 @@ import { AddressModule } from '../../components/address/address.module';
 import { InputAddressModule } from '../../components/input-address/input-address.module';
 import { AccountSelectorModule } from '../../components/account-selector/account-selector.module';
 import { InputAmountModule } from '../../components/input-amount/input-amount.module';
-import { MultisigDraftComponent } from './multisig-draft/multisig-draft.component';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
-
 const routes: Routes = [
-  {
-    path: '',
-    component: MultisignatureComponent,
-    children: [
-      { path: '', component: MultisigDraftComponent },
-      { path: 'add-multisig-info', component: AddMultisigInfoComponent },
-      { path: 'create-transaction', component: CreateTransactionComponent },
-      { path: 'add-signatures', component: AddParticipantsComponent },
-      { path: 'send-transaction', component: SendTransactionComponent },
-    ],
-  },
+  { path: '', component: MultisignatureComponent },
+  { path: 'add-multisig-info', component: AddMultisigInfoComponent },
+  { path: 'create-transaction', component: CreateTransactionComponent },
+  { path: 'add-signatures', component: AddParticipantsComponent },
+  { path: 'send-transaction', component: SendTransactionComponent },
 ];
 
 @NgModule({
@@ -53,7 +45,6 @@ const routes: Routes = [
     CreateTransactionComponent,
     AddParticipantsComponent,
     SendTransactionComponent,
-    MultisigDraftComponent,
   ],
   imports: [
     AddressModule,
