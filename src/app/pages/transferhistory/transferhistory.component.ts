@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
 import zoobc, {
@@ -10,6 +10,7 @@ import zoobc, {
   EscrowListParams,
   OrderBy,
   toTransactions,
+  ZBCTransaction,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -21,7 +22,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './transferhistory.component.html',
 })
 export class TransferhistoryComponent implements OnDestroy {
-  accountHistory: any[];
+  accountHistory: ZBCTransaction[];
   unconfirmTx: any[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
@@ -115,12 +116,13 @@ export class TransferhistoryComponent implements OnDestroy {
         let txs = toTransactions(trxList.transactionsList);
         txs.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          // recent['alias'] = this.contactServ.get(recent.address).name || '';
+          recent.senderAlias = this.contactServ.get(recent.sender).name || '';
+          recent.recipientAlias = this.contactServ.get(recent.recipient).name || '';
           if (escStatus) {
-            recent['escrow'] = true;
-            recent['escrowStatus'] = escStatus.status;
-          } else recent['escrow'] = false;
-          recent['multisigchild'] = multisigTx.includes(recent.id);
+            recent.escrow = true;
+            recent.escrowStatus = escStatus.status;
+          } else recent.escrow = false;
+          recent.multisig = multisigTx.includes(recent.id);
           return recent;
         });
         this.total = parseInt(trxList.total);
@@ -130,7 +132,6 @@ export class TransferhistoryComponent implements OnDestroy {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
             (res: MempoolTransactionsResponse) => {
-              console.log(res);
               return toUnconfirmedSendMoneyWallet(res, this.address);
             }
           );

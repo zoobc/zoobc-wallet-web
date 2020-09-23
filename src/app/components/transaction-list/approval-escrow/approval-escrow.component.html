@@ -9,8 +9,8 @@
     </div>
   </div>
   <div class="col-12 col-sm-4 text-right">
-    <div class="status-approval" [ngClass]="getColorByEscrowStatus(transaction.txBody.approval)">
-      {{ getTextByEscrowStatus(transaction.txBody.approval) }}
+    <div class="status-approval" [ngClass]="getEscrowColor(transaction.txBody.approval)">
+      {{ getEscrowStatus(transaction.txBody.approval) }}
     </div>
     <div class="fee">
       - {{ transaction.fee / 1e8 | number: '0.0-8' }}
@@ -42,9 +42,18 @@
     </div>
 
     <div class="row">
+      <div class="col-12 col-md-4">{{ 'escrow transaction id' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <a [href]="'https://zoobc.net/transactions/' + transaction.txBody.transactionid" target="_blank">
+          {{ transaction.txBody.transactionid }}
+        </a>
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-12 col-md-4">{{ 'approval status' | translate }}:</div>
       <div class="col-12 col-md-8">
-        {{ getTextByEscrowStatus(transaction.txBody.approval) }}
+        {{ getEscrowStatus(transaction.txBody.approval) }}
       </div>
     </div>
 

@@ -1,6 +1,7 @@
 import { Component, ViewChild, TemplateRef, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
+import { ZBCTransaction } from 'zoobc-sdk';
 
 @Component({
   selector: 'send-money',
@@ -8,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SendMoneyComponent {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
-  @Input() transaction: any;
+  @Input() transaction: ZBCTransaction[];
 
   address: string;
 
@@ -24,28 +25,11 @@ export class SendMoneyComponent {
     });
   }
 
-  getColorByEscrowStatus(status) {
-    let color = '';
-    if (status == '0') return (color = 'red');
-    if (status == '1') return (color = 'green');
-    return color;
+  getEscrowColor(status) {
+    return status == '0' ? 'yellow' : status == '1' ? 'green' : status == '2' ? 'red' : 'red';
   }
 
-  getTextByEscrowStatus(status) {
-    let text = '';
-    switch (status) {
-      case 0:
-        text = 'rejected';
-        break;
-      case 1:
-        text = 'approved';
-        break;
-      // case 2:
-      //   text = 'rejected';
-      //   break;
-      // default:
-      //   text = 'expired';
-    }
-    return text;
+  getEscrowStatus(status) {
+    return status == '0' ? 'pending' : status == '1' ? 'approved' : status == '2' ? 'rejected' : 'expired';
   }
 }

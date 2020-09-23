@@ -1,5 +1,6 @@
 import { Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { ZBCTransaction } from 'zoobc-sdk';
 
 @Component({
   selector: 'approval-escrow',
@@ -7,7 +8,7 @@ import { MatDialog } from '@angular/material';
 })
 export class ApprovalEscrowComponent {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
-  @Input() transaction: any;
+  @Input() transaction: ZBCTransaction[];
 
   constructor(private dialog: MatDialog) {}
 
@@ -19,28 +20,11 @@ export class ApprovalEscrowComponent {
     });
   }
 
-  getColorByEscrowStatus(status) {
-    let color = '';
-    if (status == '0') return (color = 'red');
-    if (status == '1') return (color = 'green');
-    return color;
+  getEscrowColor(status) {
+    return status == '0' ? 'green' : status == '1' ? 'red' : status == '2' ? 'red' : '';
   }
 
-  getTextByEscrowStatus(status) {
-    let text = '';
-    switch (status) {
-      case 0:
-        text = 'rejected';
-        break;
-      case 1:
-        text = 'approved';
-        break;
-      // case 2:
-      //   text = 'rejected';
-      //   break;
-      // default:
-      //   text = 'expired';
-    }
-    return text;
+  getEscrowStatus(status) {
+    return status == '0' ? 'approved' : status == '1' ? 'rejected' : status == '2' ? 'expired' : '';
   }
 }

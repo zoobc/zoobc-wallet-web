@@ -4,8 +4,14 @@
       <mat-label>Transaction Type</mat-label>
       <mat-select [value]="txType" (selectionChange)="onFilter($event.value)">
         <mat-option [value]="1">Send Coin</mat-option>
-        <mat-option [value]="4">Approval Escrow</mat-option>
+        <mat-option [value]="2">Register Node</mat-option>
+        <mat-option [value]="256">Update Node</mat-option>
+        <mat-option [value]="514">Remove Node</mat-option>
         <mat-option [value]="770">Claim Node</mat-option>
+        <mat-option [value]="3">Setup Account Dataset</mat-option>
+        <mat-option [value]="259">Remove Account Dataset</mat-option>
+        <mat-option [value]="4">Approval Escrow</mat-option>
+        <mat-option [value]="5">Multi Signature</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -51,7 +57,6 @@
   [fromRoot]="true"
 >
   <transaction-list
-    [withDetail]="true"
     [transactionData]="accountHistory"
     [isLoading]="isLoading"
     [isError]="isError"
