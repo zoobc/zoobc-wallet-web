@@ -222,8 +222,8 @@ export class SendTransactionComponent implements OnInit {
       })
       .catch(async err => {
         console.log(err.message);
-        // let message = getTranslation('an error occurred while processing your request', this.translate);
-        Swal.fire('Opps...', err.message, 'error');
+        let message = getTranslation(err.message, this.translate);
+        Swal.fire('Opps...', message, 'error');
       });
   }
 

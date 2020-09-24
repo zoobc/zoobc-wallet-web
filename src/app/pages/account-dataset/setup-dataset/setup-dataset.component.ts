@@ -104,8 +104,8 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
         this.isError = true;
         this.isLoading = false;
         console.log(err);
-        // let message = getTranslation('an error occurred while processing your request', this.translate);
-        Swal.fire('Opps...', err.message, 'error');
+        let message = getTranslation(err.message, this.translate);
+        Swal.fire('Opps...', message, 'error');
       })
       .finally(() => {
         this.isLoading = false;
