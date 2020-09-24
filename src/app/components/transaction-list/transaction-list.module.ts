@@ -7,11 +7,10 @@ import { HttpClient } from '@angular/common/http';
 import { AddressModule } from '../address/address.module';
 import { DateAgoModule } from 'src/app/pipes/date-ago.module';
 import { MatTooltipModule, MatCardModule, MatButtonModule } from '@angular/material';
-import { ApprovalEscrowComponent } from './approval-escrow/approval-escrow.component';
 import { SendMoneyComponent } from './send-money/send-money.component';
 
 @NgModule({
-  declarations: [TransactionListComponent, ApprovalEscrowComponent, SendMoneyComponent],
+  declarations: [TransactionListComponent, SendMoneyComponent],
   imports: [
     CommonModule,
     TranslateModule.forChild({
