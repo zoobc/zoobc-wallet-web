@@ -9,7 +9,7 @@ import zoobc, {
   TransactionType,
   EscrowListParams,
   OrderBy,
-  toTransactions,
+  toZBCTransactions,
   ZBCTransaction,
 } from 'zoobc-sdk';
 
@@ -113,7 +113,7 @@ export class TransferhistoryComponent implements OnDestroy {
         const escrowList = escrowTx.escrowsList;
         const escrowGroup = this.groupEscrowList(escrowList);
 
-        let txs = toTransactions(trxList.transactionsList);
+        let txs = toZBCTransactions(trxList.transactionsList);
         txs.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
           recent.senderAlias = this.contactServ.get(recent.sender).name || '';
@@ -131,9 +131,7 @@ export class TransferhistoryComponent implements OnDestroy {
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
-            (res: MempoolTransactionsResponse) => {
-              return toUnconfirmedSendMoneyWallet(res, this.address);
-            }
+            (res: MempoolTransactionsResponse) => toUnconfirmedSendMoneyWallet(res, this.address)
           );
         }
       } catch {
