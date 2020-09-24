@@ -1,6 +1,13 @@
 <form [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
-  <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+  <ng-container *ngIf="chooseSender">
+    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+  </ng-container>
+  <ng-container *ngIf="!chooseSender">
+    <div style="margin-bottom: 16px;">
+      <wallet-address [value]="group.get(inputMap.sender).value"></wallet-address>
+    </div>
+  </ng-container>
   <input-address
     label="{{ 'recipient address' | translate }}"
     classList="block"
@@ -17,29 +24,31 @@
       {{ 'zbc address is invalid' | translate }}
     </mat-error>
   </ng-container>
-  <div class="address-alias" *ngIf="!showSaveAddressBtn">
-    <span>{{ 'address' | translate }}: </span>
-    <b>{{ contact.name }}</b>
-  </div>
-  <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
-    <mat-checkbox class="checkbox-margin" (change)="onToggleSaveAddress()">
-      {{ 'save to contact' | translate }}
-    </mat-checkbox>
-  </div>
-  <ng-container *ngIf="saveAddress">
-    <mat-form-field appearance="outline" color="accent" class="block">
-      <mat-label>{{ 'name' | translate }}</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="{{ inputMap.alias }}"
-        placeholder="{{ 'name' | translate }}"
-      />
-    </mat-form-field>
-    <ng-container *ngIf="group.get(inputMap.alias).touched">
-      <mat-error *ngIf="group.get(inputMap.alias).hasError('required')">
-        {{ 'name is required' | translate }}
-      </mat-error>
+  <ng-container *ngIf="saveAddressFeature">
+    <div class="address-alias" *ngIf="!showSaveAddressBtn">
+      <span>{{ 'address' | translate }}: </span>
+      <b>{{ contact.name }}</b>
+    </div>
+    <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
+      <mat-checkbox class="checkbox-margin" (change)="onToggleSaveAddress()">
+        {{ 'save to contact' | translate }}
+      </mat-checkbox>
+    </div>
+    <ng-container *ngIf="saveAddress">
+      <mat-form-field appearance="outline" color="accent" class="block">
+        <mat-label>{{ 'name' | translate }}</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="{{ inputMap.alias }}"
+          placeholder="{{ 'name' | translate }}"
+        />
+      </mat-form-field>
+      <ng-container *ngIf="group.get(inputMap.alias).touched">
+        <mat-error *ngIf="group.get(inputMap.alias).hasError('required')">
+          {{ 'name is required' | translate }}
+        </mat-error>
+      </ng-container>
     </ng-container>
   </ng-container>
   <input-amount

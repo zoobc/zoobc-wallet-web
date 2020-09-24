@@ -44,6 +44,18 @@ export class CreateTransactionComponent implements OnInit {
     signatures: false,
   };
 
+  sendMoneyForm = {
+    sender: 'sender',
+    recipient: 'recipient',
+    alias: 'alias',
+    typeCoin: 'typeCoin',
+    amountCurrency: 'amountCurrency',
+    amount: 'amount',
+    typeFee: 'typeFee',
+    feeCurrency: 'feeCurr',
+    fee: 'fee',
+  };
+
   constructor(
     private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,

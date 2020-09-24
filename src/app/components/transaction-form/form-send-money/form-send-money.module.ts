@@ -9,6 +9,7 @@ import { FormSendMoneyComponent } from './form-send-money.component';
 import { AccountSelectorModule } from 'src/app/components/account-selector/account-selector.module';
 import { InputAddressModule } from 'src/app/components/input-address/input-address.module';
 import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
+import { AddressModule } from 'src/app/components/address/address.module';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
@@ -31,6 +32,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     AccountSelectorModule,
     InputAddressModule,
     InputAmountModule,
+    AddressModule,
   ],
   exports: [FormSendMoneyComponent],
 })

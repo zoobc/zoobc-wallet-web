@@ -24,7 +24,12 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="createTransactionForm" (submit)="next()">
-      <label>{{ 'sender' | translate }}</label>
+      <app-form-send-money
+        [group]="createTransactionForm"
+        [inputMap]="sendMoneyForm"
+        [currencyRate]="currencyRate"
+      ></app-form-send-money>
+      <!-- <label>{{ 'sender' | translate }}</label>
       <div style="margin-bottom: 16px;">
         <wallet-address [value]="senderForm.value"></wallet-address>
       </div>
@@ -112,7 +117,7 @@
             </mat-error>
           </ng-container>
         </div>
-      </div>
+      </div> -->
       <button
         *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button

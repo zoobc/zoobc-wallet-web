@@ -12,14 +12,16 @@ import { Currency } from 'src/app/services/currency-rate.service';
 export class FormSendMoneyComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  @Input() contact: Contact;
+  @Input() contact?: Contact;
   @Input() currencyRate: Currency;
-  @Input() showSaveAddressBtn: boolean;
-  @Input() saveAddress: boolean;
-  @Output() switchAccount: EventEmitter<SavedAccount> = new EventEmitter();
-  @Output() isAddressInContacts: EventEmitter<boolean> = new EventEmitter();
-  @Output() toggleSaveAddress: EventEmitter<boolean> = new EventEmitter();
+  @Input() showSaveAddressBtn: boolean = false;
+  @Input() saveAddress: boolean = false;
+  @Input() saveAddressFeature: boolean = false;
+  @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
+  @Output() isAddressInContacts?: EventEmitter<boolean> = new EventEmitter();
+  @Output() toggleSaveAddress?: EventEmitter<boolean> = new EventEmitter();
   account: SavedAccount;
+  chooseSender: boolean = true;
 
   constructor() {}
 
@@ -31,7 +33,9 @@ export class FormSendMoneyComponent implements OnInit {
     this.toggleSaveAddress.emit(true);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.inputMap.sender) this.chooseSender = false;
+  }
 
   checkAddressInContacts() {
     this.isAddressInContacts.emit(true);

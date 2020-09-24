@@ -53,7 +53,7 @@ export class SendmoneyComponent implements OnInit {
   accounts: SavedAccount[];
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
-
+  saveAddressFeature: boolean = true;
   sendMoneyForm = {
     recipient: 'recipient',
     alias: 'alias',
