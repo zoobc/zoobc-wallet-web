@@ -15,7 +15,6 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 })
 export class MultisignatureComponent implements OnInit {
   multiSigDrafts: MultiSigDraft[];
-
   form: FormGroup;
   multisigInfoField = new FormControl(true);
   transactionField = new FormControl(false);

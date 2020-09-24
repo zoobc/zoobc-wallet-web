@@ -178,7 +178,8 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       preConfirm: () => {
         return zoobc.Node.generateNodeKey(this.account.nodeIP, this.authServ.seed)
           .then((res: GenerateNodeKeyResponses) => {
-            this.nodePublicKey = res.nodepublickey.toString();
+            const nodeBuffer = Buffer.from(res.nodepublickey.toString(), 'base64');
+            this.nodePublicKey = getZBCAddress(nodeBuffer, 'ZNK');
             this.successRefDialog = this.dialog.open(this.popupPubKey, {
               disableClose: true,
               width: '500px',
@@ -282,7 +283,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
           const { lockedbalance } = res.noderegistrationsList[0];
           this.queueLockBalance = Number(lockedbalance);
           const curentNode = await zoobc.Node.get(params);
-          this.curentNodeQueue = curentNode;
+          this.curentNodeQueue = curentNode.noderegistration;
           this.curentLockBalance = Number(curentNode.noderegistration.lockedbalance);
         } else {
           const curentNode = await zoobc.Node.get(params);
