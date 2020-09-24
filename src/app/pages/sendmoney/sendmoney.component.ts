@@ -23,18 +23,14 @@ import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 })
 export class SendmoneyComponent implements OnInit {
   subscription: Subscription = new Subscription();
-
   contacts: Contact[];
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
-
   currencyRate: Currency;
-
   minFee = environment.fee;
   kindFee: string;
 
   formSend: FormGroup;
-
   recipientForm = new FormControl('', Validators.required);
   amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   amountCurrencyForm = new FormControl('', Validators.required);
@@ -51,19 +47,32 @@ export class SendmoneyComponent implements OnInit {
   typeCommissionField = new FormControl('ZBC');
 
   sendMoneyRefDialog: MatDialogRef<any>;
-
   isLoading = false;
   isError = false;
-
   account: SavedAccount;
   accounts: SavedAccount[];
-
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
-  customFee: boolean = false;
-  advancedMenu: boolean = false;
 
-  blockHeight: number;
+  sendMoneyForm = {
+    recipient: 'recipient',
+    alias: 'alias',
+    typeCoin: 'typeCoin',
+    amountCurrency: 'amountCurrency',
+    amount: 'amount',
+    typeFee: 'typeFee',
+    feeCurrency: 'feeCurr',
+    fee: 'fee',
+  };
+
+  escrowForm = {
+    addressApprover: 'addressApprover',
+    typeCommission: 'typeCommission',
+    approverCommissionCurr: 'approverCommissionCurr',
+    approverCommission: 'approverCommission',
+    timeout: 'timeout',
+    instruction: 'instruction',
+  };
 
   constructor(
     private authServ: AuthService,
@@ -93,8 +102,6 @@ export class SendmoneyComponent implements OnInit {
     // disable alias field (saveAddress = false)
     this.aliasField.disable();
     // disable some field where (advancedMenu = false)
-    this.disableFieldAdvancedMenu();
-
     const amount = this.activeRoute.snapshot.params['amount'];
     const recipient = this.activeRoute.snapshot.params['recipient'];
     this.amountForm.patchValue(amount);
@@ -110,7 +117,6 @@ export class SendmoneyComponent implements OnInit {
     }
     this.contacts = this.contactServ.getList() || [];
 
-    // set filtered contacts function
     this.filteredContacts = this.recipientForm.valueChanges.pipe(
       startWith(''),
       map(value => this.filterContacts(value))
@@ -124,9 +130,7 @@ export class SendmoneyComponent implements OnInit {
       this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
-
     this.getAccounts();
-    this.getBlockHeight();
   }
 
   ngOnDestroy() {
@@ -182,12 +186,6 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  toggleAdvancedMenu() {
-    this.advancedMenu = !this.advancedMenu;
-    this.enableFieldAdvancedMenu();
-    if (!this.advancedMenu) this.disableFieldAdvancedMenu();
-  }
-
   async onOpenDialogDetailSendMoney() {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
@@ -199,7 +197,7 @@ export class SendmoneyComponent implements OnInit {
         data: {
           form: this.formSend.value,
           kindFee: this.kindFee,
-          advancedMenu: this.advancedMenu,
+          advancedMenu: this.approverCommissionField.enabled,
           account: this.account,
           currencyName: this.currencyRate.name,
           saveAddress: this.saveAddress,
@@ -232,22 +230,6 @@ export class SendmoneyComponent implements OnInit {
     });
   }
 
-  disableFieldAdvancedMenu() {
-    this.addressApproverField.disable();
-    this.approverCommissionField.disable();
-    this.approverCommissionCurrField.disable();
-    this.instructionField.disable();
-    this.timeoutField.disable();
-  }
-
-  enableFieldAdvancedMenu() {
-    this.addressApproverField.enable();
-    this.approverCommissionField.enable();
-    this.instructionField.enable();
-    this.timeoutField.enable();
-    this.approverCommissionCurrField.enable();
-  }
-
   onSendMoney() {
     if (this.formSend.valid) {
       this.isLoading = true;
@@ -264,7 +246,6 @@ export class SendmoneyComponent implements OnInit {
       };
       // const txBytes = sendMoneyBuilder(data, this.keyringServ);
       const childSeed = this.authServ.seed;
-
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
           this.isLoading = false;
@@ -290,24 +271,11 @@ export class SendmoneyComponent implements OnInit {
         async err => {
           this.isLoading = false;
           console.log(err);
-
           let message = getTranslation('an error occurred while processing your request', this.translate);
           Swal.fire('Opps...', message, 'error');
         }
       );
     }
-  }
-
-  getBlockHeight() {
-    zoobc.Host.getInfo()
-      .then((res: HostInfoResponse) => {
-        res.chainstatusesList.filter(chain => {
-          if (chain.chaintype === 0) this.blockHeight = chain.height;
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
   }
 
   async getMinimumFee() {
