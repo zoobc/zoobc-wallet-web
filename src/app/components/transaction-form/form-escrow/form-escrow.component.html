@@ -1,0 +1,103 @@
+<form [formGroup]="group">
+  <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
+    {{ 'escrow transaction' | translate }}
+  </mat-checkbox>
+  <div class="zbc-form-item" *ngIf="showEscrow">
+    <input-address
+      label="{{ 'approver address' | translate }}"
+      classList="block"
+      formControlName="{{ inputMap.addressApprover }}"
+      placeholder="{{ 'approver address' | translate }}..."
+    ></input-address>
+    <ng-container *ngIf="group.get(inputMap.addressApprover).touched">
+      <mat-error *ngIf="group.get(inputMap.addressApprover).hasError('required')">
+        {{ 'address for approver is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="group.get(inputMap.addressApprover).hasError('invalidAddress')">
+        {{ 'zbc address is invalid' | translate }}
+      </mat-error>
+    </ng-container>
+    <input-amount
+      [group]="group"
+      typeCoinName="{{ inputMap.typeCommission }}"
+      amountCurrencyName="{{ inputMap.approverCommissionCurr }}"
+      amountName="{{ inputMap.approverCommission }}"
+      [displayConverter]="false"
+      [currencyRate]="currencyRate"
+      label="{{ 'approver commission' | translate }}"
+    >
+    </input-amount>
+    <div
+      class="row"
+      *ngIf="
+        (group.get(inputMap.approverCommission).touched && group.get(inputMap.approverCommission).invalid) ||
+        (group.get(inputMap.approverCommissionCurr).touched &&
+          group.get(inputMap.approverCommissionCurr).invalid)
+      "
+    >
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container
+          *ngIf="
+            group.get(inputMap.approverCommission).touched &&
+            group.get(inputMap.typeCommission).value === 'ZBC'
+          "
+        >
+          <mat-error *ngIf="group.get(inputMap.approverCommission).hasError('required')">
+            {{ 'commission for approver is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="group.get(inputMap.approverCommission).hasError('min')">
+            {{ 'minimum commission is' | translate: { val: '0.00000001' } }}
+          </mat-error>
+        </ng-container>
+
+        <ng-container
+          *ngIf="
+            group.get(inputMap.approverCommissionCurr).touched &&
+            group.get(inputMap.typeCommission).value === 'Fiat'
+          "
+        >
+          <mat-error *ngIf="group.get(inputMap.approverCommissionCurr).hasError('required')">
+            {{ 'commission for approver is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="group.get(inputMap.approverCommissionCurr).hasError('min')">
+            {{ 'minimum commission for approver in zbc must be zbc' | translate: { val: '0.00000001' } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
+    <label class="block-height">
+      <b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b>
+    </label>
+    <mat-form-field appearance="outline" class="block" color="accent">
+      <mat-label>{{ 'timeout' | translate }}</mat-label>
+      <input
+        (change)="onChangeTimeOut()"
+        matInput
+        type="number"
+        formControlName="{{ inputMap.timeout }}"
+        placeholder="{{ 'timeout' | translate }}"
+      />
+    </mat-form-field>
+    <ng-container *ngIf="group.get(inputMap.timeout).touched">
+      <mat-error *ngIf="group.get(inputMap.timeout).hasError('required')">{{
+        'timeout is required' | translate
+      }}</mat-error>
+      <mat-error *ngIf="group.get(inputMap.timeout).hasError('min')">
+        {{ 'minimum timeout is 1' | translate }}
+      </mat-error>
+      <mat-error *ngIf="group.get(inputMap.timeout).hasError('max')">
+        {{ 'maximum timeout is 720' | translate }}
+      </mat-error>
+    </ng-container>
+    <mat-form-field appearance="outline" class="block" color="accent">
+      <mat-label>{{ 'instruction' | translate }}</mat-label>
+      <textarea matInput formControlName="{{ inputMap.instruction }}" rows="5"></textarea>
+    </mat-form-field>
+    <ng-container *ngIf="group.get(inputMap.instruction).touched">
+      <mat-error *ngIf="group.get(inputMap.instruction).hasError('required')">
+        {{ 'instruction is required' | translate }}
+      </mat-error>
+    </ng-container>
+  </div>
+</form>

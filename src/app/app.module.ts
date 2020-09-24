@@ -89,6 +89,8 @@ import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
+import { FormSendMoneyComponent } from './components/transaction-form/form-send-money/form-send-money.component';
+import { FormEscrowComponent } from './components/transaction-form/form-escrow/form-escrow.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -140,6 +142,8 @@ export function getLanguage(languageServ: LanguageService) {
     ApprovalEscrowHistoryComponent,
     MultisigApprovalHistoryComponent,
     NodeRewardListComponent,
+    FormSendMoneyComponent,
+    FormEscrowComponent,
   ],
   imports: [
     BrowserModule,

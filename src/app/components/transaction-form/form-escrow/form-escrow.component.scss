@@ -1,0 +1,7 @@
+@import '../../../../styles//variables';
+@import '../../../../styles/mixins';
+.block-height {
+  display: block;
+  text-align: right;
+  color: map-get($accent, 500);
+}
