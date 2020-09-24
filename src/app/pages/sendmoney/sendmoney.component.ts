@@ -192,31 +192,31 @@ export class SendmoneyComponent implements OnInit {
     this.getMinimumFee();
     const total = this.amountForm.value + this.feeForm.value;
     const balance = this.account.balance / 1e8;
-    // if (balance >= total) {
-    this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
-      width: '500px',
-      maxHeight: '90vh',
-      data: {
-        form: this.formSend.value,
-        kindFee: this.kindFee,
-        advancedMenu: this.advancedMenu,
-        account: this.account,
-        currencyName: this.currencyRate.name,
-        saveAddress: this.saveAddress,
-        alias: this.aliasField.value,
-      },
-    });
-    this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
-      if (onConfirm) {
-        this.onOpenPinDialog();
-      }
-    });
-    // } else {
-    // let message = getTranslation('your balances are not enough for this transaction', this.translate, {
-    //   amount: balance - this.feeForm.value,
-    // });
-    // Swal.fire({ type: 'error', title: 'Oops...', text: message });
-    // }
+    if (balance >= total) {
+      this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
+        width: '500px',
+        maxHeight: '90vh',
+        data: {
+          form: this.formSend.value,
+          kindFee: this.kindFee,
+          advancedMenu: this.advancedMenu,
+          account: this.account,
+          currencyName: this.currencyRate.name,
+          saveAddress: this.saveAddress,
+          alias: this.aliasField.value,
+        },
+      });
+      this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
+        if (onConfirm) {
+          this.onOpenPinDialog();
+        }
+      });
+    } else {
+      let message = getTranslation('your balances are not enough for this transaction', this.translate, {
+        amount: balance - this.feeForm.value,
+      });
+      Swal.fire({ type: 'error', title: 'Oops...', text: message });
+    }
   }
 
   onOpenPinDialog() {
