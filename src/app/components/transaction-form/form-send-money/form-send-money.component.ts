@@ -7,6 +7,7 @@ import { Currency } from 'src/app/services/currency-rate.service';
 @Component({
   selector: 'app-form-send-money',
   templateUrl: './form-send-money.component.html',
+  styleUrls: ['./form-send-money.component.scss'],
 })
 export class FormSendMoneyComponent implements OnInit {
   @Input() group: FormGroup;
