@@ -4,12 +4,11 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { RegisterNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { RegisterNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
-import { getTranslation, truncate } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 @Component({
   selector: 'app-register-node',
   templateUrl: './register-node.component.html',
@@ -26,11 +25,17 @@ export class RegisterNodeComponent implements OnInit {
 
   account: SavedAccount;
   poown: Buffer;
-
   isLoading: boolean = false;
   isError: boolean = false;
 
-  currencyRate: Currency;
+  registerNodeForm = {
+    ipAddress: 'ipAddress',
+    lockedBalance: 'lockedBalance',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+    nodePublicKey: 'nodePublicKey',
+  };
 
   constructor(
     private authServ: AuthService,
@@ -38,7 +43,6 @@ export class RegisterNodeComponent implements OnInit {
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<RegisterNodeComponent>,
     private translate: TranslateService,
-    private currencyServ: CurrencyRateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
     this.formRegisterNode = new FormGroup({
@@ -55,18 +59,7 @@ export class RegisterNodeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
     if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
-  }
-
-  onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
-    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
   onRegisterNode() {
