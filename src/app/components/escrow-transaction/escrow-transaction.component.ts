@@ -143,7 +143,7 @@ export class EscrowTransactionComponent implements OnInit {
           err => {
             this.isLoadingTx = false;
             console.log('err', err);
-            let message = getTranslation('an error occurred while processing your request', this.translate);
+            let message = getTranslation(err.message, this.translate);
             Swal.fire('Opps...', message, 'error');
           }
         )
@@ -184,7 +184,7 @@ export class EscrowTransactionComponent implements OnInit {
           err => {
             this.isLoadingTx = false;
             console.log('err', err);
-            let message = getTranslation('an error occurred while processing your request', this.translate);
+            let message = getTranslation(err.message, this.translate);
             Swal.fire('Opps...', message, 'error');
           }
         )
