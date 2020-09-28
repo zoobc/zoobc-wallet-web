@@ -85,6 +85,8 @@ import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-appro
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
 import { FormRegisterNodeModule } from './components/transaction-form/form-register-node/form-register-node.module';
+import { TransactionListModule } from './components/transaction-list/transaction-list.module';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
@@ -154,6 +156,8 @@ export function getLanguage(languageServ: LanguageService) {
     AddressModule,
     DateAgoModule,
     AccountSelectorModule,
+    TransactionListModule,
+
     MatButtonModule,
     MatCheckboxModule,
     MatGridListModule,
