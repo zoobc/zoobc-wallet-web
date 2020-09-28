@@ -1,17 +1,17 @@
 <div class="row">
   <div class="col-12 text-right">
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>Transaction Type</mat-label>
+      <mat-label>{{ 'transaction type' | translate }}</mat-label>
       <mat-select [value]="txType" (selectionChange)="onFilter($event.value)">
-        <mat-option [value]="1">Send Coin</mat-option>
-        <mat-option [value]="2">Register Node</mat-option>
-        <mat-option [value]="256">Update Node</mat-option>
-        <mat-option [value]="514">Remove Node</mat-option>
-        <mat-option [value]="770">Claim Node</mat-option>
-        <mat-option [value]="3">Setup Account Dataset</mat-option>
-        <mat-option [value]="259">Remove Account Dataset</mat-option>
-        <mat-option [value]="4">Approval Escrow</mat-option>
-        <mat-option [value]="5">Multi Signature</mat-option>
+        <mat-option [value]="1">{{ 'send money' | translate }}</mat-option>
+        <mat-option [value]="2">{{ 'register node' | translate }}</mat-option>
+        <mat-option [value]="256">{{ 'update node' | translate }}</mat-option>
+        <mat-option [value]="514">{{ 'remove node' | translate }}</mat-option>
+        <mat-option [value]="770">{{ 'claim node' | translate }}</mat-option>
+        <mat-option [value]="3">{{ 'setup account dataset' | translate }}</mat-option>
+        <mat-option [value]="259">{{ 'remove account dataset' | translate }}</mat-option>
+        <mat-option [value]="4">{{ 'escrow approval' | translate }}</mat-option>
+        <mat-option [value]="5">{{ 'multisignature' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
