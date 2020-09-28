@@ -181,7 +181,8 @@ export class CreateTransactionComponent implements OnInit {
       }
     } catch (err) {
       console.log(err);
-      return Swal.fire({ type: 'error', title: 'Oops...', text: err.message });
+      let message = getTranslation(err.message, this.translate);
+      return Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
   }
 
