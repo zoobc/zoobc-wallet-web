@@ -9,7 +9,6 @@ import { truncate } from 'src/helpers/utils';
 @Component({
   selector: 'app-form-register-node',
   templateUrl: './form-register-node.component.html',
-  styleUrls: ['./form-register-node.component.scss'],
 })
 export class FormRegisterNodeComponent implements OnInit, OnDestroy {
   @Input() group: FormGroup;
