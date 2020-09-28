@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import Swal from 'sweetalert2';
@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-multisignature',
@@ -14,12 +15,27 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./multisignature.component.scss'],
 })
 export class MultisignatureComponent implements OnInit {
+  @ViewChild('fileInput') myInputVariable: ElementRef;
+
   multiSigDrafts: MultiSigDraft[];
   form: FormGroup;
-  multisigInfoField = new FormControl(true);
-  transactionField = new FormControl(false);
-  signaturesField = new FormControl(false);
-  @ViewChild('fileInput') myInputVariable: ElementRef;
+  txTypeField = new FormControl('sendMoney', Validators.required);
+  chainTypeField = new FormControl('onchain', Validators.required);
+
+  innerTransaction: boolean = false;
+  signatures: boolean = false;
+
+  txType = [
+    { code: 'sendMoney', type: 'send money' },
+    { code: 'registerNode', type: 'register node' },
+    { code: 'updateNode', type: 'update node' },
+    { code: 'removeNode', type: 'remove node' },
+    { code: 'claimNode', type: 'claim node' },
+    { code: 'setupDataset', type: 'setup account dataset' },
+    { code: 'removeDataset', type: 'remove account dataset' },
+    { code: 'escrowApproval', type: 'escrow approval' },
+  ];
+
   isMultiSignature: boolean = false;
   account: SavedAccount;
 
@@ -27,12 +43,12 @@ export class MultisignatureComponent implements OnInit {
     private router: Router,
     private multisigServ: MultisigService,
     private translate: TranslateService,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private dialog: MatDialog
   ) {
     this.form = new FormGroup({
-      multisigInfo: this.multisigInfoField,
-      transaction: this.transactionField,
-      signatures: this.signaturesField,
+      txType: this.txTypeField,
+      chainType: this.chainTypeField,
     });
     this.account = authServ.getCurrAccount();
     this.isMultiSignature = this.account.type == 'multisig' ? true : false;
@@ -47,10 +63,10 @@ export class MultisignatureComponent implements OnInit {
     this.multiSigDrafts = this.multisigServ
       .getDrafts()
       .filter(draft => {
-        const { multisigInfo, transaction, generatedSender } = draft;
+        const { multisigInfo, sendMoney, generatedSender } = draft;
         if (generatedSender == currAccount.address) return draft;
         if (multisigInfo.participants.includes(currAccount.address)) return draft;
-        if (transaction && transaction.sender == currAccount.address) return draft;
+        if (sendMoney && sendMoney.sender == currAccount.address) return draft;
       })
       .sort()
       .reverse();
@@ -68,15 +84,16 @@ export class MultisignatureComponent implements OnInit {
   }
 
   onNext() {
+    const txType = this.txTypeField.value;
     const multisig: MultiSigDraft = {
       accountAddress: '',
       fee: 0,
       id: 0,
+      multisigInfo: null,
+      unisgnedTransactions: null,
+      [txType]: null,
     };
-    const { multisigInfo, transaction, signatures } = this.form.value;
-    if (multisigInfo) multisig.multisigInfo = null;
-    if (transaction) multisig.unisgnedTransactions = null;
-    if (signatures) multisig.signaturesInfo = null;
+    if (this.chainTypeField.value == 'offchain') multisig.signaturesInfo = null;
 
     if (this.isMultiSignature) {
       multisig.multisigInfo = {
@@ -96,16 +113,10 @@ export class MultisignatureComponent implements OnInit {
       if (!isOneParticpants) {
         let message = getTranslation('you dont have any account that in participant list', this.translate);
         Swal.fire({ type: 'error', title: 'Oops...', text: message });
-      } else {
-        if (transaction) this.router.navigate(['/multisignature/create-transaction']);
-        else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
-      }
+      } else this.router.navigate(['/multisignature/create-transaction']);
     } else {
       this.multisigServ.update(multisig);
-
-      if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
-      else if (transaction) this.router.navigate(['/multisignature/create-transaction']);
-      else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+      this.router.navigate(['/multisignature/add-multisig-info']);
     }
   }
 

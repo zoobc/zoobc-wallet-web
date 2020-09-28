@@ -1,42 +1,44 @@
 <div class="multisinature-container">
-  <h2 class="mat-h2">{{ 'multisignature transaction' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'create  multisignature transaction' | translate }}</h2>
   <mat-card>
-    <h4 class="mat-h4 check-title">{{ 'send money' | translate }}</h4>
-    <p class="check-desciption">
-      {{ 'please select what properties you need to create multisignature transaction' | translate }}
-    </p>
+    <form [formGroup]="form" (submit)="onNext()">
+      <div style="margin-bottom: 8px">What kind of transaction do you want to create??</div>
+      <mat-form-field appearance="outline" color="accent">
+        <mat-select formControlName="txType">
+          <mat-option [value]="type.code" *ngFor="let type of txType">{{ type.type | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br /><br />
 
-    <form [formGroup]="form">
-      <div class="row">
-        <div class="column-check">
-          <mat-checkbox formControlName="transaction">
-            {{ 'create transaction' | translate }}
-            <i
-              class="fas fa-info-circle"
-              matTooltip="{{ 'create transaction' | translate }}"
-              matTooltipPosition="above"
-            ></i>
-          </mat-checkbox>
-        </div>
-        <div class="column-check">
-          <mat-checkbox formControlName="signatures">
-            {{ 'add participants signature' | translate }}
-            <i
-              class="fas fa-info-circle"
-              matTooltip="{{ 'add participants signature' | translate }}"
-              matTooltipPosition="above"
-            ></i>
-          </mat-checkbox>
-        </div>
-      </div>
-      <div class="text-right" style="margin-top: 16px;">
-        <button
-          (click)="onNext()"
-          mat-flat-button
-          color="primary"
-          type="button"
-          [disabled]="!transactionField.value && !signaturesField.value"
-        >
+      <div style="margin-bottom: 8px">How do you want multi signature to be executed?</div>
+
+      <mat-radio-group class="row" formControlName="chainType">
+        <mat-radio-button value="onchain" class="col-12 col-sm-6">
+          Onchain Multi Signature
+          <i
+            class="fas fa-info-circle"
+            matTooltip="{{
+              'submit the information of multisignature transaction without any participants\' signatures, and then each participant will signing/approving the transaction on my task page'
+                | translate
+            }}"
+            matTooltipPosition="above"
+          ></i>
+        </mat-radio-button>
+        <mat-radio-button value="offchain" class="col-12 col-sm-6">
+          Offchain Multi Signature
+          <i
+            class="fas fa-info-circle"
+            matTooltip="{{
+              'Submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
+                | translate
+            }}"
+            matTooltipPosition="above"
+          ></i>
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <div class="text-right">
+        <button mat-flat-button color="primary" [disabled]="form.invalid">
           {{ 'next' | translate }}
         </button>
       </div>

@@ -172,7 +172,7 @@ export class SendTransactionComponent implements OnInit {
       multisigInfo,
       unisgnedTransactions,
       signaturesInfo,
-      transaction,
+      sendMoney,
     } = this.multisig;
     let data: MultiSigInterface;
     if (signaturesInfo !== undefined) {
@@ -206,15 +206,15 @@ export class SendTransactionComponent implements OnInit {
     const childSeed = this.authServ.seed;
 
     if (data.signaturesInfo === undefined)
-      data.unisgnedTransactions = sendMoneyBuilder(this.multisig.transaction);
+      data.unisgnedTransactions = sendMoneyBuilder(this.multisig.sendMoney);
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);
         let subMessage = getTranslation('you send coins to', this.translate, {
-          amount: transaction.amount,
-          currencyValue: truncate(transaction.amount * this.currencyRate.value, 2),
+          amount: sendMoney.amount,
+          currencyValue: truncate(sendMoney.amount * this.currencyRate.value, 2),
           currencyName: this.currencyRate.name,
-          recipient: transaction.recipient,
+          recipient: sendMoney.recipient,
         });
         this.multisigServ.deleteDraft(this.multisig.id);
         Swal.fire(message, subMessage, 'success');

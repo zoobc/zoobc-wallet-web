@@ -20,6 +20,8 @@ import {
   MatChipsModule,
   MatDividerModule,
   MatStepperModule,
+  MatRadioModule,
+  MatSelectModule,
 } from '@angular/material';
 import { DateAgoModule } from '../../pipes/date-ago.module';
 import { AddressModule } from '../../components/address/address.module';
@@ -69,6 +71,8 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatStepperModule,
+    MatSelectModule,
+    MatRadioModule,
     AccountSelectorModule,
     InputAddressModule,
     InputAmountModule,

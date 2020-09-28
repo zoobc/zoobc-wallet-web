@@ -74,7 +74,7 @@ export class CreateTransactionComponent implements OnInit {
     });
     // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      const { multisigInfo, unisgnedTransactions, signaturesInfo, transaction } = multisig;
+      const { multisigInfo, unisgnedTransactions, signaturesInfo, sendMoney } = multisig;
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
@@ -82,8 +82,8 @@ export class CreateTransactionComponent implements OnInit {
 
       this.senderForm.setValue(multisig.generatedSender);
 
-      if (transaction) {
-        const { sender, recipient, amount, fee } = transaction;
+      if (sendMoney) {
+        const { sender, recipient, amount, fee } = sendMoney;
         this.senderForm.setValue(sender);
         this.recipientForm.setValue(recipient);
         this.amountForm.setValue(amount);
@@ -185,7 +185,7 @@ export class CreateTransactionComponent implements OnInit {
     const { recipient, amount, fee, sender } = this.createTransactionForm.value;
     const multisig = { ...this.multisig };
 
-    multisig.transaction = { sender, amount, fee, recipient };
+    multisig.sendMoney = { sender, amount, fee, recipient };
     this.multisigServ.update(multisig);
   }
 
