@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -32,6 +32,15 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   typeFeeField = new FormControl('ZBC');
+
+  setupDataSetForm = {
+    property: 'property',
+    value: 'value',
+    recipientAddress: 'recipientAddress',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+  };
 
   constructor(
     public dialog: MatDialog,
