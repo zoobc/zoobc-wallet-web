@@ -85,6 +85,7 @@ import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-appro
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
+import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -190,6 +191,7 @@ export function getLanguage(languageServ: LanguageService) {
     InputAmountModule,
     MatStepperModule,
     RewardTableModule,
+    FormRemoveNodeModule,
   ],
   bootstrap: [AppComponent],
   providers: [
