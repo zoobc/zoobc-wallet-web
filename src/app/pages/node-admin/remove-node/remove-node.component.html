@@ -1,59 +1,7 @@
 <div class="remove-node-container">
   <h2 class="mat-h2">{{ 'remove node' | translate }}</h2>
   <form [formGroup]="formRemoveNode" (submit)="onRemoveNode()" class="grid">
-    <input-amount
-      [group]="formRemoveNode"
-      typeCoinName="typeFee"
-      amountCurrencyName="feeCurr"
-      amountName="fee"
-      [displayConverter]="true"
-      [currencyRate]="currencyRate"
-      label="{{ 'fee' | translate }}"
-    >
-    </input-amount>
-    <div
-      class="row"
-      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
-    >
-      <div class="col-4 col-sm-3">&nbsp;</div>
-      <div class="col-8 col-sm-9">
-        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
-          <mat-error *ngIf="feeForm.hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="feeForm.hasError('min')">
-            {{ 'minimum fee is' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
-          <mat-error *ngIf="feeFormCurr.hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="feeFormCurr.hasError('min')">
-            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-      </div>
-    </div>
-    <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'node public key' | translate }}</mat-label>
-      <input
-        matInput
-        type="text"
-        placeholder="{{ 'node public key' | translate }}"
-        formControlName="nodePublicKey"
-        (keyup)="onChangeNodePublicKey()"
-        class="font-roboto-mono"
-      />
-    </mat-form-field>
-    <ng-container *ngIf="nodePublicKeyForm.touched">
-      <mat-error *ngIf="nodePublicKeyForm.hasError('required')">
-        {{ 'node public key is required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="nodePublicKeyForm.hasError('invalidAddress')">
-        {{ 'node public key is invalid' | translate }}
-      </mat-error>
-    </ng-container>
+    <app-form-remove-node [group]="formRemoveNode" [inputMap]="removeNodeForm"></app-form-remove-node>
     <br />
     <button mat-flat-button color="primary" type="submit" [disabled]="formRemoveNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
