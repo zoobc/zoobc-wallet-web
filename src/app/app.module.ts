@@ -84,6 +84,8 @@ import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
+import { FormEscrowModule } from './components/transaction-form/form-escrow/form-escrow.module';
+import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
 import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 
@@ -157,7 +159,6 @@ export function getLanguage(languageServ: LanguageService) {
     DateAgoModule,
     AccountSelectorModule,
     TransactionListModule,
-
     MatButtonModule,
     MatCheckboxModule,
     MatGridListModule,
@@ -192,6 +193,8 @@ export function getLanguage(languageServ: LanguageService) {
     MatStepperModule,
     RewardTableModule,
     FormRemoveNodeModule,
+    FormSendMoneyModule,
+    FormEscrowModule,
   ],
   bootstrap: [AppComponent],
   providers: [

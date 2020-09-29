@@ -41,6 +41,7 @@ import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
 import { DemoNodeAdminComponent } from './demo-node-admin/demo-node-admin.component';
 import { FormRemoveNodeModule } from 'src/app/components/transaction-form/form-remove-node/form-remove-node.module';
+import { FormUpdateNodeModule } from 'src/app/components/transaction-form/form-update-node/form-update-node.module';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
@@ -100,6 +101,7 @@ const routes: Routes = [
     InputAmountModule,
     RewardTableModule,
     FormRemoveNodeModule,
+    FormUpdateNodeModule,
   ],
   entryComponents: [RegisterNodeComponent, UpdateNodeComponent, ClaimNodeComponent, RemoveNodeComponent],
 })
