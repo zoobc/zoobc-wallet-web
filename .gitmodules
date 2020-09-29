@@ -1,4 +1,4 @@
 [submodule "src/assets/languages"]
 	path = src/assets/languages
 	url = https://github.com/zoobc/zoobc-language-files
-	branch = master
+	branch = master 

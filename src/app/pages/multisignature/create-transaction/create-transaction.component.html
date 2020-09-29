@@ -24,95 +24,11 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="createTransactionForm" (submit)="next()">
-      <label>{{ 'sender' | translate }}</label>
-      <div style="margin-bottom: 16px;">
-        <wallet-address [value]="senderForm.value"></wallet-address>
-      </div>
-      <input-address
-        label="{{ 'recipient address' | translate }}"
-        classList="block"
-        formControlName="recipient"
-        placeholder="{{ 'recipient address' | translate }}..."
-      ></input-address>
-      <ng-container *ngIf="recipientForm.touched">
-        <mat-error *ngIf="recipientForm.hasError('required')">
-          {{ 'recipient is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="recipientForm.hasError('invalidAddress')">
-          {{ 'zbc address is invalid' | translate }}
-        </mat-error>
-      </ng-container>
-      <input-amount
+      <app-form-send-money
         [group]="createTransactionForm"
-        typeCoinName="typeCoin"
-        amountCurrencyName="amountCurrency"
-        amountName="amount"
-        [displayConverter]="true"
+        [inputMap]="sendMoneyForm"
         [currencyRate]="currencyRate"
-        label="{{ 'coin amount' | translate }}"
-      >
-      </input-amount>
-      <div
-        class="row"
-        *ngIf="
-          (amountForm.touched && amountForm.invalid) ||
-          (amountCurrencyForm.touched && amountCurrencyForm.invalid)
-        "
-      >
-        <div class="col-4 col-sm-3">&nbsp;</div>
-        <div class="col-8 col-sm-9">
-          <ng-container *ngIf="amountForm.touched && typeCoinField.value === 'ZBC'">
-            <mat-error *ngIf="amountForm.hasError('required')">
-              {{ 'amount is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="amountForm.hasError('min')">
-              {{ 'minimum amount is' | translate: { val: '0.00000001' } }}
-            </mat-error>
-          </ng-container>
-          <ng-container *ngIf="amountCurrencyForm.touched && typeCoinField.value === 'Fiat'">
-            <mat-error *ngIf="amountCurrencyForm.hasError('required')">
-              {{ 'amount is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="amountCurrencyForm.hasError('min')">
-              {{ 'minimum amount in zbc must be zbc' | translate: { val: '0.00000001' } }}
-            </mat-error>
-          </ng-container>
-        </div>
-      </div>
-      <input-amount
-        [group]="createTransactionForm"
-        typeCoinName="typeFee"
-        amountCurrencyName="feeCurr"
-        amountName="fee"
-        [displayConverter]="true"
-        [currencyRate]="currencyRate"
-        label="{{ 'fee' | translate }}"
-      >
-      </input-amount>
-      <div
-        class="row"
-        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
-      >
-        <div class="col-4 col-sm-3">&nbsp;</div>
-        <div class="col-8 col-sm-9">
-          <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
-            <mat-error *ngIf="feeForm.hasError('required')">
-              {{ 'fee is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="feeForm.hasError('min')">
-              {{ 'minimum fee is' | translate: { val: minFee } }}
-            </mat-error>
-          </ng-container>
-          <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
-            <mat-error *ngIf="feeFormCurr.hasError('required')">
-              {{ 'fee is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="feeFormCurr.hasError('min')">
-              {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
-            </mat-error>
-          </ng-container>
-        </div>
-      </div>
+      ></app-form-send-money>
       <button
         *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button

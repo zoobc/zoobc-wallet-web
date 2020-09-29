@@ -7,9 +7,8 @@ import Swal from 'sweetalert2';
 import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid, getZBCAddress } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
-import { getTranslation, truncate } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-update-node',
@@ -30,7 +29,14 @@ export class UpdateNodeComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  currencyRate: Currency;
+  updateNodeForm = {
+    ipAddress: 'ipAddress',
+    lockedAmount: 'lockedAmount',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+    nodePublicKey: 'nodePublicKey',
+  };
 
   constructor(
     private authServ: AuthService,
@@ -38,8 +44,7 @@ export class UpdateNodeComponent implements OnInit {
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
     @Inject(MAT_DIALOG_DATA) public node: any,
-    private translate: TranslateService,
-    private currencyServ: CurrencyRateService
+    private translate: TranslateService
   ) {
     this.formUpdateNode = new FormGroup({
       ipAddress: this.ipAddressForm,
@@ -67,19 +72,7 @@ export class UpdateNodeComponent implements OnInit {
     ]);
   }
 
-  ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-  }
-
-  onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
-    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
-  }
+  ngOnInit() {}
 
   onUpdateNode() {
     if (this.formUpdateNode.valid) {
