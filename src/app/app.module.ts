@@ -85,6 +85,8 @@ import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-appro
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
 import { FormRegisterNodeModule } from './components/transaction-form/form-register-node/form-register-node.module';
+import { FormEscrowModule } from './components/transaction-form/form-escrow/form-escrow.module';
+import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
 
 // AoT requires an exported function for factories
@@ -157,7 +159,6 @@ export function getLanguage(languageServ: LanguageService) {
     DateAgoModule,
     AccountSelectorModule,
     TransactionListModule,
-
     MatButtonModule,
     MatCheckboxModule,
     MatGridListModule,
@@ -192,6 +193,8 @@ export function getLanguage(languageServ: LanguageService) {
     MatStepperModule,
     RewardTableModule,
     FormRegisterNodeModule,
+    FormSendMoneyModule,
+    FormEscrowModule,
   ],
   bootstrap: [AppComponent],
   providers: [
