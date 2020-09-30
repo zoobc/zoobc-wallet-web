@@ -41,6 +41,16 @@ export class AccountDatasetComponent implements OnInit {
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
+  removeDataSetForm = {
+    sender: '',
+    property: '',
+    value: '',
+    recipientAddress: '',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+  };
+
   constructor(
     public dialog: MatDialog,
     private currencyServ: CurrencyRateService,
@@ -126,6 +136,10 @@ export class AccountDatasetComponent implements OnInit {
 
   onDelete(dataset: any) {
     this.dataSet = dataset;
+    this.removeDataSetForm.sender = dataset.setteraccountaddress;
+    this.removeDataSetForm.recipientAddress = dataset.recipientaccountaddress;
+    this.removeDataSetForm.property = dataset.property;
+    this.removeDataSetForm.value = dataset.value;
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeForm.patchValue(this.minFee);
@@ -162,5 +176,9 @@ export class AccountDatasetComponent implements OnInit {
       data: this.account,
       disableClose: true,
     });
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
   }
 }
