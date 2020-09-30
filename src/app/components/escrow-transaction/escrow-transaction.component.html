@@ -88,6 +88,7 @@
         {{ escrowDetail.instruction }}
       </div>
     </div>
+
     <div class="row">
       <div class="col-12" style="margin: 16px 0;">
         <mat-checkbox (click)="toogleShowProcessForm($event)">
@@ -96,46 +97,10 @@
       </div>
     </div>
     <ng-container *ngIf="showProcessForm">
-      <div class="row" style="border-bottom: none;">
+      <div class="row">
         <div class="col-12 col-md-10 offset-md-1">
-          <input-amount
-            [group]="form"
-            typeCoinName="typeFee"
-            amountCurrencyName="feeCurr"
-            amountName="fee"
-            [displayConverter]="true"
-            [currencyRate]="currencyRate"
-            label="{{ 'fee' | translate }}"
-          >
-          </input-amount>
-        </div>
-      </div>
-      <div
-        class="row"
-        *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
-      >
-        <div class="col-12 col-md-10 offset-md-1">
-          <div class="row" style="border-bottom: none; margin-top: -30px; font-weight: initial;">
-            <div class="col-4 col-sm-3">&nbsp;</div>
-            <div class="col-8 col-sm-9" style="padding: 0 10px;">
-              <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
-                <mat-error *ngIf="feeForm.hasError('required')">
-                  {{ 'fee is required' | translate }}
-                </mat-error>
-                <mat-error *ngIf="feeForm.hasError('min')">
-                  {{ 'minimum fee is' | translate: { val: minFee } }}
-                </mat-error>
-              </ng-container>
-              <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
-                <mat-error *ngIf="feeFormCurr.hasError('required')">
-                  {{ 'fee is required' | translate }}
-                </mat-error>
-                <mat-error *ngIf="feeFormCurr.hasError('min')">
-                  {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
-                </mat-error>
-              </ng-container>
-            </div>
-          </div>
+          <app-form-escrow-approval [group]="form" [inputMap]="escrowApprovalForm" [prefillTxId]="false">
+          </app-form-escrow-approval>
         </div>
       </div>
       <div class="text-right" style="margin-top: 8px">
@@ -147,7 +112,7 @@
           mat-flat-button
           color="warn"
           style="margin-right: 8px"
-          (click)="onOpenPinDialog(escrowDetail.id, 1)"
+          (click)="onOpenPinDialog(1)"
         >
           <span *ngIf="isLoadingTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
           <span>{{ 'reject' | translate }}</span>
@@ -156,7 +121,7 @@
           [disabled]="isLoadingTx || !form.valid"
           mat-flat-button
           color="primary"
-          (click)="onOpenPinDialog(escrowDetail.id, 0)"
+          (click)="onOpenPinDialog(0)"
         >
           <span *ngIf="isLoadingTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
           <span>
