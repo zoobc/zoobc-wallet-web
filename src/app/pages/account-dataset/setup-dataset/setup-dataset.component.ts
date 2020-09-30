@@ -34,6 +34,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   typeFeeField = new FormControl('ZBC');
 
   setupDataSetForm = {
+    sender: this.account.address,
     property: 'property',
     value: 'value',
     recipientAddress: 'recipientAddress',

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { SavedAccount } from 'src/app/services/auth.service';
 import { Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
@@ -12,14 +13,19 @@ export class FormSetupAccountDatasetComponent implements OnInit {
   @Input() currencyRate: Currency;
   @Input() isSetupOther: boolean = false;
   @Output() enableSetupOther?: EventEmitter<boolean> = new EventEmitter();
+  @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
+  account: SavedAccount;
+  chooseSender: boolean = true;
 
   constructor() {}
 
   ngOnInit() {
-    console.log('ayam', this.formValue);
-    console.log(this.group);
-    console.log(this.currencyRate);
-    console.log(this.enableSetupOther);
+    if (this.formValue.sender) this.chooseSender = false;
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
+    this.switchAccount.emit(account);
   }
 
   onToggleEnableSetupOther() {
