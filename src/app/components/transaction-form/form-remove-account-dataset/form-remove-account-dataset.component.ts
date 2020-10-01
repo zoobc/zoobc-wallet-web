@@ -6,7 +6,6 @@ import { Currency } from 'src/app/services/currency-rate.service';
 @Component({
   selector: 'form-remove-account-dataset',
   templateUrl: './form-remove-account-dataset.component.html',
-  styleUrls: ['./form-remove-account-dataset.component.scss'],
 })
 export class FormRemoveAccountDatasetComponent implements OnChanges {
   @Input() group: FormGroup;
