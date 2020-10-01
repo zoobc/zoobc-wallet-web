@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -32,6 +32,17 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   typeFeeField = new FormControl('ZBC');
+  senderAddressField = new FormControl('', [Validators.required]);
+
+  setupDataSetForm = {
+    sender: 'sender',
+    property: 'property',
+    value: 'value',
+    recipientAddress: 'recipientAddress',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+  };
 
   constructor(
     public dialog: MatDialog,
@@ -42,6 +53,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     private translate: TranslateService
   ) {
     this.formGroup = new FormGroup({
+      sender: this.senderAddressField,
       property: this.propertyField,
       value: this.valueField,
       recipientAddress: this.recipientAddressField,
@@ -61,6 +73,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     this.subscription.add(subsRate);
     this.isSetupOther = false;
     this.disableSetupOther();
+    this.senderAddressField.patchValue(this.account.address);
   }
 
   ngOnDestroy() {

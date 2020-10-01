@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,7 +9,7 @@ import { shortenHash } from 'zoobc-sdk';
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss'],
 })
-export class AddressComponent implements OnInit {
+export class AddressComponent {
   @Input() value: string;
   @Input() copyButton: boolean = true;
   @Input() center: boolean = false;
@@ -18,9 +18,16 @@ export class AddressComponent implements OnInit {
   len: number = 0;
   halfLen: number = 0;
 
-  constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
+  constructor(private snackbar: MatSnackBar, private translate: TranslateService) {
+    if (this.value) {
+      this.len = this.value.length;
+      this.halfLen = Math.round(this.value.length / 2);
 
-  ngOnInit() {
+      this.shortValue = shortenHash(this.value);
+    }
+  }
+
+  ngOnChanges() {
     if (this.value) {
       this.len = this.value.length;
       this.halfLen = Math.round(this.value.length / 2);
