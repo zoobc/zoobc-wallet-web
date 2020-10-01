@@ -1,0 +1,77 @@
+<form [formGroup]="group">
+  <mat-form-field appearance="outline" color="accent" style="width: 100%;">
+    <mat-label>{{ 'ip address' | translate }}</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="https://yournode.com:8001 {{ 'or' | translate }} http://192.168.43.1:8001"
+      formControlName="{{ inputMap.ipAddress }}"
+    />
+  </mat-form-field>
+  <ng-container *ngIf="group.get(inputMap.ipAddress).touched">
+    <mat-error *ngIf="group.get(inputMap.ipAddress).hasError('required')">
+      {{ 'ip address is required' | translate }}
+    </mat-error>
+    <mat-error *ngIf="group.get(inputMap.ipAddress).hasError('pattern')">
+      {{ 'invalid ip address format' | translate }}
+    </mat-error>
+  </ng-container>
+  <input-amount
+    [group]="group"
+    typeCoinName="{{ inputMap.typeFee }}"
+    amountCurrencyName="{{ inputMap.feeCurr }}"
+    amountName="{{ inputMap.fee }}"
+    [displayConverter]="true"
+    [currencyRate]="currencyRate"
+    label="{{ 'fee' | translate }}"
+  >
+  </input-amount>
+  <div
+    class="row"
+    *ngIf="
+      (group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid) ||
+      (group.get(inputMap.feeCurr).touched && group.get(inputMap.feeCurr).invalid)
+    "
+  >
+    <div class="col-4 col-sm-3">&nbsp;</div>
+    <div class="col-8 col-sm-9">
+      <ng-container *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.typeFee).value === 'ZBC'">
+        <mat-error *ngIf="group.get(inputMap.fee).hasError('required')">
+          {{ 'fee is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="group.get(inputMap.fee).hasError('min')">
+          {{ 'minimum fee is' | translate: { val: minFee } }}
+        </mat-error>
+      </ng-container>
+      <ng-container
+        *ngIf="group.get(inputMap.feeCurr).touched && roup.get(inputMap.typeFee).value === 'Fiat'"
+      >
+        <mat-error *ngIf="group.get(inputMap.feeCurr).hasError('required')">
+          {{ 'fee is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="group.get(inputMap.feeCurr).hasError('min')">
+          {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
+        </mat-error>
+      </ng-container>
+    </div>
+  </div>
+  <mat-form-field appearance="outline" color="accent" style="width: 100%;">
+    <mat-label>{{ 'node public key' | translate }}</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="{{ 'node public key' | translate }}"
+      formControlName="{{ inputMap.nodePublicKey }}"
+      (keyup)="onChangeNodePublicKey()"
+      class="font-roboto-mono"
+    />
+  </mat-form-field>
+  <ng-container *ngIf="group.get(inputMap.nodePublicKey).touched">
+    <mat-error *ngIf="group.get(inputMap.nodePublicKey).hasError('required')">
+      {{ 'node public key is required' | translate }}
+    </mat-error>
+    <mat-error *ngIf="group.get(inputMap.nodePublicKey).hasError('invalidAddress')">
+      {{ 'node public key is invalid' | translate }}
+    </mat-error>
+  </ng-container>
+</form>
