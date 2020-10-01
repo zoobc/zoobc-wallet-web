@@ -4,11 +4,10 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { ZBCAddressToBytes, ClaimNodeInterface, isZBCAddressValid } from 'zoobc-sdk';
-import { getTranslation, truncate } from 'src/helpers/utils';
+import zoobc, { ZBCAddressToBytes, ClaimNodeInterface } from 'zoobc-sdk';
+import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 @Component({
   selector: 'app-claim-node',
   templateUrl: './claim-node.component.html',
@@ -21,20 +20,22 @@ export class ClaimNodeComponent implements OnInit {
   typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
   ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
-
   account: SavedAccount;
-
   isLoading: boolean = false;
   isError: boolean = false;
-
-  currencyRate: Currency;
+  claimNodeForm = {
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+    nodePublicKey: 'nodePublicKey',
+    ipAddress: 'ipAddress',
+  };
 
   constructor(
     private authServ: AuthService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<ClaimNodeComponent>,
     private translate: TranslateService,
-    private currencyServ: CurrencyRateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
     this.formClaimNode = new FormGroup({
@@ -46,23 +47,11 @@ export class ClaimNodeComponent implements OnInit {
     });
 
     this.account = authServ.getCurrAccount();
-
     this.ipAddressForm.patchValue(this.account.nodeIP);
   }
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
     if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
-  }
-
-  onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
-    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
   onClaimNode() {
