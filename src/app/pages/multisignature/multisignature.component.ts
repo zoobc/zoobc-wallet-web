@@ -5,9 +5,10 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
+import { getTxType } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-multisignature',
@@ -19,21 +20,24 @@ export class MultisignatureComponent implements OnInit {
 
   multiSigDrafts: MultiSigDraft[];
   form: FormGroup;
-  txTypeField = new FormControl('sendMoney', Validators.required);
+  txTypeField = new FormControl(TransactionType.SENDMONEYTRANSACTION, Validators.required);
   chainTypeField = new FormControl('onchain', Validators.required);
 
   innerTransaction: boolean = false;
   signatures: boolean = false;
 
+  signedBy: number[] = [];
+  draftTxType: string[] = [];
+
   txType = [
-    { code: 'sendMoney', type: 'send money' },
-    { code: 'registerNode', type: 'register node' },
-    { code: 'updateNode', type: 'update node' },
-    { code: 'removeNode', type: 'remove node' },
-    { code: 'claimNode', type: 'claim node' },
-    { code: 'setupDataset', type: 'setup account dataset' },
-    { code: 'removeDataset', type: 'remove account dataset' },
-    { code: 'escrowApproval', type: 'escrow approval' },
+    { code: TransactionType.SENDMONEYTRANSACTION, type: 'send money' },
+    { code: TransactionType.NODEREGISTRATIONTRANSACTION, type: 'register node' },
+    { code: TransactionType.UPDATENODEREGISTRATIONTRANSACTION, type: 'update node' },
+    { code: TransactionType.REMOVENODEREGISTRATIONTRANSACTION, type: 'remove node' },
+    { code: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION, type: 'claim node' },
+    { code: TransactionType.SETUPACCOUNTDATASETTRANSACTION, type: 'setup account dataset' },
+    { code: TransactionType.REMOVENODEREGISTRATIONTRANSACTION, type: 'remove account dataset' },
+    { code: TransactionType.APPROVALESCROWTRANSACTION, type: 'escrow approval' },
   ];
 
   isMultiSignature: boolean = false;
@@ -70,7 +74,15 @@ export class MultisignatureComponent implements OnInit {
       })
       .sort()
       .reverse();
-    console.log(this.multiSigDrafts);
+
+    this.multiSigDrafts.forEach((draft, i) => {
+      let total = 0;
+      draft.signaturesInfo.participants.forEach(p => {
+        total += Buffer.from(p.signature).length > 0 ? 1 : 0;
+      });
+      this.signedBy[i] = total;
+      this.draftTxType[i] = getTxType(draft.txType);
+    });
   }
 
   onEditDraft(idx: number) {

@@ -87,7 +87,7 @@
                 <div class="chip" *ngIf="draft.signaturesInfo !== undefined">
                   {{ 'offchain multisig' | translate }}
                 </div>
-                <div class="chip">{{ draft.txType }}</div>
+                <div class="chip">{{ draftTxType[i] | translate }}</div>
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@
                   <div class="signed">
                     <span>{{ 'signedby' | translate }} </span>
                     <b>
-                      <!-- <span>{{ 'draft' | message }} </span> -->
+                      <span>{{ signedBy[i] }} </span>
                       <span *ngIf="draft.multisigInfo"> of {{ draft.multisigInfo.participants.length }}</span>
                     </b>
                   </div>

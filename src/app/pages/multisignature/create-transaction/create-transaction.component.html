@@ -28,13 +28,13 @@
         [group]="createTransactionForm"
         [inputMap]="fieldList"
         [currencyRate]="currencyRate"
-        *ngIf="multisig.txType == 'sendMoney'"
+        *ngIf="multisig.txType == 1"
       ></app-form-send-money>
 
       <app-form-update-node
         [group]="createTransactionForm"
         [inputMap]="fieldList"
-        *ngIf="multisig.txType == 'updateNode'"
+        *ngIf="multisig.txType == 258"
       ></app-form-update-node>
       <button
         *ngIf="multisig.signaturesInfo !== undefined"

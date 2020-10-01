@@ -6,6 +6,7 @@ import {
   updateNodeBuilder,
   UpdateNodeInterface,
   ZBCAddressToBytes,
+  TransactionType,
 } from 'zoobc-sdk';
 
 // general
@@ -53,9 +54,9 @@ export const updateNodeForm = {
   nodePublicKey: 'nodePublicKey',
 };
 
-export function createInnerTxForm(txType: string) {
+export function createInnerTxForm(txType: number) {
   switch (txType) {
-    case 'sendMoney':
+    case TransactionType.SENDMONEYTRANSACTION:
       return new FormGroup({
         sender: senderForm,
         recipient: recipientForm,
@@ -66,7 +67,7 @@ export function createInnerTxForm(txType: string) {
         typeCoin: typeCoinField,
         typeFee: typeFeeField,
       });
-    case 'updateNode':
+    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
       return new FormGroup({
         sender: senderForm,
         fee: feeForm,
@@ -81,21 +82,30 @@ export function createInnerTxForm(txType: string) {
   }
 }
 
-export function createTxBytes(form: any, txType: string): Buffer {
+export function createTxBytes(form: any, txType: number): Buffer {
   switch (txType) {
-    case 'sendMoney':
+    case TransactionType.SENDMONEYTRANSACTION:
       return createSendMoney(form);
-    case 'updateNode':
+    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
       return createUpdateNode(form);
   }
 }
 
-export function getFieldList(txType: string): Object {
+export function getFieldList(txType: number): Object {
   switch (txType) {
-    case 'sendMoney':
+    case TransactionType.SENDMONEYTRANSACTION:
       return sendMoneyForm;
-    case 'updateNode':
+    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
       return updateNodeForm;
+  }
+}
+
+export function getTxType(type: number) {
+  switch (type) {
+    case TransactionType.SENDMONEYTRANSACTION:
+      return 'send money';
+    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
+      return 'update node';
   }
 }
 
