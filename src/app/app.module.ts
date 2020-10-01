@@ -87,7 +87,7 @@ import { NodeRewardListComponent } from './components/node-reward-list/node-rewa
 import { FormEscrowModule } from './components/transaction-form/form-escrow/form-escrow.module';
 import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
-
+import { FormClaimNodeModule } from './components/transaction-form/form-claim-node/form-claim-node.module';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
@@ -193,6 +193,7 @@ export function getLanguage(languageServ: LanguageService) {
     RewardTableModule,
     FormSendMoneyModule,
     FormEscrowModule,
+    FormClaimNodeModule,
   ],
   bootstrap: [AppComponent],
   providers: [
