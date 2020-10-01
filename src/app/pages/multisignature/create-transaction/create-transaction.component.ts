@@ -11,7 +11,7 @@ import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
-import { createInnerTxForm, createTxBytes, getFieldList } from 'src/helpers/multisig-utils';
+import { createInnerTxForm, createTxBytes, getFieldList, getTxType } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
@@ -54,10 +54,9 @@ export class CreateTransactionComponent implements OnInit {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
       const feeFormCurr = this.createTransactionForm.get('feeCurr');
-      // const amountCurrencyForm = this.createTransactionForm.get('amountCurrency');
+
       feeFormCurr.patchValue(minCurrency);
       feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      // amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
@@ -70,15 +69,6 @@ export class CreateTransactionComponent implements OnInit {
       const senderForm = this.createTransactionForm.get('sender');
       senderForm.setValue(multisig.generatedSender);
 
-      // if (sendMoney) {
-      //   const { sender, recipient, amount, fee } = txBody;
-      //   this.senderForm.setValue(sender);
-      //   this.recipientForm.setValue(recipient);
-      //   this.amountForm.setValue(amount);
-      //   this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
-      //   this.feeForm.setValue(fee);
-      //   this.feeFormCurr.setValue(fee * this.currencyRate.value);
-      // }
       if (txBody) this.createTransactionForm.setValue(multisig.txBody);
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
@@ -178,10 +168,8 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   updateCreateTransaction() {
-    // const { recipient, amount, fee, sender } = this.createTransactionForm.value;
     const multisig = { ...this.multisig };
 
-    // multisig.sendMoney = { sender, amount, fee, recipient };
     multisig.txBody = this.createTransactionForm.value;
     this.multisigServ.update(multisig);
   }
@@ -191,37 +179,15 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   generatedTxHash() {
-    // console.log(this.createTransactionForm.value);
+    const { unisgnedTransactions, multisigInfo, signaturesInfo, txType } = this.multisig;
+    const form = this.createTransactionForm.value;
+    const signature = stringToBuffer('');
 
-    // const { sender, fee, nodePublicKey, nodeAddress, funds } = this.createTransactionForm.value;
-    const { unisgnedTransactions, multisigInfo } = this.multisig;
-    // const data: SendMoneyInterface = { sender, recipient, fee, amount };
-    // this.multisig.unisgnedTransactions = this.multisigServ.createTxBytes(this.createTransactionForm.value, this.multisig.txType);
-    // const data: UpdateNodeInterface = {
-    //   accountAddress: sender,
-    //   fee,
-    //   nodePublicKey: ZBCAddressToBytes(nodePublicKey),
-    //   nodeAddress,
-    //   funds,
-    // };
-    // console.log(data);
+    if (unisgnedTransactions === null) this.multisig.unisgnedTransactions = createTxBytes(form, txType);
 
-    console.log(this.createTransactionForm.value, this.multisig.txType);
-
-    if (unisgnedTransactions === null)
-      this.multisig.unisgnedTransactions = createTxBytes(
-        this.createTransactionForm.value,
-        this.multisig.txType
-      );
-
-    console.log(this.multisig.unisgnedTransactions);
-
-    if (this.multisig.signaturesInfo !== undefined) {
+    if (signaturesInfo !== undefined) {
       const txHash = generateTransactionHash(this.multisig.unisgnedTransactions);
-      const participants = multisigInfo.participants.map(address => ({
-        address,
-        signature: stringToBuffer(''),
-      }));
+      const participants = multisigInfo.participants.map(address => ({ address, signature }));
       this.multisig.signaturesInfo = { txHash, participants };
     }
   }

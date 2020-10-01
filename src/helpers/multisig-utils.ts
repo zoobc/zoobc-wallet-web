@@ -3,14 +3,12 @@ import { environment } from 'src/environments/environment';
 import {
   sendMoneyBuilder,
   SendMoneyInterface,
-  updateNodeBuilder,
-  UpdateNodeInterface,
-  ZBCAddressToBytes,
   TransactionType,
   SetupDatasetInterface,
   setupDatasetBuilder,
 } from 'zoobc-sdk';
 
+// ===================== FORM ==================== //
 // general
 export const senderForm = new FormControl('', Validators.required);
 export const feeForm = new FormControl(environment.fee, [
@@ -26,17 +24,13 @@ export const recipientForm = new FormControl('', Validators.required);
 export const amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
 export const amountCurrencyForm = new FormControl('', Validators.required);
 
-// update node
-export const ipAddressForm = new FormControl('', [
-  Validators.required,
-  Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
-]);
-export const lockedAmountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-export const nodePublicKeyForm = new FormControl('', Validators.required);
-
+// setup dataset
 export const propertyField = new FormControl('', [Validators.required]);
 export const valueField = new FormControl('', [Validators.required]);
 
+// ========================= END FORM ============================ //
+
+// ========================== INPUT MAP ========================== //
 export const sendMoneyForm = {
   sender: 'sender',
   recipient: 'recipient',
@@ -49,16 +43,6 @@ export const sendMoneyForm = {
   fee: 'fee',
 };
 
-export const updateNodeForm = {
-  accountAddress: 'accountAddress',
-  ipAddress: 'nodeAddress',
-  lockedAmount: 'funds',
-  fee: 'fee',
-  feeCurr: 'feeCurr',
-  typeFee: 'typeFee',
-  nodePublicKey: 'nodePublicKey',
-};
-
 export const setupDataSetForm = {
   sender: 'sender',
   property: 'property',
@@ -68,6 +52,7 @@ export const setupDataSetForm = {
   feeCurr: 'feeCurr',
   typeFee: 'typeFee',
 };
+// =========================== END INPUT MAP ======================= //
 
 export function createInnerTxForm(txType: number) {
   switch (txType) {
@@ -81,18 +66,6 @@ export function createInnerTxForm(txType: number) {
         feeCurr: feeFormCurr,
         typeCoin: typeCoinField,
         typeFee: typeFeeField,
-      });
-    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
-      return new FormGroup({
-        sender: senderForm,
-        fee: feeForm,
-        feeCurr: feeFormCurr,
-        typeCoin: typeCoinField,
-        typeFee: typeFeeField,
-
-        nodeAddress: ipAddressForm,
-        funds: lockedAmountForm,
-        nodePublicKey: nodePublicKeyForm,
       });
 
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
@@ -112,8 +85,6 @@ export function createTxBytes(form: any, txType: number): Buffer {
   switch (txType) {
     case TransactionType.SENDMONEYTRANSACTION:
       return createSendMoney(form);
-    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
-      return createUpdateNode(form);
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return createSetupDataset(form);
   }
@@ -123,8 +94,6 @@ export function getFieldList(txType: number): Object {
   switch (txType) {
     case TransactionType.SENDMONEYTRANSACTION:
       return sendMoneyForm;
-    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
-      return updateNodeForm;
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return setupDataSetForm;
   }
@@ -134,8 +103,6 @@ export function getTxType(type: number) {
   switch (type) {
     case TransactionType.SENDMONEYTRANSACTION:
       return 'send money';
-    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
-      return 'update node';
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return 'setup account dataset';
   }
@@ -147,21 +114,8 @@ function createSendMoney(form: any) {
   return sendMoneyBuilder(data);
 }
 
-function createUpdateNode(form: any) {
-  const { sender, fee, nodePublicKey, nodeAddress, funds } = form;
-  const data: UpdateNodeInterface = {
-    accountAddress: sender,
-    fee,
-    nodePublicKey: ZBCAddressToBytes(nodePublicKey),
-    nodeAddress,
-    funds,
-  };
-  return updateNodeBuilder(data, Buffer.from([0, 0, 0, 0]));
-}
-
 function createSetupDataset(form: any) {
   const { sender, fee, recipientAddress, property, value } = form;
-  // const data: SendMoneyInterface = { sender, fee, amount, recipient };
   const data: SetupDatasetInterface = {
     property,
     value,

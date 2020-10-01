@@ -1,5 +1,5 @@
 <div class="create-transaction-container">
-  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'multisignature' | translate }}</h2>
   <mat-card>
     <div class="stepper">
       <ng-container *ngIf="stepper.multisigInfo">
@@ -30,12 +30,6 @@
         [currencyRate]="currencyRate"
         *ngIf="multisig.txType == 1"
       ></app-form-send-money>
-
-      <app-form-update-node
-        [group]="createTransactionForm"
-        [inputMap]="fieldList"
-        *ngIf="multisig.txType == 258"
-      ></app-form-update-node>
 
       <form-setup-account-dataset
         [group]="createTransactionForm"

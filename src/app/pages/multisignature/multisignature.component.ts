@@ -26,15 +26,11 @@ export class MultisignatureComponent implements OnInit {
   innerTransaction: boolean = false;
   signatures: boolean = false;
 
-  signedBy: number[] = [];
+  draftSignedBy: number[] = [];
   draftTxType: string[] = [];
 
   txType = [
     { code: TransactionType.SENDMONEYTRANSACTION, type: 'send money' },
-    { code: TransactionType.NODEREGISTRATIONTRANSACTION, type: 'register node' },
-    { code: TransactionType.UPDATENODEREGISTRATIONTRANSACTION, type: 'update node' },
-    { code: TransactionType.REMOVENODEREGISTRATIONTRANSACTION, type: 'remove node' },
-    { code: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION, type: 'claim node' },
     { code: TransactionType.SETUPACCOUNTDATASETTRANSACTION, type: 'setup account dataset' },
     { code: TransactionType.REMOVENODEREGISTRATIONTRANSACTION, type: 'remove account dataset' },
     { code: TransactionType.APPROVALESCROWTRANSACTION, type: 'escrow approval' },
@@ -80,7 +76,7 @@ export class MultisignatureComponent implements OnInit {
       draft.signaturesInfo.participants.forEach(p => {
         total += Buffer.from(p.signature).length > 0 ? 1 : 0;
       });
-      this.signedBy[i] = total;
+      this.draftSignedBy[i] = total;
       this.draftTxType[i] = getTxType(draft.txType);
     });
   }
