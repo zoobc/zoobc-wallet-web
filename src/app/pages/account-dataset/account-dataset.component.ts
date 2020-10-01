@@ -35,6 +35,10 @@ export class AccountDatasetComponent implements OnInit {
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   feeFormCurr = new FormControl('', Validators.required);
   typeFeeField = new FormControl('ZBC');
+  propertyField = new FormControl('', [Validators.required]);
+  valueField = new FormControl('', [Validators.required]);
+  recipientAddressField = new FormControl('', [Validators.required]);
+  senderAddressField = new FormControl('', [Validators.required]);
 
   account: SavedAccount;
 
@@ -42,10 +46,10 @@ export class AccountDatasetComponent implements OnInit {
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
   removeDataSetForm = {
-    sender: '',
-    property: '',
-    value: '',
-    recipientAddress: '',
+    sender: 'sender',
+    property: 'property',
+    value: 'value',
+    recipientAddress: 'recipientAddress',
     fee: 'fee',
     feeCurr: 'feeCurr',
     typeFee: 'typeFee',
@@ -59,6 +63,10 @@ export class AccountDatasetComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
     this.form = new FormGroup({
+      sender: this.senderAddressField,
+      property: this.propertyField,
+      value: this.valueField,
+      recipientAddress: this.recipientAddressField,
       fee: this.feeForm,
       feeCurr: this.feeFormCurr,
       typeFee: this.typeFeeField,
@@ -136,10 +144,10 @@ export class AccountDatasetComponent implements OnInit {
 
   onDelete(dataset: any) {
     this.dataSet = dataset;
-    this.removeDataSetForm.sender = dataset.setteraccountaddress;
-    this.removeDataSetForm.recipientAddress = dataset.recipientaccountaddress;
-    this.removeDataSetForm.property = dataset.property;
-    this.removeDataSetForm.value = dataset.value;
+    this.senderAddressField.patchValue(dataset.setteraccountaddress);
+    this.recipientAddressField.patchValue(dataset.recipientaccountaddress);
+    this.propertyField.patchValue(dataset.property);
+    this.valueField.patchValue(dataset.value);
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeForm.patchValue(this.minFee);

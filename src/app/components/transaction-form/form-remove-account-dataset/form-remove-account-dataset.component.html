@@ -2,24 +2,24 @@
   <label>{{ 'sender' | translate }}:</label>
   <ng-container *ngIf="readOnly">
     <div style="margin-bottom: 16px;">
-      <wallet-address [value]="formValue.sender"></wallet-address>
+      <wallet-address [value]="group.get(formValue.sender).value"></wallet-address>
     </div>
   </ng-container>
   <ng-container *ngIf="!readOnly">
     <account-selector
       (select)="onSwitchAccount($event)"
       type="normal"
-      [addresses]="formValue.sender"
+      [addresses]="group.get(formValue.sender).value"
     ></account-selector>
   </ng-container>
   <ng-container *ngIf="!removeOther">
     <label>{{ 'property' | translate }}:</label>
     <div style="margin-bottom: 16px;">
-      {{ formValue.property }}
+      {{ group.get(formValue.property).value }}
     </div>
     <label>{{ 'value' | translate }}:</label>
     <div style="margin-bottom: 16px;">
-      {{ formValue.value }}
+      {{ group.get(formValue.value).value }}
     </div>
   </ng-container>
   <ng-container *ngIf="removeOther">
