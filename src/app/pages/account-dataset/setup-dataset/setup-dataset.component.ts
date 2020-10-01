@@ -32,9 +32,10 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
   feeFormCurr = new FormControl('', Validators.required);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
   typeFeeField = new FormControl('ZBC');
+  senderAddressField = new FormControl('', [Validators.required]);
 
   setupDataSetForm = {
-    sender: this.account.address,
+    sender: 'sender',
     property: 'property',
     value: 'value',
     recipientAddress: 'recipientAddress',
@@ -52,6 +53,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     private translate: TranslateService
   ) {
     this.formGroup = new FormGroup({
+      sender: this.senderAddressField,
       property: this.propertyField,
       value: this.valueField,
       recipientAddress: this.recipientAddressField,
@@ -71,6 +73,7 @@ export class SetupDatasetComponent implements OnInit, OnDestroy {
     this.subscription.add(subsRate);
     this.isSetupOther = false;
     this.disableSetupOther();
+    this.senderAddressField.patchValue(this.account.address);
   }
 
   ngOnDestroy() {

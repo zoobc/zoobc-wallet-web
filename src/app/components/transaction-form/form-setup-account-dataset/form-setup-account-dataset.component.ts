@@ -15,12 +15,12 @@ export class FormSetupAccountDatasetComponent implements OnInit {
   @Output() enableSetupOther?: EventEmitter<boolean> = new EventEmitter();
   @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
   account: SavedAccount;
-  chooseSender: boolean = true;
+  prefillSender: boolean = false;
 
   constructor() {}
 
   ngOnInit() {
-    if (this.formValue.sender) this.chooseSender = false;
+    if (this.group.get(this.formValue.sender).value) this.prefillSender = true;
   }
 
   onSwitchAccount(account: SavedAccount) {

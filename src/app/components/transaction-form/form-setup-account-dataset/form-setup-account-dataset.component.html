@@ -1,12 +1,12 @@
 <form [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
-  <ng-container *ngIf="chooseSender">
-    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
-  </ng-container>
-  <ng-container *ngIf="!chooseSender">
+  <ng-container *ngIf="prefillSender">
     <div style="margin-bottom: 16px;">
-      <wallet-address [value]="formValue.sender"></wallet-address>
+      <wallet-address [value]="group.get(formValue.sender).value"></wallet-address>
     </div>
+  </ng-container>
+  <ng-container *ngIf="!prefillSender">
+    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
   </ng-container>
   <mat-form-field appearance="outline" color="accent" class="block">
     <mat-label>{{ 'property' | translate }}</mat-label>
