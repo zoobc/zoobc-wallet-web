@@ -12,9 +12,10 @@ import { environment } from 'src/environments/environment';
 import { truncate, calcMinFee, getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { PostTransactionResponses, HostInfoResponse } from 'zoobc-sdk';
+import zoobc, { PostTransactionResponses, HostInfoResponse, TransactionType } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
+import { sendMoneyForm, createInnerTxForm } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-sendmoney',
@@ -23,28 +24,26 @@ import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 })
 export class SendmoneyComponent implements OnInit {
   subscription: Subscription = new Subscription();
-  contacts: Contact[];
-  contact: Contact;
-  filteredContacts: Observable<Contact[]>;
+
   currencyRate: Currency;
   minFee = environment.fee;
   kindFee: string;
 
   formSend: FormGroup;
-  recipientForm = new FormControl('', Validators.required);
-  amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-  amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  aliasField = new FormControl('', Validators.required);
-  addressApproverField = new FormControl('', Validators.required);
-  approverCommissionField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-  approverCommissionCurrField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-  instructionField = new FormControl('', Validators.required);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  typeCoinField = new FormControl('ZBC');
-  typeFeeField = new FormControl('ZBC');
-  typeCommissionField = new FormControl('ZBC');
+  // recipientForm = new FormControl('', Validators.required);
+  // amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
+  // amountCurrencyForm = new FormControl('', Validators.required);
+  // feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
+  // feeFormCurr = new FormControl('', Validators.required);
+  // aliasField = new FormControl('', Validators.required);
+  // addressApproverField = new FormControl('', Validators.required);
+  // approverCommissionField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
+  // approverCommissionCurrField = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
+  // instructionField = new FormControl('', Validators.required);
+  // timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
+  // typeCoinField = new FormControl('ZBC');
+  // typeFeeField = new FormControl('ZBC');
+  // typeCommissionField = new FormControl('ZBC');
 
   sendMoneyRefDialog: MatDialogRef<any>;
   isLoading = false;
@@ -54,16 +53,7 @@ export class SendmoneyComponent implements OnInit {
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
   saveAddressFeature: boolean = true;
-  sendMoneyForm = {
-    recipient: 'recipient',
-    alias: 'alias',
-    typeCoin: 'typeCoin',
-    amountCurrency: 'amountCurrency',
-    amount: 'amount',
-    typeFee: 'typeFee',
-    feeCurrency: 'feeCurr',
-    fee: 'fee',
-  };
+  sendMoneyForm = sendMoneyForm;
 
   escrowForm = {
     addressApprover: 'addressApprover',
@@ -83,29 +73,34 @@ export class SendmoneyComponent implements OnInit {
     private router: Router,
     private activeRoute: ActivatedRoute
   ) {
-    this.formSend = new FormGroup({
-      recipient: this.recipientForm,
-      amount: this.amountForm,
-      amountCurrency: this.amountCurrencyForm,
-      typeCoin: this.typeCoinField,
-      alias: this.aliasField,
-      fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
-      addressApprover: this.addressApproverField,
-      approverCommission: this.approverCommissionField,
-      approverCommissionCurr: this.approverCommissionCurrField,
-      typeCommission: this.typeCommissionField,
-      instruction: this.instructionField,
-      timeout: this.timeoutField,
-    });
+    // this.formSend = new FormGroup({
+    //   recipient: this.recipientForm,
+    //   amount: this.amountForm,
+    //   amountCurrency: this.amountCurrencyForm,
+    //   typeCoin: this.typeCoinField,
+    //   alias: this.aliasField,
+    //   fee: this.feeForm,
+    //   feeCurr: this.feeFormCurr,
+    //   typeFee: this.typeFeeField,
+    //   addressApprover: this.addressApproverField,
+    //   approverCommission: this.approverCommissionField,
+    //   approverCommissionCurr: this.approverCommissionCurrField,
+    //   typeCommission: this.typeCommissionField,
+    //   instruction: this.instructionField,
+    //   timeout: this.timeoutField,
+    // });
+    this.formSend = createInnerTxForm(TransactionType.SENDMONEYTRANSACTION);
     // disable alias field (saveAddress = false)
-    this.aliasField.disable();
+    const aliasField = this.formSend.get('alias');
+    const amountForm = this.formSend.get('amount');
+    const recipientForm = this.formSend.get('recipient');
+
+    aliasField.disable();
     // disable some field where (advancedMenu = false)
     const amount = this.activeRoute.snapshot.params['amount'];
     const recipient = this.activeRoute.snapshot.params['recipient'];
-    this.amountForm.patchValue(amount);
-    this.recipientForm.patchValue(recipient);
+    amountForm.patchValue(amount);
+    recipientForm.patchValue(recipient);
   }
 
   ngOnInit() {
@@ -115,75 +110,10 @@ export class SendmoneyComponent implements OnInit {
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
       this.router.navigateByUrl('/dashboard');
     }
-    this.contacts = this.contactServ.getList() || [];
-
-    this.filteredContacts = this.recipientForm.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterContacts(value))
-    );
-
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    this.subscription.add(subsRate);
-    this.getAccounts();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  getAccounts() {
-    this.accounts = this.authServ.getAllAccount();
-    this.accounts.forEach(account => {
-      const contact: Contact = {
-        address: account.address,
-        name: account.name,
-      };
-      this.contacts.push(contact);
-    });
-  }
-
-  onSwitchAccount(account: SavedAccount) {
-    this.account = account;
-  }
-
-  filterContacts(value: string): Contact[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      return this.contacts.filter((contact: Contact) => contact.name.toLowerCase().includes(filterValue));
-    } else if (value == '') return this.contacts;
-  }
-
-  isAddressInContacts() {
-    const isAddressInContacts = this.contacts.some(c => {
-      if (c.address == this.recipientForm.value) {
-        this.contact = c;
-        return true;
-      } else return false;
-    });
-
-    if (isAddressInContacts) {
-      this.aliasField.disable();
-      this.saveAddress = false;
-      this.showSaveAddressBtn = false;
-    } else {
-      this.showSaveAddressBtn = true;
-    }
-  }
-
-  toggleSaveAddress() {
-    if (this.saveAddress) {
-      this.aliasField.disable();
-      this.saveAddress = false;
-    } else {
-      this.aliasField.enable();
-      this.saveAddress = true;
-    }
   }
 
   async onOpenDialogDetailSendMoney() {

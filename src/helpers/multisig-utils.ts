@@ -43,6 +43,15 @@ export const sendMoneyForm = {
   fee: 'fee',
 };
 
+export const escrowForm = {
+  addressApprover: 'addressApprover',
+  typeCommission: 'typeCommission',
+  approverCommissionCurr: 'approverCommissionCurr',
+  approverCommission: 'approverCommission',
+  timeout: 'timeout',
+  instruction: 'instruction',
+};
+
 export const setupDataSetForm = {
   sender: 'sender',
   property: 'property',

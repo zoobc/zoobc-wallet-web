@@ -2,18 +2,7 @@
   <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
-      <app-form-send-money
-        [group]="formSend"
-        [inputMap]="sendMoneyForm"
-        [contact]="contact"
-        [currencyRate]="currencyRate"
-        [showSaveAddressBtn]="showSaveAddressBtn"
-        [saveAddress]="saveAddress"
-        [saveAddressFeature]="saveAddressFeature"
-        (switchAccount)="onSwitchAccount($event)"
-        (isAddressInContacts)="isAddressInContacts()"
-        (toggleSaveAddress)="toggleSaveAddress()"
-      ></app-form-send-money>
+      <app-form-send-money [group]="formSend" [inputMap]="sendMoneyForm"></app-form-send-money>
       <span class="sub-title">
         {{ 'advanced option' | translate }}
       </span>
