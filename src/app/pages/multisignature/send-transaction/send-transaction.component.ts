@@ -78,6 +78,8 @@ export class SendTransactionComponent implements OnInit {
     });
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
+      console.log(multisig);
+
       const { multisigInfo } = multisig;
       if (multisigInfo === undefined) return this.router.navigate(['/multisignature']);
       this.multisig = multisig;
@@ -166,14 +168,7 @@ export class SendTransactionComponent implements OnInit {
 
   async onSendMultiSignatureTransaction() {
     this.updateSendTransaction();
-    let {
-      accountAddress,
-      fee,
-      multisigInfo,
-      unisgnedTransactions,
-      signaturesInfo,
-      sendMoney,
-    } = this.multisig;
+    let { accountAddress, fee, multisigInfo, unisgnedTransactions, signaturesInfo, txBody } = this.multisig;
     let data: MultiSigInterface;
     if (signaturesInfo !== undefined) {
       const signatureInfoFilter: SignatureInfo = {
@@ -205,16 +200,15 @@ export class SendTransactionComponent implements OnInit {
     }
     const childSeed = this.authServ.seed;
 
-    if (data.signaturesInfo === undefined)
-      data.unisgnedTransactions = sendMoneyBuilder(this.multisig.sendMoney);
+    if (data.signaturesInfo === undefined) data.unisgnedTransactions = sendMoneyBuilder(this.multisig.txBody);
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);
         let subMessage = getTranslation('you send coins to', this.translate, {
-          amount: sendMoney.amount,
-          currencyValue: truncate(sendMoney.amount * this.currencyRate.value, 2),
+          amount: txBody.amount,
+          currencyValue: truncate(txBody.amount * this.currencyRate.value, 2),
           currencyName: this.currencyRate.name,
-          recipient: sendMoney.recipient,
+          recipient: txBody.recipient,
         });
         this.multisigServ.deleteDraft(this.multisig.id);
         Swal.fire(message, subMessage, 'success');

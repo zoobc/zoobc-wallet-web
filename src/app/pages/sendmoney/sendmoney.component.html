@@ -11,8 +11,8 @@
         [saveAddress]="saveAddress"
         [saveAddressFeature]="saveAddressFeature"
         (switchAccount)="onSwitchAccount($event)"
-        (isAddressInContacts)="isAddressInContacts($event)"
-        (toggleSaveAddress)="toggleSaveAddress($event)"
+        (isAddressInContacts)="isAddressInContacts()"
+        (toggleSaveAddress)="toggleSaveAddress()"
       ></app-form-send-money>
       <span class="sub-title">
         {{ 'advanced option' | translate }}
@@ -21,7 +21,7 @@
         [group]="formSend"
         [inputMap]="escrowForm"
         [currencyRate]="currencyRate"
-        (changeTimeOut)="onChangeTimeOut($event)"
+        (changeTimeOut)="onChangeTimeOut()"
       ></app-form-escrow>
       <button
         mat-flat-button

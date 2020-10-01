@@ -26,9 +26,16 @@
     <form [formGroup]="createTransactionForm" (submit)="next()">
       <app-form-send-money
         [group]="createTransactionForm"
-        [inputMap]="sendMoneyForm"
+        [inputMap]="fieldList"
         [currencyRate]="currencyRate"
+        *ngIf="multisig.txType == 'sendMoney'"
       ></app-form-send-money>
+
+      <app-form-update-node
+        [group]="createTransactionForm"
+        [inputMap]="fieldList"
+        *ngIf="multisig.txType == 'updateNode'"
+      ></app-form-update-node>
       <button
         *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button

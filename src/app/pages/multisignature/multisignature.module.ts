@@ -29,6 +29,7 @@ import { InputAddressModule } from '../../components/input-address/input-address
 import { AccountSelectorModule } from '../../components/account-selector/account-selector.module';
 import { InputAmountModule } from '../../components/input-amount/input-amount.module';
 import { FormSendMoneyModule } from '../../components/transaction-form/form-send-money/form-send-money.module';
+import { FormUpdateNodeModule } from 'src/app/components/transaction-form/form-update-node/form-update-node.module';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -77,6 +78,7 @@ const routes: Routes = [
     InputAddressModule,
     InputAmountModule,
     FormSendMoneyModule,
+    FormUpdateNodeModule,
   ],
 })
 export class MultisignatureModule {}

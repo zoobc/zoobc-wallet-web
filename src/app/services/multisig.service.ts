@@ -1,27 +1,20 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  ClaimNodeInterface,
-  EscrowApprovalInterface,
-  MultiSigInterface,
-  RegisterNodeInterface,
-  RemoveNodeInterface,
-  SendMoneyInterface,
-  SetupDatasetInterface,
-  UpdateNodeInterface,
-} from 'zoobc-sdk';
+import { MultiSigInterface } from 'zoobc-sdk';
 
 export interface MultiSigDraft extends MultiSigInterface {
   id: number;
   generatedSender?: string;
-  sendMoney?: SendMoneyInterface;
-  registerNode?: RegisterNodeInterface;
-  updateNode?: UpdateNodeInterface;
-  removeNode?: RemoveNodeInterface;
-  claimNode?: ClaimNodeInterface;
-  setupDataset?: SetupDatasetInterface;
-  removeDataset?: RemoveNodeInterface;
-  escrowApproval?: EscrowApprovalInterface;
+  txType: string;
+  txBody?: any;
+  // sendMoney?: SendMoneyInterface;
+  // registerNode?: RegisterNodeInterface;
+  // updateNode?: UpdateNodeInterface;
+  // removeNode?: RemoveNodeInterface;
+  // claimNode?: ClaimNodeInterface;
+  // setupDataset?: SetupDatasetInterface;
+  // removeDataset?: RemoveNodeInterface;
+  // escrowApproval?: EscrowApprovalInterface;
 }
 
 @Injectable({
@@ -32,6 +25,7 @@ export class MultisigService {
     id: 0,
     accountAddress: '',
     fee: 0,
+    txType: 'sendMoney',
   };
 
   private sourceMultisig = new BehaviorSubject<MultiSigDraft>({ ...this.multisigTemplate });

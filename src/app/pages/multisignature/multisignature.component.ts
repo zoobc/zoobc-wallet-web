@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Pipe, PipeTransform } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
@@ -63,13 +63,14 @@ export class MultisignatureComponent implements OnInit {
     this.multiSigDrafts = this.multisigServ
       .getDrafts()
       .filter(draft => {
-        const { multisigInfo, sendMoney, generatedSender } = draft;
+        const { multisigInfo, txBody, generatedSender } = draft;
         if (generatedSender == currAccount.address) return draft;
         if (multisigInfo.participants.includes(currAccount.address)) return draft;
-        if (sendMoney && sendMoney.sender == currAccount.address) return draft;
+        if (txBody && txBody.sender == currAccount.address) return draft;
       })
       .sort()
       .reverse();
+    console.log(this.multiSigDrafts);
   }
 
   onEditDraft(idx: number) {
@@ -91,7 +92,7 @@ export class MultisignatureComponent implements OnInit {
       id: 0,
       multisigInfo: null,
       unisgnedTransactions: null,
-      [txType]: null,
+      txType,
     };
     if (this.chainTypeField.value == 'offchain') multisig.signaturesInfo = null;
 
@@ -187,4 +188,13 @@ export class MultisignatureComponent implements OnInit {
       };
     }
   }
+
+  // get TotalSignedTx(draft: MultiSigDraft): number {
+  //   let total = 0;
+  //   // console.log(Buffer.from(draft.signaturesInfo.participants[0].signature).length);
+  //   draft.signaturesInfo.participants.forEach(p => (total += Buffer.from(p.signature).length == 0 ? 1 : 0));
+  //   // console.log(total);
+
+  //   return total;
+  // }
 }
