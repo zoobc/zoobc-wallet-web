@@ -150,6 +150,8 @@ export class CreateTransactionComponent implements OnInit {
             type: 'warning',
           }).then(result => {
             if (result.value) {
+              console.log('here');
+
               this.generatedTxHash();
               this.multisigServ.update(this.multisig);
               return true;
@@ -204,11 +206,15 @@ export class CreateTransactionComponent implements OnInit {
     // };
     // console.log(data);
 
+    console.log(this.createTransactionForm.value, this.multisig.txType);
+
     if (unisgnedTransactions === null)
       this.multisig.unisgnedTransactions = createTxBytes(
         this.createTransactionForm.value,
         this.multisig.txType
       );
+
+    console.log(this.multisig.unisgnedTransactions);
 
     if (this.multisig.signaturesInfo !== undefined) {
       const txHash = generateTransactionHash(this.multisig.unisgnedTransactions);

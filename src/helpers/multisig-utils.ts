@@ -7,6 +7,8 @@ import {
   UpdateNodeInterface,
   ZBCAddressToBytes,
   TransactionType,
+  SetupDatasetInterface,
+  setupDatasetBuilder,
 } from 'zoobc-sdk';
 
 // general
@@ -32,6 +34,9 @@ export const ipAddressForm = new FormControl('', [
 export const lockedAmountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
 export const nodePublicKeyForm = new FormControl('', Validators.required);
 
+export const propertyField = new FormControl('', [Validators.required]);
+export const valueField = new FormControl('', [Validators.required]);
+
 export const sendMoneyForm = {
   sender: 'sender',
   recipient: 'recipient',
@@ -52,6 +57,16 @@ export const updateNodeForm = {
   feeCurr: 'feeCurr',
   typeFee: 'typeFee',
   nodePublicKey: 'nodePublicKey',
+};
+
+export const setupDataSetForm = {
+  sender: 'sender',
+  property: 'property',
+  value: 'value',
+  recipientAddress: 'recipientAddress',
+  fee: 'fee',
+  feeCurr: 'feeCurr',
+  typeFee: 'typeFee',
 };
 
 export function createInnerTxForm(txType: number) {
@@ -79,6 +94,17 @@ export function createInnerTxForm(txType: number) {
         funds: lockedAmountForm,
         nodePublicKey: nodePublicKeyForm,
       });
+
+    case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
+      return new FormGroup({
+        sender: senderForm,
+        property: propertyField,
+        value: valueField,
+        recipientAddress: recipientForm,
+        fee: feeForm,
+        feeCurr: feeFormCurr,
+        typeFee: typeFeeField,
+      });
   }
 }
 
@@ -88,6 +114,8 @@ export function createTxBytes(form: any, txType: number): Buffer {
       return createSendMoney(form);
     case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
       return createUpdateNode(form);
+    case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
+      return createSetupDataset(form);
   }
 }
 
@@ -97,6 +125,8 @@ export function getFieldList(txType: number): Object {
       return sendMoneyForm;
     case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
       return updateNodeForm;
+    case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
+      return setupDataSetForm;
   }
 }
 
@@ -106,6 +136,8 @@ export function getTxType(type: number) {
       return 'send money';
     case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
       return 'update node';
+    case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
+      return 'setup account dataset';
   }
 }
 
@@ -125,4 +157,17 @@ function createUpdateNode(form: any) {
     funds,
   };
   return updateNodeBuilder(data, Buffer.from([0, 0, 0, 0]));
+}
+
+function createSetupDataset(form: any) {
+  const { sender, fee, recipientAddress, property, value } = form;
+  // const data: SendMoneyInterface = { sender, fee, amount, recipient };
+  const data: SetupDatasetInterface = {
+    property,
+    value,
+    setterAccountAddress: sender,
+    recipientAccountAddress: recipientAddress,
+    fee: fee,
+  };
+  return setupDatasetBuilder(data);
 }

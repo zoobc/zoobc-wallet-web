@@ -36,6 +36,15 @@
         [inputMap]="fieldList"
         *ngIf="multisig.txType == 258"
       ></app-form-update-node>
+
+      <form-setup-account-dataset
+        [group]="createTransactionForm"
+        [formValue]="fieldList"
+        [currencyRate]="currencyRate"
+        [isSetupOther]="true"
+        *ngIf="multisig.txType == 3"
+      ></form-setup-account-dataset>
+
       <button
         *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button
