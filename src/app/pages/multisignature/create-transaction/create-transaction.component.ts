@@ -69,7 +69,7 @@ export class CreateTransactionComponent implements OnInit {
       const senderForm = this.createTransactionForm.get('sender');
       senderForm.setValue(multisig.generatedSender);
 
-      if (txBody) this.createTransactionForm.setValue(multisig.txBody);
+      if (txBody) this.createTransactionForm.setValue(txBody);
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
@@ -127,7 +127,7 @@ export class CreateTransactionComponent implements OnInit {
       if (this.createTransactionForm.valid) {
         this.updateCreateTransaction();
         const { signaturesInfo } = this.multisig;
-        if (this.multisig.signaturesInfo === null) {
+        if (signaturesInfo === null) {
           const title = getTranslation('are you sure?', this.translate);
           const message = getTranslation('you will not be able to update the form anymore!', this.translate);
           const buttonText = getTranslation('yes, continue it!', this.translate);
@@ -171,6 +171,7 @@ export class CreateTransactionComponent implements OnInit {
     const multisig = { ...this.multisig };
 
     multisig.txBody = this.createTransactionForm.value;
+
     this.multisigServ.update(multisig);
   }
 

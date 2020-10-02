@@ -23,6 +23,7 @@ export const typeFeeField = new FormControl('ZBC');
 export const recipientForm = new FormControl('', Validators.required);
 export const amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
 export const amountCurrencyForm = new FormControl('', Validators.required);
+export const aliasField = new FormControl('', Validators.required);
 
 // setup dataset
 export const propertyField = new FormControl('', [Validators.required]);
@@ -34,7 +35,7 @@ export const valueField = new FormControl('', [Validators.required]);
 export const sendMoneyForm = {
   sender: 'sender',
   recipient: 'recipient',
-  alias: 'alias',
+  // alias: 'alias',
   typeCoin: 'typeCoin',
   amountCurrency: 'amountCurrency',
   amount: 'amount',
@@ -71,6 +72,7 @@ export function createInnerTxForm(txType: number) {
         recipient: recipientForm,
         amount: amountForm,
         amountCurrency: amountCurrencyForm,
+        // alias: aliasField,
         fee: feeForm,
         feeCurr: feeFormCurr,
         typeCoin: typeCoinField,

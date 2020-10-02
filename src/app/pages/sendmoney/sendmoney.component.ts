@@ -26,7 +26,7 @@ export class SendmoneyComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
   currencyRate: Currency;
-  minFee = environment.fee;
+
   kindFee: string;
 
   formSend: FormGroup;
@@ -49,7 +49,7 @@ export class SendmoneyComponent implements OnInit {
   isLoading = false;
   isError = false;
   account: SavedAccount;
-  accounts: SavedAccount[];
+  // accounts: SavedAccount[];
   saveAddress: boolean = false;
   showSaveAddressBtn: boolean = true;
   saveAddressFeature: boolean = true;
@@ -95,7 +95,7 @@ export class SendmoneyComponent implements OnInit {
     const amountForm = this.formSend.get('amount');
     const recipientForm = this.formSend.get('recipient');
 
-    aliasField.disable();
+    // aliasField.disable();
     // disable some field where (advancedMenu = false)
     const amount = this.activeRoute.snapshot.params['amount'];
     const recipient = this.activeRoute.snapshot.params['recipient'];
@@ -117,8 +117,13 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async onOpenDialogDetailSendMoney() {
-    this.getMinimumFee();
-    const total = this.amountForm.value + this.feeForm.value;
+    const amountForm = this.formSend.get('amount');
+    const feeForm = this.formSend.get('fee');
+    // const approverCommissionField = this.formSend.get('approverCommission');
+    const aliasField = this.formSend.get('alias');
+
+    // this.getMinimumFee();
+    const total = amountForm.value + feeForm.value;
     const balance = this.account.balance / 1e8;
     if (balance >= total) {
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
@@ -127,11 +132,11 @@ export class SendmoneyComponent implements OnInit {
         data: {
           form: this.formSend.value,
           kindFee: this.kindFee,
-          advancedMenu: this.approverCommissionField.enabled,
+          // advancedMenu: approverCommissionField.enabled,
           account: this.account,
-          currencyName: this.currencyRate.name,
+          // currencyName: this.currencyRate.name,
           saveAddress: this.saveAddress,
-          alias: this.aliasField.value,
+          // alias: aliasField.value,
         },
       });
       this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
@@ -141,7 +146,7 @@ export class SendmoneyComponent implements OnInit {
       });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate, {
-        amount: balance - this.feeForm.value,
+        amount: balance - feeForm.value,
       });
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
@@ -164,15 +169,25 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isLoading = true;
 
+      const amountForm = this.formSend.get('amount');
+      const feeForm = this.formSend.get('fee');
+      // const approverCommissionField = this.formSend.get('approverCommission');
+      // const addressApproverField = this.formSend.get('addressApprover');
+      const recipientForm = this.formSend.get('recipient');
+      // const timeoutField = this.formSend.get('timeout');
+      // const instructionField = this.formSend.get('instruction');
+      const amountCurrencyForm = this.formSend.get('amountCurrency');
+      const aliasField = this.formSend.get('alias');
+
       let data: SendMoneyInterface = {
         sender: this.account.address,
-        recipient: this.recipientForm.value,
-        fee: this.feeForm.value,
-        amount: this.amountForm.value,
-        approverAddress: this.addressApproverField.value,
-        commission: this.approverCommissionField.value,
-        timeout: this.timeoutField.value,
-        instruction: this.instructionField.value,
+        recipient: recipientForm.value,
+        fee: feeForm.value,
+        amount: amountForm.value,
+        // approverAddress: addressApproverField.value,
+        // commission: approverCommissionField.value,
+        // timeout: timeoutField.value,
+        // instruction: instructionField.value,
       };
       // const txBytes = sendMoneyBuilder(data, this.keyringServ);
       const childSeed = this.authServ.seed;
@@ -182,8 +197,8 @@ export class SendmoneyComponent implements OnInit {
           let message = getTranslation('your transaction is processing', this.translate);
           let subMessage = getTranslation('you send coins to', this.translate, {
             amount: data.amount,
-            currencyValue: truncate(this.amountCurrencyForm.value, 2),
-            currencyName: this.currencyRate.name,
+            currencyValue: truncate(amountCurrencyForm.value, 2),
+            // currencyName: this.currencyRate.name,
             recipient: data.recipient,
           });
           Swal.fire(message, subMessage, 'success');
@@ -191,10 +206,10 @@ export class SendmoneyComponent implements OnInit {
           // save address
           if (this.saveAddress) {
             const newContact: Contact = {
-              name: this.aliasField.value,
-              address: this.recipientForm.value,
+              name: aliasField.value,
+              address: recipientForm.value,
             };
-            this.contacts = this.contactServ.add(newContact);
+            this.contactServ.add(newContact);
           }
           this.router.navigateByUrl('/dashboard');
         },
@@ -207,36 +222,5 @@ export class SendmoneyComponent implements OnInit {
         }
       );
     }
-  }
-
-  async getMinimumFee() {
-    let data: SendMoneyInterface = {
-      sender: this.account.address,
-      recipient: this.recipientForm.value,
-      fee: this.feeForm.value,
-      amount: this.amountForm.value,
-      approverAddress: this.addressApproverField.value,
-      commission: this.approverCommissionField.value,
-      timeout: this.timeoutField.value,
-      instruction: this.instructionField.value,
-    };
-
-    const fee: number = calcMinFee(data);
-    this.minFee = fee;
-
-    this.feeForm.setValidators([Validators.required, Validators.min(fee)]);
-    if (fee > this.feeForm.value) this.feeForm.patchValue(fee);
-    const feeCurrency = truncate(fee * this.currencyRate.value, 8);
-    this.feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
-    this.feeFormCurr.patchValue(feeCurrency);
-    this.amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
-    this.feeForm.updateValueAndValidity();
-    this.feeFormCurr.updateValueAndValidity();
-    this.feeForm.markAsTouched();
-    this.feeFormCurr.markAsTouched();
-  }
-
-  onChangeTimeOut() {
-    this.getMinimumFee();
   }
 }

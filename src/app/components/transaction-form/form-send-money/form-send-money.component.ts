@@ -1,16 +1,20 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input, Output, OnInit, EventEmitter, OnDestroy } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { Contact } from 'src/app/services/contact.service';
-import { Currency } from 'src/app/services/currency-rate.service';
-import { Observable } from 'rxjs';
+import { Contact, ContactService } from 'src/app/services/contact.service';
+import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { calcMinFee, truncate } from 'src/helpers/utils';
+import { environment } from 'src/environments/environment';
+import { SendMoneyInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-form-send-money',
   templateUrl: './form-send-money.component.html',
   styleUrls: ['./form-send-money.component.scss'],
 })
-export class FormSendMoneyComponent implements OnInit {
+export class FormSendMoneyComponent implements OnInit, OnDestroy {
   @Input() group: FormGroup;
   @Input() inputMap: any;
   // @Input() contact?: Contact;
@@ -18,17 +22,29 @@ export class FormSendMoneyComponent implements OnInit {
   @Input() showSaveAddressBtn: boolean = false;
   @Input() saveAddress: boolean = false;
   @Input() saveAddressFeature: boolean = false;
+  @Input() multisig: boolean = false;
   // @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
   // @Output() isAddressInContacts?: EventEmitter<boolean> = new EventEmitter();
   // @Output() toggleSaveAddress?: EventEmitter<boolean> = new EventEmitter();
-  account: SavedAccount;
+
   chooseSender: boolean = true;
 
   contacts: Contact[];
   contact: Contact;
   filteredContacts: Observable<Contact[]>;
 
-  constructor(private authServ: AuthService) {}
+  minFee = environment.fee;
+
+  account: SavedAccount;
+  accounts: SavedAccount[];
+
+  subscription: Subscription = new Subscription();
+
+  constructor(
+    private authServ: AuthService,
+    private contactServ: ContactService,
+    private currencyServ: CurrencyRateService
+  ) {}
 
   // onSwitchAccount(account: SavedAccount) {
   //   this.account = account;
@@ -39,11 +55,22 @@ export class FormSendMoneyComponent implements OnInit {
   // }
 
   ngOnInit() {
+    const amountForm = this.group.get('amount');
+    const feeForm = this.group.get('fee');
+    // const approverCommissionField = this.group.get('approverCommission');
+    // const addressApproverField = this.group.get('addressApprover');
+    const recipientForm = this.group.get('recipient');
+    // const timeoutField = this.group.get('timeout');
+    // const instructionField = this.group.get('instruction');
+    const amountCurrencyForm = this.group.get('amountCurrency');
+    const aliasField = this.group.get('alias');
+    const feeFormCurr = this.group.get('feeCurr');
+
     if (this.inputMap.sender) this.chooseSender = false;
 
     this.contacts = this.contactServ.getList() || [];
 
-    this.filteredContacts = this.recipientForm.valueChanges.pipe(
+    this.filteredContacts = recipientForm.valueChanges.pipe(
       startWith(''),
       map(value => this.filterContacts(value))
     );
@@ -51,12 +78,16 @@ export class FormSendMoneyComponent implements OnInit {
     const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
       const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
+      feeFormCurr.patchValue(minCurrency);
+      feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
+      amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
     });
     this.subscription.add(subsRate);
     this.getAccounts();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   // checkAddressInContacts() {
@@ -76,6 +107,7 @@ export class FormSendMoneyComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
+    this.group.get('sender').patchValue(account.address);
   }
 
   filterContacts(value: string): Contact[] {
@@ -86,15 +118,19 @@ export class FormSendMoneyComponent implements OnInit {
   }
 
   isAddressInContacts() {
+    const aliasField = this.group.get('alias');
+
+    const recipientForm = this.group.get('recipient');
+
     const isAddressInContacts = this.contacts.some(c => {
-      if (c.address == this.recipientForm.value) {
+      if (c.address == recipientForm.value) {
         this.contact = c;
         return true;
       } else return false;
     });
 
     if (isAddressInContacts) {
-      this.aliasField.disable();
+      aliasField.disable();
       this.saveAddress = false;
       this.showSaveAddressBtn = false;
     } else {
@@ -103,12 +139,56 @@ export class FormSendMoneyComponent implements OnInit {
   }
 
   toggleSaveAddress() {
+    const aliasField = this.group.get('alias');
+
     if (this.saveAddress) {
-      this.aliasField.disable();
+      aliasField.disable();
       this.saveAddress = false;
     } else {
-      this.aliasField.enable();
+      aliasField.enable();
       this.saveAddress = true;
     }
   }
+
+  // async getMinimumFee() {
+  //   const amountForm = this.group.get('amount');
+  //   const feeForm = this.group.get('fee');
+  //   const approverCommissionField = this.group.get('approverCommission');
+  //   const addressApproverField = this.group.get('addressApprover');
+  //   const recipientForm = this.group.get('recipient');
+  //   const timeoutField = this.group.get('timeout');
+  //   const instructionField = this.group.get('instruction');
+  //   const amountCurrencyForm = this.group.get('amountCurr');
+  //   const aliasField = this.group.get('alias');
+  //   const feeFormCurr = this.group.get('feeCurr');
+
+  //   let data: SendMoneyInterface = {
+  //     sender: this.account.address,
+  //     recipient: recipientForm.value,
+  //     fee: feeForm.value,
+  //     amount: amountForm.value,
+  //     approverAddress: addressApproverField.value,
+  //     commission: approverCommissionField.value,
+  //     timeout: timeoutField.value,
+  //     instruction: instructionField.value,
+  //   };
+
+  //   const fee: number = calcMinFee(data);
+  //   this.minFee = fee;
+
+  //   feeForm.setValidators([Validators.required, Validators.min(fee)]);
+  //   if (fee > feeForm.value) feeForm.patchValue(fee);
+  //   const feeCurrency = truncate(fee * this.currencyRate.value, 8);
+  //   feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
+  //   feeFormCurr.patchValue(feeCurrency);
+  //   amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
+  //   feeForm.updateValueAndValidity();
+  //   feeFormCurr.updateValueAndValidity();
+  //   feeForm.markAsTouched();
+  //   feeFormCurr.markAsTouched();
+  // }
+
+  // onChangeTimeOut() {
+  //   this.getMinimumFee();
+  // }
 }
