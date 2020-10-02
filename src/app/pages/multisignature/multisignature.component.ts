@@ -7,7 +7,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { MatDialog } from '@angular/material';
 import { getTxType } from 'src/helpers/multisig-utils';
 
 @Component({
@@ -43,8 +42,7 @@ export class MultisignatureComponent implements OnInit {
     private router: Router,
     private multisigServ: MultisigService,
     private translate: TranslateService,
-    private authServ: AuthService,
-    private dialog: MatDialog
+    private authServ: AuthService
   ) {
     this.form = new FormGroup({
       txType: this.txTypeField,
@@ -146,11 +144,6 @@ export class MultisignatureComponent implements OnInit {
     });
   }
 
-  getDate(pDate: number) {
-    const newDate = new Date(pDate);
-    return newDate;
-  }
-
   openFile() {
     this.myInputVariable.nativeElement.click();
   }
@@ -196,13 +189,4 @@ export class MultisignatureComponent implements OnInit {
       };
     }
   }
-
-  // get TotalSignedTx(draft: MultiSigDraft): number {
-  //   let total = 0;
-  //   // console.log(Buffer.from(draft.signaturesInfo.participants[0].signature).length);
-  //   draft.signaturesInfo.participants.forEach(p => (total += Buffer.from(p.signature).length == 0 ? 1 : 0));
-  //   // console.log(total);
-
-  //   return total;
-  // }
 }

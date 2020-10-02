@@ -24,13 +24,13 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="createTransactionForm" (submit)="next()">
-      <app-form-send-money
+      <form-send-money
         [group]="createTransactionForm"
         [inputMap]="fieldList"
         [currencyRate]="currencyRate"
         [multisig]="true"
         *ngIf="multisig.txType == 1"
-      ></app-form-send-money>
+      ></form-send-money>
 
       <form-setup-account-dataset
         [group]="createTransactionForm"
@@ -40,10 +40,8 @@
         *ngIf="multisig.txType == 3"
       ></form-setup-account-dataset>
 
-      <span class="sub-title">
-        {{ 'advanced option' | translate }}
-      </span>
-      <app-form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></app-form-escrow>
+      <span class="sub-title">{{ 'advanced option' | translate }}</span>
+      <form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></form-escrow>
 
       <button
         *ngIf="multisig.signaturesInfo !== undefined"

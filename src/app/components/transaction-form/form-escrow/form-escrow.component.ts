@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import zoobc, { HostInfoResponse, SendMoneyInterface } from 'zoobc-sdk';
@@ -6,7 +6,7 @@ import { truncate, calcMinFee } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-form-escrow',
+  selector: 'form-escrow',
   templateUrl: './form-escrow.component.html',
   styleUrls: ['./form-escrow.component.scss'],
 })

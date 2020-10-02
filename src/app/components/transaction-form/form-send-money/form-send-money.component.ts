@@ -9,7 +9,7 @@ import { truncate } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-form-send-money',
+  selector: 'form-send-money',
   templateUrl: './form-send-money.component.html',
   styleUrls: ['./form-send-money.component.scss'],
 })

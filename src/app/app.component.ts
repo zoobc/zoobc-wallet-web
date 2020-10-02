@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { LanguageService } from './services/language.service';
-import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +7,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   title = 'zoobc-wallet-web';
-  constructor(private langServ: LanguageService, authServ: AuthService) {
+  constructor(private langServ: LanguageService) {
     this.langServ.setInitialAppLanguage();
-    authServ.login('111111');
   }
 }

@@ -11,7 +11,7 @@ import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
-import { createInnerTxForm, createTxBytes, getFieldList, getTxType } from 'src/helpers/multisig-utils';
+import { createInnerTxForm, createTxBytes, getFieldList } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
@@ -43,8 +43,6 @@ export class CreateTransactionComponent implements OnInit {
   ) {
     const subs = this.multisigServ.multisig.subscribe(multisig => {
       this.createTransactionForm = createInnerTxForm(multisig.txType);
-      console.log(this.createTransactionForm);
-
       this.fieldList = getFieldList(multisig.txType);
     });
     subs.unsubscribe();
@@ -142,8 +140,6 @@ export class CreateTransactionComponent implements OnInit {
             type: 'warning',
           }).then(result => {
             if (result.value) {
-              console.log('here');
-
               this.generatedTxHash();
               this.multisigServ.update(this.multisig);
               return true;
@@ -171,9 +167,7 @@ export class CreateTransactionComponent implements OnInit {
 
   updateCreateTransaction() {
     const multisig = { ...this.multisig };
-
     multisig.txBody = this.createTransactionForm.value;
-
     this.multisigServ.update(multisig);
   }
 

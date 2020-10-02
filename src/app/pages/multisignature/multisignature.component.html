@@ -1,5 +1,5 @@
 <div class="multisinature-container">
-  <h2 class="mat-h2">{{ 'create  multisignature transaction' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'create multisignature transaction' | translate }}</h2>
   <mat-card>
     <form [formGroup]="form" (submit)="onNext()">
       <div style="margin-bottom: 8px">What kind of transaction do you want to create??</div>
@@ -11,7 +11,6 @@
       <br /><br />
 
       <div style="margin-bottom: 8px">How do you want multi signature to be executed?</div>
-
       <mat-radio-group class="row" formControlName="chainType">
         <mat-radio-button value="onchain" class="col-12 col-sm-6">
           Onchain Multi Signature
@@ -38,12 +37,11 @@
       </mat-radio-group>
 
       <div class="text-right">
-        <button mat-flat-button color="primary" [disabled]="form.invalid">
-          {{ 'next' | translate }}
-        </button>
+        <button mat-flat-button color="primary" [disabled]="form.invalid">{{ 'next' | translate }}</button>
       </div>
     </form>
   </mat-card>
+
   <div class="row" style="margin-top: 16px;">
     <div class="col-6">
       <h2 class="mat-h2">{{ 'multisignature drafts' | translate }}</h2>
@@ -90,8 +88,7 @@
                 <div class="chip">{{ draftTxType[i] | translate }}</div>
               </div>
             </div>
-          </div>
-          <div class="row">
+
             <div class="col-12 col-sm-9 col-md-10">
               <div class="row">
                 <div class="col-12 col-md-6" *ngIf="draft.txBody.sender">
@@ -117,6 +114,7 @@
                 </div>
               </div>
             </div>
+
             <div class="col-12 col-sm-3 col-md-2 right">
               <button
                 type="button"

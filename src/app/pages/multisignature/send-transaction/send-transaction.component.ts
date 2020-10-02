@@ -78,8 +78,6 @@ export class SendTransactionComponent implements OnInit {
     });
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      console.log(multisig);
-
       const { multisigInfo } = multisig;
       if (multisigInfo === undefined) return this.router.navigate(['/multisignature']);
       this.multisig = multisig;
