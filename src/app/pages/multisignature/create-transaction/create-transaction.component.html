@@ -40,6 +40,11 @@
         *ngIf="multisig.txType == 3"
       ></form-setup-account-dataset>
 
+      <span class="sub-title">
+        {{ 'advanced option' | translate }}
+      </span>
+      <app-form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></app-form-escrow>
+
       <button
         *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button

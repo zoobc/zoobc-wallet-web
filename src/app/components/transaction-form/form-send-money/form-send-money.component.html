@@ -24,13 +24,13 @@
       {{ 'zbc address is invalid' | translate }}
     </mat-error>
   </ng-container>
-  <ng-container *ngIf="saveAddressFeature">
+  <ng-container>
     <div class="address-alias" *ngIf="!showSaveAddressBtn">
       <span>{{ 'address' | translate }}: </span>
-      <b>{{ contact.name }}</b>
+      <b>{{ contact && contact.name }}</b>
     </div>
     <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
-      <mat-checkbox class="checkbox-margin" (change)="onToggleSaveAddress()">
+      <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
         {{ 'save to contact' | translate }}
       </mat-checkbox>
     </div>

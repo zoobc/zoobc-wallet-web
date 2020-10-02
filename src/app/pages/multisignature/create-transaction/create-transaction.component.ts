@@ -43,6 +43,8 @@ export class CreateTransactionComponent implements OnInit {
   ) {
     const subs = this.multisigServ.multisig.subscribe(multisig => {
       this.createTransactionForm = createInnerTxForm(multisig.txType);
+      console.log(this.createTransactionForm);
+
       this.fieldList = getFieldList(multisig.txType);
     });
     subs.unsubscribe();

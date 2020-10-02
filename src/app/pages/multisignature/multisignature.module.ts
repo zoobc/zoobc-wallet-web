@@ -30,6 +30,7 @@ import { AccountSelectorModule } from '../../components/account-selector/account
 import { InputAmountModule } from '../../components/input-amount/input-amount.module';
 import { FormSendMoneyModule } from '../../components/transaction-form/form-send-money/form-send-money.module';
 import { FormSetupAccountDatasetModule } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
+import { FormEscrowModule } from 'src/app/components/transaction-form/form-escrow/form-escrow.module';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -78,6 +79,7 @@ const routes: Routes = [
     InputAddressModule,
     InputAmountModule,
     FormSendMoneyModule,
+    FormEscrowModule,
     FormSetupAccountDatasetModule,
   ],
 })

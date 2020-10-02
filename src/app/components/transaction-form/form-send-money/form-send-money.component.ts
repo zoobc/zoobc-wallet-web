@@ -1,13 +1,12 @@
-import { Component, Input, Output, OnInit, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { Contact, ContactService } from 'src/app/services/contact.service';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { calcMinFee, truncate } from 'src/helpers/utils';
+import { truncate } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
-import { SendMoneyInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-form-send-money',
@@ -17,17 +16,11 @@ import { SendMoneyInterface } from 'zoobc-sdk';
 export class FormSendMoneyComponent implements OnInit, OnDestroy {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  // @Input() contact?: Contact;
   @Input() currencyRate: Currency;
-  @Input() showSaveAddressBtn: boolean = false;
-  @Input() saveAddress: boolean = false;
-  @Input() saveAddressFeature: boolean = false;
   @Input() multisig: boolean = false;
-  // @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
-  // @Output() isAddressInContacts?: EventEmitter<boolean> = new EventEmitter();
-  // @Output() toggleSaveAddress?: EventEmitter<boolean> = new EventEmitter();
 
-  chooseSender: boolean = true;
+  showSaveAddressBtn: boolean = true;
+  saveAddress: boolean = false;
 
   contacts: Contact[];
   contact: Contact;
@@ -46,27 +39,10 @@ export class FormSendMoneyComponent implements OnInit, OnDestroy {
     private currencyServ: CurrencyRateService
   ) {}
 
-  // onSwitchAccount(account: SavedAccount) {
-  //   this.account = account;
-  //   this.switchAccount.emit(account);
-  // }
-  // onToggleSaveAddress() {
-  //   this.toggleSaveAddress.emit(true);
-  // }
-
   ngOnInit() {
-    const amountForm = this.group.get('amount');
-    const feeForm = this.group.get('fee');
-    // const approverCommissionField = this.group.get('approverCommission');
-    // const addressApproverField = this.group.get('addressApprover');
     const recipientForm = this.group.get('recipient');
-    // const timeoutField = this.group.get('timeout');
-    // const instructionField = this.group.get('instruction');
     const amountCurrencyForm = this.group.get('amountCurrency');
-    const aliasField = this.group.get('alias');
     const feeFormCurr = this.group.get('feeCurr');
-
-    if (this.inputMap.sender) this.chooseSender = false;
 
     this.contacts = this.contactServ.getList() || [];
 
@@ -89,10 +65,6 @@ export class FormSendMoneyComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
-  // checkAddressInContacts() {
-  //   this.isAddressInContacts.emit(true);
-  // }
 
   getAccounts() {
     this.accounts = this.authServ.getAllAccount();
@@ -149,46 +121,4 @@ export class FormSendMoneyComponent implements OnInit, OnDestroy {
       this.saveAddress = true;
     }
   }
-
-  // async getMinimumFee() {
-  //   const amountForm = this.group.get('amount');
-  //   const feeForm = this.group.get('fee');
-  //   const approverCommissionField = this.group.get('approverCommission');
-  //   const addressApproverField = this.group.get('addressApprover');
-  //   const recipientForm = this.group.get('recipient');
-  //   const timeoutField = this.group.get('timeout');
-  //   const instructionField = this.group.get('instruction');
-  //   const amountCurrencyForm = this.group.get('amountCurr');
-  //   const aliasField = this.group.get('alias');
-  //   const feeFormCurr = this.group.get('feeCurr');
-
-  //   let data: SendMoneyInterface = {
-  //     sender: this.account.address,
-  //     recipient: recipientForm.value,
-  //     fee: feeForm.value,
-  //     amount: amountForm.value,
-  //     approverAddress: addressApproverField.value,
-  //     commission: approverCommissionField.value,
-  //     timeout: timeoutField.value,
-  //     instruction: instructionField.value,
-  //   };
-
-  //   const fee: number = calcMinFee(data);
-  //   this.minFee = fee;
-
-  //   feeForm.setValidators([Validators.required, Validators.min(fee)]);
-  //   if (fee > feeForm.value) feeForm.patchValue(fee);
-  //   const feeCurrency = truncate(fee * this.currencyRate.value, 8);
-  //   feeFormCurr.setValidators([Validators.required, Validators.min(feeCurrency)]);
-  //   feeFormCurr.patchValue(feeCurrency);
-  //   amountCurrencyForm.setValidators([Validators.required, Validators.min(feeCurrency)]);
-  //   feeForm.updateValueAndValidity();
-  //   feeFormCurr.updateValueAndValidity();
-  //   feeForm.markAsTouched();
-  //   feeFormCurr.markAsTouched();
-  // }
-
-  // onChangeTimeOut() {
-  //   this.getMinimumFee();
-  // }
 }
