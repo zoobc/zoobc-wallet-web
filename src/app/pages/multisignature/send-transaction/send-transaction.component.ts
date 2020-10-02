@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { getTranslation, jsonBufferToString } from 'src/helpers/utils';
+import { getTranslation, jsonBufferToString, truncate } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -148,14 +148,7 @@ export class SendTransactionComponent implements OnInit {
 
   async onSendMultiSignatureTransaction() {
     this.updateSendTransaction();
-    let {
-      accountAddress,
-      fee,
-      multisigInfo,
-      unisgnedTransactions,
-      signaturesInfo,
-      transaction,
-    } = this.multisig;
+    let { accountAddress, fee, multisigInfo, unisgnedTransactions, signaturesInfo, txBody } = this.multisig;
     let data: MultiSigInterface;
     if (signaturesInfo !== undefined) {
       const signatureInfoFilter: SignatureInfo = {
@@ -187,14 +180,15 @@ export class SendTransactionComponent implements OnInit {
     }
     const childSeed = this.authServ.seed;
 
-    if (data.signaturesInfo === undefined)
-      data.unisgnedTransactions = sendMoneyBuilder(this.multisig.transaction);
+    if (data.signaturesInfo === undefined) data.unisgnedTransactions = sendMoneyBuilder(this.multisig.txBody);
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);
         let subMessage = getTranslation('you send coins to', this.translate, {
-          amount: transaction.amount,
-          recipient: transaction.recipient,
+          amount: txBody.amount,
+          // currencyValue: truncate(txBody.amount * this.currencyRate.value, 2),
+          // currencyName: this.currencyRate.name,
+          recipient: txBody.recipient,
         });
         this.multisigServ.deleteDraft(this.multisig.id);
         Swal.fire(message, subMessage, 'success');
@@ -202,7 +196,7 @@ export class SendTransactionComponent implements OnInit {
       })
       .catch(async err => {
         console.log(err.message);
-        let message = getTranslation('an error occurred while processing your request', this.translate);
+        let message = getTranslation(err.message, this.translate);
         Swal.fire('Opps...', message, 'error');
       });
   }

@@ -26,6 +26,18 @@ export class SetupDatasetComponent implements OnInit {
   recipientAddressField = new FormControl('', [Validators.required]);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
+  typeFeeField = new FormControl('ZBC');
+  senderAddressField = new FormControl('', [Validators.required]);
+
+  setupDataSetForm = {
+    sender: 'sender',
+    property: 'property',
+    value: 'value',
+    recipientAddress: 'recipientAddress',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+  };
 
   constructor(
     public dialog: MatDialog,
@@ -35,6 +47,7 @@ export class SetupDatasetComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.formGroup = new FormGroup({
+      sender: this.senderAddressField,
       property: this.propertyField,
       value: this.valueField,
       recipientAddress: this.recipientAddressField,
@@ -45,6 +58,7 @@ export class SetupDatasetComponent implements OnInit {
   ngOnInit() {
     this.isSetupOther = false;
     this.disableSetupOther();
+    this.senderAddressField.patchValue(this.account.address);
   }
 
   enableSetupOther() {
@@ -84,7 +98,7 @@ export class SetupDatasetComponent implements OnInit {
         this.isError = true;
         this.isLoading = false;
         console.log(err);
-        let message = getTranslation('an error occurred while processing your request', this.translate);
+        let message = getTranslation(err.message, this.translate);
         Swal.fire('Opps...', message, 'error');
       })
       .finally(() => {

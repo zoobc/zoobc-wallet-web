@@ -1,59 +1,13 @@
 <div class="setup-dataset-container">
   <h2 class="mat-h2 text-center">{{ 'setup new dataset' | translate }}</h2>
   <form [formGroup]="formGroup" (submit)="onSubmit()">
-    <mat-form-field appearance="outline" color="accent" class="block">
-      <mat-label>{{ 'property' | translate }}</mat-label>
-      <input matInput type="text" formControlName="property" />
-    </mat-form-field>
-    <ng-container *ngIf="propertyField.touched">
-      <mat-error *ngIf="propertyField.hasError('required')">
-        {{ 'property is required' | translate }}
-      </mat-error>
-    </ng-container>
-    <mat-form-field appearance="outline" color="accent" class="block">
-      <mat-label>{{ 'value' | translate }}</mat-label>
-      <input matInput type="text" formControlName="value" />
-    </mat-form-field>
-    <ng-container *ngIf="valueField.touched">
-      <mat-error *ngIf="valueField.hasError('required')">
-        {{ 'value is required' | translate }}
-      </mat-error>
-    </ng-container>
-    <div style="margin-bottom: 16px;">
-      <mat-checkbox (click)="onClickSetupOther()">
-        {{ 'setup dataset to other address' | translate }}
-      </mat-checkbox>
-    </div>
-    <ng-container *ngIf="isSetupOther">
-      <input-address
-        class="input"
-        label="{{ 'recipient address' | translate }}"
-        formControlName="recipientAddress"
-        placeholder="{{ 'recipient address' | translate }}"
-      ></input-address>
-      <ng-container *ngIf="recipientAddressField.touched">
-        <mat-error style="margin-top: 4px;" *ngIf="recipientAddressField.hasError('required')">
-          {{ 'recipient address is required' | translate }}
-        </mat-error>
-        <mat-error style="margin-top: 4px;" *ngIf="recipientAddressField.hasError('invalidAddress')">
-          {{ 'recipient address is invalid' | translate }}
-        </mat-error>
-      </ng-container>
-    </ng-container>
-    <input-amount [group]="formGroup" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-    <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
-      <div class="col-4 col-sm-3">&nbsp;</div>
-      <div class="col-8 col-sm-9">
-        <ng-container *ngIf="feeForm.touched">
-          <mat-error *ngIf="feeForm.hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="feeForm.hasError('min')">
-            {{ 'minimum fee is' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-      </div>
-    </div>
+    <form-setup-account-dataset
+      [group]="formGroup"
+      [formValue]="setupDataSetForm"
+      [currencyRate]="currencyRate"
+      [isSetupOther]="isSetupOther"
+      (enableSetupOther)="onClickSetupOther($event)"
+    ></form-setup-account-dataset>
     <div class="row">
       <div class="col-12 col-md-6">
         <button

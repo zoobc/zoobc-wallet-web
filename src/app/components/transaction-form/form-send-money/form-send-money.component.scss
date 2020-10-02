@@ -1,0 +1,15 @@
+@import '../../../../styles//variables';
+@import '../../../../styles/mixins';
+form {
+  .row {
+    margin: 0 -4px;
+
+    [class^='col'] {
+      padding: 0 4px;
+    }
+  }
+
+  .address-alias {
+    color: $black2;
+  }
+}

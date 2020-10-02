@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid, getZBCAddress } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
@@ -27,6 +27,15 @@ export class UpdateNodeComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
+  updateNodeForm = {
+    ipAddress: 'ipAddress',
+    lockedAmount: 'lockedAmount',
+    fee: 'fee',
+    feeCurr: 'feeCurr',
+    typeFee: 'typeFee',
+    nodePublicKey: 'nodePublicKey',
+  };
+
   constructor(
     private authServ: AuthService,
     private NodeAdminServ: NodeAdminService,
@@ -44,7 +53,13 @@ export class UpdateNodeComponent implements OnInit {
 
     this.account = authServ.getCurrAccount();
     this.ipAddressForm.patchValue(this.account.nodeIP);
-    this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
+    const formatAddressPubKey = getZBCAddress(
+      Buffer.from(this.node.nodepublickey.toString(), 'base64'),
+      'ZNK'
+    );
+    const validFormatAddress = isZBCAddressValid(this.node.nodepublickey, 'ZNK');
+    if (validFormatAddress) this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
+    else this.nodePublicKeyForm.patchValue(formatAddressPubKey);
     this.lockedAmountForm.patchValue(parseInt(this.node.lockedbalance) / 1e8);
 
     this.lockedAmountForm.setValidators([

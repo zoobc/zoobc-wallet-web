@@ -52,7 +52,8 @@ export class AddNodeAdminComponent {
           });
         })
         .catch(async err => {
-          Swal.fire('Error', err.message, 'error');
+          let message = getTranslation(err.message, this.translate);
+          Swal.fire('Opps...', message, 'error');
           this.isLoading = false;
         });
     }

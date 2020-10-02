@@ -99,7 +99,7 @@ export class AccountDatasetComponent implements OnInit {
       })
       .catch(async err => {
         console.log(err);
-        let message = getTranslation('an error occurred while processing your request', this.translate);
+        let message = getTranslation(err.message, this.translate);
         Swal.fire('Opps...', message, 'error');
         this.isErrorDelete = true;
         this.isLoadingDelete = false;

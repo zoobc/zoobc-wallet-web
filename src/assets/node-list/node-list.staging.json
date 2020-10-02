@@ -1,15 +1,10 @@
 {
   "node": [
     {
-      "ip": "http://n100.demo.proofofparticipation.network:7001",
+      "ip": "http://n0.beta.proofofparticipation.network:7001",
       "default": true,
-      "name": "Experimental Testnet"
-    },
-    {
-      "ip": "http://n0.demo.proofofparticipation.network",
-      "default": true,
-      "name": "Staging Testnet"
+      "name": "Beta Testnet"
     }
   ],
-  "timestamp": 1596763102000
+  "timestamp": 1600672362000
 }
