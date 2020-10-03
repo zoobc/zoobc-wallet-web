@@ -74,7 +74,7 @@
               <div class="zbc">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
               <div class="currency">
                 <!-- {{ feeFormCurr.value | number: '0.0-2' }}
-                {{ currencyRate.name }} -->
+                {{ currencyRate.name }}
               </div>
             </div>
             <div class="label">{{ 'timeout' | translate }}:</div>
@@ -93,9 +93,10 @@
             <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
             <div class="currency">
               <!-- {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
-              {{ currencyRate.name }} -->
-            </div>
-          </div> -->
+              {{ currencyRate.name }} 
+        </div>
+      </div>
+      -->
           <div class="label">
             <span>{{ 'fee' | translate }}</span>
             <!-- <span> - {{ kindFee }}</span> -->
@@ -103,10 +104,10 @@
           </div>
           <div class="amount">
             <div class="zbc">{{ multisig.txBody.fee | number: '0.0-8' }} ZBC</div>
-            <div class="currency">
+            <!-- <div class="currency">
               {{ multisig.txBody.fee * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
-            </div>
+            </div> -->
           </div>
           <div class="label">{{ 'total' | translate }} :</div>
           <div class="total" *ngIf="advancedMenu; else not_escrow">
@@ -125,8 +126,8 @@
               <!-- {{
                 multisig.transaction.amount * currencyRate.value +
                   multisig.transaction.fee * currencyRate.value | number: '0.0-2'
-              }}
-              {{ currencyRate.name }} -->
+              }}/
+              {{ currencyRate.name }}
             </div>
           </ng-template> -->
         </div>

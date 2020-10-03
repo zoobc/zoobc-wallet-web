@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { FormGroup } from '@angular/forms';
 import { truncate } from 'src/helpers/utils';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'input-amount',
@@ -17,13 +18,18 @@ export class InputAmountComponent implements OnInit {
   amountCurrency: number;
   typeCoinName: string = 'ZBC';
   currencyRate: Currency;
+  subsRate: Subscription;
 
   constructor(private currencyServ: CurrencyRateService) {}
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+    this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
     });
+  }
+
+  ngOnDestroy() {
+    if (this.subsRate) this.subsRate.unsubscribe();
   }
 
   onChangeCoin(value) {

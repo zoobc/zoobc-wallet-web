@@ -71,9 +71,11 @@ export class MultisignatureComponent implements OnInit {
 
     this.multiSigDrafts.forEach((draft, i) => {
       let total = 0;
-      draft.signaturesInfo.participants.forEach(p => {
-        total += Buffer.from(p.signature).length > 0 ? 1 : 0;
-      });
+      if (draft.signaturesInfo) {
+        draft.signaturesInfo.participants.forEach(p => {
+          total += Buffer.from(p.signature).length > 0 ? 1 : 0;
+        });
+      }
       this.draftSignedBy[i] = total;
       this.draftTxType[i] = getTxType(draft.txType);
     });
