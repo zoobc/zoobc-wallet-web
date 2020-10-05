@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, Input } from '@angular/core';
+import { Component, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
 import { ZBCTransaction } from 'zoobc-sdk';
@@ -7,14 +7,23 @@ import { ZBCTransaction } from 'zoobc-sdk';
   selector: 'send-money',
   templateUrl: './send-money.component.html',
 })
-export class SendMoneyComponent {
+export class SendMoneyComponent implements OnInit {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
   @Input() transaction: ZBCTransaction;
 
   address: string;
+  status: string = '';
+  color: string = '';
 
   constructor(private dialog: MatDialog, authServ: AuthService) {
     this.address = authServ.getCurrAccount().address;
+  }
+
+  ngOnInit() {
+    const approval = this.transaction.txBody.approval;
+    this.status = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
+    this.color =
+      approval == '0' ? 'pending' : approval == '1' ? 'approved' : approval == '2' ? 'rejected' : 'expired';
   }
 
   openDetail(id) {
@@ -23,13 +32,5 @@ export class SendMoneyComponent {
       maxHeight: '90vh',
       data: id,
     });
-  }
-
-  getEscrowColor(status) {
-    return status == '0' ? 'yellow' : status == '1' ? 'green' : status == '2' ? 'red' : 'red';
-  }
-
-  getEscrowStatus(status) {
-    return status == '0' ? 'pending' : status == '1' ? 'approved' : status == '2' ? 'rejected' : 'expired';
   }
 }
