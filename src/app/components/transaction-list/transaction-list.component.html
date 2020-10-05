@@ -9,6 +9,9 @@
       <ng-container *ngIf="txType == 1">
         <send-money [transaction]="tx" *ngFor="let tx of transactionData"></send-money>
       </ng-container>
+      <ng-container *ngIf="txType == 2">
+        <register-node [transaction]="tx" *ngFor="let tx of transactionData"></register-node>
+      </ng-container>
     </ng-container>
 
     <ng-container *ngIf="isLoading">

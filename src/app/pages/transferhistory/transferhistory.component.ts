@@ -11,6 +11,7 @@ import zoobc, {
   OrderBy,
   toZBCTransactions,
   ZBCTransaction,
+  getZBCAddress,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -118,6 +119,10 @@ export class TransferhistoryComponent implements OnDestroy {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
           recent.senderAlias = this.contactServ.get(recent.sender).name || '';
           recent.recipientAlias = this.contactServ.get(recent.recipient).name || '';
+          if (recent.transactionType == 2) {
+            const formatNodePubkey = Buffer.from(recent.txBody['nodepublickey'], 'base64');
+            recent.txBody['nodepublickey'] = getZBCAddress(formatNodePubkey, 'ZNK');
+          }
           if (escStatus) {
             recent.escrow = true;
             recent.escrowStatus = escStatus.status;
