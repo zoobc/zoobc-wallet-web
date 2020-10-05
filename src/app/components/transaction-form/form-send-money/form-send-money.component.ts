@@ -1,11 +1,9 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { Contact, ContactService } from 'src/app/services/contact.service';
-import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { truncate } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -13,10 +11,9 @@ import { environment } from 'src/environments/environment';
   templateUrl: './form-send-money.component.html',
   styleUrls: ['./form-send-money.component.scss'],
 })
-export class FormSendMoneyComponent implements OnInit, OnDestroy {
+export class FormSendMoneyComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  @Input() currencyRate: Currency;
   @Input() multisig: boolean = false;
 
   showSaveAddressBtn: boolean = true;
@@ -31,18 +28,11 @@ export class FormSendMoneyComponent implements OnInit, OnDestroy {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  subscription: Subscription = new Subscription();
-
-  constructor(
-    private authServ: AuthService,
-    private contactServ: ContactService,
-    private currencyServ: CurrencyRateService
-  ) {}
+  constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
   ngOnInit() {
+    this.group.get('alias').disable();
     const recipientForm = this.group.get('recipient');
-    const amountCurrencyForm = this.group.get('amountCurrency');
-    const feeFormCurr = this.group.get('feeCurr');
 
     this.contacts = this.contactServ.getList() || [];
 
@@ -51,19 +41,7 @@ export class FormSendMoneyComponent implements OnInit, OnDestroy {
       map(value => this.filterContacts(value))
     );
 
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      feeFormCurr.patchValue(minCurrency);
-      feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    this.subscription.add(subsRate);
     this.getAccounts();
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   getAccounts() {

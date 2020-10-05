@@ -5,9 +5,8 @@ import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { Subscription } from 'rxjs';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { truncate, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import zoobc, { PostTransactionResponses, TransactionType } from 'zoobc-sdk';
@@ -23,8 +22,6 @@ import { sendMoneyForm, createInnerTxForm, escrowForm } from 'src/helpers/multis
 export class SendmoneyComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
-  currencyRate: Currency;
-
   formSend: FormGroup;
 
   sendMoneyRefDialog: MatDialogRef<any>;
@@ -38,7 +35,6 @@ export class SendmoneyComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
-    private currencyServ: CurrencyRateService,
     private contactServ: ContactService,
     private translate: TranslateService,
     public dialog: MatDialog,
@@ -87,11 +83,8 @@ export class SendmoneyComponent implements OnInit {
         maxHeight: '90vh',
         data: {
           form: this.formSend.value,
-          // advancedMenu: approverCommissionField.enabled,
           account: this.account,
-          // currencyName: this.currencyRate.name,
           saveAddress: this.saveAddress,
-          // alias: aliasField.value,
         },
       });
       this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
@@ -131,7 +124,6 @@ export class SendmoneyComponent implements OnInit {
       const recipientForm = this.formSend.get('recipient');
       const timeoutField = this.formSend.get('timeout');
       const instructionField = this.formSend.get('instruction');
-      const amountCurrencyForm = this.formSend.get('amountCurrency');
       const aliasField = this.formSend.get('alias');
 
       let data: SendMoneyInterface = {
@@ -144,7 +136,7 @@ export class SendmoneyComponent implements OnInit {
         timeout: timeoutField.value,
         instruction: instructionField.value,
       };
-      // const txBytes = sendMoneyBuilder(data, this.keyringServ);
+
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
@@ -152,8 +144,6 @@ export class SendmoneyComponent implements OnInit {
           let message = getTranslation('your transaction is processing', this.translate);
           let subMessage = getTranslation('you send coins to', this.translate, {
             amount: data.amount,
-            currencyValue: truncate(amountCurrencyForm.value, 2),
-            // currencyName: this.currencyRate.name,
             recipient: data.recipient,
           });
           Swal.fire(message, subMessage, 'success');
