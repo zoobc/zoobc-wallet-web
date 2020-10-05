@@ -2,7 +2,9 @@
   <h2 class="mat-h2">{{ 'create multisignature transaction' | translate }}</h2>
   <mat-card>
     <form [formGroup]="form" (submit)="onNext()">
-      <div style="margin-bottom: 8px">What kind of transaction do you want to create??</div>
+      <div style="margin-bottom: 8px">
+        {{ 'what kind of transaction do you want to create?' | translate }}
+      </div>
       <mat-form-field appearance="outline" color="accent">
         <mat-select formControlName="txType">
           <mat-option [value]="type.code" *ngFor="let type of txType">{{ type.type | translate }}</mat-option>
@@ -10,25 +12,27 @@
       </mat-form-field>
       <br /><br />
 
-      <div style="margin-bottom: 8px">How do you want multi signature to be executed?</div>
+      <div style="margin-bottom: 8px">
+        {{ 'how do you want multi signature to be executed?' | translate }}
+      </div>
       <mat-radio-group class="row" formControlName="chainType">
         <mat-radio-button value="onchain" class="col-12 col-sm-6">
-          Onchain Multi Signature
+          {{ 'onchain multi signature' | translate }}
           <i
             class="fas fa-info-circle"
             matTooltip="{{
-              'submit the information of multisignature transaction without any participants\' signatures, and then each participant will signing/approving the transaction on my task page'
+              'submit the information of multisignature transaction without any participants signatures and then each participant will signing approving the transaction on my task page'
                 | translate
             }}"
             matTooltipPosition="above"
           ></i>
         </mat-radio-button>
         <mat-radio-button value="offchain" class="col-12 col-sm-6">
-          Offchain Multi Signature
+          {{ 'offchain multi signature' | translate }}
           <i
             class="fas fa-info-circle"
             matTooltip="{{
-              'Submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
+              'submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
                 | translate
             }}"
             matTooltipPosition="above"
