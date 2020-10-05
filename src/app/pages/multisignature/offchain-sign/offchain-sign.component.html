@@ -1,0 +1,99 @@
+<div>
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <div class="mat-h3">Multisignature Info</div>
+      <div class="label">{{ 'Participants' | translate }}:</div>
+      <ul class="participants" *ngFor="let participant of draft.multisigInfo.participants">
+        <li><wallet-address [value]="participant" [copyButton]="true"></wallet-address></li>
+      </ul>
+      <div class="label nonce">
+        {{ 'Nonce' | translate }}: <span>{{ draft.multisigInfo.nonce }}</span>
+      </div>
+      <div class="label">
+        {{ 'Min Signature' | translate }}:
+        <span class="min-signature">{{ draft.multisigInfo.minSigs }} address(es)</span>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6">
+      <div class="mat-h3">Send Money</div>
+
+      <div class="label">{{ 'Sender' | translate }}</div>
+      <div class="value">
+        <wallet-address [value]="draft.txBody.sender" [copyButton]="true"></wallet-address>
+      </div>
+
+      <div class="label">{{ 'Recipient' | translate }}</div>
+      <div class="value">
+        <wallet-address [value]="draft.txBody.recipient" [copyButton]="true"></wallet-address>
+      </div>
+
+      <div class="label">{{ 'Fee' | translate }}</div>
+      <div class="value">{{ draft.txBody.fee | number }}</div>
+
+      <div class="label">{{ 'Amount' | translate }}</div>
+      <div class="value">{{ draft.txBody.amount | number }}</div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br />
+
+  <div class="text-center">
+    <div class="label">Transaction Hash</div>
+    <div class="value">
+      <wallet-address
+        [value]="draft.signaturesInfo.txHash"
+        [copyButton]="true"
+        center="true"
+      ></wallet-address>
+    </div>
+
+    <div [ngClass]="yourTxHash ? (isValid ? 'valid' : 'invalid') : ''">
+      <div class="label">Generated Transaction Hash</div>
+      <div class="value">
+        <i *ngIf="!yourTxHash">(Click verify to validating transaction)</i>
+        <wallet-address
+          *ngIf="yourTxHash"
+          [value]="yourTxHash"
+          [copyButton]="true"
+          center="true"
+        ></wallet-address>
+      </div>
+
+      <button mat-flat-button color="primary" (click)="onVerify()">
+        <ng-container *ngIf="yourTxHash">
+          <i matPrefix class="fa fa-times" *ngIf="!isValid"></i>
+          <i matPrefix class="fa fa-check" *ngIf="isValid"></i>
+        </ng-container>
+        <span>Verify Transaction</span>
+      </button>
+    </div>
+
+    <ng-container *ngIf="yourTxHash && isValid">
+      <br />
+
+      <div class="label">Your Signature</div>
+      <div class="value">
+        <i *ngIf="!signature">(Your signature will appear here)</i>
+        <wallet-address
+          *ngIf="signature"
+          [value]="signature.toString('base64')"
+          [copyButton]="true"
+          center="true"
+        ></wallet-address>
+      </div>
+
+      <div class="button-group">
+        <button mat-flat-button color="primary" (click)="onSign()">
+          <i matPrefix class="fa fa-file-signature"></i>
+          <span>Sign this transaction</span>
+        </button>
+
+        <button mat-flat-button color="accent" (click)="onCopy()" [disabled]="!signature">
+          <i matPrefix class="fa fa-share-alt"></i>
+          <span>Share your signature</span>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>

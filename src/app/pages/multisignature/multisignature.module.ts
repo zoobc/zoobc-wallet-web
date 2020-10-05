@@ -22,6 +22,7 @@ import {
   MatStepperModule,
   MatRadioModule,
   MatSelectModule,
+  MatDialogModule,
 } from '@angular/material';
 import { DateAgoModule } from '../../pipes/date-ago.module';
 import { AddressModule } from '../../components/address/address.module';
@@ -31,6 +32,7 @@ import { InputAmountModule } from '../../components/input-amount/input-amount.mo
 import { FormSendMoneyModule } from '../../components/transaction-form/form-send-money/form-send-money.module';
 import { FormSetupAccountDatasetModule } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
 import { FormEscrowModule } from 'src/app/components/transaction-form/form-escrow/form-escrow.module';
+import { OffchainSignComponent } from './offchain-sign/offchain-sign.component';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -49,6 +51,7 @@ const routes: Routes = [
     CreateTransactionComponent,
     AddParticipantsComponent,
     SendTransactionComponent,
+    OffchainSignComponent,
   ],
   imports: [
     AddressModule,
@@ -65,6 +68,7 @@ const routes: Routes = [
       },
     }),
     MatTooltipModule,
+    MatDialogModule,
     MatCheckboxModule,
     MatCardModule,
     MatChipsModule,
@@ -82,5 +86,7 @@ const routes: Routes = [
     FormEscrowModule,
     FormSetupAccountDatasetModule,
   ],
+  exports: [OffchainSignComponent],
+  entryComponents: [OffchainSignComponent],
 })
 export class MultisignatureModule {}
