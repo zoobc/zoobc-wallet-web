@@ -1,9 +1,9 @@
 <form [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
-  <ng-container *ngIf="chooseSender">
+  <ng-container *ngIf="!multisig">
     <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
   </ng-container>
-  <ng-container *ngIf="!chooseSender">
+  <ng-container *ngIf="multisig">
     <div style="margin-bottom: 16px;">
       <wallet-address [value]="group.get(inputMap.sender).value"></wallet-address>
     </div>
@@ -13,7 +13,7 @@
     classList="block"
     formControlName="{{ inputMap.recipient }}"
     placeholder="{{ 'recipient address' | translate }}..."
-    (change)="checkAddressInContacts()"
+    (change)="isAddressInContacts()"
   >
   </input-address>
   <ng-container *ngIf="group.get(inputMap.recipient).touched">
@@ -24,13 +24,13 @@
       {{ 'zbc address is invalid' | translate }}
     </mat-error>
   </ng-container>
-  <ng-container *ngIf="saveAddressFeature">
+  <ng-container>
     <div class="address-alias" *ngIf="!showSaveAddressBtn">
       <span>{{ 'address' | translate }}: </span>
       <b>{{ contact.name }}</b>
     </div>
     <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
-      <mat-checkbox class="checkbox-margin" (change)="onToggleSaveAddress()">
+      <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
         {{ 'save to contact' | translate }}
       </mat-checkbox>
     </div>

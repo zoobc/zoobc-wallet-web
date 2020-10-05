@@ -9,7 +9,7 @@ import { ZBCTransaction } from 'zoobc-sdk';
 })
 export class SendMoneyComponent {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
-  @Input() transaction: ZBCTransaction[];
+  @Input() transaction: ZBCTransaction;
 
   address: string;
 

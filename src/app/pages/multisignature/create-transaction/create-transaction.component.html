@@ -1,5 +1,5 @@
 <div class="create-transaction-container">
-  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'multisignature' | translate }}</h2>
   <mat-card>
     <div class="stepper">
       <ng-container *ngIf="stepper.multisigInfo">
@@ -24,11 +24,25 @@
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
     <form [formGroup]="createTransactionForm" (submit)="next()">
-      <app-form-send-money
+      <form-send-money
         [group]="createTransactionForm"
-        [inputMap]="sendMoneyForm"
+        [inputMap]="fieldList"
         [currencyRate]="currencyRate"
-      ></app-form-send-money>
+        [multisig]="true"
+        *ngIf="multisig.txType == 1"
+      ></form-send-money>
+
+      <form-setup-account-dataset
+        [group]="createTransactionForm"
+        [formValue]="fieldList"
+        [currencyRate]="currencyRate"
+        [isSetupOther]="true"
+        *ngIf="multisig.txType == 3"
+      ></form-setup-account-dataset>
+
+      <span class="sub-title">{{ 'advanced option' | translate }}</span>
+      <form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></form-escrow>
+
       <button
         *ngIf="multisig.signaturesInfo !== undefined"
         mat-flat-button

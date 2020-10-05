@@ -77,13 +77,13 @@
         <div class="col-12 col-sm-6 test">
           <div class="label">{{ 'sender' | translate }}:</div>
           <div class="address">
-            <wallet-address [value]="multisig.transaction.sender"></wallet-address>
+            <wallet-address [value]="multisig.txBody.sender"></wallet-address>
           </div>
           <div class="label">{{ 'recipient' | translate }}:</div>
           <div class="address">
-            <wallet-address [value]="multisig.transaction.recipient"></wallet-address>
+            <wallet-address [value]="multisig.txBody.recipient"></wallet-address>
           </div>
-          <ng-container *ngIf="advancedMenu">
+          <!-- <ng-container *ngIf="advancedMenu">
             <mat-divider style="margin-bottom: 10px;"></mat-divider>
             <div class="label">{{ 'approver address' | translate }}:</div>
             <div class="address">
@@ -105,26 +105,26 @@
             <div class="instruction">
               This is dummy data
             </div>
-          </ng-container>
+          </ng-container> -->
         </div>
         <div class="col-12 col-sm-6 text-right">
-          <div class="label">{{ 'amount' | translate }}:</div>
+          <!-- <div class="label">{{ 'amount' | translate }}:</div>
           <div class="amount">
             <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
             <div class="currency">
               {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
-          </div>
+          </div> -->
           <div class="label">
             <span>{{ 'fee' | translate }}</span>
             <span> - {{ kindFee }}</span>
             <span>:</span>
           </div>
           <div class="amount">
-            <div class="zbc">{{ multisig.transaction.fee | number: '0.0-8' }} ZBC</div>
+            <div class="zbc">{{ multisig.txBody.fee | number: '0.0-8' }} ZBC</div>
             <div class="currency">
-              {{ multisig.transaction.fee * currencyRate.value | number: '0.0-2' }}
+              {{ multisig.txBody.fee * currencyRate.value | number: '0.0-2' }}
               {{ currencyRate.name }}
             </div>
           </div>
@@ -136,7 +136,7 @@
               {{ currencyRate.name }}
             </div>
           </div>
-          <ng-template #not_escrow>
+          <!-- <ng-template #not_escrow>
             <div class="zbc">
               {{ multisig.transaction.amount + multisig.transaction.fee | number: '0.0-8' }}
               ZBC
@@ -148,7 +148,7 @@
               }}
               {{ currencyRate.name }}
             </div>
-          </ng-template>
+          </ng-template> -->
         </div>
       </div>
     </div>

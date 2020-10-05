@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef, Pipe, PipeTransform } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import zoobc, { isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
+import { getTxType } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-multisignature',
@@ -14,12 +15,26 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./multisignature.component.scss'],
 })
 export class MultisignatureComponent implements OnInit {
+  @ViewChild('fileInput') myInputVariable: ElementRef;
+
   multiSigDrafts: MultiSigDraft[];
   form: FormGroup;
-  multisigInfoField = new FormControl(true);
-  transactionField = new FormControl(false);
-  signaturesField = new FormControl(false);
-  @ViewChild('fileInput') myInputVariable: ElementRef;
+  txTypeField = new FormControl(TransactionType.SENDMONEYTRANSACTION, Validators.required);
+  chainTypeField = new FormControl('onchain', Validators.required);
+
+  innerTransaction: boolean = false;
+  signatures: boolean = false;
+
+  draftSignedBy: number[] = [];
+  draftTxType: string[] = [];
+
+  txType = [
+    { code: TransactionType.SENDMONEYTRANSACTION, type: 'send money' },
+    { code: TransactionType.SETUPACCOUNTDATASETTRANSACTION, type: 'setup account dataset' },
+    { code: TransactionType.REMOVENODEREGISTRATIONTRANSACTION, type: 'remove account dataset' },
+    { code: TransactionType.APPROVALESCROWTRANSACTION, type: 'escrow approval' },
+  ];
+
   isMultiSignature: boolean = false;
   account: SavedAccount;
 
@@ -30,9 +45,8 @@ export class MultisignatureComponent implements OnInit {
     private authServ: AuthService
   ) {
     this.form = new FormGroup({
-      multisigInfo: this.multisigInfoField,
-      transaction: this.transactionField,
-      signatures: this.signaturesField,
+      txType: this.txTypeField,
+      chainType: this.chainTypeField,
     });
     this.account = authServ.getCurrAccount();
     this.isMultiSignature = this.account.type == 'multisig' ? true : false;
@@ -47,13 +61,22 @@ export class MultisignatureComponent implements OnInit {
     this.multiSigDrafts = this.multisigServ
       .getDrafts()
       .filter(draft => {
-        const { multisigInfo, transaction, generatedSender } = draft;
+        const { multisigInfo, txBody, generatedSender } = draft;
         if (generatedSender == currAccount.address) return draft;
         if (multisigInfo.participants.includes(currAccount.address)) return draft;
-        if (transaction && transaction.sender == currAccount.address) return draft;
+        if (txBody && txBody.sender == currAccount.address) return draft;
       })
       .sort()
       .reverse();
+
+    this.multiSigDrafts.forEach((draft, i) => {
+      let total = 0;
+      draft.signaturesInfo.participants.forEach(p => {
+        total += Buffer.from(p.signature).length > 0 ? 1 : 0;
+      });
+      this.draftSignedBy[i] = total;
+      this.draftTxType[i] = getTxType(draft.txType);
+    });
   }
 
   onEditDraft(idx: number) {
@@ -68,15 +91,16 @@ export class MultisignatureComponent implements OnInit {
   }
 
   onNext() {
+    const txType = this.txTypeField.value;
     const multisig: MultiSigDraft = {
       accountAddress: '',
       fee: 0,
       id: 0,
+      multisigInfo: null,
+      unisgnedTransactions: null,
+      txType,
     };
-    const { multisigInfo, transaction, signatures } = this.form.value;
-    if (multisigInfo) multisig.multisigInfo = null;
-    if (transaction) multisig.unisgnedTransactions = null;
-    if (signatures) multisig.signaturesInfo = null;
+    if (this.chainTypeField.value == 'offchain') multisig.signaturesInfo = null;
 
     if (this.isMultiSignature) {
       multisig.multisigInfo = {
@@ -96,16 +120,10 @@ export class MultisignatureComponent implements OnInit {
       if (!isOneParticpants) {
         let message = getTranslation('you dont have any account that in participant list', this.translate);
         Swal.fire({ type: 'error', title: 'Oops...', text: message });
-      } else {
-        if (transaction) this.router.navigate(['/multisignature/create-transaction']);
-        else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
-      }
+      } else this.router.navigate(['/multisignature/create-transaction']);
     } else {
       this.multisigServ.update(multisig);
-
-      if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
-      else if (transaction) this.router.navigate(['/multisignature/create-transaction']);
-      else if (signatures) this.router.navigate(['/multisignature/add-signatures']);
+      this.router.navigate(['/multisignature/add-multisig-info']);
     }
   }
 
@@ -124,11 +142,6 @@ export class MultisignatureComponent implements OnInit {
         return true;
       },
     });
-  }
-
-  getDate(pDate: number) {
-    const newDate = new Date(pDate);
-    return newDate;
   }
 
   openFile() {
