@@ -2,7 +2,7 @@
   <div *ngIf="displayConverter" class="amount text-right">
     <div class="primary-amount">{{ group.get(amountName).value | number: '0.0-8' }} ZBC</div>
     <div class="secondary-amount">
-      {{ group.get(amountCurrencyName).value | number: '0.0-2' }}
+      {{ amountCurrency | number: '0.0-2' }}
       {{ currencyRate.name }}
     </div>
   </div>
@@ -12,19 +12,14 @@
   <div class="row">
     <div class="col-4 col-sm-3">
       <mat-form-field appearance="outline" color="accent" class="block">
-        <mat-select formControlName="{{ typeCoinName }}">
+        <mat-select value="ZBC" (selectionChange)="onChangeCoin($event.value)">
           <mat-option value="ZBC">ZBC</mat-option>
-          <mat-option value="Fiat">{{ currencyRate.name }}</mat-option>
+          <mat-option value="Fiat" *ngIf="currencyRate.name">{{ currencyRate.name }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div class="col-8 col-sm-9">
-      <mat-form-field
-        appearance="outline"
-        class="block"
-        *ngIf="group.get(typeCoinName).value === 'ZBC'"
-        color="accent"
-      >
+      <mat-form-field *ngIf="typeCoinName === 'ZBC'" appearance="outline" class="block" color="accent">
         <mat-label>{{ label }}</mat-label>
         <input
           matInput
@@ -36,18 +31,14 @@
         />
       </mat-form-field>
 
-      <mat-form-field
-        *ngIf="group.get(typeCoinName).value === 'Fiat'"
-        appearance="outline"
-        class="block"
-        color="accent"
-      >
+      <mat-form-field *ngIf="typeCoinName === 'Fiat'" appearance="outline" class="block" color="accent">
+        <mat-label>{{ label }}</mat-label>
         <input
           matInput
           (keyup)="onChangeAmountCurrencyField($event.target.value)"
           (change)="onChangeAmountCurrencyField($event.target.value)"
           type="number"
-          formControlName="{{ amountCurrencyName }}"
+          [value]="amountCurrency"
           placeholder="{{ currencyRate.name }} {{ 'amount' | translate }}"
         />
       </mat-form-field>

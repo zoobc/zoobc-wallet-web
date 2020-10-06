@@ -82,13 +82,20 @@
 <ng-template #feedialog>
   <h2 class="mat-h2 text-center">{{ 'remove dataset' | translate }}</h2>
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
-    <form-remove-account-dataset
-      [group]="form"
-      [formValue]="removeDataSetForm"
-      [currencyRate]="currencyRate"
-      (switchAccount)="onSwitchAccount($event)"
-      [removeOther]="false"
-    ></form-remove-account-dataset>
+    <input-amount [group]="form" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
+    <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
+      <div class="col-4 col-sm-3">&nbsp;</div>
+      <div class="col-8 col-sm-9">
+        <ng-container *ngIf="feeForm.touched">
+          <mat-error *ngIf="feeForm.hasError('required')">
+            {{ 'fee is required' | translate }}
+          </mat-error>
+          <mat-error *ngIf="feeForm.hasError('min')">
+            {{ 'minimum fee is' | translate: { val: minFee } }}
+          </mat-error>
+        </ng-container>
+      </div>
+    </div>
     <button
       mat-flat-button
       color="primary"

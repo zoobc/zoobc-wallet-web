@@ -35,7 +35,7 @@
     </ng-template>
     <div class="description">
       <div class="chips">
-        <div class="chip small" *ngIf="transaction.multisigchild">
+        <div class="chip small" *ngIf="transaction.multisig">
           {{ 'multisignature' | translate }}
         </div>
         <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
