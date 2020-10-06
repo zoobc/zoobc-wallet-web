@@ -189,6 +189,12 @@ button[mat-stroked-button] {
 // ============================ END BUTTON ============================
 
 // ================================ FORM ==============================
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
 form.grid {
   display: grid;
 }

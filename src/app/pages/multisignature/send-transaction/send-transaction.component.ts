@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate, getTranslation, jsonBufferToString } from 'src/helpers/utils';
+import { getTranslation, jsonBufferToString, truncate } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -29,17 +28,12 @@ export class SendTransactionComponent implements OnInit {
   @ViewChild('confirmDialog') confirmDialog: TemplateRef<any>;
   confirmRefDialog: MatDialogRef<any>;
 
-  currencySubs: Subscription;
-
   account: SavedAccount;
   accounts: SavedAccount[];
   formSend: FormGroup;
   minFee = environment.fee;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
 
-  currencyRate: Currency;
   advancedMenu: boolean = false;
 
   multisig: MultiSigDraft;
@@ -52,7 +46,6 @@ export class SendTransactionComponent implements OnInit {
 
   constructor(
     private authServ: AuthService,
-    private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
     private translate: TranslateService,
     private router: Router,
@@ -61,8 +54,6 @@ export class SendTransactionComponent implements OnInit {
   ) {
     this.formSend = new FormGroup({
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
     });
   }
 
@@ -70,12 +61,6 @@ export class SendTransactionComponent implements OnInit {
     this.account = this.authServ.getCurrAccount();
     if (this.account.type === 'multisig') this.isMultiSigAccount = true;
     this.accounts = this.authServ.getAllAccount();
-    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      this.feeFormCurr.patchValue(minCurrency);
-    });
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo } = multisig;
@@ -84,9 +69,7 @@ export class SendTransactionComponent implements OnInit {
       const { fee } = this.multisig;
       if (fee >= this.minFee) {
         this.feeForm.setValue(fee);
-        this.feeFormCurr.setValue(fee * this.currencyRate.value);
         this.feeForm.markAsTouched();
-        this.feeFormCurr.markAsTouched();
       }
     });
     this.participants = this.multisig.multisigInfo.participants;
@@ -120,7 +103,6 @@ export class SendTransactionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
     this.authServ.switchMultisigAccount();
   }
@@ -204,8 +186,8 @@ export class SendTransactionComponent implements OnInit {
         let message = getTranslation('your transaction is processing', this.translate);
         let subMessage = getTranslation('you send coins to', this.translate, {
           amount: txBody.amount,
-          currencyValue: truncate(txBody.amount * this.currencyRate.value, 2),
-          currencyName: this.currencyRate.name,
+          // currencyValue: truncate(txBody.amount * this.currencyRate.value, 2),
+          // currencyName: this.currencyRate.name,
           recipient: txBody.recipient,
         });
         this.multisigServ.deleteDraft(this.multisig.id);

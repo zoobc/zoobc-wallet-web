@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
-import { Currency } from 'src/app/services/currency-rate.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
+import { FormGroup } from '@angular/forms';
 import { truncate } from 'src/helpers/utils';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'input-amount',
@@ -9,26 +10,42 @@ import { truncate } from 'src/helpers/utils';
   styleUrls: ['./input-amount.component.scss'],
 })
 export class InputAmountComponent implements OnInit {
-  @Input() currencyRate: Currency;
   @Input() label: String;
-  @Input() displayConverter: boolean;
+  @Input() displayConverter: boolean = true;
   @Input() group: FormGroup;
-  @Input() typeCoinName: string;
   @Input() amountName: string;
-  @Input() amountCurrencyName: string;
 
-  constructor() {}
+  amountCurrency: number;
+  typeCoinName: string = 'ZBC';
+  currencyRate: Currency;
+  subsRate: Subscription;
 
-  ngOnInit() {}
+  constructor(private currencyServ: CurrencyRateService) {}
 
-  onChangeAmountField(value: any) {
+  ngOnInit() {
+    this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+      this.currencyRate = rate;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.subsRate) this.subsRate.unsubscribe();
+  }
+
+  onChangeCoin(value) {
+    this.typeCoinName = value;
+    const amount = this.group.get(this.amountName).value;
+    this.onChangeAmountField(amount);
+  }
+
+  onChangeAmountField(value: number) {
     const amount = truncate(value, 8);
-    const amountCurrency = amount * this.currencyRate.value;
-    this.group.get(this.amountCurrencyName).patchValue(amountCurrency);
+    this.amountCurrency = truncate(amount * this.currencyRate.value, 4);
   }
 
   onChangeAmountCurrencyField(value: any) {
-    const amount = value / this.currencyRate.value;
+    this.amountCurrency = value;
+    const amount = ((value / this.currencyRate.value) * 1e8) / 1e8;
     const amountTrunc = truncate(amount, 8);
     this.group.get(this.amountName).patchValue(amountTrunc);
   }

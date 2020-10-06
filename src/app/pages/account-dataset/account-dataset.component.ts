@@ -9,8 +9,7 @@ import zoobc, {
   BIP32Interface,
 } from 'zoobc-sdk';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
@@ -30,11 +29,8 @@ export class AccountDatasetComponent implements OnInit {
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
   minFee = environment.fee;
-  currencyRate: Currency;
   form: FormGroup;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
 
   account: SavedAccount;
 
@@ -43,28 +39,18 @@ export class AccountDatasetComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
-    private currencyServ: CurrencyRateService,
     private authServ: AuthService,
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
     this.form = new FormGroup({
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
     });
 
     this.account = data;
   }
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    this.subscription.add(subsRate);
     this.getDataSetList();
   }
 
@@ -129,9 +115,6 @@ export class AccountDatasetComponent implements OnInit {
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeForm.patchValue(this.minFee);
-    const minCurrency = truncate(this.minFee * this.currencyRate.value, 8);
-    this.feeFormCurr.patchValue(minCurrency);
-    this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
       width: '360px',
       maxHeight: '90vh',

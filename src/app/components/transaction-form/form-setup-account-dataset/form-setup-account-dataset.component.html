@@ -50,15 +50,7 @@
       </mat-error>
     </ng-container>
   </ng-container>
-  <input-amount
-    [group]="group"
-    typeCoinName="{{ formValue.typeFee }}"
-    amountCurrencyName="{{ formValue.feeCurr }}"
-    amountName="{{ formValue.fee }}"
-    [displayConverter]="true"
-    [currencyRate]="currencyRate"
-    label="{{ 'fee' | translate }}"
-  >
+  <input-amount [group]="group" amountName="{{ formValue.fee }}" label="{{ 'fee' | translate }}">
   </input-amount>
   <div
     class="row"

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
-import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
+import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { generateTransactionHash } from 'zoobc-sdk';
@@ -19,8 +18,6 @@ import { createInnerTxForm, createTxBytes, getFieldList } from 'src/helpers/mult
 })
 export class CreateTransactionComponent implements OnInit {
   minFee = environment.fee;
-  currencyRate: Currency;
-  currencySubs: Subscription;
 
   createTransactionForm: FormGroup;
 
@@ -34,8 +31,9 @@ export class CreateTransactionComponent implements OnInit {
 
   fieldList: object;
 
+  readonlyInput: boolean = false;
+
   constructor(
-    private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
@@ -49,27 +47,17 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Currency Subscriptions
-    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      const feeFormCurr = this.createTransactionForm.get('feeCurr');
-
-      feeFormCurr.patchValue(minCurrency);
-      feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       const { multisigInfo, unisgnedTransactions, signaturesInfo, txBody } = multisig;
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
-      if (signaturesInfo && signaturesInfo.txHash) this.createTransactionForm.disable();
+      if (signaturesInfo && signaturesInfo.txHash) this.readonlyInput = true;
 
       const senderForm = this.createTransactionForm.get('sender');
       senderForm.setValue(multisig.generatedSender);
 
-      if (txBody) this.createTransactionForm.setValue(txBody);
+      if (txBody) this.createTransactionForm.patchValue(txBody);
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
@@ -91,7 +79,7 @@ export class CreateTransactionComponent implements OnInit {
       }).then(result => {
         if (result.value) {
           this.generatedTxHash();
-          this.createTransactionForm.disable();
+          this.readonlyInput = true;
           return true;
         } else return false;
       });
@@ -104,13 +92,12 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
   }
 
   async next() {
     try {
-      if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
+      if (this.multisig.signaturesInfo !== null) this.readonlyInput = false;
 
       // const amountForm = this.createTransactionForm.get('amount');
       // const feeForm = this.createTransactionForm.get('fee');
