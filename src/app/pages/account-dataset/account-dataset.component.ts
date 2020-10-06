@@ -31,6 +31,10 @@ export class AccountDatasetComponent implements OnInit {
   minFee = environment.fee;
   form: FormGroup;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
+  propertyField = new FormControl('', [Validators.required]);
+  valueField = new FormControl('', [Validators.required]);
+  recipientAddressField = new FormControl('', [Validators.required]);
+  senderAddressField = new FormControl('', [Validators.required]);
 
   account: SavedAccount;
 
@@ -43,8 +47,6 @@ export class AccountDatasetComponent implements OnInit {
     value: 'value',
     recipientAddress: 'recipientAddress',
     fee: 'fee',
-    feeCurr: 'feeCurr',
-    typeFee: 'typeFee',
   };
 
   constructor(

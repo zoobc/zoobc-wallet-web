@@ -26,7 +26,6 @@ export class SetupDatasetComponent implements OnInit {
   recipientAddressField = new FormControl('', [Validators.required]);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
   timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  typeFeeField = new FormControl('ZBC');
   senderAddressField = new FormControl('', [Validators.required]);
 
   setupDataSetForm = {
@@ -35,8 +34,6 @@ export class SetupDatasetComponent implements OnInit {
     value: 'value',
     recipientAddress: 'recipientAddress',
     fee: 'fee',
-    feeCurr: 'feeCurr',
-    typeFee: 'typeFee',
   };
 
   constructor(

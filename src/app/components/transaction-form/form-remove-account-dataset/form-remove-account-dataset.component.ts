@@ -10,7 +10,6 @@ import { Currency } from 'src/app/services/currency-rate.service';
 export class FormRemoveAccountDatasetComponent implements OnChanges {
   @Input() group: FormGroup;
   @Input() formValue: any;
-  @Input() currencyRate: Currency;
   @Input() removeOther?: boolean = false;
   @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
   account: SavedAccount;
