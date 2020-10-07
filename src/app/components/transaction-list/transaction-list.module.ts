@@ -9,9 +9,15 @@ import { DateAgoModule } from 'src/app/pipes/date-ago.module';
 import { MatTooltipModule, MatCardModule, MatButtonModule } from '@angular/material';
 import { SendMoneyComponent } from './send-money/send-money.component';
 import { RegisterNodeComponent } from './register-node/register-node.component';
+import { EscrowApprovalComponent } from './escrow-approval/escrow-approval.component';
 
 @NgModule({
-  declarations: [TransactionListComponent, SendMoneyComponent, RegisterNodeComponent],
+  declarations: [
+    TransactionListComponent,
+    SendMoneyComponent,
+    RegisterNodeComponent,
+    EscrowApprovalComponent,
+  ],
   imports: [
     CommonModule,
     TranslateModule.forChild({

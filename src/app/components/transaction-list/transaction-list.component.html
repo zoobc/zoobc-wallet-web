@@ -9,8 +9,13 @@
       <ng-container *ngIf="txType == 1">
         <send-money [transaction]="tx" *ngFor="let tx of transactionData"></send-money>
       </ng-container>
+
       <ng-container *ngIf="txType == 2 || txType == 258 || txType == 514 || txType == 770">
         <register-node [transaction]="tx" *ngFor="let tx of transactionData"></register-node>
+      </ng-container>
+
+      <ng-container *ngIf="txType == 4">
+        <escrow-approval [transaction]="tx" *ngFor="let tx of transactionData"></escrow-approval>
       </ng-container>
     </ng-container>
 
