@@ -15,6 +15,7 @@ import { getTxType } from 'src/helpers/multisig-utils';
 export class OffchainSignComponent implements OnInit {
   yourTxHash: string;
   isValid: boolean = false;
+  isAddressInParticipants: boolean;
   signature: string;
 
   draft: MultiSigDraft;
@@ -53,17 +54,26 @@ export class OffchainSignComponent implements OnInit {
     const { txHash } = this.draft.signaturesInfo;
     this.yourTxHash = generateTransactionHash(Buffer.from(this.draft.unisgnedTransactions));
     this.isValid = this.yourTxHash == txHash ? true : false;
+
+    if (this.isValid) {
+      let accounts = this.authServ.getAllAccount();
+      accounts = accounts.filter(res => this.participants.includes(res.address));
+      console.log(accounts);
+      if (accounts.length > 0) this.isAddressInParticipants = true;
+      else this.isAddressInParticipants = false;
+    }
   }
 
   onSign() {
     const seed = this.authServ.seed;
-    console.log(seed);
+    // console.log(seed);
 
     const buff = signTransactionHash(this.yourTxHash, seed);
-    console.log(buff);
+    // console.log(buff);
 
     this.signature = signTransactionHash(this.yourTxHash, seed).toString('base64');
-    console.log(this.signature);
+    // console.log(this.signature);
+    console.log(`${window.location.origin}/sign/${this.yourTxHash}/${this.signature}`);
   }
 
   async onCopy() {
@@ -81,7 +91,10 @@ export class OffchainSignComponent implements OnInit {
   }
 
   onSwitchAccount(account: SavedAccount) {
-    this.account = account;
-    this.authServ.switchAccount(account);
+    // this.account = account;
+    // this.authServ.switchAccount(account);
+    //   if (!account) {
+    //     this.isAddressInParticipants = false;
+    //   } else this.isAddressInParticipants = true;
   }
 }

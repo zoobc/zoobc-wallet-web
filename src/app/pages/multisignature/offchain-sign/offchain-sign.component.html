@@ -57,35 +57,45 @@
     </div>
 
     <ng-container *ngIf="yourTxHash && isValid">
-      <div class="col-12 col-sm-6">
-        <account-selector
-          (select)="onSwitchAccount($event)"
-          type="normal"
-          [addresses]="participants"
-        ></account-selector>
+      <ng-container *ngIf="isAddressInParticipants">
+        <div class="col-12 col-sm-6">
+          <account-selector
+            (select)="onSwitchAccount($event)"
+            type="normal"
+            [addresses]="participants"
+          ></account-selector>
 
-        <button mat-flat-button color="primary" (click)="onSign()" class="block">
-          <i matPrefix class="fa fa-file-signature"></i>
-          <span>Sign this transaction</span>
-        </button>
-        <br /><br />
-      </div>
-      <div class="col-12 col-sm-6">
-        <div class="label">Your Signature</div>
-        <div class="value">
-          <i *ngIf="!signature">(Your signature will appear here)</i>
-          <wallet-address
-            *ngIf="signature"
-            [value]="signature"
-            [copyButton]="true"
-            center="true"
-          ></wallet-address>
+          <button mat-flat-button color="primary" (click)="onSign()" class="block">
+            <i matPrefix class="fa fa-file-signature"></i>
+            <span>Sign this transaction</span>
+          </button>
+          <br /><br />
         </div>
+        <div class="col-12 col-sm-6">
+          <div class="label">Your Signature</div>
+          <div class="value">
+            <i *ngIf="!signature">(Your signature will appear here)</i>
+            <wallet-address
+              *ngIf="signature"
+              [value]="signature"
+              [copyButton]="true"
+              center="true"
+            ></wallet-address>
+          </div>
 
-        <button mat-flat-button color="accent" (click)="onCopy()" [disabled]="!signature" class="block">
-          <i matPrefix class="fa fa-share-alt"></i>
-          <span>Share your signature</span>
-        </button>
+          <button mat-flat-button color="accent" (click)="onCopy()" [disabled]="!signature" class="block">
+            <i matPrefix class="fa fa-share-alt"></i>
+            <span>Share your signature</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <div class="col-12">
+        <mat-error class="text-center" *ngIf="!isAddressInParticipants">
+          {{ 'you cant sign this transaction' | translate }} <br />
+          {{ 'theres no matched address between your accounts and participants' | translate }} <br />
+          {{ 'please use one of the address of the participants' | translate }}
+        </mat-error>
       </div>
     </ng-container>
   </div>

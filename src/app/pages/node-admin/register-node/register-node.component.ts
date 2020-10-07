@@ -51,7 +51,7 @@ export class RegisterNodeComponent implements OnInit {
   }
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
+    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value);
     if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
   }
 
