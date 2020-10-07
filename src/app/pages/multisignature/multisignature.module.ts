@@ -20,6 +20,8 @@ import {
   MatChipsModule,
   MatDividerModule,
   MatStepperModule,
+  MatRadioModule,
+  MatSelectModule,
 } from '@angular/material';
 import { DateAgoModule } from '../../pipes/date-ago.module';
 import { AddressModule } from '../../components/address/address.module';
@@ -27,6 +29,8 @@ import { InputAddressModule } from '../../components/input-address/input-address
 import { AccountSelectorModule } from '../../components/account-selector/account-selector.module';
 import { InputAmountModule } from '../../components/input-amount/input-amount.module';
 import { FormSendMoneyModule } from '../../components/transaction-form/form-send-money/form-send-money.module';
+import { FormSetupAccountDatasetModule } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
+import { FormEscrowModule } from 'src/app/components/transaction-form/form-escrow/form-escrow.module';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -69,10 +73,14 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatStepperModule,
+    MatSelectModule,
+    MatRadioModule,
     AccountSelectorModule,
     InputAddressModule,
     InputAmountModule,
     FormSendMoneyModule,
+    FormEscrowModule,
+    FormSetupAccountDatasetModule,
   ],
 })
 export class MultisignatureModule {}

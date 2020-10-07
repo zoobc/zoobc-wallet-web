@@ -1,21 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Subscription } from 'rxjs';
-import { truncate, getTranslation, stringToBuffer } from 'src/helpers/utils';
-import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
+import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, {
-  SendMoneyInterface,
-  generateTransactionHash,
-  sendMoneyBuilder,
-  AccountBalanceResponse,
-} from 'zoobc-sdk';
+import { generateTransactionHash } from 'zoobc-sdk';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
+import { createInnerTxForm, createTxBytes, getFieldList } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
@@ -23,18 +18,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class CreateTransactionComponent implements OnInit {
   minFee = environment.fee;
-  currencyRate: Currency;
-  currencySubs: Subscription;
 
   createTransactionForm: FormGroup;
-  senderForm = new FormControl('', Validators.required);
-  recipientForm = new FormControl('', Validators.required);
-  amountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-  amountCurrencyForm = new FormControl('', Validators.required);
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeCoinField = new FormControl('ZBC');
-  typeFeeField = new FormControl('ZBC');
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
@@ -44,65 +29,35 @@ export class CreateTransactionComponent implements OnInit {
     signatures: false,
   };
 
-  sendMoneyForm = {
-    sender: 'sender',
-    recipient: 'recipient',
-    alias: 'alias',
-    typeCoin: 'typeCoin',
-    amountCurrency: 'amountCurrency',
-    amount: 'amount',
-    typeFee: 'typeFee',
-    feeCurrency: 'feeCurr',
-    fee: 'fee',
-  };
+  fieldList: object;
+
+  readonlyInput: boolean = false;
 
   constructor(
-    private currencyServ: CurrencyRateService,
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
     private translate: TranslateService
   ) {
-    this.createTransactionForm = new FormGroup({
-      sender: this.senderForm,
-      recipient: this.recipientForm,
-      amount: this.amountForm,
-      amountCurrency: this.amountCurrencyForm,
-      fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeCoin: this.typeCoinField,
-      typeFee: this.typeFeeField,
+    const subs = this.multisigServ.multisig.subscribe(multisig => {
+      this.createTransactionForm = createInnerTxForm(multisig.txType);
+      this.fieldList = getFieldList(multisig.txType);
     });
+    subs.unsubscribe();
   }
 
   ngOnInit() {
-    // Currency Subscriptions
-    this.currencySubs = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-      this.amountCurrencyForm.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    // Multisignature Subscription
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      const { multisigInfo, unisgnedTransactions, signaturesInfo, transaction } = multisig;
+      const { multisigInfo, unisgnedTransactions, signaturesInfo, txBody } = multisig;
       if (unisgnedTransactions === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
-      if (signaturesInfo && signaturesInfo.txHash) this.createTransactionForm.disable();
+      if (signaturesInfo && signaturesInfo.txHash) this.readonlyInput = true;
 
-      this.senderForm.setValue(multisig.generatedSender);
+      const senderForm = this.createTransactionForm.get('sender');
+      senderForm.setValue(multisig.generatedSender);
 
-      if (transaction) {
-        const { sender, recipient, amount, fee } = transaction;
-        this.senderForm.setValue(sender);
-        this.recipientForm.setValue(recipient);
-        this.amountForm.setValue(amount);
-        this.amountCurrencyForm.setValue(amount * this.currencyRate.value);
-        this.feeForm.setValue(fee);
-        this.feeFormCurr.setValue(fee * this.currencyRate.value);
-      }
+      if (txBody) this.createTransactionForm.patchValue(txBody);
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
@@ -124,7 +79,7 @@ export class CreateTransactionComponent implements OnInit {
       }).then(result => {
         if (result.value) {
           this.generatedTxHash();
-          this.createTransactionForm.disable();
+          this.readonlyInput = true;
           return true;
         } else return false;
       });
@@ -137,26 +92,29 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.currencySubs.unsubscribe();
     this.multisigSubs.unsubscribe();
   }
 
   async next() {
     try {
-      if (this.multisig.signaturesInfo !== null) this.createTransactionForm.enable();
+      if (this.multisig.signaturesInfo !== null) this.readonlyInput = false;
 
-      const total = this.amountForm.value + this.feeForm.value;
-      const balance = await zoobc.Account.getBalance(this.senderForm.value).then(
-        (res: AccountBalanceResponse) => parseInt(res.accountbalance.spendablebalance) / 1e8
-      );
-      if (balance < total) {
-        const message = getTranslation('your balances are not enough for this transaction', this.translate);
-        return Swal.fire({ type: 'error', title: 'Oops...', text: message });
-      }
+      // const amountForm = this.createTransactionForm.get('amount');
+      // const feeForm = this.createTransactionForm.get('fee');
+      // const senderForm = this.createTransactionForm.get('sender');
+
+      // const total = amountForm.value + feeForm.value;
+      // const balance = await zoobc.Account.getBalance(senderForm.value).then(
+      //   (res: AccountBalanceResponse) => parseInt(res.accountbalance.spendablebalance) / 1e8
+      // );
+      // if (balance < total) {
+      //   const message = getTranslation('your balances are not enough for this transaction', this.translate);
+      //   return Swal.fire({ type: 'error', title: 'Oops...', text: message });
+      // }
       if (this.createTransactionForm.valid) {
         this.updateCreateTransaction();
         const { signaturesInfo } = this.multisig;
-        if (this.multisig.signaturesInfo === null) {
+        if (signaturesInfo === null) {
           const title = getTranslation('are you sure?', this.translate);
           const message = getTranslation('you will not be able to update the form anymore!', this.translate);
           const buttonText = getTranslation('yes, continue it!', this.translate);
@@ -170,6 +128,7 @@ export class CreateTransactionComponent implements OnInit {
           }).then(result => {
             if (result.value) {
               this.generatedTxHash();
+              this.multisigServ.update(this.multisig);
               return true;
             } else return false;
           });
@@ -194,10 +153,8 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   updateCreateTransaction() {
-    const { recipient, amount, fee, sender } = this.createTransactionForm.value;
     const multisig = { ...this.multisig };
-
-    multisig.transaction = { sender, amount, fee, recipient };
+    multisig.txBody = this.createTransactionForm.value;
     this.multisigServ.update(multisig);
   }
 
@@ -206,18 +163,15 @@ export class CreateTransactionComponent implements OnInit {
   }
 
   generatedTxHash() {
-    const { recipient, amount, fee, sender } = this.createTransactionForm.value;
-    const { unisgnedTransactions, multisigInfo } = this.multisig;
-    const data: SendMoneyInterface = { sender, recipient, fee, amount };
+    const { unisgnedTransactions, multisigInfo, signaturesInfo, txType } = this.multisig;
+    const form = this.createTransactionForm.value;
+    const signature = stringToBuffer('');
 
-    if (unisgnedTransactions === null) this.multisig.unisgnedTransactions = sendMoneyBuilder(data);
+    if (unisgnedTransactions === null) this.multisig.unisgnedTransactions = createTxBytes(form, txType);
 
-    if (this.multisig.signaturesInfo !== undefined) {
-      const txHash = generateTransactionHash(data);
-      const participants = multisigInfo.participants.map(address => ({
-        address,
-        signature: stringToBuffer(''),
-      }));
+    if (signaturesInfo !== undefined) {
+      const txHash = generateTransactionHash(this.multisig.unisgnedTransactions);
+      const participants = multisigInfo.participants.map(address => ({ address, signature }));
       this.multisig.signaturesInfo = { txHash, participants };
     }
   }

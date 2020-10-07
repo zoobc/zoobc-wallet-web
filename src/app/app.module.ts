@@ -88,6 +88,7 @@ import { FormEscrowModule } from './components/transaction-form/form-escrow/form
 import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
 import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
+import { FormSetupAccountDatasetModule } from './components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -195,6 +196,7 @@ export function getLanguage(languageServ: LanguageService) {
     FormRemoveNodeModule,
     FormSendMoneyModule,
     FormEscrowModule,
+    FormSetupAccountDatasetModule,
   ],
   bootstrap: [AppComponent],
   providers: [

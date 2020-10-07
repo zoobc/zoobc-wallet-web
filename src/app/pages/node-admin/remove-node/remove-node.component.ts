@@ -6,7 +6,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import Swal from 'sweetalert2';
 import zoobc, { RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
-import { getTranslation, truncate } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,8 +17,6 @@ export class RemoveNodeComponent implements OnInit {
   minFee = environment.fee;
   formRemoveNode: FormGroup;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
   account: SavedAccount;
   isLoading: boolean = false;
@@ -40,8 +38,6 @@ export class RemoveNodeComponent implements OnInit {
   ) {
     this.formRemoveNode = new FormGroup({
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
       nodePublicKey: this.nodePublicKeyForm,
     });
 
