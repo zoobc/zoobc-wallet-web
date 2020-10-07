@@ -98,16 +98,7 @@
     <ng-container *ngIf="showProcessForm">
       <div class="row" style="border-bottom: none;">
         <div class="col-12 col-md-10 offset-md-1">
-          <input-amount
-            [group]="form"
-            typeCoinName="typeFee"
-            amountCurrencyName="feeCurr"
-            amountName="fee"
-            [displayConverter]="true"
-            [currencyRate]="currencyRate"
-            label="{{ 'fee' | translate }}"
-          >
-          </input-amount>
+          <input-amount [group]="form" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
         </div>
       </div>
       <div
