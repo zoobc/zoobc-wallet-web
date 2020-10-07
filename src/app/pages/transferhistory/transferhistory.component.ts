@@ -131,7 +131,6 @@ export class TransferhistoryComponent implements OnDestroy {
             recent.escrowStatus = escStatus.status;
           } else recent.escrow = false;
           recent.multisig = multisigTx.includes(recent.id);
-          console.log(recent);
           return recent;
         });
         this.total = parseInt(trxList.total);
