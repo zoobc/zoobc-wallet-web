@@ -7,6 +7,7 @@ import zoobc, {
   AccountDatasetsResponse,
   RemoveDatasetInterface,
   BIP32Interface,
+  TransactionType,
 } from 'zoobc-sdk';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
@@ -15,6 +16,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { createInnerTxForm, removeDataSetForm } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -41,13 +43,7 @@ export class AccountDatasetComponent implements OnInit {
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
-  removeDataSetForm = {
-    sender: 'sender',
-    property: 'property',
-    value: 'value',
-    recipientAddress: 'recipientAddress',
-    fee: 'fee',
-  };
+  removeDataSetForm = removeDataSetForm;
 
   constructor(
     public dialog: MatDialog,
@@ -55,13 +51,7 @@ export class AccountDatasetComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
-    this.form = new FormGroup({
-      sender: this.senderAddressField,
-      property: this.propertyField,
-      value: this.valueField,
-      recipientAddress: this.recipientAddressField,
-      fee: this.feeForm,
-    });
+    this.form = createInnerTxForm(TransactionType.REMOVEACCOUNTDATASETTRANSACTION);
 
     this.account = data;
   }
@@ -128,10 +118,10 @@ export class AccountDatasetComponent implements OnInit {
 
   onDelete(dataset: any) {
     this.dataSet = dataset;
-    this.senderAddressField.patchValue(dataset.setteraccountaddress);
-    this.recipientAddressField.patchValue(dataset.recipientaccountaddress);
-    this.propertyField.patchValue(dataset.property);
-    this.valueField.patchValue(dataset.value);
+    this.form.get('sender').patchValue(dataset.setteraccountaddress);
+    this.form.get('property').patchValue(dataset.property);
+    this.form.get('value').patchValue(dataset.value);
+    this.form.get('recipientAddress').patchValue(dataset.recipientaccountaddress);
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeForm.patchValue(this.minFee);
