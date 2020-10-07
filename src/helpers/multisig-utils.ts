@@ -61,6 +61,7 @@ export const setupDataSetForm = {
   value: 'value',
   recipientAddress: 'recipientAddress',
   fee: 'fee',
+  ...escrowForm,
 };
 // =========================== END INPUT MAP ======================= //
 
@@ -89,6 +90,7 @@ export function createInnerTxForm(txType: number) {
         value: valueField,
         recipientAddress: recipientForm,
         fee: feeForm,
+        ...escrowAddition,
       });
   }
 }

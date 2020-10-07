@@ -52,6 +52,8 @@ export class FormEscrowComponent implements OnInit {
   }
 
   disableFieldEscrow() {
+    console.log(this.group);
+
     this.group.get(this.inputMap.addressApprover).disable();
     this.group.get(this.inputMap.approverCommission).disable();
     this.group.get(this.inputMap.instruction).disable();

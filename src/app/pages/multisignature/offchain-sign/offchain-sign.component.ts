@@ -1,10 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
-import { generateTransactionHash, signTransactionHash } from 'zoobc-sdk';
-import { AuthService } from 'src/app/services/auth.service';
+import { generateTransactionHash, isZBCAddressValid, signTransactionHash } from 'zoobc-sdk';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { getTxType } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-offchain-sign',
@@ -17,6 +18,11 @@ export class OffchainSignComponent implements OnInit {
   signature: string;
 
   draft: MultiSigDraft;
+  innerTx: any[] = [];
+  txType: string = '';
+
+  account: SavedAccount;
+  participants: string[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<OffchainSignComponent>,
@@ -26,6 +32,19 @@ export class OffchainSignComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.draft = data;
+    this.txType = getTxType(data.txType);
+    this.participants = data.multisigInfo.participants;
+    this.innerTx = Object.keys(this.draft.txBody).map(key => {
+      const item = this.draft.txBody;
+      console.log(key);
+
+      return {
+        key,
+        value: item[key],
+        isAddress: isZBCAddressValid(item[key]),
+      };
+    });
+    console.log(this.innerTx);
   }
 
   ngOnInit() {}
@@ -38,7 +57,13 @@ export class OffchainSignComponent implements OnInit {
 
   onSign() {
     const seed = this.authServ.seed;
+    console.log(seed);
+
+    const buff = signTransactionHash(this.yourTxHash, seed);
+    console.log(buff);
+
     this.signature = signTransactionHash(this.yourTxHash, seed).toString('base64');
+    console.log(this.signature);
   }
 
   async onCopy() {
@@ -53,5 +78,10 @@ export class OffchainSignComponent implements OnInit {
 
     let message = await getTranslation('Signature copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
+    this.authServ.switchAccount(account);
   }
 }

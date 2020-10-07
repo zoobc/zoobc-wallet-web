@@ -171,6 +171,8 @@ export class CreateTransactionComponent implements OnInit {
 
     if (signaturesInfo !== undefined) {
       const txHash = generateTransactionHash(this.multisig.unisgnedTransactions);
+      console.log(txHash);
+
       const participants = multisigInfo.participants.map(address => ({ address, signature }));
       this.multisig.signaturesInfo = { txHash, participants };
     }
