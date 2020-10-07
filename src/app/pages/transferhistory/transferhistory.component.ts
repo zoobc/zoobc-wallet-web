@@ -119,11 +119,19 @@ export class TransferhistoryComponent implements OnDestroy {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
           recent.senderAlias = this.contactServ.get(recent.sender).name || '';
           recent.recipientAlias = this.contactServ.get(recent.recipient).name || '';
+          if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
+            if (recent.txBody.nodepublickey) {
+              const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
+              const pubkey = getZBCAddress(buffer, 'ZNK');
+              recent['txBody'].nodepublickey = pubkey;
+            }
+          }
           if (escStatus) {
             recent.escrow = true;
             recent.escrowStatus = escStatus.status;
           } else recent.escrow = false;
           recent.multisig = multisigTx.includes(recent.id);
+          console.log(recent);
           return recent;
         });
         this.total = parseInt(trxList.total);

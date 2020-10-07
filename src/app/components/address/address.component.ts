@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { onCopyText, getTranslation, shortenAddress } from 'src/helpers/utils';
+import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { shortenHash } from 'zoobc-sdk';
@@ -33,7 +33,7 @@ export class AddressComponent {
       } else {
         this.len = value.length;
         this.halfLen = Math.round(value.length / 2);
-        this.shortValue = shortenAddress(value);
+        this.shortValue = value;
       }
     }
   }
