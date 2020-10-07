@@ -1,13 +1,17 @@
 <div class="transaction-item hover row" (click)="openDetail(transaction.id)">
   <div class="col-12 col-sm-8">
-    <div class="label">{{ 'account address' | translate }}:</div>
+    <div class="label">{{ 'node public key' | translate }}:</div>
     <div class="address">
-      <wallet-address [value]="transaction.txBody.accountaddress"></wallet-address>
+      <wallet-address [value]="transaction.txBody.nodepublickey"></wallet-address>
     </div>
     <div class="date">{{ transaction.timestamp | dateAgo }}</div>
   </div>
   <div class="col-12 col-sm-4 text-right">
-    <div class="amount-send" title="{{ 'locked balance' | translate }}">
+    <div
+      class="amount-send"
+      title="{{ 'locked balance' | translate }}"
+      *ngIf="transaction.txBody.lockedbalance"
+    >
       - {{ transaction.txBody.lockedbalance / 1e8 | number: '0.0-8' }} ZBC
     </div>
     <div class="fee">
@@ -39,14 +43,14 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="transaction.txBody.accountaddress">
       <div class="col-12 col-md-4">{{ 'account address' | translate }}:</div>
       <div class="col-12 col-md-8">
         <wallet-address [value]="transaction.txBody.accountaddress"></wallet-address>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="transaction.txBody.lockedbalance">
       <div class="col-12 col-md-4">{{ 'locked balance' | translate }}:</div>
       <div class="col-12 col-md-8">{{ transaction.txBody.lockedbalance / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
@@ -70,6 +74,15 @@
       <div class="col-12 col-md-4">{{ 'transaction type' | translate }}:</div>
       <ng-container *ngIf="transaction.transactionType == 2">
         <div class="col-12 col-md-8">{{ 'register node' | translate }}</div>
+      </ng-container>
+      <ng-container *ngIf="transaction.transactionType == 258">
+        <div class="col-12 col-md-8">{{ 'update node registration' | translate }}</div>
+      </ng-container>
+      <ng-container *ngIf="transaction.transactionType == 514">
+        <div class="col-12 col-md-8">{{ 'remove node registration' | translate }}</div>
+      </ng-container>
+      <ng-container *ngIf="transaction.transactionType == 770">
+        <div class="col-12 col-md-8">{{ 'claim node registration' | translate }}</div>
       </ng-container>
     </div>
 

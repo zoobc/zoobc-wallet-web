@@ -84,3 +84,9 @@ export function jsonBufferToString(buf: any) {
     return buf.toString('base64');
   }
 }
+
+export function shortenAddress(text = ''): string {
+  const head = text.slice(0, 8);
+  const tail = text.slice(text.length - 8, text.length);
+  return `${head}...${tail}`;
+}
