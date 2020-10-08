@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
