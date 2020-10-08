@@ -37,6 +37,11 @@ export const setupDataSetForm = {
   fee: 'fee',
 };
 
+export const claimNodeForm = {
+  fee: 'fee',
+  nodePublicKey: 'nodePublicKey',
+  ipAddress: 'ipAddress',
+};
 export const removeDataSetForm = {
   sender: 'sender',
   property: 'property',
@@ -101,6 +106,15 @@ export function createInnerTxForm(txType: number) {
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
       });
 
+    case TransactionType.CLAIMNODEREGISTRATIONTRANSACTION:
+      return new FormGroup({
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        nodePublicKey: new FormControl('', Validators.required),
+        ipAddress: new FormControl('', [
+          Validators.required,
+          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
+        ]),
+      });
     case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
       return new FormGroup({
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
