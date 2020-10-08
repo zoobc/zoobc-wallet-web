@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { ZBCAddressToBytes, ClaimNodeInterface } from 'zoobc-sdk';
+import zoobc, { ZBCAddressToBytes, ClaimNodeInterface, isZBCAddressValid } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
@@ -16,8 +16,6 @@ export class ClaimNodeComponent implements OnInit {
   minFee = environment.fee;
   formClaimNode: FormGroup;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
   ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
   account: SavedAccount;
@@ -40,8 +38,6 @@ export class ClaimNodeComponent implements OnInit {
   ) {
     this.formClaimNode = new FormGroup({
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
       nodePublicKey: this.nodePublicKeyForm,
       ipAddress: this.ipAddressForm,
     });

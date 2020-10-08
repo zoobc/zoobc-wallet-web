@@ -6,9 +6,8 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import Swal from 'sweetalert2';
 import zoobc, { RemoveNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
-import { getTranslation, truncate } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 @Component({
   selector: 'app-remove-node',
   templateUrl: './remove-node.component.html',
@@ -17,8 +16,6 @@ export class RemoveNodeComponent implements OnInit {
   minFee = environment.fee;
   formRemoveNode: FormGroup;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
 
   account: SavedAccount;
@@ -26,20 +23,15 @@ export class RemoveNodeComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  currencyRate: Currency;
-
   constructor(
     private authServ: AuthService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<RemoveNodeComponent>,
     @Inject(MAT_DIALOG_DATA) public node: any,
-    private translate: TranslateService,
-    private currencyServ: CurrencyRateService
+    private translate: TranslateService
   ) {
     this.formRemoveNode = new FormGroup({
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
       nodePublicKey: this.nodePublicKeyForm,
     });
 
@@ -47,14 +39,7 @@ export class RemoveNodeComponent implements OnInit {
     this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
   }
 
-  ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-  }
+  ngOnInit() {}
 
   onChangeNodePublicKey() {
     let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');

@@ -20,8 +20,6 @@ export class UpdateNodeComponent implements OnInit {
   ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
   lockedAmountForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
   nodePublicKeyForm = new FormControl('', Validators.required);
 
   account: SavedAccount;
@@ -50,8 +48,6 @@ export class UpdateNodeComponent implements OnInit {
       ipAddress: this.ipAddressForm,
       lockedAmount: this.lockedAmountForm,
       fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
       nodePublicKey: this.nodePublicKeyForm,
     });
 
@@ -73,6 +69,11 @@ export class UpdateNodeComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  onChangeNodePublicKey() {
+    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value, 'ZNK');
+    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
+  }
 
   onUpdateNode() {
     if (this.formUpdateNode.valid) {
