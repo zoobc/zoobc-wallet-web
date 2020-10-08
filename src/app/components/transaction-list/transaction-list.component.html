@@ -11,7 +11,7 @@
       </ng-container>
 
       <ng-container *ngIf="txType == 2 || txType == 258 || txType == 514 || txType == 770">
-        <register-node [transaction]="tx" *ngFor="let tx of transactionData"></register-node>
+        <node-registration [transaction]="tx" *ngFor="let tx of transactionData"></node-registration>
       </ng-container>
 
       <ng-container *ngIf="txType == 4">

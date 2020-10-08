@@ -1,21 +1,16 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { AuthService } from 'src/app/services/auth.service';
 import { ZBCTransaction } from 'zoobc-sdk';
 
 @Component({
-  selector: 'register-node',
-  templateUrl: './register-node.component.html',
+  selector: 'node-registration',
+  templateUrl: './node-registration.component.html',
 })
-export class RegisterNodeComponent {
+export class NodeRegistrationComponent {
   @Input() transaction: ZBCTransaction[];
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
 
-  address: string;
-
-  constructor(private dialog: MatDialog, authServ: AuthService) {
-    this.address = authServ.getCurrAccount().address;
-  }
+  constructor(private dialog: MatDialog) {}
 
   openDetail(id) {
     this.dialog.open(this.detailDialog, {
