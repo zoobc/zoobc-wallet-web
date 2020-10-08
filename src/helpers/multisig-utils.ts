@@ -62,6 +62,12 @@ export const setupDataSetForm = {
   recipientAddress: 'recipientAddress',
   fee: 'fee',
 };
+
+export const claimNodeForm = {
+  fee: 'fee',
+  nodePublicKey: 'nodePublicKey',
+  ipAddress: 'ipAddress',
+};
 // =========================== END INPUT MAP ======================= //
 
 export function createInnerTxForm(txType: number) {
@@ -89,6 +95,16 @@ export function createInnerTxForm(txType: number) {
         value: valueField,
         recipientAddress: recipientForm,
         fee: feeForm,
+      });
+
+    case TransactionType.CLAIMNODEREGISTRATIONTRANSACTION:
+      return new FormGroup({
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        nodePublicKey: new FormControl('', Validators.required),
+        ipAddress: new FormControl('', [
+          Validators.required,
+          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
+        ]),
       });
   }
 }
