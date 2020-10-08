@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -18,21 +18,23 @@ export class AddressComponent {
   len: number = 0;
   halfLen: number = 0;
 
-  constructor(private snackbar: MatSnackBar, private translate: TranslateService) {
-    if (this.value) {
-      this.len = this.value.length;
-      this.halfLen = Math.round(this.value.length / 2);
+  constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
-      this.shortValue = shortenHash(this.value);
-    }
-  }
-
-  ngOnChanges() {
-    if (this.value) {
-      this.len = this.value.length;
-      this.halfLen = Math.round(this.value.length / 2);
-
-      this.shortValue = shortenHash(this.value);
+  ngOnChanges(changes: SimpleChanges): void {
+    const value = changes.value.currentValue;
+    if (value) {
+      const prefixDefault = ['ZBC', 'ZNK', 'ZBL', 'ZTX'];
+      const prefixValue = value.slice(0, 3);
+      const valid = prefixDefault.indexOf(prefixValue) > -1;
+      if (valid) {
+        this.len = value.length;
+        this.halfLen = Math.round(value.length / 2);
+        this.shortValue = shortenHash(value);
+      } else {
+        this.len = value.length;
+        this.halfLen = Math.round(value.length / 2);
+        this.shortValue = value;
+      }
     }
   }
 
