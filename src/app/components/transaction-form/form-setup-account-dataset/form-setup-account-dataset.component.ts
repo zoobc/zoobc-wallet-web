@@ -10,7 +10,6 @@ import { Currency } from 'src/app/services/currency-rate.service';
 export class FormSetupAccountDatasetComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() formValue: any;
-  @Input() currencyRate: Currency;
   @Input() isSetupOther: boolean = false;
   @Output() enableSetupOther?: EventEmitter<boolean> = new EventEmitter();
   @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();

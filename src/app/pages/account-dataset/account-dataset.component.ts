@@ -7,6 +7,7 @@ import zoobc, {
   AccountDatasetsResponse,
   RemoveDatasetInterface,
   BIP32Interface,
+  TransactionType,
 } from 'zoobc-sdk';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
@@ -15,6 +16,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { createInnerTxForm, removeDataSetForm } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -28,14 +30,14 @@ export class AccountDatasetComponent implements OnInit {
   isError: boolean;
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
-  minFee = environment.fee;
   form: FormGroup;
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
 
   account: SavedAccount;
 
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
+
+  removeDataSetForm = removeDataSetForm;
 
   constructor(
     public dialog: MatDialog,
@@ -43,9 +45,7 @@ export class AccountDatasetComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
-    this.form = new FormGroup({
-      fee: this.feeForm,
-    });
+    this.form = createInnerTxForm(TransactionType.REMOVEACCOUNTDATASETTRANSACTION);
 
     this.account = data;
   }
@@ -85,7 +85,7 @@ export class AccountDatasetComponent implements OnInit {
       recipientAccountAddress: this.dataSet.recipientaccountaddress,
       property: this.dataSet.property,
       value: this.dataSet.value,
-      fee: this.feeForm.value,
+      fee: this.form.get('fee').value,
     };
 
     zoobc.AccountDataset.removeDataset(param, seed)
@@ -112,9 +112,12 @@ export class AccountDatasetComponent implements OnInit {
 
   onDelete(dataset: any) {
     this.dataSet = dataset;
+    this.form.get('sender').patchValue(dataset.setteraccountaddress);
+    this.form.get('property').patchValue(dataset.property);
+    this.form.get('value').patchValue(dataset.value);
+    this.form.get('recipientAddress').patchValue(dataset.recipientaccountaddress);
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
-    this.feeForm.patchValue(this.minFee);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
       width: '360px',
       maxHeight: '90vh',
@@ -145,5 +148,9 @@ export class AccountDatasetComponent implements OnInit {
       data: this.account,
       disableClose: true,
     });
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
   }
 }
