@@ -40,6 +40,8 @@ import { RegisterNodeComponent } from './register-node/register-node.component';
 import { ClaimNodeComponent } from './claim-node/claim-node.component';
 import { RemoveNodeComponent } from './remove-node/remove-node.component';
 import { DemoNodeAdminComponent } from './demo-node-admin/demo-node-admin.component';
+import { FormRegisterNodeModule } from 'src/app/components/transaction-form/form-register-node/form-register-node.module';
+
 import { FormUpdateNodeModule } from 'src/app/components/transaction-form/form-update-node/form-update-node.module';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -99,6 +101,7 @@ const routes: Routes = [
     MatAutocompleteModule,
     InputAmountModule,
     RewardTableModule,
+    FormRegisterNodeModule,
     FormUpdateNodeModule,
   ],
   entryComponents: [RegisterNodeComponent, UpdateNodeComponent, ClaimNodeComponent, RemoveNodeComponent],
