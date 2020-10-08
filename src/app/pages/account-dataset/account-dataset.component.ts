@@ -30,13 +30,7 @@ export class AccountDatasetComponent implements OnInit {
   isError: boolean;
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
-  minFee = environment.fee;
   form: FormGroup;
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  propertyField = new FormControl('', [Validators.required]);
-  valueField = new FormControl('', [Validators.required]);
-  recipientAddressField = new FormControl('', [Validators.required]);
-  senderAddressField = new FormControl('', [Validators.required]);
 
   account: SavedAccount;
 
@@ -91,7 +85,7 @@ export class AccountDatasetComponent implements OnInit {
       recipientAccountAddress: this.dataSet.recipientaccountaddress,
       property: this.dataSet.property,
       value: this.dataSet.value,
-      fee: this.feeForm.value,
+      fee: this.form.get('fee').value,
     };
 
     zoobc.AccountDataset.removeDataset(param, seed)
@@ -124,7 +118,6 @@ export class AccountDatasetComponent implements OnInit {
     this.form.get('recipientAddress').patchValue(dataset.recipientaccountaddress);
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
-    this.feeForm.patchValue(this.minFee);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
       width: '360px',
       maxHeight: '90vh',
