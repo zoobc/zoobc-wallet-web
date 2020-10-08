@@ -40,12 +40,8 @@
         </div>
         <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
       </div>
-      <div class="status" [style.color]="getEscrowColor(transaction.escrowStatus)" *ngIf="transaction.escrow">
-        <i
-          class="fas fa-dot-circle"
-          [matTooltip]="getEscrowStatus(transaction.escrowStatus) | translate"
-          matTooltipPosition="above"
-        ></i>
+      <div class="status" [style.color]="color" *ngIf="transaction.escrow">
+        <i class="fas fa-dot-circle" [matTooltip]="status | translate" matTooltipPosition="above"></i>
       </div>
     </div>
   </div>
