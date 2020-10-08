@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 import { isZBCAddressValid } from 'zoobc-sdk';
 
 @Component({
@@ -7,6 +8,7 @@ import { isZBCAddressValid } from 'zoobc-sdk';
   templateUrl: './form-remove-node.component.html',
 })
 export class FormRemoveNodeComponent {
+  minFee = environment.fee;
   @Input() group: FormGroup;
   @Input() inputMap: any;
 
