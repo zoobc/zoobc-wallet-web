@@ -1,5 +1,5 @@
 <form [formGroup]="group">
-  <mat-form-field appearance="outline" color="accent" style="width: 100%;">
+  <mat-form-field appearance="outline" color="accent" style="width:100%">
     <mat-label>{{ 'ip address' | translate }}</mat-label>
     <input
       matInput
@@ -16,21 +16,21 @@
       {{ 'invalid ip address format' | translate }}
     </mat-error>
   </ng-container>
-  <mat-form-field appearance="outline" color="accent" style="width: 100%;">
+  <mat-form-field appearance="outline" color="accent" style="width:100%">
     <mat-label>{{ 'locked balance' | translate }}</mat-label>
     <input
       matInput
       type="number"
-      placeholder="{{ 'locked amount' | translate }}"
-      formControlName="{{ inputMap.lockedAmount }}"
+      placeholder="{{ 'locked balance' | translate }}"
+      formControlName="{{ inputMap.lockedBalance }}"
     />
   </mat-form-field>
-  <ng-container *ngIf="group.get(inputMap.lockedAmount).touched">
-    <mat-error *ngIf="group.get(inputMap.lockedAmount).hasError('required')">
+  <ng-container *ngIf="group.get(inputMap.lockedBalance).touched">
+    <mat-error *ngIf="group.get(inputMap.lockedBalance).hasError('required')">
       {{ 'locked balance is required' | translate }}
     </mat-error>
-    <mat-error *ngIf="group.get(inputMap.lockedAmount).hasError('min')">
-      {{ 'new locked balance cannot be smaller than current locked balance' | translate }}
+    <mat-error *ngIf="group.get(inputMap.lockedBalance).hasError('min')">
+      {{ 'minimum locked balance is' | translate: { val: '0.00000001' } }}
     </mat-error>
   </ng-container>
   <input-amount [group]="group" amountName="{{ inputMap.fee }}" label="{{ 'fee' | translate }}">
@@ -48,7 +48,7 @@
       </ng-container>
     </div>
   </div>
-  <mat-form-field appearance="outline" color="accent" style="width: 100%;">
+  <mat-form-field appearance="outline" color="accent" style="width:100%">
     <mat-label>{{ 'node public key' | translate }}</mat-label>
     <input
       matInput

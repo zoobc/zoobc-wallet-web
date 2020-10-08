@@ -4,14 +4,15 @@ import { environment } from 'src/environments/environment';
 import { isZBCAddressValid } from 'zoobc-sdk';
 
 @Component({
-  selector: 'app-form-update-node',
-  templateUrl: './form-update-node.component.html',
+  selector: 'app-form-remove-node',
+  templateUrl: './form-remove-node.component.html',
 })
-export class FormUpdateNodeComponent {
+export class FormRemoveNodeComponent {
+  minFee = environment.fee;
   @Input() group: FormGroup;
   @Input() inputMap: any;
 
-  minFee = environment.fee;
+  constructor() {}
 
   onChangeNodePublicKey() {
     let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, 'ZNK');

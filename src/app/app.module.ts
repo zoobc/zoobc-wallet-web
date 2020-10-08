@@ -84,10 +84,12 @@ import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
+import { FormRegisterNodeModule } from './components/transaction-form/form-register-node/form-register-node.module';
 import { FormEscrowModule } from './components/transaction-form/form-escrow/form-escrow.module';
 import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
 import { FormClaimNodeModule } from './components/transaction-form/form-claim-node/form-claim-node.module';
+import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 import { FormSetupAccountDatasetModule } from './components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
 
 // AoT requires an exported function for factories
@@ -193,6 +195,8 @@ export function getLanguage(languageServ: LanguageService) {
     InputAmountModule,
     MatStepperModule,
     RewardTableModule,
+    FormRemoveNodeModule,
+    FormRegisterNodeModule,
     FormSendMoneyModule,
     FormEscrowModule,
     FormClaimNodeModule,
