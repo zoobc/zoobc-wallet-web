@@ -8,12 +8,14 @@ import zoobc, {
   EscrowApprovalInterface,
   EscrowApproval,
   AccountBalanceResponse,
+  TransactionType,
 } from 'zoobc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
-import { getTranslation, truncate } from 'src/helpers/utils';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { getTranslation } from 'src/helpers/utils';
+import { FormGroup } from '@angular/forms';
+import { createInnerTxForm, escrowApprovalForm } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -31,10 +33,6 @@ export class EscrowTransactionComponent implements OnInit {
 
   form: FormGroup;
   minFee = environment.fee;
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
-  transactionIdForm = new FormControl('', Validators.required);
   showProcessForm: boolean = false;
   escrowDetail: EscrowTransactionResponse;
   isLoadingDetail: boolean = false;
@@ -42,21 +40,10 @@ export class EscrowTransactionComponent implements OnInit {
   waitingList = [];
   account;
   accountBalance: any;
-
-  escrowApprovalForm = {
-    fee: 'fee',
-    feeCurr: 'feeCurr',
-    typeFee: 'typeFee',
-    transactionId: 'transactionId',
-  };
+  escrowApprovalForm = escrowApprovalForm;
 
   constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
-    this.form = new FormGroup({
-      fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
-      transactionId: this.transactionIdForm,
-    });
+    this.form = createInnerTxForm(TransactionType.APPROVALESCROWTRANSACTION);
   }
 
   ngOnInit() {
@@ -69,8 +56,8 @@ export class EscrowTransactionComponent implements OnInit {
 
   openDetail(id) {
     this.showProcessForm = false;
-    this.transactionIdForm.patchValue(id);
-    this.feeForm.patchValue(this.minFee);
+    this.form.get('transactionId').patchValue(id);
+    this.form.get('fee').patchValue(this.minFee);
     this.isLoadingDetail = true;
     zoobc.Escrows.get(id).then((res: EscrowTransactionResponse) => {
       this.escrowDetail = res;
@@ -109,15 +96,18 @@ export class EscrowTransactionComponent implements OnInit {
   }
 
   async onConfirm() {
+    const feeForm = this.form.get('fee');
+    const transactionIdForm = this.form.get('transactionId');
+
     await this.getBalance();
     const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
-    if (balance >= this.feeForm.value) {
+    if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
         approvalAddress: this.account.address,
-        fee: this.feeForm.value,
+        fee: feeForm.value,
         approvalCode: EscrowApproval.APPROVE,
-        transactionId: this.transactionIdForm.value,
+        transactionId: transactionIdForm.value,
       };
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
@@ -132,7 +122,7 @@ export class EscrowTransactionComponent implements OnInit {
               timer: 1500,
             });
             this.escrowTransactionsData = this.escrowTransactionsData.filter(
-              tx => tx.id != this.transactionIdForm.value
+              tx => tx.id != transactionIdForm.value
             );
           },
           err => {
@@ -152,15 +142,18 @@ export class EscrowTransactionComponent implements OnInit {
   }
 
   async onReject() {
+    const feeForm = this.form.get('fee');
+    const transactionIdForm = this.form.get('transactionId');
+
     await this.getBalance();
     const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
-    if (balance >= this.feeForm.value) {
+    if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
         approvalAddress: this.account.address,
-        fee: this.feeForm.value,
+        fee: feeForm.value,
         approvalCode: EscrowApproval.REJECT,
-        transactionId: this.transactionIdForm.value,
+        transactionId: transactionIdForm.value,
       };
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
@@ -175,7 +168,7 @@ export class EscrowTransactionComponent implements OnInit {
               timer: 1500,
             });
             this.escrowTransactionsData = this.escrowTransactionsData.filter(
-              tx => tx.id != this.transactionIdForm.value
+              tx => tx.id != transactionIdForm.value
             );
           },
           err => {
