@@ -67,6 +67,20 @@ export const removeNodeForm = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
 };
+
+export const updateNodeForm = {
+  ipAddress: 'ipAddress',
+  lockedAmount: 'lockedAmount',
+  fee: 'fee',
+  nodePublicKey: 'nodePublicKey',
+};
+
+export const registerNodeForm = {
+  ipAddress: 'ipAddress',
+  lockedBalance: 'lockedBalance',
+  fee: 'fee',
+  nodePublicKey: 'nodePublicKey',
+};
 // =========================== END INPUT MAP ======================= //
 
 export function createInnerTxForm(txType: number) {
@@ -99,6 +113,28 @@ export function createInnerTxForm(txType: number) {
     case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
       return new FormGroup({
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        nodePublicKey: new FormControl('', Validators.required),
+      });
+
+    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
+      return new FormGroup({
+        ipAddress: new FormControl('', [
+          Validators.required,
+          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
+        ]),
+        lockedAmount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+        fee: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+        nodePublicKey: new FormControl('', Validators.required),
+      });
+
+    case TransactionType.NODEREGISTRATIONTRANSACTION:
+      return new FormGroup({
+        ipAddress: new FormControl('', [
+          Validators.required,
+          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
+        ]),
+        lockedBalance: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+        fee: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
         nodePublicKey: new FormControl('', Validators.required),
       });
   }

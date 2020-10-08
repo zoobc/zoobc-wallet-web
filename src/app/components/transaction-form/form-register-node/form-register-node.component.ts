@@ -1,17 +1,23 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { isZBCAddressValid } from 'zoobc-sdk';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-form-update-node',
-  templateUrl: './form-update-node.component.html',
+  selector: 'app-form-register-node',
+  templateUrl: './form-register-node.component.html',
 })
-export class FormUpdateNodeComponent {
+export class FormRegisterNodeComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
 
-  minFee = environment.fee;
+  minFee: number = environment.fee;
+  subscription: Subscription = new Subscription();
+
+  constructor() {}
+
+  ngOnInit() {}
 
   onChangeNodePublicKey() {
     let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, 'ZNK');
