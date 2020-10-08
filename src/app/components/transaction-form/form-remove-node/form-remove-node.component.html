@@ -1,39 +1,15 @@
 <form [formGroup]="group">
-  <input-amount
-    [group]="group"
-    typeCoinName="{{ inputMap.typeFee }}"
-    amountCurrencyName="{{ inputMap.feeCurr }}"
-    amountName="{{ inputMap.fee }}"
-    [displayConverter]="true"
-    [currencyRate]="currencyRate"
-    label="{{ 'fee' | translate }}"
-  >
+  <input-amount amountName="{{ inputMap.fee }}" [group]="group" label="{{ 'fee' | translate }}">
   </input-amount>
-  <div
-    class="row"
-    *ngIf="
-      (group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid) ||
-      (group.get(inputMap.feeCurr).touched && group.get(inputMap.feeCurr).invalid)
-    "
-  >
+  <div class="row" *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid">
     <div class="col-4 col-sm-3">&nbsp;</div>
     <div class="col-8 col-sm-9">
-      <ng-container *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.typeFee).value === 'ZBC'">
+      <ng-container *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid">
         <mat-error *ngIf="group.get(inputMap.fee).hasError('required')">
           {{ 'fee is required' | translate }}
         </mat-error>
         <mat-error *ngIf="group.get(inputMap.fee).hasError('min')">
           {{ 'minimum fee is' | translate: { val: minFee } }}
-        </mat-error>
-      </ng-container>
-      <ng-container
-        *ngIf="group.get(inputMap.feeCurr).touched && group.get(inputMap.typeFee).value === 'Fiat'"
-      >
-        <mat-error *ngIf="group.get(inputMap.feeCurr).hasError('required')">
-          {{ 'fee is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="group.get(inputMap.feeCurr).hasError('min')">
-          {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
         </mat-error>
       </ng-container>
     </div>

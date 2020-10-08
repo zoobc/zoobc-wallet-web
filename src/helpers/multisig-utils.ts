@@ -62,6 +62,11 @@ export const setupDataSetForm = {
   recipientAddress: 'recipientAddress',
   fee: 'fee',
 };
+
+export const removeNodeForm = {
+  fee: 'fee',
+  nodePublicKey: 'nodePublicKey',
+};
 // =========================== END INPUT MAP ======================= //
 
 export function createInnerTxForm(txType: number) {
@@ -89,6 +94,12 @@ export function createInnerTxForm(txType: number) {
         value: valueField,
         recipientAddress: recipientForm,
         fee: feeForm,
+      });
+
+    case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
+      return new FormGroup({
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        nodePublicKey: new FormControl('', Validators.required),
       });
   }
 }

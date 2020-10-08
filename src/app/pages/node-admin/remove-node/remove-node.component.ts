@@ -1,33 +1,24 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { RemoveNodeInterface, TransactionType, ZBCAddressToBytes } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { environment } from 'src/environments/environment';
+import { createInnerTxForm, removeNodeForm } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-remove-node',
   templateUrl: './remove-node.component.html',
 })
 export class RemoveNodeComponent implements OnInit {
-  minFee = environment.fee;
   formRemoveNode: FormGroup;
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  nodePublicKeyForm = new FormControl('', Validators.required);
   account: SavedAccount;
   isLoading: boolean = false;
   isError: boolean = false;
-
-  removeNodeForm = {
-    fee: 'fee',
-    feeCurr: 'feeCurr',
-    typeFee: 'typeFee',
-    nodePublicKey: 'nodePublicKey',
-  };
+  removeNodeForm = removeNodeForm;
 
   constructor(
     private authServ: AuthService,
@@ -36,13 +27,9 @@ export class RemoveNodeComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public node: any,
     private translate: TranslateService
   ) {
-    this.formRemoveNode = new FormGroup({
-      fee: this.feeForm,
-      nodePublicKey: this.nodePublicKeyForm,
-    });
-
+    this.formRemoveNode = createInnerTxForm(TransactionType.REMOVENODEREGISTRATIONTRANSACTION);
     this.account = authServ.getCurrAccount();
-    this.nodePublicKeyForm.patchValue(this.node.nodepublickey);
+    this.formRemoveNode.get('nodePublicKey').patchValue(this.node.nodepublickey);
   }
 
   ngOnInit() {}
@@ -61,10 +48,9 @@ export class RemoveNodeComponent implements OnInit {
 
           let data: RemoveNodeInterface = {
             accountAddress: this.account.address,
-            nodePublicKey: ZBCAddressToBytes(this.nodePublicKeyForm.value),
-            fee: this.feeForm.value,
+            nodePublicKey: ZBCAddressToBytes(this.formRemoveNode.get('nodePublicKey').value),
+            fee: this.formRemoveNode.get('fee').value,
           };
-
           zoobc.Node.remove(data, this.authServ.seed)
             .then(() => {
               let message = getTranslation('your node will be removed soon', this.translate);
