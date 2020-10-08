@@ -79,11 +79,11 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   }
 
   patchValue(multisig: MultiSigDraft) {
-    const { signaturesInfo, multisigInfo, unisgnedTransactions, transaction } = multisig;
+    const { signaturesInfo, multisigInfo, unisgnedTransactions } = multisig;
 
     if (!signaturesInfo || signaturesInfo == null) {
       if (multisigInfo) return this.patchParticipant(multisigInfo.participants);
-      if (unisgnedTransactions) return this.patchUnsignedAddress(transaction.sender);
+      // if (unisgnedTransactions) return this.patchUnsignedAddress(txBody.sender);
       return this.pushInitParticipant(1, this.authServ.getCurrAccount());
     }
     if (signaturesInfo.txHash) this.transactionHashField.patchValue(signaturesInfo.txHash);

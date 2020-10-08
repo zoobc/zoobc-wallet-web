@@ -1,0 +1,71 @@
+<form [formGroup]="group">
+  <label>{{ 'sender' | translate }}</label>
+  <ng-container *ngIf="prefillSender">
+    <div style="margin-bottom: 16px;">
+      <wallet-address [value]="group.get(formValue.sender).value"></wallet-address>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!prefillSender">
+    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+  </ng-container>
+  <mat-form-field appearance="outline" color="accent" class="block">
+    <mat-label>{{ 'property' | translate }}</mat-label>
+    <input matInput type="text" formControlName="{{ formValue.property }}" />
+  </mat-form-field>
+  <ng-container *ngIf="group.get(formValue.property).touched">
+    <mat-error *ngIf="group.get(formValue.property).hasError('required')">
+      {{ 'property is required' | translate }}
+    </mat-error>
+  </ng-container>
+  <mat-form-field appearance="outline" color="accent" class="block">
+    <mat-label>{{ 'value' | translate }}</mat-label>
+    <input matInput type="text" formControlName="{{ formValue.value }}" />
+  </mat-form-field>
+  <ng-container *ngIf="group.get(formValue.value).touched">
+    <mat-error *ngIf="group.get(formValue.value).hasError('required')">
+      {{ 'value is required' | translate }}
+    </mat-error>
+  </ng-container>
+  <div style="margin-bottom: 16px;">
+    <mat-checkbox (click)="onToggleEnableSetupOther()">
+      {{ 'setup dataset to other address' | translate }}
+    </mat-checkbox>
+  </div>
+  <ng-container *ngIf="isSetupOther">
+    <input-address
+      class="input"
+      label="{{ 'recipient address' | translate }}"
+      formControlName="{{ formValue.recipientAddress }}"
+      placeholder="{{ 'recipient address' | translate }}"
+    ></input-address>
+    <ng-container *ngIf="group.get(formValue.recipientAddress).touched">
+      <mat-error style="margin-top: 4px;" *ngIf="group.get(formValue.recipientAddress).hasError('required')">
+        {{ 'recipient address is required' | translate }}
+      </mat-error>
+      <mat-error
+        style="margin-top: 4px;"
+        *ngIf="group.get(formValue.recipientAddress).hasError('invalidAddress')"
+      >
+        {{ 'recipient address is invalid' | translate }}
+      </mat-error>
+    </ng-container>
+  </ng-container>
+  <input-amount
+    [group]="group"
+    amountName="{{ formValue.fee }}"
+    label="{{ 'fee' | translate }}"
+  ></input-amount>
+  <div class="row" *ngIf="group.get(formValue.fee).touched && group.get(formValue.fee).invalid">
+    <div class="col-4 col-sm-3">&nbsp;</div>
+    <div class="col-8 col-sm-9">
+      <ng-container *ngIf="group.get(formValue.fee).touched">
+        <mat-error *ngIf="group.get(formValue.fee).hasError('required')">
+          {{ 'fee is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="group.get(formValue.fee).hasError('min')">
+          {{ 'minimum fee is' | translate: { val: minFee } }}
+        </mat-error>
+      </ng-container>
+    </div>
+  </div>
+</form>

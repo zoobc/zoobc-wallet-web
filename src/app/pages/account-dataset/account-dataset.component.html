@@ -80,44 +80,14 @@
   </div>
 </div>
 <ng-template #feedialog>
-  <h3 class="mat-h3">
-    <b>{{ 'please select fee' | translate }}</b>
-  </h3>
+  <h2 class="mat-h2 text-center">{{ 'remove dataset' | translate }}</h2>
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
-    <input-amount
+    <form-remove-account-dataset
       [group]="form"
-      typeCoinName="typeFee"
-      amountCurrencyName="feeCurr"
-      amountName="fee"
-      [displayConverter]="true"
-      [currencyRate]="currencyRate"
-      label="{{ 'fee' | translate }}"
-    >
-    </input-amount>
-    <div
-      class="row"
-      *ngIf="(feeForm.touched && feeForm.invalid) || (feeFormCurr.touched && feeFormCurr.invalid)"
-    >
-      <div class="col-4 col-sm-3">&nbsp;</div>
-      <div class="col-8 col-sm-9">
-        <ng-container *ngIf="feeForm.touched && typeFeeField.value === 'ZBC'">
-          <mat-error *ngIf="feeForm.hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="feeForm.hasError('min')">
-            {{ 'minimum fee is' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-        <ng-container *ngIf="feeFormCurr.touched && typeFeeField.value === 'Fiat'">
-          <mat-error *ngIf="feeFormCurr.hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="feeFormCurr.hasError('min')">
-            {{ 'minimum amount of fee in zbc must be zbc' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-      </div>
-    </div>
+      [formValue]="removeDataSetForm"
+      (switchAccount)="onSwitchAccount($event)"
+      [removeOther]="false"
+    ></form-remove-account-dataset>
     <button
       mat-flat-button
       color="primary"

@@ -7,15 +7,16 @@ import zoobc, {
   AccountDatasetsResponse,
   RemoveDatasetInterface,
   BIP32Interface,
+  TransactionType,
 } from 'zoobc-sdk';
 import { environment } from 'src/environments/environment';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
-import { truncate, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { createInnerTxForm, removeDataSetForm } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -29,42 +30,27 @@ export class AccountDatasetComponent implements OnInit {
   isError: boolean;
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
-  minFee = environment.fee;
-  currencyRate: Currency;
   form: FormGroup;
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  feeFormCurr = new FormControl('', Validators.required);
-  typeFeeField = new FormControl('ZBC');
 
   account: SavedAccount;
 
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
+  removeDataSetForm = removeDataSetForm;
+
   constructor(
     public dialog: MatDialog,
-    private currencyServ: CurrencyRateService,
     private authServ: AuthService,
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
-    this.form = new FormGroup({
-      fee: this.feeForm,
-      feeCurr: this.feeFormCurr,
-      typeFee: this.typeFeeField,
-    });
+    this.form = createInnerTxForm(TransactionType.REMOVEACCOUNTDATASETTRANSACTION);
 
     this.account = data;
   }
 
   ngOnInit() {
-    const subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-      this.currencyRate = rate;
-      const minCurrency = truncate(this.minFee * rate.value, 8);
-      this.feeFormCurr.patchValue(minCurrency);
-      this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
-    });
-    this.subscription.add(subsRate);
     this.getDataSetList();
   }
 
@@ -99,7 +85,7 @@ export class AccountDatasetComponent implements OnInit {
       recipientAccountAddress: this.dataSet.recipientaccountaddress,
       property: this.dataSet.property,
       value: this.dataSet.value,
-      fee: this.feeForm.value,
+      fee: this.form.get('fee').value,
     };
 
     zoobc.AccountDataset.removeDataset(param, seed)
@@ -126,12 +112,12 @@ export class AccountDatasetComponent implements OnInit {
 
   onDelete(dataset: any) {
     this.dataSet = dataset;
+    this.form.get('sender').patchValue(dataset.setteraccountaddress);
+    this.form.get('property').patchValue(dataset.property);
+    this.form.get('value').patchValue(dataset.value);
+    this.form.get('recipientAddress').patchValue(dataset.recipientaccountaddress);
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
-    this.feeForm.patchValue(this.minFee);
-    const minCurrency = truncate(this.minFee * this.currencyRate.value, 8);
-    this.feeFormCurr.patchValue(minCurrency);
-    this.feeFormCurr.setValidators([Validators.required, Validators.min(minCurrency)]);
     this.feeRefDialog = this.dialog.open(this.feeDialog, {
       width: '360px',
       maxHeight: '90vh',
@@ -162,5 +148,9 @@ export class AccountDatasetComponent implements OnInit {
       data: this.account,
       disableClose: true,
     });
+  }
+
+  onSwitchAccount(account: SavedAccount) {
+    this.account = account;
   }
 }

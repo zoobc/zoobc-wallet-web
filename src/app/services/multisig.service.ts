@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MultiSigInterface, SendMoneyInterface } from 'zoobc-sdk';
+import { MultiSigInterface, TransactionType } from 'zoobc-sdk';
 
 export interface MultiSigDraft extends MultiSigInterface {
   id: number;
   generatedSender?: string;
-  transaction?: SendMoneyInterface;
+  txType: number;
+  txBody?: any;
 }
 
 @Injectable({
@@ -16,6 +17,7 @@ export class MultisigService {
     id: 0,
     accountAddress: '',
     fee: 0,
+    txType: TransactionType.SENDMONEYTRANSACTION,
   };
 
   private sourceMultisig = new BehaviorSubject<MultiSigDraft>({ ...this.multisigTemplate });
