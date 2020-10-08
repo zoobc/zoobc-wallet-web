@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { isZBCAddressValid } from 'zoobc-sdk';
 
 @Component({
@@ -11,7 +11,7 @@ export class FormUpdateNodeComponent {
   @Input() group: FormGroup;
   @Input() inputMap: any;
 
-  subscription: Subscription = new Subscription();
+  minFee = environment.fee;
 
   onChangeNodePublicKey() {
     let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, 'ZNK');
