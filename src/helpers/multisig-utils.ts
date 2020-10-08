@@ -63,6 +63,11 @@ export const setupDataSetForm = {
   fee: 'fee',
 };
 
+export const removeNodeForm = {
+  fee: 'fee',
+  nodePublicKey: 'nodePublicKey',
+};
+
 export const updateNodeForm = {
   ipAddress: 'ipAddress',
   lockedAmount: 'lockedAmount',
@@ -103,6 +108,12 @@ export function createInnerTxForm(txType: number) {
         value: valueField,
         recipientAddress: recipientForm,
         fee: feeForm,
+      });
+
+    case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
+      return new FormGroup({
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        nodePublicKey: new FormControl('', Validators.required),
       });
 
     case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
