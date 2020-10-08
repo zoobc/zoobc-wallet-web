@@ -88,6 +88,8 @@ import { FormRegisterNodeModule } from './components/transaction-form/form-regis
 import { FormEscrowModule } from './components/transaction-form/form-escrow/form-escrow.module';
 import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
+import { FormRemoveAccountDatasetModule } from './components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.module';
+import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 import { FormSetupAccountDatasetModule } from './components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
 
 // AoT requires an exported function for factories
@@ -193,9 +195,11 @@ export function getLanguage(languageServ: LanguageService) {
     InputAmountModule,
     MatStepperModule,
     RewardTableModule,
+    FormRemoveNodeModule,
     FormRegisterNodeModule,
     FormSendMoneyModule,
     FormEscrowModule,
+    FormRemoveAccountDatasetModule,
     FormSetupAccountDatasetModule,
   ],
   bootstrap: [AppComponent],
