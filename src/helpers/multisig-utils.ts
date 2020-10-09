@@ -35,12 +35,14 @@ export const setupDataSetForm = {
   value: 'value',
   recipientAddress: 'recipientAddress',
   fee: 'fee',
+  ...escrowForm,
 };
 
 export const claimNodeForm = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
   ipAddress: 'ipAddress',
+  ...escrowForm,
 };
 export const removeDataSetForm = {
   sender: 'sender',
@@ -48,11 +50,13 @@ export const removeDataSetForm = {
   value: 'value',
   recipientAddress: 'recipientAddress',
   fee: 'fee',
+  ...escrowForm,
 };
 
 export const removeNodeForm = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
+  ...escrowForm,
 };
 
 export const updateNodeForm = {
@@ -60,6 +64,7 @@ export const updateNodeForm = {
   lockedAmount: 'lockedAmount',
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
+  ...escrowForm,
 };
 
 export const registerNodeForm = {
@@ -67,11 +72,13 @@ export const registerNodeForm = {
   lockedBalance: 'lockedBalance',
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
+  ...escrowForm,
 };
 
 export const escrowApprovalForm = {
   fee: 'fee',
   transactionId: 'transactionId',
+  ...escrowForm,
 };
 // =========================== END INPUT MAP ======================= //
 
@@ -100,6 +107,7 @@ export function createInnerTxForm(txType: number) {
         value: new FormControl('', [Validators.required]),
         recipientAddress: new FormControl('', Validators.required),
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        ...escrowAddition,
       });
 
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
@@ -109,6 +117,7 @@ export function createInnerTxForm(txType: number) {
         value: new FormControl('', [Validators.required]),
         recipientAddress: new FormControl('', Validators.required),
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        ...escrowAddition,
       });
 
     case TransactionType.CLAIMNODEREGISTRATIONTRANSACTION:
@@ -119,11 +128,13 @@ export function createInnerTxForm(txType: number) {
           Validators.required,
           Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
         ]),
+        ...escrowAddition,
       });
     case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
       return new FormGroup({
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         nodePublicKey: new FormControl('', Validators.required),
+        ...escrowAddition,
       });
 
     case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
@@ -135,6 +146,7 @@ export function createInnerTxForm(txType: number) {
         lockedAmount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         nodePublicKey: new FormControl('', Validators.required),
+        ...escrowAddition,
       });
 
     case TransactionType.NODEREGISTRATIONTRANSACTION:
@@ -146,12 +158,14 @@ export function createInnerTxForm(txType: number) {
         lockedBalance: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         nodePublicKey: new FormControl('', Validators.required),
+        ...escrowAddition,
       });
 
     case TransactionType.APPROVALESCROWTRANSACTION:
       return new FormGroup({
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         transactionId: new FormControl('', Validators.required),
+        ...escrowAddition,
       });
   }
 }

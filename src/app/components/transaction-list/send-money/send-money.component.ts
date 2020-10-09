@@ -21,8 +21,8 @@ export class SendMoneyComponent implements OnInit {
 
   ngOnInit() {
     const approval = this.transaction.txBody.approval;
-    this.status = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
-    this.color =
+    this.color = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
+    this.status =
       approval == '0' ? 'pending' : approval == '1' ? 'approved' : approval == '2' ? 'rejected' : 'expired';
   }
 
