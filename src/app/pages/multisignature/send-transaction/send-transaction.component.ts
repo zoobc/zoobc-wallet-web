@@ -18,6 +18,7 @@ import zoobc, {
   AccountBalanceResponse,
 } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
+import { createTxBytes } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-send-transaction',
@@ -180,7 +181,10 @@ export class SendTransactionComponent implements OnInit {
     }
     const childSeed = this.authServ.seed;
 
-    if (data.signaturesInfo === undefined) data.unisgnedTransactions = sendMoneyBuilder(this.multisig.txBody);
+    console.log(this.multisig.txBody);
+
+    if (data.signaturesInfo === undefined)
+      data.unisgnedTransactions = createTxBytes(this.multisig.txBody, this.multisig.txType);
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);

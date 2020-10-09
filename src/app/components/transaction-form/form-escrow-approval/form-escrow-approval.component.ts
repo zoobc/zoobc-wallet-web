@@ -11,6 +11,7 @@ export class FormEscrowApprovalComponent {
   @Input() group: FormGroup;
   @Input() inputMap: any;
   @Input() prefillTxId: boolean = false;
+  @Input() multisig: boolean = false;
 
   minFee = environment.fee;
 

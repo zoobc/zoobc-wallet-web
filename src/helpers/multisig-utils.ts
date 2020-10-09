@@ -8,6 +8,8 @@ import {
   setupDatasetBuilder,
   removeDatasetBuilder,
   RemoveDatasetInterface,
+  EscrowApprovalInterface,
+  escrowBuilder,
 } from 'zoobc-sdk';
 
 // ========================== INPUT MAP ========================== //
@@ -78,6 +80,8 @@ export const registerNodeForm = {
 export const escrowApprovalForm = {
   fee: 'fee',
   transactionId: 'transactionId',
+  sender: 'sender',
+  approvalCode: 'approvalCode',
   ...escrowForm,
 };
 // =========================== END INPUT MAP ======================= //
@@ -163,8 +167,10 @@ export function createInnerTxForm(txType: number) {
 
     case TransactionType.APPROVALESCROWTRANSACTION:
       return new FormGroup({
+        sender: new FormControl('', Validators.required),
         fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         transactionId: new FormControl('', Validators.required),
+        approvalCode: new FormControl(1, Validators.required),
         ...escrowAddition,
       });
   }
@@ -178,6 +184,8 @@ export function createTxBytes(form: any, txType: number): Buffer {
       return createSetupDataset(form);
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
       return createRemoveSetupDataset(form);
+    case TransactionType.APPROVALESCROWTRANSACTION:
+      return createEscrowApproval(form);
   }
 }
 
@@ -189,6 +197,8 @@ export function getFieldList(txType: number): Object {
       return setupDataSetForm;
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
       return removeDataSetForm;
+    case TransactionType.APPROVALESCROWTRANSACTION:
+      return escrowApprovalForm;
   }
 }
 
@@ -200,6 +210,8 @@ export function getTxType(type: number) {
       return 'setup account dataset';
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
       return 'remove setup account dataset';
+    case TransactionType.APPROVALESCROWTRANSACTION:
+      return 'escrow approval';
   }
 }
 
@@ -231,4 +243,17 @@ function createRemoveSetupDataset(form: any) {
     fee: fee,
   };
   return removeDatasetBuilder(data);
+}
+
+function createEscrowApproval(form: any) {
+  console.log(form);
+
+  const { approvalCode, fee, transactionId, sender } = form;
+  const data: EscrowApprovalInterface = {
+    fee,
+    approvalCode,
+    approvalAddress: sender,
+    transactionId,
+  };
+  return escrowBuilder(data);
 }

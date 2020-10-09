@@ -1,4 +1,13 @@
 <form [formGroup]="group">
+  <label>{{ 'sender' | translate }}</label>
+  <ng-container *ngIf="!multisig">
+    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+  </ng-container>
+  <ng-container *ngIf="multisig">
+    <div style="margin-bottom: 16px;">
+      <wallet-address [value]="group.get(inputMap.sender).value"></wallet-address>
+    </div>
+  </ng-container>
   <ng-container *ngIf="prefillTxId">
     <span class="title">{{ 'transaction id' | translate }}: </span>
     <span class="subtitle">{{ group.get(inputMap.transactionId).value }}</span>
