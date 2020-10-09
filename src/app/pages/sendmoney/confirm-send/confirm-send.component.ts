@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
 @Component({
   selector: 'app-confirm-send',
@@ -10,18 +12,28 @@ export class ConfirmSendComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
-    public dialogRef: MatDialogRef<ConfirmSendComponent>
+    public dialogRef: MatDialogRef<ConfirmSendComponent>,
+    private currencyServ: CurrencyRateService
   ) {}
   account: any;
   form: any;
   advancedMenu: boolean = false;
-  currencyRateName: string;
+  currencyRate: Currency;
+  subsRate: Subscription;
+
   ngOnInit() {
+    this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
+      this.currencyRate = rate;
+    });
     this.account = this.data.account;
     this.form = this.data.form;
-    this.advancedMenu = this.data.advancedMenu;
-    this.currencyRateName = this.data.currencyName;
+    if (this.data.form.addressApprover) this.advancedMenu = true;
   }
+
+  ngOnDestroy() {
+    if (this.subsRate) this.subsRate.unsubscribe();
+  }
+
   closeDialog() {
     this.dialog.closeAll();
   }
