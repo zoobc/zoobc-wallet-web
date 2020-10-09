@@ -68,6 +68,11 @@ export const registerNodeForm = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
 };
+
+export const escrowApprovalForm = {
+  fee: 'fee',
+  transactionId: 'transactionId',
+};
 // =========================== END INPUT MAP ======================= //
 
 export function createInnerTxForm(txType: number) {
@@ -128,7 +133,7 @@ export function createInnerTxForm(txType: number) {
           Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
         ]),
         lockedAmount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
-        fee: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         nodePublicKey: new FormControl('', Validators.required),
       });
 
@@ -139,8 +144,14 @@ export function createInnerTxForm(txType: number) {
           Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
         ]),
         lockedBalance: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
-        fee: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
         nodePublicKey: new FormControl('', Validators.required),
+      });
+
+    case TransactionType.APPROVALESCROWTRANSACTION:
+      return new FormGroup({
+        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+        transactionId: new FormControl('', Validators.required),
       });
   }
 }

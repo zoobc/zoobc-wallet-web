@@ -88,6 +88,7 @@ import { FormRegisterNodeModule } from './components/transaction-form/form-regis
 import { FormEscrowModule } from './components/transaction-form/form-escrow/form-escrow.module';
 import { FormSendMoneyModule } from './components/transaction-form/form-send-money/form-send-money.module';
 import { TransactionListModule } from './components/transaction-list/transaction-list.module';
+import { FormEscrowApprovalModule } from './components/transaction-form/form-escrow-approval/form-escrow-approval.module';
 import { FormClaimNodeModule } from './components/transaction-form/form-claim-node/form-claim-node.module';
 import { FormRemoveAccountDatasetModule } from './components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.module';
 import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
@@ -200,6 +201,7 @@ export function getLanguage(languageServ: LanguageService) {
     FormRegisterNodeModule,
     FormSendMoneyModule,
     FormEscrowModule,
+    FormEscrowApprovalModule,
     FormClaimNodeModule,
     FormRemoveAccountDatasetModule,
     FormSetupAccountDatasetModule,

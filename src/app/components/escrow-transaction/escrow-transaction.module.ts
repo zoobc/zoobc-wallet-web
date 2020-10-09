@@ -7,7 +7,7 @@ import { DateAgoModule } from 'src/app/pipes/date-ago.module';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule, MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
 import { AddressModule } from '../address/address.module';
-import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
+import { FormEscrowApprovalModule } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.module';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
@@ -29,8 +29,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatButtonModule,
     AddressModule,
     MatCheckboxModule,
-    InputAmountModule,
     MatInputModule,
+    FormEscrowApprovalModule,
   ],
   exports: [EscrowTransactionComponent],
 })
