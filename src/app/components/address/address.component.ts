@@ -18,38 +18,14 @@ export class AddressComponent {
   len: number = 0;
   halfLen: number = 0;
 
-  // constructor(private snackbar: MatSnackBar, private translate: TranslateService) {
-  // if (this.value) {
-  //   this.len = this.value.length;
-  //   this.halfLen = Math.round(this.value.length / 2);
-  //   this.shortValue = shortenHash(this.value);
-  // }
-  // }
-
-  // ngOnChanges() {
-  //   if (this.value) {
-  //     this.shortValue = isZBCAddressValid(this.value) ? shortenHash(this.value) : this.value;
-  //     this.len = this.shortValue.length;
-  //     this.halfLen = Math.round(this.shortValue.length / 2);
-  //   }
-  // }
   constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges) {
     const value = changes.value.currentValue;
     if (value) {
-      const prefixDefault = ['ZBC', 'ZNK', 'ZBL', 'ZTX'];
-      const prefixValue = value.slice(0, 3);
-      const valid = prefixDefault.indexOf(prefixValue) > -1;
-      if (valid) {
-        this.len = value.length;
-        this.halfLen = Math.round(value.length / 2);
-        this.shortValue = shortenHash(value);
-      } else {
-        this.len = value.length;
-        this.halfLen = Math.round(value.length / 2);
-        this.shortValue = value;
-      }
+      this.shortValue = isZBCAddressValid(value) ? shortenHash(value) : value;
+      this.len = this.shortValue.length;
+      this.halfLen = Math.round(this.shortValue.length / 2);
     }
   }
 
