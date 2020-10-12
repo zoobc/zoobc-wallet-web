@@ -45,8 +45,10 @@
           <i *ngIf="!yourTxHash">(Click verify to validating transaction)</i>
           <wallet-address *ngIf="yourTxHash" [value]="yourTxHash"></wallet-address>
         </div>
-        <!-- <mat-error *ngIf="yourTxHash && !isValid">Transac</mat-error>
-        <mat-hint *ngIf="yourTxHash && isValid">Sucess</mat-hint> -->
+        <div style="margin: -12px 0 16px;" class="label">
+          <div *ngIf="yourTxHash && !isValid">Transaction hash is not matched</div>
+          <div *ngIf="yourTxHash && isValid">Transaction hash is matched</div>
+        </div>
       </div>
     </div>
 
@@ -59,6 +61,7 @@
     <ng-container *ngIf="yourTxHash && isValid">
       <ng-container *ngIf="isAddressInParticipants">
         <div class="col-12 col-sm-6">
+          <div class="label">Choose address to sign with:</div>
           <account-selector
             (select)="onSwitchAccount($event)"
             type="normal"
@@ -75,17 +78,16 @@
           <div class="label">Your Signature</div>
           <div class="value">
             <i *ngIf="!signature">(Your signature will appear here)</i>
-            <wallet-address
-              *ngIf="signature"
-              [value]="signature"
-              [copyButton]="true"
-              center="true"
-            ></wallet-address>
+            <wallet-address *ngIf="signature" [value]="signature" center="true"></wallet-address>
+          </div>
+
+          <div class="text-center">
+            <ngx-qrcode qrc-element-type="canvas" [qrc-value]="signatureUrl"></ngx-qrcode>
           </div>
 
           <button mat-flat-button color="accent" (click)="onCopy()" [disabled]="!signature" class="block">
             <i matPrefix class="fa fa-share-alt"></i>
-            <span>Share your signature</span>
+            <span>Share signature as link</span>
           </button>
         </div>
       </ng-container>
