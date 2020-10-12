@@ -3,8 +3,7 @@
   <form [formGroup]="formGroup" (submit)="onSubmit()">
     <form-setup-account-dataset
       [group]="formGroup"
-      [formValue]="setupDataSetForm"
-      [currencyRate]="currencyRate"
+      [formValue]="setupDatasetForm"
       [isSetupOther]="isSetupOther"
       (enableSetupOther)="onClickSetupOther($event)"
     ></form-setup-account-dataset>

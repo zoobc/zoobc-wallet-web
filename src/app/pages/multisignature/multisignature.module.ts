@@ -34,6 +34,7 @@ import { FormSetupAccountDatasetModule } from 'src/app/components/transaction-fo
 import { FormEscrowModule } from 'src/app/components/transaction-form/form-escrow/form-escrow.module';
 import { OffchainSignComponent } from './offchain-sign/offchain-sign.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { FormEscrowApprovalModule } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.module';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -87,6 +88,7 @@ const routes: Routes = [
     FormSendMoneyModule,
     FormEscrowModule,
     FormSetupAccountDatasetModule,
+    FormEscrowApprovalModule,
   ],
   exports: [OffchainSignComponent],
   entryComponents: [OffchainSignComponent],

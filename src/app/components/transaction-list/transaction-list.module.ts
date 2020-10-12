@@ -8,9 +8,18 @@ import { AddressModule } from '../address/address.module';
 import { DateAgoModule } from 'src/app/pipes/date-ago.module';
 import { MatTooltipModule, MatCardModule, MatButtonModule } from '@angular/material';
 import { SendMoneyComponent } from './send-money/send-money.component';
+import { EscrowApprovalComponent } from './escrow-approval/escrow-approval.component';
+import { NodeRegistrationComponent } from './node-registration/node-registration.component';
+import { AccountDatasetComponent } from './account-dataset/account-dataset.component';
 
 @NgModule({
-  declarations: [TransactionListComponent, SendMoneyComponent],
+  declarations: [
+    TransactionListComponent,
+    SendMoneyComponent,
+    EscrowApprovalComponent,
+    NodeRegistrationComponent,
+    AccountDatasetComponent,
+  ],
   imports: [
     CommonModule,
     TranslateModule.forChild({

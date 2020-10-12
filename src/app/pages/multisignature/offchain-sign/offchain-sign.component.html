@@ -62,11 +62,7 @@
       <ng-container *ngIf="isAddressInParticipants">
         <div class="col-12 col-sm-6">
           <div class="label">Choose address to sign with:</div>
-          <account-selector
-            (select)="onSwitchAccount($event)"
-            type="normal"
-            [addresses]="participants"
-          ></account-selector>
+          <account-selector type="normal" [addresses]="participants"></account-selector>
 
           <button mat-flat-button color="primary" (click)="onSign()" class="block">
             <i matPrefix class="fa fa-file-signature"></i>

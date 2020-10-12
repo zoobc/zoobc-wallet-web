@@ -1,14 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { BIP32Interface, SetupDatasetResponse } from 'zoobc-sdk';
+import zoobc, { BIP32Interface, SetupDatasetResponse, TransactionType } from 'zoobc-sdk';
 import { SetupDatasetInterface } from 'zoobc-sdk/types/helper/transaction-builder/setup-account-dataset';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { createInnerTxForm, setupDataSetForm } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-setup-dataset',
@@ -21,23 +22,8 @@ export class SetupDatasetComponent implements OnInit {
   minFee = environment.fee;
 
   formGroup: FormGroup;
-  propertyField = new FormControl('', [Validators.required]);
-  valueField = new FormControl('', [Validators.required]);
-  recipientAddressField = new FormControl('', [Validators.required]);
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  timeoutField = new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]);
-  typeFeeField = new FormControl('ZBC');
-  senderAddressField = new FormControl('', [Validators.required]);
-
-  setupDataSetForm = {
-    sender: 'sender',
-    property: 'property',
-    value: 'value',
-    recipientAddress: 'recipientAddress',
-    fee: 'fee',
-    feeCurr: 'feeCurr',
-    typeFee: 'typeFee',
-  };
+  setupDatasetForm = setupDataSetForm;
+  recipient: AbstractControl;
 
   constructor(
     public dialog: MatDialog,
@@ -46,41 +32,36 @@ export class SetupDatasetComponent implements OnInit {
     private authServ: AuthService,
     private translate: TranslateService
   ) {
-    this.formGroup = new FormGroup({
-      sender: this.senderAddressField,
-      property: this.propertyField,
-      value: this.valueField,
-      recipientAddress: this.recipientAddressField,
-      fee: this.feeForm,
-    });
+    this.formGroup = createInnerTxForm(TransactionType.SETUPACCOUNTDATASETTRANSACTION);
+    let sender = this.formGroup.get('sender');
+    sender.patchValue(this.account.address);
+    this.recipient = this.formGroup.get('recipientAddress');
   }
 
   ngOnInit() {
     this.isSetupOther = false;
     this.disableSetupOther();
-    this.senderAddressField.patchValue(this.account.address);
   }
 
   enableSetupOther() {
-    this.recipientAddressField.enable();
+    this.recipient.enable();
   }
 
   disableSetupOther() {
-    this.recipientAddressField.disable();
+    this.recipient.disable();
   }
 
   setupDataset() {
     this.authServ.switchAccount(this.account);
     this.isError = false;
     this.isLoading = true;
-    let receipient = this.recipientAddressField.value;
-    if (!this.isSetupOther) receipient = this.account.address;
+    if (!this.isSetupOther) this.recipient.patchValue(this.account.address);
     const param: SetupDatasetInterface = {
-      property: this.propertyField.value,
-      value: this.valueField.value,
-      setterAccountAddress: this.account.address,
-      recipientAccountAddress: receipient,
-      fee: this.feeForm.value,
+      property: this.formGroup.get('property').value,
+      value: this.formGroup.get('value').value,
+      setterAccountAddress: this.formGroup.get('sender').value,
+      recipientAccountAddress: this.recipient.value,
+      fee: this.formGroup.get('fee').value,
     };
 
     const seed: BIP32Interface = this.authServ.seed;

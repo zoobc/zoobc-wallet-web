@@ -1,31 +1,27 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { RegisterNodeInterface, ZBCAddressToBytes, isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { RegisterNodeInterface, TransactionType, ZBCAddressToBytes } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { environment } from 'src/environments/environment';
+import { createInnerTxForm, registerNodeForm } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-register-node',
   templateUrl: './register-node.component.html',
 })
 export class RegisterNodeComponent implements OnInit {
-  minFee = environment.fee;
   formRegisterNode: FormGroup;
-  ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
-  lockedBalanceForm = new FormControl('', [Validators.required, Validators.min(1 / 1e8)]);
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  nodePublicKeyForm = new FormControl('', Validators.required);
 
   account: SavedAccount;
   poown: Buffer;
-
   isLoading: boolean = false;
   isError: boolean = false;
+
+  registerNodeForm = registerNodeForm;
 
   constructor(
     private authServ: AuthService,
@@ -35,28 +31,22 @@ export class RegisterNodeComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
-    this.formRegisterNode = new FormGroup({
-      ipAddress: this.ipAddressForm,
-      lockedBalance: this.lockedBalanceForm,
-      fee: this.feeForm,
-      nodePublicKey: this.nodePublicKeyForm,
-    });
-
+    this.formRegisterNode = createInnerTxForm(TransactionType.NODEREGISTRATIONTRANSACTION);
     this.account = authServ.getCurrAccount();
-    this.ipAddressForm.patchValue(this.account.nodeIP);
+    this.formRegisterNode.get('ipAddress').patchValue(this.account.nodeIP);
   }
 
   ngOnInit() {
-    if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
-  }
-
-  onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value);
-    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
+    if (this.myNodePubKey) this.formRegisterNode.get('nodePublicKey').patchValue(this.myNodePubKey);
   }
 
   onRegisterNode() {
     if (this.formRegisterNode.valid) {
+      const nodePublicKeyForm = this.formRegisterNode.get('nodePublicKey');
+      const ipAddressForm = this.formRegisterNode.get('ipAddress');
+      const feeForm = this.formRegisterNode.get('fee');
+      const lockedBalanceForm = this.formRegisterNode.get('lockedBalance');
+
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
         maxHeight: '90vh',
@@ -69,10 +59,10 @@ export class RegisterNodeComponent implements OnInit {
 
           let data: RegisterNodeInterface = {
             accountAddress: this.account.address,
-            nodePublicKey: ZBCAddressToBytes(this.nodePublicKeyForm.value),
-            nodeAddress: this.ipAddressForm.value,
-            fee: this.feeForm.value,
-            funds: this.lockedBalanceForm.value,
+            nodePublicKey: ZBCAddressToBytes(nodePublicKeyForm.value),
+            nodeAddress: ipAddressForm.value,
+            fee: feeForm.value,
+            funds: lockedBalanceForm.value,
           };
 
           zoobc.Node.register(data, this.authServ.seed)
@@ -81,8 +71,8 @@ export class RegisterNodeComponent implements OnInit {
               Swal.fire('Success', message, 'success');
 
               // change IP if has different value
-              if (this.ipAddressForm.value != this.account.nodeIP)
-                this.nodeAdminServ.editIpAddress(this.ipAddressForm.value);
+              if (ipAddressForm.value != this.account.nodeIP)
+                this.nodeAdminServ.editIpAddress(ipAddressForm.value);
 
               this.dialogRef.close(true);
             })

@@ -1,28 +1,23 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { ZBCAddressToBytes, ClaimNodeInterface, isZBCAddressValid } from 'zoobc-sdk';
+import zoobc, { ZBCAddressToBytes, ClaimNodeInterface, TransactionType } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
+import { createInnerTxForm, claimNodeForm } from 'src/helpers/multisig-utils';
 @Component({
   selector: 'app-claim-node',
   templateUrl: './claim-node.component.html',
 })
 export class ClaimNodeComponent implements OnInit {
-  minFee = environment.fee;
   formClaimNode: FormGroup;
-  feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
-  nodePublicKeyForm = new FormControl('', Validators.required);
-  ipAddressForm = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
-
   account: SavedAccount;
-
   isLoading: boolean = false;
   isError: boolean = false;
+  claimNodeForm = claimNodeForm;
 
   constructor(
     private authServ: AuthService,
@@ -31,28 +26,21 @@ export class ClaimNodeComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
-    this.formClaimNode = new FormGroup({
-      fee: this.feeForm,
-      nodePublicKey: this.nodePublicKeyForm,
-      ipAddress: this.ipAddressForm,
-    });
-
+    this.formClaimNode = createInnerTxForm(TransactionType.CLAIMNODEREGISTRATIONTRANSACTION);
     this.account = authServ.getCurrAccount();
-
-    this.ipAddressForm.patchValue(this.account.nodeIP);
+    this.formClaimNode.get('ipAddress').patchValue(this.account.nodeIP);
   }
 
   ngOnInit() {
-    if (this.myNodePubKey) this.nodePublicKeyForm.patchValue(this.myNodePubKey);
-  }
-
-  onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.nodePublicKeyForm.value);
-    if (!isValid) this.nodePublicKeyForm.setErrors({ invalidAddress: true });
+    if (this.myNodePubKey) this.formClaimNode.get('nodePublicKey').patchValue(this.myNodePubKey);
   }
 
   onClaimNode() {
     if (this.formClaimNode.valid) {
+      const nodePublicKeyForm = this.formClaimNode.get('nodePublicKey');
+      const feeForm = this.formClaimNode.get('fee');
+      const ipAddressForm = this.formClaimNode.get('ipAddress');
+
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
         maxHeight: '90vh',
@@ -61,9 +49,9 @@ export class ClaimNodeComponent implements OnInit {
         if (isPinValid) {
           const data: ClaimNodeInterface = {
             accountAddress: this.account.address,
-            nodePublicKey: ZBCAddressToBytes(this.nodePublicKeyForm.value),
-            fee: this.feeForm.value,
-            nodeAddress: this.ipAddressForm.value,
+            nodePublicKey: ZBCAddressToBytes(nodePublicKeyForm.value),
+            fee: feeForm.value,
+            nodeAddress: ipAddressForm.value,
           };
           const seed = this.authServ.seed;
 
