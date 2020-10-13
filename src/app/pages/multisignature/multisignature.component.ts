@@ -8,11 +8,14 @@ import { getTranslation } from 'src/helpers/utils';
 import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { getTxType } from 'src/helpers/multisig-utils';
+import { MatDialog } from '@angular/material';
+import { OffchainSignComponent } from './offchain-sign/offchain-sign.component';
 
 @Component({
   selector: 'app-multisignature',
   templateUrl: './multisignature.component.html',
   styleUrls: ['./multisignature.component.scss'],
+  entryComponents: [OffchainSignComponent],
 })
 export class MultisignatureComponent implements OnInit {
   @ViewChild('fileInput') myInputVariable: ElementRef;
@@ -42,7 +45,8 @@ export class MultisignatureComponent implements OnInit {
     private router: Router,
     private multisigServ: MultisigService,
     private translate: TranslateService,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private dialog: MatDialog
   ) {
     this.form = new FormGroup({
       txType: this.txTypeField,
@@ -147,6 +151,7 @@ export class MultisignatureComponent implements OnInit {
   }
 
   openFile() {
+    this.myInputVariable.nativeElement.value = '';
     this.myInputVariable.nativeElement.click();
   }
 
@@ -168,20 +173,11 @@ export class MultisignatureComponent implements OnInit {
           let message = getTranslation('you imported the wrong file', this.translate);
           Swal.fire('Opps...', message, 'error');
         } else {
-          this.multisigServ.update(fileResult);
-          const listdraft = this.multisigServ.getDrafts();
-          const checkExistDraft = listdraft.some(res => res.id === fileResult.id);
-
-          if (checkExistDraft === true) {
-            let message = getTranslation('there is same id in your draft', this.translate);
-            Swal.fire('Opps...', message, 'error');
-          } else {
-            this.multisigServ.saveDraft();
-            this.getMultiSigDraft();
-            let message = getTranslation('draft saved', this.translate);
-            let subMessage = getTranslation('your draft has been saved', this.translate);
-            Swal.fire(message, subMessage, 'success');
-          }
+          this.dialog.open(OffchainSignComponent, {
+            width: '720px',
+            maxHeight: '99vh',
+            data: fileResult,
+          });
         }
       };
       fileReader.onerror = async err => {

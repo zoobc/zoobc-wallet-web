@@ -1,0 +1,60 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.label {
+  font-size: 14px;
+  color: $black3;
+}
+
+.value {
+  margin: 0 0 16px 0;
+}
+
+.participants {
+  padding-left: 24px;
+  margin: 8px 0px;
+  li {
+    list-style-type: circle;
+    margin-bottom: 6px;
+  }
+}
+
+.nonce {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  span {
+    color: $black1;
+  }
+}
+
+.min-signature {
+  color: $black1;
+}
+
+.invalid {
+  .label {
+    color: #ff8a80;
+  }
+  .value {
+    color: #ff1744;
+  }
+  button {
+    background-color: $red;
+  }
+}
+
+.valid {
+  .label {
+    color: #81c784;
+  }
+  .value {
+    color: #43a047;
+  }
+  button {
+    background-color: #43a047;
+  }
+}
+
+.button-group > button {
+  margin: 0 4px 8px 4px;
+}
