@@ -1,204 +1,63 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { environment } from 'src/environments/environment';
 import {
-  sendMoneyBuilder,
-  SendMoneyInterface,
-  TransactionType,
-  SetupDatasetInterface,
-  setupDatasetBuilder,
-  removeDatasetBuilder,
-  RemoveDatasetInterface,
-  EscrowApprovalInterface,
-  escrowBuilder,
-} from 'zoobc-sdk';
+  createEscrowApprovalBytes,
+  createEscrowApprovalForm,
+  escrowApprovalMap,
+} from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.component';
+import {
+  createRemoveDatasetForm,
+  createRemoveSetupDatasetBytes,
+  removeDatasetMap,
+} from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
+import {
+  createSendMoneyBytes,
+  createSendMoneyForm,
+  sendMoneyMap,
+} from 'src/app/components/transaction-form/form-send-money/form-send-money.component';
+import {
+  createSetupDatasetBytes,
+  createSetupDatasetForm,
+  setupDatasetMap,
+} from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
+import { TransactionType } from 'zoobc-sdk';
 
-// ========================== INPUT MAP ========================== //
-
-export const escrowForm = {
-  addressApprover: 'addressApprover',
-  typeCommission: 'typeCommission',
-  approverCommission: 'approverCommission',
-  timeout: 'timeout',
-  instruction: 'instruction',
-};
-
-export const sendMoneyForm = {
-  sender: 'sender',
-  recipient: 'recipient',
-  alias: 'alias',
-  amount: 'amount',
-  fee: 'fee',
-  ...escrowForm,
-};
-
-export const setupDataSetForm = {
-  sender: 'sender',
-  property: 'property',
-  value: 'value',
-  recipientAddress: 'recipientAddress',
-  fee: 'fee',
-  ...escrowForm,
-};
-
-export const claimNodeForm = {
-  fee: 'fee',
-  nodePublicKey: 'nodePublicKey',
-  ipAddress: 'ipAddress',
-  ...escrowForm,
-};
-export const removeDataSetForm = {
-  sender: 'sender',
-  property: 'property',
-  value: 'value',
-  recipientAddress: 'recipientAddress',
-  fee: 'fee',
-  ...escrowForm,
-};
-
-export const removeNodeForm = {
-  fee: 'fee',
-  nodePublicKey: 'nodePublicKey',
-  ...escrowForm,
-};
-
-export const updateNodeForm = {
-  ipAddress: 'ipAddress',
-  lockedAmount: 'lockedAmount',
-  fee: 'fee',
-  nodePublicKey: 'nodePublicKey',
-  ...escrowForm,
-};
-
-export const registerNodeForm = {
-  ipAddress: 'ipAddress',
-  lockedBalance: 'lockedBalance',
-  fee: 'fee',
-  nodePublicKey: 'nodePublicKey',
-  ...escrowForm,
-};
-
-export const escrowApprovalForm = {
-  fee: 'fee',
-  transactionId: 'transactionId',
-  sender: 'sender',
-  approvalCode: 'approvalCode',
-  ...escrowForm,
-};
 // =========================== END INPUT MAP ======================= //
 
 export function createInnerTxForm(txType: number) {
-  const escrowAddition = {
-    addressApprover: new FormControl('', Validators.required),
-    approverCommission: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
-    timeout: new FormControl('', [Validators.required, Validators.min(1), Validators.max(720)]),
-    instruction: new FormControl('', Validators.required),
-  };
   switch (txType) {
     case TransactionType.SENDMONEYTRANSACTION:
-      return new FormGroup({
-        sender: new FormControl('', Validators.required),
-        recipient: new FormControl('', Validators.required),
-        amount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
-        alias: new FormControl('', Validators.required),
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        ...escrowAddition,
-      });
-
+      return createSendMoneyForm();
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
-      return new FormGroup({
-        sender: new FormControl('', Validators.required),
-        property: new FormControl('', [Validators.required]),
-        value: new FormControl('', [Validators.required]),
-        recipientAddress: new FormControl('', Validators.required),
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        ...escrowAddition,
-      });
-
+      return createSetupDatasetForm();
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
-      return new FormGroup({
-        sender: new FormControl('', Validators.required),
-        property: new FormControl('', [Validators.required]),
-        value: new FormControl('', [Validators.required]),
-        recipientAddress: new FormControl('', Validators.required),
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        ...escrowAddition,
-      });
-
-    case TransactionType.CLAIMNODEREGISTRATIONTRANSACTION:
-      return new FormGroup({
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        nodePublicKey: new FormControl('', Validators.required),
-        ipAddress: new FormControl('', [
-          Validators.required,
-          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
-        ]),
-        ...escrowAddition,
-      });
-    case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
-      return new FormGroup({
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        nodePublicKey: new FormControl('', Validators.required),
-        ...escrowAddition,
-      });
-
-    case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
-      return new FormGroup({
-        ipAddress: new FormControl('', [
-          Validators.required,
-          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
-        ]),
-        lockedAmount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        nodePublicKey: new FormControl('', Validators.required),
-        ...escrowAddition,
-      });
-
-    case TransactionType.NODEREGISTRATIONTRANSACTION:
-      return new FormGroup({
-        ipAddress: new FormControl('', [
-          Validators.required,
-          Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
-        ]),
-        lockedBalance: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        nodePublicKey: new FormControl('', Validators.required),
-        ...escrowAddition,
-      });
-
+      return createRemoveDatasetForm();
     case TransactionType.APPROVALESCROWTRANSACTION:
-      return new FormGroup({
-        sender: new FormControl('', Validators.required),
-        fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-        transactionId: new FormControl('', Validators.required),
-        approvalCode: new FormControl(1, Validators.required),
-        ...escrowAddition,
-      });
+      return createEscrowApprovalForm();
   }
 }
 
-export function createTxBytes(form: any, txType: number): Buffer {
+export function createInnerTxBytes(form: any, txType: number): Buffer {
   switch (txType) {
     case TransactionType.SENDMONEYTRANSACTION:
-      return createSendMoney(form);
+      return createSendMoneyBytes(form);
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
-      return createSetupDataset(form);
+      return createSetupDatasetBytes(form);
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
-      return createRemoveSetupDataset(form);
+      return createRemoveSetupDatasetBytes(form);
     case TransactionType.APPROVALESCROWTRANSACTION:
-      return createEscrowApproval(form);
+      return createEscrowApprovalBytes(form);
   }
 }
 
-export function getFieldList(txType: number): Object {
+export function getInputMap(txType: number): Object {
   switch (txType) {
     case TransactionType.SENDMONEYTRANSACTION:
-      return sendMoneyForm;
+      return sendMoneyMap;
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
-      return setupDataSetForm;
+      return setupDatasetMap;
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:
-      return removeDataSetForm;
+      return removeDatasetMap;
     case TransactionType.APPROVALESCROWTRANSACTION:
-      return escrowApprovalForm;
+      return escrowApprovalMap;
   }
 }
 
@@ -213,47 +72,4 @@ export function getTxType(type: number) {
     case TransactionType.APPROVALESCROWTRANSACTION:
       return 'escrow approval';
   }
-}
-
-function createSendMoney(form: any) {
-  const { sender, fee, amount, recipient } = form;
-  const data: SendMoneyInterface = { sender, fee, amount, recipient };
-  return sendMoneyBuilder(data);
-}
-
-function createSetupDataset(form: any) {
-  const { sender, fee, recipientAddress, property, value } = form;
-  const data: SetupDatasetInterface = {
-    property,
-    value,
-    setterAccountAddress: sender,
-    recipientAccountAddress: recipientAddress,
-    fee: fee,
-  };
-  return setupDatasetBuilder(data);
-}
-
-function createRemoveSetupDataset(form: any) {
-  const { sender, fee, recipientAddress, property, value } = form;
-  const data: RemoveDatasetInterface = {
-    property,
-    value,
-    setterAccountAddress: sender,
-    recipientAccountAddress: recipientAddress,
-    fee: fee,
-  };
-  return removeDatasetBuilder(data);
-}
-
-function createEscrowApproval(form: any) {
-  console.log(form);
-
-  const { approvalCode, fee, transactionId, sender } = form;
-  const data: EscrowApprovalInterface = {
-    fee,
-    approvalCode,
-    approvalAddress: sender,
-    transactionId,
-  };
-  return escrowBuilder(data);
 }

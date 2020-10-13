@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { Contact, ContactService } from 'src/app/services/contact.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
+import { sendMoneyBuilder, SendMoneyInterface } from 'zoobc-sdk';
 
 @Component({
   selector: 'form-send-money',
@@ -99,4 +101,30 @@ export class FormSendMoneyComponent implements OnInit {
       this.saveAddress = true;
     }
   }
+}
+
+export const sendMoneyMap = {
+  sender: 'sender',
+  recipient: 'recipient',
+  alias: 'alias',
+  amount: 'amount',
+  fee: 'fee',
+  ...escrowMap,
+};
+
+export function createSendMoneyForm(): FormGroup {
+  return new FormGroup({
+    sender: new FormControl('', Validators.required),
+    recipient: new FormControl('', Validators.required),
+    amount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+    alias: new FormControl('', Validators.required),
+    fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
+    ...escrowForm,
+  });
+}
+
+export function createSendMoneyBytes(form: any): Buffer {
+  const { sender, fee, amount, recipient } = form;
+  const data: SendMoneyInterface = { sender, fee, amount, recipient };
+  return sendMoneyBuilder(data);
 }

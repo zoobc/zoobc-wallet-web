@@ -2,11 +2,11 @@
   <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
-      <form-send-money [group]="formSend" [inputMap]="sendMoneyForm"></form-send-money>
+      <form-send-money [group]="formSend" [inputMap]="sendMoneyMap"></form-send-money>
       <span class="sub-title">
         {{ 'advanced option' | translate }}
       </span>
-      <form-escrow [group]="formSend" [inputMap]="escrowForm"></form-escrow>
+      <form-escrow [group]="formSend" [inputMap]="sendMoneyMap"></form-escrow>
       <button
         mat-flat-button
         color="primary"

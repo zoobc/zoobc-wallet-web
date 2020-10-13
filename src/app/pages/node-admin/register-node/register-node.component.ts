@@ -4,11 +4,14 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { RegisterNodeInterface, TransactionType, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { RegisterNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { createInnerTxForm, registerNodeForm } from 'src/helpers/multisig-utils';
+import {
+  createRegisterNodeForm,
+  registerNodeMap,
+} from 'src/app/components/transaction-form/form-register-node/form-register-node.component';
 @Component({
   selector: 'app-register-node',
   templateUrl: './register-node.component.html',
@@ -21,7 +24,7 @@ export class RegisterNodeComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  registerNodeForm = registerNodeForm;
+  registerNodeMap = registerNodeMap;
 
   constructor(
     private authServ: AuthService,
@@ -31,7 +34,7 @@ export class RegisterNodeComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
-    this.formRegisterNode = createInnerTxForm(TransactionType.NODEREGISTRATIONTRANSACTION);
+    this.formRegisterNode = createRegisterNodeForm();
     this.account = authServ.getCurrAccount();
     this.formRegisterNode.get('ipAddress').patchValue(this.account.nodeIP);
   }

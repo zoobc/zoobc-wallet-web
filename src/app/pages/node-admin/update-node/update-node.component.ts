@@ -4,17 +4,14 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, {
-  UpdateNodeInterface,
-  ZBCAddressToBytes,
-  isZBCAddressValid,
-  getZBCAddress,
-  TransactionType,
-} from 'zoobc-sdk';
+import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid, getZBCAddress } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { createInnerTxForm, updateNodeForm } from 'src/helpers/multisig-utils';
+import {
+  createUpdateNodeForm,
+  updateNodeMap,
+} from 'src/app/components/transaction-form/form-update-node/form-update-node.component';
 
 @Component({
   selector: 'app-update-node',
@@ -26,7 +23,7 @@ export class UpdateNodeComponent implements OnInit {
   isLoading: boolean = false;
   isError: boolean = false;
 
-  updateNodeForm = updateNodeForm;
+  updateNodeMap = updateNodeMap;
 
   constructor(
     private authServ: AuthService,
@@ -36,7 +33,7 @@ export class UpdateNodeComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public node: any,
     private translate: TranslateService
   ) {
-    this.formUpdateNode = createInnerTxForm(TransactionType.UPDATENODEREGISTRATIONTRANSACTION);
+    this.formUpdateNode = createUpdateNodeForm();
 
     const ipAddressForm = this.formUpdateNode.get('ipAddress');
     const nodePublicKeyForm = this.formUpdateNode.get('nodePublicKey');

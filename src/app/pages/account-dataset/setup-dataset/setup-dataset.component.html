@@ -3,9 +3,9 @@
   <form [formGroup]="formGroup" (submit)="onSubmit()">
     <form-setup-account-dataset
       [group]="formGroup"
-      [formValue]="setupDatasetForm"
+      [formValue]="setupDatasetMap"
       [isSetupOther]="isSetupOther"
-      (enableSetupOther)="onClickSetupOther($event)"
+      (enableSetupOther)="onClickSetupOther()"
     ></form-setup-account-dataset>
     <div class="row">
       <div class="col-12 col-md-6">

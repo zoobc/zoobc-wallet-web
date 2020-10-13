@@ -15,7 +15,8 @@ import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.c
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup } from '@angular/forms';
-import { createInnerTxForm, escrowApprovalForm } from 'src/helpers/multisig-utils';
+import { createInnerTxForm } from 'src/helpers/multisig-utils';
+import { escrowApprovalMap } from '../transaction-form/form-escrow-approval/form-escrow-approval.component';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -40,7 +41,7 @@ export class EscrowTransactionComponent implements OnInit {
   waitingList = [];
   account;
   accountBalance: any;
-  escrowApprovalForm = escrowApprovalForm;
+  escrowApprovalMap = escrowApprovalMap;
 
   constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
     this.form = createInnerTxForm(TransactionType.APPROVALESCROWTRANSACTION);

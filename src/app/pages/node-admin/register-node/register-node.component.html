@@ -1,8 +1,7 @@
 <div class="register-node-container">
   <h2 class="mat-h2">{{ 'register node' | translate }}</h2>
   <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()" class="grid">
-    <app-form-register-node [group]="formRegisterNode" [inputMap]="registerNodeForm">
-    </app-form-register-node>
+    <form-register-node [group]="formRegisterNode" [inputMap]="registerNodeMap"> </form-register-node>
     <br />
     <button mat-flat-button color="primary" type="submit" [disabled]="formRegisterNode.invalid || isLoading">
       {{ 'register' | translate }}

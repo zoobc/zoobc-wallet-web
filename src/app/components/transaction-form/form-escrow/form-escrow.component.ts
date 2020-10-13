@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import zoobc, { HostInfoResponse, SendMoneyInterface } from 'zoobc-sdk';
 import { calcMinFee } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
@@ -21,9 +21,7 @@ export class FormEscrowComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-    this.disableFieldEscrow();
-  }
+  ngOnInit() {}
 
   getBlockHeight() {
     zoobc.Host.getInfo()
@@ -92,3 +90,25 @@ export class FormEscrowComponent implements OnInit {
     this.getMinimumFee();
   }
 }
+
+export const escrowMap = {
+  addressApprover: 'addressApprover',
+  typeCommission: 'typeCommission',
+  approverCommission: 'approverCommission',
+  timeout: 'timeout',
+  instruction: 'instruction',
+};
+
+export const escrowForm = {
+  addressApprover: new FormControl({ value: '', disabled: true }, Validators.required),
+  approverCommission: new FormControl({ value: '', disabled: true }, [
+    Validators.required,
+    Validators.min(1 / 1e8),
+  ]),
+  timeout: new FormControl({ value: '', disabled: true }, [
+    Validators.required,
+    Validators.min(1),
+    Validators.max(720),
+  ]),
+  instruction: new FormControl({ value: '', disabled: true }, Validators.required),
+};

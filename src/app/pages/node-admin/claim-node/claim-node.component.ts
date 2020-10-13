@@ -7,7 +7,8 @@ import Swal from 'sweetalert2';
 import zoobc, { ZBCAddressToBytes, ClaimNodeInterface, TransactionType } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { createInnerTxForm, claimNodeForm } from 'src/helpers/multisig-utils';
+import { createInnerTxForm } from 'src/helpers/multisig-utils';
+import { claimNodeMap } from 'src/app/components/transaction-form/form-claim-node/form-claim-node.component';
 @Component({
   selector: 'app-claim-node',
   templateUrl: './claim-node.component.html',
@@ -17,7 +18,7 @@ export class ClaimNodeComponent implements OnInit {
   account: SavedAccount;
   isLoading: boolean = false;
   isError: boolean = false;
-  claimNodeForm = claimNodeForm;
+  claimNodeMap = claimNodeMap;
 
   constructor(
     private authServ: AuthService,

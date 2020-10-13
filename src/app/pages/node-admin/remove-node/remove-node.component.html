@@ -1,7 +1,7 @@
 <div class="remove-node-container">
   <h2 class="mat-h2">{{ 'remove node' | translate }}</h2>
   <form [formGroup]="formRemoveNode" (submit)="onRemoveNode()" class="grid">
-    <app-form-remove-node [group]="formRemoveNode" [inputMap]="removeNodeForm"></app-form-remove-node>
+    <form-remove-node [group]="formRemoveNode" [inputMap]="removeNodeMap"></form-remove-node>
     <br />
     <button mat-flat-button color="primary" type="submit" [disabled]="formRemoveNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>

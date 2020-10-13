@@ -4,10 +4,13 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { RemoveNodeInterface, TransactionType, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { createInnerTxForm, removeNodeForm } from 'src/helpers/multisig-utils';
+import {
+  createRemoveNodeForm,
+  removeNodeMap,
+} from 'src/app/components/transaction-form/form-remove-node/form-remove-node.component';
 
 @Component({
   selector: 'app-remove-node',
@@ -18,7 +21,7 @@ export class RemoveNodeComponent implements OnInit {
   account: SavedAccount;
   isLoading: boolean = false;
   isError: boolean = false;
-  removeNodeForm = removeNodeForm;
+  removeNodeMap = removeNodeMap;
 
   constructor(
     private authServ: AuthService,
@@ -27,7 +30,7 @@ export class RemoveNodeComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public node: any,
     private translate: TranslateService
   ) {
-    this.formRemoveNode = createInnerTxForm(TransactionType.REMOVENODEREGISTRATIONTRANSACTION);
+    this.formRemoveNode = createRemoveNodeForm();
     this.account = authServ.getCurrAccount();
     this.formRemoveNode.get('nodePublicKey').patchValue(this.node.nodepublickey);
   }

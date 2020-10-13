@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { getTranslation, jsonBufferToString, truncate } from 'src/helpers/utils';
+import { getTranslation, jsonBufferToString } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -11,14 +11,9 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, {
-  MultiSigInterface,
-  MultisigPostTransactionResponse,
-  sendMoneyBuilder,
-  AccountBalanceResponse,
-} from 'zoobc-sdk';
+import zoobc, { MultiSigInterface, MultisigPostTransactionResponse, AccountBalanceResponse } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
-import { createTxBytes } from 'src/helpers/multisig-utils';
+import { createInnerTxBytes } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-send-transaction',
@@ -184,7 +179,7 @@ export class SendTransactionComponent implements OnInit {
     console.log(this.multisig.txBody);
 
     if (data.signaturesInfo === undefined)
-      data.unisgnedTransactions = createTxBytes(this.multisig.txBody, this.multisig.txType);
+      data.unisgnedTransactions = createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);

@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
@@ -9,7 +9,8 @@ import zoobc, { BIP32Interface, SetupDatasetResponse, TransactionType } from 'zo
 import { SetupDatasetInterface } from 'zoobc-sdk/types/helper/transaction-builder/setup-account-dataset';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { createInnerTxForm, setupDataSetForm } from 'src/helpers/multisig-utils';
+import { createInnerTxForm } from 'src/helpers/multisig-utils';
+import { setupDatasetMap } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
 
 @Component({
   selector: 'app-setup-dataset',
@@ -22,7 +23,7 @@ export class SetupDatasetComponent implements OnInit {
   minFee = environment.fee;
 
   formGroup: FormGroup;
-  setupDatasetForm = setupDataSetForm;
+  setupDatasetMap = setupDatasetMap;
   recipient: AbstractControl;
 
   constructor(
