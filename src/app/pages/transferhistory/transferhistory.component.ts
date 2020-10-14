@@ -115,7 +115,6 @@ export class TransferhistoryComponent implements OnDestroy {
         const escrowGroup = this.groupEscrowList(escrowList);
 
         let txs = toZBCTransactions(trxList.transactionsList);
-
         txs.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
           recent.senderAlias = this.contactServ.get(recent.sender).name || '';
