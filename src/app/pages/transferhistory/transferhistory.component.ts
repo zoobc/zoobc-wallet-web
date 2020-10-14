@@ -88,7 +88,7 @@ export class TransferhistoryComponent implements OnDestroy {
 
         let lastHeight = 0;
         let firstHeight = 0;
-        if (parseInt(trxList.total) > 0) {
+        if (trxList.transactionsList.length > 0) {
           lastHeight = trxList.transactionsList[0].height;
           firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
         }
@@ -159,7 +159,7 @@ export class TransferhistoryComponent implements OnDestroy {
   }
 
   onScroll() {
-    if (this.accountHistory && this.accountHistory.length < this.total) {
+    if (this.accountHistory.length < this.total) {
       this.page++;
       this.getTx();
     } else this.finished = true;
