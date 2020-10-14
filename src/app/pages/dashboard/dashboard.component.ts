@@ -141,7 +141,6 @@ export class DashboardComponent implements OnInit {
         const escrowList = escrowTx.escrowsList;
         const escrowGroup = this.groupEscrowList(escrowList);
         const tx = toTransactionListWallet(trxList, this.currAcc.address);
-        console.log(tx);
 
         let rTx = tx.transactions;
         rTx.map(recent => {

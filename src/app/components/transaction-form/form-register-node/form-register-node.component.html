@@ -1,4 +1,4 @@
-<div [formGroup]="group">
+<ng-container [formGroup]="group">
   <mat-form-field appearance="outline" color="accent" style="width:100%">
     <mat-label>{{ 'ip address' | translate }}</mat-label>
     <input
@@ -67,4 +67,4 @@
       {{ 'node public key is invalid' | translate }}
     </mat-error>
   </ng-container>
-</div>
+</ng-container>

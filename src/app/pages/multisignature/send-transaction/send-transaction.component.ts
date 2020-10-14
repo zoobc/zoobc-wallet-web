@@ -176,8 +176,6 @@ export class SendTransactionComponent implements OnInit {
     }
     const childSeed = this.authServ.seed;
 
-    console.log(this.multisig.txBody);
-
     if (data.signaturesInfo === undefined)
       data.unisgnedTransactions = createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
     zoobc.MultiSignature.postTransaction(data, childSeed)
@@ -185,8 +183,6 @@ export class SendTransactionComponent implements OnInit {
         let message = getTranslation('your transaction is processing', this.translate);
         let subMessage = getTranslation('you send coins to', this.translate, {
           amount: txBody.amount,
-          // currencyValue: truncate(txBody.amount * this.currencyRate.value, 2),
-          // currencyName: this.currencyRate.name,
           recipient: txBody.recipient,
         });
         this.multisigServ.deleteDraft(this.multisig.id);
