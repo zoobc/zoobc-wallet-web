@@ -1,0 +1,100 @@
+<div>
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <div class="mat-h3">{{ 'multisignature info' | translate }}</div>
+      <div class="label">{{ 'participants' | translate }}:</div>
+      <ul class="participants" *ngFor="let participant of draft.multisigInfo.participants">
+        <li><wallet-address [value]="participant" [copyButton]="true"></wallet-address></li>
+      </ul>
+      <div class="label nonce">
+        {{ 'nonce' | translate }}: <span>{{ draft.multisigInfo.nonce }}</span>
+      </div>
+      <div class="label">
+        {{ 'min signature' | translate }}:
+        <span class="min-signature">{{ draft.multisigInfo.minSigs }} address(es)</span>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6">
+      <div class="mat-h3">{{ txType | translate }}</div>
+
+      <ng-container *ngFor="let item of innerTx">
+        <div class="label">{{ item.key | translate }}</div>
+        <div class="value">
+          <ng-container *ngIf="!item.isAddress">{{ item.value }}</ng-container>
+          <wallet-address *ngIf="item.isAddress" [value]="item.value" [copyButton]="true"></wallet-address>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br />
+
+  <div class="row">
+    <div class="col-12 col-sm-6">
+      <div class="label">{{ 'draft transaction hash' | translate }}</div>
+      <div class="value">
+        <wallet-address [value]="draft.signaturesInfo.txHash"></wallet-address>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6">
+      <div [ngClass]="yourTxHash ? (isValid ? 'valid' : 'invalid') : ''">
+        <div class="label">{{ 'your transaction hash' | translate }}</div>
+        <div class="value">
+          <i *ngIf="!yourTxHash">({{ 'click verify to validating transaction' | translate }})</i>
+          <wallet-address *ngIf="yourTxHash" [value]="yourTxHash"></wallet-address>
+        </div>
+        <div style="margin: -12px 0 16px;" class="label">
+          <div *ngIf="yourTxHash && !isValid">{{ 'transaction hash is not matched' | translate }}</div>
+          <div *ngIf="yourTxHash && isValid">{{ 'transaction hash is matched' | translate }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 text-center" *ngIf="!yourTxHash">
+      <button mat-flat-button color="primary" (click)="onVerify()">
+        {{ 'verify transaction' | translate }}
+      </button>
+    </div>
+
+    <ng-container *ngIf="yourTxHash && isValid">
+      <ng-container *ngIf="isAddressInParticipants">
+        <div class="col-12 col-sm-6">
+          <div class="label">{{ 'choose address to sign with' | translate }}:</div>
+          <account-selector type="normal" [addresses]="participants"></account-selector>
+
+          <button mat-flat-button color="primary" (click)="onSign()" class="block">
+            <i matPrefix class="fa fa-file-signature"></i>
+            <span>{{ 'sign this transaction' | translate }}</span>
+          </button>
+          <br /><br />
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="label">{{ 'your signature' | translate }}</div>
+          <div class="value">
+            <i *ngIf="!signature">({{ 'your signature will appear here' | translate }})</i>
+            <wallet-address *ngIf="signature" [value]="signature" center="true"></wallet-address>
+          </div>
+
+          <div class="text-center">
+            <ngx-qrcode qrc-element-type="canvas" [qrc-value]="signatureUrl"></ngx-qrcode>
+          </div>
+
+          <button mat-flat-button color="accent" (click)="onCopy()" [disabled]="!signature" class="block">
+            <i matPrefix class="fa fa-share-alt"></i>
+            <span>{{ 'share signature as link' | translate }}</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <div class="col-12">
+        <mat-error class="text-center" *ngIf="!isAddressInParticipants">
+          {{ 'you cant sign this transaction' | translate }} <br />
+          {{ 'theres no matched address between your accounts and participants' | translate }} <br />
+          {{ 'please use one of the address of the participants' | translate }}
+        </mat-error>
+      </div>
+    </ng-container>
+  </div>
+</div>

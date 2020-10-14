@@ -35,6 +35,7 @@ export const setupDataSetForm = {
   value: 'value',
   recipientAddress: 'recipientAddress',
   fee: 'fee',
+  ...escrowForm,
 };
 
 export const claimNodeForm = {

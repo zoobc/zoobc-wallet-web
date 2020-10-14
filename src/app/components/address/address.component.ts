@@ -2,7 +2,7 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import { shortenHash } from 'zoobc-sdk';
+import { isZBCAddressValid, shortenHash } from 'zoobc-sdk';
 
 @Component({
   selector: 'wallet-address',
@@ -20,21 +20,12 @@ export class AddressComponent {
 
   constructor(private snackbar: MatSnackBar, private translate: TranslateService) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges) {
     const value = changes.value.currentValue;
     if (value) {
-      const prefixDefault = ['ZBC', 'ZNK', 'ZBL', 'ZTX'];
-      const prefixValue = value.slice(0, 3);
-      const valid = prefixDefault.indexOf(prefixValue) > -1;
-      if (valid) {
-        this.len = value.length;
-        this.halfLen = Math.round(value.length / 2);
-        this.shortValue = shortenHash(value);
-      } else {
-        this.len = value.length;
-        this.halfLen = Math.round(value.length / 2);
-        this.shortValue = value;
-      }
+      this.shortValue = isZBCAddressValid(value) ? shortenHash(value) : value;
+      this.len = this.shortValue.length;
+      this.halfLen = Math.round(this.shortValue.length / 2);
     }
   }
 

@@ -20,7 +20,7 @@ export class FormRegisterNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, 'ZNK');
+    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value);
     if (!isValid) this.group.get(this.inputMap.nodePublicKey).setErrors({ invalidAddress: true });
   }
 }
