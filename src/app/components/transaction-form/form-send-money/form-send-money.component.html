@@ -1,4 +1,4 @@
-<form [formGroup]="group">
+<ng-container [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
   <ng-container *ngIf="!multisig">
     <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
@@ -89,4 +89,4 @@
       </ng-container>
     </div>
   </div>
-</form>
+</ng-container>

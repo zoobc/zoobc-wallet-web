@@ -3,9 +3,7 @@
   <mat-card>
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <form-send-money [group]="formSend" [inputMap]="sendMoneyMap"></form-send-money>
-      <span class="sub-title">
-        {{ 'advanced option' | translate }}
-      </span>
+      <span class="advanced-option">{{ 'advanced option' | translate }}</span>
       <form-escrow [group]="formSend" [inputMap]="sendMoneyMap"></form-escrow>
       <button
         mat-flat-button

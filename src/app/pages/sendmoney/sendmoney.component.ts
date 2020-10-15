@@ -119,6 +119,7 @@ export class SendmoneyComponent implements OnInit {
     if (this.formSend.valid) {
       this.isLoading = true;
 
+      const senderForm = this.formSend.get('sender');
       const amountForm = this.formSend.get('amount');
       const feeForm = this.formSend.get('fee');
       const approverCommissionField = this.formSend.get('approverCommission');
@@ -129,7 +130,7 @@ export class SendmoneyComponent implements OnInit {
       const aliasField = this.formSend.get('alias');
 
       let data: SendMoneyInterface = {
-        sender: this.account.address,
+        sender: senderForm.value,
         recipient: recipientForm.value,
         fee: feeForm.value,
         amount: amountForm.value,
@@ -138,6 +139,7 @@ export class SendmoneyComponent implements OnInit {
         timeout: timeoutField.value,
         instruction: instructionField.value,
       };
+      console.log(data);
 
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(
@@ -151,7 +153,7 @@ export class SendmoneyComponent implements OnInit {
           Swal.fire(message, subMessage, 'success');
 
           // save address
-          if (this.saveAddress) {
+          if (aliasField.value) {
             const newContact: Contact = {
               name: aliasField.value,
               address: recipientForm.value,

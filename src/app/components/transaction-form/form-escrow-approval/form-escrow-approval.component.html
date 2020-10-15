@@ -1,4 +1,4 @@
-<form [formGroup]="group">
+<ng-container [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
   <ng-container *ngIf="!multisig">
     <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
@@ -8,10 +8,10 @@
       <wallet-address [value]="group.get(inputMap.sender).value"></wallet-address>
     </div>
   </ng-container>
-  <ng-container *ngIf="prefillTxId">
+  <!-- <ng-container *ngIf="prefillTxId">
     <span class="title">{{ 'transaction id' | translate }}: </span>
     <span class="subtitle">{{ group.get(inputMap.transactionId).value }}</span>
-  </ng-container>
+  </ng-container> -->
   <ng-container *ngIf="!prefillTxId">
     <mat-form-field appearance="outline" color="accent" style="width: 100%;">
       <mat-label>{{ 'transaction id' | translate }}</mat-label>
@@ -43,4 +43,4 @@
       </ng-container>
     </div>
   </div>
-</form>
+</ng-container>

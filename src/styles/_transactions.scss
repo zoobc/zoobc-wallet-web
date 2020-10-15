@@ -85,6 +85,22 @@
   }
 }
 
+.advanced-option {
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  margin: 24px 0 10px 0;
+  color: $black2;
+
+  &:before,
+  &:after {
+    content: '';
+    flex: 1 1;
+    border-bottom: 2px solid $black2;
+    margin: 10px;
+  }
+}
+
 .transaction-detail-container {
   .row {
     .icon-redirect {

@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { EscrowApprovalInterface, escrowBuilder } from 'zoobc-sdk';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
+import { SavedAccount } from 'src/app/services/auth.service';
 
 export const escrowApprovalMap = {
   fee: 'fee',
@@ -26,6 +27,10 @@ export class FormEscrowApprovalComponent {
   minFee = environment.fee;
 
   constructor() {}
+
+  onSwitchAccount(account: SavedAccount) {
+    this.group.get('sender').patchValue(account.address);
+  }
 }
 
 export function createEscrowApprovalForm(): FormGroup {

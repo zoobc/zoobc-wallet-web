@@ -1,4 +1,4 @@
-<form [formGroup]="group">
+<ng-container [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
   <ng-container *ngIf="prefillSender">
     <div style="margin-bottom: 16px;">
@@ -65,4 +65,4 @@
       </ng-container>
     </div>
   </div>
-</form>
+</ng-container>

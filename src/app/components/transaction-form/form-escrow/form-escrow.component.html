@@ -1,4 +1,4 @@
-<form [formGroup]="group">
+<ng-container [formGroup]="group">
   <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
     {{ 'escrow transaction' | translate }}
   </mat-checkbox>
@@ -77,4 +77,4 @@
       </mat-error>
     </ng-container>
   </div>
-</form>
+</ng-container>
