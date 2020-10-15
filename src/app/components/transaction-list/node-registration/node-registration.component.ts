@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ZBCTransaction } from 'zoobc-sdk';
 
@@ -7,7 +7,7 @@ import { ZBCTransaction } from 'zoobc-sdk';
   templateUrl: './node-registration.component.html',
 })
 export class NodeRegistrationComponent {
-  @Input() transaction: ZBCTransaction[];
+  @Input() transaction: ZBCTransaction;
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
 
   constructor(private dialog: MatDialog) {}

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewChild, TemplateRef } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc, {
@@ -9,14 +9,14 @@ import zoobc, {
   BIP32Interface,
   TransactionType,
 } from 'zoobc-sdk';
-import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { createInnerTxForm, removeDataSetForm } from 'src/helpers/multisig-utils';
+import { createInnerTxForm } from 'src/helpers/multisig-utils';
+import { removeDatasetMap } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -37,7 +37,7 @@ export class AccountDatasetComponent implements OnInit {
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
 
-  removeDataSetForm = removeDataSetForm;
+  removeDatasetMap = removeDatasetMap;
 
   constructor(
     public dialog: MatDialog,

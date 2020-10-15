@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { MatInputModule, MatCheckboxModule } from '@angular/material';
 import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AccountSelectorModule } from '../../account-selector/account-selector.module';
+import { AddressModule } from '../../address/address.module';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -27,6 +29,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     InputAmountModule,
     ReactiveFormsModule,
     FormsModule,
+    AccountSelectorModule,
+    AddressModule,
   ],
   exports: [FormEscrowApprovalComponent],
 })

@@ -9,10 +9,13 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { PostTransactionResponses, TransactionType } from 'zoobc-sdk';
+import zoobc, { PostTransactionResponses } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
-import { sendMoneyForm, createInnerTxForm, escrowForm } from 'src/helpers/multisig-utils';
+import {
+  createSendMoneyForm,
+  sendMoneyMap,
+} from 'src/app/components/transaction-form/form-send-money/form-send-money.component';
 
 @Component({
   selector: 'app-sendmoney',
@@ -30,8 +33,7 @@ export class SendmoneyComponent implements OnInit {
   account: SavedAccount;
   saveAddress: boolean = false;
 
-  sendMoneyForm = sendMoneyForm;
-  escrowForm = escrowForm;
+  sendMoneyMap = sendMoneyMap;
 
   constructor(
     private authServ: AuthService,
@@ -41,7 +43,7 @@ export class SendmoneyComponent implements OnInit {
     private router: Router,
     private activeRoute: ActivatedRoute
   ) {
-    this.formSend = createInnerTxForm(TransactionType.SENDMONEYTRANSACTION);
+    this.formSend = createSendMoneyForm();
     // disable alias field (saveAddress = false)
     const aliasField = this.formSend.get('alias');
     const amountForm = this.formSend.get('amount');

@@ -84,7 +84,7 @@
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
     <form-remove-account-dataset
       [group]="form"
-      [formValue]="removeDataSetForm"
+      [formValue]="removeDatasetMap"
       (switchAccount)="onSwitchAccount($event)"
       [removeOther]="false"
     ></form-remove-account-dataset>

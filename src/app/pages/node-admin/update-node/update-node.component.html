@@ -1,7 +1,7 @@
 <div class="update-node-container">
   <h2 class="mat-h2">{{ 'update node' | translate }}</h2>
   <form [formGroup]="formUpdateNode" (submit)="onUpdateNode()" class="grid">
-    <app-form-update-node [group]="formUpdateNode" [inputMap]="updateNodeForm"></app-form-update-node>
+    <form-update-node [group]="formUpdateNode" [inputMap]="updateNodeMap"></form-update-node>
     <br />
     <button mat-flat-button color="primary" type="submit" [disabled]="formUpdateNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>

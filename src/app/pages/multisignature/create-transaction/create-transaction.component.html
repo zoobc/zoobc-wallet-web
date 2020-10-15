@@ -39,6 +39,13 @@
           *ngIf="multisig.txType == 3"
         ></form-setup-account-dataset>
 
+        <form-escrow-approval
+          [group]="createTransactionForm"
+          [inputMap]="fieldList"
+          [multisig]="true"
+          *ngIf="multisig.txType == 4"
+        ></form-escrow-approval>
+
         <span class="sub-title">{{ 'advanced option' | translate }}</span>
         <form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></form-escrow>
       </fieldset>
