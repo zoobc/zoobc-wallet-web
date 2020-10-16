@@ -8,15 +8,16 @@ import zoobc, {
   EscrowApprovalInterface,
   EscrowApproval,
   AccountBalanceResponse,
-  TransactionType,
 } from 'zoobc-sdk';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup } from '@angular/forms';
-import { createInnerTxForm } from 'src/helpers/multisig-utils';
-import { escrowApprovalMap } from '../transaction-form/form-escrow-approval/form-escrow-approval.component';
+import {
+  createEscrowApprovalForm,
+  escrowApprovalMap,
+} from '../transaction-form/form-escrow-approval/form-escrow-approval.component';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -39,12 +40,12 @@ export class EscrowTransactionComponent implements OnInit {
   isLoadingDetail: boolean = false;
   isLoadingTx: boolean = false;
   waitingList = [];
-  account;
+  account: SavedAccount;
   accountBalance: any;
   escrowApprovalMap = escrowApprovalMap;
 
   constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
-    this.form = createInnerTxForm(TransactionType.APPROVALESCROWTRANSACTION);
+    this.form = createEscrowApprovalForm();
   }
 
   ngOnInit() {
@@ -57,6 +58,7 @@ export class EscrowTransactionComponent implements OnInit {
 
   openDetail(id) {
     this.showProcessForm = false;
+    this.form.get('sender').patchValue(this.account.address);
     this.form.get('transactionId').patchValue(id);
     this.form.get('fee').patchValue(this.minFee);
     this.isLoadingDetail = true;

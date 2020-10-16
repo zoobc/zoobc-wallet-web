@@ -34,10 +34,17 @@
 
         <form-setup-account-dataset
           [group]="createTransactionForm"
-          [formValue]="fieldList"
-          [isSetupOther]="true"
+          [inputMap]="fieldList"
+          [multisig]="true"
           *ngIf="multisig.txType == 3"
         ></form-setup-account-dataset>
+
+        <form-remove-account-dataset
+          [group]="createTransactionForm"
+          [inputMap]="fieldList"
+          [multisig]="true"
+          *ngIf="multisig.txType == 259"
+        ></form-remove-account-dataset>
 
         <form-escrow-approval
           [group]="createTransactionForm"

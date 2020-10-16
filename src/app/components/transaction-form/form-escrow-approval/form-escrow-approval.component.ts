@@ -5,14 +5,6 @@ import { EscrowApprovalInterface, escrowBuilder } from 'zoobc-sdk';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
 import { SavedAccount } from 'src/app/services/auth.service';
 
-export const escrowApprovalMap = {
-  fee: 'fee',
-  transactionId: 'transactionId',
-  sender: 'sender',
-  approvalCode: 'approvalCode',
-  ...escrowMap,
-};
-
 @Component({
   selector: 'form-escrow-approval',
   templateUrl: './form-escrow-approval.component.html',
@@ -21,24 +13,27 @@ export const escrowApprovalMap = {
 export class FormEscrowApprovalComponent {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  @Input() prefillTxId: boolean = false;
   @Input() multisig: boolean = false;
 
   minFee = environment.fee;
 
   constructor() {}
-
-  onSwitchAccount(account: SavedAccount) {
-    this.group.get('sender').patchValue(account.address);
-  }
 }
+
+export const escrowApprovalMap = {
+  fee: 'fee',
+  transactionId: 'transactionId',
+  sender: 'sender',
+  approvalCode: 'approvalCode',
+  ...escrowMap,
+};
 
 export function createEscrowApprovalForm(): FormGroup {
   return new FormGroup({
     sender: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     transactionId: new FormControl('', Validators.required),
-    approvalCode: new FormControl(1, Validators.required),
+    approvalCode: new FormControl(0, Validators.required),
     ...escrowForm,
   });
 }
