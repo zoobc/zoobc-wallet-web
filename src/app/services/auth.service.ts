@@ -85,16 +85,10 @@ export class AuthService {
 
   switchAccount(account: SavedAccount) {
     if (account) {
-      console.log(account);
-
       localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
       if (account.type == 'multisig') localStorage.setItem('CURR_MULTISIG', JSON.stringify(account));
       if (account.path != null) {
-        console.log('oke');
-
-        // this._keyring.calcDerivationPath(account.path);
         this._seed = this._keyring.calcDerivationPath(account.path);
-        console.log(this._seed);
       }
       this.sourceCurrAccount.next(account);
     }

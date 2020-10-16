@@ -112,7 +112,6 @@ export class EscrowTransactionComponent implements OnInit {
         approvalCode: EscrowApproval.APPROVE,
         transactionId: transactionIdForm.value,
       };
-      console.log(data);
 
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
