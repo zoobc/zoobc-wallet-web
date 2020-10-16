@@ -2,7 +2,8 @@
   <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
     {{ 'escrow transaction' | translate }}
   </mat-checkbox>
-  <div class="zbc-form-item" *ngIf="showEscrow">
+
+  <div style="margin-top: 16px;" *ngIf="showEscrow">
     <input-address
       label="{{ 'approver address' | translate }}"
       classList="block"
@@ -42,7 +43,7 @@
       </div>
     </div>
 
-    <label class="block-height">
+    <label class="form-block-height">
       <b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b>
     </label>
     <mat-form-field appearance="outline" class="block" color="accent">

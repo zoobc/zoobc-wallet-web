@@ -11,7 +11,6 @@ import { sendMoneyBuilder, SendMoneyInterface } from 'zoobc-sdk';
 @Component({
   selector: 'form-send-money',
   templateUrl: './form-send-money.component.html',
-  styleUrls: ['./form-send-money.component.scss'],
 })
 export class FormSendMoneyComponent implements OnInit {
   @Input() group: FormGroup;

@@ -1,18 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import zoobc, { HostInfoResponse, SendMoneyInterface } from 'zoobc-sdk';
+import zoobc, { HostInfoResponse } from 'zoobc-sdk';
 import { calcMinFee } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'form-escrow',
   templateUrl: './form-escrow.component.html',
-  styleUrls: ['./form-escrow.component.scss'],
 })
 export class FormEscrowComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  // @Output() changeTimeOut: EventEmitter<boolean> = new EventEmitter();
 
   showEscrow: boolean = false;
   blockHeight: number;
@@ -57,27 +55,8 @@ export class FormEscrowComponent implements OnInit {
   }
 
   async getMinimumFee() {
-    const amountForm = this.group.get('amount');
     const feeForm = this.group.get('fee');
-    const approverCommissionField = this.group.get('approverCommission');
-    const addressApproverField = this.group.get('addressApprover');
-    const senderForm = this.group.get('sender');
-    const recipientForm = this.group.get('recipient');
-    const timeoutField = this.group.get('timeout');
-    const instructionField = this.group.get('instruction');
-
-    let data: SendMoneyInterface = {
-      sender: senderForm.value,
-      recipient: recipientForm.value,
-      fee: feeForm.value,
-      amount: amountForm.value,
-      approverAddress: addressApproverField.value,
-      commission: approverCommissionField.value,
-      timeout: timeoutField.value,
-      instruction: instructionField.value,
-    };
-
-    const fee: number = calcMinFee(data);
+    const fee: number = calcMinFee(this.group.value);
     this.minFee = fee;
 
     feeForm.setValidators([Validators.required, Validators.min(fee)]);

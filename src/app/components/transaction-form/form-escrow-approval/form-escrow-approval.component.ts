@@ -3,12 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { EscrowApprovalInterface, escrowBuilder } from 'zoobc-sdk';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
-import { SavedAccount } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'form-escrow-approval',
   templateUrl: './form-escrow-approval.component.html',
-  styleUrls: ['./form-escrow-approval.component.scss'],
 })
 export class FormEscrowApprovalComponent {
   @Input() group: FormGroup;
