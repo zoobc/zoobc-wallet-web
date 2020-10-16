@@ -1,9 +1,11 @@
 <ng-container [formGroup]="group">
-  <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
-    {{ 'escrow transaction' | translate }}
-  </mat-checkbox>
+  <div style="margin-bottom: 16px;">
+    <mat-checkbox class="checkbox-margin" (click)="toggleAdvancedMenu()">
+      {{ 'escrow transaction' | translate }}
+    </mat-checkbox>
+  </div>
 
-  <div style="margin-top: 16px;" *ngIf="showEscrow">
+  <ng-container *ngIf="showEscrow">
     <input-address
       label="{{ 'approver address' | translate }}"
       classList="block"
@@ -77,5 +79,5 @@
         {{ 'instruction is required' | translate }}
       </mat-error>
     </ng-container>
-  </div>
+  </ng-container>
 </ng-container>

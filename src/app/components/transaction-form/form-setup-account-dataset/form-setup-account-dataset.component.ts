@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { SetupDatasetInterface, setupDatasetBuilder } from 'zoobc-sdk';
-import { escrowForm } from '../form-escrow/form-escrow.component';
+import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
 
 @Component({
   selector: 'form-setup-account-dataset',
@@ -11,19 +11,19 @@ import { escrowForm } from '../form-escrow/form-escrow.component';
 export class FormSetupAccountDatasetComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  @Input() multisig: boolean = false
+  @Input() multisig: boolean = false;
 
   isSetupOther: boolean = false;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-    this.setDefaultRecipient()
+    this.setDefaultRecipient();
   }
 
   onToggleEnableSetupOther() {
-    this.isSetupOther = !this.isSetupOther
-    if (!this.isSetupOther) this.setDefaultRecipient()
+    this.isSetupOther = !this.isSetupOther;
+    if (!this.isSetupOther) this.setDefaultRecipient();
   }
 
   setDefaultRecipient() {
@@ -39,7 +39,7 @@ export const setupDatasetMap = {
   value: 'value',
   recipientAddress: 'recipientAddress',
   fee: 'fee',
-  ...escrowForm,
+  ...escrowMap,
 };
 
 export function createSetupDatasetForm(): FormGroup {

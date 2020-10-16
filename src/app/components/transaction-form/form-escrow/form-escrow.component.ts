@@ -19,7 +19,9 @@ export class FormEscrowComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.group);
+  }
 
   getBlockHeight() {
     zoobc.Host.getInfo()
