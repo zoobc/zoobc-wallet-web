@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
   selector: 'form-escrow',
   templateUrl: './form-escrow.component.html',
 })
-export class FormEscrowComponent implements OnInit {
+export class FormEscrowComponent {
   @Input() group: FormGroup;
   @Input() inputMap: any;
 
@@ -18,10 +18,6 @@ export class FormEscrowComponent implements OnInit {
   minFee: number = environment.fee;
 
   constructor() {}
-
-  ngOnInit() {
-    console.log(this.group);
-  }
 
   getBlockHeight() {
     zoobc.Host.getInfo()
