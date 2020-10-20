@@ -77,7 +77,7 @@
   .registered-node {
     .label {
       font-size: 13px;
-      color: $black3;
+      color: $black2;
       margin: 0 0 4px 0;
     }
 
@@ -92,7 +92,7 @@
     }
 
     .pending-label {
-      background-color: map-get($accent, 500);
+      background-color: map-get($primary, 500);
       border-radius: 16px;
       color: white;
       padding: 8px 16px;
@@ -104,7 +104,7 @@
   .rewards {
     .btn-view-all {
       color: #fff;
-      background: $accent-gradient !important;
+      background: $primary-gradient !important;
       margin-top: 16px;
       text-align: center;
       text-decoration: none;
