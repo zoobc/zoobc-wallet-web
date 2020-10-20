@@ -23,7 +23,7 @@
 
 <ng-template #dialog>
   <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
-    <div class="row">
+    <div class="row" *ngIf="transaction.transactionHash">
       <div class="col-12 col-md-4">{{ 'transaction hash' | translate }}:</div>
       <div class="col-12 col-md-8">
         <a [href]="'https://zoobc.net/transactions/' + transaction.id" target="_blank">
@@ -31,7 +31,7 @@
         </a>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="transaction.blockId">
       <div class="col-12 col-md-4">{{ 'block id' | translate }}:</div>
       <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.blockId }}</div>
     </div>
@@ -60,12 +60,12 @@
       <div class="col-12 col-md-8">{{ transaction.fee / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="transaction.height">
       <div class="col-12 col-md-4">{{ 'height' | translate }}:</div>
       <div class="col-12 col-md-8">{{ transaction.height | number }}</div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="transaction.transactionIndex">
       <div class="col-12 col-md-4">{{ 'transaction index' | translate }}:</div>
       <div class="col-12 col-md-8">{{ transaction.transactionIndex }}</div>
     </div>
