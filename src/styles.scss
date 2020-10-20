@@ -19,7 +19,7 @@ $app-primary: mat-palette($primary, 400);
 $app-accent: mat-palette($primary, 500);
 $app-red: mat-palette($red, 0);
 
-$app-theme: mat-light-theme($app-primary, $app-accent, $red);
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-red);
 
 @include angular-material-theme($app-theme);
 
