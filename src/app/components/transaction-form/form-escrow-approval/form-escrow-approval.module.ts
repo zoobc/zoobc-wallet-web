@@ -4,7 +4,7 @@ import { FormEscrowApprovalComponent } from './form-escrow-approval.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
-import { MatInputModule, MatCheckboxModule } from '@angular/material';
+import { MatInputModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AccountSelectorModule } from '../../account-selector/account-selector.module';
@@ -27,6 +27,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatInputModule,
     MatCheckboxModule,
     InputAmountModule,
+    MatRadioModule,
     ReactiveFormsModule,
     FormsModule,
     AccountSelectorModule,

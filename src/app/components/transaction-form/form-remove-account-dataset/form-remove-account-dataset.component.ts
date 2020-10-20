@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { RemoveDatasetInterface, removeDatasetBuilder } from 'zoobc-sdk';
 import { escrowMap, escrowForm } from '../form-escrow/form-escrow.component';
@@ -9,29 +8,26 @@ import { escrowMap, escrowForm } from '../form-escrow/form-escrow.component';
   selector: 'form-remove-account-dataset',
   templateUrl: './form-remove-account-dataset.component.html',
 })
-export class FormRemoveAccountDatasetComponent implements OnChanges {
+export class FormRemoveAccountDatasetComponent implements OnInit {
   @Input() group: FormGroup;
-  @Input() formValue: any;
-  @Input() removeOther?: boolean = false;
-  @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
-  account: SavedAccount;
-  readOnly: boolean = true;
+  @Input() inputMap: any;
+  @Input() multisig: boolean = false
 
-  constructor(private authServ: AuthService) {
-    this.account = this.authServ.getCurrAccount();
+  isSetupOther: boolean = false;
+
+  ngOnInit() {
+    this.setDefaultRecipient()
   }
 
-  ngOnInit() {}
-
-  ngOnChanges() {
-    this.formValue = this.formValue;
-    const isSetterAddressSame = this.group.get(this.formValue.sender).value == this.account.address;
-    if (!isSetterAddressSame) this.readOnly = false;
+  onToggleEnableSetupOther() {
+    this.isSetupOther = !this.isSetupOther
+    if (!this.isSetupOther) this.setDefaultRecipient()
   }
 
-  onSwitchAccount(account: SavedAccount) {
-    this.account = account;
-    this.switchAccount.emit(account);
+  setDefaultRecipient() {
+    const sender = this.group.get('sender').value;
+    const recipientField = this.group.get('recipientAddress');
+    recipientField.patchValue(sender);
   }
 }
 

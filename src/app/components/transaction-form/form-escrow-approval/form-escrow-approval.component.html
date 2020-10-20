@@ -1,18 +1,9 @@
-<form [formGroup]="group">
-  <label>{{ 'sender' | translate }}</label>
-  <ng-container *ngIf="!multisig">
-    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
-  </ng-container>
+<ng-container [formGroup]="group">
+  <label>{{ 'approver' | translate }}</label>
+  <div style="margin-bottom: 16px;">
+    <wallet-address [value]="group.get(inputMap.sender).value"></wallet-address>
+  </div>
   <ng-container *ngIf="multisig">
-    <div style="margin-bottom: 16px;">
-      <wallet-address [value]="group.get(inputMap.sender).value"></wallet-address>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="prefillTxId">
-    <span class="title">{{ 'transaction id' | translate }}: </span>
-    <span class="subtitle">{{ group.get(inputMap.transactionId).value }}</span>
-  </ng-container>
-  <ng-container *ngIf="!prefillTxId">
     <mat-form-field appearance="outline" color="accent" style="width: 100%;">
       <mat-label>{{ 'transaction id' | translate }}</mat-label>
       <input
@@ -27,7 +18,20 @@
         {{ 'transaction id is required' | translate }}
       </mat-error>
     </ng-container>
+
+    <div style="margin: 16px 0 8px 0;">
+      <label>{{ 'do you confirm this escrow?' }}</label>
+    </div>
+    <mat-radio-group class="row" [formControlName]="inputMap.approvalCode">
+      <mat-radio-button [value]="0" class="col-12 col-sm-6">
+        {{ 'confirm' | translate }}
+      </mat-radio-button>
+      <mat-radio-button [value]="1" class="col-12 col-sm-6">
+        {{ 'reject' | translate }}
+      </mat-radio-button>
+    </mat-radio-group>
   </ng-container>
+
   <input-amount [group]="group" amountName="{{ inputMap.fee }}" label="{{ 'fee' | translate }}">
   </input-amount>
   <div class="row subtitle" *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid">
@@ -43,4 +47,4 @@
       </ng-container>
     </div>
   </div>
-</form>
+</ng-container>
