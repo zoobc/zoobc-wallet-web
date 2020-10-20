@@ -19,11 +19,11 @@
       margin-right: 16px;
       i {
         font-size: 24px;
-        color: map-get($accent, 500);
+        color: map-get($primary, 500);
         cursor: pointer;
         @include transition(0.3s ease-in all);
         &:hover {
-          color: map-get($accent, 300);
+          color: map-get($primary, 300);
         }
       }
     }
@@ -85,8 +85,8 @@
         background-color: map-get($primary, 100);
       }
       &.accent {
-        color: map-get($accent, 500);
-        background-color: map-get($accent, 100);
+        color: map-get($primary, 500);
+        background-color: map-get($primary, 100);
       }
       &.warn {
         color: $red;
