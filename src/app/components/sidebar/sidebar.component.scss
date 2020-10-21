@@ -6,8 +6,11 @@
   width: $sidebar-width;
   background-color: white;
   border-radius: 8px;
-  // height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 90vh;
+  // box-shadow: 0 0 40px rgba(52, 61, 72, 0.2);
+
   .sidenav-menu {
     color: $black2;
     list-style: none;
