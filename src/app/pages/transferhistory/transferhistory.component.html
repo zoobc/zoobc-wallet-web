@@ -16,7 +16,9 @@
     </mat-form-field>
   </div>
 </div>
-<ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && txType == txTypeUnconfirm && !isLoading && !isError">
+<ng-container
+  *ngIf="unconfirmTx && unconfirmTx.length > 0 && txType == txTypeUnconfirm && !isLoading && !isError"
+>
   <div class="row">
     <div class="col-10">
       <h2 class="mat-h2">{{ 'pending transaction' | translate }}</h2>

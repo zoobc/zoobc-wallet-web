@@ -139,8 +139,6 @@ export class SendmoneyComponent implements OnInit {
         timeout: timeoutField.value,
         instruction: instructionField.value,
       };
-      console.log(data);
-
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
