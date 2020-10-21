@@ -161,7 +161,13 @@
         <h2 class="mat-h2">{{ 'pending transaction' | translate }}</h2>
       </div>
     </div>
-    <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
+    <transaction-list
+      [transactionData]="unconfirmTx"
+      [isLoading]="isLoadingRecentTx"
+      [isError]="isErrorRecentTx"
+      (refresh)="reloadBalanceTx()"
+      [txType]="txType"
+    ></transaction-list>
     <br />
   </ng-container>
 
@@ -180,14 +186,13 @@
       </button>
     </div>
   </div>
-  <app-transaction-table
-    [withDetail]="true"
+  <transaction-list
+    [transactionData]="recentTx"
     [isLoading]="isLoadingRecentTx"
     [isError]="isErrorRecentTx"
     (refresh)="reloadBalanceTx()"
-    [transactionData]="recentTx"
-  >
-  </app-transaction-table>
+    [txType]="txType"
+  ></transaction-list>
   <ng-container *ngIf="totalTx > 5">
     <div class="text-center">
       <a routerLink="/transferhistory" mat-flat-button class="btn-view-all">

@@ -9,13 +9,15 @@ import { EditAccountComponent } from '../account/edit-account/edit-account.compo
 
 import zoobc, {
   TransactionListParams,
-  toTransactionListWallet,
   MempoolListParams,
-  toUnconfirmedSendMoneyWallet,
   AccountBalanceResponse,
   TransactionType,
   EscrowListParams,
   OrderBy,
+  toZBCTransactions,
+  toZBCPendingTransactions,
+  ZBCTransaction,
+  getZBCAddress,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -29,6 +31,8 @@ import { ReceiveComponent } from '../receive/receive.component';
 export class DashboardComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
+  txType: number = TransactionType.SENDMONEYTRANSACTION;
+
   accountBalance: any;
   isLoadingBalance: boolean = false;
   isLoadingRecentTx: boolean = false;
@@ -37,8 +41,8 @@ export class DashboardComponent implements OnInit {
   isErrorRecentTx: boolean = false;
 
   totalTx: number;
-  recentTx: any;
-  unconfirmTx: any;
+  recentTx: ZBCTransaction[];
+  unconfirmTx: ZBCTransaction[];
 
   currencyRate: Currency;
   currencyRates: Currency[];
@@ -140,26 +144,33 @@ export class DashboardComponent implements OnInit {
         const escrowTx = await zoobc.Escrows.getList(paramEscrow);
         const escrowList = escrowTx.escrowsList;
         const escrowGroup = this.groupEscrowList(escrowList);
-        const tx = toTransactionListWallet(trxList, this.currAcc.address);
-        let rTx = tx.transactions;
-        rTx.map(recent => {
+        const tx = toZBCTransactions(trxList.transactionsList);
+        tx.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent['alias'] = this.contactServ.get(recent.address).name || '';
+          recent.senderAlias = this.contactServ.get(recent.sender).name || '';
+          recent.recipientAlias = this.contactServ.get(recent.recipient).name || '';
+          if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
+            if (recent.txBody.nodepublickey) {
+              const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
+              const pubkey = getZBCAddress(buffer, 'ZNK');
+              recent['txBody'].nodepublickey = pubkey;
+            }
+          }
           if (escStatus) {
-            recent['escrow'] = true;
-            recent['escrowStatus'] = escStatus.status;
-          } else recent['escrow'] = false;
-          recent['multisigchild'] = multisigTx.includes(recent.id);
+            recent.escrow = true;
+            recent.escrowStatus = escStatus.status;
+          } else recent.escrow = false;
+          recent.multisig = multisigTx.includes(recent.id);
           return recent;
         });
-        this.recentTx = rTx;
-        this.totalTx = tx.total;
+        this.recentTx = tx;
+        this.totalTx = parseInt(trxList.total);
 
         const paramPool: MempoolListParams = {
           address: this.currAcc.address,
         };
         const unconfirmTx = await zoobc.Mempool.getList(paramPool);
-        this.unconfirmTx = toUnconfirmedSendMoneyWallet(unconfirmTx, this.currAcc.address);
+        this.unconfirmTx = toZBCPendingTransactions(unconfirmTx);
       } catch (error) {
         console.log(error);
         this.isErrorRecentTx = true;
