@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
 body {
   height: 100%;
   background-color: map-get($primary, 50);
@@ -145,45 +148,69 @@ a:not([href='']) {
 // ======================== END ACCORDION ===========================
 
 // ============================ BUTTON ============================
+a[mat-button],
+button[mat-button],
 button[mat-flat-button],
 a[mat-flat-button],
 a[mat-stroked-button],
 button[mat-stroked-button] {
   text-transform: uppercase;
   border-radius: 4px;
-
+  font-weight: 500;
+  line-height: 40px;
   *[matPrefix] {
     margin-right: 12px;
   }
-
   *[matSuffix] {
     margin-left: 12px;
   }
-
   &.block {
     width: 100%;
   }
-
   &.small {
-    height: 28px;
     font-size: 12px;
-    line-height: 28px;
+    line-height: 32px;
+  }
+  &.big {
+    font-size: 16px;
+    line-height: 48px;
   }
 }
 
+// FLAT BUTTON
+button[mat-flat-button],
+a[mat-flat-button] {
+  @include transition(0s ease-in all);
+  &[color='primary']:not(:disabled):hover {
+    background-color: map-get($primary, 400);
+    color: white;
+  }
+  &[color='warn']:not(:disabled):hover {
+    color: white;
+  }
+}
+
+// STROKED BUTTON
 a[mat-stroked-button],
 button[mat-stroked-button] {
-  border: 1px solid map-get($primary, 600) !important;
+  border: 2px solid currentColor !important;
+  padding: 0 14px;
+  line-height: 36px;
+  &:disabled {
+    border: 2px solid currentColor !important;
+  }
   &.small {
-    line-height: 26px !important;
+    line-height: 28px !important;
   }
-
-  &[color='accent'] {
-    border: 1px solid map-get($primary, 500) !important;
+  &.big {
+    line-height: 44px;
   }
-
-  &[color='warn'] {
-    border: 1px solid $red !important;
+  &[color='primary']:not(:disabled) {
+    border: 2px solid map-get($primary, 400) !important;
+    color: map-get($primary, 400);
+  }
+  &[color='warn']:not(:disabled) {
+    border: 2px solid $red !important;
   }
 }
 // ============================ END BUTTON ============================
