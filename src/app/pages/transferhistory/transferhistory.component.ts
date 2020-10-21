@@ -11,7 +11,7 @@ import zoobc, {
   toZBCTransactions,
   ZBCTransaction,
   getZBCAddress,
-  toZBCPendingTransactions
+  toZBCPendingTransactions,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -24,10 +24,10 @@ import { Subscription } from 'rxjs';
 })
 export class TransferhistoryComponent implements OnDestroy {
   accountHistory: ZBCTransaction[];
-  unconfirmTx: any[];
+  unconfirmTx: ZBCTransaction[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
-  txTypeUnconfirm: number;
+  txTypeUnconfirm: number = TransactionType.SENDMONEYTRANSACTION;
 
   page: number = 1;
   perPage: number = 10;
@@ -50,9 +50,10 @@ export class TransferhistoryComponent implements OnDestroy {
   ) {
     this.routerEvent = router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.activeRoute.queryParams.subscribe(
-          res => (this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION)
-        );
+        this.activeRoute.queryParams.subscribe(res => {
+          this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
+          this.txTypeUnconfirm = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
+        });
         this.getTx(true);
       }
     });
@@ -143,8 +144,8 @@ export class TransferhistoryComponent implements OnDestroy {
             (res: MempoolTransactionsResponse) => toZBCPendingTransactions(res)
           );
           this.unconfirmTx.map(res => {
-            this.txTypeUnconfirm = res.transactionType
-          })
+            this.txTypeUnconfirm = res.transactionType;
+          });
         }
       } catch {
         this.isError = true;
