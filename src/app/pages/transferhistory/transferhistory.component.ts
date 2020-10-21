@@ -4,7 +4,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import zoobc, {
   TransactionListParams,
   MempoolListParams,
-  toUnconfirmedSendMoneyWallet,
   MempoolTransactionsResponse,
   TransactionType,
   EscrowListParams,
@@ -12,6 +11,7 @@ import zoobc, {
   toZBCTransactions,
   ZBCTransaction,
   getZBCAddress,
+  toZBCPendingTransactions
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -27,6 +27,7 @@ export class TransferhistoryComponent implements OnDestroy {
   unconfirmTx: any[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
+  txTypeUnconfirm: number;
 
   page: number = 1;
   perPage: number = 10;
@@ -139,8 +140,11 @@ export class TransferhistoryComponent implements OnDestroy {
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
-            (res: MempoolTransactionsResponse) => toUnconfirmedSendMoneyWallet(res, this.address)
+            (res: MempoolTransactionsResponse) => toZBCPendingTransactions(res)
           );
+          this.unconfirmTx.map(res => {
+            this.txTypeUnconfirm = res.transactionType
+          })
         }
       } catch {
         this.isError = true;
