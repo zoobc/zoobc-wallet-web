@@ -120,9 +120,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const { signaturesInfo, unisgnedTransactions } = multisig;
     if (!signaturesInfo || signaturesInfo == null) return false;
     if (!unisgnedTransactions) return false;
-    const txHash = signaturesInfo.txHash;
-    const txHashFormatted = getZBCAddress(Buffer.from(txHash, 'base64'), 'ZTX');
-    this.transactionHashField.patchValue(txHashFormatted);
+    this.transactionHashField.patchValue(signaturesInfo.txHash);
     return true;
   }
 
@@ -223,8 +221,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     let message = getTranslation('this account is not in participant list', this.translate);
     if (idx == -1) return Swal.fire('Error', message, 'error');
     const seed = this.authServ.seed;
-    const backTxHash = toBase64Url(ZBCAddressToBytes(transactionHash).toString('base64'));
-    const signature = signTransactionHash(backTxHash, seed);
+    const signature = signTransactionHash(transactionHash, seed);
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
   }
 

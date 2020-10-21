@@ -7,7 +7,7 @@
   height: calc(100% - $header-height);
   overflow: hidden;
   .sidenav-menu {
-    color: $black3;
+    color: $black2;
     list-style: none;
     text-align: center;
     padding: 0;
@@ -18,19 +18,19 @@
     li {
       padding: 12px 0;
       &.active a {
-        color: map-get($accent, 500);
+        color: map-get($primary, 500);
         font-weight: bold;
       }
     }
     a {
-      color: $black3;
+      color: $black2;
       text-decoration: none;
       font-size: 12px;
       display: grid;
       cursor: pointer;
       @include transition(0.3s ease-in all);
       &:hover {
-        color: map-get($accent, 500);
+        color: map-get($primary, 500);
       }
       i {
         font-size: 24px;

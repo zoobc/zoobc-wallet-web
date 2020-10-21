@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TransactionType } from 'zoobc-sdk';
-import { ZBCTransaction } from 'zoobc-sdk/types/helper/wallet/Transaction';
+import { TransactionType, ZBCTransaction } from 'zoobc-sdk';
 
 @Component({
   selector: 'transaction-list',

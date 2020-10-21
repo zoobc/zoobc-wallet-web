@@ -8,7 +8,10 @@ import zoobc, { ZBCAddressToBytes, ClaimNodeInterface, TransactionType } from 'z
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { createInnerTxForm } from 'src/helpers/multisig-utils';
-import { claimNodeMap } from 'src/app/components/transaction-form/form-claim-node/form-claim-node.component';
+import {
+  claimNodeMap,
+  createClaimNodeForm,
+} from 'src/app/components/transaction-form/form-claim-node/form-claim-node.component';
 @Component({
   selector: 'app-claim-node',
   templateUrl: './claim-node.component.html',
@@ -27,7 +30,7 @@ export class ClaimNodeComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public myNodePubKey: string
   ) {
-    this.formClaimNode = createInnerTxForm(TransactionType.CLAIMNODEREGISTRATIONTRANSACTION);
+    this.formClaimNode = createClaimNodeForm();
     this.account = authServ.getCurrAccount();
     this.formClaimNode.get('ipAddress').patchValue(this.account.nodeIP);
   }
@@ -64,7 +67,7 @@ export class ClaimNodeComponent implements OnInit {
             })
             .catch(err => {
               console.log(err);
-              Swal.fire('Error', err, 'error');
+              Swal.fire('Error', err.message, 'error');
               this.isError = true;
             })
             .finally(() => (this.isLoading = false));

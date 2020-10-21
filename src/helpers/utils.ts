@@ -28,7 +28,7 @@ export function truncate(num: number, places: number): number {
   return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
 }
 
-export function calcMinFee(data: SendMoneyInterface) {
+export function calcMinFee(data: any) {
   const blockPeriod = 10 * 1e8;
   const feePerBlockPeriod = 0.01 * 1e8;
 

@@ -34,7 +34,7 @@ export class MultisignatureComponent implements OnInit {
   txType = [
     { code: TransactionType.SENDMONEYTRANSACTION, type: 'send money' },
     { code: TransactionType.SETUPACCOUNTDATASETTRANSACTION, type: 'setup account dataset' },
-    { code: TransactionType.REMOVENODEREGISTRATIONTRANSACTION, type: 'remove account dataset' },
+    { code: TransactionType.REMOVEACCOUNTDATASETTRANSACTION, type: 'remove account dataset' },
     { code: TransactionType.APPROVALESCROWTRANSACTION, type: 'escrow approval' },
   ];
 

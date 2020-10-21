@@ -7,7 +7,6 @@ import zoobc, {
   AccountDatasetsResponse,
   RemoveDatasetInterface,
   BIP32Interface,
-  TransactionType,
 } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
@@ -15,8 +14,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { createInnerTxForm } from 'src/helpers/multisig-utils';
-import { removeDatasetMap } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
+import { createRemoveDatasetForm, removeDatasetMap } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -26,12 +24,13 @@ export class AccountDatasetComponent implements OnInit {
   subscription: Subscription = new Subscription();
   dataSetList: any[];
   dataSet: any;
+  
   isLoading: boolean;
   isError: boolean;
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
+  
   form: FormGroup;
-
   account: SavedAccount;
 
   feeRefDialog: MatDialogRef<any>;
@@ -45,8 +44,7 @@ export class AccountDatasetComponent implements OnInit {
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) data: SavedAccount
   ) {
-    this.form = createInnerTxForm(TransactionType.REMOVEACCOUNTDATASETTRANSACTION);
-
+    this.form = createRemoveDatasetForm();
     this.account = data;
   }
 

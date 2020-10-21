@@ -34,10 +34,17 @@
 
         <form-setup-account-dataset
           [group]="createTransactionForm"
-          [formValue]="fieldList"
-          [isSetupOther]="true"
+          [inputMap]="fieldList"
+          [multisig]="true"
           *ngIf="multisig.txType == 3"
         ></form-setup-account-dataset>
+
+        <form-remove-account-dataset
+          [group]="createTransactionForm"
+          [inputMap]="fieldList"
+          [multisig]="true"
+          *ngIf="multisig.txType == 259"
+        ></form-remove-account-dataset>
 
         <form-escrow-approval
           [group]="createTransactionForm"
@@ -46,7 +53,7 @@
           *ngIf="multisig.txType == 4"
         ></form-escrow-approval>
 
-        <span class="sub-title">{{ 'advanced option' | translate }}</span>
+        <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
         <form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></form-escrow>
       </fieldset>
 

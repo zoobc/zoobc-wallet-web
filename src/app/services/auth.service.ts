@@ -88,7 +88,6 @@ export class AuthService {
       localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
       if (account.type == 'multisig') localStorage.setItem('CURR_MULTISIG', JSON.stringify(account));
       if (account.path != null) {
-        this._keyring.calcDerivationPath(account.path);
         this._seed = this._keyring.calcDerivationPath(account.path);
       }
       this.sourceCurrAccount.next(account);

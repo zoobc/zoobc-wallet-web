@@ -1,30 +1,25 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { FormGroup, AbstractControl } from '@angular/forms';
-import { environment } from 'src/environments/environment';
+import { FormGroup } from '@angular/forms';
 import { getTranslation } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { BIP32Interface, SetupDatasetResponse, TransactionType } from 'zoobc-sdk';
+import zoobc, { BIP32Interface, SetupDatasetResponse } from 'zoobc-sdk';
 import { SetupDatasetInterface } from 'zoobc-sdk/types/helper/transaction-builder/setup-account-dataset';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { createInnerTxForm } from 'src/helpers/multisig-utils';
-import { setupDatasetMap } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
+import { createSetupDatasetForm, setupDatasetMap } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
 
 @Component({
   selector: 'app-setup-dataset',
   templateUrl: './setup-dataset.component.html',
 })
 export class SetupDatasetComponent implements OnInit {
-  isSetupOther: boolean;
   isLoading: boolean;
   isError: boolean;
-  minFee = environment.fee;
 
   formGroup: FormGroup;
   setupDatasetMap = setupDatasetMap;
-  recipient: AbstractControl;
 
   constructor(
     public dialog: MatDialog,
@@ -33,35 +28,22 @@ export class SetupDatasetComponent implements OnInit {
     private authServ: AuthService,
     private translate: TranslateService
   ) {
-    this.formGroup = createInnerTxForm(TransactionType.SETUPACCOUNTDATASETTRANSACTION);
-    let sender = this.formGroup.get('sender');
+    this.formGroup = createSetupDatasetForm();
+    const sender = this.formGroup.get('sender');
     sender.patchValue(this.account.address);
-    this.recipient = this.formGroup.get('recipientAddress');
   }
 
-  ngOnInit() {
-    this.isSetupOther = false;
-    this.disableSetupOther();
-  }
-
-  enableSetupOther() {
-    this.recipient.enable();
-  }
-
-  disableSetupOther() {
-    this.recipient.disable();
-  }
+  ngOnInit() { }
 
   setupDataset() {
     this.authServ.switchAccount(this.account);
     this.isError = false;
     this.isLoading = true;
-    if (!this.isSetupOther) this.recipient.patchValue(this.account.address);
     const param: SetupDatasetInterface = {
       property: this.formGroup.get('property').value,
       value: this.formGroup.get('value').value,
       setterAccountAddress: this.formGroup.get('sender').value,
-      recipientAccountAddress: this.recipient.value,
+      recipientAccountAddress: this.formGroup.get('recipientAddress').value,
       fee: this.formGroup.get('fee').value,
     };
 
@@ -86,12 +68,6 @@ export class SetupDatasetComponent implements OnInit {
       .finally(() => {
         this.isLoading = false;
       });
-  }
-
-  onClickSetupOther() {
-    this.isSetupOther = !this.isSetupOther;
-    if (!this.isSetupOther) return this.disableSetupOther();
-    this.enableSetupOther();
   }
 
   onCancel() {

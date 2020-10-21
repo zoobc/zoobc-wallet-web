@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
 body {
   height: 100%;
   background-color: map-get($primary, 50);
@@ -10,12 +13,12 @@ body {
 a:not([href='']) {
   text-decoration: none;
   font-weight: 400;
-  color: map-get($accent, 500);
+  color: map-get($primary, 500);
   outline: none;
   @include transition(0.3s ease-in all);
 
   &:hover {
-    color: map-get($accent, 300);
+    color: map-get($primary, 300);
   }
 }
 
@@ -145,143 +148,72 @@ a:not([href='']) {
 // ======================== END ACCORDION ===========================
 
 // ============================ BUTTON ============================
+a[mat-button],
+button[mat-button],
 button[mat-flat-button],
 a[mat-flat-button],
 a[mat-stroked-button],
 button[mat-stroked-button] {
   text-transform: uppercase;
   border-radius: 4px;
-
+  font-weight: 500;
+  line-height: 40px;
   *[matPrefix] {
     margin-right: 12px;
   }
-
   *[matSuffix] {
     margin-left: 12px;
   }
-
   &.block {
     width: 100%;
   }
-
   &.small {
-    height: 28px;
     font-size: 12px;
-    line-height: 28px;
+    line-height: 32px;
+  }
+  &.big {
+    font-size: 16px;
+    line-height: 48px;
   }
 }
 
+// FLAT BUTTON
+button[mat-flat-button],
+a[mat-flat-button] {
+  @include transition(0s ease-in all);
+  &[color='primary']:not(:disabled):hover {
+    background-color: map-get($primary, 400);
+    color: white;
+  }
+  &[color='warn']:not(:disabled):hover {
+    color: white;
+  }
+}
+
+// STROKED BUTTON
 a[mat-stroked-button],
 button[mat-stroked-button] {
-  border: 1px solid map-get($primary, 600) !important;
+  border: 2px solid currentColor !important;
+  padding: 0 14px;
+  line-height: 36px;
+  &:disabled {
+    border: 2px solid currentColor !important;
+  }
   &.small {
-    line-height: 26px !important;
+    line-height: 28px !important;
   }
-
-  &[color='accent'] {
-    border: 1px solid map-get($accent, 500) !important;
+  &.big {
+    line-height: 44px;
   }
-
-  &[color='warn'] {
-    border: 1px solid $red !important;
+  &[color='primary']:not(:disabled) {
+    border: 2px solid map-get($primary, 400) !important;
+    color: map-get($primary, 400);
+  }
+  &[color='warn']:not(:disabled) {
+    border: 2px solid $red !important;
   }
 }
 // ============================ END BUTTON ============================
-
-// ================================ FORM ==============================
-fieldset {
-  border: 0;
-  padding: 0;
-  margin: 0;
-}
-
-form.grid {
-  display: grid;
-}
-
-label {
-  font-size: 14px;
-  color: $black2;
-}
-
-mat-form-field {
-  margin-bottom: 8px;
-
-  .mat-form-field-prefix {
-    top: 0px !important;
-    padding: 12px 0 !important;
-  }
-
-  .mat-form-field-infix {
-    padding: 12px 0 !important;
-    border: 0 !important;
-  }
-
-  .mat-form-field-flex {
-    margin: 0 !important;
-  }
-
-  .mat-form-field-outline {
-    top: 0 !important;
-  }
-
-  .mat-form-field-label {
-    font-size: 14px !important;
-    margin: 0 !important;
-    top: 24px !important;
-  }
-
-  &.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float
-    .mat-form-field-label {
-    margin-top: 4px !important;
-    transform: translateY(-1.49373em) scale(0.8) !important;
-  }
-
-  .mat-select-arrow-wrapper {
-    transform: none !important;
-  }
-
-  button[mat-icon-button] {
-    &[matSuffix] {
-      color: $black2;
-      width: 32px !important;
-      height: 32px !important;
-      font-size: 16px;
-      line-height: 16px;
-      top: -4px;
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
-    }
-    &[color='warn'] {
-      color: $red !important;
-    }
-  }
-
-  &.block {
-    width: 100%;
-  }
-
-  // if mat-error exactly on bottom
-  & ~ .mat-error {
-    margin-top: -8px;
-  }
-}
-
-.mat-form-field-appearance-outline .mat-form-field-wrapper {
-  padding-bottom: 0 !important;
-}
-
-.mat-checkbox-label {
-  white-space: normal !important;
-  line-height: 16px !important;
-}
-
-.mat-error {
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-// ============================== END FORM ==============================
 
 // ============================ SWAL CUSTOM STYLE ========================
 .swal2-content {
@@ -392,10 +324,10 @@ mat-form-field {
   }
   .step.active {
     .step-circle {
-      background-color: map-get($accent, 500);
+      background-color: map-get($primary, 500);
     }
     .step-label {
-      color: map-get($accent, 500) !important;
+      color: map-get($primary, 500) !important;
     }
   }
 }
@@ -404,7 +336,7 @@ mat-form-field {
 .chips {
   margin: 0 -4px 0;
   .chip {
-    background-color: map-get($accent, 400);
+    background-color: map-get($primary, 400);
     color: white;
     padding: 6px 12px;
     border-radius: 32px;

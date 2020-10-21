@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SavedAccount } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { SetupDatasetInterface, setupDatasetBuilder } from 'zoobc-sdk';
-import { escrowForm } from '../form-escrow/form-escrow.component';
+import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
 
 @Component({
   selector: 'form-setup-account-dataset',
@@ -11,26 +10,26 @@ import { escrowForm } from '../form-escrow/form-escrow.component';
 })
 export class FormSetupAccountDatasetComponent implements OnInit {
   @Input() group: FormGroup;
-  @Input() formValue: any;
-  @Input() isSetupOther: boolean = false;
-  @Output() enableSetupOther?: EventEmitter<boolean> = new EventEmitter();
-  @Output() switchAccount?: EventEmitter<SavedAccount> = new EventEmitter();
-  account: SavedAccount;
-  prefillSender: boolean = false;
+  @Input() inputMap: any;
+  @Input() multisig: boolean = false;
+
+  isSetupOther: boolean = false;
 
   constructor() {}
 
   ngOnInit() {
-    if (this.group.get(this.formValue.sender).value) this.prefillSender = true;
-  }
-
-  onSwitchAccount(account: SavedAccount) {
-    this.account = account;
-    this.switchAccount.emit(account);
+    this.setDefaultRecipient();
   }
 
   onToggleEnableSetupOther() {
-    this.enableSetupOther.emit(true);
+    this.isSetupOther = !this.isSetupOther;
+    if (!this.isSetupOther) this.setDefaultRecipient();
+  }
+
+  setDefaultRecipient() {
+    const sender = this.group.get('sender').value;
+    const recipientField = this.group.get('recipientAddress');
+    recipientField.patchValue(sender);
   }
 }
 
@@ -40,7 +39,7 @@ export const setupDatasetMap = {
   value: 'value',
   recipientAddress: 'recipientAddress',
   fee: 'fee',
-  ...escrowForm,
+  ...escrowMap,
 };
 
 export function createSetupDatasetForm(): FormGroup {

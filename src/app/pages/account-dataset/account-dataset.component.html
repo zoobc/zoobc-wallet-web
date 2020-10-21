@@ -82,12 +82,7 @@
 <ng-template #feedialog>
   <h2 class="mat-h2 text-center">{{ 'remove dataset' | translate }}</h2>
   <form [formGroup]="form" (submit)="onOpenPinDialog()">
-    <form-remove-account-dataset
-      [group]="form"
-      [formValue]="removeDatasetMap"
-      (switchAccount)="onSwitchAccount($event)"
-      [removeOther]="false"
-    ></form-remove-account-dataset>
+    <form-remove-account-dataset [group]="form" [inputMap]="removeDatasetMap"></form-remove-account-dataset>
     <button
       mat-flat-button
       color="primary"

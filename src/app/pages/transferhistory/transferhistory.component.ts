@@ -12,6 +12,7 @@ import zoobc, {
   toZBCPendingTransactions,
   ZBCTransaction,
   getZBCAddress,
+  toZBCPendingTransactions
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -27,6 +28,7 @@ export class TransferhistoryComponent implements OnDestroy {
   unconfirmTx: ZBCTransaction[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
+  txTypeUnconfirm: number;
 
   page: number = 1;
   perPage: number = 10;
@@ -141,6 +143,9 @@ export class TransferhistoryComponent implements OnDestroy {
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
             (res: MempoolTransactionsResponse) => toZBCPendingTransactions(res)
           );
+          this.unconfirmTx.map(res => {
+            this.txTypeUnconfirm = res.transactionType
+          })
         }
       } catch {
         this.isError = true;
