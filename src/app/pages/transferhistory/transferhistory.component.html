@@ -27,7 +27,13 @@
       </button>
     </div>
   </div>
-  <app-transaction-table [transactionData]="unconfirmTx"></app-transaction-table>
+  <transaction-list
+    [transactionData]="unconfirmTx"
+    [isLoading]="isLoading"
+    [isError]="isError"
+    (refresh)="getTx(true)"
+    [txType]="txType"
+  ></transaction-list>
   <br />
 </ng-container>
 
