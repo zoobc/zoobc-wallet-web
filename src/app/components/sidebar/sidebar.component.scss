@@ -4,7 +4,9 @@
 .sidenav-container {
   padding: 16px;
   width: $sidebar-width;
-  height: calc(100% - $header-height);
+  background-color: white;
+  border-radius: 8px;
+  // height: 100%;
   overflow: hidden;
   .sidenav-menu {
     color: $black2;
