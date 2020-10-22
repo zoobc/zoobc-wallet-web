@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
@@ -11,12 +11,13 @@ import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { createInnerTxBytes, createInnerTxForm, getInputMap } from 'src/helpers/multisig-utils';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
   styleUrls: ['./create-transaction.component.scss'],
 })
-export class CreateTransactionComponent implements OnInit, AfterViewInit {
+export class CreateTransactionComponent implements OnInit, AfterViewInit, OnDestroy {
   minFee = environment.fee;
 
   createTransactionForm: FormGroup;
@@ -38,7 +39,8 @@ export class CreateTransactionComponent implements OnInit, AfterViewInit {
     private router: Router,
     private location: Location,
     private translate: TranslateService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authServ: AuthService
   ) {
     const subs = this.multisigServ.multisig.subscribe(multisig => {
       this.createTransactionForm = createInnerTxForm(multisig.txType);
@@ -97,7 +99,8 @@ export class CreateTransactionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.multisigSubs.unsubscribe();
+    if (this.multisigSubs) this.multisigSubs.unsubscribe();
+    this.authServ.switchMultisigAccount();
   }
 
   async next() {
