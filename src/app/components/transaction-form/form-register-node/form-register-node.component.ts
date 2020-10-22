@@ -40,6 +40,6 @@ export function createRegisterNodeForm() {
     lockedBalance: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     nodePublicKey: new FormControl('', Validators.required),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }

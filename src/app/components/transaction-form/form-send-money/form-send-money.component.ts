@@ -118,7 +118,7 @@ export function createSendMoneyForm(): FormGroup {
     amount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
     alias: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }
 
