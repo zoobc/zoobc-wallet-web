@@ -1,23 +1,32 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import zoobc, { HostInfoResponse } from 'zoobc-sdk';
 import { calcMinFee } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
+import { MatCheckbox } from '@angular/material';
 
 @Component({
   selector: 'form-escrow',
   templateUrl: './form-escrow.component.html',
 })
-export class FormEscrowComponent {
+export class FormEscrowComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
 
+  @ViewChild('advanceCheckBox') advanceCheckBox: MatCheckbox;
   showEscrow: boolean = false;
   blockHeight: number;
 
   minFee: number = environment.fee;
 
   constructor() {}
+
+  ngOnInit() {
+    if (this.group.get(this.inputMap.addressApprover).enabled) {
+      this.showEscrow = true;
+      this.advanceCheckBox.checked = true;
+    }
+  }
 
   getBlockHeight() {
     zoobc.Host.getInfo()
@@ -37,11 +46,19 @@ export class FormEscrowComponent {
     if (!this.showEscrow) this.disableFieldEscrow();
   }
 
+  resetValue() {
+    this.group.get(this.inputMap.addressApprover).reset();
+    this.group.get(this.inputMap.approverCommission).reset();
+    this.group.get(this.inputMap.instruction).reset();
+    this.group.get(this.inputMap.timeout).reset();
+  }
+
   enableFieldEscrow() {
     this.group.get(this.inputMap.addressApprover).enable();
     this.group.get(this.inputMap.approverCommission).enable();
     this.group.get(this.inputMap.instruction).enable();
     this.group.get(this.inputMap.timeout).enable();
+    this.resetValue();
     this.getBlockHeight();
   }
 
