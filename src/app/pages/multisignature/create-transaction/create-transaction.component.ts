@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { createInnerTxBytes, createInnerTxForm, getInputMap } from 'src/helpers/
   templateUrl: './create-transaction.component.html',
   styleUrls: ['./create-transaction.component.scss'],
 })
-export class CreateTransactionComponent implements OnInit {
+export class CreateTransactionComponent implements OnInit, AfterViewInit {
   minFee = environment.fee;
 
   createTransactionForm: FormGroup;
@@ -37,7 +37,8 @@ export class CreateTransactionComponent implements OnInit {
     private multisigServ: MultisigService,
     private router: Router,
     private location: Location,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {
     const subs = this.multisigServ.multisig.subscribe(multisig => {
       this.createTransactionForm = createInnerTxForm(multisig.txType);
@@ -61,6 +62,10 @@ export class CreateTransactionComponent implements OnInit {
       this.stepper.multisigInfo = multisigInfo !== undefined ? true : false;
       this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
+  }
+
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
   }
 
   async generateDownloadJsonUri() {
