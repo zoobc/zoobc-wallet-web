@@ -41,8 +41,8 @@ export class FormSendMoneyComponent implements OnInit {
       startWith(''),
       map(value => this.filterContacts(value))
     );
-
     this.getAccounts();
+    if (recipientForm.value) this.isAddressInContacts();
   }
 
   getAccounts() {
