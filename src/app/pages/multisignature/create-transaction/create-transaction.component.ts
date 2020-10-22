@@ -100,7 +100,6 @@ export class CreateTransactionComponent implements OnInit, AfterViewInit, OnDest
 
   ngOnDestroy() {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
-    this.authServ.switchMultisigAccount();
   }
 
   async next() {
