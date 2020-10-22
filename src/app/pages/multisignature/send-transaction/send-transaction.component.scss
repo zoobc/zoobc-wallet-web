@@ -65,40 +65,8 @@
       margin-bottom: 4px;
     }
 
-    .address,
-    .amount,
-    .instruction,
-    .total {
+    .value {
       margin-bottom: 12px;
-    }
-
-    .instruction {
-      word-break: break-word !important;
-    }
-
-    .amount {
-      .zbc {
-        font-size: 16px;
-        margin-bottom: 4px;
-      }
-
-      .currency {
-        font-size: 14px;
-      }
-    }
-
-    .total {
-      color: #4caf50;
-      font-weight: bold;
-
-      .zbc {
-        font-size: 18px;
-        margin-bottom: 4px;
-      }
-
-      .currency {
-        font-size: 16px;
-      }
     }
   }
 }

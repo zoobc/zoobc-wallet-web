@@ -29,7 +29,7 @@
       <button mat-flat-button color="primary" type="button" (click)="saveDraft()">
         {{ 'save' | translate }}
       </button>
-      <button [disabled]="!formSend.valid" mat-flat-button color="primary">
+      <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary">
         {{ 'send' | translate }}
       </button>
     </form>
@@ -40,7 +40,7 @@
   <div class="confirmation-dialog">
     <div class="row">
       <div class="col-12 col-sm-6">
-        <div class="title">{{ 'confirm send money' | translate }}</div>
+        <div class="title">{{ 'confirmation' | translate }}</div>
       </div>
       <div class="col-12 col-sm-6 text-right">
         <a class="brand">
@@ -54,83 +54,26 @@
     <mat-divider></mat-divider>
     <div class="content">
       <div class="row">
-        <div class="col-12 col-sm-6 test">
-          <div class="label">{{ 'sender' | translate }}:</div>
-          <div class="address">
-            <wallet-address [value]="multisig.txBody.sender"></wallet-address>
+        <ng-container *ngFor="let x of counter(innerPage); let i = index">
+          <div class="col-12 col-sm-6" [class.text-right]="getClass(i)">
+            <ng-container *ngFor="let y of counter(2); let j = index">
+              <ng-container *ngIf="getItemByKey(i, j, 'key').length > 0">
+                <div class="label">{{ getItemByKey(i, j, 'key') | translate }}:</div>
+                <div class="value">
+                  <ng-container *ngIf="!getItemByKey(i, j, 'isAddress')">
+                    {{ getItemByKey(i, j, 'value') }}
+                  </ng-container>
+                  <wallet-address
+                    [ngStyle]="{ float: getClass(i) ? 'right' : 'none' }"
+                    *ngIf="getItemByKey(i, j, 'isAddress')"
+                    [value]="getItemByKey(i, j, 'value')"
+                    [copyButton]="true"
+                  ></wallet-address>
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
-          <div class="label">{{ 'recipient' | translate }}:</div>
-          <div class="address">
-            <wallet-address [value]="multisig.txBody.recipient"></wallet-address>
-          </div>
-          <!-- <ng-container *ngIf="advancedMenu">
-            <mat-divider style="margin-bottom: 10px;"></mat-divider>
-            <div class="label">{{ 'approver address' | translate }}:</div>
-            <div class="address">
-              <wallet-address [value]="account.address"></wallet-address>
-            </div>
-            <div class="label">{{ 'approver commission' | translate }}:</div>
-            <div class="amount">
-              <div class="zbc">{{ feeForm.value | number: '0.0-8' }} ZBC</div>
-              <div class="currency">
-                <!-- {{ feeFormCurr.value | number: '0.0-2' }}
-                {{ currencyRate.name }}
-              </div>
-            </div>
-            <div class="label">{{ 'timeout' | translate }}:</div>
-            <div class="amount">
-              100
-            </div>
-            <div class="label">{{ 'instruction' | translate }}:</div>
-            <div class="instruction">
-              This is dummy data
-            </div>
-          </ng-container> -->
-        </div>
-        <div class="col-12 col-sm-6 text-right">
-          <!-- <div class="label">{{ 'amount' | translate }}:</div>
-          <div class="amount">
-            <div class="zbc">{{ multisig.transaction.amount | number: '0.0-8' }} ZBC</div>
-            <div class="currency">
-              <!-- {{ multisig.transaction.amount * currencyRate.value | number: '0.0-2' }}
-              {{ currencyRate.name }} 
-        </div>
-      </div>
-      -->
-          <div class="label">
-            <span>{{ 'fee' | translate }}</span>
-            <!-- <span> - {{ kindFee }}</span> -->
-            <span>:</span>
-          </div>
-          <div class="amount">
-            <div class="zbc">{{ multisig.txBody.fee | number: '0.0-8' }} ZBC</div>
-            <!-- <div class="currency">
-              {{ multisig.txBody.fee * currencyRate.value | number: '0.0-2' }}
-              {{ currencyRate.name }}
-            </div> -->
-          </div>
-          <div class="label">{{ 'total' | translate }} :</div>
-          <div class="total" *ngIf="advancedMenu; else not_escrow">
-            <div class="zbc">{{ feeForm.value + feeForm.value + feeForm.value | number: '0.0-8' }} ZBC</div>
-            <div class="currency">
-              <!-- {{ feeFormCurr.value + feeFormCurr.value + feeFormCurr.value | number: '0.0-2' }}
-              {{ currencyRate.name }} -->
-            </div>
-          </div>
-          <!-- <ng-template #not_escrow>
-            <div class="zbc">
-              {{ multisig.transaction.amount + multisig.transaction.fee | number: '0.0-8' }}
-              ZBC
-            </div>
-            <div class="currency">
-              <!-- {{
-                multisig.transaction.amount * currencyRate.value +
-                  multisig.transaction.fee * currencyRate.value | number: '0.0-2'
-              }}/
-              {{ currencyRate.name }}
-            </div>
-          </ng-template> -->
-        </div>
+        </ng-container>
       </div>
     </div>
     <mat-divider></mat-divider>
