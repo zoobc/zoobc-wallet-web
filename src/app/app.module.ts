@@ -55,12 +55,10 @@ import { AddAccountComponent } from './pages/account/add-account/add-account.com
 import { ContactlistComponent } from './pages/list-contact/contactlist/contactlist.component';
 import { AddcontactComponent } from './pages/list-contact/addcontact/addcontact.component';
 import { EditcontactComponent } from './pages/list-contact/editcontact/editcontact.component';
-import { TransactionTableComponent } from './components/transaction-table/transaction-table.component';
 import { RestoreWalletComponent } from './pages/restore-wallet/restore-wallet.component';
 import { PinSetupDialogComponent } from './components/pin-setup-dialog/pin-setup-dialog.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
-import { TransactionDetailComponent } from './components/transaction-detail/transaction-detail.component';
 import { PinConfirmationComponent } from './components/pin-confirmation/pin-confirmation.component';
 import { RevealPassphraseComponent } from './components/reveal-passphrase/reveal-passphrase.component';
 import { EditAccountComponent } from './pages/account/edit-account/edit-account.component';
@@ -119,12 +117,10 @@ export function getLanguage(languageServ: LanguageService) {
     ContactlistComponent,
     AddcontactComponent,
     EditcontactComponent,
-    TransactionTableComponent,
     RestoreWalletComponent,
     PinSetupDialogComponent,
     ContactUsComponent,
     ConfirmPassphraseComponent,
-    TransactionDetailComponent,
     PinConfirmationComponent,
     RevealPassphraseComponent,
     EditAccountComponent,
@@ -219,7 +215,6 @@ export function getLanguage(languageServ: LanguageService) {
     EditcontactComponent,
     PinSetupDialogComponent,
     SendmoneyComponent,
-    TransactionDetailComponent,
     PinConfirmationComponent,
     ReceiveComponent,
     RevealPassphraseComponent,
