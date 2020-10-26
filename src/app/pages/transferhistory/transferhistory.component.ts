@@ -27,6 +27,7 @@ export class TransferhistoryComponent implements OnDestroy {
   unconfirmTx: ZBCTransaction[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
+  txTypeUnconfirm: number;
 
   txTypeUnconfirm: number = TransactionType.SENDMONEYTRANSACTION;
 
