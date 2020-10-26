@@ -13,12 +13,12 @@ body {
 a:not([href='']) {
   text-decoration: none;
   font-weight: 400;
-  color: map-get($primary, 500);
+  color: map-get($accent, 500);
   outline: none;
   @include transition(0.3s ease-in all);
 
   &:hover {
-    color: map-get($primary, 300);
+    color: map-get($accent, 300);
   }
 }
 
@@ -202,8 +202,9 @@ button[mat-stroked-button] {
   &.small {
     line-height: 28px !important;
   }
-  &.big {
-    line-height: 44px;
+
+  &[color='accent'] {
+    border: 1px solid map-get($accent, 500) !important;
   }
   &[color='primary']:not(:disabled) {
     border: 2px solid map-get($primary, 400) !important;
@@ -324,10 +325,10 @@ button[mat-stroked-button] {
   }
   .step.active {
     .step-circle {
-      background-color: map-get($primary, 500);
+      background-color: map-get($accent, 500);
     }
     .step-label {
-      color: map-get($primary, 500) !important;
+      color: map-get($accent, 500) !important;
     }
   }
 }
@@ -336,7 +337,7 @@ button[mat-stroked-button] {
 .chips {
   margin: 0 -4px 0;
   .chip {
-    background-color: map-get($primary, 400);
+    background-color: map-get($accent, 400);
     color: white;
     padding: 6px 12px;
     border-radius: 32px;
