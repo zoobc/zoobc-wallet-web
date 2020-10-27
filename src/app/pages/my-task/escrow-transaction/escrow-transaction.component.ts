@@ -10,14 +10,14 @@ import zoobc, {
   AccountBalanceResponse,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup } from '@angular/forms';
 import {
   createEscrowApprovalForm,
   escrowApprovalMap,
-} from '../transaction-form/form-escrow-approval/form-escrow-approval.component';
+} from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.component';
 
 @Component({
   selector: 'app-escrow-transactions',

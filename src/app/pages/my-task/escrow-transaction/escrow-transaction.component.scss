@@ -1,68 +1,70 @@
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
 
-.multisig-list-container {
-  .multisig-transaction-item {
+.escrow-list-container {
+  .escrow-item {
     border-bottom: 1px solid #ddd;
     padding: 16px 6px;
     margin: 0;
     align-items: center;
+    &:first-child {
+      border-top: 1px solid #ddd;
+    }
     @include transition(0.3s ease-in all);
     &.hover:hover {
       background-color: #eee;
       cursor: pointer;
     }
-
-    .alias {
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-
-    .address {
+    .nominal-task {
       word-break: break-all;
-      color: $black1;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .date {
       color: $black2;
       font-size: 13px;
+      margin-bottom: 8px;
+      font-weight: bold;
     }
-
-    .amount {
-      color: #f44336;
+    .title-task {
+      color: $black2;
+      font-size: 13px;
+      margin-bottom: 8px;
+      .address {
+        color: $black1;
+      }
+    }
+    .timeout {
+      color: $black1;
+      font-size: 13px;
+    }
+    .commission-receive {
+      color: map-get($primary, 500);
       font-size: 18px;
       font-weight: bold;
     }
-    .fee {
-      color: #f44336;
-      font-size: 12px;
+    @media #{$small-and-down} {
+      .message {
+        text-align: center;
+      }
+      .title-task {
+        display: block;
+      }
     }
   }
 }
 
-.detail-multisig-container {
+.detail-task-container {
   .row {
     color: $black1;
     padding: 8px;
     font-size: 14px;
     border-bottom: 1px solid #ddd;
     word-break: break-all;
-
     div:nth-child(odd) {
       padding: 4px 0;
       font-size: 13px;
       font-weight: bold;
       color: $black2;
     }
-
     div:nth-child(even) {
       padding: 4px 0;
-    }
-
-    .participant-info {
-      color: map-get($primary, 500);
     }
   }
 }

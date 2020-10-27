@@ -68,8 +68,8 @@ import { MyTaskComponent } from './pages/my-task/my-task.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { AccountSelectorModule } from './components/account-selector/account-selector.module';
 import { AddNodeAdminComponent } from './pages/node-admin/add-node-admin/add-node-admin.component';
-import { EscrowTransactionModule } from './components/escrow-transaction/escrow-transaction.module';
-import { MultisigTransactionModule } from './components/multisig-transaction/multisig-transaction.module';
+import { EscrowTransactionModule } from './pages/my-task/escrow-transaction/escrow-transaction.module';
+import { MultisigTransactionModule } from './pages/my-task/multisig-transaction/multisig-transaction.module';
 import { FeeSelectorModule } from './components/fee-selector/fee-selector.module';
 import { InputAddressModule } from './components/input-address/input-address.module';
 import { InputAmountModule } from './components/input-amount/input-amount.module';
@@ -78,7 +78,6 @@ import { AccountComponent } from './pages/account/account.component';
 import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-info.component';
 import { AccountDatasetComponent } from './pages/account-dataset/account-dataset.component';
 import { SetupDatasetComponent } from './pages/account-dataset/setup-dataset/setup-dataset.component';
-import { ApprovalEscrowHistoryComponent } from './pages/my-task/approval-escrow-history/approval-escrow-history.component';
 import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
@@ -132,7 +131,6 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigInfoComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
-    ApprovalEscrowHistoryComponent,
     MultisigApprovalHistoryComponent,
     NodeRewardListComponent,
   ],
