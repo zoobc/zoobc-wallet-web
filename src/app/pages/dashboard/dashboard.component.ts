@@ -10,7 +10,6 @@ import { EditAccountComponent } from '../account/edit-account/edit-account.compo
 import zoobc, {
   TransactionListParams,
   MempoolListParams,
-  AccountBalanceResponse,
   TransactionType,
   EscrowListParams,
   OrderBy,
@@ -18,6 +17,7 @@ import zoobc, {
   toZBCPendingTransactions,
   ZBCTransaction,
   getZBCAddress,
+  AccountBalance,
 } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
@@ -85,9 +85,9 @@ export class DashboardComponent implements OnInit {
       this.isLoadingBalance = true;
       this.isErrorBalance = false;
 
-      zoobc.Account.getBalance(this.currAcc.address)
-        .then((data: AccountBalanceResponse) => {
-          this.accountBalance = data.accountbalance;
+      zoobc.Account.getBalance({ address: this.currAcc.address, type: 0 })
+        .then((data: AccountBalance) => {
+          this.accountBalance = data;
           return this.authServ.getAccountsWithBalance();
         })
         .then((res: SavedAccount[]) => (this.accounts = res))
@@ -107,7 +107,7 @@ export class DashboardComponent implements OnInit {
       this.isErrorRecentTx = false;
 
       const params: TransactionListParams = {
-        address: this.currAcc.address,
+        address: { address: this.currAcc.address, type: 0 },
         transactionType: TransactionType.SENDMONEYTRANSACTION,
         pagination: {
           page: 1,
@@ -120,19 +120,17 @@ export class DashboardComponent implements OnInit {
 
         let lastHeight = 0;
         let firstHeight = 0;
-        if (parseInt(trxList.total) > 0) {
-          lastHeight = trxList.transactionsList[0].height;
-          firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
+        if (trxList.total > 0) {
+          lastHeight = trxList.transactions[0].height;
+          firstHeight = trxList.transactions[trxList.transactions.length - 1].height;
         }
 
-        const multisigTx = trxList.transactionsList
-          .filter(trx => trx.multisigchild == true)
-          .map(trx => trx.id);
+        const multisigTx = trxList.transactions.filter(trx => trx.multisig == true).map(trx => trx.id);
 
         const paramEscrow: EscrowListParams = {
           blockHeightStart: firstHeight,
           blockHeightEnd: lastHeight,
-          recipient: this.currAcc.address,
+          recipient: { address: this.currAcc.address, type: 0 },
           statusList: [0, 1, 2, 3],
           latest: false,
           pagination: {
@@ -142,13 +140,14 @@ export class DashboardComponent implements OnInit {
         };
         this.startMatch = 0;
         const escrowTx = await zoobc.Escrows.getList(paramEscrow);
-        const escrowList = escrowTx.escrowsList;
+        const escrowList = escrowTx.escrowList;
         const escrowGroup = this.groupEscrowList(escrowList);
-        const tx = toZBCTransactions(trxList.transactionsList);
+        const tx = trxList.transactions;
+
         tx.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent.senderAlias = this.contactServ.get(recent.sender).name || '';
-          recent.recipientAlias = this.contactServ.get(recent.recipient).name || '';
+          recent.senderAlias = this.contactServ.get(recent.sender.address).name || '';
+          recent.recipientAlias = this.contactServ.get(recent.recipient.address).name || '';
           if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
             if (recent.txBody.nodepublickey) {
               const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
@@ -165,10 +164,9 @@ export class DashboardComponent implements OnInit {
           return recent;
         });
         this.recentTx = tx;
-        this.totalTx = parseInt(trxList.total);
-
+        this.totalTx = trxList.total;
         const paramPool: MempoolListParams = {
-          address: this.currAcc.address,
+          address: { address: this.currAcc.address, type: 0 },
         };
         const unconfirmTx = await zoobc.Mempool.getList(paramPool);
         this.unconfirmTx = toZBCPendingTransactions(unconfirmTx).map(uc => {

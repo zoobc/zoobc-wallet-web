@@ -6,7 +6,7 @@
         {{ transaction.senderAlias }}
       </div>
       <div class="address">
-        <wallet-address [value]="transaction.sender"></wallet-address>
+        <wallet-address [value]="transaction.sender.address"></wallet-address>
       </div>
     </ng-container>
 
@@ -16,7 +16,7 @@
         {{ transaction.recipientAlias }}
       </div>
       <div class="address">
-        <wallet-address [value]="transaction.recipient"></wallet-address>
+        <wallet-address [value]="transaction.recipient.address"></wallet-address>
       </div>
     </ng-template>
 

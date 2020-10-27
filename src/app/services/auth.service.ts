@@ -4,8 +4,8 @@ import zoobc, {
   ZooKeyring,
   getZBCAddress,
   TransactionListParams,
-  AccountBalancesResponse,
-  TransactionsResponse,
+  AccountBalance,
+  ZBCTransactions,
 } from 'zoobc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
@@ -115,17 +115,22 @@ export class AuthService {
     return new Promise(async (resolve, reject) => {
       let accounts = this.getAllAccount(type);
       if (accounts.length == 0) return resolve(accounts);
-      const addresses = accounts.map(acc => acc.address);
+      const addresses = accounts.map(acc => {
+        return {
+          address: acc.address,
+          type: 0,
+        };
+      });
 
       zoobc.Account.getBalances(addresses)
-        .then((res: AccountBalancesResponse) => {
-          let balances = res.accountbalancesList;
+        .then((res: AccountBalance[]) => {
+          let balances = res;
           accounts.map(acc => {
             acc.balance = 0;
             for (let i = 0; i < balances.length; i++) {
               const balance = balances[i];
-              if (balance.accountaddress == acc.address) {
-                acc.balance = parseInt(balance.spendablebalance);
+              if (balance.account.address == acc.address) {
+                acc.balance = balance.spendableBalance;
                 balances.splice(i, 1);
                 break;
               }
@@ -179,15 +184,15 @@ export class AuthService {
           type: 'normal',
         };
         const params: TransactionListParams = {
-          address: address,
+          address: { address: address, type: 0 },
           transactionType: 1,
           pagination: {
             page: 1,
             limit: 1,
           },
         };
-        await zoobc.Transactions.getList(params).then((res: TransactionsResponse) => {
-          const totalTx = parseInt(res.total);
+        await zoobc.Transactions.getList(params).then((res: ZBCTransactions) => {
+          const totalTx = res.total;
           accountsTemp.push(account);
           if (totalTx > 0) {
             accounts = accounts.concat(accountsTemp);

@@ -11,7 +11,7 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, { MultiSigInterface, MultisigPostTransactionResponse, AccountBalanceResponse } from 'zoobc-sdk';
+import zoobc, { MultiSigInterface, MultisigPostTransactionResponse, AccountBalance } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 import { createInnerTxBytes } from 'src/helpers/multisig-utils';
 
@@ -122,9 +122,11 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async getBalance() {
-    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
-      this.accountBalance = data.accountbalance;
-    });
+    await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
+      (data: AccountBalance) => {
+        this.accountBalance = data.balance;
+      }
+    );
   }
 
   async onConfirm() {

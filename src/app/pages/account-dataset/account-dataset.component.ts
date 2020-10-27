@@ -4,7 +4,7 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc, {
   AccountDatasetListParams,
-  AccountDatasetsResponse,
+  AccountDatasets,
   RemoveDatasetInterface,
   BIP32Interface,
 } from 'zoobc-sdk';
@@ -14,7 +14,11 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { SetupDatasetComponent } from './setup-dataset/setup-dataset.component';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { createRemoveDatasetForm, removeDatasetMap } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
+import {
+  createRemoveDatasetForm,
+  removeDatasetMap,
+} from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
+import { Account } from 'zoobc-sdk/types/helper/interfaces';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -24,14 +28,15 @@ export class AccountDatasetComponent implements OnInit {
   subscription: Subscription = new Subscription();
   dataSetList: any[];
   dataSet: any;
-  
+
   isLoading: boolean;
   isError: boolean;
   isLoadingDelete: boolean;
   isErrorDelete: boolean;
-  
+
   form: FormGroup;
   account: SavedAccount;
+  accParam: Account;
 
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
@@ -46,6 +51,8 @@ export class AccountDatasetComponent implements OnInit {
   ) {
     this.form = createRemoveDatasetForm();
     this.account = data;
+    this.accParam.type = 0;
+    this.accParam.address = this.account.address;
   }
 
   ngOnInit() {
@@ -56,11 +63,11 @@ export class AccountDatasetComponent implements OnInit {
     this.isError = false;
     this.isLoading = true;
     const listParam: AccountDatasetListParams = {
-      recipientAccountAddress: this.account.address,
+      recipient: this.accParam,
     };
     zoobc.AccountDataset.getList(listParam)
-      .then((res: AccountDatasetsResponse) => {
-        this.dataSetList = res.accountdatasetsList;
+      .then((res: AccountDatasets) => {
+        this.dataSetList = res.accountDatasets;
       })
       .catch(err => {
         this.isError = true;
