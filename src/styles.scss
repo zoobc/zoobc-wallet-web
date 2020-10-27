@@ -9,18 +9,12 @@
 @import './styles/grid.css';
 
 @include mat-core();
-$red: (
-  0: #d3433c,
-  contrast: (
-    0: white,
-  ),
-);
+$app-primary: mat-palette($primary, 600);
+$app-accent: mat-palette($accent, 500);
 
-$app-primary: mat-palette($primary, 400);
-$app-accent: mat-palette($primary, 500);
-$app-red: mat-palette($red, 0);
+$red: mat-palette($mat-red, 800);
 
-$app-theme: mat-light-theme($app-primary, $app-accent, $app-red);
+$app-theme: mat-light-theme($app-primary, $app-accent, $red);
 
 @include angular-material-theme($app-theme);
 
