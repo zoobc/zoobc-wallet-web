@@ -9,7 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { AccountBalanceResponse, PostTransactionResponses } from 'zoobc-sdk';
+import zoobc, { AccountBalance, PostTransactionResponses } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 import {
@@ -81,7 +81,7 @@ export class SendmoneyComponent implements OnInit {
     const total = amountForm.value + feeForm.value;
     const sender = this.formSend.get('sender');
     await this.getBalance(sender.value);
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= total) {
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
@@ -174,8 +174,8 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async getBalance(address: string) {
-    await zoobc.Account.getBalance(address).then((data: AccountBalanceResponse) => {
-      this.accountBalance = data.accountbalance;
+    await zoobc.Account.getBalance({ address: address, type: 0 }).then((data: AccountBalance) => {
+      this.accountBalance = data;
     });
   }
 }
