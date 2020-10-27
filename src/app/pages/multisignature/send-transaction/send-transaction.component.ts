@@ -59,8 +59,6 @@ export class SendTransactionComponent implements OnInit {
     this.accounts = this.authServ.getAllAccount();
 
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      const { multisigInfo } = multisig;
-      if (multisigInfo === undefined) return this.router.navigate(['/multisignature']);
       this.multisig = multisig;
       const { fee } = this.multisig;
       if (fee >= this.minFee) {
@@ -68,6 +66,7 @@ export class SendTransactionComponent implements OnInit {
         this.feeForm.markAsTouched();
       }
     });
+    if (this.multisig.multisigInfo === undefined) return this.router.navigate(['/multisignature']);
     this.participants = this.multisig.multisigInfo.participants;
     this.getMultiSigDraft();
   }
@@ -175,7 +174,6 @@ export class SendTransactionComponent implements OnInit {
       };
     }
     const childSeed = this.authServ.seed;
-
     if (data.signaturesInfo === undefined)
       data.unisgnedTransactions = createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
     zoobc.MultiSignature.postTransaction(data, childSeed)
