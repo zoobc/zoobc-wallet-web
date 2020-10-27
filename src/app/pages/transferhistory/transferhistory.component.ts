@@ -27,7 +27,7 @@ export class TransferhistoryComponent implements OnDestroy {
   unconfirmTx: ZBCTransaction[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
-  txTypeUnconfirm: number;
+  txTypeUnconfirm: number = TransactionType.SENDMONEYTRANSACTION;
 
   page: number = 1;
   perPage: number = 10;
@@ -50,9 +50,10 @@ export class TransferhistoryComponent implements OnDestroy {
   ) {
     this.routerEvent = router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.activeRoute.queryParams.subscribe(
-          res => (this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION)
-        );
+        this.activeRoute.queryParams.subscribe(res => {
+          this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
+          this.txTypeUnconfirm = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
+        });
         this.getTx(true);
       }
     });
@@ -129,7 +130,7 @@ export class TransferhistoryComponent implements OnDestroy {
           }
           if (escStatus) {
             recent.escrow = true;
-            recent.escrowStatus = escStatus.status;
+            recent['txBody'].approval = escStatus.status;
           } else recent.escrow = false;
           recent.multisig = multisigTx.includes(recent.id);
           return recent;
@@ -140,7 +141,11 @@ export class TransferhistoryComponent implements OnDestroy {
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
-            (res: MempoolTransactionsResponse) => toZBCPendingTransactions(res)
+            (res: MempoolTransactionsResponse) =>
+              toZBCPendingTransactions(res).map(uc => {
+                if (uc.escrow) uc['txBody'].approval = 0;
+                return uc;
+              })
           );
           this.unconfirmTx.map(res => {
             this.txTypeUnconfirm = res.transactionType;
