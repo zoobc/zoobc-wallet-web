@@ -11,9 +11,14 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import zoobc, { MultiSigInterface, MultisigPostTransactionResponse, AccountBalance } from 'zoobc-sdk';
+import zoobc, {
+  MultiSigInterface,
+  MultisigPostTransactionResponse,
+  AccountBalance,
+  isZBCAddressValid,
+} from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
-import { createInnerTxBytes } from 'src/helpers/multisig-utils';
+import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
 
 @Component({
   selector: 'app-send-transaction',
@@ -38,7 +43,12 @@ export class SendTransactionComponent implements OnInit {
 
   isMultiSigAccount: boolean = false;
   participants = [];
-  accountBalance: any;
+  accountBalance: AccountBalance;
+
+  txType: string = '';
+  innerTx: any[] = [];
+  innerPage: number;
+  isLoading: boolean = false;
 
   constructor(
     private authServ: AuthService,
@@ -109,8 +119,9 @@ export class SendTransactionComponent implements OnInit {
 
   async onOpenConfirmDialog() {
     await this.getBalance();
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= this.minFee) {
+      this.fillDialog();
       this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
         width: '500px',
         maxHeight: '90vh',
@@ -124,7 +135,7 @@ export class SendTransactionComponent implements OnInit {
   async getBalance() {
     await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
       (data: AccountBalance) => {
-        this.accountBalance = data.balance;
+        this.accountBalance = data;
       }
     );
   }
@@ -198,5 +209,36 @@ export class SendTransactionComponent implements OnInit {
 
   closeDialog() {
     this.dialog.closeAll();
+  }
+
+  counter(i: number) {
+    return new Array(i);
+  }
+
+  fillDialog() {
+    this.txType = getTxType(this.multisig.txType);
+    this.innerTx = Object.keys(this.multisig.txBody).map(key => {
+      const item = this.multisig.txBody;
+      return {
+        key,
+        value: item[key],
+        isAddress: isZBCAddressValid(item[key]),
+      };
+    });
+    const div = Math.floor(this.innerTx.length / 2);
+    const mod = Math.floor(this.innerTx.length % 2);
+    this.innerPage = div + mod;
+  }
+
+  getClass(i: number) {
+    if (i % 2 != 0) return true;
+    return false;
+  }
+
+  getItemByKey(i: number, j: number, key: string) {
+    const index = i * 2 + j;
+    const obj = this.innerTx[index];
+    if (obj) return obj[key];
+    return '';
   }
 }

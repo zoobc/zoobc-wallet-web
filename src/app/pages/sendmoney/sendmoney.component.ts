@@ -9,7 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { PostTransactionResponses } from 'zoobc-sdk';
+import zoobc, { AccountBalanceResponse, PostTransactionResponses } from 'zoobc-sdk';
 import { SendMoneyInterface } from 'zoobc-sdk/types/helper/transaction-builder/send-money';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 import {
@@ -34,6 +34,7 @@ export class SendmoneyComponent implements OnInit {
   saveAddress: boolean = false;
 
   sendMoneyMap = sendMoneyMap;
+  accountBalance: any;
 
   constructor(
     private authServ: AuthService,
@@ -78,14 +79,15 @@ export class SendmoneyComponent implements OnInit {
 
     // this.getMinimumFee();
     const total = amountForm.value + feeForm.value;
-    const balance = this.account.balance / 1e8;
+    const sender = this.formSend.get('sender');
+    await this.getBalance(sender.value);
+    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
     if (balance >= total) {
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         maxHeight: '90vh',
         data: {
           form: this.formSend.value,
-          account: this.account,
           saveAddress: this.saveAddress,
         },
       });
@@ -96,7 +98,7 @@ export class SendmoneyComponent implements OnInit {
       });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate, {
-        amount: balance - feeForm.value,
+        amount: balance - total,
       });
       Swal.fire({ type: 'error', title: 'Oops...', text: message });
     }
@@ -169,5 +171,11 @@ export class SendmoneyComponent implements OnInit {
         }
       );
     }
+  }
+
+  async getBalance(address: string) {
+    await zoobc.Account.getBalance(address).then((data: AccountBalanceResponse) => {
+      this.accountBalance = data.accountbalance;
+    });
   }
 }

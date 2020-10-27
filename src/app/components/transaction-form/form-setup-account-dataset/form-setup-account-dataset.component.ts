@@ -49,7 +49,7 @@ export function createSetupDatasetForm(): FormGroup {
     value: new FormControl('', [Validators.required]),
     recipientAddress: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }
 
