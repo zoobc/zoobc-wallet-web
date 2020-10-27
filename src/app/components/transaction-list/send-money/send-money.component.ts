@@ -27,6 +27,7 @@ export class SendMoneyComponent implements OnInit {
   }
 
   openDetail(id) {
+    console.log(this.transaction);
     this.dialog.open(this.detailDialog, {
       width: '500px',
       maxHeight: '90vh',

@@ -65,14 +65,14 @@
     <div class="row">
       <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="transaction.sender"></wallet-address>
+        <wallet-address [value]="transaction.sender.address"></wallet-address>
       </div>
     </div>
 
     <div class="row">
       <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="transaction.recipient"></wallet-address>
+        <wallet-address [value]="transaction.recipient.address"></wallet-address>
       </div>
     </div>
 
