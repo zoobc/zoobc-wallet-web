@@ -77,7 +77,7 @@ export class UpdateNodeComponent implements OnInit {
           this.isError = false;
 
           let data: UpdateNodeInterface = {
-            accountAddress: this.account.address,
+            accountAddress: { address: this.account.address, type: 0 },
             fee: this.formUpdateNode.get('fee').value,
             nodePublicKey: ZBCAddressToBytes(this.formUpdateNode.get('nodePublicKey').value),
             nodeAddress: this.formUpdateNode.get('ipAddress').value,

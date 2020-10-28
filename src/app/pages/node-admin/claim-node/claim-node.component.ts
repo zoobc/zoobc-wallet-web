@@ -52,7 +52,7 @@ export class ClaimNodeComponent implements OnInit {
       pinRefDialog.afterClosed().subscribe(isPinValid => {
         if (isPinValid) {
           const data: ClaimNodeInterface = {
-            accountAddress: this.account.address,
+            accountAddress: { address: this.account.address, type: 0 },
             nodePublicKey: ZBCAddressToBytes(nodePublicKeyForm.value),
             fee: feeForm.value,
             nodeAddress: ipAddressForm.value,

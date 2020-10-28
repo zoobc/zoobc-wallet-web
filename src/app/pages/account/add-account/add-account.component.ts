@@ -7,6 +7,7 @@ import { uniqueParticipant } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
+import { Account } from 'zoobc-sdk/types/helper/interfaces';
 @Component({
   selector: 'app-add-new-account',
   templateUrl: './add-account.component.html',
@@ -81,13 +82,13 @@ export class AddAccountComponent implements OnInit {
         nonce: this.nonceField.value,
         minSigs: this.minSignatureField.value,
       };
-      const multiSignAddress: string = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+      const multiSignAddress: Account = zoobc.MultiSignature.createMultiSigAddress(multiParam);
       account = {
         name: this.accountNameField.value,
         type: 'multisig',
         path: null,
         nodeIP: null,
-        address: multiSignAddress,
+        address: multiSignAddress.address,
         participants: participants,
         nonce: this.nonceField.value,
         minSig: this.minSignatureField.value,

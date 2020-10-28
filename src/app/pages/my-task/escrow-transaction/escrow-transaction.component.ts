@@ -109,7 +109,7 @@ export class EscrowTransactionComponent implements OnInit {
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
-        approvalAddress: this.account.address,
+        approvalAddress: { address: this.account.address, type: 0 },
         fee: feeForm.value,
         approvalCode: EscrowApproval.APPROVE,
         transactionId: transactionIdForm.value,
@@ -156,7 +156,7 @@ export class EscrowTransactionComponent implements OnInit {
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
-        approvalAddress: this.account.address,
+        approvalAddress: { address: this.account.address, type: 0 },
         fee: feeForm.value,
         approvalCode: EscrowApproval.REJECT,
         transactionId: transactionIdForm.value,

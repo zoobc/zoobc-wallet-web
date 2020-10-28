@@ -167,7 +167,7 @@ export class SendTransactionComponent implements OnInit {
         if (jsonBufferToString(pcp.signature).length > 0) return pcp;
       });
       this.account = this.authServ.getCurrAccount();
-      accountAddress = this.account.address;
+      accountAddress = { address: this.account.address, type: 0 };
       data = {
         accountAddress,
         fee,
@@ -177,7 +177,7 @@ export class SendTransactionComponent implements OnInit {
       };
     } else {
       this.account = this.authServ.getCurrAccount();
-      accountAddress = this.account.address;
+      accountAddress = { address: this.account.address, type: 0 };
       data = {
         accountAddress,
         fee,

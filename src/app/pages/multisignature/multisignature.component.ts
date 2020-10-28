@@ -5,7 +5,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid, MultiSigAddress, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { getTxType } from 'src/helpers/multisig-utils';
 import { MatDialog } from '@angular/material';
@@ -67,7 +67,7 @@ export class MultisignatureComponent implements OnInit {
       .filter(draft => {
         const { multisigInfo, txBody, generatedSender } = draft;
         if (generatedSender == currAccount.address) return draft;
-        if (multisigInfo.participants.includes(currAccount.address)) return draft;
+        if (multisigInfo.participants.some(pc => pc.address == currAccount.address)) return draft;
         if (txBody && txBody.sender == currAccount.address) return draft;
       })
       .sort()
@@ -99,7 +99,7 @@ export class MultisignatureComponent implements OnInit {
   onNext() {
     const txType = this.txTypeField.value;
     const multisig: MultiSigDraft = {
-      accountAddress: '',
+      accountAddress: null,
       fee: 0,
       id: 0,
       multisigInfo: null,
@@ -112,15 +112,22 @@ export class MultisignatureComponent implements OnInit {
       multisig.multisigInfo = {
         minSigs: this.account.minSig,
         nonce: this.account.nonce,
+        participants: this.account.participants.map(pc => {
+          return { address: pc, type: 0 };
+        }),
+      };
+      let multisigAddress: MultiSigAddress = {
+        minSigs: this.account.minSig,
+        nonce: this.account.nonce,
         participants: this.account.participants,
       };
-      const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
-      multisig.generatedSender = address;
+      const address = zoobc.MultiSignature.createMultiSigAddress(multisigAddress);
+      multisig.generatedSender = address.address;
       this.multisigServ.update(multisig);
       let isOneParticpants: boolean = false;
       const idx = this.authServ
         .getAllAccount()
-        .filter(res => multisig.multisigInfo.participants.includes(res.address));
+        .filter(res => multisig.multisigInfo.participants.some(pc => pc.address == res.address));
       if (idx.length > 0) isOneParticpants = true;
       else isOneParticpants = false;
       if (!isOneParticpants) {
