@@ -41,7 +41,7 @@ export class EscrowTransactionComponent implements OnInit {
   isLoadingTx: boolean = false;
   waitingList = [];
   account: SavedAccount;
-  accountBalance: any;
+  accountBalance: AccountBalance;
   escrowApprovalMap = escrowApprovalMap;
 
   constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
@@ -95,7 +95,7 @@ export class EscrowTransactionComponent implements OnInit {
   async getBalance() {
     await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
       (data: AccountBalance) => {
-        this.accountBalance = data.balance;
+        this.accountBalance = data;
       }
     );
   }
@@ -105,7 +105,7 @@ export class EscrowTransactionComponent implements OnInit {
     const transactionIdForm = this.form.get('transactionId');
 
     await this.getBalance();
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
@@ -152,7 +152,7 @@ export class EscrowTransactionComponent implements OnInit {
     const transactionIdForm = this.form.get('transactionId');
 
     await this.getBalance();
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {

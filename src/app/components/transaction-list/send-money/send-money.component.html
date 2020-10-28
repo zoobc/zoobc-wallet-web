@@ -23,9 +23,9 @@
     <div class="date">{{ transaction.timestamp | dateAgo }}</div>
   </div>
   <div class="col-12 col-sm-4 text-right">
-    <ng-container *ngIf="transaction.sender == address; else recipientAmount">
+    <ng-container *ngIf="transaction.sender.address == address; else recipientAmount">
       <div class="amount-send">- {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
-      <div class="fee" *ngIf="transaction.sender == address">
+      <div class="fee" *ngIf="transaction.sender.address == address">
         - {{ transaction.fee / 1e8 | number: '0.0-8' }}
         <small>ZBC {{ 'fee' | translate }}</small>
       </div>

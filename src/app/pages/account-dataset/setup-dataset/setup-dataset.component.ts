@@ -8,7 +8,10 @@ import zoobc, { BIP32Interface, SetupDatasetResponse } from 'zoobc-sdk';
 import { SetupDatasetInterface } from 'zoobc-sdk/types/helper/transaction-builder/setup-account-dataset';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { createSetupDatasetForm, setupDatasetMap } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
+import {
+  createSetupDatasetForm,
+  setupDatasetMap,
+} from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
 
 @Component({
   selector: 'app-setup-dataset',
@@ -33,7 +36,7 @@ export class SetupDatasetComponent implements OnInit {
     sender.patchValue(this.account.address);
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   setupDataset() {
     this.authServ.switchAccount(this.account);
@@ -42,8 +45,8 @@ export class SetupDatasetComponent implements OnInit {
     const param: SetupDatasetInterface = {
       property: this.formGroup.get('property').value,
       value: this.formGroup.get('value').value,
-      setterAccountAddress: this.formGroup.get('sender').value,
-      recipientAccountAddress: this.formGroup.get('recipientAddress').value,
+      setterAccountAddress: { address: this.formGroup.get('sender').value, type: 0 },
+      recipientAccountAddress: { address: this.formGroup.get('recipientAddress').value, type: 0 },
       fee: this.formGroup.get('fee').value,
     };
 

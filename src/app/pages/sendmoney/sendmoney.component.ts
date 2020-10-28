@@ -132,15 +132,16 @@ export class SendmoneyComponent implements OnInit {
       const aliasField = this.formSend.get('alias');
 
       let data: SendMoneyInterface = {
-        sender: senderForm.value,
-        recipient: recipientForm.value,
+        sender: { address: senderForm.value, type: 0 },
+        recipient: { address: recipientForm.value, type: 0 },
         fee: feeForm.value,
         amount: amountForm.value,
-        approverAddress: addressApproverField.value,
+        approverAddress: { address: addressApproverField.value, type: 0 },
         commission: approverCommissionField.value,
         timeout: timeoutField.value,
         instruction: instructionField.value,
       };
+      console.log(data);
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
@@ -148,7 +149,7 @@ export class SendmoneyComponent implements OnInit {
           let message = getTranslation('your transaction is processing', this.translate);
           let subMessage = getTranslation('you send coins to', this.translate, {
             amount: data.amount,
-            recipient: data.recipient,
+            recipient: data.recipient.address,
           });
           Swal.fire(message, subMessage, 'success');
 
