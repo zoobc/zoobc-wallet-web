@@ -22,13 +22,13 @@ export class NodeRewardListComponent implements OnInit {
 
   displayedColumns = [
     {
-      id: 'balancechange',
+      id: 'balanceChange',
       format: 'money',
       caption: 'reward',
       width: 40,
     },
     {
-      id: 'blockheight',
+      id: 'blockHeight',
       format: 'number',
       caption: 'height',
       width: 15,
@@ -45,8 +45,10 @@ export class NodeRewardListComponent implements OnInit {
 
   constructor(private authServ: AuthService, private element: ElementRef) {
     this.account = authServ.getCurrAccount();
-    this.accParams.address = this.account.address;
-    this.accParams.type = 0;
+    this.accParams = {
+      address: this.account.address,
+      type: 0,
+    };
   }
 
   ngOnInit() {

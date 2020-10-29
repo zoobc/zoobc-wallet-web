@@ -78,11 +78,13 @@ export class AddAccountComponent implements OnInit {
       let participants: [string] = this.participantsField.value.filter(value => value.length > 0);
       participants = participants.sort();
       const multiParam: MultiSigAddress = {
-        participants: participants,
+        participants: participants.map(pc => {
+          return { address: pc, type: 0 };
+        }),
         nonce: this.nonceField.value,
         minSigs: this.minSignatureField.value,
       };
-      const multiSignAddress: Account = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+      const multiSignAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
       account = {
         name: this.accountNameField.value,
         type: 'multisig',

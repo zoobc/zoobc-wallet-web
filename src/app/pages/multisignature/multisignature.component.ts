@@ -116,12 +116,8 @@ export class MultisignatureComponent implements OnInit {
           return { address: pc, type: 0 };
         }),
       };
-      let multisigAddress: MultiSigAddress = {
-        minSigs: this.account.minSig,
-        nonce: this.account.nonce,
-        participants: this.account.participants,
-      };
-      const address = zoobc.MultiSignature.createMultiSigAddress(multisigAddress);
+
+      const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
       multisig.generatedSender = address.address;
       this.multisigServ.update(multisig);
       let isOneParticpants: boolean = false;

@@ -56,8 +56,8 @@ export function createRemoveSetupDatasetBytes(form: any): Buffer {
   const data: RemoveDatasetInterface = {
     property,
     value,
-    setterAccountAddress: sender,
-    recipientAccountAddress: recipientAddress,
+    setterAccountAddress: { address: sender, type: 0 },
+    recipientAccountAddress: { address: recipientAddress, type: 0 },
     fee,
   };
   return removeDatasetBuilder(data);

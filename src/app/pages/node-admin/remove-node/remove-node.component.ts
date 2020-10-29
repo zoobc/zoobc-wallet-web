@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { NodeRegistration, RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import {
@@ -27,12 +27,12 @@ export class RemoveNodeComponent implements OnInit {
     private authServ: AuthService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<RemoveNodeComponent>,
-    @Inject(MAT_DIALOG_DATA) public node: any,
+    @Inject(MAT_DIALOG_DATA) public node: NodeRegistration,
     private translate: TranslateService
   ) {
     this.formRemoveNode = createRemoveNodeForm();
     this.account = authServ.getCurrAccount();
-    this.formRemoveNode.get('nodePublicKey').patchValue(this.node.nodepublickey);
+    this.formRemoveNode.get('nodePublicKey').patchValue(this.node.nodePublicKey);
   }
 
   ngOnInit() {}

@@ -39,7 +39,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   mbToB = Math.pow(1024, 2);
   gbToB = Math.pow(1024, 3);
 
-  registeredNode: any;
+  registeredNode: NodeRegistration;
   pendingNodeTx = null;
 
   isNodeHardwareLoading: boolean = false;
@@ -57,13 +57,13 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   showAutomaticNumber: boolean = true;
   displayedColumns = [
     {
-      id: 'balancechange',
+      id: 'balanceChange',
       format: 'money',
       caption: 'reward',
       width: 40,
     },
     {
-      id: 'blockheight',
+      id: 'blockHeight',
       format: 'number',
       caption: 'height',
       width: 15,
@@ -139,9 +139,6 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
         if (res) {
           const registrationstatus = res.registrationStatus;
           if (registrationstatus == 0) {
-            const pubKeyBytes = Buffer.from(String(res.nodePublicKey), 'base64');
-            const pubKey = getZBCAddress(pubKeyBytes, 'ZNK');
-            res.nodePublicKey = pubKey;
             this.registeredNode = res;
             this.getTotalScore();
             this.getRewardNode();
@@ -159,7 +156,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   }
 
   getTotalScore() {
-    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeid)
+    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeId)
       .then(res => (this.score = parseInt(res.score) / 1e8))
       .catch(err => console.log(err));
   }
