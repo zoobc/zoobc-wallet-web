@@ -5,10 +5,11 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import zoobc from 'zoobc-sdk';
+import zoobc, { MultiSigAddress } from 'zoobc-sdk';
 import { uniqueParticipant, getTranslation } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { Account } from 'zoobc-sdk/types/helper/interfaces';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -53,7 +54,8 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
       if (multisigInfo) {
         const { participants, minSigs, nonce } = multisigInfo;
-        this.patchParticipant(participants);
+        const addressParticipant = participants.map(pc => pc.address);
+        this.patchParticipant(addressParticipant);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
       }
@@ -117,7 +119,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       let isOneParticpants: boolean = false;
       const idx = this.authServ
         .getAllAccount()
-        .filter(res => this.multisig.multisigInfo.participants.includes(res.address));
+        .filter(res => this.multisig.multisigInfo.participants.some(ps => ps.address == res.address));
       if (idx.length > 0) isOneParticpants = true;
       else isOneParticpants = false;
       if (!isOneParticpants) {
@@ -140,16 +142,20 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     const multisig = { ...this.multisig };
 
     let participants: string[] = this.form.value.participants;
+
     participants.sort();
     participants = participants.filter(address => address != '');
-
+    let arrParticipant: Account[] = participants.map(pc => {
+      return { address: pc, type: 0 };
+    });
     multisig.multisigInfo = {
       minSigs: parseInt(minSigs),
       nonce: parseInt(nonce),
-      participants: participants,
+      participants: arrParticipant,
     };
+
     const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
-    multisig.generatedSender = address;
+    multisig.generatedSender = address.address;
     this.multisigServ.update(multisig);
   }
 }

@@ -61,7 +61,7 @@ export class RegisterNodeComponent implements OnInit {
           this.isError = false;
 
           let data: RegisterNodeInterface = {
-            accountAddress: this.account.address,
+            accountAddress: { address: this.account.address, type: 0 },
             nodePublicKey: ZBCAddressToBytes(nodePublicKeyForm.value),
             nodeAddress: ipAddressForm.value,
             fee: feeForm.value,

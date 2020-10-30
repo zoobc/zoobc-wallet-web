@@ -118,7 +118,7 @@
             <div class="balance">
               <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
               <span *ngIf="!isLoadingBalance && !isErrorBalance">
-                {{ accountBalance.spendablebalance / 1e8 | number: '0.0-4' }}
+                {{ accountBalance.spendableBalance / 1e8 | number: '0.0-4' }}
               </span>
               <span> ZBC</span>
             </div>

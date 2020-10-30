@@ -14,11 +14,12 @@ import { Location } from '@angular/common';
 import zoobc, {
   MultiSigInterface,
   MultisigPostTransactionResponse,
-  AccountBalanceResponse,
+  AccountBalance,
   isZBCAddressValid,
 } from 'zoobc-sdk';
 import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
+import { patchComponentDefWithScope } from '@angular/core/src/render3/jit/module';
 
 @Component({
   selector: 'app-send-transaction',
@@ -43,7 +44,7 @@ export class SendTransactionComponent implements OnInit {
 
   isMultiSigAccount: boolean = false;
   participants = [];
-  accountBalance: any;
+  accountBalance: AccountBalance;
 
   txType: string = '';
   innerTx: any[] = [];
@@ -77,7 +78,7 @@ export class SendTransactionComponent implements OnInit {
       }
     });
     if (this.multisig.multisigInfo === undefined) return this.router.navigate(['/multisignature']);
-    this.participants = this.multisig.multisigInfo.participants;
+    this.participants = this.multisig.multisigInfo.participants.map(pc => pc.address);
     this.getMultiSigDraft();
   }
 
@@ -119,7 +120,7 @@ export class SendTransactionComponent implements OnInit {
 
   async onOpenConfirmDialog() {
     await this.getBalance();
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= this.minFee) {
       this.fillDialog();
       this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
@@ -133,11 +134,11 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async getBalance() {
-    this.isLoading = true;
-    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
-      this.accountBalance = data.accountbalance;
-      this.isLoading = false;
-    });
+    await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
+      (data: AccountBalance) => {
+        this.accountBalance = data;
+      }
+    );
   }
 
   async onConfirm() {
@@ -163,11 +164,13 @@ export class SendTransactionComponent implements OnInit {
         txHash: signaturesInfo.txHash,
         participants: [],
       };
+
       signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
         if (jsonBufferToString(pcp.signature).length > 0) return pcp;
       });
+
       this.account = this.authServ.getCurrAccount();
-      accountAddress = this.account.address;
+      accountAddress = { address: this.account.address, type: 0 };
       data = {
         accountAddress,
         fee,
@@ -177,7 +180,7 @@ export class SendTransactionComponent implements OnInit {
       };
     } else {
       this.account = this.authServ.getCurrAccount();
-      accountAddress = this.account.address;
+      accountAddress = { address: this.account.address, type: 0 };
       data = {
         accountAddress,
         fee,

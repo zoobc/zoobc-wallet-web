@@ -58,8 +58,8 @@ export function createSetupDatasetBytes(form: any): Buffer {
   const data: SetupDatasetInterface = {
     property,
     value,
-    setterAccountAddress: sender,
-    recipientAccountAddress: recipientAddress,
+    setterAccountAddress: { address: sender, type: 0 },
+    recipientAccountAddress: { address: recipientAddress, type: 0 },
     fee,
   };
   return setupDatasetBuilder(data);

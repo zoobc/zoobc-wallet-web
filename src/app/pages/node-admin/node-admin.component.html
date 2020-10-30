@@ -72,20 +72,20 @@
         <div class="col-12 col-sm-6">
           <div class="label">{{ 'account address' | translate }}</div>
           <div class="value">
-            <wallet-address [value]="registeredNode.accountaddress"></wallet-address>
+            <wallet-address [value]="registeredNode.accountAddress.address"></wallet-address>
           </div>
           <div class="label">{{ 'node public key' | translate }}</div>
           <div class="value">
-            <wallet-address [value]="registeredNode.nodepublickey"></wallet-address>
+            <wallet-address [value]="registeredNode.nodePublicKey"></wallet-address>
           </div>
         </div>
         <div class="col-12 col-sm-6">
           <div class="label">{{ 'locked balance' | translate }}</div>
-          <div class="value big">{{ registeredNode.lockedbalance / 1e8 | number: '0.0-8' }} ZBC</div>
+          <div class="value big">{{ registeredNode.lockedBalance / 1e8 | number: '0.0-8' }} ZBC</div>
           <div class="label">{{ 'height' | translate }}</div>
           <div class="value big">{{ registeredNode.height | number }}</div>
           <div class="label">{{ 'registration height' | translate }}</div>
-          <div class="value big">{{ registeredNode.registrationheight | number }}</div>
+          <div class="value big">{{ registeredNode.registrationHeight | number }}</div>
         </div>
       </div>
       <div class="text-right">
@@ -187,7 +187,7 @@
   </mat-card>
   <br />
   <!-- REWARDS NODE -->
-  <div *ngIf="registeredNode && registeredNode.registrationstatus == 0">
+  <div *ngIf="registeredNode && registeredNode.registrationStatus == 0">
     <div class="row">
       <div class="col-10">
         <h2 class="mat-h2">{{ 'rewards' | translate }}</h2>

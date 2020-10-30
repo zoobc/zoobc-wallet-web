@@ -41,7 +41,7 @@ export function createEscrowApprovalBytes(form: any): Buffer {
   const data: EscrowApprovalInterface = {
     fee,
     approvalCode,
-    approvalAddress: sender,
+    approvalAddress: { address: sender, type: 0 },
     transactionId,
   };
   return escrowBuilder(data);

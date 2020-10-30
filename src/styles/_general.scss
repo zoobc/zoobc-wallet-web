@@ -175,11 +175,15 @@ a[mat-stroked-button],
 button[mat-stroked-button] {
   border: 1px solid map-get($primary, 600) !important;
   &.small {
-    line-height: 26px !important;
+    line-height: 28px !important;
   }
 
   &[color='accent'] {
     border: 1px solid map-get($accent, 500) !important;
+  }
+
+  &[color='accent'] {
+    border: 1px solid map-get($primary, 500) !important;
   }
 
   &[color='warn'] {
