@@ -34,6 +34,6 @@ export function createClaimNodeForm() {
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     nodePublicKey: new FormControl('', Validators.required),
     ipAddress: new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }

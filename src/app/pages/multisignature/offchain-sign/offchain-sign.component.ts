@@ -35,7 +35,7 @@ export class OffchainSignComponent {
   ) {
     this.draft = data;
     this.txType = getTxType(data.txType);
-    this.participants = data.multisigInfo.participants;
+    this.participants = data.multisigInfo.participants.map(pc => pc.address);
     this.innerTx = Object.keys(this.draft.txBody).map(key => {
       const item = this.draft.txBody;
       return {

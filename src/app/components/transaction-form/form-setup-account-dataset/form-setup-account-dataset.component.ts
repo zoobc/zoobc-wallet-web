@@ -49,7 +49,7 @@ export function createSetupDatasetForm(): FormGroup {
     value: new FormControl('', [Validators.required]),
     recipientAddress: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }
 
@@ -58,8 +58,8 @@ export function createSetupDatasetBytes(form: any): Buffer {
   const data: SetupDatasetInterface = {
     property,
     value,
-    setterAccountAddress: sender,
-    recipientAccountAddress: recipientAddress,
+    setterAccountAddress: { address: sender, type: 0 },
+    recipientAccountAddress: { address: recipientAddress, type: 0 },
     fee,
   };
   return setupDatasetBuilder(data);

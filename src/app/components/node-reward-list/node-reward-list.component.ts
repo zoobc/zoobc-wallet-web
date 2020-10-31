@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import zoobc, { AccountLedgerListParams, EventType, OrderBy } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { Account } from 'zoobc-sdk/types/helper/interfaces';
 @Component({
   selector: 'app-node-reward-list',
   templateUrl: './node-reward-list.component.html',
@@ -9,6 +10,7 @@ export class NodeRewardListComponent implements OnInit {
   @ViewChild('rewardlist') rewardList: ElementRef;
 
   account: SavedAccount;
+  accParams: Account;
   isLoading: boolean = false;
   isError: boolean = false;
   finished: boolean = false;
@@ -20,13 +22,13 @@ export class NodeRewardListComponent implements OnInit {
 
   displayedColumns = [
     {
-      id: 'balancechange',
+      id: 'balanceChange',
       format: 'money',
       caption: 'reward',
       width: 40,
     },
     {
-      id: 'blockheight',
+      id: 'blockHeight',
       format: 'number',
       caption: 'height',
       width: 15,
@@ -43,6 +45,10 @@ export class NodeRewardListComponent implements OnInit {
 
   constructor(private authServ: AuthService, private element: ElementRef) {
     this.account = authServ.getCurrAccount();
+    this.accParams = {
+      address: this.account.address,
+      type: 0,
+    };
   }
 
   ngOnInit() {
@@ -59,7 +65,7 @@ export class NodeRewardListComponent implements OnInit {
     }
 
     const param: AccountLedgerListParams = {
-      accountAddress: this.account.address,
+      account: this.accParams,
       eventType: EventType.EVENTREWARD,
       pagination: {
         page: this.page,
@@ -71,10 +77,10 @@ export class NodeRewardListComponent implements OnInit {
 
     try {
       const ledgerList = await zoobc.AccountLedger.getList(param);
-      this.total = parseInt(ledgerList.total);
+      this.total = ledgerList.total;
       this.tableData = reload
-        ? ledgerList.accountledgersList
-        : this.tableData.concat(ledgerList.accountledgersList);
+        ? ledgerList.accountLedgerList
+        : this.tableData.concat(ledgerList.accountLedgerList);
     } catch (err) {
       this.isError = true;
       console.log(err);

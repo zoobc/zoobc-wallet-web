@@ -58,7 +58,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     });
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
     this.patchValue(this.multisig);
-    this.participants = this.multisig.multisigInfo.participants;
+    this.participants = this.multisig.multisigInfo.participants.map(pc => pc.address);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
@@ -96,7 +96,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       let address: string = '';
       let signature: string = '';
       if (typeof pcp === 'object') {
-        address = pcp.address;
+        address = pcp.address.address;
         signature = Buffer.from(pcp.signature).toString('base64');
       } else address = pcp;
       this.participantsSignatureField.push(this.createParticipant(address, signature, false));
@@ -170,10 +170,12 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   updateMultiStorage() {
     const { transactionHash, participantsSignature } = this.form.value;
     const multisig = { ...this.multisig };
-
     const newPcp = participantsSignature.map(pcp => {
       pcp.signature = stringToBuffer(pcp.signature);
-      return pcp;
+      return {
+        address: { address: pcp.address, type: 0 },
+        signature: pcp.signature,
+      };
     });
 
     multisig.signaturesInfo = {

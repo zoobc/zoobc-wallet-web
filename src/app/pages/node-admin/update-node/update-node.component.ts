@@ -4,7 +4,13 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import Swal from 'sweetalert2';
-import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid, getZBCAddress } from 'zoobc-sdk';
+import zoobc, {
+  UpdateNodeInterface,
+  ZBCAddressToBytes,
+  isZBCAddressValid,
+  getZBCAddress,
+  NodeRegistration,
+} from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
@@ -30,7 +36,7 @@ export class UpdateNodeComponent implements OnInit {
     private NodeAdminServ: NodeAdminService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<UpdateNodeComponent>,
-    @Inject(MAT_DIALOG_DATA) public node: any,
+    @Inject(MAT_DIALOG_DATA) public node: NodeRegistration,
     private translate: TranslateService
   ) {
     this.formUpdateNode = createUpdateNodeForm();
@@ -42,18 +48,18 @@ export class UpdateNodeComponent implements OnInit {
     this.account = authServ.getCurrAccount();
     ipAddressForm.patchValue(this.account.nodeIP);
     const formatAddressPubKey = getZBCAddress(
-      Buffer.from(this.node.nodepublickey.toString(), 'base64'),
+      Buffer.from(this.node.nodePublicKey.toString(), 'base64'),
       'ZNK'
     );
-    const validFormatAddress = isZBCAddressValid(this.node.nodepublickey);
+    const validFormatAddress = isZBCAddressValid(this.node.nodePublicKey);
 
-    if (validFormatAddress) nodePublicKeyForm.patchValue(this.node.nodepublickey);
+    if (validFormatAddress) nodePublicKeyForm.patchValue(this.node.nodePublicKey);
     else nodePublicKeyForm.patchValue(formatAddressPubKey);
 
-    lockedAmountForm.patchValue(parseInt(this.node.lockedbalance) / 1e8);
+    lockedAmountForm.patchValue(parseInt(this.node.lockedBalance) / 1e8);
     lockedAmountForm.setValidators([
       Validators.required,
-      Validators.min(parseInt(this.node.lockedbalance) / 1e8),
+      Validators.min(parseInt(this.node.lockedBalance) / 1e8),
     ]);
   }
 
@@ -77,7 +83,7 @@ export class UpdateNodeComponent implements OnInit {
           this.isError = false;
 
           let data: UpdateNodeInterface = {
-            accountAddress: this.account.address,
+            accountAddress: { address: this.account.address, type: 0 },
             fee: this.formUpdateNode.get('fee').value,
             nodePublicKey: ZBCAddressToBytes(this.formUpdateNode.get('nodePublicKey').value),
             nodeAddress: this.formUpdateNode.get('ipAddress').value,

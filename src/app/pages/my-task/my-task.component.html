@@ -8,7 +8,7 @@
         <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
             <div class="col-6 col-md-6" style="margin-top: 10px;">
-              <a routerLink="/escrow-approval-history" class="approval-history">
+              <a routerLink="/transferhistory" [queryParams]="{ type: '4' }" class="approval-history">
                 <i class="fa fa-history" aria-hidden="true"></i> {{ 'approval history' | translate }}
               </a>
             </div>
@@ -79,7 +79,7 @@
         <mat-tab label="{{ 'escrow approval' | translate }}">
           <div class="row" style="margin: 0;">
             <div class="col-6 col-md-6" style="margin-top: 8px;">
-              <a routerLink="/escrow-approval-history" class="approval-history">
+              <a routerLink="/transferhistory" [queryParams]="{ type: '4' }" class="approval-history">
                 <i class="fa fa-history" aria-hidden="true"></i>
                 {{ 'approval history' | translate }}
               </a>

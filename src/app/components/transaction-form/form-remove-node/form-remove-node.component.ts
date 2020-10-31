@@ -31,6 +31,6 @@ export function createRemoveNodeForm() {
   return new FormGroup({
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     nodePublicKey: new FormControl('', Validators.required),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }

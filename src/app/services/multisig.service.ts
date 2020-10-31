@@ -15,7 +15,7 @@ export interface MultiSigDraft extends MultiSigInterface {
 export class MultisigService {
   private multisigTemplate: MultiSigDraft = {
     id: 0,
-    accountAddress: '',
+    accountAddress: null,
     fee: 0,
     txType: TransactionType.SENDMONEYTRANSACTION,
   };

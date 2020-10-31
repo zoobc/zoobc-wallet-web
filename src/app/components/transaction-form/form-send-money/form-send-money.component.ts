@@ -41,8 +41,8 @@ export class FormSendMoneyComponent implements OnInit {
       startWith(''),
       map(value => this.filterContacts(value))
     );
-
     this.getAccounts();
+    if (recipientForm.value) this.isAddressInContacts();
   }
 
   getAccounts() {
@@ -118,12 +118,17 @@ export function createSendMoneyForm(): FormGroup {
     amount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
     alias: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }
 
 export function createSendMoneyBytes(form: any): Buffer {
   const { sender, fee, amount, recipient } = form;
-  const data: SendMoneyInterface = { sender, fee, amount, recipient };
+  const data: SendMoneyInterface = {
+    sender: { address: sender, type: 0 },
+    fee,
+    amount,
+    recipient: { address: recipient, type: 0 },
+  };
   return sendMoneyBuilder(data);
 }

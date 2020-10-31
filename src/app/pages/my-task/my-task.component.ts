@@ -5,7 +5,6 @@ import zoobc, {
   MultisigPendingListParams,
   MultisigPendingTxResponse,
   toGetPendingList,
-  EscrowTransactionsResponse,
   OrderBy,
   HostInfoResponse,
   EscrowStatus,
@@ -15,6 +14,7 @@ import zoobc, {
   readInt64,
   MultisigPendingTxDetailResponse,
   bufferToBase64,
+  Escrows,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
@@ -68,7 +68,7 @@ export class MyTaskComponent implements OnInit {
         this.pageMultiSig = 1;
       }
       const params: MultisigPendingListParams = {
-        address: this.account.address,
+        address: { address: this.account.address, type: 0 },
         status: PendingTransactionStatus.PENDINGTRANSACTIONPENDING,
         pagination: {
           page: this.pageMultiSig,
@@ -106,7 +106,7 @@ export class MyTaskComponent implements OnInit {
       }
 
       const params: EscrowListParams = {
-        approverAddress: this.account.address,
+        approverAddress: { address: this.account.address, type: 0 },
         statusList: [EscrowStatus.PENDING],
         pagination: {
           page: this.pageEscrow,
@@ -117,21 +117,21 @@ export class MyTaskComponent implements OnInit {
         latest: true,
       };
       zoobc.Escrows.getList(params)
-        .then(async (res: EscrowTransactionsResponse) => {
-          this.totalEscrow = parseInt(res.total);
-          let txMap = res.escrowsList.map(tx => {
-            const alias = this.contactServ.get(tx.recipientaddress).name || '';
+        .then(async (res: Escrows) => {
+          this.totalEscrow = res.total;
+          let txMap = res.escrowList.map(tx => {
+            const alias = this.contactServ.get(tx.recipient.address).name || '';
             return {
               id: tx.id,
               alias: alias,
-              senderaddress: tx.senderaddress,
-              recipientaddress: tx.recipientaddress,
-              approveraddress: tx.approveraddress,
+              senderaddress: tx.sender.address,
+              recipientaddress: tx.recipient.address,
+              approveraddress: tx.approver.address,
               amount: tx.amount,
               commission: tx.commission,
-              timeout: parseInt(tx.timeout),
+              timeout: tx.timeout,
               status: tx.status,
-              blockheight: tx.blockheight,
+              blockheight: tx.blockHeight,
               latest: tx.latest,
               instruction: tx.instruction,
             };
@@ -153,7 +153,7 @@ export class MyTaskComponent implements OnInit {
 
   async getPendingEscrowApproval() {
     const params: MempoolListParams = {
-      address: this.account.address,
+      address: { address: this.account.address, type: 0 },
     };
     let list: string[] = await zoobc.Mempool.getList(params).then(res => {
       let id: any = res.mempooltransactionsList.filter(tx => {

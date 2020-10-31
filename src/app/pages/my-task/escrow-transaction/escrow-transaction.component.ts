@@ -3,21 +3,21 @@ import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
-  EscrowTransactionResponse,
+  Escrow,
   ApprovalEscrowTransactionResponse,
   EscrowApprovalInterface,
   EscrowApproval,
-  AccountBalanceResponse,
+  AccountBalance,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { PinConfirmationComponent } from '../pin-confirmation/pin-confirmation.component';
+import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup } from '@angular/forms';
 import {
   createEscrowApprovalForm,
   escrowApprovalMap,
-} from '../transaction-form/form-escrow-approval/form-escrow-approval.component';
+} from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.component';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -36,12 +36,12 @@ export class EscrowTransactionComponent implements OnInit {
   form: FormGroup;
   minFee = environment.fee;
   showProcessForm: boolean = false;
-  escrowDetail: EscrowTransactionResponse;
+  escrowDetail: Escrow;
   isLoadingDetail: boolean = false;
   isLoadingTx: boolean = false;
   waitingList = [];
   account: SavedAccount;
-  accountBalance: any;
+  accountBalance: AccountBalance;
   escrowApprovalMap = escrowApprovalMap;
 
   constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
@@ -62,7 +62,7 @@ export class EscrowTransactionComponent implements OnInit {
     this.form.get('transactionId').patchValue(id);
     this.form.get('fee').patchValue(this.minFee);
     this.isLoadingDetail = true;
-    zoobc.Escrows.get(id).then((res: EscrowTransactionResponse) => {
+    zoobc.Escrows.get(id).then((res: Escrow) => {
       this.escrowDetail = res;
       this.isLoadingDetail = false;
     });
@@ -93,9 +93,11 @@ export class EscrowTransactionComponent implements OnInit {
   }
 
   async getBalance() {
-    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalanceResponse) => {
-      this.accountBalance = data.accountbalance;
-    });
+    await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
+      (data: AccountBalance) => {
+        this.accountBalance = data;
+      }
+    );
   }
 
   async onConfirm() {
@@ -103,11 +105,11 @@ export class EscrowTransactionComponent implements OnInit {
     const transactionIdForm = this.form.get('transactionId');
 
     await this.getBalance();
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
-        approvalAddress: this.account.address,
+        approvalAddress: { address: this.account.address, type: 0 },
         fee: feeForm.value,
         approvalCode: EscrowApproval.APPROVE,
         transactionId: transactionIdForm.value,
@@ -150,11 +152,11 @@ export class EscrowTransactionComponent implements OnInit {
     const transactionIdForm = this.form.get('transactionId');
 
     await this.getBalance();
-    const balance = parseInt(this.accountBalance.spendablebalance) / 1e8;
+    const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
-        approvalAddress: this.account.address,
+        approvalAddress: { address: this.account.address, type: 0 },
         fee: feeForm.value,
         approvalCode: EscrowApproval.REJECT,
         transactionId: transactionIdForm.value,

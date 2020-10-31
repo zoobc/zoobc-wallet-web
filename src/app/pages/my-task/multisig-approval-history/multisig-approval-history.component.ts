@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, {
   TransactionType,
-  TransactionsResponse,
   TransactionListParams,
   MultisigPendingTxDetailResponse,
   MultisigPendingTxResponse,
@@ -60,7 +59,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
     this.isError = false;
 
     const txParam: TransactionListParams = {
-      address: this.account.address,
+      address: { address: this.account.address, type: 0 },
       transactionType: TransactionType.MULTISIGNATURETRANSACTION,
       pagination: {
         page: this.page,
@@ -68,9 +67,9 @@ export class MultisigApprovalHistoryComponent implements OnInit {
       },
     };
     try {
-      let tx = await zoobc.Transactions.getList(txParam).then((res: TransactionsResponse) => res);
-      const multisig = tx.transactionsList.filter(mh => mh.multisignaturetransactionbody.signatureinfo);
-      this.total = parseInt(tx.total);
+      let tx = await zoobc.Transactions.getList(txParam);
+      const multisig = tx.transactions.filter(mh => mh.txBody.signatureinfo);
+      this.total = tx.total;
       if (reload) {
         this.multisigHistory = multisig;
       } else {

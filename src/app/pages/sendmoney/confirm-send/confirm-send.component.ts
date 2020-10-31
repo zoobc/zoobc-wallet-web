@@ -15,7 +15,6 @@ export class ConfirmSendComponent implements OnInit {
     public dialogRef: MatDialogRef<ConfirmSendComponent>,
     private currencyServ: CurrencyRateService
   ) {}
-  account: any;
   form: any;
   advancedMenu: boolean = false;
   currencyRate: Currency;
@@ -25,7 +24,6 @@ export class ConfirmSendComponent implements OnInit {
     this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
       this.currencyRate = rate;
     });
-    this.account = this.data.account;
     this.form = this.data.form;
     if (this.data.form.addressApprover) this.advancedMenu = true;
   }

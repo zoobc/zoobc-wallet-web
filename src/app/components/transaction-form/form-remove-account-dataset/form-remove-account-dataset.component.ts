@@ -1,4 +1,4 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { RemoveDatasetInterface, removeDatasetBuilder } from 'zoobc-sdk';
@@ -11,17 +11,17 @@ import { escrowMap, escrowForm } from '../form-escrow/form-escrow.component';
 export class FormRemoveAccountDatasetComponent implements OnInit {
   @Input() group: FormGroup;
   @Input() inputMap: any;
-  @Input() multisig: boolean = false
+  @Input() multisig: boolean = false;
 
   isSetupOther: boolean = false;
 
   ngOnInit() {
-    this.setDefaultRecipient()
+    this.setDefaultRecipient();
   }
 
   onToggleEnableSetupOther() {
-    this.isSetupOther = !this.isSetupOther
-    if (!this.isSetupOther) this.setDefaultRecipient()
+    this.isSetupOther = !this.isSetupOther;
+    if (!this.isSetupOther) this.setDefaultRecipient();
   }
 
   setDefaultRecipient() {
@@ -47,7 +47,7 @@ export function createRemoveDatasetForm(): FormGroup {
     value: new FormControl('', [Validators.required]),
     recipientAddress: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }
 
@@ -56,8 +56,8 @@ export function createRemoveSetupDatasetBytes(form: any): Buffer {
   const data: RemoveDatasetInterface = {
     property,
     value,
-    setterAccountAddress: sender,
-    recipientAccountAddress: recipientAddress,
+    setterAccountAddress: { address: sender, type: 0 },
+    recipientAccountAddress: { address: recipientAddress, type: 0 },
     fee,
   };
   return removeDatasetBuilder(data);

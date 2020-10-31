@@ -27,7 +27,7 @@ export class TransferhistoryComponent implements OnDestroy {
   unconfirmTx: ZBCTransaction[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
-  txTypeUnconfirm: number;
+  txTypeUnconfirm: number = TransactionType.SENDMONEYTRANSACTION;
 
   page: number = 1;
   perPage: number = 10;
@@ -50,9 +50,10 @@ export class TransferhistoryComponent implements OnDestroy {
   ) {
     this.routerEvent = router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.activeRoute.queryParams.subscribe(
-          res => (this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION)
-        );
+        this.activeRoute.queryParams.subscribe(res => {
+          this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
+          this.txTypeUnconfirm = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
+        });
         this.getTx(true);
       }
     });
@@ -76,7 +77,7 @@ export class TransferhistoryComponent implements OnDestroy {
       this.isError = false;
 
       const txParam: TransactionListParams = {
-        address: this.address,
+        address: { address: this.address, type: 0 },
         transactionType: this.txType,
         pagination: {
           page: this.page,
@@ -89,19 +90,17 @@ export class TransferhistoryComponent implements OnDestroy {
 
         let lastHeight = 0;
         let firstHeight = 0;
-        if (trxList.transactionsList.length > 0) {
-          lastHeight = trxList.transactionsList[0].height;
-          firstHeight = trxList.transactionsList[trxList.transactionsList.length - 1].height;
+        if (trxList.transactions.length > 0) {
+          lastHeight = trxList.transactions[0].height;
+          firstHeight = trxList.transactions[trxList.transactions.length - 1].height;
         }
 
-        const multisigTx = trxList.transactionsList
-          .filter(trx => trx.multisigchild == true)
-          .map(trx => trx.id);
+        const multisigTx = trxList.transactions.filter(trx => trx.multisig == true).map(trx => trx.id);
 
         const paramEscrow: EscrowListParams = {
           blockHeightStart: firstHeight,
           blockHeightEnd: lastHeight,
-          recipient: this.address,
+          recipient: { address: this.address, type: 0 },
           statusList: [0, 1, 2, 3],
           latest: false,
           pagination: {
@@ -112,14 +111,14 @@ export class TransferhistoryComponent implements OnDestroy {
         this.startMatch = 0;
         const escrowTx = await zoobc.Escrows.getList(paramEscrow);
 
-        const escrowList = escrowTx.escrowsList;
+        const escrowList = escrowTx.escrowList;
         const escrowGroup = this.groupEscrowList(escrowList);
 
-        let txs = toZBCTransactions(trxList.transactionsList);
+        let txs = trxList.transactions;
         txs.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent.senderAlias = this.contactServ.get(recent.sender).name || '';
-          recent.recipientAlias = this.contactServ.get(recent.recipient).name || '';
+          recent.senderAlias = this.contactServ.get(recent.sender.address).name || '';
+          recent.recipientAlias = this.contactServ.get(recent.recipient.address).name || '';
           if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
             if (recent.txBody.nodepublickey) {
               const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
@@ -129,18 +128,22 @@ export class TransferhistoryComponent implements OnDestroy {
           }
           if (escStatus) {
             recent.escrow = true;
-            recent.escrowStatus = escStatus.status;
+            recent['txBody'].approval = escStatus.status;
           } else recent.escrow = false;
           recent.multisig = multisigTx.includes(recent.id);
           return recent;
         });
-        this.total = parseInt(trxList.total);
+        this.total = trxList.total;
         this.accountHistory = reload ? txs : this.accountHistory.concat(txs);
 
         if (reload) {
-          const mempoolParams: MempoolListParams = { address: this.address };
+          const mempoolParams: MempoolListParams = { address: { address: this.address, type: 0 } };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
-            (res: MempoolTransactionsResponse) => toZBCPendingTransactions(res)
+            (res: MempoolTransactionsResponse) =>
+              toZBCPendingTransactions(res).map(uc => {
+                if (uc.escrow) uc['txBody'].approval = 0;
+                return uc;
+              })
           );
           this.unconfirmTx.map(res => {
             this.txTypeUnconfirm = res.transactionType;
