@@ -23,7 +23,7 @@
   </div>
 
   <mat-card class="account-card">
-    <div class="no-content" *ngIf="isErrorBalance">
+    <div class="no-content" *ngIf="isError">
       <i matPrefix class="fa fa-exclamation-triangle"></i>
       <span class="message">
         {{ 'an error occurred while processing your request' | translate }}
@@ -33,7 +33,7 @@
       </button>
     </div>
 
-    <ng-container *ngIf="!isErrorBalance">
+    <ng-container *ngIf="!isError">
       <div class="summary row">
         <div class="col-10">
           <span class="account-dropdown" [matMenuTriggerFor]="account">
@@ -75,7 +75,7 @@
             </div>
           </mat-menu>
           <span class="address">
-            <wallet-address [value]="currAcc.address"></wallet-address>
+            <wallet-address [value]="currAcc.address.value"></wallet-address>
           </span>
         </div>
         <div class="col-2 text-right">
@@ -93,15 +93,15 @@
           <div class="balance-detail">
             <div class="label">{{ 'balance' | translate }}</div>
             <div class="balance">
-              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
-              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
+              <span *ngIf="!isLoading && !isError">
                 {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
               </span>
               <span> ZBC</span>
             </div>
             <div class="converted-balance">
-              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
-              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
+              <span *ngIf="!isLoading && !isError">
                 {{ (accountBalance.balance / 1e8) * currencyRate.value | number: '0.0-2' }}
               </span>
               <span> {{ currencyRate.name }}</span>
@@ -116,15 +116,15 @@
           <div class="balance-detail">
             <div class="label">{{ 'spendable balance' | translate }}</div>
             <div class="balance">
-              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
-              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
+              <span *ngIf="!isLoading && !isError">
                 {{ accountBalance.spendableBalance / 1e8 | number: '0.0-4' }}
               </span>
               <span> ZBC</span>
             </div>
             <div class="converted-balance">
-              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoadingBalance"></i>
-              <span *ngIf="!isLoadingBalance && !isErrorBalance">
+              <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
+              <span *ngIf="!isLoading && !isError">
                 {{ (accountBalance.spendablebalance / 1e8) * currencyRate.value | number: '0.0-2' }}
               </span>
               <span> {{ currencyRate.name }}</span>
@@ -149,7 +149,7 @@
       </div>
     </ng-container>
     <div class="text-right">
-      <span style="font-size: 12px;" *ngIf="!isLoadingBalance && !isErrorBalance"
+      <span style="font-size: 12px;" *ngIf="!isLoading && !isError"
         ><i>{{ 'last refresh' | translate }}: {{ lastRefreshAccount | dateAgo }}</i></span
       >
     </div>
@@ -163,8 +163,8 @@
     </div>
     <transaction-list
       [transactionData]="unconfirmTx"
-      [isLoading]="isLoadingRecentTx"
-      [isError]="isErrorRecentTx"
+      [isLoading]="isLoading"
+      [isError]="isError"
       (refresh)="reloadBalanceTx()"
       [txType]="txType"
     ></transaction-list>
@@ -175,7 +175,7 @@
     <div class="col-10">
       <h2 class="mat-h2 title">
         {{ 'recent transactions' | translate }}
-        <span class="text-refresh" *ngIf="!isErrorRecentTx && !isLoadingRecentTx"
+        <span class="text-refresh" *ngIf="!isError && !isLoading"
           >( {{ 'last refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
         >
       </h2>
@@ -188,8 +188,8 @@
   </div>
   <transaction-list
     [transactionData]="recentTx"
-    [isLoading]="isLoadingRecentTx"
-    [isError]="isErrorRecentTx"
+    [isLoading]="isLoading"
+    [isError]="isError"
     (refresh)="reloadBalanceTx()"
     [txType]="txType"
   ></transaction-list>

@@ -63,33 +63,33 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onChange(value: string) {
-    if (value != this.value) {
-      this.filteredContacts = this.filterContacts(value);
-      this._onChange(value);
-      this._onTouched(value);
-      this.change.emit(value);
+  onChange(address: string) {
+    if (address != this.value) {
+      this.filteredContacts = this.filterContacts(address);
+      this._onChange(address);
+      this._onTouched(address);
+      this.change.emit(address);
     }
-    this.value = value;
+    this.value = address;
   }
 
   onOptionClick(address: string) {
     this._onChange(address);
   }
 
-  filterContacts(value: string): Contact[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
+  filterContacts(address: string): Contact[] {
+    if (address) {
+      const filterValue = address.toLowerCase();
       return this.contacts.filter((contact: Contact) =>
         contact.name.toLocaleLowerCase().includes(filterValue)
       );
-    } else if (value == '') return this.contacts;
+    } else if (address == '') return this.contacts;
   }
 
   getAccounts() {
     this.accounts = this.authServ.getAllAccount();
     if (this.exceptContact)
-      this.accounts = this.accounts.filter(acc => acc.address !== this.exceptContact.address);
+      this.accounts = this.accounts.filter(acc => acc.address.value !== this.exceptContact.address.value);
     this.accounts.forEach(account => {
       const contact: Contact = {
         address: account.address,

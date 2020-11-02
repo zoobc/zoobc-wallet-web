@@ -13,8 +13,6 @@ import zoobc, {
   TransactionType,
   EscrowListParams,
   OrderBy,
-  toZBCTransactions,
-  toZBCPendingTransactions,
   ZBCTransaction,
   getZBCAddress,
   AccountBalance,
@@ -33,12 +31,9 @@ export class DashboardComponent implements OnInit {
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
 
-  accountBalance: any;
-  isLoadingBalance: boolean = false;
-  isLoadingRecentTx: boolean = false;
-
-  isErrorBalance: boolean = false;
-  isErrorRecentTx: boolean = false;
+  accountBalance: AccountBalance;
+  isLoading: boolean = false;
+  isError: boolean = false;
 
   totalTx: number;
   recentTx: ZBCTransaction[];
@@ -62,7 +57,6 @@ export class DashboardComponent implements OnInit {
     this.currAcc = this.authServ.getCurrAccount();
 
     this.getBalance();
-    this.getTransactions();
 
     const subsRate = this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
     this.subscription.add(subsRate);
@@ -81,33 +75,34 @@ export class DashboardComponent implements OnInit {
   }
 
   getBalance() {
-    if (!this.isLoadingBalance) {
-      this.isLoadingBalance = true;
-      this.isErrorBalance = false;
+    if (!this.isLoading) {
+      this.isLoading = true;
+      this.isError = false;
 
-      zoobc.Account.getBalance({ address: this.currAcc.address, type: 0 })
+      zoobc.Account.getBalance(this.currAcc.address)
         .then((data: AccountBalance) => {
           this.accountBalance = data;
           return this.authServ.getAccountsWithBalance();
         })
         .then((res: SavedAccount[]) => (this.accounts = res))
-        .catch(e => {
-          this.isErrorBalance = true;
-        })
-        .finally(() => ((this.isLoadingBalance = false), (this.lastRefreshAccount = Date.now())));
+        .catch(e => (this.isError = true))
+        .finally(() => {
+          this.isLoading = false;
+          this.getTransactions();
+        });
     }
   }
 
   async getTransactions() {
-    if (!this.isLoadingRecentTx) {
+    if (!this.isLoading) {
       this.recentTx = null;
       this.unconfirmTx = null;
 
-      this.isLoadingRecentTx = true;
-      this.isErrorRecentTx = false;
+      // this.isLoading = true;
+      // this.isError = false;
 
       const params: TransactionListParams = {
-        address: { address: this.currAcc.address, type: 0 },
+        address: this.currAcc.address,
         transactionType: TransactionType.SENDMONEYTRANSACTION,
         pagination: {
           page: 1,
@@ -130,7 +125,7 @@ export class DashboardComponent implements OnInit {
         const paramEscrow: EscrowListParams = {
           blockHeightStart: firstHeight,
           blockHeightEnd: lastHeight,
-          recipient: { address: this.currAcc.address, type: 0 },
+          recipient: this.currAcc.address,
           statusList: [0, 1, 2, 3],
           latest: false,
           pagination: {
@@ -146,8 +141,8 @@ export class DashboardComponent implements OnInit {
 
         tx.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent.senderAlias = this.contactServ.get(recent.sender.address).name || '';
-          recent.recipientAlias = this.contactServ.get(recent.recipient.address).name || '';
+          recent.senderAlias = this.contactServ.get(recent.sender.value).name || '';
+          recent.recipientAlias = this.contactServ.get(recent.recipient.value).name || '';
           if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
             if (recent.txBody.nodepublickey) {
               const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
@@ -166,18 +161,18 @@ export class DashboardComponent implements OnInit {
         this.recentTx = tx;
         this.totalTx = trxList.total;
         const paramPool: MempoolListParams = {
-          address: { address: this.currAcc.address, type: 0 },
+          address: this.currAcc.address,
         };
         const unconfirmTx = await zoobc.Mempool.getList(paramPool);
-        this.unconfirmTx = toZBCPendingTransactions(unconfirmTx).map(uc => {
+        this.unconfirmTx = unconfirmTx.transactions.map(uc => {
           if (uc.escrow) uc['txBody'].approval = 0;
           return uc;
         });
       } catch (error) {
         console.log(error);
-        this.isErrorRecentTx = true;
+        this.isError = true;
       } finally {
-        this.isLoadingRecentTx = false;
+        this.isLoading = false;
         this.lastRefresh = Date.now();
       }
     }

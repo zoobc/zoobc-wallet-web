@@ -50,7 +50,7 @@ export class RemoveNodeComponent implements OnInit {
           this.isError = false;
 
           let data: RemoveNodeInterface = {
-            accountAddress: { address: this.account.address, type: 0 },
+            accountAddress: this.account.address,
             nodePublicKey: ZBCAddressToBytes(this.formRemoveNode.get('nodePublicKey').value),
             fee: this.formRemoveNode.get('fee').value,
           };

@@ -2,12 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { getZBCAddress, MultiSigAddress } from 'zoobc-sdk';
+import zoobc, { getZBCAddress, MultiSigInfo, Address } from 'zoobc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { Account } from 'zoobc-sdk/types/helper/interfaces';
 @Component({
   selector: 'app-add-new-account',
   templateUrl: './add-account.component.html',
@@ -55,7 +54,7 @@ export class AddAccountComponent implements OnInit {
         type: 'normal',
         path,
         nodeIP: null,
-        address: accountAddress,
+        address: { value: accountAddress, type: 0 },
       };
       this.authServ.addAccount(account);
       return this.dialogRef.close(true);
@@ -75,12 +74,11 @@ export class AddAccountComponent implements OnInit {
       type: 'warning',
     }).then(res => {
       if (!res.value) return null;
-      let participants: [string] = this.participantsField.value.filter(value => value.length > 0);
-      participants = participants.sort();
-      const multiParam: MultiSigAddress = {
-        participants: participants.map(pc => {
-          return { address: pc, type: 0 };
-        }),
+      let addresses: [string] = this.participantsField.value.filter(value => value.length > 0);
+      addresses = addresses.sort();
+      const participants: Address[] = addresses.map(address => ({ value: address, type: 0 }));
+      const multiParam: MultiSigInfo = {
+        participants,
         nonce: this.nonceField.value,
         minSigs: this.minSignatureField.value,
       };
@@ -90,7 +88,7 @@ export class AddAccountComponent implements OnInit {
         type: 'multisig',
         path: null,
         nodeIP: null,
-        address: multiSignAddress.address,
+        address: { value: multiSignAddress, type: 0 },
         participants: participants,
         nonce: this.nonceField.value,
         minSig: this.minSignatureField.value,

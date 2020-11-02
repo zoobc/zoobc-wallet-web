@@ -7,7 +7,7 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress, parseAddress } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 
 interface Languages {
@@ -141,7 +141,7 @@ export class RestoreWalletComponent implements OnInit {
       path: 0,
       type: 'normal',
       nodeIP: null,
-      address: address,
+      address: { value: address, type: 0 },
     };
 
     localStorage.removeItem('ACCOUNT');

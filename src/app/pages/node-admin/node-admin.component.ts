@@ -11,10 +11,8 @@ import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
   NodeParams,
-  toUnconfirmTransactionNodeWallet,
   MempoolListParams,
   TransactionListParams,
-  MempoolTransactionsResponse,
   GenerateNodeKeyResponses,
   NodeHardwareResponse,
   TransactionType,
@@ -26,6 +24,7 @@ import zoobc, {
   ZBCTransactions,
   NodeRegistration,
   NodeRegistrations,
+  ZBCTransaction,
 } from 'zoobc-sdk';
 
 @Component({
@@ -40,7 +39,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   gbToB = Math.pow(1024, 3);
 
   registeredNode: NodeRegistration;
-  pendingNodeTx = null;
+  pendingNodeTx: ZBCTransaction = null;
 
   isNodeHardwareLoading: boolean = false;
   isNodeHardwareError: boolean = false;
@@ -117,21 +116,21 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     this.registeredNode = null;
 
     const params: MempoolListParams = {
-      address: { address: this.account.address, type: 0 },
+      address: this.account.address,
     };
     const param: TransactionListParams = {
       transactionType: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION,
-      address: { address: this.account.address, type: 0 },
+      address: this.account.address,
     };
     zoobc.Transactions.getList(param).then((res: ZBCTransactions) => {
       this.lastClaim = res.transactions[0] && res.transactions[0].timestamp;
     });
     zoobc.Mempool.getList(params)
-      .then((res: MempoolTransactionsResponse) => {
-        const pendingTxs = toUnconfirmTransactionNodeWallet(res);
-        this.pendingNodeTx = pendingTxs;
+      .then((res: ZBCTransactions) => {
+        // const pendingTxs = toUnconfirmTransactionNodeWallet(res);
+        this.pendingNodeTx = res.transactions[0];
         const params: NodeParams = {
-          owner: { address: this.account.address, type: 0 },
+          owner: this.account.address,
         };
         return zoobc.Node.get(params);
       })
@@ -273,7 +272,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   streamNodeRegistrationQueue() {
     this.isNodeInQueue = true;
     const params: NodeParams = {
-      owner: { address: this.account.address, type: 0 },
+      owner: this.account.address,
     };
     this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
       async res => {
@@ -303,7 +302,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     this.isNodeRewardError = false;
     this.totalNodeReward = 0;
     let param: AccountLedgerListParams = {
-      account: { address: this.account.address, type: 0 },
+      address: this.account.address,
       eventType: EventType.EVENTREWARD,
       pagination: {
         page: 1,

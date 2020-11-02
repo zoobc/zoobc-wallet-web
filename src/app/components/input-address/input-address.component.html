@@ -19,12 +19,12 @@
     </mat-option>
     <mat-option
       #matOption
-      (click)="onChange(contact.address)"
+      (click)="onChange(contact.address.value)"
       *ngFor="let contact of filteredContacts"
-      [value]="contact.address"
+      [value]="contact.address.value"
     >
       <span>{{ contact.name }}</span> |
-      <small class="font-roboto-mono">{{ contact.address }}</small>
+      <small class="font-roboto-mono">{{ contact.address.value }}</small>
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

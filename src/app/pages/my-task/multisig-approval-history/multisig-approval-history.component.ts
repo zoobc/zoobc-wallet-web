@@ -59,7 +59,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
     this.isError = false;
 
     const txParam: TransactionListParams = {
-      address: { address: this.account.address, type: 0 },
+      address: this.account.address,
       transactionType: TransactionType.MULTISIGNATURETRANSACTION,
       pagination: {
         page: this.page,

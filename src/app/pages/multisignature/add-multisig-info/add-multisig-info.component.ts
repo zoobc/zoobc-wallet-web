@@ -5,11 +5,10 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import zoobc, { MultiSigAddress } from 'zoobc-sdk';
+import zoobc, { Address } from 'zoobc-sdk';
 import { uniqueParticipant, getTranslation } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { Account } from 'zoobc-sdk/types/helper/interfaces';
 
 @Component({
   selector: 'app-add-multisig-info',
@@ -54,7 +53,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
       if (multisigInfo) {
         const { participants, minSigs, nonce } = multisigInfo;
-        const addressParticipant = participants.map(pc => pc.address);
+        const addressParticipant = participants;
         this.patchParticipant(addressParticipant);
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
@@ -78,11 +77,11 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       this.participantsField.push(new FormControl('', [Validators.required]));
   }
 
-  patchParticipant(participants: string[]) {
+  patchParticipant(participants: Address[]) {
     while (this.participantsField.controls.length !== 0) this.participantsField.removeAt(0);
 
     participants.forEach((pcp, index) => {
-      if (index <= 1) this.participantsField.push(new FormControl(pcp, [Validators.required]));
+      if (index <= 1) this.participantsField.push(new FormControl(pcp.value, [Validators.required]));
       else this.participantsField.push(new FormControl(pcp));
     });
   }
@@ -119,7 +118,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       let isOneParticpants: boolean = false;
       const idx = this.authServ
         .getAllAccount()
-        .filter(res => this.multisig.multisigInfo.participants.some(ps => ps.address == res.address));
+        .filter(res => this.multisig.multisigInfo.participants.some(ps => ps.value == res.address.value));
       if (idx.length > 0) isOneParticpants = true;
       else isOneParticpants = false;
       if (!isOneParticpants) {
@@ -145,8 +144,8 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
     participants.sort();
     participants = participants.filter(address => address != '');
-    let arrParticipant: Account[] = participants.map(pc => {
-      return { address: pc, type: 0 };
+    let arrParticipant: Address[] = participants.map(pc => {
+      return { value: pc, type: 0 };
     });
     multisig.multisigInfo = {
       minSigs: parseInt(minSigs),
@@ -155,7 +154,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     };
 
     const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
-    multisig.generatedSender = address.address;
+    multisig.generatedSender = address;
     this.multisigServ.update(multisig);
   }
 }

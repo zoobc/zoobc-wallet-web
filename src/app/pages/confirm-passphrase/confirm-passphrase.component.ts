@@ -116,7 +116,7 @@ export class ConfirmPassphraseComponent implements OnInit {
       type: 'normal',
       path: 0,
       nodeIP: null,
-      address: accountAddress,
+      address: { value: accountAddress, type: 0 },
     };
 
     localStorage.removeItem('ACCOUNT');

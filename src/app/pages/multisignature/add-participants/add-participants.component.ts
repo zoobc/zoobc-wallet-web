@@ -58,7 +58,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     });
     if (this.multisig.signaturesInfo === undefined) return this.router.navigate(['/multisignature']);
     this.patchValue(this.multisig);
-    this.participants = this.multisig.multisigInfo.participants.map(pc => pc.address);
+    this.participants = this.multisig.multisigInfo.participants.map(pc => pc.value);
     this.enabledAddParticipant = this.checkEnabledAddParticipant(this.multisig);
     this.readOnlyTxHash = this.checkReadOnlyTxHash(this.multisig);
     this.readOnlyAddress = this.checkReadOnlyAddress(this.multisig);
@@ -103,9 +103,9 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     });
   }
 
-  patchUnsignedAddress(addres: string) {
+  patchUnsignedAddress(address: string) {
     const accounts = this.authServ.getAllAccount();
-    const account = accounts.find(acc => acc.address == addres);
+    const account = accounts.find(acc => acc.address.value == address);
     this.patchParticipant(account.participants);
   }
 
@@ -139,7 +139,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       return null;
     }
     curAccount.participants.forEach(pcp => {
-      this.participantsSignatureField.push(this.createParticipant(pcp, '', false));
+      this.participantsSignatureField.push(this.createParticipant(pcp.value, '', false));
     });
   }
 

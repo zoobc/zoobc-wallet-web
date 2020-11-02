@@ -4,14 +4,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import zoobc, {
   TransactionListParams,
   MempoolListParams,
-  MempoolTransactionsResponse,
   TransactionType,
   EscrowListParams,
   OrderBy,
-  toZBCTransactions,
-  toZBCPendingTransactions,
   ZBCTransaction,
   getZBCAddress,
+  Address,
+  ZBCTransactions,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -34,7 +33,7 @@ export class TransferhistoryComponent implements OnDestroy {
   total: number = 0;
   finished: boolean = false;
 
-  address: string = this.authServ.getCurrAccount().address;
+  address: Address = this.authServ.getCurrAccount().address;
   isLoading: boolean = false;
   isError: boolean = false;
   lastRefresh: number;
@@ -77,7 +76,7 @@ export class TransferhistoryComponent implements OnDestroy {
       this.isError = false;
 
       const txParam: TransactionListParams = {
-        address: { address: this.address, type: 0 },
+        address: this.address,
         transactionType: this.txType,
         pagination: {
           page: this.page,
@@ -100,7 +99,7 @@ export class TransferhistoryComponent implements OnDestroy {
         const paramEscrow: EscrowListParams = {
           blockHeightStart: firstHeight,
           blockHeightEnd: lastHeight,
-          recipient: { address: this.address, type: 0 },
+          recipient: this.address,
           statusList: [0, 1, 2, 3],
           latest: false,
           pagination: {
@@ -117,8 +116,8 @@ export class TransferhistoryComponent implements OnDestroy {
         let txs = trxList.transactions;
         txs.map(recent => {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent.senderAlias = this.contactServ.get(recent.sender.address).name || '';
-          recent.recipientAlias = this.contactServ.get(recent.recipient.address).name || '';
+          recent.senderAlias = this.contactServ.get(recent.sender.value).name || '';
+          recent.recipientAlias = this.contactServ.get(recent.recipient.value).name || '';
           if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
             if (recent.txBody.nodepublickey) {
               const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
@@ -137,13 +136,12 @@ export class TransferhistoryComponent implements OnDestroy {
         this.accountHistory = reload ? txs : this.accountHistory.concat(txs);
 
         if (reload) {
-          const mempoolParams: MempoolListParams = { address: { address: this.address, type: 0 } };
-          this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
-            (res: MempoolTransactionsResponse) =>
-              toZBCPendingTransactions(res).map(uc => {
-                if (uc.escrow) uc['txBody'].approval = 0;
-                return uc;
-              })
+          const mempoolParams: MempoolListParams = { address: this.address };
+          this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then((res: ZBCTransactions) =>
+            res.transactions.map(uc => {
+              if (uc.escrow) uc['txBody'].approval = 0;
+              return uc;
+            })
           );
           this.unconfirmTx.map(res => {
             this.txTypeUnconfirm = res.transactionType;

@@ -6,6 +6,8 @@ import zoobc, {
   TransactionListParams,
   AccountBalance,
   ZBCTransactions,
+  Address,
+  parseAddress,
 } from 'zoobc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
@@ -14,8 +16,8 @@ export interface SavedAccount {
   path?: number;
   type: 'normal' | 'multisig';
   nodeIP: string;
-  address: string;
-  participants?: [string];
+  address: Address;
+  participants?: Address[];
   nonce?: number;
   minSig?: number;
   balance?: number;
@@ -114,14 +116,10 @@ export class AuthService {
   getAccountsWithBalance(type?: 'normal' | 'multisig'): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
       let accounts = this.getAllAccount(type);
-      if (accounts.length == 0) return resolve(accounts);
-      const addresses = accounts.map(acc => {
-        return {
-          address: acc.address,
-          type: 0,
-        };
-      });
 
+      if (accounts.length == 0) return resolve(accounts);
+
+      const addresses = accounts.map(acc => acc.address);
       zoobc.Account.getBalances(addresses)
         .then((res: AccountBalance[]) => {
           let balances = res;
@@ -129,7 +127,7 @@ export class AuthService {
             acc.balance = 0;
             for (let i = 0; i < balances.length; i++) {
               const balance = balances[i];
-              if (balance.account.address == acc.address) {
+              if (balance.address.value == acc.address.value) {
                 acc.balance = balance.spendableBalance;
                 balances.splice(i, 1);
                 break;
@@ -150,7 +148,7 @@ export class AuthService {
     const accounts = this.getAllAccount();
     const { address } = account;
     const isDuplicate = accounts.find(acc => {
-      if (address && acc.address === address) return true;
+      if (address.value && acc.address.value === address.value) return true;
       return false;
     });
 
@@ -174,17 +172,17 @@ export class AuthService {
 
       while (counter < 20) {
         const childSeed = keyring.calcDerivationPath(accountPath);
-        const publicKey = childSeed.publicKey;
-        const address = getZBCAddress(publicKey);
+        const address = getZBCAddress(childSeed.publicKey);
+
         const account: SavedAccount = {
           name: 'Account '.concat((accountPath + 1).toString()),
           path: accountPath,
           nodeIP: null,
-          address: address,
+          address: { value: address, type: 0 },
           type: 'normal',
         };
         const params: TransactionListParams = {
-          address: { address: address, type: 0 },
+          address: { value: address, type: 0 },
           transactionType: 1,
           pagination: {
             page: 1,
@@ -211,7 +209,7 @@ export class AuthService {
         let isDuplicate = false;
         for (let j = 0; j < accounts.length; j++) {
           const account2 = accounts[j];
-          if (account.address == account2.address) {
+          if (account.address.value == account2.address.value) {
             isDuplicate = true;
             break;
           }

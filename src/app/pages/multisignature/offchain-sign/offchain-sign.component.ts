@@ -35,7 +35,7 @@ export class OffchainSignComponent {
   ) {
     this.draft = data;
     this.txType = getTxType(data.txType);
-    this.participants = data.multisigInfo.participants.map(pc => pc.address);
+    this.participants = data.multisigInfo.participants.map(pc => pc.value);
     this.innerTx = Object.keys(this.draft.txBody).map(key => {
       const item = this.draft.txBody;
       return {
@@ -53,7 +53,7 @@ export class OffchainSignComponent {
 
     if (this.isValid) {
       let accounts = this.authServ.getAllAccount();
-      accounts = accounts.filter(res => this.participants.includes(res.address));
+      accounts = accounts.filter(res => this.participants.includes(res.address.value));
       if (accounts.length > 0) this.isAddressInParticipants = true;
       else this.isAddressInParticipants = false;
     }
