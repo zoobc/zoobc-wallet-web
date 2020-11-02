@@ -48,10 +48,10 @@ export class AccountSelectorComponent implements OnInit {
       .then((res: SavedAccount[]) => {
         this.accounts = res;
         if (this.addresses) {
-          this.accounts = this.accounts.filter(res => this.addresses.includes(res.address));
+          this.accounts = this.accounts.filter(res => this.addresses.includes(res.address.value));
           this.account = this.accounts[0];
         } else if (this.selectedValue) {
-          this.account = this.accounts.find(acc => acc.address == this.selectedValue);
+          this.account = this.accounts.find(acc => acc.address.value == this.selectedValue);
         } else if (this.switchAccount) {
           this.account = this.accounts.find(acc => this.account.address == acc.address);
           if (!this.account) this.account = this.accounts[0];

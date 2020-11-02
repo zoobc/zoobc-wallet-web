@@ -8,6 +8,7 @@ import zoobc, {
   RemoveDatasetInterface,
   BIP32Interface,
   AccountDataset,
+  Address,
 } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
@@ -19,7 +20,6 @@ import {
   createRemoveDatasetForm,
   removeDatasetMap,
 } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.component';
-import { Account } from 'zoobc-sdk/types/helper/interfaces';
 @Component({
   selector: 'app-account-dataset',
   templateUrl: './account-dataset.component.html',
@@ -37,7 +37,7 @@ export class AccountDatasetComponent implements OnInit {
 
   form: FormGroup;
   account: SavedAccount;
-  accParam: Account;
+  accParam: Address;
 
   feeRefDialog: MatDialogRef<any>;
   @ViewChild('feedialog') feeDialog: TemplateRef<any>;
@@ -52,10 +52,7 @@ export class AccountDatasetComponent implements OnInit {
   ) {
     this.form = createRemoveDatasetForm();
     this.account = data;
-    this.accParam = {
-      address: this.account.address,
-      type: 0,
-    };
+    this.accParam = this.account.address;
   }
 
   ngOnInit() {
@@ -89,8 +86,8 @@ export class AccountDatasetComponent implements OnInit {
     const seed: BIP32Interface = this.authServ.seed;
 
     let param: RemoveDatasetInterface = {
-      setterAccountAddress: { address: this.dataSet.setter.address, type: 0 },
-      recipientAccountAddress: { address: this.dataSet.recipient.address, type: 0 },
+      setterAccountAddress: { value: this.dataSet.setter.value, type: 0 },
+      recipientAccountAddress: { value: this.dataSet.recipient.value, type: 0 },
       property: this.dataSet.property,
       value: this.dataSet.value,
       fee: this.form.get('fee').value,
@@ -120,10 +117,10 @@ export class AccountDatasetComponent implements OnInit {
 
   onDelete(dataset: AccountDataset) {
     this.dataSet = dataset;
-    this.form.get('sender').patchValue(dataset.setter.address);
+    this.form.get('sender').patchValue(dataset.setter.value);
     this.form.get('property').patchValue(dataset.property);
     this.form.get('value').patchValue(dataset.value);
-    this.form.get('recipientAddress').patchValue(dataset.recipient.address);
+    this.form.get('recipientAddress').patchValue(dataset.recipient.value);
     this.isErrorDelete = false;
     this.isLoadingDelete = false;
     this.feeRefDialog = this.dialog.open(this.feeDialog, {

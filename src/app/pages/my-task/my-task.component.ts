@@ -68,7 +68,7 @@ export class MyTaskComponent implements OnInit {
         this.pageMultiSig = 1;
       }
       const params: MultisigPendingListParams = {
-        address: { address: this.account.address, type: 0 },
+        address: this.account.address,
         status: PendingTransactionStatus.PENDINGTRANSACTIONPENDING,
         pagination: {
           page: this.pageMultiSig,
@@ -106,7 +106,7 @@ export class MyTaskComponent implements OnInit {
       }
 
       const params: EscrowListParams = {
-        approverAddress: { address: this.account.address, type: 0 },
+        approverAddress: this.account.address,
         statusList: [EscrowStatus.PENDING],
         pagination: {
           page: this.pageEscrow,
@@ -120,13 +120,13 @@ export class MyTaskComponent implements OnInit {
         .then(async (res: Escrows) => {
           this.totalEscrow = res.total;
           let txMap = res.escrowList.map(tx => {
-            const alias = this.contactServ.get(tx.recipient.address).name || '';
+            const alias = this.contactServ.get(tx.recipient.value).name || '';
             return {
               id: tx.id,
               alias: alias,
-              senderaddress: tx.sender.address,
-              recipientaddress: tx.recipient.address,
-              approveraddress: tx.approver.address,
+              senderaddress: tx.sender.value,
+              recipientaddress: tx.recipient.value,
+              approveraddress: tx.approver.value,
               amount: tx.amount,
               commission: tx.commission,
               timeout: tx.timeout,
@@ -153,12 +153,11 @@ export class MyTaskComponent implements OnInit {
 
   async getPendingEscrowApproval() {
     const params: MempoolListParams = {
-      address: { address: this.account.address, type: 0 },
+      address: this.account.address,
     };
     let list: string[] = await zoobc.Mempool.getList(params).then(res => {
-      let id: any = res.mempooltransactionsList.filter(tx => {
-        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
-        if (bytes.readInt32LE(0) == TransactionType.APPROVALESCROWTRANSACTION) return tx;
+      let id: any = res.transactions.filter(tx => {
+        if (tx.transactionType == TransactionType.APPROVALESCROWTRANSACTION) return tx;
       });
       id = id.map(tx => {
         const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
@@ -173,9 +172,8 @@ export class MyTaskComponent implements OnInit {
 
   async getPendingMultisigApproval() {
     let list: string[] = await zoobc.Mempool.getList().then(res => {
-      let txHash: any = res.mempooltransactionsList.filter(tx => {
-        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
-        if (bytes.readInt32LE(0) == TransactionType.MULTISIGNATURETRANSACTION) return tx;
+      let txHash: any = res.transactions.filter(tx => {
+        if (tx.transactionType == TransactionType.MULTISIGNATURETRANSACTION) return tx;
       });
       txHash = txHash.map(tx => {
         const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');

@@ -13,7 +13,7 @@ export class NodeAdminService {
 
     for (let i = 0; i < accounts.length; i++) {
       const acc = accounts[i];
-      if (acc.address == account.address) {
+      if (acc.address.value == account.address.value) {
         account.nodeIP = accounts[i].nodeIP = ip;
         break;
       }

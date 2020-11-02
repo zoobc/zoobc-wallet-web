@@ -28,7 +28,7 @@ export class ContactlistComponent implements OnInit {
     this.contacts = this.contactServ.getList();
   }
 
-  async deleteContact(contact) {
+  async deleteContact(contact: Contact) {
     let sentence = getTranslation('are you sure want to delete?', this.translate, {
       alias: contact.name,
     });
@@ -37,7 +37,7 @@ export class ContactlistComponent implements OnInit {
       showCancelButton: true,
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        this.contacts = this.contactServ.delete(contact.address);
+        this.contacts = this.contactServ.delete(contact.address.value);
         return true;
       },
     });

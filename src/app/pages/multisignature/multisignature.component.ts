@@ -5,7 +5,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import zoobc, { isZBCAddressValid, MultiSigAddress, TransactionType } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { getTxType } from 'src/helpers/multisig-utils';
 import { MatDialog } from '@angular/material';
@@ -66,8 +66,8 @@ export class MultisignatureComponent implements OnInit {
       .getDrafts()
       .filter(draft => {
         const { multisigInfo, txBody, generatedSender } = draft;
-        if (generatedSender == currAccount.address) return draft;
-        if (multisigInfo.participants.some(pc => pc.address == currAccount.address)) return draft;
+        if (generatedSender == currAccount.address.value) return draft;
+        if (multisigInfo.participants.some(pc => pc.value == currAccount.address.value)) return draft;
         if (txBody && txBody.sender == currAccount.address) return draft;
       })
       .sort()
@@ -112,18 +112,16 @@ export class MultisignatureComponent implements OnInit {
       multisig.multisigInfo = {
         minSigs: this.account.minSig,
         nonce: this.account.nonce,
-        participants: this.account.participants.map(pc => {
-          return { address: pc, type: 0 };
-        }),
+        participants: this.account.participants,
       };
 
       const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
-      multisig.generatedSender = address.address;
+      multisig.generatedSender = address;
       this.multisigServ.update(multisig);
       let isOneParticpants: boolean = false;
       const idx = this.authServ
         .getAllAccount()
-        .filter(res => multisig.multisigInfo.participants.some(pc => pc.address == res.address));
+        .filter(res => multisig.multisigInfo.participants.some(pc => pc.value == res.address.value));
       if (idx.length > 0) isOneParticpants = true;
       else isOneParticpants = false;
       if (!isOneParticpants) {

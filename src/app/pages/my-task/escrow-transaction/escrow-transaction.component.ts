@@ -93,11 +93,9 @@ export class EscrowTransactionComponent implements OnInit {
   }
 
   async getBalance() {
-    await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
-      (data: AccountBalance) => {
-        this.accountBalance = data;
-      }
-    );
+    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalance) => {
+      this.accountBalance = data;
+    });
   }
 
   async onConfirm() {
@@ -109,7 +107,7 @@ export class EscrowTransactionComponent implements OnInit {
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
-        approvalAddress: { address: this.account.address, type: 0 },
+        approvalAddress: this.account.address,
         fee: feeForm.value,
         approvalCode: EscrowApproval.APPROVE,
         transactionId: transactionIdForm.value,
@@ -156,7 +154,7 @@ export class EscrowTransactionComponent implements OnInit {
     if (balance >= feeForm.value) {
       this.isLoadingTx = true;
       const data: EscrowApprovalInterface = {
-        approvalAddress: { address: this.account.address, type: 0 },
+        approvalAddress: this.account.address,
         fee: feeForm.value,
         approvalCode: EscrowApproval.REJECT,
         transactionId: transactionIdForm.value,

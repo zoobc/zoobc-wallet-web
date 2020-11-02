@@ -120,13 +120,13 @@ export class MultisigTransactionComponent implements OnInit {
         const seed = this.authServ.seed;
         this.isLoadingTx = true;
         let data: MultiSigInterface = {
-          accountAddress: { address: account.address, type: 0 },
+          accountAddress: account.address,
           fee: this.feeForm.value,
           signaturesInfo: {
             txHash: this.multiSigDetail.transactionhash,
             participants: [
               {
-                address: { address: account.address, type: 0 },
+                address: account.address,
                 signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
               },
             ],

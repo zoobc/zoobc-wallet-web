@@ -132,16 +132,15 @@ export class SendmoneyComponent implements OnInit {
       const aliasField = this.formSend.get('alias');
 
       let data: SendMoneyInterface = {
-        sender: { address: senderForm.value, type: 0 },
-        recipient: { address: recipientForm.value, type: 0 },
+        sender: { value: senderForm.value, type: 0 },
+        recipient: { value: recipientForm.value, type: 0 },
         fee: feeForm.value,
         amount: amountForm.value,
-        approverAddress: { address: addressApproverField.value, type: 0 },
+        approverAddress: { value: addressApproverField.value, type: 0 },
         commission: approverCommissionField.value,
         timeout: timeoutField.value,
         instruction: instructionField.value,
       };
-      console.log(data);
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
@@ -149,7 +148,7 @@ export class SendmoneyComponent implements OnInit {
           let message = getTranslation('your transaction is processing', this.translate);
           let subMessage = getTranslation('you send coins to', this.translate, {
             amount: data.amount,
-            recipient: data.recipient.address,
+            recipient: data.recipient.value,
           });
           Swal.fire(message, subMessage, 'success');
 
@@ -157,7 +156,7 @@ export class SendmoneyComponent implements OnInit {
           if (aliasField.value) {
             const newContact: Contact = {
               name: aliasField.value,
-              address: recipientForm.value,
+              address: { value: recipientForm.value, type: 0 },
             };
             this.contactServ.add(newContact);
           }
@@ -175,7 +174,7 @@ export class SendmoneyComponent implements OnInit {
   }
 
   async getBalance(address: string) {
-    await zoobc.Account.getBalance({ address: address, type: 0 }).then((data: AccountBalance) => {
+    await zoobc.Account.getBalance({ value: address, type: 0 }).then((data: AccountBalance) => {
       this.accountBalance = data;
     });
   }

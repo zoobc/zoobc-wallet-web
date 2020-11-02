@@ -1,7 +1,7 @@
 import { Component, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
-import { ZBCTransaction } from 'zoobc-sdk';
+import { Address, ZBCTransaction } from 'zoobc-sdk';
 
 @Component({
   selector: 'send-money',
@@ -11,7 +11,7 @@ export class SendMoneyComponent implements OnInit {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
   @Input() transaction: ZBCTransaction;
 
-  address: string;
+  address: Address;
   status: string = '';
   color: string = '';
 

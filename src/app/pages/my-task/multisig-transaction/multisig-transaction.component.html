@@ -12,7 +12,7 @@
       <div class="col-12 col-sm-8">
         <div class="alias" *ngIf="multisig.alias">{{ multisig.alias }}</div>
         <div class="address">
-          <wallet-address [value]="multisig.senderaddress"></wallet-address>
+          <wallet-address [value]="multisig.senderaddress.value"></wallet-address>
         </div>
         <div class="date">
           {{ multisig.timestamp * 1000 | dateAgo }}
@@ -55,13 +55,13 @@
     <div class="row">
       <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="multiSigDetail.senderaddress"></wallet-address>
+        <wallet-address [value]="multiSigDetail.senderaddress.value"></wallet-address>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="multiSigDetail.recipientaddress"></wallet-address>
+        <wallet-address [value]="multiSigDetail.recipientaddress.value"></wallet-address>
       </div>
     </div>
     <div class="row">

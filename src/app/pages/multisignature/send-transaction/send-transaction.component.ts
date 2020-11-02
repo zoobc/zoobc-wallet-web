@@ -78,7 +78,7 @@ export class SendTransactionComponent implements OnInit {
       }
     });
     if (this.multisig.multisigInfo === undefined) return this.router.navigate(['/multisignature']);
-    this.participants = this.multisig.multisigInfo.participants.map(pc => pc.address);
+    this.participants = this.multisig.multisigInfo.participants.map(pc => pc.value);
     this.getMultiSigDraft();
   }
 
@@ -134,11 +134,9 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async getBalance() {
-    await zoobc.Account.getBalance({ address: this.account.address, type: 0 }).then(
-      (data: AccountBalance) => {
-        this.accountBalance = data;
-      }
-    );
+    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalance) => {
+      this.accountBalance = data;
+    });
   }
 
   async onConfirm() {
@@ -170,7 +168,7 @@ export class SendTransactionComponent implements OnInit {
       });
 
       this.account = this.authServ.getCurrAccount();
-      accountAddress = { address: this.account.address, type: 0 };
+      accountAddress = this.account.address;
       data = {
         accountAddress,
         fee,
@@ -180,7 +178,7 @@ export class SendTransactionComponent implements OnInit {
       };
     } else {
       this.account = this.authServ.getCurrAccount();
-      accountAddress = { address: this.account.address, type: 0 };
+      accountAddress = this.account.address;
       data = {
         accountAddress,
         fee,

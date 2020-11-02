@@ -47,7 +47,11 @@ export class AddcontactComponent implements OnInit {
           text: message,
         });
       } else {
-        const contacts: Contact[] = this.contactServ.add(this.addForm.value);
+        const contact: Contact = {
+          name: this.aliasField.value,
+          address: { value: this.addressField.value, type: 0 },
+        };
+        const contacts: Contact[] = this.contactServ.add(contact);
         this.dialogRef.close(contacts);
       }
     }

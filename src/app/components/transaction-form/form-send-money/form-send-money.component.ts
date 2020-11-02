@@ -58,7 +58,7 @@ export class FormSendMoneyComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-    this.group.get('sender').patchValue(account.address);
+    this.group.get('sender').patchValue(account.address.value);
   }
 
   filterContacts(value: string): Contact[] {
@@ -74,7 +74,7 @@ export class FormSendMoneyComponent implements OnInit {
     const recipientForm = this.group.get('recipient');
 
     const isAddressInContacts = this.contacts.some(c => {
-      if (c.address == recipientForm.value) {
+      if (c.address.value == recipientForm.value) {
         this.contact = c;
         return true;
       } else return false;
@@ -125,10 +125,10 @@ export function createSendMoneyForm(): FormGroup {
 export function createSendMoneyBytes(form: any): Buffer {
   const { sender, fee, amount, recipient } = form;
   const data: SendMoneyInterface = {
-    sender: { address: sender, type: 0 },
+    sender: { value: sender, type: 0 },
     fee,
     amount,
-    recipient: { address: recipient, type: 0 },
+    recipient: { value: recipient, type: 0 },
   };
   return sendMoneyBuilder(data);
 }

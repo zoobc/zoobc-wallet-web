@@ -4,6 +4,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
+import { Address } from 'zoobc-sdk';
 
 @Component({
   selector: 'app-receive',
@@ -11,7 +12,7 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./receive.component.scss'],
 })
 export class ReceiveComponent implements OnInit {
-  address: string = '';
+  address: Address;
   urlReqCoin: string;
   qrCodeStr: string;
 
@@ -28,20 +29,20 @@ export class ReceiveComponent implements OnInit {
     });
 
     this.address = this.authServ.getCurrAccount().address;
-    this.urlReqCoin = `${window.location.origin}/request/${this.address}`;
-    this.qrCodeStr = this.address + '||' + this.amountField.value;
+    this.urlReqCoin = `${window.location.origin}/request/${this.address.value}`;
+    this.qrCodeStr = this.address.value + '||' + this.amountField.value;
   }
 
   ngOnInit() {}
 
   onChangeAmount(amount) {
     if (amount != '') {
-      this.urlReqCoin = `${window.location.origin}/request/${this.address}/${amount}`;
+      this.urlReqCoin = `${window.location.origin}/request/${this.address.value}/${amount}`;
     } else {
-      this.urlReqCoin = `${window.location.origin}/request/${this.address}`;
+      this.urlReqCoin = `${window.location.origin}/request/${this.address.value}`;
     }
 
-    this.qrCodeStr = this.address + '||' + this.amountField.value;
+    this.qrCodeStr = this.address.value + '||' + this.amountField.value;
   }
 
   async onCopyText(e) {
