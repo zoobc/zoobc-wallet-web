@@ -33,7 +33,7 @@ export class SetupDatasetComponent implements OnInit {
   ) {
     this.formGroup = createSetupDatasetForm();
     const sender = this.formGroup.get('sender');
-    sender.patchValue(this.account.address);
+    sender.patchValue(this.account.address.value);
   }
 
   ngOnInit() {}

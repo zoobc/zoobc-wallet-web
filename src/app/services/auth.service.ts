@@ -7,7 +7,6 @@ import zoobc, {
   AccountBalance,
   ZBCTransactions,
   Address,
-  parseAddress,
 } from 'zoobc-sdk';
 import { BehaviorSubject } from 'rxjs';
 

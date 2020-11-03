@@ -32,14 +32,14 @@
     <div class="row">
       <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="transaction.sender.address"></wallet-address>
+        <wallet-address [value]="transaction.sender.value"></wallet-address>
       </div>
     </div>
 
-    <div class="row" *ngIf="transaction.sender.address != transaction.recipient.address">
+    <div class="row" *ngIf="transaction.sender.value != transaction.recipient.value">
       <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="transaction.recipient.address"></wallet-address>
+        <wallet-address [value]="transaction.recipient.value"></wallet-address>
       </div>
     </div>
 
