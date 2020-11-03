@@ -23,7 +23,6 @@ import zoobc, {
   OrderBy,
   ZBCTransactions,
   NodeRegistration,
-  NodeRegistrations,
   ZBCTransaction,
 } from 'zoobc-sdk';
 
@@ -39,7 +38,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   gbToB = Math.pow(1024, 3);
 
   registeredNode: NodeRegistration;
-  pendingNodeTx: ZBCTransaction = null;
+  registrationType: string;
 
   isNodeHardwareLoading: boolean = false;
   isNodeHardwareError: boolean = false;
@@ -48,7 +47,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   isNodeRewardLoading: boolean = false;
   isNodeRewardError: boolean = false;
 
-  lastClaim: any = undefined;
+  lastClaim: number; // timestamp
   nodePublicKey: string = '';
   totalNodeReward: number;
   stream: Subscription;
@@ -109,32 +108,33 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     if (this.streamQueue) this.streamQueue.unsubscribe();
   }
 
-  getRegisteredNode() {
+  async getRegisteredNode() {
     this.isNodeLoading = true;
     this.isNodeError = false;
-    this.pendingNodeTx = null;
+    this.registrationType = '';
     this.registeredNode = null;
 
-    const params: MempoolListParams = {
-      address: this.account.address,
-    };
-    const param: TransactionListParams = {
+    const txParam: TransactionListParams = {
       transactionType: TransactionType.CLAIMNODEREGISTRATIONTRANSACTION,
       address: this.account.address,
     };
-    zoobc.Transactions.getList(param).then((res: ZBCTransactions) => {
+    zoobc.Transactions.getList(txParam).then((res: ZBCTransactions) => {
       this.lastClaim = res.transactions[0] && res.transactions[0].timestamp;
     });
-    zoobc.Mempool.getList(params)
-      .then((res: ZBCTransactions) => {
-        // const pendingTxs = toUnconfirmTransactionNodeWallet(res);
-        this.pendingNodeTx = res.transactions[0];
-        const params: NodeParams = {
-          owner: this.account.address,
-        };
-        return zoobc.Node.get(params);
-      })
-      .then((res: NodeRegistration) => {
+
+    try {
+      const mempoolParam: MempoolListParams = {
+        address: this.account.address,
+      };
+      await zoobc.Mempool.getList(mempoolParam).then(
+        (res: ZBCTransactions) => (this.registrationType = this.getRegistrationType(res.transactions))
+      );
+      console.log(this.registrationType);
+
+      const params: NodeParams = {
+        owner: this.account.address,
+      };
+      await zoobc.Node.get(params).then((res: NodeRegistration) => {
         if (res) {
           const registrationstatus = res.registrationStatus;
           if (registrationstatus == 0) {
@@ -146,18 +146,13 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
               this.streamNodeRegistrationQueue();
           }
         }
-      })
-      .catch(err => {
-        console.log(err);
-        this.isNodeError = true;
-      })
-      .finally(() => (this.isNodeLoading = false));
-  }
-
-  getTotalScore() {
-    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeId)
-      .then(res => (this.score = parseInt(res.score) / 1e8))
-      .catch(err => console.log(err));
+      });
+    } catch (err) {
+      console.log(err);
+      this.isNodeError = true;
+    } finally {
+      this.isNodeLoading = false;
+    }
   }
 
   generateNewPubKey() {
@@ -206,6 +201,104 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
     );
   }
 
+  streamNodeRegistrationQueue() {
+    this.isNodeInQueue = true;
+    const params: NodeParams = {
+      owner: this.account.address,
+    };
+    this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
+      async res => {
+        if (res.noderegistrationsList.length > 0) {
+          const { lockedbalance } = res.noderegistrationsList[0];
+          this.queueLockBalance = Number(lockedbalance);
+          const curentNode = await zoobc.Node.get(params);
+          this.curentNodeQueue = curentNode;
+          this.curentLockBalance = Number(curentNode.lockedBalance);
+        } else {
+          const curentNode = await zoobc.Node.get(params);
+          if (curentNode.registrationStatus == 0) {
+            this.streamQueue.unsubscribe();
+            this.isNodeInQueue = false;
+            this.getRegisteredNode();
+          }
+        }
+      },
+      err => {}
+    );
+  }
+
+  getMyNodePublicKey() {
+    zoobc.Node.getMyNodePublicKey(this.account.nodeIP).then(res => {
+      this.nodePublicKey = getZBCAddress(Buffer.from(res.nodepublickey.toString(), 'base64'), 'ZNK');
+    });
+  }
+
+  getRegistrationType(txs: ZBCTransaction[]): string {
+    for (let i = 0; i < txs.length; i++) {
+      switch (txs[i].transactionType) {
+        case TransactionType.NODEREGISTRATIONTRANSACTION:
+          return 'register node';
+        case TransactionType.UPDATENODEREGISTRATIONTRANSACTION:
+          return 'update node';
+        case TransactionType.CLAIMNODEREGISTRATIONTRANSACTION:
+          return 'claim node';
+        case TransactionType.REMOVENODEREGISTRATIONTRANSACTION:
+          return 'remove node';
+      }
+    }
+  }
+
+  // ========================== PARTICIPATION AND REWARD ================== //
+  getTotalScore() {
+    zoobc.ParticipationScore.getLatest(this.registeredNode.nodeId)
+      .then(res => (this.score = parseInt(res.score) / 1e8))
+      .catch(err => console.log(err));
+  }
+
+  async getRewardNode() {
+    this.tableData = [];
+    if (!this.registeredNode) return null;
+    this.isNodeRewardLoading = true;
+    this.isNodeRewardError = false;
+    this.totalNodeReward = 0;
+    let param: AccountLedgerListParams = {
+      address: this.account.address,
+      eventType: EventType.EVENTREWARD,
+      pagination: {
+        page: 1,
+        limit: 5,
+        orderField: 'timestamp',
+        orderBy: OrderBy.DESC,
+      },
+    };
+    try {
+      const accLedger = await zoobc.AccountLedger.getList(param);
+      this.totalNodeReward = accLedger.total;
+      this.tableData = accLedger.accountLedgerList;
+    } catch (err) {
+      this.isNodeRewardError = true;
+      console.log(err);
+    } finally {
+      this.isNodeRewardLoading = false;
+    }
+  }
+
+  getMoreReward() {
+    this.dialog.open(NodeRewardListComponent, {
+      width: '600px',
+      maxHeight: '90vh',
+    });
+  }
+  // ========================== END PARTICIPATION AND REWARD ================== //
+
+  async onCopyUrl(url: string) {
+    onCopyText(url);
+
+    let message = getTranslation('address copied to clipboard', this.translate);
+    this.snackbar.open(message, null, { duration: 3000 });
+  }
+
+  // ======================== OPEN DIALOG NODE ======================== //
   openRegisterNode() {
     const dialog = this.dialog.open(RegisterNodeComponent, {
       width: '420px',
@@ -261,76 +354,5 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   onCloseDialog() {
     this.successRefDialog.close();
   }
-
-  async onCopyUrl(url: string) {
-    onCopyText(url);
-
-    let message = getTranslation('address copied to clipboard', this.translate);
-    this.snackbar.open(message, null, { duration: 3000 });
-  }
-
-  streamNodeRegistrationQueue() {
-    this.isNodeInQueue = true;
-    const params: NodeParams = {
-      owner: this.account.address,
-    };
-    this.streamQueue = zoobc.Node.getPending(1, this.authServ.seed).subscribe(
-      async res => {
-        if (res.noderegistrationsList.length > 0) {
-          const { lockedbalance } = res.noderegistrationsList[0];
-          this.queueLockBalance = Number(lockedbalance);
-          const curentNode = await zoobc.Node.get(params);
-          this.curentNodeQueue = curentNode;
-          this.curentLockBalance = Number(curentNode.lockedBalance);
-        } else {
-          const curentNode = await zoobc.Node.get(params);
-          if (curentNode.registrationStatus == 0) {
-            this.streamQueue.unsubscribe();
-            this.isNodeInQueue = false;
-            this.getRegisteredNode();
-          }
-        }
-      },
-      err => {}
-    );
-  }
-
-  async getRewardNode() {
-    this.tableData = [];
-    if (!this.registeredNode) return null;
-    this.isNodeRewardLoading = true;
-    this.isNodeRewardError = false;
-    this.totalNodeReward = 0;
-    let param: AccountLedgerListParams = {
-      address: this.account.address,
-      eventType: EventType.EVENTREWARD,
-      pagination: {
-        page: 1,
-        limit: 5,
-        orderField: 'timestamp',
-        orderBy: OrderBy.DESC,
-      },
-    };
-    try {
-      const accLedger = await zoobc.AccountLedger.getList(param);
-      this.totalNodeReward = accLedger.total;
-      this.tableData = accLedger.accountLedgerList;
-    } catch (err) {
-      this.isNodeRewardError = true;
-      console.log(err);
-    } finally {
-      this.isNodeRewardLoading = false;
-    }
-  }
-  getMoreReward() {
-    const dialog = this.dialog.open(NodeRewardListComponent, {
-      width: '600px',
-      maxHeight: '90vh',
-    });
-  }
-  getMyNodePublicKey() {
-    zoobc.Node.getMyNodePublicKey(this.account.nodeIP).then(res => {
-      this.nodePublicKey = getZBCAddress(Buffer.from(res.nodepublickey.toString(), 'base64'), 'ZNK');
-    });
-  }
+  // ======================== END OPEN DIALOG NODE ======================== //
 }

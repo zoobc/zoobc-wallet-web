@@ -49,7 +49,7 @@
       *ngFor="let acc of accounts"
       class="account-card"
       (click)="onSwitchAccount(acc)"
-      [ngClass]="account && account.address == acc.address && 'active'"
+      [ngClass]="account && account.value == acc.address.value && 'active'"
     >
       <div class="name">{{ acc.name }}</div>
       <div class="address">

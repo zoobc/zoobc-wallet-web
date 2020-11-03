@@ -10,7 +10,7 @@
         <div class="label">{{ 'participants' | translate }}:</div>
         <ul class="participants" *ngFor="let participant of currAcc.participants">
           <li>
-            <wallet-address [value]="participant"></wallet-address>
+            <wallet-address [value]="participant.value"></wallet-address>
           </li>
         </ul>
         <div class="label nonce">
