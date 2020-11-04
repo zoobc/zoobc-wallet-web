@@ -16,7 +16,6 @@ import zoobc, {
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
-import { base64ToHex } from 'src/helpers/utils';
 @Component({
   selector: 'app-my-task',
   templateUrl: './my-task.component.html',

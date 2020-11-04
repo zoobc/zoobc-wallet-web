@@ -3,12 +3,11 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, {
   TransactionType,
   TransactionListParams,
-  MultisigPendingTxDetailResponse,
   MultisigPendingTxResponse,
   toGetPendingList,
   ZBCTransaction,
+  MultiSigPendingDetailResponse,
 } from 'zoobc-sdk';
-import { base64ToHex } from 'src/helpers/utils';
 import { MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({
@@ -93,19 +92,10 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   }
 
   onOpenDetailTransaction(txHash: string, id: string) {
-    const hashHex = base64ToHex(txHash);
     this.transactionId = id;
     this.isLoadingDetail = true;
-    zoobc.MultiSignature.getPendingByTxHash(hashHex).then((res: ZBCTransaction) => {
-      const list = [];
-      list.push(res);
-      const tx: MultisigPendingTxResponse = {
-        count: 1,
-        page: 1,
-        pendingtransactionsList: list,
-      };
-      const txFilter = toGetPendingList(tx);
-      this.transactionDetail = txFilter.transactions[0];
+    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: MultiSigPendingDetailResponse) => {
+      this.transactionDetail = res.pendingtransaction;
       this.isLoadingDetail = false;
     });
     this.detailTransactionRefDialog = this.dialog.open(this.detailTransactionDialog, {

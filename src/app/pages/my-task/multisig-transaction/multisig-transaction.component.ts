@@ -6,11 +6,10 @@ import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, {
   MultiSigInterface,
   signTransactionHash,
-  MultisigPendingTxDetailResponse,
   MultisigPostTransactionResponse,
   MultiSigPendingDetailResponse,
 } from 'zoobc-sdk';
-import { base64ToHex, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
@@ -65,9 +64,8 @@ export class MultisigTransactionComponent implements OnInit {
 
   openDetailMultiSignature(txHash) {
     this.showSignForm = false;
-    const hashHex = base64ToHex(txHash);
     this.isLoadingDetail = true;
-    zoobc.MultiSignature.getPendingByTxHash(hashHex).then((res: MultiSigPendingDetailResponse) => {
+    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: MultiSigPendingDetailResponse) => {
       this.multiSigDetail = res.pendingtransaction;
       this.pendingSignatures = res.pendingsignaturesList;
       this.participants = res.multisignatureinfo.addressesList;

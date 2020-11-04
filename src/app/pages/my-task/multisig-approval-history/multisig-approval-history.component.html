@@ -90,27 +90,23 @@
 <ng-template #detailTransaction>
   <div class="detail-transaction-container" *ngIf="transactionDetail && !isLoadingDetail">
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'id' | translate }}:</div>
-      <div class="col-12 col-md-8 font-roboto-mono">
-        {{ transactionId }}
-        <span class="icon-redirect" (click)="redirect()"
-          ><i
-            class="fas fa-external-link-alt"
-            title="{{ 'click here to view on zoobc explorer' | translate }}"
-          ></i
-        ></span>
+      <div class="col-12 col-md-4">{{ 'transaction hash' | translate }}:</div>
+      <div class="col-12 col-md-8">
+        <a [href]="'https://zoobc.net/transactions/' + transactionId" target="_blank">
+          <wallet-address [value]="transactionDetail.transactionHash"></wallet-address>
+        </a>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="transactionDetail.senderaddress"></wallet-address>
+        <wallet-address [value]="transactionDetail.sender.value"></wallet-address>
       </div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <wallet-address [value]="transactionDetail.recipientaddress"></wallet-address>
+        <wallet-address [value]="transactionDetail.recipient.value"></wallet-address>
       </div>
     </div>
     <div class="row">
@@ -123,12 +119,12 @@
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'blockheight' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transactionDetail.blockheight | number }}</div>
+      <div class="col-12 col-md-8">{{ transactionDetail.height | number }}</div>
     </div>
     <div class="row">
       <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
       <div class="col-12 col-md-8">
-        {{ transactionDetail.timestamp * 1000 | date: 'medium' }}
+        {{ transactionDetail.timestamp | date: 'medium' }}
       </div>
     </div>
   </div>
