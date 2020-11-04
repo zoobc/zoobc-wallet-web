@@ -88,6 +88,7 @@ export class DashboardComponent implements OnInit {
         .catch(e => (this.isError = true))
         .finally(() => {
           this.isLoading = false;
+          this.lastRefreshAccount = Date.now();
           this.getTransactions();
         });
     }
@@ -98,8 +99,8 @@ export class DashboardComponent implements OnInit {
       this.recentTx = null;
       this.unconfirmTx = null;
 
-      // this.isLoading = true;
-      // this.isError = false;
+      this.isLoading = true;
+      this.isError = false;
 
       const params: TransactionListParams = {
         address: this.currAcc.address,
