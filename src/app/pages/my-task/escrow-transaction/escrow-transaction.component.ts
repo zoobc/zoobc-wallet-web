@@ -58,7 +58,7 @@ export class EscrowTransactionComponent implements OnInit {
 
   openDetail(id) {
     this.showProcessForm = false;
-    this.form.get('sender').patchValue(this.account.address);
+    this.form.get('sender').patchValue(this.account.address.value);
     this.form.get('transactionId').patchValue(id);
     this.form.get('fee').patchValue(this.minFee);
     this.isLoadingDetail = true;
