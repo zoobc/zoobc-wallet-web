@@ -158,6 +158,7 @@ export class DashboardComponent implements OnInit {
           }
           if (escStatus) {
             recent.escrow = true;
+            recent['txBody'].approval = escStatus.status;
             recent.escrowStatus = escStatus.status;
           } else recent.escrow = false;
           recent.multisig = multisigTx.includes(recent.id);
@@ -170,7 +171,10 @@ export class DashboardComponent implements OnInit {
           address: this.currAcc.address,
         };
         const unconfirmTx = await zoobc.Mempool.getList(paramPool);
-        this.unconfirmTx = toZBCPendingTransactions(unconfirmTx);
+        this.unconfirmTx = toZBCPendingTransactions(unconfirmTx).map(uc => {
+          if (uc.escrow) uc['txBody'].approval = 0;
+          return uc;
+        });
       } catch (error) {
         console.log(error);
         this.isErrorRecentTx = true;
