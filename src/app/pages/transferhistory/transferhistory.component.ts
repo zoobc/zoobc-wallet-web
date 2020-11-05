@@ -11,6 +11,7 @@ import zoobc, {
   getZBCAddress,
   Address,
   ZBCTransactions,
+  parseAddress,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
@@ -118,11 +119,19 @@ export class TransferhistoryComponent implements OnDestroy {
           let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
           recent.senderAlias = this.contactServ.get(recent.sender.value).name || '';
           recent.recipientAlias = this.contactServ.get(recent.recipient.value).name || '';
-          if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
-            if (recent.txBody.nodepublickey) {
+          const nodeManagementTxType =
+            this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770;
+          if (nodeManagementTxType) {
+            const hasNodePublicKey = recent.txBody.nodepublickey;
+            const hasAccountAddress = recent.txBody.accountaddress;
+            if (hasNodePublicKey) {
               const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
               const pubkey = getZBCAddress(buffer, 'ZNK');
               recent['txBody'].nodepublickey = pubkey;
+            }
+            if (hasAccountAddress) {
+              const accountAddress = parseAddress(recent.txBody.accountaddress);
+              recent['txBody'].accountaddress = accountAddress.value;
             }
           }
           if (escStatus) {
@@ -139,13 +148,10 @@ export class TransferhistoryComponent implements OnDestroy {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then((res: ZBCTransactions) =>
             res.transactions.map(uc => {
-              if (uc.escrow) uc['txBody'].approval = 0;
+              this.txTypeUnconfirm = uc.transactionType;
               return uc;
             })
           );
-          this.unconfirmTx.map(res => {
-            this.txTypeUnconfirm = res.transactionType;
-          });
         }
       } catch {
         this.isError = true;

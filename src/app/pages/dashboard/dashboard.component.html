@@ -125,7 +125,7 @@
             <div class="converted-balance">
               <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
               <span *ngIf="!isLoading && !isError">
-                {{ (accountBalance.spendablebalance / 1e8) * currencyRate.value | number: '0.0-2' }}
+                {{ (accountBalance.spendableBalance / 1e8) * currencyRate.value | number: '0.0-2' }}
               </span>
               <span> {{ currencyRate.name }}</span>
             </div>
