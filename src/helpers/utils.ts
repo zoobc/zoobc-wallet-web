@@ -37,16 +37,6 @@ export function calcMinFee(data: any) {
   } else return feePerBlockPeriod / 1e8;
 }
 
-export function base64ToHex(str) {
-  const raw = atob(str);
-  let result = '';
-  for (let i = 0; i < raw.length; i++) {
-    const hex = raw.charCodeAt(i).toString(16);
-    result += hex.length === 2 ? hex : '0' + hex;
-  }
-  return result.toUpperCase();
-}
-
 export function uniqueParticipant(formArray: FormArray): ValidationErrors {
   const values = formArray.value.filter(val => val.length > 0);
   const controls = formArray.controls;

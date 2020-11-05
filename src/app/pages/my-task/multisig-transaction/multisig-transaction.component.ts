@@ -4,14 +4,12 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, {
-  toGetPendingList,
   MultiSigInterface,
   signTransactionHash,
-  MultisigPendingTxDetailResponse,
   MultisigPostTransactionResponse,
-  MultisigPendingTxResponse,
+  MultiSigPendingDetailResponse,
 } from 'zoobc-sdk';
-import { base64ToHex, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
@@ -66,19 +64,9 @@ export class MultisigTransactionComponent implements OnInit {
 
   openDetailMultiSignature(txHash) {
     this.showSignForm = false;
-    const hashHex = base64ToHex(txHash);
     this.isLoadingDetail = true;
-    zoobc.MultiSignature.getPendingByTxHash(hashHex).then((res: MultisigPendingTxDetailResponse) => {
-      const list = [];
-      list.push(res.pendingtransaction);
-      const tx: MultisigPendingTxResponse = {
-        count: 1,
-        page: 1,
-        pendingtransactionsList: list,
-      };
-      const txFilter = toGetPendingList(tx);
-      this.multiSigDetail = txFilter.pendingtransactionsList[0];
-
+    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: MultiSigPendingDetailResponse) => {
+      this.multiSigDetail = res.pendingtransaction;
       this.pendingSignatures = res.pendingsignaturesList;
       this.participants = res.multisignatureinfo.addressesList;
       this.totalParticpants = res.multisignatureinfo.addressesList.length;

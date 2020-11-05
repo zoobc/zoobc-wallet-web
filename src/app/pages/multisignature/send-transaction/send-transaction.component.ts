@@ -193,10 +193,7 @@ export class SendTransactionComponent implements OnInit {
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);
-        let subMessage = getTranslation('you send coins to', this.translate, {
-          amount: txBody.amount,
-          recipient: txBody.recipient,
-        });
+        let subMessage = getTranslation('please tell the participant to approve it', this.translate);
         this.multisigServ.deleteDraft(this.multisig.id);
         Swal.fire(message, subMessage, 'success');
         this.router.navigateByUrl('/dashboard');

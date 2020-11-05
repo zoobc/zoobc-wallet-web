@@ -3,8 +3,6 @@ import { MatDialog } from '@angular/material';
 import zoobc, {
   EscrowListParams,
   MultisigPendingListParams,
-  MultisigPendingTxResponse,
-  toGetPendingList,
   OrderBy,
   HostInfoResponse,
   EscrowStatus,
@@ -12,13 +10,12 @@ import zoobc, {
   MempoolListParams,
   TransactionType,
   readInt64,
-  MultisigPendingTxDetailResponse,
   bufferToBase64,
   Escrows,
+  ZBCTransactions,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { ContactService } from 'src/app/services/contact.service';
-import { base64ToHex } from 'src/helpers/utils';
 @Component({
   selector: 'app-my-task',
   templateUrl: './my-task.component.html',
@@ -76,10 +73,9 @@ export class MyTaskComponent implements OnInit {
         },
       };
       zoobc.MultiSignature.getPendingList(params)
-        .then(async (res: MultisigPendingTxResponse) => {
-          const tx = toGetPendingList(res);
-          this.totalMultiSig = tx.count;
-          let pendingList = tx.pendingtransactionsList;
+        .then(async (tx: ZBCTransactions) => {
+          this.totalMultiSig = tx.total;
+          let pendingList = tx.transactions;
           if (pendingList.length > 0) pendingList = await this.checkVisibleMultisig(pendingList);
           if (reload) {
             this.multiSigPendingList = pendingList;
@@ -171,7 +167,10 @@ export class MyTaskComponent implements OnInit {
   }
 
   async getPendingMultisigApproval() {
-    let list: string[] = await zoobc.Mempool.getList().then(res => {
+    const paramPool: MempoolListParams = {
+      address: this.account.address,
+    };
+    let list: string[] = await zoobc.Mempool.getList(paramPool).then(res => {
       let txHash: any = res.transactions.filter(tx => {
         if (tx.transactionType == TransactionType.MULTISIGNATURETRANSACTION) return tx;
       });
