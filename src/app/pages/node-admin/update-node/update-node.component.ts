@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import zoobc, { UpdateNodeInterface, ZBCAddressToBytes, isZBCAddressValid, getZBCAddress } from 'zoobc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
-import { getPrefixAddress, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import {
   createUpdateNodeForm,
   updateNodeMap,
@@ -45,8 +45,7 @@ export class UpdateNodeComponent implements OnInit {
       Buffer.from(this.node.nodepublickey.toString(), 'base64'),
       'ZNK'
     );
-    const prefix = getPrefixAddress(this.node.nodepublickey);
-    const validFormatAddress = isZBCAddressValid(this.node.nodepublickey, prefix);
+    const validFormatAddress = isZBCAddressValid(this.node.nodepublickey, 'ZNK');
 
     if (validFormatAddress) nodePublicKeyForm.patchValue(this.node.nodepublickey);
     else nodePublicKeyForm.patchValue(formatAddressPubKey);
@@ -61,8 +60,7 @@ export class UpdateNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    const prefix = getPrefixAddress(this.formUpdateNode.get('nodePublicKey').value);
-    let isValid = isZBCAddressValid(this.formUpdateNode.get('nodePublicKey').value, prefix);
+    let isValid = isZBCAddressValid(this.formUpdateNode.get('nodePublicKey').value, 'ZNK');
     if (!isValid) this.formUpdateNode.get('nodePublicKey').setErrors({ invalidAddress: true });
   }
 

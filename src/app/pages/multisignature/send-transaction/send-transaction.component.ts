@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { getPrefixAddress, getTranslation, jsonBufferToString } from 'src/helpers/utils';
+import { getTranslation, jsonBufferToString } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -219,11 +219,10 @@ export class SendTransactionComponent implements OnInit {
     this.txType = getTxType(this.multisig.txType);
     this.innerTx = Object.keys(this.multisig.txBody).map(key => {
       const item = this.multisig.txBody;
-      const prefix = getPrefixAddress(item[key]);
       return {
         key,
         value: item[key],
-        isAddress: isZBCAddressValid(item[key], prefix),
+        isAddress: isZBCAddressValid(item[key], 'ZBC'),
       };
     });
     const div = Math.floor(this.innerTx.length / 2);

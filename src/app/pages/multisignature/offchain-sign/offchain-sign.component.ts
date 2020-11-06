@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
 import { generateTransactionHash, isZBCAddressValid, signTransactionHash, toBase64Url } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { onCopyText, getTranslation, getPrefixAddress } from 'src/helpers/utils';
+import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { getTxType } from 'src/helpers/multisig-utils';
 
@@ -38,11 +38,10 @@ export class OffchainSignComponent {
     this.participants = data.multisigInfo.participants;
     this.innerTx = Object.keys(this.draft.txBody).map(key => {
       const item = this.draft.txBody;
-      const prefix = getPrefixAddress(item[key]);
       return {
         key,
         value: item[key],
-        isAddress: isZBCAddressValid(item[key], prefix),
+        isAddress: isZBCAddressValid(item[key], 'ZBC'),
       };
     });
   }

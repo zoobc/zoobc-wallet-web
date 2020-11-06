@@ -5,7 +5,7 @@ import { EditcontactComponent } from '../editcontact/editcontact.component';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
-import { getPrefixAddress, getTranslation } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { isZBCAddressValid } from 'zoobc-sdk';
 import { saveAs } from 'file-saver';
 
@@ -70,8 +70,7 @@ export class ContactlistComponent implements OnInit {
     let status;
     if (file.length !== undefined) {
       file.forEach(element => {
-        const prefix = getPrefixAddress(element.address);
-        if (element.address) return (status = isZBCAddressValid(element.address, prefix));
+        if (element.address) return (status = isZBCAddressValid(element.address, 'ZBC'));
         return (status = false);
       });
       return status;

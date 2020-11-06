@@ -3,7 +3,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } f
 import { Contact, ContactService } from 'src/app/services/contact.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { isZBCAddressValid } from 'zoobc-sdk';
-import { getPrefixAddress } from 'src/helpers/utils';
 @Component({
   selector: 'input-address',
   templateUrl: './input-address.component.html',
@@ -102,8 +101,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
 
   validate({ value }: FormControl) {
     let result: boolean = false;
-    const prefix = getPrefixAddress(value);
-    if (value) result = isZBCAddressValid(value, prefix);
+    if (value) result = isZBCAddressValid(value, 'ZBC');
     else return null;
 
     if (!result) return { invalidAddress: true };
