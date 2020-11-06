@@ -10,6 +10,7 @@ import zoobc, {
   MultisigPendingTxDetailResponse,
   MultisigPostTransactionResponse,
   MultisigPendingTxResponse,
+  getZBCAddress,
 } from 'zoobc-sdk';
 import { base64ToHex, getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -118,16 +119,18 @@ export class MultisigTransactionComponent implements OnInit {
       if (isPinValid) {
         const account = this.authServ.getCurrAccount();
         const seed = this.authServ.seed;
+        const txHash = getZBCAddress(Buffer.from(this.multiSigDetail.transactionhash, 'base64'), 'ZTX');
+
         this.isLoadingTx = true;
         let data: MultiSigInterface = {
           accountAddress: account.address,
           fee: this.feeForm.value,
           signaturesInfo: {
-            txHash: this.multiSigDetail.transactionhash,
+            txHash,
             participants: [
               {
                 address: account.address,
-                signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
+                signature: signTransactionHash(txHash, seed),
               },
             ],
           },
