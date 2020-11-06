@@ -32,7 +32,7 @@ export function createEscrowApprovalForm(): FormGroup {
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     transactionId: new FormControl('', Validators.required),
     approvalCode: new FormControl(0, Validators.required),
-    ...escrowForm,
+    ...escrowForm(),
   });
 }
 

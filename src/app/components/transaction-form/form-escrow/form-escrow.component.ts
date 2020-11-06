@@ -76,16 +76,18 @@ export const escrowMap = {
   instruction: 'instruction',
 };
 
-export const escrowForm = {
-  addressApprover: new FormControl({ value: '', disabled: true }, Validators.required),
-  approverCommission: new FormControl({ value: '', disabled: true }, [
-    Validators.required,
-    Validators.min(1 / 1e8),
-  ]),
-  timeout: new FormControl({ value: '', disabled: true }, [
-    Validators.required,
-    Validators.min(1),
-    Validators.max(720),
-  ]),
-  instruction: new FormControl({ value: '', disabled: true }, Validators.required),
-};
+export function escrowForm() {
+  return {
+    addressApprover: new FormControl({ value: '', disabled: true }, Validators.required),
+    approverCommission: new FormControl({ value: '', disabled: true }, [
+      Validators.required,
+      Validators.min(1 / 1e8),
+    ]),
+    timeout: new FormControl({ value: '', disabled: true }, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(720),
+    ]),
+    instruction: new FormControl({ value: '', disabled: true }, Validators.required),
+  };
+}
