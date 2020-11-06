@@ -1,21 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MultisigTransactionComponent } from './multisig-transaction.component';
+import { EscrowTransactionComponent } from './escrow-transaction.component';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DateAgoModule } from 'src/app/pipes/date-ago.module';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule, MatButtonModule, MatCheckboxModule, MatInputModule } from '@angular/material';
-import { AddressModule } from '../address/address.module';
-import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
-import { AccountSelectorModule } from '../account-selector/account-selector.module';
+import { AddressModule } from 'src/app/components/address/address.module';
+import { FormEscrowApprovalModule } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.module';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 
 @NgModule({
-  declarations: [MultisigTransactionComponent],
+  declarations: [EscrowTransactionComponent],
   imports: [
     CommonModule,
     TranslateModule.forChild({
@@ -26,14 +25,13 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
       },
     }),
     DateAgoModule,
-    MatButtonModule,
     MatCardModule,
+    MatButtonModule,
     AddressModule,
-    MatInputModule,
-    InputAmountModule,
     MatCheckboxModule,
-    AccountSelectorModule,
+    MatInputModule,
+    FormEscrowApprovalModule,
   ],
-  exports: [MultisigTransactionComponent],
+  exports: [EscrowTransactionComponent],
 })
-export class MultisigTransactionModule {}
+export class EscrowTransactionModule {}
