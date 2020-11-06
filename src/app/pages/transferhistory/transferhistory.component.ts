@@ -9,9 +9,9 @@ import zoobc, {
   EscrowListParams,
   OrderBy,
   toZBCTransactions,
-  toZBCPendingTransactions,
   ZBCTransaction,
   getZBCAddress,
+  toZBCPendingTransactions,
 } from 'zoobc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
