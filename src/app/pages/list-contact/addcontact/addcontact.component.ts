@@ -5,7 +5,7 @@ import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { isZBCAddressValid } from 'zoobc-sdk';
-import { getTranslation } from 'src/helpers/utils';
+import { getPrefixAddress, getTranslation } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-addcontact',
@@ -30,7 +30,8 @@ export class AddcontactComponent implements OnInit {
   ngOnInit() {}
 
   onAddressValidation() {
-    const validation = isZBCAddressValid(this.addressField.value);
+    const prefix = getPrefixAddress(this.addressField.value);
+    const validation = isZBCAddressValid(this.addressField.value, prefix);
     if (!validation) {
       this.addressField.setErrors({ invalidAddress: true });
     }

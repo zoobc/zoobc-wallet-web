@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { getTranslation } from 'src/helpers/utils';
+import { getPrefixAddress, getTranslation } from 'src/helpers/utils';
 import zoobc, { isZBCAddressValid, TransactionType } from 'zoobc-sdk';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { getTxType } from 'src/helpers/multisig-utils';
@@ -156,8 +156,10 @@ export class MultisignatureComponent implements OnInit {
   }
 
   validationFile(file: any): file is MultiSigDraft {
-    if ((file as MultiSigDraft).generatedSender !== undefined)
-      return isZBCAddressValid((file as MultiSigDraft).generatedSender);
+    if ((file as MultiSigDraft).generatedSender !== undefined) {
+      const prefix = getPrefixAddress((file as MultiSigDraft).generatedSender);
+      return isZBCAddressValid((file as MultiSigDraft).generatedSender, prefix);
+    }
     return false;
   }
 

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { isZBCAddressValid } from 'zoobc-sdk';
 import { Subscription } from 'rxjs';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
+import { getPrefixAddress } from 'src/helpers/utils';
 
 @Component({
   selector: 'form-register-node',
@@ -21,7 +22,8 @@ export class FormRegisterNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value);
+    const prefix = getPrefixAddress(this.group.get(this.inputMap.nodePublicKey).value);
+    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, prefix);
     if (!isValid) this.group.get(this.inputMap.nodePublicKey).setErrors({ invalidAddress: true });
   }
 }

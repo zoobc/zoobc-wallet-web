@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { getPrefixAddress } from 'src/helpers/utils';
 import { isZBCAddressValid } from 'zoobc-sdk';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
 
@@ -16,7 +17,8 @@ export class FormRemoveNodeComponent {
   constructor() {}
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value);
+    const prefix = getPrefixAddress(this.group.get(this.inputMap.nodePublicKey).value);
+    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, prefix);
     if (!isValid) this.group.get(this.inputMap.nodePublicKey).setErrors({ invalidAddress: true });
   }
 }
