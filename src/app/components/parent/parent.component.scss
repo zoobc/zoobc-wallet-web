@@ -5,6 +5,7 @@
   max-width: $parent-width;
   .drawer-container {
     background-color: transparent !important;
+    min-height: calc(100vh - #{$header-height});
   }
 
   mat-drawer {
@@ -13,7 +14,10 @@
     width: $sidebar-width-margin;
     z-index: 999;
     box-shadow: none;
-    position: absolute;
+    height: 100%;
+    ::ng-deep .mat-drawer-inner-container {
+      overflow: hidden;
+    }
   }
 
   mat-drawer-content {
