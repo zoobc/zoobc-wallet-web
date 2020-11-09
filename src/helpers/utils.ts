@@ -83,17 +83,3 @@ export function jsonBufferToString(buf: any) {
     return buf.toString('base64');
   }
 }
-
-export function getPrefixAddress(address: string) {
-  const prefixDefault = ['ZBC', 'ZNK', 'ZBL', 'ZTX'];
-  let prefix: string;
-  if (address) {
-    if (address.length == 66) {
-      const segs = address.split('_');
-      prefix = segs[0];
-      const valid = prefixDefault.indexOf(prefix) > -1;
-      if (valid) return prefix;
-      else return '';
-    } else return '';
-  } else return '';
-}

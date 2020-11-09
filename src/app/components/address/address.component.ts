@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { onCopyText, getTranslation, getPrefixAddress } from 'src/helpers/utils';
+import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import { isZBCAddressValid, shortenHash } from 'zoobc-sdk';
@@ -23,8 +23,7 @@ export class AddressComponent {
   ngOnChanges(changes: SimpleChanges) {
     const value = changes.value.currentValue;
     if (value) {
-      const prefix = getPrefixAddress(value);
-      this.shortValue = isZBCAddressValid(value, prefix) ? shortenHash(value) : value;
+      this.shortValue = isZBCAddressValid(value) ? shortenHash(value) : value;
       this.len = this.shortValue.length;
       this.halfLen = Math.round(this.shortValue.length / 2);
     }
