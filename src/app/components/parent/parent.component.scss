@@ -2,66 +2,31 @@
 
 .parent-container {
   margin: calc(#{$header-height} - #{$header-height-offset}) auto 0 auto;
-  // height: calc(100vh - #{$header-height});
   max-width: $parent-width;
-  // background-color: white;
-  // box-shadow: 0 0 40px rgba(52, 61, 72, 0.2);
-  // border-radius: 8px;
-  // overflow: hidden;
   .drawer-container {
-    height: 100%;
     background-color: transparent !important;
-    display: flex;
-    overflow: inherit;
-    justify-content: space-between;
   }
 
   mat-drawer {
     background-color: transparent !important;
     border-right: 0 !important;
-    overflow: hidden;
-    border-radius: 8px;
-
-    // width: 25%;
-    width: $sidebar-width;
-    height: 100%; // experiment with this value, try changing to 110vh
-    // min-height: 200px;
-    position: sticky;
-    top: 24px;
-
+    width: $sidebar-width-margin;
     z-index: 999;
-    @media #{$medium-only} {
-      left: 24px;
-    }
-    @media #{$small-and-down} {
-      display: none;
-    }
-    ::ng-deep .mat-drawer-inner-container {
-      // overflow: hidden;
-    }
-  }
-  mat-drawer:not(.mat-drawer-side) {
-    // box-shadow: none;
-    box-shadow: 0 0 40px rgba(52, 61, 72, 0.2);
-    border-right: 0 !important;
+    box-shadow: none;
+    position: absolute;
   }
 
   mat-drawer-content {
-    width: calc(100% - #{$sidebar-width});
-    @media #{$medium-only} {
-      width: calc(100% - #{$sidebar-width} - 24px);
-    }
-    @media #{$small-and-down} {
-      width: 100%;
+    margin-left: 0;
+    &.login {
+      margin-left: calc(#{$sidebar-width} + 16px) !important;
+      @media #{$small-and-down} {
+        margin-left: 0 !important;
+      }
     }
   }
 }
 
 .main-container {
-  padding: 24px;
-  // background-color: #f9fafb;
-  min-height: 100%;
-  @media #{$small-and-down} {
-    padding: 24px 16px;
-  }
+  margin: 24px 16px;
 }
