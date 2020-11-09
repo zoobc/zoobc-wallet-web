@@ -155,7 +155,7 @@
     </div>
   </mat-card>
 
-  <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoading && !isError">
+  <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoadingRecentTx && !isErrorRecentTx">
     <div class="row">
       <div class="col-12">
         <h2 class="mat-h2">{{ 'pending transaction' | translate }}</h2>
