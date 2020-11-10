@@ -142,14 +142,11 @@ export class TransferhistoryComponent implements OnDestroy {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then(
             (res: MempoolTransactionsResponse) =>
-              toZBCPendingTransactions(res).map(uc => {
+              toZBCPendingTransactions(res, this.txTypeUnconfirm).map(uc => {
                 if (uc.escrow) uc['txBody'].approval = 0;
                 return uc;
               })
           );
-          this.unconfirmTx.map(res => {
-            this.txTypeUnconfirm = res.transactionType;
-          });
         }
       } catch {
         this.isError = true;

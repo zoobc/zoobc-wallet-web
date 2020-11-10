@@ -171,10 +171,12 @@ export class DashboardComponent implements OnInit {
           address: this.currAcc.address,
         };
         const unconfirmTx = await zoobc.Mempool.getList(paramPool);
-        this.unconfirmTx = toZBCPendingTransactions(unconfirmTx).map(uc => {
-          if (uc.escrow) uc['txBody'].approval = 0;
-          return uc;
-        });
+        this.unconfirmTx = toZBCPendingTransactions(unconfirmTx, TransactionType.SENDMONEYTRANSACTION).map(
+          uc => {
+            if (uc.escrow) uc['txBody'].approval = 0;
+            return uc;
+          }
+        );
       } catch (error) {
         console.log(error);
         this.isErrorRecentTx = true;
