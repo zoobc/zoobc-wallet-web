@@ -222,7 +222,7 @@ export class SendTransactionComponent implements OnInit {
       return {
         key,
         value: item[key],
-        isAddress: isZBCAddressValid(item[key]),
+        isAddress: isZBCAddressValid(item[key], 'ZBC'),
       };
     });
     const div = Math.floor(this.innerTx.length / 2);

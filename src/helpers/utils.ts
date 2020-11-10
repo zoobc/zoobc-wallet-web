@@ -1,4 +1,3 @@
-import { SendMoneyInterface } from 'zoobc-sdk';
 import { ValidationErrors, FormArray } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 

@@ -41,7 +41,7 @@ export class OffchainSignComponent {
       return {
         key,
         value: item[key],
-        isAddress: isZBCAddressValid(item[key]),
+        isAddress: isZBCAddressValid(item[key], 'ZBC'),
       };
     });
   }

@@ -17,7 +17,7 @@ export class FormClaimNodeComponent {
   constructor() {}
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value);
+    let isValid = isZBCAddressValid(this.group.get(this.inputMap.nodePublicKey).value, 'ZNK');
     if (!isValid) this.group.get(this.inputMap.nodePublicKey).setErrors({ invalidAddress: true });
   }
 }

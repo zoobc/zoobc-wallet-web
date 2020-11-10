@@ -45,7 +45,7 @@ export class UpdateNodeComponent implements OnInit {
       Buffer.from(this.node.nodepublickey.toString(), 'base64'),
       'ZNK'
     );
-    const validFormatAddress = isZBCAddressValid(this.node.nodepublickey);
+    const validFormatAddress = isZBCAddressValid(this.node.nodepublickey, 'ZNK');
 
     if (validFormatAddress) nodePublicKeyForm.patchValue(this.node.nodepublickey);
     else nodePublicKeyForm.patchValue(formatAddressPubKey);
@@ -60,7 +60,7 @@ export class UpdateNodeComponent implements OnInit {
   ngOnInit() {}
 
   onChangeNodePublicKey() {
-    let isValid = isZBCAddressValid(this.formUpdateNode.get('nodePublicKey').value);
+    let isValid = isZBCAddressValid(this.formUpdateNode.get('nodePublicKey').value, 'ZNK');
     if (!isValid) this.formUpdateNode.get('nodePublicKey').setErrors({ invalidAddress: true });
   }
 
