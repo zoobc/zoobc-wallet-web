@@ -3,6 +3,9 @@
     <mat-select [value]="selectedNode" (selectionChange)="changeNode($event.value)">
       <mat-option *ngFor="let node of nodeList.node; let i = index" [value]="i">
         <span>{{ node.name }}</span>
+        <span class="detail-network" (click)="openDialog($event, 'detail', node, i)" matTooltip="Detail">
+          <i class="fas fa-server"></i>
+        </span>
         <ng-container *ngIf="!node.default">
           <span class="delete-network" (click)="delete($event, i)" matTooltip="Delete">
             <i class="fas fa-trash"></i>
@@ -21,44 +24,61 @@
 </div>
 
 <ng-template #detailDialog>
-  <h2 class="mat-h3" *ngIf="currAction == 'add'">
-    {{ 'add network' | translate }}
-  </h2>
-  <h2 class="mat-h3" *ngIf="currAction == 'edit'">
-    {{ 'edit network' | translate }}
-  </h2>
-  <form [formGroup]="formNetwork" style="display: grid;" (submit)="submitNetwork()">
-    <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'network name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" />
-    </mat-form-field>
-    <ng-container *ngIf="nameField.touched">
-      <mat-error *ngIf="nameField.hasError('required')">
-        {{ 'network name is required' | translate }}
-      </mat-error>
-    </ng-container>
+  <div class="title">
+    <h2 class="mat-h3" *ngIf="currAction == 'add'">
+      {{ 'add network' | translate }}
+    </h2>
+    <h2 class="mat-h3" *ngIf="currAction == 'edit'">
+      {{ 'edit network' | translate }}
+    </h2>
+    <h2 class="mat-h3" *ngIf="currAction == 'detail'">
+      {{ 'detail network' | translate }}
+    </h2>
+  </div>
+  <ng-container *ngIf="currAction == 'detail'">
+    <div class="detail">
+      <div class="label">
+        {{ 'network name' | translate }}: <span>{{ nameField.value }}</span>
+      </div>
+      <div class="label">
+        {{ 'node address' | translate }}: <span>{{ ipField.value }}</span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="currAction != 'detail'">
+    <form [formGroup]="formNetwork" style="display: grid;" (submit)="submitNetwork()">
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>{{ 'network name' | translate }}</mat-label>
+        <input matInput type="text" formControlName="name" />
+      </mat-form-field>
+      <ng-container *ngIf="nameField.touched">
+        <mat-error *ngIf="nameField.hasError('required')">
+          {{ 'network name is required' | translate }}
+        </mat-error>
+      </ng-container>
 
-    <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'node address' | translate }}</mat-label>
-      <input
-        matInput
-        type="text"
-        placeholder="https://yournode.com:80 {{ 'or' | translate }} http://192.168.43.1:8001"
-        formControlName="ip"
-      />
-    </mat-form-field>
-    <ng-container *ngIf="ipField.touched">
-      <mat-error *ngIf="ipField.hasError('required')">
-        {{ 'node address is required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="ipField.hasError('pattern')">
-        {{ 'invalid node address format' | translate }}
-      </mat-error>
-    </ng-container>
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>{{ 'node address' | translate }}</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="https://yournode.com:80 {{ 'or' | translate }} http://192.168.43.1:8001"
+          formControlName="ip"
+        />
+      </mat-form-field>
+      <ng-container *ngIf="ipField.touched">
+        <mat-error *ngIf="ipField.hasError('required')">
+          {{ 'node address is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="ipField.hasError('pattern')">
+          {{ 'invalid node address format' | translate }}
+        </mat-error>
+      </ng-container>
 
-    <button mat-flat-button color="primary" type="submit">
-      <span *ngIf="currAction == 'add'">{{ 'add' | translate }}</span>
-      <span *ngIf="currAction == 'edit'">{{ 'edit' | translate }}</span>
-    </button>
-  </form>
+      <button mat-flat-button color="primary" type="submit">
+        <span *ngIf="currAction == 'add'">{{ 'add' | translate }}</span>
+        <span *ngIf="currAction == 'edit'">{{ 'edit' | translate }}</span>
+      </button>
+    </form>
+  </ng-container>
 </ng-template>

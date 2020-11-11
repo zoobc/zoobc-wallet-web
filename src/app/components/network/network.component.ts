@@ -43,7 +43,7 @@ export class NetworkComponent implements OnInit {
   openDialog(e, action, node?: Node, idx?: number) {
     e.stopPropagation();
     this.detailRefDialog = this.dialog.open(this.detailDialog, {
-      width: '360px',
+      width: '400px',
       maxHeight: '90vh',
     });
 
@@ -52,8 +52,15 @@ export class NetworkComponent implements OnInit {
       this.nameField.patchValue('');
       this.ipField.patchValue('');
     } else if (action == 'edit') {
+      this.nameField.enable();
+      this.ipField.enable();
       this.nameField.patchValue(node.name);
       this.ipField.patchValue(node.ip);
+    } else if (action == 'detail') {
+      this.nameField.patchValue(node.name);
+      this.ipField.patchValue(node.ip);
+      this.nameField.disable();
+      this.ipField.disable();
     }
 
     this.detailRefDialog.afterClosed().subscribe((node: Node) => {
