@@ -18,6 +18,45 @@
     }
   }
 
+  .new-account-card {
+    background-image: url('/assets/img/home-bg.png');
+    color: white;
+    margin-bottom: 24px;
+    text-align: center;
+    padding: 0 0 48px 0;
+
+    .account-dropdown {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      i {
+        margin-left: 8px;
+      }
+    }
+
+    .address {
+      font-size: 12px;
+      margin-top: 4px;
+      margin-bottom: 24px;
+      color: $white2;
+      word-break: break-all;
+    }
+
+    .balance {
+      font-size: 32px;
+      font-weight: 500;
+    }
+    .spendable {
+      color: $white2;
+      font-size: 14px;
+    }
+
+    .reload-button {
+      color: white !important;
+      margin: 16px 16px 8px 0;
+    }
+  }
+
   .account-card {
     background: $primary-gradient !important;
     color: white;
@@ -166,4 +205,40 @@
     overflow-x: hidden;
     max-height: 400px;
   }
+}
+
+.blog {
+  background-image: url('/assets/img/sampleblog1.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 200px;
+  box-shadow: 0 0 10px rgba(52, 61, 72, 0.2);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  position: relative;
+  .title {
+    color: white;
+    font-size: 24px;
+    padding: 12px;
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0));
+  }
+}
+
+.transaction-title {
+  padding: 12px 16px;
+  color: $black2;
+  span {
+    margin: 0 4px;
+  }
+  > .title {
+    font-weight: 500;
+  }
+}
+
+.timestamp {
+  font-size: 12px;
+  font-style: italic;
 }

@@ -2,8 +2,13 @@
 @import '../../../styles/mixins';
 
 .header {
-  height: $header-height-offset;
+  height: $header-height;
   background-color: map-get($primary, 600);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 99;
+  box-shadow: 0 0 10px rgba(52, 61, 72, 0.2);
   .header-container {
     margin: 0 auto;
     display: flex;

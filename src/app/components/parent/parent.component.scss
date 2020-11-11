@@ -1,11 +1,11 @@
 @import '../../../styles/variables';
 
 .parent-container {
-  margin: calc(#{$header-height} - #{$header-height-offset}) auto 0 auto;
+  margin: calc(#{$header-height} + 16px) auto 0 auto;
   max-width: $parent-width;
   .drawer-container {
     background-color: transparent !important;
-    min-height: calc(100vh - #{$header-height});
+    min-height: calc(100vh - #{$header-height} - 16px);
   }
 
   mat-drawer {
@@ -32,5 +32,5 @@
 }
 
 .main-container {
-  margin: 24px 16px;
+  margin: 0 16px 24px 16px;
 }
