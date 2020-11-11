@@ -2,10 +2,16 @@
 @import '../../../styles/mixins';
 
 .sidenav-container {
-  padding: 16px;
+  padding: 8px;
   width: $sidebar-width;
-  height: calc(100% - $header-height);
-  overflow: hidden;
+  background-color: white;
+  border-radius: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100vh - 48px);
+  box-shadow: 0 0 10px rgba(52, 61, 72, 0.2);
+  margin: 0 16px;
+
   .sidenav-menu {
     color: $black2;
     list-style: none;

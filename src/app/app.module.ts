@@ -90,6 +90,7 @@ import { FormClaimNodeModule } from './components/transaction-form/form-claim-no
 import { FormRemoveAccountDatasetModule } from './components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.module';
 import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 import { FormSetupAccountDatasetModule } from './components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
+import { StickyModule } from 'ng2-sticky-kit';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -146,6 +147,7 @@ export function getLanguage(languageServ: LanguageService) {
     InfiniteScrollModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    StickyModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

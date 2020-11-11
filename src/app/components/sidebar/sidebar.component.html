@@ -32,6 +32,19 @@
       </li>
     </ng-container>
 
+    <!-- <li>
+      <a [matMenuTriggerFor]="menu">
+        <i class="fa fa-paper-plane"></i>
+        <span>{{ 'send' | translate }}</span>
+      </a>
+      <mat-menu #menu="matMenu" style="margin-left: 112px;">
+        <a routerLink="/sendmoney" (click)="onToggle()">
+          <i class="fa fa-paper-plane"></i><br />
+          <span>{{ 'send' | translate }}</span>
+        </a>
+      </mat-menu>
+    </li> -->
+
     <li [ngClass]="menu == 'multisignature' && 'active'">
       <a routerLink="/multisignature" (click)="onToggle()">
         <i class="fa fa-file-signature"></i>
