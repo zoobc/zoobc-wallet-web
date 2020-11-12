@@ -3,56 +3,44 @@
 
 .receive-container {
   text-align: center;
-  .address-text {
+  .form-input {
     text-align: center;
-    background-color: map-get($primary, 400);
-    color: white;
-    word-break: break-all;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
+    ::ng-deep .mat-form-field-suffix {
+      top: 0 !important;
+    }
+    ::ng-deep .mat-form-field-infix {
+      width: 110px !important;
+    }
   }
-  .copy-address {
-    margin-left: 8px;
-    font-size: 16px;
-    @include transition(0.3s ease-in all);
-    &:hover {
-      opacity: 0.6;
-      cursor: pointer;
+  .address {
+    .label {
+      display: block;
+      padding-bottom: 5px;
+      font-size: 14px;
+      color: $black2;
+    }
+    .address-text {
+      text-align: center;
+      word-break: break-all;
+      font-weight: bold;
+      padding: 0 12px;
+      font-size: 14px;
     }
   }
   .qrcode-container {
-    width: 100%;
-    min-height: 220px;
-    .url {
-      font-size: 13px;
-      border-radius: 8px;
-      padding: 4px 8px;
-      margin-bottom: 8px;
-      word-break: break-all;
-      @include transition(0.3s ease-in all);
-      &:hover {
-        background-color: #ccc;
-        cursor: pointer;
-      }
-    }
-    .instruction {
-      font-size: 14px;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    .qrcode-icon {
-      width: 100%;
-      height: 256px;
-      text-align: center;
-      padding-top: 24px;
-      i {
-        font-size: 116px;
-        color: $black3;
-      }
-    }
+    padding-top: 20px;
+    padding-bottom: 20px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  form {
-    display: grid;
+  .btn-grouped {
+    margin: 16px auto;
+    button {
+      width: 150px;
+      margin: 8px 4px;
+      border: 1px solid map-get($primary, 400) !important;
+    }
   }
 }
