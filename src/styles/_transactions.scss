@@ -1,4 +1,22 @@
+.transaction-list,
 .transaction-table {
+  padding: 0 !important;
+  .transaction-title {
+    padding: 12px 16px;
+    color: $black2;
+    span {
+      margin: 0 4px;
+    }
+    > .title {
+      font-weight: 500;
+    }
+  }
+
+  .timestamp {
+    font-size: 12px;
+    font-style: italic;
+  }
+
   .transaction-item {
     border-bottom: 1px solid #ddd;
     padding: 16px 6px;

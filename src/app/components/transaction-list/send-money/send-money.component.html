@@ -22,9 +22,9 @@
   </div>
   <div class="col-12 col-sm-4 text-right">
     <ng-container *ngIf="transaction.sender.value == address.value; else recipientAmount">
-      <div class="amount-send">- {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
+      <div class="amount-send">- ZBC {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }}</div>
       <div class="amount-currency">
-        - {{ (transaction.txBody.amount * currencyRate.value) / 1e8 | number: '0.0-8' }} USD
+        - USD {{ (transaction.txBody.amount * currencyRate.value) / 1e8 | number: '0.0-8' }}
       </div>
     </ng-container>
     <ng-template #recipientAmount>
