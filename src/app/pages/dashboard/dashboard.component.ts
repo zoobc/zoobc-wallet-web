@@ -107,7 +107,7 @@ export class DashboardComponent implements OnInit {
         transactionType: TransactionType.SENDMONEYTRANSACTION,
         pagination: {
           page: 1,
-          limit: 5,
+          limit: 10,
         },
       };
 

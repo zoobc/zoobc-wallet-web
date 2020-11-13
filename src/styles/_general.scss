@@ -3,7 +3,7 @@
 
 body {
   height: 100%;
-  background-color: map-get($primary, 50);
+  background-color: $black4;
   margin: 0px;
   font-family: 'Roboto', sans-serif !important;
   font-size: 14px;
@@ -100,7 +100,7 @@ a:not([href='']) {
 
 .mat-card {
   box-shadow: 0 0 10px rgba(52, 61, 72, 0.2) !important;
-  border-radius: 8px !important;
+  border-radius: 6px !important;
   color: $black1;
 }
 
