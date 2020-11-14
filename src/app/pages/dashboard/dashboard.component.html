@@ -94,10 +94,10 @@
     </mat-card>
 
     <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoadingRecentTx && !isErrorRecentTx">
-      <mat-card style="padding: 0">
+      <mat-card class="transaction-list">
         <div class="transaction-title">
           <span><i class="fa fa-history"></i></span>
-          <span class="title">{{ 'pending transactions' | translate }}</span>
+          <span class="title">{{ 'pending transaction' | translate }}</span>
         </div>
         <mat-divider></mat-divider>
 
