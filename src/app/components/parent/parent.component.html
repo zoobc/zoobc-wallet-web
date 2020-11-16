@@ -7,9 +7,7 @@
       [opened]="largeScreen"
       [disableClose]="largeScreen ? true : false"
     >
-      <sticky [sticky-offset-top]="72" [sticky-offset-bottom]="24" [sticky-parent]="false" *ngIf="isLogin">
-        <app-sidebar [menu]="menu"></app-sidebar>
-      </sticky>
+      <app-sidebar [menu]="menu" *ngIf="isLogin"></app-sidebar>
     </mat-drawer>
     <mat-drawer-content #mainContainer [class.login]="isLogin">
       <div class="main-container">
