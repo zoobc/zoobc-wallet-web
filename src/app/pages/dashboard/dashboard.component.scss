@@ -2,127 +2,47 @@
 @import '../../../styles/mixins';
 
 .dashboard-container {
-  .btn-view-all {
-    color: #fff;
-    background: $accent-gradient !important;
-    margin-top: 16px;
-    text-align: center;
-    text-decoration: none;
-    width: 150px;
-  }
-  .rates-dropdown {
-    font-size: 14px;
-    color: $black1;
-    i {
-      margin-left: 8px;
-    }
-  }
-
   .account-card {
-    background: $primary-gradient !important;
+    background-image: url('/assets/img/home-bg.png');
     color: white;
     margin-bottom: 24px;
-    .summary {
-      margin-bottom: 24px;
-      .account-dropdown {
-        cursor: pointer;
-        i {
-          margin-left: 8px;
-        }
-      }
-      .name {
-        text-transform: uppercase;
-        font-size: 16px;
-        font-weight: bold;
-      }
-      .detail-button {
+    text-align: center;
+    padding: 0 0 48px 0;
+
+    .account-dropdown {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      i {
         margin-left: 8px;
-        padding: 2px 12px;
-        border: 1px solid $white1;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: bold;
-        color: $white1;
       }
-      .address {
-        font-size: 14px;
-        margin-top: 8px;
-        color: $white1;
-        word-break: break-all;
-      }
+    }
+
+    .address {
+      font-size: 12px;
+      margin-top: 4px;
+      margin-bottom: 24px;
+      color: $white2;
+      word-break: break-all;
+    }
+
+    .balance {
+      font-size: 32px;
+      font-weight: 500;
+    }
+    .spendable {
+      color: $white2;
+      font-size: 14px;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      font-style: italic;
     }
 
     .reload-button {
       color: white !important;
-      margin: -24px -12px 0 0;
-    }
-
-    .balance-section {
-      display: flex;
-      margin-bottom: 16px;
-      .icon i {
-        font-size: 48px;
-      }
-      .balance-detail {
-        padding-left: 16px;
-        .label {
-          text-transform: uppercase;
-          color: $white1;
-          font-size: 12px;
-          font-weight: bold;
-        }
-        .balance {
-          font-size: 20px;
-          line-height: 32px;
-        }
-        .converted-balance {
-          color: $white1;
-          font-size: 15px;
-        }
-      }
-    }
-
-    .button-group {
-      text-align: center;
-      button {
-        margin: 4px;
-        background-color: rgba(black, 0.3);
-        color: $white1;
-        @include transition(0.3s ease-in all);
-        &:hover {
-          background-color: rgba(black, 0.5);
-        }
-      }
-    }
-
-    .no-content {
-      color: white;
-      padding: 0;
-      button {
-        text-transform: uppercase;
-        background-color: rgba($color: black, $alpha: 0.3);
-        color: $white1;
-        @include transition(0.3s ease-in all);
-        &:hover {
-          background-color: $black3;
-        }
-      }
-      .message {
-        @media #{$small-and-down} {
-          text-align: center;
-        }
-      }
-    }
-  }
-}
-
-.rates-dropdown-list {
-  max-height: 400px;
-  button {
-    color: $black1;
-    text-align: right;
-    i {
-      margin-right: 8px;
+      margin: 8px 12px 8px 0;
     }
   }
 }
@@ -165,5 +85,26 @@
   .account-container {
     overflow-x: hidden;
     max-height: 400px;
+  }
+}
+
+.blog {
+  background-image: url('/assets/img/sampleblog1.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 200px;
+  box-shadow: 0 0 10px rgba(52, 61, 72, 0.2);
+  border-radius: 6px;
+  margin-bottom: 16px;
+  position: relative;
+  .title {
+    color: white;
+    font-size: 24px;
+    padding: 12px;
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0));
+    border-radius: 6px;
   }
 }

@@ -3,13 +3,15 @@
   <mat-drawer-container class="drawer-container" [hasBackdrop]="false">
     <mat-drawer
       #sidenav
-      [mode]="largeScreen ? 'side' : 'push'"
+      [mode]="!isLogin ? 'over' : largeScreen ? 'side' : 'over'"
       [opened]="largeScreen"
       [disableClose]="largeScreen ? true : false"
     >
-      <app-sidebar [menu]="menu" *ngIf="isLogin"></app-sidebar>
+      <sticky [sticky-offset-top]="72" [sticky-offset-bottom]="24" [sticky-parent]="false" *ngIf="isLogin">
+        <app-sidebar [menu]="menu"></app-sidebar>
+      </sticky>
     </mat-drawer>
-    <mat-drawer-content #mainContainer>
+    <mat-drawer-content #mainContainer [class.login]="isLogin">
       <div class="main-container">
         <router-outlet></router-outlet>
       </div>

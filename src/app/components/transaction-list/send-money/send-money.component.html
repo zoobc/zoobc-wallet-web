@@ -1,8 +1,7 @@
 <div class="transaction-item hover row" (click)="openDetail(transaction.id)">
   <div class="col-12 col-sm-8">
-    <ng-container *ngIf="transaction.recipient.value == address.value; else recipient">
-      <div class="label">{{ 'from address' | translate }}:</div>
-      <div class="name" *ngIf="transaction.senderAlias">
+    <ng-container *ngIf="transaction.recipient.value == address.value">
+      <div class="name" *ngIf="transaction.senderAlias.value">
         {{ transaction.senderAlias }}
       </div>
       <div class="address">
@@ -10,24 +9,22 @@
       </div>
     </ng-container>
 
-    <ng-template #recipient>
-      <div class="label">{{ 'to address' | translate }}:</div>
+    <ng-container *ngIf="transaction.sender.value == address.value">
       <div class="name" *ngIf="transaction.recipientAlias">
         {{ transaction.recipientAlias }}
       </div>
-      <div class="address">
+      <div class="address" [class.withContact]="transaction.recipientAlias">
         <wallet-address [value]="transaction.recipient.value"></wallet-address>
       </div>
-    </ng-template>
+    </ng-container>
 
     <div class="date">{{ transaction.timestamp | dateAgo }}</div>
   </div>
   <div class="col-12 col-sm-4 text-right">
     <ng-container *ngIf="transaction.sender.value == address.value; else recipientAmount">
-      <div class="amount-send">- {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
-      <div class="fee" *ngIf="transaction.sender.value == address.value">
-        - {{ transaction.fee / 1e8 | number: '0.0-8' }}
-        <small>ZBC {{ 'fee' | translate }}</small>
+      <div class="amount-send">- ZBC {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }}</div>
+      <div class="amount-currency">
+        - USD {{ (transaction.txBody.amount * currencyRate.value) / 1e8 | number: '0.0-8' }}
       </div>
     </ng-container>
     <ng-template #recipientAmount>

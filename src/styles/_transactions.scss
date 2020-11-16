@@ -1,4 +1,22 @@
+.transaction-list,
 .transaction-table {
+  padding: 0 !important;
+  .transaction-title {
+    padding: 12px 16px;
+    color: $black2;
+    span {
+      margin: 0 4px;
+    }
+    > .title {
+      font-weight: 500;
+    }
+  }
+
+  .timestamp {
+    font-size: 12px;
+    font-style: italic;
+  }
+
   .transaction-item {
     border-bottom: 1px solid #ddd;
     padding: 16px 6px;
@@ -23,7 +41,11 @@
       word-break: break-all;
       color: $black1;
       font-size: 13px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
+      &.withContact {
+        font-size: 12px;
+        color: $black2;
+      }
     }
 
     .date {
@@ -32,19 +54,27 @@
       margin-right: 10px;
     }
 
+    .amount-receive,
+    .amount-send {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
     .amount-send {
       color: #f44336;
-      font-size: 18px;
-      font-weight: bold;
     }
     .amount-receive {
       color: #4caf50;
-      font-size: 18px;
-      font-weight: bold;
     }
     .fee {
       color: #f44336;
-      font-size: 14px;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .amount-currency {
+      color: $black2;
+      font-size: 12px;
+      margin-bottom: 4px;
     }
 
     .status-approval {

@@ -9,7 +9,7 @@
     }
   }
   .block-height {
-    color: map-get($accent, 500);
+    color: map-get($primary, 500);
   }
   .mat-tab-label {
     font-weight: bold;
@@ -17,6 +17,6 @@
   /* Styles for the active tab label */
   .mat-tab-label.mat-tab-label-active {
     font-weight: bold;
-    color: map-get($accent, 500);
+    color: map-get($primary, 500);
   }
 }
