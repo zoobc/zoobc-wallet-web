@@ -56,6 +56,13 @@ $white3: rgba(
   $alpha: 0.4,
 );
 
+//gray
+
+$gray1: rgba(
+  $color: #dadce7,
+  $alpha: 1,
+);
+
 // $primary2: (
 //   50: #e6f9ff,
 //   100: #b3eeff,
@@ -148,17 +155,9 @@ $accent: (
   ),
 );
 
-$primary-gradient: linear-gradient(
-  45deg,
-  map-get($primary, 600),
-  map-get($primary, 400)
-);
+$primary-gradient: linear-gradient(45deg, map-get($primary, 600), map-get($primary, 400));
 
-$accent-gradient: linear-gradient(
-  45deg,
-  map-get($accent, 600),
-  map-get($accent, 300)
-);
+$accent-gradient: linear-gradient(45deg, map-get($accent, 600), map-get($accent, 300));
 
 $error-gradient: linear-gradient(45deg, #c62828, #ef5350);
 $red: #c62828;

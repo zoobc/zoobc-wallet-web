@@ -17,7 +17,7 @@ export class ConfirmPassphraseComponent implements OnInit {
   words: string;
   passphrase: string[];
   prefillPassphrase: string[];
-
+  focusInput: boolean[] = [];
   confirmForm: FormGroup;
   wordField: FormArray;
   zooKeyring: ZooKeyring;
@@ -53,7 +53,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     // removing some words of the passphrase
     this.prefillPassphrase = this.passphrase;
     // let totalWordRemoved = 1;
-    let totalWordRemoved = Math.round(this.mnemonicNumWords / 6);
+    let totalWordRemoved = 2;
 
     for (let i = 0; i < totalWordRemoved; i++) {
       let lenWords = this.prefillPassphrase.length;
@@ -75,6 +75,7 @@ export class ConfirmPassphraseComponent implements OnInit {
     for (let i = 0; i < this.mnemonicNumWords; i++) {
       this.wordField = <FormArray>this.confirmForm.controls['words'];
       this.wordField.push(this.fb.group({ word: [prefill[i], Validators.required] }));
+      this.focusInput.push(false);
     }
   }
 
@@ -126,5 +127,16 @@ export class ConfirmPassphraseComponent implements OnInit {
     localStorage.setItem('IS_RESTORED', 'false');
 
     this.authServ.login(key);
+  }
+
+  toggleFocus(i: number) {
+    this.focusInput.forEach((fi, index, arr) => {
+      arr[index] = false;
+    });
+    this.focusInput[i] = true;
+  }
+
+  clearInput(i: number) {
+    this.confirmForm.get('words')['controls'][i].reset();
   }
 }

@@ -1,18 +1,41 @@
 <div class="confirm-passphrase-container">
-  <h2 class="mat-h2">{{ 'confirm your seed phrase' | translate }}</h2>
+  <h2 class="mat-h2">{{ 'create wallet' | translate }}</h2>
+  <h3 class="mat-h3">{{ 'confirm your seed phrase' | translate }}</h3>
   <p class="mat-body-1">
-    {{ 'fill the missing phrase word to complete create new wallet!' | translate }}
+    {{ 'please enter the following words from your seed phrase to ensure you got it right' | translate }}
   </p>
   <form [formGroup]="confirmForm" (submit)="openCreatePin()">
     <div class="row" formArrayName="words">
-      <div class="col-6 col-sm-4" *ngFor="let word of prefillPassphrase; let i = index">
-        <mat-form-field [formGroupName]="i" appearance="outline" color="accent" class="block">
-          <div matPrefix style="margin-right: 8px">{{ i + 1 }}.</div>
-          <input matInput formControlName="word" (keyup)="isValid()" />
-        </mat-form-field>
-      </div>
+      <ng-container *ngFor="let word of prefillPassphrase; let i = index">
+        <div *ngIf="word.length == 0" class="col-12 col-sm-12">
+          <label>{{ 'word' | translate }} #{{ i + 1 }}</label>
+          <mat-form-field
+            style="margin-bottom: 20px;"
+            class="input"
+            [formGroupName]="i"
+            appearance="outline"
+            color="accent"
+            class="block"
+          >
+            <input
+              matInput
+              formControlName="word"
+              placeholder="{{ 'enter word' | translate }} #{{ i + 1 }}"
+              (keyup)="isValid()"
+              (focus)="toggleFocus(i)"
+            />
+            <button (click)="clearInput(i)" *ngIf="focusInput[i]" mat-icon-button matSuffix>
+              <i matPrefix class="fas fa-times-circle"></i>
+            </button>
+          </mat-form-field>
+        </div>
+      </ng-container>
     </div>
-    <div style="height: 25px" class="text-center">
+    <div
+      *ngIf="confirmForm.hasError('required') || confirmForm.hasError('mnemonic')"
+      style="height: 25px"
+      class="text-center"
+    >
       <mat-error *ngIf="confirmForm.hasError('required')">
         {{ 'please fill all of the seed phrase' | translate }}
       </mat-error>
@@ -21,13 +44,8 @@
       </mat-error>
     </div>
     <div class="btn-grouped">
-      <button mat-flat-button color="warn" (click)="backClicked()">
-        <i matPrefix class="fas fa-arrow-left"></i>
-        <span class="text">{{ 'back' | translate }}</span>
-      </button>
       <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
-        <i matPrefix class="fas fa-check"></i>
-        <span class="text">{{ 'confirm' | translate }}</span>
+        <span class="text">{{ 'create wallet' | translate }}</span>
       </button>
     </div>
   </form>

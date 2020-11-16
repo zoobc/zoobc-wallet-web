@@ -1,18 +1,34 @@
+@import '../../../styles/variables';
 .confirm-passphrase-container {
-  max-width: 480px;
+  max-width: 512px;
   margin: 0 auto;
   text-align: center;
   .mat-h2 {
-    font-weight: bold;
+    font-weight: 500;
     margin-bottom: 24px;
+    font-size: 32px;
+  }
+  .mat-h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .mat-body-1 {
+    color: $black2;
+    font-size: 16px;
   }
   form {
+    text-align: left;
+    margin-top: 16px;
+
+    label {
+      color: $black1;
+      font-weight: 500;
+      font-size: 14px;
+    }
     .btn-grouped {
-      margin: 16px auto;
-      font-weight: bold;
       button {
-        width: 150px;
-        margin: 0 4px 8px 4px;
+        width: 100%;
       }
     }
   }
