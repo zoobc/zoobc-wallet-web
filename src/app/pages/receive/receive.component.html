@@ -1,23 +1,22 @@
 <div class="receive-container">
-  <h2 class="mat-h2 text-center">{{ 'amount' | translate }}</h2>
-  <div class="form-input">
-    <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
-      <mat-form-field appearance="standard" color="primary">
-        <input
-          matInput
-          style="text-align: end;"
-          type="number"
-          placeholder="0.00"
-          formControlName="amount"
-          (keyup)="onChangeAmount($event.target.value)"
-          (change)="onChangeAmount($event.target.value)"
-        />
-        <span matSuffix>ZBC</span>
-      </mat-form-field>
-    </form>
-  </div>
+  <div class="title">{{ 'receive' | translate }}</div>
+  <div class="amount">{{ 'amount' | translate }}</div>
+  <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
+    <mat-form-field appearance="standard" color="primary">
+      <input
+        matInput
+        style="text-align: end;"
+        type="number"
+        placeholder="0.00"
+        formControlName="amount"
+        (keyup)="onChangeAmount($event.target.value)"
+        (change)="onChangeAmount($event.target.value)"
+      />
+      <span class="suffix" matSuffix>ZBC</span>
+    </mat-form-field>
+  </form>
   <div class="qrcode-container">
-    <ngx-qrcode qrc-element-type="canvas" [qrc-value]="qrCodeStr"></ngx-qrcode>
+    <ngx-qrcode class="qrcode-icon" qrc-element-type="canvas" [qrc-value]="qrCodeStr"></ngx-qrcode>
   </div>
   <div class="address">
     <label class="label">{{ 'your address' | translate }}</label>

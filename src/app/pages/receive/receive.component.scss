@@ -2,45 +2,78 @@
 @import '../../../styles/mixins';
 
 .receive-container {
+  font-family: 'Roboto Mono', monospace !important;
   text-align: center;
-  .form-input {
-    text-align: center;
-    ::ng-deep .mat-form-field-suffix {
-      top: 0 !important;
-    }
-    ::ng-deep .mat-form-field-infix {
-      width: 110px !important;
-    }
+  .title {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+    display: flex;
+    margin-bottom: 16px;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -10.875px;
+  }
+
+  ::ng-deep .mat-form-field-flex {
+    width: 120px;
+    height: 24px;
+  }
+
+  ::ng-deep .mat-form-field-flex {
+    padding-top: 0px;
+  }
+
+  mat-form-field {
+    font-size: 20px;
+  }
+
+  .amount {
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: 8px;
+  }
+  .suffix {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 23px;
   }
   .address {
     .label {
+      font-size: 12px;
+      line-height: 14px;
       display: block;
-      padding-bottom: 5px;
-      font-size: 14px;
-      color: $black2;
+      color: $gray1;
+      margin-bottom: 5px;
     }
     .address-text {
-      text-align: center;
-      word-break: break-all;
-      font-weight: bold;
-      padding: 0 12px;
       font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      word-break: break-all;
+      margin-bottom: 20px;
+      color: $black1;
     }
   }
   .qrcode-container {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    flex-grow: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
+    margin-bottom: 16px;
+    .qrcode-icon {
+      background: $white1;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
+    }
   }
   .btn-grouped {
-    margin: 16px auto;
     button {
-      width: 150px;
-      margin: 8px 4px;
-      border: 1px solid map-get($primary, 400) !important;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 14px;
+      width: 156px;
+      height: 32px;
+      margin-right: 16px;
     }
   }
 }
