@@ -20,7 +20,7 @@
         <mat-error *ngIf="pinForm.hasError('invalid')">
           {{ 'pin invalid' | translate }}
         </mat-error>
-        <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
+        <button mat-stroked-button color="primary" [disabled]="formLoginPin.invalid">
           <i matPrefix class="fas fa-check" *ngIf="!isLoading"></i>
           <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
           <span class="text">{{ 'login' | translate }}</span>
@@ -29,7 +29,7 @@
         <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
           {{ 'create new wallet' | translate }}
         </button>
-        <button style="margin-top: 8px;" routerLink="/open-wallet" mat-flat-button color="primary">
+        <button style="margin-top: 8px;" routerLink="/open-wallet" mat-stroked-button="primary">
           {{ 'open another wallet' | translate }}
         </button>
       </form>

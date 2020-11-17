@@ -34,3 +34,36 @@
 .main-container {
   margin: 0 16px 24px 16px;
 }
+
+.background-box {
+  min-width: 100vw;
+  min-height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+}
+.base {
+  background-color: map-get($primary, 600);
+}
+
+.image {
+  background: url('/assets/img/background.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.cover {
+  background-color: map-get($primary, 600);
+  mix-blend-mode: hard-light;
+}
+
+.shiner {
+  background-color: map-get($primary, 600);
+  opacity: 0.2;
+}
+
+.hide {
+  display: none;
+}

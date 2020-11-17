@@ -9,6 +9,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'field-pins',
@@ -28,8 +29,7 @@ export class PinsComponent implements OnInit, ControlValueAccessor, AfterViewIni
 
   pins = [];
   values: any = {};
-
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     for (let i = 0; i < this.digit; i++) {
@@ -122,5 +122,10 @@ export class PinsComponent implements OnInit, ControlValueAccessor, AfterViewIni
         .children[0];
       child.focus();
     }, 50);
+  }
+
+  getWhiteClass() {
+    if (this.router.url === '/login') return 'white';
+    return '';
   }
 }
