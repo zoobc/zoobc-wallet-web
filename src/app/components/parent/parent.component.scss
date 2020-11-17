@@ -6,6 +6,7 @@
   .drawer-container {
     background-color: transparent !important;
     min-height: calc(100vh - #{$header-height} - 16px);
+    overflow: initial;
   }
 
   mat-drawer {
@@ -15,24 +16,28 @@
     z-index: 999;
     box-shadow: none;
     height: 100%;
+    overflow: initial;
+    position: fixed;
+    top: calc(#{$header-height} + 16px);
+    @media only screen and (max-width : calc(#{$parent-width} + 16px)) {
+      margin-left: 16px;
+      width: calc(#{$sidebar-width-margin} + 16px);
+    }
     ::ng-deep .mat-drawer-inner-container {
-      overflow: hidden;
+      overflow: initial;
     }
   }
 
   mat-drawer-content {
-    margin-left: 0;
-    &.login {
-      margin-left: calc(#{$sidebar-width} + 16px) !important;
-      @media #{$small-and-down} {
-        margin-left: 0 !important;
-      }
-    }
+    overflow: initial;
   }
 }
 
 .main-container {
-  margin: 0 16px 24px 16px;
+  margin: 0 0 24px 16px;
+  @media only screen and (max-width : calc(#{$parent-width} + 16px)) {
+    margin: 0 16px 24px 16px;
+  }
 }
 
 .background-box {
