@@ -1,52 +1,54 @@
 <div class="confirm-passphrase-container">
-  <h2 class="mat-h2">{{ 'create wallet' | translate }}</h2>
-  <h3 class="mat-h3">{{ 'confirm your seed phrase' | translate }}</h3>
-  <p class="mat-body-1">
-    {{ 'please enter the following words from your seed phrase to ensure you got it right' | translate }}
-  </p>
-  <form [formGroup]="confirmForm" (submit)="openCreatePin()">
-    <div class="row" formArrayName="words">
-      <ng-container *ngFor="let word of prefillPassphrase; let i = index">
-        <div *ngIf="word.length == 0" class="col-12 col-sm-12">
-          <label>{{ 'word' | translate }} #{{ i + 1 }}</label>
-          <mat-form-field
-            style="margin-bottom: 20px;"
-            class="input"
-            [formGroupName]="i"
-            appearance="outline"
-            color="accent"
-            class="block"
-          >
-            <input
-              matInput
-              formControlName="word"
-              placeholder="{{ 'enter word' | translate }} #{{ i + 1 }}"
-              (keyup)="isValid()"
-              (focus)="toggleFocus(i)"
-            />
-            <button (click)="clearInput(i)" *ngIf="focusInput[i]" mat-icon-button matSuffix>
-              <i matPrefix class="fas fa-times-circle"></i>
-            </button>
-          </mat-form-field>
-        </div>
-      </ng-container>
-    </div>
-    <div
-      *ngIf="confirmForm.hasError('required') || confirmForm.hasError('mnemonic')"
-      style="height: 25px"
-      class="text-center"
-    >
-      <mat-error *ngIf="confirmForm.hasError('required')">
-        {{ 'please fill all of the seed phrase' | translate }}
-      </mat-error>
-      <mat-error *ngIf="confirmForm.hasError('mnemonic')">
-        {{ 'the seed phrase is not matched' | translate }}
-      </mat-error>
-    </div>
-    <div class="btn-grouped">
-      <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
-        <span class="text">{{ 'create wallet' | translate }}</span>
-      </button>
-    </div>
-  </form>
+  <mat-card style="max-width: 700px; margin: 32px auto 0; padding-bottom: 32px;">
+    <h2 class="mat-h2">{{ 'create wallet' | translate }}</h2>
+    <h3 class="mat-h3">{{ 'confirm your seed phrase' | translate }}</h3>
+    <p class="mat-body-1">
+      {{ 'please enter the following words from your seed phrase to ensure you got it right' | translate }}
+    </p>
+    <form [formGroup]="confirmForm" (submit)="openCreatePin()">
+      <div class="row" formArrayName="words">
+        <ng-container *ngFor="let word of prefillPassphrase; let i = index">
+          <div *ngIf="word.length == 0" class="col-12 col-sm-12">
+            <label>{{ 'word' | translate }} #{{ i + 1 }}</label>
+            <mat-form-field
+              style="margin-bottom: 20px;"
+              class="input"
+              [formGroupName]="i"
+              appearance="outline"
+              color="accent"
+              class="block"
+            >
+              <input
+                matInput
+                formControlName="word"
+                placeholder="{{ 'enter word' | translate }} #{{ i + 1 }}"
+                (keyup)="isValid()"
+                (focus)="toggleFocus(i)"
+              />
+              <button (click)="clearInput(i)" *ngIf="focusInput[i]" mat-icon-button matSuffix>
+                <i matPrefix class="fas fa-times-circle"></i>
+              </button>
+            </mat-form-field>
+          </div>
+        </ng-container>
+      </div>
+      <div
+        *ngIf="confirmForm.hasError('required') || confirmForm.hasError('mnemonic')"
+        style="height: 25px"
+        class="text-center"
+      >
+        <mat-error *ngIf="confirmForm.hasError('required')">
+          {{ 'please fill all of the seed phrase' | translate }}
+        </mat-error>
+        <mat-error *ngIf="confirmForm.hasError('mnemonic')">
+          {{ 'the seed phrase is not matched' | translate }}
+        </mat-error>
+      </div>
+      <div class="btn-grouped">
+        <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
+          <span class="text">{{ 'create wallet' | translate }}</span>
+        </button>
+      </div>
+    </form>
+  </mat-card>
 </div>

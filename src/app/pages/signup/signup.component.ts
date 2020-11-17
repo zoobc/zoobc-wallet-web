@@ -34,7 +34,6 @@ export class SignupComponent implements OnInit {
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
-  showPassPhrase: boolean = false;
 
   location: 'signup' | 'protect your fund' | 'what a seedphrase';
 
@@ -74,9 +73,6 @@ export class SignupComponent implements OnInit {
     this.router.navigate(['confirm-passphrase'], {
       state: { passphrase: this.passphrase },
     });
-  }
-  tooglePassphrase() {
-    this.showPassPhrase = !this.showPassPhrase;
   }
 
   next() {

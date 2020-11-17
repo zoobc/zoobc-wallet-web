@@ -1,26 +1,29 @@
 @import '../../../styles/variables';
 .confirm-passphrase-container {
-  max-width: 512px;
-  margin: 0 auto;
   text-align: center;
   .mat-h2 {
     font-weight: 500;
-    margin-bottom: 24px;
+    margin: 0 auto 24px auto;
     font-size: 32px;
+    max-width: 512px;
   }
   .mat-h3 {
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 8px;
+    margin: 0 auto 8px auto;
+    max-width: 512px;
   }
   .mat-body-1 {
     color: $black2;
     font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 512px;
   }
   form {
     text-align: left;
-    margin-top: 16px;
-
+    margin: 16px auto 0 auto;
+    max-width: 512px;
     label {
       color: $black1;
       font-weight: 500;

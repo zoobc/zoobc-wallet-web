@@ -70,9 +70,5 @@ $primary: (
 
 $red: #d3433c;
 $green: #1d8b49;
-$gray1: rgba(
-  $color: #dadce7,
-  $alpha: 1,
-);
 $primary-gradient: linear-gradient(45deg, map-get($primary, 600), map-get($primary, 400));
 $error-gradient: linear-gradient(45deg, #c62828, #ef5350);
