@@ -29,7 +29,6 @@
     "file-saver": "^2.0.2",
     "google-protobuf": "^3.8.0",
     "ng-pick-datetime": "^7.0.0",
-    "ng2-sticky-kit": "^6.1.0",
     "ngx-build-plus": "^7.8.3",
     "ngx-infinite-scroll": "^7.0.0",
     "ngx-popper": "^7.0.0",
