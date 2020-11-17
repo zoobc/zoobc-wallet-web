@@ -1,17 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PinsComponent } from 'src/app/components/pins/pins.component';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   @ViewChild('pin') pin: PinsComponent;
 
   encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private appServ: AppService,
-    private authServ: AuthService
+    private authServ: AuthService,
+    @Inject(DOCUMENT) private document
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
@@ -39,8 +41,15 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.document.getElementById('navbar-head').classList.add('no-color');
+    this.document.body.classList.add('bodybg');
     let isLoggedIn: boolean = this.appServ.isLoggedIn();
     if (isLoggedIn) this.router.navigateByUrl('/dashboard');
+  }
+
+  ngOnDestroy() {
+    this.document.body.classList.remove('bodybg');
+    this.document.getElementById('navbar-head').classList.remove('no-color');
   }
 
   onChangePin() {

@@ -1,35 +1,38 @@
 <div class="login-container">
-  <img src="/assets/img/zbc-color-text.svg" alt="" />
-  <h2 class="mat-h2">Wallet</h2>
-  <ng-container *ngIf="!hasAccount">
-    <a routerLink="/signup" mat-flat-button color="primary">
-      {{ 'create new wallet' | translate }}
-    </a>
-    <a routerLink="/open-wallet" mat-flat-button color="primary">
-      {{ 'open wallet' | translate }}
-    </a>
-  </ng-container>
-
-  <ng-container *ngIf="hasAccount && !isLoggedIn">
-    <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
-      <mat-label>{{ 'please enter your pin' | translate }}</mat-label>
-      <br />
-      <field-pins #pin formControlName="pin" (keyup)="onChangePin()"></field-pins>
-      <mat-error *ngIf="pinForm.hasError('invalid')">
-        {{ 'pin invalid' | translate }}
-      </mat-error>
-      <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
-        <i matPrefix class="fas fa-check" *ngIf="!isLoading"></i>
-        <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
-        <span class="text">{{ 'login' | translate }}</span>
-      </button>
-
-      <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
+  <div class="login-box">
+    <img src="/assets/img/icon-zbc.png" alt="" />
+    <h2 class="mat-h4">{{ 'welcome to zoobc app' | translate }}</h2>
+    <p>{{ 'the easy way to spend and receive zoobc' | translate }}</p>
+    <ng-container *ngIf="!hasAccount">
+      <a routerLink="/signup" mat-flat-button color="primary">
         {{ 'create new wallet' | translate }}
-      </button>
-      <button style="margin-top: 8px;" routerLink="/open-wallet" mat-flat-button color="primary">
-        {{ 'open another wallet' | translate }}
-      </button>
-    </form>
-  </ng-container>
+      </a>
+      <a routerLink="/open-wallet" mat-stroked-button color="white">
+        {{ 'restore wallet' | translate }}
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="hasAccount && !isLoggedIn">
+      <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
+        <mat-label>{{ 'please enter your pin' | translate }}</mat-label>
+        <br />
+        <field-pins #pin formControlName="pin" (keyup)="onChangePin()"></field-pins>
+        <mat-error *ngIf="pinForm.hasError('invalid')">
+          {{ 'pin invalid' | translate }}
+        </mat-error>
+        <button mat-flat-button color="primary" [disabled]="formLoginPin.invalid">
+          <i matPrefix class="fas fa-check" *ngIf="!isLoading"></i>
+          <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoading"></i>
+          <span class="text">{{ 'login' | translate }}</span>
+        </button>
+
+        <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
+          {{ 'create new wallet' | translate }}
+        </button>
+        <button style="margin-top: 8px;" routerLink="/open-wallet" mat-flat-button color="primary">
+          {{ 'open another wallet' | translate }}
+        </button>
+      </form>
+    </ng-container>
+  </div>
 </div>

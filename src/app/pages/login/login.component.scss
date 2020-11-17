@@ -1,36 +1,71 @@
 @import '../../../styles/variables';
 
+.login-bg {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background-color: aqua;
+}
 .login-container {
+  display: flex;
+  align-items: center;
   text-align: center;
-  img {
-    max-width: 240px;
-    margin-top: 24px;
-  }
-  h2 {
-    margin-bottom: 24px;
-    font-size: 24px;
-    color: $black1;
-  }
-  a.mat-flat-button {
-    display: block;
-    margin: 8px auto;
-    width: 240px;
-    padding: 6px 0;
-    font-weight: bold;
-    letter-spacing: 1px;
-  }
-  form {
-    max-width: 360px;
-    margin: 0 auto;
-    mat-label {
-      font-size: 14px;
-      font-weight: bold;
-      color: $black2;
-      margin-bottom: 16px;
+  justify-content: center;
+  height: calc(93vh - 64px);
+  .login-box {
+    min-width: 328px;
+    max-width: 328px;
+
+    img {
+      max-width: 136px;
     }
-    button {
+
+    h2 {
+      margin-bottom: 8px;
+      margin-top: 39px;
+      font-size: 20px;
+      font-weight: 500;
+      color: white;
+    }
+
+    p {
+      margin-bottom: 16px;
+      font-size: 16px;
+      color: white;
+      font-style: normal;
+      font-weight: normal;
+    }
+
+    a.mat-flat-button {
+      display: block;
       width: 100%;
-      padding: 4px 0;
+      margin: 8px 0;
+      background-color: white;
+      color: map-get($primary, 500);
+    }
+    a.mat-stroked-button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      color: white;
+      border-color: white !important;
+    }
+
+    form {
+      max-width: 360px;
+      margin: 0 auto;
+      mat-label {
+        font-size: 14px;
+        font-weight: bold;
+        color: $black2;
+        margin-bottom: 16px;
+      }
+      button {
+        width: 100%;
+        padding: 4px 0;
+      }
     }
   }
 }
