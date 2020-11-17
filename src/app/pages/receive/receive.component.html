@@ -1,5 +1,5 @@
 <div class="receive-container">
-  <div class="title">{{ 'receive' | translate }}</div>
+  <h2 class="mat-h2 text-center">{{ 'receive' | translate }}</h2>
   <div class="amount">{{ 'amount' | translate }}</div>
   <form (submit)="$event.preventDefault()" [formGroup]="formRequest">
     <mat-form-field appearance="standard" color="primary">
@@ -18,7 +18,7 @@
   <div class="qrcode-container">
     <ngx-qrcode class="qrcode-icon" qrc-element-type="canvas" [qrc-value]="qrCodeStr"></ngx-qrcode>
   </div>
-  <div class="address">
+  <div class="address font-roboto-mono">
     <label class="label">{{ 'your address' | translate }}</label>
     <span class="address-text">{{ address.value }}</span>
   </div>
