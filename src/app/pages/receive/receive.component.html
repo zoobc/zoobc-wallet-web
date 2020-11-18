@@ -18,9 +18,9 @@
   <div class="qrcode-container">
     <ngx-qrcode class="qrcode-icon" qrc-element-type="canvas" [qrc-value]="qrCodeStr"></ngx-qrcode>
   </div>
-  <div class="address font-roboto-mono">
+  <div class="address">
     <label class="label">{{ 'your address' | translate }}</label>
-    <span class="address-text">{{ address.value }}</span>
+    <span class="address-text font-roboto-mono">{{ address.value }}</span>
   </div>
   <div class="btn-grouped">
     <button mat-stroked-button (click)="onCopyText($event, 1)" color="primary">
