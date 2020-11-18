@@ -1,3 +1,4 @@
+@import '../../../styles/variables';
 $spacePins: 2px;
 .pins-container {
   margin-left: -$spacePins;
@@ -11,6 +12,24 @@ $spacePins: 2px;
     input {
       text-align: center;
       font-size: 32px;
+    }
+  }
+
+  .white {
+    ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+      color: $white3 !important;
+    }
+
+    ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+      color: white !important;
+    }
+
+    ::ng-deep .mat-input-element {
+      caret-color: white !important;
+    }
+
+    input.mat-input-element {
+      color: white;
     }
   }
 }

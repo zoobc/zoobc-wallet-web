@@ -1,7 +1,7 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
 import { getTranslation } from 'src/helpers/utils';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinsComponent } from 'src/app/components/pins/pins.component';
@@ -9,12 +9,14 @@ import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { Address } from 'zoobc-sdk';
+import { DOCUMENT } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('pin') pin: PinsComponent;
 
   encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED');
@@ -39,7 +41,8 @@ export class LoginComponent implements OnInit {
     private appServ: AppService,
     private authServ: AuthService,
     private zone: NgZone,
-    private translate: TranslateService
+    private translate: TranslateService,
+    @Inject(DOCUMENT) private document
   ) {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
@@ -49,6 +52,14 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     let isLoggedIn: boolean = this.appServ.isLoggedIn();
     if (isLoggedIn) this.router.navigateByUrl('/dashboard');
+  }
+
+  ngAfterViewInit() {
+    this.toogleBackground();
+  }
+
+  ngOnDestroy() {
+    this.toogleBackground(false);
   }
 
   onChangePin() {
@@ -102,6 +113,16 @@ export class LoginComponent implements OnInit {
     } catch (error) {
       let message = getTranslation('extension not found', this.translate);
       return Swal.fire('Opps...', message, 'error');
+    }
+  }
+
+  toogleBackground(show: boolean = true) {
+    if (show) this.document.getElementById('navbar-head').classList.add('no-color');
+    else this.document.getElementById('navbar-head').classList.remove('no-color');
+    let boxImage = this.document.getElementsByClassName('background-box');
+    for (let i = 0; i < boxImage.length; i++) {
+      if (show) boxImage[i].classList.remove('hide');
+      else boxImage[i].classList.add('hide');
     }
   }
 }
