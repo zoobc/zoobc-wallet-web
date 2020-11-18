@@ -20,7 +20,7 @@
       color: $black2;
       font-size: 13px;
       margin-bottom: 8px;
-      font-weight: bold;
+      font-weight: 500;
     }
     .title-task {
       color: $black2;
@@ -37,7 +37,7 @@
     .commission-receive {
       color: map-get($primary, 500);
       font-size: 18px;
-      font-weight: bold;
+      font-weight: 500;
     }
     @media #{$small-and-down} {
       .message {
@@ -60,7 +60,7 @@
     div:nth-child(odd) {
       padding: 4px 0;
       font-size: 13px;
-      font-weight: bold;
+      font-weight: 500;
       color: $black2;
     }
     div:nth-child(even) {

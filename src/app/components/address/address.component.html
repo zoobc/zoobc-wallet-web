@@ -1,9 +1,13 @@
 <div class="address-template" [popper]="value" *ngIf="value">
-  <span class="start">{{ shortValue | slice: 0:halfLen }}</span>
-  <span class="end">
-    <span class="blank-space">s</span>
-    <span>{{ shortValue | slice: halfLen:len }}</span>
-  </span>
+  <ng-container *ngIf="!showFull">
+    <span class="start">{{ shortValue | slice: 0:halfLen }}</span>
+    <span class="end">
+      <span class="blank-space">s</span>
+      <span>{{ shortValue | slice: halfLen:len }}</span>
+    </span>
+  </ng-container>
+
+  <span class="full-address" *ngIf="showFull">{{ value }}</span>
   <span class="copy-address" (click)="onCopyText($event)" *ngIf="copyButton">
     <i class="far fa-copy"></i>
   </span>
