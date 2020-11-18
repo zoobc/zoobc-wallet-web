@@ -1,74 +1,73 @@
-<div class="row">
-  <div class="col-12 text-right">
-    <mat-form-field appearance="outline" color="accent">
-      <mat-label>{{ 'transaction type' | translate }}</mat-label>
-      <mat-select [value]="txType" (selectionChange)="onFilter($event.value)">
-        <mat-option [value]="1">{{ 'send money' | translate }}</mat-option>
-        <mat-option [value]="2">{{ 'register node' | translate }}</mat-option>
-        <mat-option [value]="258">{{ 'update node' | translate }}</mat-option>
-        <mat-option [value]="514">{{ 'remove node' | translate }}</mat-option>
-        <mat-option [value]="770">{{ 'claim node' | translate }}</mat-option>
-        <mat-option [value]="3">{{ 'setup account dataset' | translate }}</mat-option>
-        <mat-option [value]="259">{{ 'remove account dataset' | translate }}</mat-option>
-        <mat-option [value]="4">{{ 'escrow approval' | translate }}</mat-option>
-        <mat-option [value]="5">{{ 'multisignature' | translate }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-</div>
-<ng-container
-  *ngIf="unconfirmTx && unconfirmTx.length > 0 && txType == txTypeUnconfirm && !isLoading && !isError"
->
+<div style="max-width: 600px; margin: 0 auto;">
   <div class="row">
-    <div class="col-10">
-      <h2 class="mat-h2">{{ 'pending transaction' | translate }}</h2>
+    <div class="col-12 text-right">
+      <mat-form-field appearance="outline" color="accent">
+        <mat-label>{{ 'transaction type' | translate }}</mat-label>
+        <mat-select [value]="txType" (selectionChange)="onFilter($event.value)">
+          <mat-option [value]="1">{{ 'send money' | translate }}</mat-option>
+          <mat-option [value]="2">{{ 'register node' | translate }}</mat-option>
+          <mat-option [value]="258">{{ 'update node' | translate }}</mat-option>
+          <mat-option [value]="514">{{ 'remove node' | translate }}</mat-option>
+          <mat-option [value]="770">{{ 'claim node' | translate }}</mat-option>
+          <mat-option [value]="3">{{ 'setup account dataset' | translate }}</mat-option>
+          <mat-option [value]="259">{{ 'remove account dataset' | translate }}</mat-option>
+          <mat-option [value]="4">{{ 'escrow approval' | translate }}</mat-option>
+          <mat-option [value]="5">{{ 'multisignature' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-    <div class="col-2 text-right">
-      <button mat-icon-button class="reload-button" (click)="getTx(true)">
-        <i class="fa fa-redo-alt"></i>
-      </button>
+  </div>
+  <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoading && !isError">
+    <mat-card class="transaction-list">
+      <div class="row">
+        <div class="col-8">
+          <div class="transaction-title">
+            <span><i class="fa fa-history"></i></span>
+            <span class="title">{{ 'pending transaction' | translate }}</span>
+          </div>
+        </div>
+        <div class="col-4 text-right">
+          <button mat-icon-button class="reload-button" (click)="getTx(true)">
+            <i class="fa fa-redo-alt"></i>
+          </button>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <transaction-list
+        [transactionData]="unconfirmTx"
+        [isLoading]="isLoading"
+        [isError]="isError"
+        (refresh)="getTx(true)"
+        [txType]="txType"
+      ></transaction-list>
+    </mat-card>
+    <br />
+  </ng-container>
+
+  <mat-card class="transaction-list">
+    <div class="row">
+      <div class="col-8">
+        <div class="transaction-title">
+          <span><i class="fa fa-history"></i></span>
+          <span class="title">{{ 'transaction history' | translate }}</span>
+          <span class="timestamp" *ngIf="!isLoading && !isError">({{ lastRefresh | dateAgo }})</span>
+        </div>
+      </div>
+      <div class="col-4 text-right">
+        <button mat-icon-button class="reload-button" (click)="getTx(true)">
+          <i class="fa fa-redo-alt"></i>
+        </button>
+      </div>
     </div>
-  </div>
-  <transaction-list
-    [transactionData]="unconfirmTx"
-    [isLoading]="isLoading"
-    [isError]="isError"
-    (refresh)="getTx(true)"
-    [txType]="txTypeUnconfirm"
-  ></transaction-list>
-  <br />
-</ng-container>
-
-<div class="row">
-  <div class="col-10">
-    <h2 class="mat-h2 title">
-      {{ 'transaction history' | translate }}
-      <span class="text-refresh" *ngIf="!isError && !isLoading"
-        >( {{ 'last refresh' | translate }}: {{ lastRefresh | dateAgo }} )</span
-      >
-    </h2>
-  </div>
-  <div class="col-2 text-right">
-    <button mat-icon-button class="reload-button" (click)="getTx(true)">
-      <i class="fa fa-redo-alt"></i>
-    </button>
-  </div>
-</div>
-
-<div
-  infiniteScroll
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="50"
-  (scrolled)="onScroll()"
-  [scrollWindow]="false"
-  [infiniteScrollContainer]="'.mat-drawer-content'"
-  [fromRoot]="true"
->
-  <transaction-list
-    [transactionData]="accountHistory"
-    [isLoading]="isLoading"
-    [isError]="isError"
-    (refresh)="getTx(true)"
-    [txType]="txType"
-  ></transaction-list>
+    <mat-divider></mat-divider>
+    <div infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()">
+      <transaction-list
+        [transactionData]="accountHistory"
+        [isLoading]="isLoading"
+        [isError]="isError"
+        (refresh)="getTx(true)"
+        [txType]="txType"
+      ></transaction-list>
+    </div>
+  </mat-card>
 </div>

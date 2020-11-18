@@ -5,19 +5,24 @@
   h2 {
     font-weight: 500;
     margin-bottom: 24px;
+    font-size: 32px;
+  }
+  h3 {
+    font-size: 24px;
   }
   h4 {
     font-weight: 500;
     color: $black2;
+    font-size: 18px;
   }
   .language-selector {
     text-align: left;
-    max-width: 600px;
+    max-width: 512px;
     margin: 8px auto;
   }
   .passphrase-section {
     position: relative;
-    max-width: 600px;
+    max-width: 512px;
     margin: 0 auto;
     .box-passphrase {
       display: flex;
@@ -26,66 +31,73 @@
       overflow: hidden;
       font-size: 14px;
       .number {
-        background-color: map-get($primary, 200);
+        background-color: $black3;
         width: 32px;
-        color: white;
+        color: $black1;
         text-align: center;
         padding: 8px;
       }
       .word {
-        background-color: map-get($primary, 100);
-        color: map-get($primary, 600);
+        background-color: $black3;
+        color: $black1;
         width: calc(100% - 32px);
-        text-align: center;
+        text-align: left;
         padding: 8px 0px;
       }
     }
-
-    .cover-passphrase {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #f2f3f4;
-      border-radius: 6px;
-      opacity: 0.7;
-      cursor: pointer;
-      display: flex;
-      &.hide {
-        display: none;
-      }
-
-      .text-cover {
-        display: flex;
-        flex-flow: column;
-        font-size: 20px;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-
-  .blur {
-    filter: blur(5px);
   }
 
   .btn-grouped {
     margin: 16px auto;
     text-align: center;
     font-weight: 500;
+    display: flex;
+    max-width: 512px;
     button {
       margin: 0 4px 8px 4px;
+      width: 50%;
     }
   }
 
-  .warning-box {
-    background-color: #fff176;
-    color: $black2;
-    padding: 16px;
-    border-radius: 6px;
-    margin-bottom: 16px;
+  .form-section {
+    margin: 0 auto;
+    max-width: 512px;
+    form {
+      width: 100%;
+      .btn-create {
+        width: 100%;
+        margin-top: 24px;
+      }
+    }
+  }
+
+  .explanation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h3 {
+      font-weight: 500;
+    }
+
+    img {
+      margin-top: 60px;
+    }
+
+    .text-box {
+      max-width: 512px;
+
+      p {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        font-size: 16px;
+      }
+    }
+
+    button {
+      width: 336px;
+      margin-top: 15px;
+    }
   }
 }
