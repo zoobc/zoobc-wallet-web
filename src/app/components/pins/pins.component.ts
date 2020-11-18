@@ -38,6 +38,7 @@ export class PinsComponent implements OnInit, ControlValueAccessor, AfterViewIni
   }
 
   ngAfterViewInit() {
+    this.getWhiteClass();
     setTimeout(() => {
       const child = this.pinDigit.first.nativeElement.children[0].children[0].children[0].children[2]
         .children[0];
@@ -125,7 +126,10 @@ export class PinsComponent implements OnInit, ControlValueAccessor, AfterViewIni
   }
 
   getWhiteClass() {
-    if (this.router.url === '/login') return 'white';
-    return '';
+    if (this.router.url.includes('/login')) {
+      this.pinDigit.forEach(item => {
+        item.nativeElement.classList.add('white');
+      });
+    }
   }
 }

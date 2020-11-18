@@ -78,8 +78,11 @@
         border-color: white !important;
       }
 
-      :disabled {
-        opacity: 0.5;
+      .spiner {
+        display: flex;
+        justify-content: center;
+        font-size: 32px;
+        color: white;
       }
     }
   }
