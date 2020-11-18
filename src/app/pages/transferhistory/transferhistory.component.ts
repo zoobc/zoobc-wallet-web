@@ -27,7 +27,6 @@ export class TransferhistoryComponent implements OnDestroy {
   unconfirmTx: ZBCTransaction[];
 
   txType: number = TransactionType.SENDMONEYTRANSACTION;
-  txTypeUnconfirm: number = TransactionType.SENDMONEYTRANSACTION;
 
   page: number = 1;
   perPage: number = 10;
@@ -52,7 +51,6 @@ export class TransferhistoryComponent implements OnDestroy {
       if (event instanceof NavigationEnd) {
         this.activeRoute.queryParams.subscribe(res => {
           this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
-          this.txTypeUnconfirm = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
         });
         this.getTx(true);
       }
@@ -148,7 +146,7 @@ export class TransferhistoryComponent implements OnDestroy {
           const mempoolParams: MempoolListParams = { address: this.address };
           this.unconfirmTx = await zoobc.Mempool.getList(mempoolParams).then((res: ZBCTransactions) =>
             res.transactions.map(uc => {
-              this.txTypeUnconfirm = uc.transactionType;
+              this.txType = uc.transactionType;
               return uc;
             })
           );
@@ -168,7 +166,7 @@ export class TransferhistoryComponent implements OnDestroy {
   }
 
   onScroll() {
-    if (this.accountHistory.length < this.total) {
+    if (this.accountHistory && this.accountHistory.length < this.total) {
       this.page++;
       this.getTx();
     } else this.finished = true;
