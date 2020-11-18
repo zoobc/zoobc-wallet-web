@@ -3,7 +3,7 @@
 
 .multisinature-container {
   .check-title {
-    font-weight: bold;
+    font-weight: 500;
     color: $black2;
   }
 
@@ -30,7 +30,7 @@
       }
 
       .label {
-        color: $black3;
+        color: $black2;
         margin: 8px 0 4px 0;
       }
 
@@ -41,7 +41,7 @@
       .amount {
         color: #f44336;
         font-size: 18px;
-        font-weight: bold;
+        font-weight: 500;
         margin-top: 8px;
       }
       .signed {

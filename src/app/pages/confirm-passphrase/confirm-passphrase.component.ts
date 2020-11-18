@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, FormArray } from '@angular/forms';
-import { environment } from '../../../environments/environment';
+import { Component, ElementRef, OnInit, ViewChildren } from '@angular/core';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin-setup-dialog.component';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
@@ -14,34 +13,37 @@ import { Location } from '@angular/common';
   styleUrls: ['./confirm-passphrase.component.scss'],
 })
 export class ConfirmPassphraseComponent implements OnInit {
+  @ViewChildren('firstInput') firstInput: ElementRef;
+
   words: string;
   passphrase: string[];
-  prefillPassphrase: string[];
-
-  confirmForm: FormGroup;
-  wordField: FormArray;
   zooKeyring: ZooKeyring;
-
-  mnemonicNumWords = environment.mnemonicNumWords;
+  confirmForm: FormGroup;
+  firstIndex: number;
+  secondIndex: number;
+  firstWord: FormControl = new FormControl('', Validators.required);
+  secondWord: FormControl = new FormControl('', Validators.required);
 
   constructor(
-    private fb: FormBuilder,
     private dialog: MatDialog,
     private authServ: AuthService,
     private router: Router,
     private location: Location
-  ) {}
+  ) {
+    this.confirmForm = new FormGroup({
+      firstWord: this.firstWord,
+      secondWord: this.secondWord,
+    });
+  }
 
   ngOnInit() {
     if (!history.state.passphrase) {
       this.location.replaceState('signup');
       this.location.back();
-
-      this.confirmForm = this.fb.group({ words: this.fb.array([]) });
     } else {
       this.words = history.state.passphrase.join(' ');
       this.passphrase = Object.assign([], history.state.passphrase);
-      this.prefillHalfPassphrase();
+      this.randomPassPhrase();
     }
   }
 
@@ -49,45 +51,26 @@ export class ConfirmPassphraseComponent implements OnInit {
     this.location.back();
   }
 
-  prefillHalfPassphrase() {
-    // removing some words of the passphrase
-    this.prefillPassphrase = this.passphrase;
-    // let totalWordRemoved = 1;
-    let totalWordRemoved = Math.round(this.mnemonicNumWords / 6);
-
-    for (let i = 0; i < totalWordRemoved; i++) {
-      let lenWords = this.prefillPassphrase.length;
-      let random: number;
-      do {
-        random = Math.floor(Math.random() * (lenWords - 1));
-      } while (this.prefillPassphrase[random] == '');
-
-      this.prefillPassphrase[random] = '';
-    }
-
-    // create array form
-    this.confirmForm = this.fb.group({
-      words: this.fb.array([]),
-    });
-
-    // fill the form with the prefilled passphrase
-    const prefill = this.prefillPassphrase;
-    for (let i = 0; i < this.mnemonicNumWords; i++) {
-      this.wordField = <FormArray>this.confirmForm.controls['words'];
-      this.wordField.push(this.fb.group({ word: [prefill[i], Validators.required] }));
+  randomPassPhrase() {
+    let lenWords = this.passphrase.length;
+    const first = Math.floor(Math.random() * (lenWords - 1));
+    const second = Math.floor(Math.random() * (lenWords - 1));
+    this.firstIndex = first;
+    this.secondIndex = second;
+    if (first > second) {
+      this.firstIndex = second;
+      this.secondIndex = first;
     }
   }
 
-  isValid() {
-    if (this.wordField.valid) {
-      let passphraseField: string = this.confirmForm.value.words
-        .map(form => form.word)
-        .join(' ')
-        .replace(/\s\s+/g, ' ')
-        .toLowerCase();
-
-      if (passphraseField != this.words) this.confirmForm.setErrors({ mnemonic: true });
-    } else this.confirmForm.setErrors({ required: true });
+  checkValid() {
+    if (!this.confirmForm.valid) return this.confirmForm.setErrors({ required: true });
+    if (
+      this.firstWord.value.replace(/\s/g, '').toLowerCase() !== this.passphrase[this.firstIndex] ||
+      this.secondWord.value.replace(/\s/g, '').toLowerCase() !== this.passphrase[this.secondIndex]
+    ) {
+      this.confirmForm.setErrors({ mnemonic: true });
+    }
   }
 
   openCreatePin() {
@@ -126,5 +109,9 @@ export class ConfirmPassphraseComponent implements OnInit {
     localStorage.setItem('IS_RESTORED', 'false');
 
     this.authServ.login(key);
+  }
+
+  clearInput(name: string) {
+    this.confirmForm.get(name).reset();
   }
 }

@@ -22,6 +22,10 @@ a:not([href='']) {
   }
 }
 
+b {
+  font-weight: 500 !important;
+}
+
 // =========================== GENERAL =============================
 .reload-button {
   font-size: 18px !important;
@@ -32,7 +36,7 @@ a:not([href='']) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: $black3;
+  color: $black2;
 
   &.padding {
     padding: 16px;
@@ -50,9 +54,8 @@ a:not([href='']) {
   }
 
   button {
-    height: 32px;
     font-size: 12px;
-    line-height: 12px;
+    line-height: 32px !important;
   }
 }
 
@@ -61,7 +64,7 @@ a:not([href='']) {
 
   a {
     margin-right: 6px;
-    font-weight: bold;
+    font-weight: 500;
   }
 
   i {
@@ -147,74 +150,6 @@ a:not([href='']) {
 }
 // ======================== END ACCORDION ===========================
 
-// ============================ BUTTON ============================
-a[mat-button],
-button[mat-button],
-button[mat-flat-button],
-a[mat-flat-button],
-a[mat-stroked-button],
-button[mat-stroked-button] {
-  text-transform: uppercase;
-  border-radius: 4px;
-  font-weight: 500;
-  line-height: 40px;
-  *[matPrefix] {
-    margin-right: 12px;
-  }
-  *[matSuffix] {
-    margin-left: 12px;
-  }
-  &.block {
-    width: 100%;
-  }
-  &.small {
-    font-size: 12px;
-    line-height: 32px;
-  }
-  &.big {
-    font-size: 16px;
-    line-height: 48px;
-  }
-}
-
-// FLAT BUTTON
-button[mat-flat-button],
-a[mat-flat-button] {
-  @include transition(0s ease-in all);
-  &[color='primary']:not(:disabled):hover {
-    background-color: map-get($primary, 400);
-    color: white;
-  }
-  &[color='warn']:not(:disabled):hover {
-    color: white;
-  }
-}
-
-// STROKED BUTTON
-a[mat-stroked-button],
-button[mat-stroked-button] {
-  border: 2px solid currentColor !important;
-  padding: 0 14px;
-  line-height: 36px;
-  &:disabled {
-    border: 2px solid currentColor !important;
-  }
-  &.small {
-    line-height: 28px !important;
-  }
-  &.big {
-    line-height: 44px;
-  }
-  &[color='primary']:not(:disabled) {
-    border: 2px solid map-get($primary, 400) !important;
-    color: map-get($primary, 400);
-  }
-  &[color='warn']:not(:disabled) {
-    border: 2px solid $red !important;
-  }
-}
-// ============================ END BUTTON ============================
-
 // ============================ SWAL CUSTOM STYLE ========================
 .swal2-content {
   .loader {
@@ -225,7 +160,7 @@ button[mat-stroked-button] {
 
 .swal2-styled {
   border-radius: 8px !important;
-  font-weight: bold !important;
+  font-weight: 500 !important;
 }
 
 .swal2-confirm {
@@ -304,7 +239,7 @@ button[mat-stroked-button] {
   }
   .step-circle {
     display: block;
-    background-color: $black4;
+    background-color: $black3;
     width: 24px;
     height: 24px;
     border-radius: 24px;
@@ -319,7 +254,7 @@ button[mat-stroked-button] {
     color: $black1 !important;
   }
   .stepper-line {
-    border-top: 1px solid $black4;
+    border-top: 1px solid $black3;
     margin: 12px -5% 0;
   }
   .step.active {

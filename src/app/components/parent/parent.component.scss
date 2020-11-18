@@ -12,7 +12,7 @@
   mat-drawer {
     background-color: transparent !important;
     border-right: 0 !important;
-    width: $sidebar-width-margin;
+    width: $sidebar-width;
     z-index: 999;
     box-shadow: none;
     height: 100%;
@@ -21,7 +21,7 @@
     top: calc(#{$header-height} + 16px);
     @media only screen and (max-width : calc(#{$parent-width} + 16px)) {
       margin-left: 16px;
-      width: calc(#{$sidebar-width-margin} + 16px);
+      width: calc(#{$sidebar-width} + 16px);
     }
     ::ng-deep .mat-drawer-inner-container {
       overflow: initial;
@@ -38,4 +38,37 @@
   @media only screen and (max-width : calc(#{$parent-width} + 16px)) {
     margin: 0 16px 24px 16px;
   }
+}
+
+.background-box {
+  min-width: 100vw;
+  min-height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+}
+.base {
+  background-color: map-get($primary, 600);
+}
+
+.image {
+  background: url('/assets/img/background.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.cover {
+  background-color: map-get($primary, 600);
+  mix-blend-mode: hard-light;
+}
+
+.shiner {
+  background-color: map-get($primary, 600);
+  opacity: 0.2;
+}
+
+.hide {
+  display: none;
 }

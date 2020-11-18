@@ -24,7 +24,7 @@
       padding: 12px 0;
       &.active a {
         color: map-get($primary, 500);
-        font-weight: bold;
+        font-weight: 500;
       }
     }
     a {
