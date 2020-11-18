@@ -8,7 +8,7 @@
         <div class="name">
           {{ account.name }} <br />
           <small>
-            <wallet-address [value]="account.address.value"></wallet-address>
+            <wallet-address [value]="account.address.value" [showFull]="true"></wallet-address>
           </small>
         </div>
         <div *ngIf="withBalance" class="balance">{{ account.balance / 1e8 | number: '0.0-8' }} ZBC</div>
@@ -53,7 +53,7 @@
     >
       <div class="name">{{ acc.name }}</div>
       <div class="address">
-        <wallet-address [value]="acc.address.value"></wallet-address>
+        <wallet-address [value]="acc.address.value" [showFull]="true"></wallet-address>
       </div>
       <div class="text-right" *ngIf="withBalance">
         <div class="balance">{{ acc.balance / 1e8 | number: '0.0-8' }} <small>ZBC</small></div>

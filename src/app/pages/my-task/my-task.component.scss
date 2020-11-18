@@ -12,11 +12,11 @@
     color: map-get($primary, 500);
   }
   .mat-tab-label {
-    font-weight: bold;
+    font-weight: 500;
   }
   /* Styles for the active tab label */
   .mat-tab-label.mat-tab-label-active {
-    font-weight: bold;
+    font-weight: 500;
     color: map-get($primary, 500);
   }
 }

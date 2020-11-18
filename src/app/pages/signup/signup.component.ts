@@ -34,7 +34,8 @@ export class SignupComponent implements OnInit {
   formTerms: FormGroup;
   isWrittenDown = new FormControl(false, Validators.required);
   isAgree = new FormControl(false, Validators.required);
-  showPassPhrase: boolean = false;
+
+  location: 'signup' | 'protect your fund' | 'what a seedphrase';
 
   constructor(private router: Router, private snackbar: MatSnackBar, private translate: TranslateService) {
     this.formTerms = new FormGroup({
@@ -45,6 +46,7 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     this.generateNewWallet();
+    this.location = 'protect your fund';
   }
 
   selectMnemonicLanguage(index: number) {
@@ -72,7 +74,9 @@ export class SignupComponent implements OnInit {
       state: { passphrase: this.passphrase },
     });
   }
-  tooglePassphrase() {
-    this.showPassPhrase = !this.showPassPhrase;
+
+  next() {
+    if (this.location == 'protect your fund') return (this.location = 'what a seedphrase');
+    return (this.location = 'signup');
   }
 }

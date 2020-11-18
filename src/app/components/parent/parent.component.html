@@ -1,3 +1,7 @@
+<div class="background-box base hide"></div>
+<div class="background-box image hide"></div>
+<div class="background-box cover hide"></div>
+<div class="background-box shiner hide"></div>
 <app-navbar></app-navbar>
 <div class="parent-container">
   <mat-drawer-container class="drawer-container" [hasBackdrop]="false">
@@ -7,9 +11,7 @@
       [opened]="largeScreen"
       [disableClose]="largeScreen ? true : false"
     >
-      <sticky [sticky-offset-top]="72" [sticky-offset-bottom]="24" [sticky-parent]="false" *ngIf="isLogin">
-        <app-sidebar [menu]="menu"></app-sidebar>
-      </sticky>
+      <app-sidebar [menu]="menu" *ngIf="isLogin"></app-sidebar>
     </mat-drawer>
     <mat-drawer-content #mainContainer [class.login]="isLogin">
       <div class="main-container">

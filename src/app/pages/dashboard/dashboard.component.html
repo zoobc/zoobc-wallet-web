@@ -79,7 +79,7 @@
             <i matPrefix class="fa fa-paper-plane"></i>
             <span>{{ 'send' | translate }}</span>
           </button>
-          <button *ngIf="currAcc.type == 'multisig'" mat-flat-button routerLink="/multisignature">
+          <button *ngIf="currAcc.type == 'multisig'" mat-button routerLink="/multisignature" color="primary">
             <i matPrefix class="fa fa-file-signature"></i>
             <span>{{ 'multisignature' | translate }}</span>
           </button>
@@ -94,10 +94,10 @@
     </mat-card>
 
     <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoadingRecentTx && !isErrorRecentTx">
-      <mat-card style="padding: 0">
+      <mat-card class="transaction-list">
         <div class="transaction-title">
           <span><i class="fa fa-history"></i></span>
-          <span class="title">{{ 'pending transactions' | translate }}</span>
+          <span class="title">{{ 'pending transaction' | translate }}</span>
         </div>
         <mat-divider></mat-divider>
 
@@ -137,6 +137,7 @@
         [txType]="txType"
       ></transaction-list>
     </mat-card>
+    <br /><br />
   </div>
 
   <div class="col-12 col-md-4">
@@ -149,5 +150,7 @@
     <div class="blog">
       <div class="title">What is Lightning Network? And How Does it Work?</div>
     </div>
+
+    <button mat-stroked-button color="primary" class="block">{{ 'view more' | translate }}</button>
   </div>
 </div>

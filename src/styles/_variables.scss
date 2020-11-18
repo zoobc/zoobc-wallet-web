@@ -1,14 +1,12 @@
 // header properties
-$header-height-offset: 300px;
 $header-height: 64px;
 $brand-width: 200px;
 
 // sidebar properties
 $sidebar-width: 88px;
-$sidebar-width-margin: 120px;
 
 // parent properties
-$parent-width: 1000px;
+$parent-width: 880px;
 
 // Media Query Ranges
 $small-screen-up: 576px !default;
@@ -70,8 +68,5 @@ $primary: (
 
 $red: #d3433c;
 $green: #1d8b49;
-
-$gray1: #727588;
-
 $primary-gradient: linear-gradient(45deg, map-get($primary, 600), map-get($primary, 400));
 $error-gradient: linear-gradient(45deg, #c62828, #ef5350);
