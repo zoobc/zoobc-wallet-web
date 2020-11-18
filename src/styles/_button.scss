@@ -1,0 +1,75 @@
+// ============================ BUTTON ============================
+.grouped-button {
+  margin: 0 -4px;
+  button,
+  a {
+    margin: 4px 4px;
+  }
+}
+
+a[mat-button],
+button[mat-button],
+button[mat-flat-button],
+a[mat-flat-button],
+a[mat-stroked-button],
+button[mat-stroked-button] {
+  text-transform: uppercase;
+  border-radius: 4px;
+  font-weight: 500;
+  line-height: 40px;
+  *[matPrefix] {
+    margin-right: 12px;
+  }
+  *[matSuffix] {
+    margin-left: 12px;
+  }
+  &.block {
+    width: 100%;
+  }
+  &.small {
+    font-size: 12px;
+    line-height: 32px;
+  }
+  &.big {
+    font-size: 16px;
+    line-height: 48px;
+  }
+}
+
+// FLAT BUTTON
+button[mat-flat-button],
+a[mat-flat-button] {
+  @include transition(0s ease-in all);
+  &[color='primary']:not(:disabled):hover {
+    background-color: map-get($primary, 400);
+    color: white;
+  }
+  &[color='warn']:not(:disabled):hover {
+    color: white;
+  }
+}
+
+// STROKED BUTTON
+a[mat-stroked-button],
+button[mat-stroked-button] {
+  border: 2px solid currentColor !important;
+  padding: 0 14px;
+  line-height: 36px;
+  &:disabled {
+    border: 2px solid currentColor !important;
+  }
+  &.small {
+    line-height: 28px !important;
+  }
+  &.big {
+    line-height: 44px;
+  }
+  &[color='primary']:not(:disabled) {
+    border: 2px solid map-get($primary, 400) !important;
+    color: map-get($primary, 400);
+  }
+  &[color='warn']:not(:disabled) {
+    border: 2px solid $red !important;
+  }
+}
+// ============================ END BUTTON ============================

@@ -79,7 +79,7 @@
             <i matPrefix class="fa fa-paper-plane"></i>
             <span>{{ 'send' | translate }}</span>
           </button>
-          <button *ngIf="currAcc.type == 'multisig'" mat-flat-button routerLink="/multisignature">
+          <button *ngIf="currAcc.type == 'multisig'" mat-button routerLink="/multisignature" color="primary">
             <i matPrefix class="fa fa-file-signature"></i>
             <span>{{ 'multisignature' | translate }}</span>
           </button>
