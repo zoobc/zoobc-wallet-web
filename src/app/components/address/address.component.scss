@@ -25,6 +25,9 @@
     font-size: 1px;
     visibility: hidden;
   }
+  .full-address {
+    word-break: break-all;
+  }
   .copy-address {
     margin-left: 8px;
     font-size: 16px;

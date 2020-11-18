@@ -13,6 +13,7 @@ export class AddressComponent {
   @Input() value: string;
   @Input() copyButton: boolean = true;
   @Input() center: boolean = false;
+  @Input() showFull = false;
 
   shortValue: string;
   len: number = 0;
