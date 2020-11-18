@@ -6,32 +6,54 @@
       {{ 'please enter the following words from your seed phrase to ensure you got it right' | translate }}
     </p>
     <form [formGroup]="confirmForm" (submit)="openCreatePin()">
-      <div class="row" formArrayName="words">
-        <ng-container *ngFor="let word of prefillPassphrase; let i = index">
-          <div *ngIf="word.length == 0" class="col-12 col-sm-12">
-            <label>{{ 'word' | translate }} #{{ i + 1 }}</label>
-            <mat-form-field
-              style="margin-bottom: 20px;"
-              class="input"
-              [formGroupName]="i"
-              appearance="outline"
-              color="accent"
-              class="block"
-            >
-              <input
-                matInput
-                formControlName="word"
-                placeholder="{{ 'enter word' | translate }} #{{ i + 1 }}"
-                (keyup)="isValid()"
-                (focus)="toggleFocus(i)"
-              />
-              <button (click)="clearInput(i)" *ngIf="focusInput[i]" mat-icon-button matSuffix>
-                <i matPrefix class="fas fa-times-circle"></i>
-              </button>
-            </mat-form-field>
-          </div>
-        </ng-container>
-      </div>
+      <label>{{ 'word' | translate }} #{{ firstIndex + 1 }}</label>
+      <mat-form-field
+        #firstInput
+        style="margin-bottom: 20px;"
+        appearance="outline"
+        color="accent"
+        class="block"
+      >
+        <input
+          matInput
+          formControlName="firstWord"
+          placeholder="{{ 'enter word' | translate }} #{{ firstIndex + 1 }}"
+          (keyup)="checkValid()"
+        />
+        <button
+          *ngIf="firstWord.value"
+          class="suffix"
+          (click)="clearInput('firstWord')"
+          mat-icon-button
+          matSuffix
+        >
+          <i matPrefix class="fas fa-times-circle"></i>
+        </button>
+      </mat-form-field>
+      <label>{{ 'word' | translate }} #{{ secondIndex + 1 }}</label>
+      <mat-form-field
+        #secondInput
+        style="margin-bottom: 20px;"
+        appearance="outline"
+        color="accent"
+        class="block"
+      >
+        <input
+          matInput
+          formControlName="secondWord"
+          placeholder="{{ 'enter word' | translate }} #{{ secondIndex + 1 }}"
+          (keyup)="checkValid()"
+        />
+        <button
+          *ngIf="secondWord.value"
+          class="suffix"
+          (click)="clearInput('secondWord')"
+          mat-icon-button
+          matSuffix
+        >
+          <i matPrefix class="fas fa-times-circle"></i>
+        </button>
+      </mat-form-field>
       <div
         *ngIf="confirmForm.hasError('required') || confirmForm.hasError('mnemonic')"
         style="height: 25px"
@@ -44,11 +66,9 @@
           {{ 'the seed phrase is not matched' | translate }}
         </mat-error>
       </div>
-      <div class="btn-grouped">
-        <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
-          <span class="text">{{ 'create wallet' | translate }}</span>
-        </button>
-      </div>
+      <button mat-flat-button color="primary" type="submit" [disabled]="confirmForm.invalid">
+        <span class="text">{{ 'create wallet' | translate }}</span>
+      </button>
     </form>
   </mat-card>
 </div>

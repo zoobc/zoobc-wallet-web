@@ -29,9 +29,17 @@
       font-weight: 500;
       font-size: 14px;
     }
-    .btn-grouped {
-      button {
-        width: 100%;
+    button {
+      width: 100%;
+    }
+    .block {
+      .suffix {
+        display: none !important;
+      }
+      &:focus-within {
+        & .suffix {
+          display: block !important;
+        }
       }
     }
   }
