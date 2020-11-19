@@ -45,9 +45,10 @@ export class ReceiveComponent implements OnInit {
     this.qrCodeStr = this.address.value + '||' + this.amountField.value;
   }
 
-  async onCopyText(e) {
+  onCopyText(e, value: number) {
     e.stopPropagation();
-    onCopyText(this.urlReqCoin);
+    if (value == 1) onCopyText(this.address.value);
+    else onCopyText(this.urlReqCoin);
 
     let message = getTranslation('address copied to clipboard', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
