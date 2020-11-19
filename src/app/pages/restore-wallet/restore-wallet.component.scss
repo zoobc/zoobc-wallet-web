@@ -1,14 +1,21 @@
+@import '../../../styles/variables';
 .restore-wallet-container {
-  max-width: 360px;
   margin: 0 auto;
   text-align: center;
   .mat-h2 {
     font-weight: 500;
     margin-bottom: 24px;
+    font-size: 32px;
+  }
+  .mat-h4 {
+    font-weight: 500;
+    color: $black2;
+    font-size: 18px;
   }
   .language-selector {
     text-align: left;
-    margin: 8px 0;
+    margin: 8px auto;
+    max-width: 512px;
     i {
       margin-left: 8px;
     }
@@ -16,15 +23,26 @@
       text-transform: uppercase;
     }
   }
+  .passphrase-section {
+    max-width: 512px;
+    margin: 0 auto;
+  }
   form {
+    max-width: 512px;
+    margin: 0 auto;
     textarea {
       line-height: 22px;
+    }
+    .btn {
+      padding: 0 16px;
     }
     .btn-grouped {
       margin: 16px auto;
       font-weight: 500;
-      button {
+      display: flex;
+      .button-half {
         margin: 0 4px 8px 4px;
+        width: 50%;
       }
     }
   }
