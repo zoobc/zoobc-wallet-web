@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, Inject, ViewChild, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import zoobc, {
   EscrowListParams,
@@ -9,13 +9,16 @@ import zoobc, {
   PendingTransactionStatus,
   MempoolListParams,
   TransactionType,
-  readInt64,
-  bufferToBase64,
   Escrows,
   ZBCTransactions,
+  Escrow,
 } from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { ContactService } from 'src/app/services/contact.service';
+import { DOCUMENT } from '@angular/common';
+import { EscrowTransactionComponent } from './escrow-transaction/escrow-transaction.component';
+import { ZBCTransaction } from 'zoobc-sdk';
+import { MultisigTransactionComponent } from './multisig-transaction/multisig-transaction.component';
+
 @Component({
   selector: 'app-my-task',
   templateUrl: './my-task.component.html',
@@ -30,6 +33,16 @@ export class MyTaskComponent implements OnInit {
   // Multisignature input
   @Input() isLoadingMultisig: boolean = false;
   @Input() isErrorMultiSig: boolean = false;
+
+  @ViewChild(EscrowTransactionComponent)
+  private escrowComponent: EscrowTransactionComponent;
+
+  @ViewChild(MultisigTransactionComponent)
+  private multisigComponent: MultisigTransactionComponent;
+
+  @ViewChildren('checkboxEscrow') private checkboxEscrow: any;
+  @ViewChildren('checkboxMultisig') private checkboxMultisig: any;
+
   account: SavedAccount;
   timeout: number;
 
@@ -45,8 +58,12 @@ export class MyTaskComponent implements OnInit {
   perPageMultiSig: number = 10;
   totalMultiSig: number = 0;
   multiSigfinished: boolean = false;
+  showProcessFormEscrow: boolean = false;
+  escrowDetail: Escrow;
+  multisigDetail: ZBCTransaction;
+  showProcessFormMultisig: boolean = false;
 
-  constructor(public dialog: MatDialog, private authServ: AuthService, private contactServ: ContactService) {}
+  constructor(public dialog: MatDialog, private authServ: AuthService, @Inject(DOCUMENT) private document) {}
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
@@ -115,23 +132,7 @@ export class MyTaskComponent implements OnInit {
       zoobc.Escrows.getList(params)
         .then(async (res: Escrows) => {
           this.totalEscrow = res.total;
-          let txMap = res.escrowList.map(tx => {
-            const alias = this.contactServ.get(tx.recipient.value).name || '';
-            return {
-              id: tx.id,
-              alias: alias,
-              senderaddress: tx.sender.value,
-              recipientaddress: tx.recipient.value,
-              approveraddress: tx.approver.value,
-              amount: tx.amount,
-              commission: tx.commission,
-              timeout: tx.timeout,
-              status: tx.status,
-              blockheight: tx.blockHeight,
-              latest: tx.latest,
-              instruction: tx.instruction,
-            };
-          });
+          let txMap = res.escrowList;
           if (txMap.length > 0) txMap = await this.checkVisibleEscrow(txMap);
           if (reload) {
             this.escrowTransactions = txMap;
@@ -151,17 +152,17 @@ export class MyTaskComponent implements OnInit {
     const params: MempoolListParams = {
       address: this.account.address,
     };
-    let list: string[] = await zoobc.Mempool.getList(params).then(res => {
-      let id: any = res.transactions.filter(tx => {
+    let list = await zoobc.Mempool.getList(params).then(res => {
+      let id = res.transactions.filter(tx => {
         if (tx.transactionType == TransactionType.APPROVALESCROWTRANSACTION) return tx;
       });
-      id = id.map(tx => {
-        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
-        const bodyBytes = bytes.slice(165, 177);
-        const res = readInt64(bodyBytes, 4);
-        return res;
+      id = id.map(idx => {
+        return idx.txBody.transactionid;
       });
-      return id;
+      return {
+        total: id.length,
+        transactions: id,
+      };
     });
     return list;
   }
@@ -170,18 +171,8 @@ export class MyTaskComponent implements OnInit {
     const paramPool: MempoolListParams = {
       address: this.account.address,
     };
-    let list: string[] = await zoobc.Mempool.getList(paramPool).then(res => {
-      let txHash: any = res.transactions.filter(tx => {
-        if (tx.transactionType == TransactionType.MULTISIGNATURETRANSACTION) return tx;
-      });
-      txHash = txHash.map(tx => {
-        const bytes = Buffer.from(tx.transactionbytes.toString(), 'base64');
-        const bodyBytes = bytes.slice(173, 355);
-        const txHashBytes = bodyBytes.slice(4, 36);
-        const result = bufferToBase64(txHashBytes);
-        return result;
-      });
-      return txHash;
+    let list = await zoobc.Mempool.getList(paramPool).then(res => {
+      return res;
     });
     return list;
   }
@@ -189,9 +180,9 @@ export class MyTaskComponent implements OnInit {
   async checkVisibleMultisig(pendingList) {
     let list = [];
     let pendingApprovalList = await this.getPendingMultisigApproval();
-    if (pendingApprovalList.length > 0) {
+    if (pendingApprovalList.total > 0) {
       for (let i = 0; i < pendingList.length; i++) {
-        let onPending = pendingApprovalList.includes(pendingList[i].transactionhash);
+        let onPending = pendingApprovalList.transactions.includes(pendingList[i].transactionHash);
         if (!onPending) {
           list.push(pendingList[i]);
         }
@@ -205,9 +196,9 @@ export class MyTaskComponent implements OnInit {
   async checkVisibleEscrow(escrowsList) {
     let list = [];
     let pendingApprovalList = await this.getPendingEscrowApproval();
-    if (pendingApprovalList.length > 0) {
+    if (pendingApprovalList.total > 0) {
       for (let i = 0; i < escrowsList.length; i++) {
-        let onPending = pendingApprovalList.includes(escrowsList[i].id);
+        let onPending = pendingApprovalList.transactions.includes(escrowsList[i].id);
         if (!onPending) {
           list.push(escrowsList[i]);
         }
@@ -250,5 +241,58 @@ export class MyTaskComponent implements OnInit {
       this.pageMultiSig++;
       this.getMultiSigPendingList();
     } else this.multiSigfinished = true;
+  }
+
+  toogleShowProcessFormEscrow() {
+    this.showProcessFormEscrow = !this.showProcessFormEscrow;
+    if (this.showProcessFormEscrow == true) {
+      this.updateStyle();
+    }
+  }
+
+  toogleShowSignFormMultisig() {
+    this.showProcessFormMultisig = !this.showProcessFormMultisig;
+    if (this.showProcessFormMultisig == true) {
+      this.updateStyle();
+    }
+  }
+
+  updateStyle() {
+    let widthWindows = window.outerWidth;
+    if (widthWindows > 767) {
+      this.document.getElementById('my-task').style.width = '53%';
+      this.document.getElementById('dtl-task').style.width = '44%';
+    } else {
+      this.document.getElementById('my-task').style.width = '90%';
+      this.document.getElementById('dtl-task').style.width = '402px';
+    }
+  }
+
+  dismiss(e: boolean) {
+    if (e == true) {
+      this.document.getElementById('dtl-task').style.display = 'none';
+      this.showProcessFormEscrow = false;
+      this.showProcessFormMultisig = false;
+      if (this.checkboxEscrow._results.length > 0) this.checkboxEscrow._results[0].checked = false;
+      else if (this.checkboxMultisig._results.length > 0) this.checkboxMultisig._results[0].checked = false;
+    }
+  }
+
+  getDetailEscrow($event) {
+    this.escrowDetail = $event;
+    let widthWindows = window.outerWidth;
+    setTimeout(() => {
+      this.document.getElementById('dtl-task').style.display = 'block';
+      if (widthWindows < 500) this.document.getElementById('dtl-task').style.width = '402px';
+    }, 30);
+  }
+
+  getDetailMultisig($event) {
+    this.multisigDetail = $event;
+    let widthWindows = window.outerWidth;
+    setTimeout(() => {
+      this.document.getElementById('dtl-task').style.display = 'block';
+      if (widthWindows < 500) this.document.getElementById('dtl-task').style.width = '402px';
+    }, 30);
   }
 }

@@ -1,26 +1,13 @@
-<div class="my-task-container">
-  <h2 class="mat-h2">
-    {{ 'my tasks' | translate }}
-  </h2>
+<div class="my-task-container" id="my-task">
   <mat-card style="padding: 0;">
     <mat-tab-group mat-align-tabs="center" color="accent">
       <ng-container *ngIf="account.type === 'normal'">
-        <mat-tab label="{{ 'escrow approval' | translate }}">
+        <mat-tab label="{{ 'escrow' | translate }}" (click)="reload(true)">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 10px;">
-              <a routerLink="/transferhistory" [queryParams]="{ type: '4' }" class="approval-history">
-                <i class="fa fa-history" aria-hidden="true"></i> {{ 'approval history' | translate }}
-              </a>
-            </div>
-            <div class="col-6 col-md-6">
-              <div class="text-right">
-                <button mat-icon-button class="reload-button" (click)="reload(true)">
-                  <i class="fa fa-redo-alt"></i>
-                </button>
-                <label class="block-height" *ngIf="!isLoadingBlockHeight"
-                  ><b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b></label
-                >
-              </div>
+            <div class="col-12 col-md-12" style="margin-top: 10px;">
+              <label class="block-height" *ngIf="!isLoadingBlockHeight"
+                >{{ 'block height' | translate }} : {{ blockHeight | number }}</label
+              >
             </div>
           </div>
           <div
@@ -31,6 +18,7 @@
             [scrollWindow]="false"
             [infiniteScrollContainer]="'.mat-drawer-content'"
             [fromRoot]="true"
+            style="margin-top: 16px;"
           >
             <app-escrow-transactions
               [escrowTransactionsData]="escrowTransactions"
@@ -38,24 +26,48 @@
               [isLoading]="isLoadingEscrow"
               [isError]="isErrorEscrow"
               (refresh)="getEscrowTx(true)"
+              (detailEscrowMap)="getDetailEscrow($event)"
+              (dismiss)="dismiss(true)"
             ></app-escrow-transactions>
           </div>
         </mat-tab>
       </ng-container>
       <ng-container *ngIf="account.type === 'multisig'">
+        <mat-tab label="{{ 'escrow' | translate }}" (click)="reload(true)">
+          <div class="row" style="margin: 0;">
+            <div class="col-12 col-md-12" style="margin-top: 8px;">
+              <label class="block-height" *ngIf="!isLoadingBlockHeight"
+                >{{ 'block height' | translate }} : {{ blockHeight | number }}</label
+              >
+            </div>
+          </div>
+          <div
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onScrollEscrow()"
+            [scrollWindow]="false"
+            [infiniteScrollContainer]="'.mat-drawer-content'"
+            [fromRoot]="true"
+            style="margin-top: 16px;"
+          >
+            <app-escrow-transactions
+              [escrowTransactionsData]="escrowTransactions"
+              [withDetail]="true"
+              [isLoading]="isLoadingEscrow"
+              [isError]="isErrorEscrow"
+              (refresh)="getEscrowTx(true)"
+              (detailEscrowMap)="getDetailEscrow($event)"
+              (dismiss)="dismiss(true)"
+            ></app-escrow-transactions>
+          </div>
+        </mat-tab>
         <mat-tab label="Multisignature">
           <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 10px;">
-              <a routerLink="/multisig-approval-history" class="approval-history">
-                <i class="fa fa-history"></i> {{ 'approval history' | translate }}
-              </a>
-            </div>
-            <div class="col-6 col-md-6">
-              <div class="text-right">
-                <button mat-icon-button class="reload-button" (click)="reload(true)">
-                  <i class="fa fa-redo-alt"></i>
-                </button>
-              </div>
+            <div class="col-12 col-md-12" style="margin-top: 10px;">
+              <label class="block-height" *ngIf="!isLoadingBlockHeight"
+                >{{ 'block height' | translate }} : {{ blockHeight | number }}</label
+              >
             </div>
           </div>
           <div
@@ -66,6 +78,7 @@
             [scrollWindow]="false"
             [infiniteScrollContainer]="'.mat-drawer-content'"
             [fromRoot]="true"
+            style="margin-top: 16px;"
           >
             <app-multisig-transaction
               [pendingListMultiSig]="multiSigPendingList"
@@ -73,47 +86,220 @@
               [isLoading]="isLoadingMultisig"
               [isError]="isErrorMultiSig"
               (refresh)="getMultiSigPendingList(true)"
+              (detailMultisig)="getDetailMultisig($event)"
+              (dismiss)="dismiss(true)"
             ></app-multisig-transaction>
-          </div>
-        </mat-tab>
-        <mat-tab label="{{ 'escrow approval' | translate }}">
-          <div class="row" style="margin: 0;">
-            <div class="col-6 col-md-6" style="margin-top: 8px;">
-              <a routerLink="/transferhistory" [queryParams]="{ type: '4' }" class="approval-history">
-                <i class="fa fa-history" aria-hidden="true"></i>
-                {{ 'approval history' | translate }}
-              </a>
-            </div>
-            <div class="col-6 col-md-6">
-              <div class="text-right">
-                <button mat-icon-button class="reload-button" (click)="reload(true)">
-                  <i class="fa fa-redo-alt"></i>
-                </button>
-                <label class="block-height" *ngIf="!isLoadingBlockHeight"
-                  ><b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b></label
-                >
-              </div>
-            </div>
-          </div>
-          <div
-            infiniteScroll
-            [infiniteScrollDistance]="2"
-            [infiniteScrollThrottle]="50"
-            (scrolled)="onScrollEscrow()"
-            [scrollWindow]="false"
-            [infiniteScrollContainer]="'.mat-drawer-content'"
-            [fromRoot]="true"
-          >
-            <app-escrow-transactions
-              [escrowTransactionsData]="escrowTransactions"
-              [withDetail]="true"
-              [isLoading]="isLoadingEscrow"
-              [isError]="isErrorEscrow"
-              (refresh)="getEscrowTx(true)"
-            ></app-escrow-transactions>
           </div>
         </mat-tab>
       </ng-container>
     </mat-tab-group>
   </mat-card>
 </div>
+<ng-container *ngIf="escrowDetail">
+  <div class="detail-task" id="dtl-task">
+    <div class="title">
+      <div class="row">
+        <div class="col-8">
+          <h2 class="mat-h2">{{ 'task details' | translate }}</h2>
+        </div>
+        <div class="col-4 text-right">
+          <button mat-icon-button class="reload-button" (click)="dismiss(true)">
+            <i style="color: #ffffff; margin-top: 6px;" class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="item">
+        <span class="label">{{ 'id' | translate }}</span>
+        <span class="value">{{ escrowDetail.id }}</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'sender' | translate }}</span>
+        <wallet-address class="address" [value]="escrowDetail.sender.value" showFull="true"></wallet-address>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'recipient' | translate }}</span>
+        <wallet-address
+          class="address"
+          [value]="escrowDetail.recipient.value"
+          showFull="true"
+        ></wallet-address>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'amount' | translate }}</span>
+        <span class="value">ZBC {{ escrowDetail.amount / 1e8 | number: '0.0-4' }}</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'commission' | translate }}</span>
+        <span class="value">ZBC {{ escrowDetail.commission / 1e8 | number: '0.0-4' }}</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'instruction' | translate }}</span>
+        <span class="value">{{ escrowDetail.instruction }}</span>
+      </div>
+      <div class="item">
+        <div style="margin: 16px 0;">
+          <mat-checkbox #checkboxEscrow (click)="toogleShowProcessFormEscrow()">
+            {{ 'process this transaction' || translate }}
+          </mat-checkbox>
+        </div>
+      </div>
+      <ng-container *ngIf="showProcessFormEscrow">
+        <div class="item">
+          <form-escrow-approval [group]="escrowComponent.form" [inputMap]="escrowComponent.escrowApprovalMap">
+          </form-escrow-approval>
+        </div>
+        <div class="text-right" style="margin: 8px 0 8px 0;">
+          <button mat-button style="margin-right: 8px" (click)="dismiss(true)">
+            {{ 'cancel' | translate }}
+          </button>
+          <button
+            [disabled]="escrowComponent.isLoadingRejectTx || !escrowComponent.form.valid"
+            mat-flat-button
+            color="warn"
+            style="margin-right: 8px"
+            (click)="escrowComponent.onOpenPinDialog(1)"
+          >
+            <span *ngIf="escrowComponent.isLoadingRejectTx">
+              <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span
+            >
+            <span>{{ 'reject' | translate }}</span>
+          </button>
+          <button
+            [disabled]="escrowComponent.isLoadingApproveTx || !escrowComponent.form.valid"
+            mat-flat-button
+            color="primary"
+            (click)="escrowComponent.onOpenPinDialog(0)"
+          >
+            <span *ngIf="escrowComponent.isLoadingApproveTx">
+              <i class="fas fa-circle-notch fa-spin"></i>&nbsp;
+            </span>
+            <span>
+              {{ 'confirm' | translate }}
+            </span>
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="multisigDetail">
+  <div class="detail-task" id="dtl-task">
+    <div class="title">
+      <div class="row">
+        <div class="col-8">
+          <h2 class="mat-h2">{{ 'task details' | translate }}</h2>
+        </div>
+        <div class="col-4 text-right">
+          <button mat-icon-button class="reload-button" (click)="dismiss(true)">
+            <i style="color: #ffffff; margin-top: 6px;" class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="item">
+        <span class="label">{{ 'sender' | translate }}</span>
+        <wallet-address
+          class="address"
+          [value]="multisigDetail.sender.value"
+          showFull="true"
+        ></wallet-address>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'recipient' | translate }}</span>
+        <wallet-address
+          class="address"
+          [value]="multisigDetail.recipient.value"
+          showFull="true"
+        ></wallet-address>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'amount' | translate }}</span>
+        <span class="value">ZBC {{ multisigDetail.txBody.amount / 1e8 | number: '0.0-4' }}</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'fee' | translate }}</span>
+        <span class="value">ZBC {{ multisigDetail.fee / 1e8 | number: '0.0-4' }}</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'height' | translate }}</span>
+        <span class="value">{{ multisigDetail.height }}</span>
+      </div>
+      <div class="item">
+        <span class="label">{{ 'date' | translate }}</span>
+        <span class="value">{{ multisigDetail.timestamp | date: 'medium' }}</span>
+      </div>
+      <div class="row">
+        <div class="col-6 col-md-6" style="margin: 16px 0 16px; padding-left: 16px;">
+          <ng-container *ngIf="multisigComponent.enabledSign">
+            <mat-checkbox #checkboxMultisig (click)="toogleShowSignFormMultisig()">
+              {{ 'sign this transaction' || translate }}
+            </mat-checkbox>
+          </ng-container>
+        </div>
+        <div class="col-6 col-md-6 text-right participant-info" style="margin: 16px 0 16px;">
+          <ng-container *ngIf="multisigComponent.pendingSignatures.length == 0">
+            {{ 'no participants have signed yet' || translate }}
+          </ng-container>
+          <ng-container *ngIf="multisigComponent.pendingSignatures.length > 0">
+            {{
+              'signed by'
+                | translate
+                  : {
+                      pendingSign: multisigComponent.pendingSignatures.length,
+                      totalSign: multisigComponent.totalParticpants
+                    }
+            }}
+          </ng-container>
+        </div>
+      </div>
+      <ng-container *ngIf="showProcessFormMultisig">
+        <div class="row" style="border-bottom: none;">
+          <div class="col-12 col-md-10 offset-md-1">
+            <label>{{ 'sign by' | translate }}</label>
+            <account-selector
+              (select)="multisigComponent.onSwitchAccount($event)"
+              type="normal"
+              [addresses]="multisigComponent.participants"
+              [switchAccount]="true"
+            ></account-selector>
+            <input-amount [group]="multisigComponent.form" amountName="fee" label="{{ 'fee' | translate }}">
+            </input-amount>
+          </div>
+        </div>
+        <div class="row" *ngIf="multisigComponent.feeForm.touched && multisigComponent.feeForm.invalid">
+          <div class="col-12 col-md-10 offset-md-1">
+            <div class="row" style="border-bottom: none; margin-top: -30px; font-weight: initial;">
+              <div class="col-4 col-sm-3">&nbsp;</div>
+              <div class="col-8 col-sm-9" style="padding: 0 10px;">
+                <ng-container *ngIf="multisigComponent.feeForm.touched">
+                  <mat-error *ngIf="multisigComponent.feeForm.hasError('required')">
+                    {{ 'fee is required' | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="feeForm.hasError('min')">
+                    {{ 'minimum fee is' | translate: { val: minFee } }}
+                  </mat-error>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-right" style="margin: 8px 0 8px">
+          <button mat-flat-button color="warn" style="margin-right: 8px" (click)="dismiss(true)">
+            {{ 'ignore' | translate }}
+          </button>
+          <button
+            [disabled]="multisigComponent.isLoadingConfirmTx || !multisigComponent.form.valid"
+            mat-flat-button
+            color="primary"
+            (click)="multisigComponent.onAccept()"
+          >
+            {{ 'accept' | translate }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

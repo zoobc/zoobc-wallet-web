@@ -15,56 +15,22 @@
       background-color: #eee;
       cursor: pointer;
     }
-    .nominal-task {
-      word-break: break-all;
-      color: $black2;
-      font-size: 13px;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-    .title-task {
-      color: $black2;
-      font-size: 13px;
-      margin-bottom: 8px;
-      .address {
-        color: $black1;
+    .task-item {
+      margin-bottom: 16px;
+      .label-task {
+        color: $black2;
+        font-size: 12px;
+        margin-bottom: 4px;
+        .value-task {
+          color: $black1;
+          font-size: 16px;
+        }
       }
-    }
-    .timeout {
-      color: $black1;
-      font-size: 13px;
-    }
-    .commission-receive {
-      color: map-get($primary, 500);
-      font-size: 18px;
-      font-weight: 500;
     }
     @media #{$small-and-down} {
       .message {
         text-align: center;
       }
-      .title-task {
-        display: block;
-      }
-    }
-  }
-}
-
-.detail-task-container {
-  .row {
-    color: $black1;
-    padding: 8px;
-    font-size: 14px;
-    border-bottom: 1px solid #ddd;
-    word-break: break-all;
-    div:nth-child(odd) {
-      padding: 4px 0;
-      font-size: 13px;
-      font-weight: 500;
-      color: $black2;
-    }
-    div:nth-child(even) {
-      padding: 4px 0;
     }
   }
 }
