@@ -4,6 +4,9 @@
 .dashboard-container {
   .account-card {
     background-image: url('/assets/img/home-bg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     color: white;
     margin-bottom: 24px;
     text-align: center;
