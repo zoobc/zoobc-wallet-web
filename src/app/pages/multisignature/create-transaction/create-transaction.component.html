@@ -2,24 +2,27 @@
   <h2 class="mat-h2">{{ 'multisignature' | translate }}</h2>
   <mat-card>
     <div class="stepper">
-      <ng-container *ngIf="stepper.multisigInfo">
-        <div class="step">
-          <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'add multisig info' | translate }}</span>
-        </div>
-        <div class="stepper-line"></div>
-      </ng-container>
+      <div class="step">
+        <span class="step-circle"><i class="fa fa-minus"></i></span>
+        <span class="step-label">{{ 'add multisig info' | translate }}</span>
+      </div>
+      <div class="stepper-line"></div>
       <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">{{ 'create transaction' | translate }}</span>
+        <span class="step-label">{{ 'transaction' | translate }}</span>
       </div>
-      <ng-container *ngIf="stepper.signatures">
+      <!-- <ng-container *ngIf="stepper.signatures">
         <div class="stepper-line"></div>
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
           <span class="step-label">{{ 'add signatures' | translate }}</span>
         </div>
-      </ng-container>
+      </ng-container> -->
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle"><i class="fa fa-check"></i></span>
+        <span class="step-label">{{ 'send multisignature' | translate }}</span>
+      </div>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
@@ -75,13 +78,20 @@
             {{ 'back' | translate }}
           </button>
         </div>
-        <div class="col">
+        <!-- <div class="col">
           <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
             {{ 'save' | translate }}
           </button>
-        </div>
+        </div> -->
         <div class="col">
-          <button mat-flat-button color="primary" class="block" [disabled]="createTransactionForm.invalid">
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            class="block"
+            [disabled]="createTransactionForm.invalid"
+            (click)="onNext()"
+          >
             {{ 'next' | translate }}
           </button>
         </div>
@@ -89,3 +99,46 @@
     </form>
   </mat-card>
 </div>
+
+<!-- <mat-card style="max-width: 400px; margin: 0 auto;"> -->
+<ng-template #chainDialog>
+  <form [formGroup]="form" (submit)="onSelectedChain()">
+    <div style="margin-bottom: 8px">
+      {{ 'how do you want multi signature to be executed?' | translate }}
+    </div>
+    <mat-radio-group formControlName="chainType">
+      <mat-radio-button value="onchain" style="margin-bottom: 8px;">
+        {{ 'onchain multi signature' | translate }}
+        <i
+          class="fas fa-info-circle"
+          matTooltip="{{
+            'submit the information of multisignature transaction without any participants signatures and then each participant will signing approving the transaction on my task page'
+              | translate
+          }}"
+          matTooltipPosition="above"
+        ></i>
+      </mat-radio-button>
+      <mat-radio-button value="offchain">
+        {{ 'offchain multi signature' | translate }}
+        <i
+          class="fas fa-info-circle"
+          matTooltip="{{
+            'submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
+              | translate
+          }}"
+          matTooltipPosition="above"
+        ></i>
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <div class="text-right grouped-button" style="margin-top: 8px;">
+      <button mat-button color="warn">
+        {{ 'cancel' | translate }}
+      </button>
+      <button mat-flat-button color="primary">
+        {{ 'next' | translate }}
+      </button>
+    </div>
+    <!-- </mat-card> -->
+  </form>
+</ng-template>

@@ -1,26 +1,40 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { generateTransactionHash } from 'zoobc-sdk';
+import { generateTransactionHash, TransactionType } from 'zoobc-sdk';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { createInnerTxBytes, createInnerTxForm, getInputMap } from 'src/helpers/multisig-utils';
 import { AuthService } from 'src/app/services/auth.service';
+import { MatDialog, MatDialogRef } from '@angular/material';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
   styleUrls: ['./create-transaction.component.scss'],
 })
 export class CreateTransactionComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('chainDialog') chainDialog: TemplateRef<any>;
+  accountRefDialog: MatDialogRef<any>;
+
   minFee = environment.fee;
 
   createTransactionForm: FormGroup;
+  form: FormGroup;
+  chainTypeField = new FormControl('onchain', Validators.required);
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
@@ -40,13 +54,18 @@ export class CreateTransactionComponent implements OnInit, AfterViewInit, OnDest
     private location: Location,
     private translate: TranslateService,
     private cdr: ChangeDetectorRef,
-    private authServ: AuthService
+    private authServ: AuthService,
+    private dialog: MatDialog
   ) {
     const subs = this.multisigServ.multisig.subscribe(multisig => {
       this.createTransactionForm = createInnerTxForm(multisig.txType);
       this.fieldList = getInputMap(multisig.txType);
     });
     subs.unsubscribe();
+
+    this.form = new FormGroup({
+      chainType: this.chainTypeField,
+    });
   }
 
   ngOnInit() {
@@ -163,6 +182,42 @@ export class CreateTransactionComponent implements OnInit, AfterViewInit, OnDest
     const multisig = { ...this.multisig };
     multisig.txBody = this.createTransactionForm.value;
     this.multisigServ.update(multisig);
+  }
+
+  onNext() {
+    this.accountRefDialog = this.dialog.open(this.chainDialog, {
+      width: '380px',
+      maxHeight: '90vh',
+    });
+  }
+
+  async onSelectedChain() {
+    console.log(this.chainTypeField.value);
+    if (this.chainTypeField.value == 'onchain') {
+      this.updateCreateTransaction();
+      this.router.navigate(['/multisignature/send-transaction']);
+    } else if (this.chainTypeField.value == 'offchain') {
+      const title = getTranslation('are you sure?', this.translate);
+      const message = getTranslation('you will not be able to update the form anymore!', this.translate);
+      const buttonText = getTranslation('yes, continue it!', this.translate);
+      const isConfirm = await Swal.fire({
+        title: title,
+        text: message,
+        showCancelButton: true,
+        confirmButtonText: buttonText,
+        type: 'warning',
+      }).then(result => {
+        if (result.value) {
+          this.generatedTxHash();
+          this.readonlyInput = true;
+          return true;
+        } else return false;
+      });
+      if (!isConfirm) return false;
+
+      this.saveDraft();
+    }
+    this.accountRefDialog.close();
   }
 
   back() {
