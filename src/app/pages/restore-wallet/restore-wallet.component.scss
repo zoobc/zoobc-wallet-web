@@ -2,6 +2,7 @@
 .restore-wallet-container {
   margin: 0 auto;
   text-align: center;
+  max-width: calc(360px + 16 * 2);
   .mat-h2 {
     font-weight: 500;
     margin-bottom: 24px;
@@ -15,7 +16,7 @@
   .language-selector {
     text-align: left;
     margin: 8px auto;
-    max-width: 512px;
+    max-width: calc(360px + 16 * 2);
     i {
       margin-left: 8px;
     }
@@ -24,11 +25,11 @@
     }
   }
   .passphrase-section {
-    max-width: 512px;
+    max-width: calc(360px + 16 * 2);
     margin: 0 auto;
   }
   form {
-    max-width: 512px;
+    max-width: calc(360px + 16 * 2);
     margin: 0 auto;
     textarea {
       line-height: 22px;
