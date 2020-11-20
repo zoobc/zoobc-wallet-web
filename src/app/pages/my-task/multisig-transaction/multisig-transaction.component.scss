@@ -12,57 +12,17 @@
       background-color: #eee;
       cursor: pointer;
     }
-
-    .alias {
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-
-    .address {
-      word-break: break-all;
-      color: $black1;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .date {
-      color: $black2;
-      font-size: 13px;
-    }
-
-    .amount {
-      color: #f44336;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .fee {
-      color: #f44336;
-      font-size: 12px;
-    }
-  }
-}
-
-.detail-multisig-container {
-  .row {
-    color: $black1;
-    padding: 8px;
-    font-size: 14px;
-    border-bottom: 1px solid #ddd;
-    word-break: break-all;
-
-    div:nth-child(odd) {
-      padding: 4px 0;
-      font-size: 13px;
-      font-weight: bold;
-      color: $black2;
-    }
-
-    div:nth-child(even) {
-      padding: 4px 0;
-    }
-
-    .participant-info {
-      color: map-get($primary, 500);
+    .task-item {
+      margin-bottom: 16px;
+      .label-task {
+        color: $black2;
+        font-size: 12px;
+        margin-bottom: 4px;
+        .value-task {
+          color: $black1;
+          font-size: 16px;
+        }
+      }
     }
   }
 }

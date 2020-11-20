@@ -3,56 +3,68 @@
 
 .receive-container {
   text-align: center;
-  .address-text {
-    text-align: center;
-    background-color: map-get($primary, 400);
-    color: white;
-    word-break: break-all;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
+
+  ::ng-deep .mat-form-field-wrapper {
+    margin-bottom: -10.875px;
   }
-  .copy-address {
-    margin-left: 8px;
-    font-size: 16px;
-    @include transition(0.3s ease-in all);
-    &:hover {
-      opacity: 0.6;
-      cursor: pointer;
+
+  ::ng-deep .mat-form-field-flex {
+    width: 120px;
+    height: 24px;
+  }
+
+  ::ng-deep .mat-form-field-flex {
+    padding-top: 0px;
+  }
+
+  mat-form-field {
+    font-size: 20px;
+  }
+
+  .amount {
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .suffix {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 23px;
+  }
+  .address {
+    .label {
+      font-size: 12px;
+      line-height: 14px;
+      display: block;
+      color: $black2;
+      margin-bottom: 5px;
+    }
+    .address-text {
+      font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      word-break: break-all;
+      margin-bottom: 20px;
+      color: $black1;
     }
   }
   .qrcode-container {
-    width: 100%;
-    min-height: 220px;
-    .url {
-      font-size: 13px;
-      border-radius: 8px;
-      padding: 4px 8px;
-      margin-bottom: 8px;
-      word-break: break-all;
-      @include transition(0.3s ease-in all);
-      &:hover {
-        background-color: #ccc;
-        cursor: pointer;
-      }
-    }
-    .instruction {
-      font-size: 14px;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
     .qrcode-icon {
-      width: 100%;
-      height: 256px;
-      text-align: center;
-      padding-top: 24px;
-      i {
-        font-size: 116px;
-        color: $black3;
-      }
+      background: $white1;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
     }
   }
-  form {
-    display: grid;
+  .btn-grouped {
+    button {
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 14px;
+      width: 156px;
+      height: 32px;
+      margin-right: 16px;
+    }
   }
 }

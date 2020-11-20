@@ -1,12 +1,12 @@
 @import '../../../../styles/variables';
 
 .card-title {
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 24px;
 }
 .title {
   font-size: 17px;
-  font-weight: bold;
+  font-weight: 500;
   color: $black1;
   margin-top: 16px !important;
   margin-bottom: 24px;
@@ -44,7 +44,7 @@ table {
   .table {
     width: 100px;
     display: inline-block;
-    font-weight: bold;
+    font-weight: 500;
   }
 
   .mat-row {
