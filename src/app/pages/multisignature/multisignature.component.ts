@@ -106,7 +106,7 @@ export class MultisignatureComponent implements OnInit {
       unisgnedTransactions: null,
       txType,
     };
-    if (this.chainTypeField.value == 'offchain') multisig.signaturesInfo = null;
+    // if (this.chainTypeField.value == 'offchain') multisig.signaturesInfo = null;
 
     if (this.isMultiSignature) {
       multisig.multisigInfo = {

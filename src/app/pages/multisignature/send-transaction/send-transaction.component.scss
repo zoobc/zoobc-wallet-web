@@ -4,6 +4,10 @@
 .send-transaction-container {
   max-width: 400px;
   margin: 0 auto;
+  .mat-card .mat-divider-horizontal {
+    position: inherit !important;
+    margin-bottom: 10px;
+  }
   form {
     .row {
       margin: 0 -4px;

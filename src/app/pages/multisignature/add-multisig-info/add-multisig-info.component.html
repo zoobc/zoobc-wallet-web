@@ -6,20 +6,23 @@
         <span class="step-circle"><i class="fa fa-check"></i></span>
         <span class="step-label">{{ 'add multisig info' | translate }}</span>
       </div>
-      <ng-container *ngIf="stepper.transaction">
-        <div class="stepper-line"></div>
-        <div class="step">
-          <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'create transaction' | translate }}</span>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="stepper.signatures">
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle"><i class="fa fa-minus"></i></span>
+        <span class="step-label">{{ 'transaction' | translate }}</span>
+      </div>
+      <!-- <ng-container *ngIf="stepper.signatures">
         <div class="stepper-line"></div>
         <div class="step">
           <span class="step-circle"><i class="fa fa-minus"></i></span>
           <span class="step-label">{{ 'add signatures' | translate }}</span>
         </div>
-      </ng-container>
+      </ng-container> -->
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle"><i class="fa fa-check"></i></span>
+        <span class="step-label">{{ 'send multisignature' | translate }}</span>
+      </div>
     </div>
     <mat-divider style="margin-bottom: 24px;"></mat-divider>
 
@@ -114,11 +117,6 @@
         <div class="col">
           <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
             {{ 'back' | translate }}
-          </button>
-        </div>
-        <div class="col">
-          <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
-            {{ 'save' | translate }}
           </button>
         </div>
         <div class="col">

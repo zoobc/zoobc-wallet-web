@@ -68,24 +68,75 @@
     </div>
   </div> -->
 
-  <button mat-flat-button [matMenuTriggerFor]="menu" color="primary" class="small">
-    <i matPrefix class="fa fa-plus"></i>
-    {{ 'create' | translate }}
-    <i matSuffix class="fa fa-caret-down"></i>
-  </button>
-  <mat-menu #menu="matMenu"> <br /><br /><br /> </mat-menu>
+  <div class="grouped-button" style="margin-bottom: 16px;">
+    <button mat-flat-button [matMenuTriggerFor]="menu" color="primary" class="small">
+      <i matPrefix class="fa fa-plus"></i>
+      {{ 'create' | translate }}
+      <i matSuffix class="fa fa-caret-down"></i>
+    </button>
+    <mat-menu #menu="matMenu">
+      <form [formGroup]="form" (submit)="onNext()">
+        <div style="margin-bottom: 8px">
+          {{ 'what kind of transaction do you want to create?' | translate }}
+        </div>
+        <mat-form-field appearance="outline" color="accent">
+          <mat-select formControlName="txType">
+            <mat-option [value]="type.code" *ngFor="let type of txType">{{
+              type.type | translate
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-  <button mat-flat-button color="primary" class="small" (click)="openFile()">
-    <i matPrefix class="fa fa-signature"></i>
-    {{ 'sign' | translate }}
-  </button>
-  <input
-    #fileInput
-    type="file"
-    (change)="onFileChanged($event)"
-    style="display: none"
-    accept="application/JSON"
-  />
+        <button mat-flat-button color="primary" [disabled]="form.invalid" style="margin-left: 16px;">
+          {{ 'next' | translate }}
+        </button>
+
+        <!-- <div style="margin-bottom: 8px">
+        {{ 'how do you want multi signature to be executed?' | translate }}
+      </div>
+      <mat-radio-group class="row" formControlName="chainType">
+        <mat-radio-button value="onchain" class="col-12 col-sm-6">
+          {{ 'onchain multi signature' | translate }}
+          <i
+            class="fas fa-info-circle"
+            matTooltip="{{
+              'submit the information of multisignature transaction without any participants signatures and then each participant will signing approving the transaction on my task page'
+                | translate
+            }}"
+            matTooltipPosition="above"
+          ></i>
+        </mat-radio-button>
+        <mat-radio-button value="offchain" class="col-12 col-sm-6">
+          {{ 'offchain multi signature' | translate }}
+          <i
+            class="fas fa-info-circle"
+            matTooltip="{{
+              'submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
+                | translate
+            }}"
+            matTooltipPosition="above"
+          ></i>
+        </mat-radio-button>
+      </mat-radio-group> -->
+
+        <!-- <div class="text-right">
+        <button mat-flat-button color="primary" [disabled]="form.invalid">{{ 'next' | translate }}</button>
+      </div> -->
+      </form>
+    </mat-menu>
+
+    <button mat-flat-button color="primary" class="small" (click)="openFile()">
+      <i matPrefix class="fa fa-signature"></i>
+      {{ 'sign' | translate }}
+    </button>
+    <input
+      #fileInput
+      type="file"
+      (change)="onFileChanged($event)"
+      style="display: none"
+      accept="application/JSON"
+    />
+  </div>
 
   <div class="multisignature-drafts">
     <mat-card style="padding: 0;" class="transaction-list">

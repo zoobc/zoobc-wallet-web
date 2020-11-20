@@ -102,12 +102,12 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     this.participantsField.removeAt(index);
   }
 
-  saveDraft() {
-    this.updateMultisig();
-    if (this.multisig.id) this.multisigServ.editDraft();
-    else this.multisigServ.saveDraft();
-    this.router.navigate(['/multisignature']);
-  }
+  // saveDraft() {
+  //   this.updateMultisig();
+  //   if (this.multisig.id) this.multisigServ.editDraft();
+  //   else this.multisigServ.saveDraft();
+  //   this.router.navigate(['/multisignature']);
+  // }
 
   next() {
     this.form.enable();
