@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild, TemplateRef, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  TemplateRef,
+  Input,
+  Output,
+  EventEmitter,
+  Inject,
+} from '@angular/core';
 import Swal from 'sweetalert2';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,11 +17,13 @@ import zoobc, {
   signTransactionHash,
   MultisigPostTransactionResponse,
   multisigPendingDetail,
+  ZBCTransaction,
 } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-multisig-transaction',
@@ -20,17 +31,17 @@ import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pi
   styleUrls: ['./multisig-transaction.component.scss'],
 })
 export class MultisigTransactionComponent implements OnInit {
-  @ViewChild('detailMultisig') detailMultisigDialog: TemplateRef<any>;
   @Input() pendingListMultiSig;
   @Input() isLoading: boolean = false;
   @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;
   @Output() refresh: EventEmitter<boolean> = new EventEmitter();
-  detailMultisigRefDialog: MatDialogRef<any>;
+  @Output() detailMultisig: EventEmitter<ZBCTransaction> = new EventEmitter();
+  @Output() dismiss: EventEmitter<boolean> = new EventEmitter();
 
   multiSigDetail: any;
   isLoadingDetail: boolean = false;
-  isLoadingTx: boolean = false;
+  isLoadingConfirmTx: boolean = false;
   account;
 
   form: FormGroup;
@@ -44,7 +55,12 @@ export class MultisigTransactionComponent implements OnInit {
   participants = [];
   totalParticpants: number;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
+  constructor(
+    public dialog: MatDialog,
+    private translate: TranslateService,
+    private authServ: AuthService,
+    @Inject(DOCUMENT) private document
+  ) {
     this.form = new FormGroup({
       fee: this.feeForm,
     });
@@ -67,34 +83,31 @@ export class MultisigTransactionComponent implements OnInit {
     this.isLoadingDetail = true;
     zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: multisigPendingDetail) => {
       this.multiSigDetail = res.pendingtransaction;
+      this.detailMultisig.emit(this.multiSigDetail);
       this.pendingSignatures = res.pendingsignaturesList;
       this.participants = res.multisignatureinfo.addressesList;
+      this.participants = this.participants.map(res => res.value);
       this.totalParticpants = res.multisignatureinfo.addressesList.length;
-      if (this.pendingSignatures) {
+      if (this.pendingSignatures.length > 0) {
         for (let i = 0; i < this.pendingSignatures.length; i++) {
           this.participants = this.participants.filter(
-            res => res != this.pendingSignatures[i].accountaddress
+            res => res != this.pendingSignatures[i].accountaddress.value
           );
         }
-        const idx = this.authServ.getAllAccount().filter(res => this.participants.includes(res.address));
+        const idx = this.authServ
+          .getAllAccount()
+          .filter(res => this.participants.includes(res.address.value));
+        if (idx.length > 0) this.enabledSign = true;
+        else this.enabledSign = false;
+      } else {
+        const idx = this.authServ
+          .getAllAccount()
+          .filter(res => this.participants.includes(res.address.value));
         if (idx.length > 0) this.enabledSign = true;
         else this.enabledSign = false;
       }
-
       this.isLoadingDetail = false;
     });
-    this.detailMultisigRefDialog = this.dialog.open(this.detailMultisigDialog, {
-      width: '500px',
-      maxHeight: '90vh',
-    });
-  }
-
-  onIgnore() {
-    this.closeDialog();
-  }
-
-  closeDialog() {
-    this.detailMultisigRefDialog.close();
   }
 
   onAccept() {
@@ -106,16 +119,17 @@ export class MultisigTransactionComponent implements OnInit {
       if (isPinValid) {
         const account = this.authServ.getCurrAccount();
         const seed = this.authServ.seed;
-        this.isLoadingTx = true;
+        this.isLoadingConfirmTx = true;
+
         let data: MultiSigInterface = {
           accountAddress: account.address,
           fee: this.feeForm.value,
           signaturesInfo: {
-            txHash: this.multiSigDetail.transactionhash,
+            txHash: this.multiSigDetail.transactionHash,
             participants: [
               {
                 address: account.address,
-                signature: signTransactionHash(this.multiSigDetail.transactionhash, seed),
+                signature: signTransactionHash(this.multiSigDetail.transactionHash, seed),
               },
             ],
           },
@@ -131,7 +145,7 @@ export class MultisigTransactionComponent implements OnInit {
             });
 
             this.pendingListMultiSig = this.pendingListMultiSig.filter(
-              tx => tx.transactionhash != this.multiSigDetail.transactionhash
+              tx => tx.transactionHash != this.multiSigDetail.transactionHash
             );
           })
           .catch(err => {
@@ -140,19 +154,19 @@ export class MultisigTransactionComponent implements OnInit {
             Swal.fire('Opps...', message, 'error');
           })
           .finally(() => {
-            this.isLoadingTx = false;
-            this.closeDialog();
+            this.isLoadingConfirmTx = false;
+            this.onDismiss();
           });
       }
     });
   }
 
-  toogleShowSignForm() {
-    this.showSignForm = !this.showSignForm;
-  }
-
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
     this.authServ.switchAccount(account);
+  }
+
+  onDismiss() {
+    this.dismiss.emit(true);
   }
 }
