@@ -131,9 +131,6 @@ export class EscrowTransactionComponent implements OnInit {
         )
         .finally(() => {
           this.onDismiss();
-          let widthWindows = window.outerWidth;
-          if (widthWindows > 767) this.document.getElementById('my-task').style.width = '53%';
-          else this.document.getElementById('my-task').style.width = '90%';
         });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
@@ -180,9 +177,6 @@ export class EscrowTransactionComponent implements OnInit {
         )
         .finally(() => {
           this.onDismiss();
-          let widthWindows = window.outerWidth;
-          if (widthWindows > 767) this.document.getElementById('my-task').style.width = '53%';
-          else this.document.getElementById('my-task').style.width = '90%';
         });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);

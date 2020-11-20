@@ -8,7 +8,7 @@
   </ng-container>
 
   <span class="full-address" *ngIf="showFull">{{ value }}</span>
-  <span class="copy-address" (click)="onCopyText($event)" *ngIf="copyButton == true">
+  <span class="copy-address" (click)="onCopyText($event)" *ngIf="copyButton">
     <i class="far fa-copy"></i>
   </span>
 </div>

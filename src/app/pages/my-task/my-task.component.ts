@@ -245,27 +245,10 @@ export class MyTaskComponent implements OnInit {
 
   toogleShowProcessFormEscrow() {
     this.showProcessFormEscrow = !this.showProcessFormEscrow;
-    if (this.showProcessFormEscrow == true) {
-      this.updateStyle();
-    }
   }
 
   toogleShowSignFormMultisig() {
     this.showProcessFormMultisig = !this.showProcessFormMultisig;
-    if (this.showProcessFormMultisig == true) {
-      this.updateStyle();
-    }
-  }
-
-  updateStyle() {
-    let widthWindows = window.outerWidth;
-    if (widthWindows > 767) {
-      this.document.getElementById('my-task').style.width = '53%';
-      this.document.getElementById('dtl-task').style.width = '44%';
-    } else {
-      this.document.getElementById('my-task').style.width = '90%';
-      this.document.getElementById('dtl-task').style.width = '402px';
-    }
   }
 
   dismiss(e: boolean) {
@@ -280,19 +263,15 @@ export class MyTaskComponent implements OnInit {
 
   getDetailEscrow($event) {
     this.escrowDetail = $event;
-    let widthWindows = window.outerWidth;
     setTimeout(() => {
       this.document.getElementById('dtl-task').style.display = 'block';
-      if (widthWindows < 500) this.document.getElementById('dtl-task').style.width = '402px';
     }, 30);
   }
 
   getDetailMultisig($event) {
     this.multisigDetail = $event;
-    let widthWindows = window.outerWidth;
     setTimeout(() => {
       this.document.getElementById('dtl-task').style.display = 'block';
-      if (widthWindows < 500) this.document.getElementById('dtl-task').style.width = '402px';
     }, 30);
   }
 }

@@ -156,9 +156,6 @@ export class MultisigTransactionComponent implements OnInit {
           .finally(() => {
             this.isLoadingConfirmTx = false;
             this.onDismiss();
-            let widthWindows = window.outerWidth;
-            if (widthWindows > 767) this.document.getElementById('my-task').style.width = '53%';
-            else this.document.getElementById('my-task').style.width = '90%';
           });
       }
     });

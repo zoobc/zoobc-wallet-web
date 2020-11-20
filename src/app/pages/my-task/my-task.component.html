@@ -116,14 +116,18 @@
       </div>
       <div class="item">
         <span class="label">{{ 'sender' | translate }}</span>
-        <wallet-address class="address" [value]="escrowDetail.sender.value" showFull="true"></wallet-address>
+        <wallet-address
+          class="address"
+          [value]="escrowDetail.sender.value"
+          [showFull]="true"
+        ></wallet-address>
       </div>
       <div class="item">
         <span class="label">{{ 'recipient' | translate }}</span>
         <wallet-address
           class="address"
           [value]="escrowDetail.recipient.value"
-          showFull="true"
+          [showFull]="true"
         ></wallet-address>
       </div>
       <div class="item">
@@ -204,7 +208,7 @@
         <wallet-address
           class="address"
           [value]="multisigDetail.sender.value"
-          showFull="true"
+          [showFull]="true"
         ></wallet-address>
       </div>
       <div class="item">
@@ -212,7 +216,7 @@
         <wallet-address
           class="address"
           [value]="multisigDetail.recipient.value"
-          showFull="true"
+          [showFull]="true"
         ></wallet-address>
       </div>
       <div class="item">

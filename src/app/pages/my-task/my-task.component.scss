@@ -4,10 +4,13 @@
 .my-task-container {
   position: absolute;
   left: 16px;
-  width: 53%;
+  width: 53% !important;
+  .mat-card {
+    min-height: calc(100vh - 100px);
+  }
   @media #{$small-and-down} {
     z-index: 1;
-    width: 90%;
+    width: 90% !important;
   }
   .approval-history {
     margin: 8px;
@@ -39,10 +42,12 @@
   right: 10px;
   display: none;
   width: 44%;
+  min-height: calc(100vh - 100px);
   @media #{$small-and-down} {
     z-index: 2;
     left: 13px;
     width: 402px;
+    display: block;
   }
   .title {
     background: map-get($primary, 600);
