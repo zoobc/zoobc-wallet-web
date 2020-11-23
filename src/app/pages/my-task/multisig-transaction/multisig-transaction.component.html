@@ -9,18 +9,33 @@
       *ngFor="let multisig of pendingListMultiSig; let i = index"
       (click)="openDetailMultiSignature(multisig.transactionHash)"
     >
-      <div class="col-12 col-sm-8">
-        <div class="alias" *ngIf="multisig.alias">{{ multisig.alias }}</div>
-        <div class="address">
-          <wallet-address [value]="multisig.sender.value"></wallet-address>
+      <div class="col-12 col-sm-6">
+        <div class="task-item">
+          <span class="label-task"> {{ 'sender' | translate }}: </span>
+          <wallet-address
+            class="value-task"
+            [value]="multisig.sender.value"
+            [copyButton]="false"
+          ></wallet-address>
         </div>
-        <div class="date">
-          {{ multisig.timestamp | dateAgo }}
+        <div class="task-item">
+          <span class="label-task"> {{ 'recipient' | translate }}: </span>
+          <wallet-address
+            class="value-task"
+            [value]="multisig.recipient.value"
+            [copyButton]="false"
+          ></wallet-address>
         </div>
       </div>
-      <div class="col-12 col-sm-4 text-right">
-        <div class="amount">- {{ multisig.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
-        <div class="fee">- {{ multisig.fee / 1e8 | number: '0.0-8' }} ZBC</div>
+      <div class="col-12 col-sm-6 text-right">
+        <div class="task-item">
+          <span class="label-task" style="display: block;">{{ 'amount' | translate }}</span>
+          <span class="value-task"> ZBC {{ multisig.txBody.amount / 1e8 | number: '0.0-8' }}</span>
+        </div>
+        <div class="task-item">
+          <span class="label-task" style="display: block;"> {{ 'fee' | translate }}</span>
+          <span class="value-task">ZBC {{ multisig.fee / 1e8 | number: '0.0-8' }}</span>
+        </div>
       </div>
     </div>
   </ng-container>
@@ -49,155 +64,3 @@
     </button>
   </div>
 </div>
-
-<ng-template #detailMultisig>
-  <div class="detail-multisig-container" *ngIf="multiSigDetail && !isLoadingDetail">
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'sender' | translate }}:</div>
-      <div class="col-12 col-md-8">
-        <wallet-address [value]="multiSigDetail.sender.value"></wallet-address>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'recipient' | translate }}:</div>
-      <div class="col-12 col-md-8">
-        <wallet-address [value]="multiSigDetail.recipient.value"></wallet-address>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'amount' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ multiSigDetail.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'fee' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ multiSigDetail.fee / 1e8 | number: '0.0-8' }} ZBC</div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'blockheight' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ multiSigDetail.height | number: '0.0-8' }}</div>
-    </div>
-    <div class="row">
-      <div class="col-12 col-md-4">{{ 'date' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ multiSigDetail.timestamp | date: 'medium' }}</div>
-    </div>
-    <div class="row">
-      <div class="col-6 col-md-6" style="margin: 16px 0 16px;">
-        <ng-container *ngIf="enabledSign">
-          <mat-checkbox (click)="toogleShowSignForm($event)">
-            {{ 'sign this transaction' || translate }}
-          </mat-checkbox>
-        </ng-container>
-      </div>
-      <div class="col-6 col-md-6 text-right participant-info" style="margin: 16px 0 16px;">
-        <ng-container *ngIf="pendingSignatures.length == 0">
-          {{ 'no participants have signed yet' || translate }}
-        </ng-container>
-        <ng-container *ngIf="pendingSignatures.length > 0">
-          {{
-            'signed by' | translate: { pendingSign: pendingSignatures.length, totalSign: totalParticpants }
-          }}
-        </ng-container>
-      </div>
-    </div>
-    <ng-container *ngIf="showSignForm">
-      <div class="row" style="border-bottom: none;">
-        <div class="col-12 col-md-10 offset-md-1">
-          <label>{{ 'sign by' | translate }}</label>
-          <account-selector
-            (select)="onSwitchAccount($event)"
-            type="normal"
-            [addresses]="participants"
-            [switchAccount]="true"
-          ></account-selector>
-          <input-amount [group]="form" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-        </div>
-      </div>
-      <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
-        <div class="col-12 col-md-10 offset-md-1">
-          <div class="row" style="border-bottom: none; margin-top: -30px; font-weight: initial;">
-            <div class="col-4 col-sm-3">&nbsp;</div>
-            <div class="col-8 col-sm-9" style="padding: 0 10px;">
-              <ng-container *ngIf="feeForm.touched">
-                <mat-error *ngIf="feeForm.hasError('required')">
-                  {{ 'fee is required' | translate }}
-                </mat-error>
-                <mat-error *ngIf="feeForm.hasError('min')">
-                  {{ 'minimum fee is' | translate: { val: minFee } }}
-                </mat-error>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="text-right" style="margin-top: 8px">
-        <button
-          [disabled]="isLoadingTx"
-          mat-flat-button
-          color="warn"
-          style="margin-right: 8px"
-          (click)="onIgnore()"
-        >
-          {{ 'ignore' | translate }}
-        </button>
-        <button [disabled]="isLoadingTx || !form.valid" mat-flat-button color="primary" (click)="onAccept()">
-          {{ 'accept' | translate }}
-        </button>
-      </div>
-    </ng-container>
-  </div>
-  <div class="detail-multisig-container skeleton" *ngIf="isLoadingDetail">
-    <div class="row">
-      <div class="col-12 col-md-4">
-        <div class="skeleton-text" style="width:20%;"></div>
-      </div>
-      <div class="col-12 col-md-8">
-        <div class="skeleton-text" style="width:50%;"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12 col-md-4">
-        <div class="skeleton-text" style="width:50%;"></div>
-      </div>
-      <div class="col-12 col-md-8">
-        <div class="skeleton-text" style="width:100%;"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12 col-md-4">
-        <div class="skeleton-text" style="width:30%;"></div>
-      </div>
-      <div class="col-12 col-md-8">
-        <div class="skeleton-text" style="width:30%;"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12 col-md-4">
-        <div class="skeleton-text" style="width:50%;"></div>
-      </div>
-      <div class="col-12 col-md-8">
-        <div class="skeleton-text" style="width:30%;"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12 col-md-4">
-        <div class="skeleton-text" style="width:70%;"></div>
-      </div>
-      <div class="col-12 col-md-8">
-        <div class="skeleton-text" style="width:40%;"></div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12 col-md-4">
-        <div class="skeleton-text" style="width:40%;"></div>
-      </div>
-      <div class="col-12 col-md-8">
-        <div class="skeleton-text" style="width:100%;"></div>
-      </div>
-    </div>
-  </div>
-</ng-template>

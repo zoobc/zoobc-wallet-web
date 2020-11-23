@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, TemplateRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
 import Swal from 'sweetalert2';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 import zoobc, {
   Escrow,
@@ -18,6 +18,7 @@ import {
   createEscrowApprovalForm,
   escrowApprovalMap,
 } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.component';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-escrow-transactions',
@@ -25,26 +26,29 @@ import {
   styleUrls: ['./escrow-transaction.component.scss'],
 })
 export class EscrowTransactionComponent implements OnInit {
-  @ViewChild('detailEscrow') detailEscrow: TemplateRef<any>;
   @Input() escrowTransactionsData;
   @Input() isLoading: boolean = false;
   @Input() isError: boolean = false;
   @Input() withDetail: boolean = false;
   @Output() refresh: EventEmitter<boolean> = new EventEmitter();
-  detailEscrowRefDialog: MatDialogRef<any>;
+  @Output() detailEscrowMap: EventEmitter<Escrow> = new EventEmitter();
+  @Output() dismiss: EventEmitter<boolean> = new EventEmitter();
 
   form: FormGroup;
   minFee = environment.fee;
-  showProcessForm: boolean = false;
-  escrowDetail: Escrow;
   isLoadingDetail: boolean = false;
-  isLoadingTx: boolean = false;
-  waitingList = [];
+  isLoadingApproveTx: boolean = false;
+  isLoadingRejectTx: boolean = false;
   account: SavedAccount;
   accountBalance: AccountBalance;
   escrowApprovalMap = escrowApprovalMap;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
+  constructor(
+    public dialog: MatDialog,
+    private translate: TranslateService,
+    private authServ: AuthService,
+    @Inject(DOCUMENT) private document
+  ) {
     this.form = createEscrowApprovalForm();
   }
 
@@ -57,23 +61,12 @@ export class EscrowTransactionComponent implements OnInit {
   }
 
   openDetail(id) {
-    this.showProcessForm = false;
     this.form.get('sender').patchValue(this.account.address.value);
     this.form.get('transactionId').patchValue(id);
     this.form.get('fee').patchValue(this.minFee);
-    this.isLoadingDetail = true;
     zoobc.Escrows.get(id).then((res: Escrow) => {
-      this.escrowDetail = res;
-      this.isLoadingDetail = false;
+      this.detailEscrowMap.emit(res);
     });
-    this.detailEscrowRefDialog = this.dialog.open(this.detailEscrow, {
-      width: '500px',
-      maxHeight: '90vh',
-    });
-  }
-
-  closeDialog() {
-    this.detailEscrowRefDialog.close();
   }
 
   onOpenPinDialog(approvalCode) {
@@ -105,7 +98,7 @@ export class EscrowTransactionComponent implements OnInit {
     await this.getBalance();
     const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= feeForm.value) {
-      this.isLoadingTx = true;
+      this.isLoadingApproveTx = true;
       const data: EscrowApprovalInterface = {
         approvalAddress: this.account.address,
         fee: feeForm.value,
@@ -117,7 +110,7 @@ export class EscrowTransactionComponent implements OnInit {
       zoobc.Escrows.approval(data, childSeed)
         .then(
           (res: ApprovalEscrowTransactionResponse) => {
-            this.isLoadingTx = false;
+            this.isLoadingApproveTx = false;
             let message = getTranslation('transaction has been approved', this.translate);
             Swal.fire({
               type: 'success',
@@ -130,14 +123,14 @@ export class EscrowTransactionComponent implements OnInit {
             );
           },
           err => {
-            this.isLoadingTx = false;
+            this.isLoadingApproveTx = false;
             console.log('err', err);
             let message = getTranslation(err.message, this.translate);
             Swal.fire('Opps...', message, 'error');
           }
         )
         .finally(() => {
-          this.closeDialog();
+          this.onDismiss();
         });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
@@ -152,7 +145,7 @@ export class EscrowTransactionComponent implements OnInit {
     await this.getBalance();
     const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= feeForm.value) {
-      this.isLoadingTx = true;
+      this.isLoadingRejectTx = true;
       const data: EscrowApprovalInterface = {
         approvalAddress: this.account.address,
         fee: feeForm.value,
@@ -163,7 +156,7 @@ export class EscrowTransactionComponent implements OnInit {
       zoobc.Escrows.approval(data, childSeed)
         .then(
           (res: ApprovalEscrowTransactionResponse) => {
-            this.isLoadingTx = false;
+            this.isLoadingRejectTx = false;
             let message = getTranslation('transaction has been rejected', this.translate);
             Swal.fire({
               type: 'success',
@@ -176,14 +169,14 @@ export class EscrowTransactionComponent implements OnInit {
             );
           },
           err => {
-            this.isLoadingTx = false;
+            this.isLoadingRejectTx = false;
             console.log('err', err);
             let message = getTranslation(err.message, this.translate);
             Swal.fire('Opps...', message, 'error');
           }
         )
         .finally(() => {
-          this.closeDialog();
+          this.onDismiss();
         });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
@@ -191,7 +184,7 @@ export class EscrowTransactionComponent implements OnInit {
     }
   }
 
-  toogleShowProcessForm(e) {
-    this.showProcessForm = !this.showProcessForm;
+  onDismiss() {
+    this.dismiss.emit(true);
   }
 }

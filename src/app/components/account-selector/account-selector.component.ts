@@ -53,7 +53,7 @@ export class AccountSelectorComponent implements OnInit {
         } else if (this.selectedValue) {
           this.account = this.accounts.find(acc => acc.address.value == this.selectedValue);
         } else if (this.switchAccount) {
-          this.account = this.accounts.find(acc => this.account.address == acc.address);
+          this.account = this.accounts.find(acc => this.account.address.value == acc.address.value);
           if (!this.account) this.account = this.accounts[0];
         } else this.account = undefined;
 

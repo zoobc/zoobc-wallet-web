@@ -1,13 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, {
-  TransactionType,
-  TransactionListParams,
-  MultisigPendingTxResponse,
-  toGetPendingList,
-  ZBCTransaction,
-  MultiSigPendingDetailResponse,
-} from 'zoobc-sdk';
+import zoobc, { TransactionType, TransactionListParams, multisigPendingDetail } from 'zoobc-sdk';
 import { MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({
@@ -94,7 +87,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   onOpenDetailTransaction(txHash: string, id: string) {
     this.transactionId = id;
     this.isLoadingDetail = true;
-    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: MultiSigPendingDetailResponse) => {
+    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: multisigPendingDetail) => {
       this.transactionDetail = res.pendingtransaction;
       this.isLoadingDetail = false;
     });
