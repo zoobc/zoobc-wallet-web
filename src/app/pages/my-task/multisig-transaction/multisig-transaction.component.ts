@@ -7,7 +7,7 @@ import zoobc, {
   MultiSigInterface,
   signTransactionHash,
   MultisigPostTransactionResponse,
-  MultiSigPendingDetailResponse,
+  multisigPendingDetail,
 } from 'zoobc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -65,7 +65,7 @@ export class MultisigTransactionComponent implements OnInit {
   openDetailMultiSignature(txHash) {
     this.showSignForm = false;
     this.isLoadingDetail = true;
-    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: MultiSigPendingDetailResponse) => {
+    zoobc.MultiSignature.getPendingByTxHash(txHash).then((res: multisigPendingDetail) => {
       this.multiSigDetail = res.pendingtransaction;
       this.pendingSignatures = res.pendingsignaturesList;
       this.participants = res.multisignatureinfo.addressesList;
