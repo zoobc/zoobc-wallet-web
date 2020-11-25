@@ -84,11 +84,11 @@ export class AuthService {
     return (this.loggedIn = false);
   }
 
-  loginPass(address: string, path: number): boolean {
-    if (!isZBCAddressValid(address)) return (this.loggedIn = false);
+  loginPass(address: Address, path: number): boolean {
+    if (!isZBCAddressValid(address.value)) return (this.loggedIn = false);
     const account: SavedAccount = {
       name: 'Account 1',
-      address: { type: 0, value: address },
+      address: address,
       path: 0,
       pathHardware: path,
       type: 'normal',
@@ -256,5 +256,11 @@ export class AuthService {
   getHardwareLogin(): boolean {
     const test = JSON.parse(localStorage.getItem('IS_HARDWARE_LOGIN'));
     return JSON.parse(localStorage.getItem('IS_HARDWARE_LOGIN'));
+  }
+
+  getAccountByAddressValue(address: string): SavedAccount {
+    let accounts = this.getAllAccount('normal');
+    const account = accounts.find(acc => acc.address.value == address);
+    return account;
   }
 }
