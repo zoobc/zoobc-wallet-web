@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { getTranslation, jsonBufferToString } from 'src/helpers/utils';
+import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import Swal from 'sweetalert2';
@@ -17,9 +17,7 @@ import zoobc, {
   AccountBalance,
   isZBCAddressValid,
 } from 'zoobc-sdk';
-import { SignatureInfo } from 'zoobc-sdk/types/helper/transaction-builder/multisignature';
 import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
-import { patchComponentDefWithScope } from '@angular/core/src/render3/jit/module';
 
 @Component({
   selector: 'app-send-transaction',
@@ -31,7 +29,9 @@ export class SendTransactionComponent implements OnInit {
   confirmRefDialog: MatDialogRef<any>;
 
   account: SavedAccount;
-  accounts: SavedAccount[];
+  participants = [];
+  innerTx: any[] = [];
+
   formSend: FormGroup;
   minFee = environment.fee;
   feeForm = new FormControl(this.minFee, [Validators.required, Validators.min(this.minFee)]);
@@ -40,15 +40,7 @@ export class SendTransactionComponent implements OnInit {
 
   multisig: MultiSigDraft;
   multisigSubs: Subscription;
-  multiSigDrafts: MultiSigDraft[];
-
-  isMultiSigAccount: boolean = false;
-  participants = [];
-  accountBalance: AccountBalance;
-
   txType: string = '';
-  innerTx: any[] = [];
-  innerPage: number;
   isLoading: boolean = false;
 
   constructor(
@@ -66,42 +58,11 @@ export class SendTransactionComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    if (this.account.type === 'multisig') this.isMultiSigAccount = true;
-    this.accounts = this.authServ.getAllAccount();
-
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
       this.multisig = multisig;
-      const { fee } = this.multisig;
-      if (fee >= this.minFee) {
-        this.feeForm.setValue(fee);
-        this.feeForm.markAsTouched();
-      }
     });
     if (this.multisig.multisigInfo === undefined) return this.router.navigate(['/multisignature']);
     this.participants = this.multisig.multisigInfo.participants.map(pc => pc.value);
-    this.getMultiSigDraft();
-  }
-
-  getMultiSigDraft() {
-    this.multiSigDrafts = this.multisigServ.getDrafts();
-  }
-
-  saveDraft() {
-    this.updateSendTransaction();
-    const isDraft = this.multiSigDrafts.some(draft => draft.id == this.multisig.id);
-    if (isDraft) {
-      this.multisigServ.editDraft();
-    } else {
-      this.multisigServ.saveDraft();
-    }
-    this.router.navigate(['/multisignature']);
-  }
-
-  updateSendTransaction() {
-    const { fee } = this.formSend.value;
-    const multisig = { ...this.multisig };
-    multisig.fee = fee;
-    this.multisigServ.update(multisig);
   }
 
   back() {
@@ -119,8 +80,7 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async onOpenConfirmDialog() {
-    await this.getBalance();
-    const balance = this.accountBalance.spendableBalance / 1e8;
+    const balance = await this.getBalance();
     if (balance >= this.minFee) {
       this.fillDialog();
       this.confirmRefDialog = this.dialog.open(this.confirmDialog, {
@@ -133,10 +93,9 @@ export class SendTransactionComponent implements OnInit {
     }
   }
 
-  async getBalance() {
-    await zoobc.Account.getBalance(this.account.address).then((data: AccountBalance) => {
-      this.accountBalance = data;
-    });
+  async getBalance(): Promise<number> {
+    const balance = await zoobc.Account.getBalance(this.account.address).then((data: AccountBalance) => data);
+    return balance.spendableBalance / 1e8;
   }
 
   async onConfirm() {
@@ -154,42 +113,17 @@ export class SendTransactionComponent implements OnInit {
   }
 
   async onSendMultiSignatureTransaction() {
-    this.updateSendTransaction();
-    let { accountAddress, fee, multisigInfo, unisgnedTransactions, signaturesInfo, txBody } = this.multisig;
-    let data: MultiSigInterface;
-    if (signaturesInfo !== undefined) {
-      const signatureInfoFilter: SignatureInfo = {
-        txHash: signaturesInfo.txHash,
-        participants: [],
-      };
-
-      signatureInfoFilter.participants = signaturesInfo.participants.filter(pcp => {
-        if (jsonBufferToString(pcp.signature).length > 0) return pcp;
-      });
-
-      this.account = this.authServ.getCurrAccount();
-      accountAddress = this.account.address;
-      data = {
-        accountAddress,
-        fee,
-        multisigInfo,
-        unisgnedTransactions,
-        signaturesInfo: signatureInfoFilter,
-      };
-    } else {
-      this.account = this.authServ.getCurrAccount();
-      accountAddress = this.account.address;
-      data = {
-        accountAddress,
-        fee,
-        multisigInfo,
-        unisgnedTransactions,
-        signaturesInfo,
-      };
-    }
+    const { multisigInfo, signaturesInfo } = this.multisig;
+    const unisgnedTransactions = createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
+    const data: MultiSigInterface = {
+      accountAddress: this.account.address,
+      fee: this.feeForm.value,
+      multisigInfo,
+      unisgnedTransactions: unisgnedTransactions,
+      signaturesInfo,
+    };
     const childSeed = this.authServ.seed;
-    if (data.signaturesInfo === undefined)
-      data.unisgnedTransactions = createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
+
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);
@@ -209,10 +143,6 @@ export class SendTransactionComponent implements OnInit {
     this.dialog.closeAll();
   }
 
-  counter(i: number) {
-    return new Array(i);
-  }
-
   fillDialog() {
     this.txType = getTxType(this.multisig.txType);
     this.innerTx = Object.keys(this.multisig.txBody).map(key => {
@@ -223,20 +153,5 @@ export class SendTransactionComponent implements OnInit {
         isAddress: isZBCAddressValid(item[key]),
       };
     });
-    const div = Math.floor(this.innerTx.length / 2);
-    const mod = Math.floor(this.innerTx.length % 2);
-    this.innerPage = div + mod;
-  }
-
-  getClass(i: number) {
-    if (i % 2 != 0) return true;
-    return false;
-  }
-
-  getItemByKey(i: number, j: number, key: string) {
-    const index = i * 2 + j;
-    const obj = this.innerTx[index];
-    if (obj) return obj[key];
-    return '';
   }
 }

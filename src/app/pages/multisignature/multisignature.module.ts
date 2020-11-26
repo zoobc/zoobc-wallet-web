@@ -42,6 +42,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 }
 const routes: Routes = [
   { path: '', component: MultisignatureComponent },
+  { path: 'sign/:txHash/:address/:signature', component: MultisignatureComponent },
   { path: 'add-multisig-info', component: AddMultisigInfoComponent },
   { path: 'create-transaction', component: CreateTransactionComponent },
   { path: 'add-signatures', component: AddParticipantsComponent },

@@ -7,12 +7,12 @@
         <span class="step-label">{{ 'add multisig info' | translate }}</span>
       </div>
       <div class="stepper-line"></div>
-      <div class="step active">
+      <div class="step">
         <span class="step-circle"><i class="fa fa-check"></i></span>
         <span class="step-label">{{ 'transaction' | translate }}</span>
       </div>
       <div class="stepper-line"></div>
-      <div class="step">
+      <div class="step active">
         <span class="step-circle"><i class="fa fa-check"></i></span>
         <span class="step-label">{{ 'send multisignature' | translate }}</span>
       </div>
@@ -41,15 +41,18 @@
           </ng-container>
         </div>
       </div>
-      <button mat-flat-button color="warn" type="button" (click)="back()">
-        {{ 'back' | translate }}
-      </button>
-      <button mat-flat-button color="primary" type="button" (click)="saveDraft()">
-        {{ 'save' | translate }}
-      </button>
-      <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary">
-        {{ 'send' | translate }}
-      </button>
+      <div class="row" style="margin-top: 10px;">
+        <div class="col">
+          <button mat-flat-button color="warn" type="button" (click)="back()" class="block">
+            {{ 'back' | translate }}
+          </button>
+        </div>
+        <div class="col">
+          <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary" class="block">
+            {{ 'send' | translate }}
+          </button>
+        </div>
+      </div>
     </form>
   </mat-card>
 </div>
@@ -72,24 +75,17 @@
     <mat-divider></mat-divider>
     <div class="content">
       <div class="row">
-        <ng-container *ngFor="let x of counter(innerPage); let i = index">
-          <div class="col-12 col-sm-6" [class.text-right]="getClass(i)">
-            <ng-container *ngFor="let y of counter(2); let j = index">
-              <ng-container *ngIf="getItemByKey(i, j, 'key').length > 0">
-                <div class="label">{{ getItemByKey(i, j, 'key') | translate }}:</div>
-                <div class="value">
-                  <ng-container *ngIf="!getItemByKey(i, j, 'isAddress')">
-                    {{ getItemByKey(i, j, 'value') }}
-                  </ng-container>
-                  <wallet-address
-                    [ngStyle]="{ float: getClass(i) ? 'right' : 'none' }"
-                    *ngIf="getItemByKey(i, j, 'isAddress')"
-                    [value]="getItemByKey(i, j, 'value')"
-                    [copyButton]="true"
-                  ></wallet-address>
-                </div>
-              </ng-container>
-            </ng-container>
+        <ng-container *ngFor="let item of innerTx">
+          <div class="col-12 col-sm-6">
+            <div class="label">{{ item.key | translate }}</div>
+            <div class="value">
+              <ng-container *ngIf="!item.isAddress">{{ item.value }}</ng-container>
+              <wallet-address
+                *ngIf="item.isAddress"
+                [value]="item.value"
+                [copyButton]="true"
+              ></wallet-address>
+            </div>
           </div>
         </ng-container>
       </div>

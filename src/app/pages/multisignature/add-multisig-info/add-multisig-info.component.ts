@@ -16,11 +16,6 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./add-multisig-info.component.scss'],
 })
 export class AddMultisigInfoComponent implements OnInit, OnDestroy {
-  stepper = {
-    transaction: false,
-    signatures: false,
-  };
-
   form: FormGroup;
   participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
@@ -45,7 +40,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.multisigSubs = this.multisigServ.multisig.subscribe(multisig => {
-      const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
+      const { multisigInfo } = multisig;
       if (multisigInfo === undefined) this.router.navigate(['/multisignature']);
 
       this.multisig = multisig;
@@ -58,11 +53,6 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
         this.nonceField.setValue(nonce);
         this.minSignatureField.setValue(minSigs);
       }
-
-      if (signaturesInfo && signaturesInfo.txHash) this.form.disable();
-
-      this.stepper.transaction = unisgnedTransactions !== undefined ? true : false;
-      this.stepper.signatures = signaturesInfo !== undefined ? true : false;
     });
   }
 
@@ -102,33 +92,31 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     this.participantsField.removeAt(index);
   }
 
-  // saveDraft() {
-  //   this.updateMultisig();
-  //   if (this.multisig.id) this.multisigServ.editDraft();
-  //   else this.multisigServ.saveDraft();
-  //   this.router.navigate(['/multisignature']);
-  // }
-
   next() {
-    this.form.enable();
     if (this.form.valid) {
-      this.updateMultisig();
-
-      const { unisgnedTransactions, signaturesInfo } = this.multisig;
-      let isOneParticpants: boolean = false;
-      const idx = this.authServ
+      const addresses = this.sortAddresses();
+      const accounts = this.authServ
         .getAllAccount()
-        .filter(res => this.multisig.multisigInfo.participants.some(ps => ps.value == res.address.value));
-      if (idx.length > 0) isOneParticpants = true;
-      else isOneParticpants = false;
-      if (!isOneParticpants) {
+        .filter(res => addresses.some(ps => ps.value == res.address.value));
+
+      if (accounts.length <= 0) {
         let message = getTranslation('you dont have any account that in participant list', this.translate);
         Swal.fire({ type: 'error', title: 'Oops...', text: message });
-      } else {
-        if (unisgnedTransactions !== undefined) this.router.navigate(['/multisignature/create-transaction']);
-        else if (signaturesInfo !== undefined) this.router.navigate(['/multisignature/add-signatures']);
-        else this.router.navigate(['/multisignature/send-transaction']);
+        return false;
       }
+
+      const { minSigs, nonce } = this.form.value;
+      const multisig = { ...this.multisig };
+      multisig.multisigInfo = {
+        minSigs: parseInt(minSigs),
+        nonce: parseInt(nonce),
+        participants: addresses,
+      };
+      const sender = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
+      multisig.txBody.sender = sender;
+      this.multisigServ.update(multisig);
+
+      this.router.navigate(['/multisignature/create-transaction']);
     }
   }
 
@@ -136,25 +124,11 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  updateMultisig() {
-    const { minSigs, nonce } = this.form.value;
-    const multisig = { ...this.multisig };
-
-    let participants: string[] = this.form.value.participants;
-
-    participants.sort();
-    participants = participants.filter(address => address != '');
-    let arrParticipant: Address[] = participants.map(pc => {
-      return { value: pc, type: 0 };
-    });
-    multisig.multisigInfo = {
-      minSigs: parseInt(minSigs),
-      nonce: parseInt(nonce),
-      participants: arrParticipant,
-    };
-
-    const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
-    multisig.generatedSender = address;
-    this.multisigServ.update(multisig);
+  sortAddresses(): Address[] {
+    const participants: string[] = this.form.value.participants;
+    return participants
+      .sort()
+      .filter(address => address != '')
+      .map(pc => ({ value: pc, type: 0 }));
   }
 }
