@@ -13,7 +13,6 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
-  styleUrls: ['./create-transaction.component.scss'],
 })
 export class CreateTransactionComponent implements OnInit, OnDestroy {
   @ViewChild('chainDialog') chainDialog: TemplateRef<any>;

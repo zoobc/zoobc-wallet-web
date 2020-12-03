@@ -2,18 +2,18 @@
   <h2 class="mat-h2 text-center">{{ 'signatures list' | translate }}</h2>
   <form [formGroup]="form">
     <div style="margin-bottom: 16px;">
-      <label class="label-margin">{{ 'transaction hash' | translate }}</label>
+      <label>{{ 'transaction hash' | translate }}</label>
       <wallet-address [value]="transactionHashField.value"></wallet-address>
     </div>
 
-    <label class="label-margin">{{ 'participants signature' | translate }}</label>
+    <label>{{ 'participants signature' | translate }}</label>
     <div formArrayName="participantsSignature">
       <ng-container *ngFor="let participant of participantsSignatureField.controls; let i = index">
-        <div class="participant-field" [formGroupName]="i">
+        <div [formGroupName]="i">
           <wallet-address [value]="participantsSignatureField.controls[i].get('address').value">
           </wallet-address>
 
-          <mat-form-field class="custom-input" appearance="outline" color="accent">
+          <mat-form-field class="block" appearance="outline" color="accent">
             <input
               placeholder="{{ 'signature' | translate }} {{ i + 1 }}"
               formControlName="signature"
@@ -32,6 +32,7 @@
         </div>
       </ng-container>
     </div>
+    <br />
 
     <mat-checkbox class="checkbox-margin" (click)="toggleGetSignature()">
       {{ 'sign with my signature' | translate }}

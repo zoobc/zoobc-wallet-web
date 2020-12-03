@@ -14,7 +14,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 @Component({
   selector: 'app-add-participants',
   templateUrl: './add-participants.component.html',
-  styleUrls: ['./add-participants.component.scss'],
 })
 export class AddParticipantsComponent implements OnInit, OnDestroy {
   form: FormGroup;
