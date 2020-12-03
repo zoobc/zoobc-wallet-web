@@ -25,6 +25,7 @@
     "@angular/router": "~7.2.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
+    "@types/chrome": "0.0.126",
     "@zxing/ngx-scanner": "^3.0.0",
     "file-saver": "^2.0.2",
     "google-protobuf": "^3.8.0",
@@ -38,7 +39,7 @@
     "sweetalert2": "^8.11.7",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26",
-    "zoobc-sdk": "github:zoobc/zoobc-sdk#develop"
+    "zoobc-sdk": "../zoobc-sdk"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

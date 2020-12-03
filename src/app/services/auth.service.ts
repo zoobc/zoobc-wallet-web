@@ -7,12 +7,14 @@ import zoobc, {
   AccountBalance,
   ZBCTransactions,
   Address,
+  isZBCAddressValid,
 } from 'zoobc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
 export interface SavedAccount {
   name: string;
   path?: number;
+  pathHardware?: number;
   type: 'normal' | 'multisig';
   nodeIP: string;
   address: Address;
@@ -30,7 +32,7 @@ export class AuthService {
   private _seed: BIP32Interface;
   private _keyring: ZooKeyring;
   private restoring = false;
-
+  private loggedInHardware: boolean = false;
   private sourceCurrAccount = new BehaviorSubject<SavedAccount>(null);
   currAccount = this.sourceCurrAccount.asObservable();
 
@@ -49,6 +51,10 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return this.loggedIn;
+  }
+  isLoggedInHardware(): boolean {
+    this.loggedInHardware = this.getHardwareLogin();
+    return this.loggedInHardware;
   }
 
   generateDerivationPath(): number {
@@ -76,6 +82,28 @@ export class AuthService {
       return (this.loggedIn = true);
     }
     return (this.loggedIn = false);
+  }
+
+  loginPass(address: Address, path: number): boolean {
+    if (!isZBCAddressValid(address.value)) return (this.loggedIn = false);
+    const account: SavedAccount = {
+      name: 'Account 1',
+      address: address,
+      path: 0,
+      pathHardware: path,
+      type: 'normal',
+      nodeIP: null,
+    };
+
+    if (!this.isLoggedInHardware()) {
+      localStorage.removeItem('ACCOUNT');
+      localStorage.setItem('ACCOUNT', JSON.stringify([account]));
+    }
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    localStorage.setItem('IS_RESTORED', 'true');
+    localStorage.setItem('IS_HARDWARE_LOGIN', 'true');
+    this.sourceCurrAccount.next(account);
+    return (this.loggedIn = true);
   }
 
   logout() {
@@ -223,5 +251,16 @@ export class AuthService {
 
       this.restoring = false;
     }
+  }
+
+  getHardwareLogin(): boolean {
+    const test = JSON.parse(localStorage.getItem('IS_HARDWARE_LOGIN'));
+    return JSON.parse(localStorage.getItem('IS_HARDWARE_LOGIN'));
+  }
+
+  getAccountByAddressValue(address: string): SavedAccount {
+    let accounts = this.getAllAccount('normal');
+    const account = accounts.find(acc => acc.address.value == address);
+    return account;
   }
 }

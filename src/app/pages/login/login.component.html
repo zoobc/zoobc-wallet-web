@@ -2,11 +2,15 @@
   <img src="/assets/img/zbc-color-text.svg" alt="" />
   <h2 class="mat-h2">Wallet</h2>
   <ng-container *ngIf="!hasAccount">
-    <a routerLink="/signup" mat-flat-button color="primary">
+    <a [disabled]="isLoadingImport" routerLink="/signup" mat-flat-button color="primary">
       {{ 'create new wallet' | translate }}
     </a>
-    <a routerLink="/open-wallet" mat-flat-button color="primary">
+    <a [disabled]="isLoadingImport" routerLink="/open-wallet" mat-flat-button color="primary">
       {{ 'open wallet' | translate }}
+    </a>
+    <a [disabled]="isLoadingImport" (click)="importAccount()" mat-flat-button color="primary">
+      <span class="text" *ngIf="!isLoadingImport">{{ 'import account' | translate }}</span>
+      <span class="text" *ngIf="isLoadingImport">{{ 'waiting response' | translate }}</span>
     </a>
   </ng-container>
 
@@ -24,11 +28,35 @@
         <span class="text">{{ 'login' | translate }}</span>
       </button>
 
-      <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
+      <button
+        [disabled]="isLoadingImport"
+        style="margin-top: 8px;"
+        routerLink="/signup"
+        mat-flat-button
+        color="primary"
+      >
         {{ 'create new wallet' | translate }}
       </button>
-      <button style="margin-top: 8px;" routerLink="/open-wallet" mat-flat-button color="primary">
+      <button
+        [disabled]="isLoadingImport"
+        style="margin-top: 8px;"
+        routerLink="/open-wallet"
+        mat-flat-button
+        color="primary"
+      >
         {{ 'open another wallet' | translate }}
+      </button>
+      <button
+        [disabled]="isLoadingImport"
+        type="button"
+        style="margin-top: 8px;"
+        (click)="importAccount()"
+        mat-flat-button
+        color="primary"
+      >
+        <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingImport"></i>
+        <span class="text" *ngIf="!isLoadingImport">{{ 'import account' | translate }}</span>
+        <span class="text" *ngIf="isLoadingImport">{{ 'waiting response' | translate }}</span>
       </button>
     </form>
   </ng-container>
