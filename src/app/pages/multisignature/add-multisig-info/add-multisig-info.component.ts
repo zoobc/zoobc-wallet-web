@@ -116,7 +116,7 @@ export class AddMultisigInfoComponent implements OnInit, OnDestroy {
       multisig.txBody.sender = sender;
       this.multisigServ.update(multisig);
 
-      this.router.navigate(['/multisignature/create-transaction']);
+      this.router.navigate(['/multisignature/create/create-transaction']);
     }
   }
 

@@ -16,6 +16,7 @@ import zoobc, {
   MultisigPostTransactionResponse,
   AccountBalance,
   isZBCAddressValid,
+  getZBCAddress,
 } from 'zoobc-sdk';
 import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
 
@@ -122,7 +123,10 @@ export class SendTransactionComponent implements OnInit {
       unisgnedTransactions: unisgnedTransactions,
       signaturesInfo,
     };
+
     const childSeed = this.authServ.seed;
+    console.log(data);
+    console.log(getZBCAddress(childSeed.publicKey));
 
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {

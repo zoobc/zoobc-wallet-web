@@ -91,7 +91,7 @@ export class CreateTransactionComponent implements OnInit, OnDestroy {
   async onSelectedChain() {
     if (this.chainTypeField.value == 'onchain') {
       this.updateCreateTransaction();
-      this.router.navigate(['/multisignature/send-transaction']);
+      this.router.navigate(['/multisignature/create/send-transaction']);
     } else if (this.chainTypeField.value == 'offchain') {
       const title = getTranslation('are you sure?', this.translate);
       const message = getTranslation('you will not be able to update the form anymore!', this.translate);

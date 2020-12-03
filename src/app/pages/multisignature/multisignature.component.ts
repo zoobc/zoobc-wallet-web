@@ -115,9 +115,9 @@ export class MultisignatureComponent implements OnInit {
     this.multisigServ.update(multisig);
 
     const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
-    if (multisigInfo) this.router.navigate(['/multisignature/add-multisig-info']);
-    else if (unisgnedTransactions) this.router.navigate(['/multisignature/create-transaction']);
-    else if (signaturesInfo) this.router.navigate(['/multisignature/add-signatures']);
+    if (multisigInfo) this.router.navigate(['/multisignature/create/add-multisig-info']);
+    else if (unisgnedTransactions) this.router.navigate(['/multisignature/create/reate-transaction']);
+    else if (signaturesInfo) this.router.navigate(['/multisignature/create/add-signatures']);
   }
 
   onNext() {
@@ -157,10 +157,10 @@ export class MultisignatureComponent implements OnInit {
       multisig.txBody.sender = address;
 
       this.multisigServ.update(multisig);
-      this.router.navigate(['/multisignature/create-transaction']);
+      this.router.navigate(['/multisignature/create/create-transaction']);
     } else {
       this.multisigServ.update(multisig);
-      this.router.navigate(['/multisignature/add-multisig-info']);
+      this.router.navigate(['/multisignature/create/add-multisig-info']);
     }
   }
 

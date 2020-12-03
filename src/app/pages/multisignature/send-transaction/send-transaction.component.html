@@ -1,61 +1,38 @@
-<div class="send-transaction-container">
-  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
-  <mat-card>
-    <div class="stepper">
-      <div class="step">
-        <span class="step-circle"><i class="fa fa-minus"></i></span>
-        <span class="step-label">{{ 'add multisig info' | translate }}</span>
-      </div>
-      <div class="stepper-line"></div>
-      <div class="step">
-        <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">{{ 'transaction' | translate }}</span>
-      </div>
-      <div class="stepper-line"></div>
-      <div class="step active">
-        <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">{{ 'send multisignature' | translate }}</span>
-      </div>
+<form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
+  <label>{{ 'sender' | translate }}</label>
+  <account-selector
+    (select)="onSwitchAccount($event)"
+    type="normal"
+    [addresses]="participants"
+    [switchAccount]="true"
+  ></account-selector>
+  <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
+  <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
+    <div class="col-4 col-sm-3">&nbsp;</div>
+    <div class="col-8 col-sm-9">
+      <ng-container *ngIf="feeForm.touched">
+        <mat-error *ngIf="feeForm.hasError('required')">
+          {{ 'fee is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="feeForm.hasError('min')">
+          {{ 'minimum fee is' | translate: { val: minFee } }}
+        </mat-error>
+      </ng-container>
     </div>
-    <mat-divider style="margin-bottom: 24px;"></mat-divider>
-
-    <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
-      <label>{{ 'sender' | translate }}</label>
-      <account-selector
-        (select)="onSwitchAccount($event)"
-        type="normal"
-        [addresses]="participants"
-        [switchAccount]="true"
-      ></account-selector>
-      <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-      <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
-        <div class="col-4 col-sm-3">&nbsp;</div>
-        <div class="col-8 col-sm-9">
-          <ng-container *ngIf="feeForm.touched">
-            <mat-error *ngIf="feeForm.hasError('required')">
-              {{ 'fee is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="feeForm.hasError('min')">
-              {{ 'minimum fee is' | translate: { val: minFee } }}
-            </mat-error>
-          </ng-container>
-        </div>
-      </div>
-      <div class="row" style="margin-top: 10px;">
-        <div class="col">
-          <button mat-flat-button color="warn" type="button" (click)="back()" class="block">
-            {{ 'back' | translate }}
-          </button>
-        </div>
-        <div class="col">
-          <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary" class="block">
-            {{ 'send' | translate }}
-          </button>
-        </div>
-      </div>
-    </form>
-  </mat-card>
-</div>
+  </div>
+  <div class="row" style="margin-top: 10px;">
+    <div class="col">
+      <button mat-flat-button color="warn" type="button" (click)="back()" class="block">
+        {{ 'back' | translate }}
+      </button>
+    </div>
+    <div class="col">
+      <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary" class="block">
+        {{ 'send' | translate }}
+      </button>
+    </div>
+  </div>
+</form>
 
 <ng-template #confirmDialog>
   <div class="confirmation-dialog">

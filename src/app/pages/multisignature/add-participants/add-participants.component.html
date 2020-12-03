@@ -1,4 +1,4 @@
-<div class="add-participant-container">
+<div class="add-participant-container" *ngIf="!isSendDialog">
   <h2 class="mat-h2 text-center">{{ 'signatures list' | translate }}</h2>
   <form [formGroup]="form">
     <div style="margin-bottom: 16px;">
@@ -79,3 +79,8 @@
     </div>
   </form>
 </div>
+
+<ng-container *ngIf="isSendDialog">
+  <h2 class="mat-h2 text-center">{{ 'send multisignature' | translate }}</h2>
+  <app-send-transaction></app-send-transaction>
+</ng-container>

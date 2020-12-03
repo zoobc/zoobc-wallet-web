@@ -27,6 +27,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
   account: SavedAccount;
   participants = [];
   getSignature: boolean = false;
+  isSendDialog: boolean = false;
 
   constructor(
     private multisigServ: MultisigService,
@@ -116,7 +117,8 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
       const { txHash } = this.multisig.signaturesInfo;
       this.transactionHashField.patchValue(txHash);
       this.updateMultiStorage();
-      return this.router.navigate(['/multisignature/send-transaction']);
+      this.isSendDialog = true;
+      return true;
     }
     let message = getTranslation('at least 1 signature must be filled', this.translate);
     Swal.fire('Error', message, 'error');
