@@ -4,4 +4,12 @@
 .sendmoney-container {
   max-width: 440px;
   margin: 0 auto;
+
+  .device-approval {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    margin: 20px 0 20px 0;
+    color: $black2;
+  }
 }

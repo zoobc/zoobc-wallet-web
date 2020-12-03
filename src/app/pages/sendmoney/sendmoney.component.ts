@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
@@ -16,6 +16,7 @@ import {
   createSendMoneyForm,
   sendMoneyMap,
 } from 'src/app/components/transaction-form/form-send-money/form-send-money.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sendmoney',
@@ -29,12 +30,17 @@ export class SendmoneyComponent implements OnInit {
 
   sendMoneyRefDialog: MatDialogRef<any>;
   isLoading = false;
+  isLoadingExtension = false;
   isError = false;
   account: SavedAccount;
+  senderAccount: SavedAccount;
   saveAddress: boolean = false;
 
   sendMoneyMap = sendMoneyMap;
   accountBalance: any;
+
+  extensionId = environment.extId;
+  port;
 
   constructor(
     private authServ: AuthService,
@@ -42,7 +48,8 @@ export class SendmoneyComponent implements OnInit {
     private translate: TranslateService,
     public dialog: MatDialog,
     private router: Router,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    private zone: NgZone
   ) {
     this.formSend = createSendMoneyForm();
     // disable alias field (saveAddress = false)
@@ -83,6 +90,7 @@ export class SendmoneyComponent implements OnInit {
     await this.getBalance(sender.value);
     const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= total) {
+      this.senderAccount = this.authServ.getAccountByAddressValue(sender.value);
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         maxHeight: '90vh',
@@ -93,7 +101,8 @@ export class SendmoneyComponent implements OnInit {
       });
       this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
         if (onConfirm) {
-          this.onOpenPinDialog();
+          if (this.senderAccount.pathHardware >= 0) return this.sendDataToExtension();
+          else return this.onOpenPinDialog();
         }
       });
     } else {
@@ -177,5 +186,49 @@ export class SendmoneyComponent implements OnInit {
     await zoobc.Account.getBalance({ value: address, type: 0 }).then((data: AccountBalance) => {
       this.accountBalance = data;
     });
+  }
+
+  sendDataToExtension() {
+    try {
+      this.isLoadingExtension = true;
+      this.port = chrome.runtime.connect(this.extensionId);
+      this.port.postMessage({
+        action: 'get-signature',
+        transaction: this.formSend.value,
+        path: this.senderAccount.pathHardware,
+      });
+      this.port.onMessage.addListener(msg => {
+        this.zone.run(() => {
+          let message = '';
+          switch (msg.message) {
+            case 'failed':
+              message = getTranslation('extension closed', this.translate);
+              this.isLoadingExtension = false;
+              Swal.fire('Opps...', message, 'error');
+              break;
+            case 'cancel':
+              message = getTranslation('extension cancel the operation', this.translate);
+              this.isLoadingExtension = false;
+              Swal.fire('Opps...', message, 'error');
+              break;
+            case 'success':
+              this.sendMoneyHardware(msg.signature);
+              break;
+            default:
+              this.isLoadingExtension = false;
+              console.log(msg);
+          }
+        });
+      });
+    } catch (error) {
+      let message = getTranslation('extension not found', this.translate);
+      return Swal.fire('Opps...', message, 'error');
+    }
+  }
+
+  sendMoneyHardware(signature: string) {
+    alert(signature);
+    this.isLoadingExtension = false;
+    this.isLoading = true;
   }
 }
