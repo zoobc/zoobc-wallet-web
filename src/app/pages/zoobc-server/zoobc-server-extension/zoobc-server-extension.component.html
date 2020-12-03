@@ -1,0 +1,32 @@
+<div class="apps-container">
+  <h2 class="mat-h2">
+    {{ 'Zoobc Server App List' | translate }} <i>({{ 'coming soon' | translate }})</i>
+  </h2>
+
+  <mat-card class="app-list">
+    <div class="app-item" (click)="onComingSoonPage()">
+      <div class="app-icon">
+        <i class="fa fa-puzzle-piece"></i>
+      </div>
+      <div class="app-title">{{ 'Auto Escrow' | translate }}</div>
+    </div>
+    <div class="app-item" routerLink="/zoobc-server/zoobc-server-extension/notification">
+      <div class="app-icon">
+        <i class="fa fa-puzzle-piece"></i>
+      </div>
+      <div class="app-title">{{ 'Push Notification Settings' | translate }}</div>
+    </div>
+    <div class="app-item" routerLink="/zoobc-server/zoobc-server-extension/backup-address">
+      <div class="app-icon">
+        <i class="fa fa-puzzle-piece"></i>
+      </div>
+      <div class="app-title">{{ 'Backup Address' | translate }} </div>
+    </div>
+    <div class="app-item" (click)="onComingSoonPage()">
+      <div class="app-icon">
+        <i class="fa fa-puzzle-piece"></i>
+      </div>
+      <div class="app-title">{{ 'News' | translate }} </div>
+    </div>
+  </mat-card>
+</div>

@@ -133,7 +133,7 @@ export function getLanguage(languageServ: LanguageService) {
     SetupDatasetComponent,
     MultisigApprovalHistoryComponent,
     NodeRewardListComponent,
-  ],
+   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

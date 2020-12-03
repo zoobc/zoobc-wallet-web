@@ -24,7 +24,8 @@
               "src/assets/node-list",
               "src/assets/languages",
               "src/assets/img",
-              "src/_redirects"
+              "src/_redirects",
+              "src/assets/node-zoobc-server"
             ],
             "styles": ["src/styles.scss"],
             "es5BrowserSupport": true
