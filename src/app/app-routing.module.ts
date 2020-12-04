@@ -46,6 +46,7 @@ const routes: Routes = [
         loadChildren: './pages/node-admin/node-admin.module#NodeAdminModule',
       },
       { path: 'apps', loadChildren: './pages/apps/apps.module#AppsModule' },
+      { path: 'zoobc-server', loadChildren: './pages/zoobc-server/zoobc-server.module#ZoobcServerModule'}
     ],
   },
   {
