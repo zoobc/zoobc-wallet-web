@@ -1,36 +1,6 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-.add-multisig-info-container {
-  max-width: 400px;
-  margin: 0 auto;
-
-  .mat-card .mat-divider-horizontal {
-    position: inherit !important;
-    margin-bottom: 10px;
-  }
-
-  form {
-    .row {
-      margin: 0 -4px;
-      [class^='col'] {
-        padding: 0 4px;
-      }
-    }
-    .label-margin {
-      margin-top: 10px;
-      display: block;
-    }
-    .add-participants-button-row {
-      text-align: end;
-      text-transform: capitalize;
-    }
-  }
-  ::ng-deep .mat-step-label {
-    min-width: 120px !important;
-  }
-}
-
 .inline-control {
   display: flex;
   justify-content: space-between;

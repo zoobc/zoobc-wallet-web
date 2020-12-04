@@ -1,73 +1,4 @@
 <div class="multisinature-container">
-  <!-- <h2 class="mat-h2">{{ 'create multisignature transaction' | translate }}</h2>
-  <mat-card>
-    <form [formGroup]="form" (submit)="onNext()">
-      <div style="margin-bottom: 8px">
-        {{ 'what kind of transaction do you want to create?' | translate }}
-      </div>
-      <mat-form-field appearance="outline" color="accent">
-        <mat-select formControlName="txType">
-          <mat-option [value]="type.code" *ngFor="let type of txType">{{ type.type | translate }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <button mat-flat-button color="primary" [disabled]="form.invalid" style="margin-left: 16px;">
-        {{ 'next' | translate }}
-      </button>
-      <br /><br />
-
-      <div style="margin-bottom: 8px">
-        {{ 'how do you want multi signature to be executed?' | translate }}
-      </div>
-      <mat-radio-group class="row" formControlName="chainType">
-        <mat-radio-button value="onchain" class="col-12 col-sm-6">
-          {{ 'onchain multi signature' | translate }}
-          <i
-            class="fas fa-info-circle"
-            matTooltip="{{
-              'submit the information of multisignature transaction without any participants signatures and then each participant will signing approving the transaction on my task page'
-                | translate
-            }}"
-            matTooltipPosition="above"
-          ></i>
-        </mat-radio-button>
-        <mat-radio-button value="offchain" class="col-12 col-sm-6">
-          {{ 'offchain multi signature' | translate }}
-          <i
-            class="fas fa-info-circle"
-            matTooltip="{{
-              'submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
-                | translate
-            }}"
-            matTooltipPosition="above"
-          ></i>
-        </mat-radio-button>
-      </mat-radio-group>
-
-      <div class="text-right">
-        <button mat-flat-button color="primary" [disabled]="form.invalid">{{ 'next' | translate }}</button>
-      </div>
-    </form>
-  </mat-card> -->
-
-  <!-- <div class="row" style="margin-top: 16px;">
-    <div class="col-6">
-      <h2 class="mat-h2">{{ 'multisignature' | translate }}</h2>
-    </div>
-    <div class="col-6 text-right">
-      <input
-        #fileInput
-        type="file"
-        (change)="onFileChanged($event)"
-        style="display: none"
-        accept="application/JSON"
-      />
-      <button mat-flat-button color="primary" type="button" (click)="openFile()">
-        {{ 'sign a transaction' | translate }}
-      </button>
-    </div>
-  </div> -->
-
   <div class="grouped-button" style="margin-bottom: 16px;">
     <button mat-flat-button [matMenuTriggerFor]="menu" color="primary" class="small">
       <i matPrefix class="fa fa-plus"></i>
@@ -90,38 +21,6 @@
         <button mat-flat-button color="primary" [disabled]="form.invalid" style="margin-left: 16px;">
           {{ 'next' | translate }}
         </button>
-
-        <!-- <div style="margin-bottom: 8px">
-        {{ 'how do you want multi signature to be executed?' | translate }}
-      </div>
-      <mat-radio-group class="row" formControlName="chainType">
-        <mat-radio-button value="onchain" class="col-12 col-sm-6">
-          {{ 'onchain multi signature' | translate }}
-          <i
-            class="fas fa-info-circle"
-            matTooltip="{{
-              'submit the information of multisignature transaction without any participants signatures and then each participant will signing approving the transaction on my task page'
-                | translate
-            }}"
-            matTooltipPosition="above"
-          ></i>
-        </mat-radio-button>
-        <mat-radio-button value="offchain" class="col-12 col-sm-6">
-          {{ 'offchain multi signature' | translate }}
-          <i
-            class="fas fa-info-circle"
-            matTooltip="{{
-              'submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
-                | translate
-            }}"
-            matTooltipPosition="above"
-          ></i>
-        </mat-radio-button>
-      </mat-radio-group> -->
-
-        <!-- <div class="text-right">
-        <button mat-flat-button color="primary" [disabled]="form.invalid">{{ 'next' | translate }}</button>
-      </div> -->
       </form>
     </mat-menu>
 
@@ -158,7 +57,7 @@
         <div
           [className]="'transaction-item hover'"
           *ngFor="let draft of multiSigDrafts; let i = index"
-          (click)="onEditDraft(i)"
+          (click)="onClickDetail(draft)"
         >
           <div class="row">
             <div class="col-12 col-sm-6">
@@ -166,39 +65,27 @@
               <div class="date">{{ draft.id | dateAgo }}</div>
             </div>
             <div class="col-12 col-sm-6 text-right">
-              <div class="chips">
-                <div class="chip" *ngIf="draft.signaturesInfo === undefined">
-                  {{ 'onchain multisig' | translate }}
-                </div>
-                <div class="chip" *ngIf="draft.signaturesInfo !== undefined">
-                  {{ 'offchain multisig' | translate }}
-                </div>
-                <div class="chip">{{ draftTxType[i] | translate }}</div>
-              </div>
+              <button
+                mat-flat-button
+                color="primary"
+                class="small"
+                (click)="onClickSignaturesList($event, draft)"
+              >
+                <i matPrefix class="fa fa-signature"></i>
+                <span>{{ 'signatures list' | translate }} </span>
+                <span>({{ draftSignedBy[i] }}/{{ draft.multisigInfo.participants.length }}) </span>
+              </button>
             </div>
 
             <div class="col-12 col-sm-9 col-md-10">
               <div class="row">
                 <div class="col-12 col-md-6" *ngIf="draft.txBody.sender">
-                  <div class="label">{{ 'sender' | translate }}</div>
-                  <wallet-address [value]="draft.txBody.sender"></wallet-address>
-                </div>
-                <div class="col-12 col-md-6" *ngIf="draft.txBody.recipient">
-                  <div class="label">{{ 'recipient' | translate }}</div>
-                  <wallet-address [value]="draft.txBody.recipient"></wallet-address>
+                  <div class="label">{{ 'transaction type' | translate }}</div>
+                  <div class="value">{{ draftTxType[i] | translate }}</div>
                 </div>
                 <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
                   <div class="label">{{ 'transaction hash' | translate }}</div>
                   <wallet-address [value]="draft.signaturesInfo.txHash"></wallet-address>
-                </div>
-                <div class="col-12 col-md-6" *ngIf="draft.signaturesInfo">
-                  <div class="signed">
-                    <span>{{ 'signedby' | translate }} </span>
-                    <b>
-                      <span>{{ draftSignedBy[i] }} </span>
-                      <span *ngIf="draft.multisigInfo"> of {{ draft.multisigInfo.participants.length }}</span>
-                    </b>
-                  </div>
                 </div>
               </div>
             </div>
@@ -206,10 +93,22 @@
             <div class="col-12 col-sm-3 col-md-2 right">
               <button
                 type="button"
+                (click)="onExport($event, draft)"
+                mat-flat-button
+                matTooltip="{{ 'share draft' | translate }}"
+                color="primary"
+                class="icon-btn"
+              >
+                <i class="fa fa-share-alt"></i>
+              </button>
+
+              <button
+                type="button"
                 (click)="onDeleteDraft($event, draft.id)"
-                class="btn-delete"
-                mat-icon-button
+                mat-flat-button
+                matTooltip="{{ 'delete draft' | translate }}"
                 color="warn"
+                class="icon-btn"
               >
                 <i class="fas fa-trash"></i>
               </button>

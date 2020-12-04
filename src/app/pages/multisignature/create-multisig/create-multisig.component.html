@@ -1,0 +1,25 @@
+<div style="max-width: 400px;margin: 0 auto;">
+  <h2 class="mat-h2">{{ 'create multisignature transaction' | translate }}</h2>
+  <mat-card>
+    <div class="stepper">
+      <div class="step active">
+        <span class="step-circle"><i class="fa fa-check"></i></span>
+        <span class="step-label">{{ 'add multisig info' | translate }}</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle"><i class="fa fa-minus"></i></span>
+        <span class="step-label">{{ 'transaction' | translate }}</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="step">
+        <span class="step-circle"><i class="fa fa-check"></i></span>
+        <span class="step-label">{{ 'send multisignature' | translate }}</span>
+      </div>
+    </div>
+    <mat-divider style="margin-bottom: 24px;"></mat-divider>
+    <br />
+
+    <router-outlet></router-outlet>
+  </mat-card>
+</div>

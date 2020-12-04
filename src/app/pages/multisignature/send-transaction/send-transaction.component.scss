@@ -1,34 +1,6 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-.send-transaction-container {
-  max-width: 400px;
-  margin: 0 auto;
-  .mat-card .mat-divider-horizontal {
-    position: inherit !important;
-    margin-bottom: 10px;
-  }
-  form {
-    .row {
-      margin: 0 -4px;
-      [class^='col'] {
-        padding: 0 4px;
-      }
-    }
-    .label-margin {
-      margin-top: 10px;
-      display: block;
-    }
-  }
-  button {
-    width: calc(31%);
-    text-transform: none;
-    margin: 10px 8px 0 0;
-    @media (max-width: 375px) {
-      margin: 10px 5px 0 0;
-    }
-  }
-}
 .confirmation-dialog {
   .brand {
     .title-wallet {
