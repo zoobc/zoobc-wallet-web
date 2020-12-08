@@ -115,7 +115,10 @@ export class SendTransactionComponent implements OnInit {
 
   async onSendMultiSignatureTransaction() {
     const { multisigInfo, signaturesInfo } = this.multisig;
-    const unisgnedTransactions = createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
+    const unisgnedTransactions =
+      (this.multisig.unisgnedTransactions && Buffer.from(this.multisig.unisgnedTransactions)) ||
+      createInnerTxBytes(this.multisig.txBody, this.multisig.txType);
+
     const data: MultiSigInterface = {
       accountAddress: this.account.address,
       fee: this.feeForm.value,
@@ -125,9 +128,6 @@ export class SendTransactionComponent implements OnInit {
     };
 
     const childSeed = this.authServ.seed;
-    console.log(data);
-    console.log(getZBCAddress(childSeed.publicKey));
-
     zoobc.MultiSignature.postTransaction(data, childSeed)
       .then(async (res: MultisigPostTransactionResponse) => {
         let message = getTranslation('your transaction is processing', this.translate);

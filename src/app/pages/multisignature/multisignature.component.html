@@ -1,28 +1,30 @@
 <div class="multisinature-container">
-  <div class="grouped-button" style="margin-bottom: 16px;">
-    <button mat-flat-button [matMenuTriggerFor]="menu" color="primary" class="small">
+  <div class="grouped-button" style="margin-bottom: 16px; position: relative;">
+    <button mat-flat-button (click)="onShow($event)" color="primary" class="small">
       <i matPrefix class="fa fa-plus"></i>
       {{ 'create' | translate }}
       <i matSuffix class="fa fa-caret-down"></i>
     </button>
-    <mat-menu #menu="matMenu">
-      <form [formGroup]="form" (submit)="onNext()">
-        <div style="margin-bottom: 8px">
-          {{ 'what kind of transaction do you want to create?' | translate }}
-        </div>
-        <mat-form-field appearance="outline" color="accent">
-          <mat-select formControlName="txType">
-            <mat-option [value]="type.code" *ngFor="let type of txType">{{
-              type.type | translate
-            }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+    <div #menu class="menu-create">
+      <mat-card *ngIf="show">
+        <form [formGroup]="form" (submit)="onNext()">
+          <div style="margin-bottom: 8px">
+            {{ 'what kind of transaction do you want to create?' | translate }}
+          </div>
+          <mat-form-field appearance="outline" color="accent">
+            <mat-select formControlName="txType">
+              <mat-option [value]="type.code" *ngFor="let type of txType">{{
+                type.type | translate
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <button mat-flat-button color="primary" [disabled]="form.invalid" style="margin-left: 16px;">
-          {{ 'next' | translate }}
-        </button>
-      </form>
-    </mat-menu>
+          <button mat-flat-button color="primary" [disabled]="form.invalid" style="margin-left: 16px;">
+            {{ 'next' | translate }}
+          </button>
+        </form>
+      </mat-card>
+    </div>
 
     <button mat-flat-button color="primary" class="small" (click)="openFile()">
       <i matPrefix class="fa fa-signature"></i>

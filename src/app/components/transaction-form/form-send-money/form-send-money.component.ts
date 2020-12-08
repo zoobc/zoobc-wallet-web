@@ -125,7 +125,7 @@ export function createSendMoneyForm(): FormGroup {
 export function createSendMoneyBytes(form: any): Buffer {
   const { sender, fee, amount, recipient } = form;
   const data: SendMoneyInterface = {
-    sender: { value: sender, type: 0 },
+    sender: { value: sender, type: 3 },
     fee,
     amount,
     recipient: { value: recipient, type: 0 },
