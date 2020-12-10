@@ -22,8 +22,25 @@
   </div>
   <div class="row" style="margin-top: 10px;">
     <div class="col">
-      <button mat-flat-button color="warn" type="button" (click)="back()" class="block">
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        (click)="back()"
+        class="block"
+        *ngIf="!isPopupDialog"
+      >
         {{ 'back' | translate }}
+      </button>
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        (click)="closeDialog()"
+        class="block"
+        *ngIf="isPopupDialog"
+      >
+        {{ 'Cancel' | translate }}
       </button>
     </div>
     <div class="col">

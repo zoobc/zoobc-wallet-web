@@ -83,5 +83,5 @@
 
 <ng-container *ngIf="isSendDialog">
   <h2 class="mat-h2 text-center">{{ 'send multisignature' | translate }}</h2>
-  <app-send-transaction></app-send-transaction>
+  <app-send-transaction [isPopupDialog]="true"></app-send-transaction>
 </ng-container>

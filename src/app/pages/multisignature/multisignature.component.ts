@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Pipe, PipeTransform, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import zoobc, { isZBCAddressValid, parseAddress, TransactionType } from 'zoobc-sdk';
-import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
+import { AuthService } from 'src/app/services/auth.service';
+import { getTxType } from 'src/helpers/multisig-utils';
 import { MatDialog } from '@angular/material';
 import { OffchainSignComponent } from './offchain-sign/offchain-sign.component';
 import { saveAs } from 'file-saver';
@@ -29,13 +29,9 @@ export class MultisignatureComponent implements OnInit {
   txTypeField = new FormControl(TransactionType.SENDMONEYTRANSACTION, Validators.required);
   chainTypeField = new FormControl('onchain', Validators.required);
 
-  // innerTransaction: boolean = false;
-  // signatures: boolean = false;
-
   draftSignedBy: number[] = [];
   draftTxType: string[] = [];
-
-  show = false;
+  showMenu = false;
 
   txType = [
     { code: TransactionType.SENDMONEYTRANSACTION, type: 'send money' },
@@ -80,14 +76,6 @@ export class MultisignatureComponent implements OnInit {
 
   ngOnInit() {
     this.getMultiSigDraft();
-    // console.log(ZBCAddressToBytes('ZTX_N5J5VIRA_V4B62XQS_G2756JRQ_ZY7Y5SSX_YSLK3QGY_J6OWLN4U_LGBY3D2R'));
-  }
-
-  @HostListener('document:click', ['$event']) onDocumentClick(event) {
-    event.stopPropagation();
-    if (!this.menu.nativeElement.contains(event.target)) {
-      this.show = false;
-    }
   }
 
   getMultiSigDraft() {
@@ -109,8 +97,6 @@ export class MultisignatureComponent implements OnInit {
   }
 
   onClickDetail(draft: MultiSigDraft) {
-    console.log(draft);
-
     const dialogRef = this.dialog.open(OffchainSignComponent, {
       width: '720px',
       maxHeight: '99vh',
@@ -118,17 +104,6 @@ export class MultisignatureComponent implements OnInit {
     });
     const instance = dialogRef.componentInstance;
     instance.withVerify = false;
-  }
-
-  onEditDraft(idx: number) {
-    let multisig: MultiSigDraft = this.multiSigDrafts[idx];
-    multisig.unisgnedTransactions = Buffer.from(multisig.unisgnedTransactions || []);
-    this.multisigServ.update(multisig);
-
-    const { multisigInfo, unisgnedTransactions, signaturesInfo } = multisig;
-    if (multisigInfo) this.router.navigate(['/multisignature/create/add-multisig-info']);
-    else if (unisgnedTransactions) this.router.navigate(['/multisignature/create/reate-transaction']);
-    else if (signaturesInfo) this.router.navigate(['/multisignature/create/add-signatures']);
   }
 
   onNext() {
@@ -251,6 +226,6 @@ export class MultisignatureComponent implements OnInit {
 
   onShow(e) {
     e.stopPropagation();
-    this.show = !this.show;
+    this.showMenu = !this.showMenu;
   }
 }

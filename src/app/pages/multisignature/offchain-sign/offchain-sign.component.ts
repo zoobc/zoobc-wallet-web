@@ -41,7 +41,6 @@ export class OffchainSignComponent {
     private translate: TranslateService
   ) {
     this.draft = data;
-    console.log(data);
 
     this.txType = getTxType(data.txType);
     this.participants = data.multisigInfo.participants.map(pc => pc.value);
@@ -77,8 +76,6 @@ export class OffchainSignComponent {
     this.signature = signTransactionHash(this.yourTxHash, seed).toString('base64');
 
     const signatureBase64Url = toBase64Url(this.signature);
-    console.log(this.account);
-
     const address = toBase64Url(addressToBytes(this.account.address).toString('base64'));
     this.signatureUrl = `${window.location.origin}/multisignature/sign/${this.yourTxHash}/${address}/${signatureBase64Url}`;
   }

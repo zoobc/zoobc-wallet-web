@@ -46,7 +46,6 @@ export class MultisigService {
 
   editDraft() {
     let multisigDrafts = this.getDrafts();
-    console.log(multisigDrafts);
 
     for (let i = 0; i < multisigDrafts.length; i++) {
       const multisig = multisigDrafts[i];

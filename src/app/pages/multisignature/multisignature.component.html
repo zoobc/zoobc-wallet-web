@@ -6,7 +6,7 @@
       <i matSuffix class="fa fa-caret-down"></i>
     </button>
     <div #menu class="menu-create">
-      <mat-card *ngIf="show">
+      <mat-card *ngIf="showMenu">
         <form [formGroup]="form" (submit)="onNext()">
           <div style="margin-bottom: 8px">
             {{ 'what kind of transaction do you want to create?' | translate }}
@@ -101,7 +101,7 @@
                 color="primary"
                 class="icon-btn"
               >
-                <i class="fa fa-share-alt"></i>
+                <i class="fa fa-download"></i>
               </button>
 
               <button

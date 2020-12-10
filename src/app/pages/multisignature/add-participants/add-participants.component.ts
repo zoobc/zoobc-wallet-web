@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { signTransactionHash, getZBCAddress, ZBCAddressToBytes, toBase64Url, Address } from 'zoobc-sdk';
+import { signTransactionHash } from 'zoobc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';
@@ -130,7 +130,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     } else {
       this.multisigServ.editDraft();
     }
-    // this.router.navigate(['/multisignature']);
     this.dialogRef.close(true);
   }
 
@@ -138,17 +137,14 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
     const { txHash, participants } = this.multisig.signaturesInfo;
     let idx: number;
     idx = participants.findIndex(pcp => pcp.address.value == this.account.address.value);
-    console.log(idx);
 
     if (this.account.type === 'multisig' && idx == -1)
       idx = participants.findIndex(pcp => pcp.address.value == this.account.address.value);
     let message = getTranslation('this account is not in participant list', this.translate);
     if (idx == -1) return Swal.fire('Error', message, 'error');
     const seed = this.authServ.seed;
-
     const signature = signTransactionHash(txHash, seed);
-    console.log(txHash);
-    console.log(signature.toString('base64'));
+
     this.participantsSignatureField.controls[idx].get('signature').patchValue(signature.toString('base64'));
   }
 

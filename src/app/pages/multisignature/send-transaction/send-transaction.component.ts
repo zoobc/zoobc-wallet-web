@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Input } from '@angular/core';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
@@ -27,6 +27,7 @@ import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
 })
 export class SendTransactionComponent implements OnInit {
   @ViewChild('confirmDialog') confirmDialog: TemplateRef<any>;
+  @Input() isPopupDialog: boolean = false;
   confirmRefDialog: MatDialogRef<any>;
 
   account: SavedAccount;

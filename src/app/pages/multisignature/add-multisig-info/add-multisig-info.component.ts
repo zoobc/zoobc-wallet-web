@@ -6,9 +6,9 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import zoobc, { Address } from 'zoobc-sdk';
-import { uniqueParticipant, getTranslation } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
+import { getTranslation, uniqueParticipant } from 'src/helpers/utils';
 
 @Component({
   selector: 'app-add-multisig-info',
