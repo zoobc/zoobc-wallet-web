@@ -88,7 +88,7 @@ export class AddAccountComponent implements OnInit {
         type: 'multisig',
         path: null,
         nodeIP: null,
-        address: { value: multiSignAddress, type: 3 },
+        address: { value: multiSignAddress, type: 0 },
         participants: participants,
         nonce: this.nonceField.value,
         minSig: this.minSignatureField.value,

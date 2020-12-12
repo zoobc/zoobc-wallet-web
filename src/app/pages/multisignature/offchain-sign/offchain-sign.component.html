@@ -79,7 +79,12 @@
             <div class="label">{{ 'your signature' | translate }}</div>
             <div class="value">
               <i *ngIf="!signature">({{ 'your signature will appear here' | translate }})</i>
-              <wallet-address *ngIf="signature" [value]="signature" center="true"></wallet-address>
+              <wallet-address
+                *ngIf="signature"
+                [value]="signature"
+                center="true"
+                [showFull]="true"
+              ></wallet-address>
             </div>
 
             <div class="text-center">
