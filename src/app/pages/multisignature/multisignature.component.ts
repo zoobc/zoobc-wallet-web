@@ -158,7 +158,7 @@ export class MultisignatureComponent implements OnInit {
 
   validationFile(file: any): file is MultiSigDraft {
     if ((file as MultiSigDraft).generatedSender !== undefined)
-      return isZBCAddressValid((file as MultiSigDraft).generatedSender);
+      return isZBCAddressValid((file as MultiSigDraft).generatedSender, 'ZBC');
     return false;
   }
 

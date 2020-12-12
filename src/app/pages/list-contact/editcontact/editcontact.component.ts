@@ -24,7 +24,7 @@ export class EditcontactComponent implements OnInit {
   ) {}
 
   onAddressValidation() {
-    const validation = isZBCAddressValid(this.addressField.value);
+    const validation = isZBCAddressValid(this.addressField.value, 'ZBC');
     if (!validation) {
       this.addressField.setErrors({ invalidAddress: true });
     }

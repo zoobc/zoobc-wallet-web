@@ -70,7 +70,7 @@ export class ContactlistComponent implements OnInit {
     let status;
     if (file.length !== undefined) {
       file.forEach(element => {
-        if (element.address) return (status = isZBCAddressValid(element.address));
+        if (element.address) return (status = isZBCAddressValid(element.address, 'ZBC'));
         return (status = false);
       });
       return status;

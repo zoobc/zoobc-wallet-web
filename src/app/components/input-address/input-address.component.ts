@@ -101,7 +101,7 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
 
   validate({ value }: FormControl) {
     let result: boolean = false;
-    if (value) result = isZBCAddressValid(value);
+    if (value) result = isZBCAddressValid(value, 'ZBC');
     else return null;
 
     if (!result) return { invalidAddress: true };
