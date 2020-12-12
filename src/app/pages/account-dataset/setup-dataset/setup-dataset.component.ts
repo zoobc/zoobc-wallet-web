@@ -46,7 +46,7 @@ export class SetupDatasetComponent implements OnInit {
       property: this.formGroup.get('property').value,
       value: this.formGroup.get('value').value,
       setterAccountAddress: { value: this.formGroup.get('sender').value, type: 0 },
-      recipientAccountAddress: { value: this.formGroup.get('recipientAddress').value, type: 0 },
+      recipientAccountAddress: { value: this.formGroup.get('recipient').value, type: 0 },
       fee: this.formGroup.get('fee').value,
     };
 

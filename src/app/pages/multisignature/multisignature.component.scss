@@ -2,20 +2,6 @@
 @import '../../../styles/mixins';
 
 .multisinature-container {
-  .check-title {
-    font-weight: 500;
-    color: $black2;
-  }
-
-  .check-desciption {
-    color: $black2;
-  }
-
-  .column-check {
-    margin-right: 4px;
-    margin-bottom: 8px;
-  }
-
   .multisignature-drafts {
     .transaction-item {
       border-bottom: 1px solid #ddd;
@@ -38,16 +24,6 @@
         color: $black2;
         margin-bottom: 4px;
       }
-      .amount {
-        color: #f44336;
-        font-size: 18px;
-        font-weight: 500;
-        margin-top: 8px;
-      }
-      .signed {
-        color: $black2;
-        margin-top: 16px;
-      }
       .date {
         color: $black2;
         font-style: italic;
@@ -60,12 +36,16 @@
         min-height: 32px;
         text-align: right;
       }
-
-      .btn-delete {
-        position: absolute;
-        bottom: 0px;
-        right: 8px;
-      }
     }
   }
+}
+
+.menu-button {
+  position: relative;
+}
+.menu-create {
+  position: absolute;
+  top: 36px;
+  left: 4px;
+  z-index: 99;
 }

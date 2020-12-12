@@ -1,40 +1,55 @@
-<div class="send-transaction-container">
-  <h2 class="mat-h2">{{ 'send money' | translate }}</h2>
-  <mat-card>
-    <form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
-      <label>{{ 'sender' | translate }}</label>
-      <account-selector
-        (select)="onSwitchAccount($event)"
-        type="normal"
-        [addresses]="participants"
-        [switchAccount]="true"
-      ></account-selector>
-      <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-      <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
-        <div class="col-4 col-sm-3">&nbsp;</div>
-        <div class="col-8 col-sm-9">
-          <ng-container *ngIf="feeForm.touched">
-            <mat-error *ngIf="feeForm.hasError('required')">
-              {{ 'fee is required' | translate }}
-            </mat-error>
-            <mat-error *ngIf="feeForm.hasError('min')">
-              {{ 'minimum fee is' | translate: { val: minFee } }}
-            </mat-error>
-          </ng-container>
-        </div>
-      </div>
-      <button mat-flat-button color="warn" type="button" (click)="back()">
+<form [formGroup]="formSend" (submit)="onOpenConfirmDialog()">
+  <label>{{ 'sender' | translate }}</label>
+  <account-selector
+    (select)="onSwitchAccount($event)"
+    type="normal"
+    [addresses]="participants"
+    [switchAccount]="true"
+  ></account-selector>
+  <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
+  <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
+    <div class="col-4 col-sm-3">&nbsp;</div>
+    <div class="col-8 col-sm-9">
+      <ng-container *ngIf="feeForm.touched">
+        <mat-error *ngIf="feeForm.hasError('required')">
+          {{ 'fee is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="feeForm.hasError('min')">
+          {{ 'minimum fee is' | translate: { val: minFee } }}
+        </mat-error>
+      </ng-container>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 10px;">
+    <div class="col">
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        (click)="back()"
+        class="block"
+        *ngIf="!isPopupDialog"
+      >
         {{ 'back' | translate }}
       </button>
-      <button mat-flat-button color="primary" type="button" (click)="saveDraft()">
-        {{ 'save' | translate }}
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        (click)="closeDialog()"
+        class="block"
+        *ngIf="isPopupDialog"
+      >
+        {{ 'Cancel' | translate }}
       </button>
-      <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary">
+    </div>
+    <div class="col">
+      <button [disabled]="!formSend.valid || isLoading" mat-flat-button color="primary" class="block">
         {{ 'send' | translate }}
       </button>
-    </form>
-  </mat-card>
-</div>
+    </div>
+  </div>
+</form>
 
 <ng-template #confirmDialog>
   <div class="confirmation-dialog">
@@ -54,24 +69,17 @@
     <mat-divider></mat-divider>
     <div class="content">
       <div class="row">
-        <ng-container *ngFor="let x of counter(innerPage); let i = index">
-          <div class="col-12 col-sm-6" [class.text-right]="getClass(i)">
-            <ng-container *ngFor="let y of counter(2); let j = index">
-              <ng-container *ngIf="getItemByKey(i, j, 'key').length > 0">
-                <div class="label">{{ getItemByKey(i, j, 'key') | translate }}:</div>
-                <div class="value">
-                  <ng-container *ngIf="!getItemByKey(i, j, 'isAddress')">
-                    {{ getItemByKey(i, j, 'value') }}
-                  </ng-container>
-                  <wallet-address
-                    [ngStyle]="{ float: getClass(i) ? 'right' : 'none' }"
-                    *ngIf="getItemByKey(i, j, 'isAddress')"
-                    [value]="getItemByKey(i, j, 'value')"
-                    [copyButton]="true"
-                  ></wallet-address>
-                </div>
-              </ng-container>
-            </ng-container>
+        <ng-container *ngFor="let item of innerTx">
+          <div class="col-12 col-sm-6">
+            <div class="label">{{ item.key | translate }}</div>
+            <div class="value">
+              <ng-container *ngIf="!item.isAddress">{{ item.value }}</ng-container>
+              <wallet-address
+                *ngIf="item.isAddress"
+                [value]="item.value"
+                [copyButton]="true"
+              ></wallet-address>
+            </div>
           </div>
         </ng-container>
       </div>

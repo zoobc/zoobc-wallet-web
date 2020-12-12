@@ -21,7 +21,7 @@ import { isZBCAddressValid } from 'zoobc-sdk';
 })
 export class InputAddressComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string;
-  @Input() label: string;
+  @Input() label: string = '';
   @Input() classList: string;
   @Input() readonly: boolean = false;
   @Input() exceptContact: SavedAccount;

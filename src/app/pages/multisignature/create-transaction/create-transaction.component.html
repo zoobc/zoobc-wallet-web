@@ -1,91 +1,82 @@
-<div class="create-transaction-container">
-  <h2 class="mat-h2">{{ 'multisignature' | translate }}</h2>
-  <mat-card>
-    <div class="stepper">
-      <ng-container *ngIf="stepper.multisigInfo">
-        <div class="step">
-          <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'add multisig info' | translate }}</span>
-        </div>
-        <div class="stepper-line"></div>
-      </ng-container>
-      <div class="step active">
-        <span class="step-circle"><i class="fa fa-check"></i></span>
-        <span class="step-label">{{ 'create transaction' | translate }}</span>
-      </div>
-      <ng-container *ngIf="stepper.signatures">
-        <div class="stepper-line"></div>
-        <div class="step">
-          <span class="step-circle"><i class="fa fa-minus"></i></span>
-          <span class="step-label">{{ 'add signatures' | translate }}</span>
-        </div>
-      </ng-container>
-    </div>
-    <mat-divider style="margin-bottom: 24px;"></mat-divider>
+<form [formGroup]="createTransactionForm" (submit)="onNext()">
+  <fieldset [disabled]="readonlyInput">
+    <form-send-money
+      [group]="createTransactionForm"
+      [inputMap]="fieldList"
+      [multisig]="true"
+      *ngIf="multisig.txType == 1"
+    ></form-send-money>
 
-    <form [formGroup]="createTransactionForm" (submit)="next()">
-      <fieldset [disabled]="readonlyInput">
-        <form-send-money
-          [group]="createTransactionForm"
-          [inputMap]="fieldList"
-          [multisig]="true"
-          *ngIf="multisig.txType == 1"
-        ></form-send-money>
+    <form-setup-account-dataset
+      [group]="createTransactionForm"
+      [inputMap]="fieldList"
+      [multisig]="true"
+      *ngIf="multisig.txType == 3"
+    ></form-setup-account-dataset>
 
-        <form-setup-account-dataset
-          [group]="createTransactionForm"
-          [inputMap]="fieldList"
-          [multisig]="true"
-          *ngIf="multisig.txType == 3"
-        ></form-setup-account-dataset>
+    <form-remove-account-dataset
+      [group]="createTransactionForm"
+      [inputMap]="fieldList"
+      [multisig]="true"
+      *ngIf="multisig.txType == 259"
+    ></form-remove-account-dataset>
 
-        <form-remove-account-dataset
-          [group]="createTransactionForm"
-          [inputMap]="fieldList"
-          [multisig]="true"
-          *ngIf="multisig.txType == 259"
-        ></form-remove-account-dataset>
+    <form-escrow-approval
+      [group]="createTransactionForm"
+      [inputMap]="fieldList"
+      [multisig]="true"
+      *ngIf="multisig.txType == 4"
+    ></form-escrow-approval>
 
-        <form-escrow-approval
-          [group]="createTransactionForm"
-          [inputMap]="fieldList"
-          [multisig]="true"
-          *ngIf="multisig.txType == 4"
-        ></form-escrow-approval>
+    <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+    <form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></form-escrow>
+  </fieldset>
 
-        <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
-        <form-escrow [group]="createTransactionForm" [inputMap]="fieldList"></form-escrow>
-      </fieldset>
-
-      <button
-        *ngIf="multisig.signaturesInfo !== undefined"
-        mat-flat-button
-        type="button"
-        class="block"
-        color="primary"
-        (click)="generateDownloadJsonUri()"
-        [disabled]="createTransactionForm.invalid"
-      >
-        {{ 'export draft multi signature' | translate }}
+  <div class="row" style="margin-top: 10px;">
+    <div class="col">
+      <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
+        {{ 'back' | translate }}
       </button>
+    </div>
+    <div class="col">
+      <button mat-flat-button color="primary" class="block" [disabled]="createTransactionForm.invalid">
+        {{ 'next' | translate }}
+      </button>
+    </div>
+  </div>
+</form>
 
-      <div class="row" style="margin-top: 10px;">
-        <div class="col">
-          <button mat-flat-button color="warn" class="block" type="button" (click)="back()">
-            {{ 'back' | translate }}
-          </button>
-        </div>
-        <div class="col">
-          <button mat-flat-button color="primary" class="block" type="button" (click)="saveDraft()">
-            {{ 'save' | translate }}
-          </button>
-        </div>
-        <div class="col">
-          <button mat-flat-button color="primary" class="block" [disabled]="createTransactionForm.invalid">
-            {{ 'next' | translate }}
-          </button>
-        </div>
-      </div>
-    </form>
-  </mat-card>
-</div>
+<ng-template #chainDialog>
+  <form [formGroup]="form" (submit)="onSelectedChain()">
+    <div style="margin-bottom: 16px">{{ 'how do you want multi signature to be executed?' | translate }}</div>
+    <mat-radio-group formControlName="chainType">
+      <mat-radio-button value="onchain" style="margin-bottom: 8px;">
+        {{ 'onchain multi signature' | translate }}
+        <i
+          class="fas fa-info-circle"
+          matTooltip="{{
+            'submit the information of multisignature transaction without any participants signatures and then each participant will signing approving the transaction on my task page'
+              | translate
+          }}"
+          matTooltipPosition="above"
+        ></i>
+      </mat-radio-button>
+      <mat-radio-button value="offchain">
+        {{ 'offchain multi signature' | translate }}
+        <i
+          class="fas fa-info-circle"
+          matTooltip="{{
+            'submit every information of multisignature transaction on one go, collecting the signatures by sending the transaction draft to each participants'
+              | translate
+          }}"
+          matTooltipPosition="above"
+        ></i>
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <div class="text-right grouped-button" style="margin-top: 8px;">
+      <button mat-button color="warn" type="button">{{ 'cancel' | translate }}</button>
+      <button mat-flat-button color="primary">{{ 'next' | translate }}</button>
+    </div>
+  </form>
+</ng-template>

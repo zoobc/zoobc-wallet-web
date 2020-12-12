@@ -46,6 +46,7 @@ export class MultisigService {
 
   editDraft() {
     let multisigDrafts = this.getDrafts();
+
     for (let i = 0; i < multisigDrafts.length; i++) {
       const multisig = multisigDrafts[i];
       if (multisig.id == this.sourceMultisig.value.id) {
