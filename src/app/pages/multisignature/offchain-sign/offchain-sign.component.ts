@@ -1,7 +1,13 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
-import { generateTransactionHash, isZBCAddressValid, signTransactionHash, toBase64Url } from 'zoobc-sdk';
+import {
+  addressToBytes,
+  generateTransactionHash,
+  isZBCAddressValid,
+  signTransactionHash,
+  toBase64Url,
+} from 'zoobc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,6 +19,7 @@ import { getTxType } from 'src/helpers/multisig-utils';
   styleUrls: ['./offchain-sign.component.scss'],
 })
 export class OffchainSignComponent {
+  withVerify = true;
   yourTxHash: string;
   isValid: boolean = false;
   isAddressInParticipants: boolean;
@@ -34,6 +41,7 @@ export class OffchainSignComponent {
     private translate: TranslateService
   ) {
     this.draft = data;
+
     this.txType = getTxType(data.txType);
     this.participants = data.multisigInfo.participants.map(pc => pc.value);
     this.innerTx = Object.keys(this.draft.txBody).map(key => {
@@ -59,12 +67,17 @@ export class OffchainSignComponent {
     }
   }
 
+  onSelectAccount(account: SavedAccount) {
+    this.account = account;
+  }
+
   onSign() {
     const seed = this.authServ.seed;
     this.signature = signTransactionHash(this.yourTxHash, seed).toString('base64');
 
     const signatureBase64Url = toBase64Url(this.signature);
-    this.signatureUrl = `${window.location.origin}/sign/${this.yourTxHash}/${signatureBase64Url}`;
+    const address = toBase64Url(addressToBytes(this.account.address).toString('base64'));
+    this.signatureUrl = `${window.location.origin}/multisignature/sign/${this.yourTxHash}/${address}/${signatureBase64Url}`;
   }
 
   async onCopy() {

@@ -129,7 +129,6 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
       await zoobc.Mempool.getList(mempoolParam).then(
         (res: ZBCTransactions) => (this.registrationType = this.getRegistrationType(res.transactions))
       );
-      console.log(this.registrationType);
 
       const params: NodeParams = {
         owner: this.account.address,

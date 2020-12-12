@@ -28,7 +28,7 @@ export class FormSetupAccountDatasetComponent implements OnInit {
 
   setDefaultRecipient() {
     const sender = this.group.get('sender').value;
-    const recipientField = this.group.get('recipientAddress');
+    const recipientField = this.group.get('recipient');
     recipientField.patchValue(sender);
   }
 }
@@ -37,7 +37,7 @@ export const setupDatasetMap = {
   sender: 'sender',
   property: 'property',
   value: 'value',
-  recipientAddress: 'recipientAddress',
+  recipient: 'recipient',
   fee: 'fee',
   ...escrowMap,
 };
@@ -47,19 +47,19 @@ export function createSetupDatasetForm(): FormGroup {
     sender: new FormControl('', Validators.required),
     property: new FormControl('', [Validators.required]),
     value: new FormControl('', [Validators.required]),
-    recipientAddress: new FormControl('', Validators.required),
+    recipient: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     ...escrowForm(),
   });
 }
 
 export function createSetupDatasetBytes(form: any): Buffer {
-  const { sender, fee, recipientAddress, property, value } = form;
+  const { sender, fee, recipient, property, value } = form;
   const data: SetupDatasetInterface = {
     property,
     value,
     setterAccountAddress: { value: sender, type: 0 },
-    recipientAccountAddress: { value: recipientAddress, type: 0 },
+    recipientAccountAddress: { value: recipient, type: 0 },
     fee,
   };
   return setupDatasetBuilder(data);

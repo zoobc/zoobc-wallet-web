@@ -23,6 +23,7 @@ import {
   MatRadioModule,
   MatSelectModule,
   MatDialogModule,
+  MatMenuModule,
 } from '@angular/material';
 import { DateAgoModule } from '../../pipes/date-ago.module';
 import { AddressModule } from '../../components/address/address.module';
@@ -36,15 +37,23 @@ import { OffchainSignComponent } from './offchain-sign/offchain-sign.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { FormEscrowApprovalModule } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.module';
 import { FormRemoveAccountDatasetModule } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.module';
+import { CreateMultisigComponent } from './create-multisig/create-multisig.component';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 const routes: Routes = [
   { path: '', component: MultisignatureComponent },
-  { path: 'add-multisig-info', component: AddMultisigInfoComponent },
-  { path: 'create-transaction', component: CreateTransactionComponent },
-  { path: 'add-signatures', component: AddParticipantsComponent },
-  { path: 'send-transaction', component: SendTransactionComponent },
+  { path: 'sign/:txHash/:address/:signature', component: MultisignatureComponent },
+  {
+    path: 'create',
+    component: CreateMultisigComponent,
+    children: [
+      { path: 'add-multisig-info', component: AddMultisigInfoComponent },
+      { path: 'create-transaction', component: CreateTransactionComponent },
+      { path: 'add-signatures', component: AddParticipantsComponent },
+      { path: 'send-transaction', component: SendTransactionComponent },
+    ],
+  },
 ];
 
 @NgModule({
@@ -55,6 +64,7 @@ const routes: Routes = [
     AddParticipantsComponent,
     SendTransactionComponent,
     OffchainSignComponent,
+    CreateMultisigComponent,
   ],
   imports: [
     AddressModule,
@@ -78,6 +88,7 @@ const routes: Routes = [
     MatDividerModule,
     MatInputModule,
     MatButtonModule,
+    MatMenuModule,
     MatIconModule,
     MatStepperModule,
     MatSelectModule,

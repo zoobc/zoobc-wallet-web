@@ -3,7 +3,7 @@
   margin: 0 -4px;
   button,
   a {
-    margin: 4px 4px;
+    margin: 0px 4px;
   }
 }
 
@@ -70,6 +70,29 @@ button[mat-stroked-button] {
   }
   &[color='warn']:not(:disabled) {
     border: 2px solid $red !important;
+  }
+}
+
+// icon button
+a.icon-btn,
+button.icon-btn {
+  font-size: 14px;
+  padding: 0 !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px;
+  margin-left: 4px;
+  &[color='primary'],
+  &[color='primary']:not(:disabled):hover {
+    color: map-get($primary, 500);
+    background-color: map-get($primary, 100);
+  }
+  &[color='warn'],
+  &[color='warn']:not(:disabled):hover {
+    color: $red;
+    background-color: #ffcdd2;
   }
 }
 // ============================ END BUTTON ============================
