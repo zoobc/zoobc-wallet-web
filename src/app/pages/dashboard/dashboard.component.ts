@@ -20,6 +20,9 @@ import zoobc, {
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
+import { getTranslation } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,7 +55,8 @@ export class DashboardComponent implements OnInit {
     private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
     private router: Router,
-    private contactServ: ContactService
+    private contactServ: ContactService,
+    private translate: TranslateService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
 
@@ -249,5 +253,15 @@ export class DashboardComponent implements OnInit {
       }
     }
     return escrowObj;
+  }
+
+  async onComingSoonPage() {
+    let message = getTranslation('coming soon', this.translate);
+    Swal.fire({
+      type: 'info',
+      title: message,
+      showConfirmButton: false,
+      timer: 1500,
+    });
   }
 }
