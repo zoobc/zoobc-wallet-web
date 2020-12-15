@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { getZBCAddress, MultiSigInfo, Address } from 'zoobc-sdk';
+import zoobc, { getZBCAddress, MultiSigInfo, Address } from 'zbc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
 import Swal from 'sweetalert2';
 import { getTranslation } from 'src/helpers/utils';

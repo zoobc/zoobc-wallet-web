@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Address } from 'zoobc-sdk';
+import { Address } from 'zbc-sdk';
 
 export interface Contact {
   name: string;

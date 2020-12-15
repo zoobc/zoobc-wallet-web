@@ -10,7 +10,7 @@ import zoobc, {
   isZBCAddressValid,
   getZBCAddress,
   NodeRegistration,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { NodeAdminService } from 'src/app/services/node-admin.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';

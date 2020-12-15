@@ -8,7 +8,7 @@ import zoobc, {
   ZBCTransactions,
   Address,
   isZBCAddressValid,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
 export interface SavedAccount {

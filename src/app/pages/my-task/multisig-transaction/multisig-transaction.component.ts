@@ -18,7 +18,7 @@ import zoobc, {
   MultisigPostTransactionResponse,
   multisigPendingDetail,
   ZBCTransaction,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';

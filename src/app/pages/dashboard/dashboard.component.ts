@@ -16,7 +16,7 @@ import zoobc, {
   ZBCTransaction,
   getZBCAddress,
   AccountBalance,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';

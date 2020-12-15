@@ -5,7 +5,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { signTransactionHash } from 'zoobc-sdk';
+import { signTransactionHash } from 'zbc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';

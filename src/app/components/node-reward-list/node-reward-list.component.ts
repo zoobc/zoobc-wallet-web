@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import zoobc, { AccountLedgerListParams, EventType, OrderBy, Address } from 'zoobc-sdk';
+import zoobc, { AccountLedgerListParams, EventType, OrderBy, Address } from 'zbc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-node-reward-list',

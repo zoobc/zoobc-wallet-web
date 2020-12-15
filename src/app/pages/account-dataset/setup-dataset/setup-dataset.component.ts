@@ -4,8 +4,8 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { FormGroup } from '@angular/forms';
 import { getTranslation } from 'src/helpers/utils';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { BIP32Interface, SetupDatasetResponse } from 'zoobc-sdk';
-import { SetupDatasetInterface } from 'zoobc-sdk/types/helper/transaction-builder/setup-account-dataset';
+import zoobc, { BIP32Interface, SetupDatasetResponse } from 'zbc-sdk';
+import { SetupDatasetInterface } from 'zbc-sdk/types/helper/transaction-builder/setup-account-dataset';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import {
