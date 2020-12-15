@@ -75,7 +75,7 @@
     <mat-card style="padding: 0 16px; margin-bottom: 16px;">
       <div class="row">
         <div class="col-6 text-center">
-          <button *ngIf="currAcc.type == 'normal'" mat-button routerLink="/sendmoney" color="primary">
+          <button *ngIf="currAcc.type != 'multisig'" mat-button routerLink="/sendmoney" color="primary">
             <i matPrefix class="fa fa-paper-plane"></i>
             <span>{{ 'send' | translate }}</span>
           </button>

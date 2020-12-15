@@ -1,7 +1,7 @@
 <ng-container [formGroup]="group">
   <label>{{ 'sender' | translate }}</label>
   <ng-container *ngIf="!multisig">
-    <account-selector (select)="onSwitchAccount($event)" type="normal"></account-selector>
+    <account-selector (select)="onSwitchAccount($event)" [type]="accountSelectorType"></account-selector>
   </ng-container>
   <ng-container *ngIf="multisig">
     <div style="margin-bottom: 16px;">

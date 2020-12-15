@@ -23,7 +23,7 @@
       </a>
     </li>
 
-    <ng-container *ngIf="account.type == 'normal'">
+    <ng-container *ngIf="account.type != 'multisig'">
       <li [ngClass]="menu == 'sendmoney' && 'active'">
         <a routerLink="/sendmoney" (click)="onToggle()">
           <i class="fa fa-paper-plane"></i>
