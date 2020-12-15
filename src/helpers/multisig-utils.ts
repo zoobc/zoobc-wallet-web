@@ -18,7 +18,7 @@ import {
   createSetupDatasetForm,
   setupDatasetMap,
 } from 'src/app/components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.component';
-import { TransactionType } from 'zoobc-sdk';
+import { TransactionType } from 'zbc-sdk';
 
 // =========================== END INPUT MAP ======================= //
 

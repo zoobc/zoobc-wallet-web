@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import zoobc from 'zoobc-sdk';
+import zoobc from 'zbc-sdk';
 import { PinsComponent } from '../pins/pins.component';
 
 @Component({

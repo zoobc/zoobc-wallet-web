@@ -8,7 +8,7 @@ import zoobc, {
   ZBCTransactions,
   Address,
   isZBCAddressValid,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
 export type AccountType = 'normal' | 'multisig' | 'one time login' | 'imported';

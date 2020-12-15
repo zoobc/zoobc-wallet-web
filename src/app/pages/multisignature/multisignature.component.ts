@@ -5,7 +5,7 @@ import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.servic
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import zoobc, { isZBCAddressValid, parseAddress, TransactionType } from 'zoobc-sdk';
+import zoobc, { isZBCAddressValid, parseAddress, TransactionType } from 'zbc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { getTxType } from 'src/helpers/multisig-utils';
 import { MatDialog } from '@angular/material';

@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { ZBCTransaction } from 'zoobc-sdk';
+import { ZBCTransaction } from 'zbc-sdk';
 
 @Component({
   selector: 'escrow-approval',

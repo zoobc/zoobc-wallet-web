@@ -9,7 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { AccountBalance, PostTransactionResponses, SendMoneyInterface } from 'zoobc-sdk';
+import zoobc, { AccountBalance, PostTransactionResponses, SendMoneyInterface } from 'zbc-sdk';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 import {
   createSendMoneyForm,

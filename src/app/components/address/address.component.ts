@@ -2,7 +2,7 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import { isZBCAddressValid, shortenHash } from 'zoobc-sdk';
+import { isZBCAddressValid, shortenHash } from 'zbc-sdk';
 
 @Component({
   selector: 'wallet-address',

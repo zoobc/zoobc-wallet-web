@@ -4,7 +4,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material';
-import { Address } from 'zoobc-sdk';
+import { Address } from 'zbc-sdk';
 
 @Component({
   selector: 'app-receive',

@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
-import { Address, isZBCAddressValid } from 'zoobc-sdk';
+import { Address, isZBCAddressValid } from 'zbc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 
 @Component({

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
-import { sendMoneyBuilder, SendMoneyInterface } from 'zoobc-sdk';
+import { sendMoneyBuilder, SendMoneyInterface } from 'zbc-sdk';
 
 @Component({
   selector: 'form-send-money',

@@ -5,7 +5,7 @@ import { MatSidenav, MatDrawerContent } from '@angular/material';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from 'src/assets/node-list/node-list.json';
 import { NodeList } from 'src/helpers/node-list';
-import zoobc, { HostInterface } from 'zoobc-sdk';
+import zoobc, { HostInterface } from 'zbc-sdk';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
 
 @Component({

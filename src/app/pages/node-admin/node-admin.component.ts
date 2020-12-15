@@ -24,7 +24,7 @@ import zoobc, {
   ZBCTransactions,
   NodeRegistration,
   ZBCTransaction,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 
 @Component({
   selector: 'app-node-admin',

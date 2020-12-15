@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { ContactService, Contact } from 'src/app/services/contact.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
-import { isZBCAddressValid } from 'zoobc-sdk';
+import { isZBCAddressValid } from 'zbc-sdk';
 import { saveAs } from 'file-saver';
 
 @Component({

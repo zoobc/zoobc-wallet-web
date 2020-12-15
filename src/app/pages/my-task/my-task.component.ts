@@ -12,11 +12,11 @@ import zoobc, {
   Escrows,
   ZBCTransactions,
   Escrow,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { DOCUMENT } from '@angular/common';
 import { EscrowTransactionComponent } from './escrow-transaction/escrow-transaction.component';
-import { ZBCTransaction } from 'zoobc-sdk';
+import { ZBCTransaction } from 'zbc-sdk';
 import { MultisigTransactionComponent } from './multisig-transaction/multisig-transaction.component';
 
 @Component({

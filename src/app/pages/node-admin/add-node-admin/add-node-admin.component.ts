@@ -5,7 +5,7 @@ import { NodeAdminService } from 'src/app/services/node-admin.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc, { RequestType } from 'zoobc-sdk';
+import zoobc, { RequestType } from 'zbc-sdk';
 import { AuthService } from 'src/app/services/auth.service';
 import { getTranslation } from 'src/helpers/utils';
 

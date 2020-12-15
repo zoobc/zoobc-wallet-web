@@ -4,7 +4,7 @@ import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import Swal from 'sweetalert2';
-import zoobc, { NodeRegistration, RemoveNodeInterface, ZBCAddressToBytes } from 'zoobc-sdk';
+import zoobc, { NodeRegistration, RemoveNodeInterface, ZBCAddressToBytes } from 'zbc-sdk';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
 import {

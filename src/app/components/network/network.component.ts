@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { NodeList, Node } from '../../../helpers/node-list';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import zoobc, { HostInterface } from 'zoobc-sdk';
+import zoobc, { HostInterface } from 'zbc-sdk';
 
 @Component({
   selector: 'network',

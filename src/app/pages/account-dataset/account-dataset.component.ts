@@ -9,7 +9,7 @@ import zoobc, {
   BIP32Interface,
   AccountDataset,
   Address,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { getTranslation } from 'src/helpers/utils';
 import { Subscription } from 'rxjs';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';

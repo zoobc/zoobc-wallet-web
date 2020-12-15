@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import zoobc, { HostInfoResponse } from 'zoobc-sdk';
+import zoobc, { HostInfoResponse } from 'zbc-sdk';
 import { calcMinFee } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 import { MatCheckbox } from '@angular/material';

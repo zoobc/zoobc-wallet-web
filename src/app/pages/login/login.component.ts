@@ -8,7 +8,7 @@ import { PinsComponent } from 'src/app/components/pins/pins.component';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
-import { Address } from 'zoobc-sdk';
+import { Address } from 'zbc-sdk';
 import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({

@@ -8,7 +8,7 @@ import zoobc, {
   EscrowApprovalInterface,
   EscrowApproval,
   AccountBalance,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { environment } from 'src/environments/environment';

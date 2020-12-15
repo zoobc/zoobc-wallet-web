@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
-import zoobc, { Address } from 'zoobc-sdk';
+import zoobc, { Address } from 'zbc-sdk';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation, uniqueParticipant } from 'src/helpers/utils';

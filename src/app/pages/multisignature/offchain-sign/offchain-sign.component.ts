@@ -7,7 +7,7 @@ import {
   isZBCAddressValid,
   signTransactionHash,
   toBase64Url,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
