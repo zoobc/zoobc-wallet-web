@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { getTranslation, stringToBuffer } from 'src/helpers/utils';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { generateTransactionHash } from 'zoobc-sdk';
+import { generateTransactionHash } from 'zbc-sdk';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { MultiSigDraft, MultisigService } from 'src/app/services/multisig.service';

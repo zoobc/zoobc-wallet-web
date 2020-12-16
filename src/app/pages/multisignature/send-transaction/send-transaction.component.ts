@@ -17,7 +17,7 @@ import zoobc, {
   AccountBalance,
   isZBCAddressValid,
   getZBCAddress,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 import { createInnerTxBytes, getTxType } from 'src/helpers/multisig-utils';
 
 @Component({

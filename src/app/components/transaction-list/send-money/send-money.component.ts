@@ -2,7 +2,7 @@ import { Component, ViewChild, TemplateRef, Input, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
-import { Address, ZBCTransaction } from 'zoobc-sdk';
+import { Address, ZBCTransaction } from 'zbc-sdk';
 
 @Component({
   selector: 'send-money',

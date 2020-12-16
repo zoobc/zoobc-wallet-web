@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { RemoveDatasetInterface, removeDatasetBuilder } from 'zoobc-sdk';
+import { RemoveDatasetInterface, removeDatasetBuilder } from 'zbc-sdk';
 import { escrowMap, escrowForm } from '../form-escrow/form-escrow.component';
 
 @Component({

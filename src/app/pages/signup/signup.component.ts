@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { onCopyText, getTranslation } from '../../../helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { ZooKeyring } from 'zoobc-sdk';
+import { ZooKeyring } from 'zbc-sdk';
 
 interface Languages {
   value: string;

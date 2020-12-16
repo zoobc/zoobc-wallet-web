@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { TransactionType, TransactionListParams, multisigPendingDetail } from 'zoobc-sdk';
+import zoobc, { TransactionType, TransactionListParams, multisigPendingDetail } from 'zbc-sdk';
 import { MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({

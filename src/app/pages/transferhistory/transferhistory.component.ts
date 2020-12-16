@@ -12,7 +12,7 @@ import zoobc, {
   Address,
   ZBCTransactions,
   parseAddress,
-} from 'zoobc-sdk';
+} from 'zbc-sdk';
 
 import { ContactService } from 'src/app/services/contact.service';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';

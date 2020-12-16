@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
-import { isZBCAddressValid } from 'zoobc-sdk';
+import { isZBCAddressValid } from 'zbc-sdk';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
 
 @Component({

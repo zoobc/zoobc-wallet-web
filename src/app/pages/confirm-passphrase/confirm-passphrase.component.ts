@@ -4,7 +4,7 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zbc-sdk';
 import { Location } from '@angular/common';
 
 @Component({

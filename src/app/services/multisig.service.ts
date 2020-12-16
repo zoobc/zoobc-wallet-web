@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MultiSigInterface, TransactionType } from 'zoobc-sdk';
+import { MultiSigInterface, TransactionType } from 'zbc-sdk';
 
 export interface MultiSigDraft extends MultiSigInterface {
   id: number;

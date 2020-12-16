@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { onCopyText, getTranslation } from 'src/helpers/utils';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc from 'zoobc-sdk';
+import zoobc from 'zbc-sdk';
 
 @Component({
   selector: 'app-reveal-passphrase',

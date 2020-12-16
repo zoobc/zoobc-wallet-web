@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TransactionType, ZBCTransaction } from 'zoobc-sdk';
+import { TransactionType, ZBCTransaction } from 'zbc-sdk';
 
 @Component({
   selector: 'transaction-list',
