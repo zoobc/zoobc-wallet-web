@@ -9,8 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { AccountBalance, PostTransactionResponses } from 'zbc-sdk';
-import { SendMoneyInterface } from 'zbc-sdk/types/helper/transaction-builder/send-money';
+import zoobc, { AccountBalance, PostTransactionResponses, SendMoneyInterface } from 'zbc-sdk';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 import {
   createSendMoneyForm,
@@ -90,7 +89,7 @@ export class SendmoneyComponent implements OnInit {
     await this.getBalance(sender.value);
     const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= total) {
-      this.senderAccount = this.authServ.getAccountByAddressValue(sender.value);
+      // this.senderAccount = this.authServ.getAccountByAddressValue(sender.value);
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         maxHeight: '90vh',

@@ -87,11 +87,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   byPassLogin(address: Address, path: number) {
     this.zone.run(() => {
-      this.isLoading = true;
-      if (this.authServ.loginPass(address, path)) {
-        this.router.navigateByUrl('/dashboard');
-      }
-      this.isLoading = false;
+      const account: SavedAccount = {
+        name: 'Ledger Account',
+        address: address,
+        path,
+        type: 'one time login',
+      };
+      if (this.authServ.loginWithoutPin(account)) this.router.navigateByUrl('/dashboard');
     });
   }
 

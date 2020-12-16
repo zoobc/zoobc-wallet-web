@@ -1,5 +1,5 @@
 <form [formGroup]="createTransactionForm" (submit)="onNext()">
-  <fieldset [disabled]="readonlyInput">
+  <fieldset>
     <form-send-money
       [group]="createTransactionForm"
       [inputMap]="fieldList"

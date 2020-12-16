@@ -106,22 +106,22 @@
         </div>
         <div class="col-4 text-center">
           <ul class="list-menu">
-          <li [ngClass]="menu == 'my-tasks' && 'active'">
-            <a routerLink="/my-tasks" (click)="onToggle()">
-              <i class="fas fa-tasks"></i>
-              <span>{{ 'my tasks' | translate }}</span>
-            </a>
-          </li>
+            <li [ngClass]="menu == 'my-tasks' && 'active'">
+              <a routerLink="/my-tasks" (click)="onToggle()">
+                <i class="fas fa-tasks"></i>
+                <span>{{ 'my tasks' | translate }}</span>
+              </a>
+            </li>
           </ul>
         </div>
         <div class="col-4 text-center">
           <ul class="list-menu">
-          <li [ngClass]="menu == 'my-tasks' && 'active'">
-            <a (click)="onComingSoonPage()">
-              <i class="fa fa-paper-plane"></i>
-              <span>{{ 'Liquid Payment' | translate }}</span>
-            </a>
-          </li>
+            <li [ngClass]="menu == 'my-tasks' && 'active'">
+              <a (click)="onComingSoonPage()">
+                <i class="fa fa-paper-plane"></i>
+                <span>{{ 'Liquid Payment' | translate }}</span>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -134,7 +134,7 @@
                 <span>{{ 'my tasks' | translate }}</span>
               </a>
             </li>
-            </ul>
+          </ul>
         </div>
         <div class="col-6 text-center">
           <ul class="list-menu">
@@ -144,12 +144,12 @@
                 <span>{{ 'Liquid Payment' | translate }}</span>
               </a>
             </li>
-            </ul>
+          </ul>
         </div>
       </div>
     </mat-card>
 
-    <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoadingRecentTx && !isErrorRecentTx">
+    <ng-container *ngIf="unconfirmTx && unconfirmTx.length > 0 && !isLoading && !isError">
       <mat-card class="transaction-list">
         <div class="transaction-title">
           <span><i class="fa fa-history"></i></span>

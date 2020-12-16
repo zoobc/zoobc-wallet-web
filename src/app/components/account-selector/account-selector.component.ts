@@ -23,6 +23,7 @@ export class AccountSelectorComponent implements OnInit {
   isLoading = false;
   isError = false;
 
+  initAccount: SavedAccount;
   account: SavedAccount;
   accounts: SavedAccount[];
 
@@ -36,7 +37,8 @@ export class AccountSelectorComponent implements OnInit {
 
   ngOnInit() {
     this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
-    this.account = this.authServ.getCurrAccount();
+    this.account = this.initAccount = this.authServ.getCurrAccount();
+
     this.getAccounts();
   }
 
@@ -71,7 +73,8 @@ export class AccountSelectorComponent implements OnInit {
   }
 
   onSwitchAccount(account: SavedAccount) {
-    if (this.switchAccount) this.authServ.switchAccount(account);
+    const onlySeed = this.initAccount.type == 'multisig' ? true : false;
+    if (this.switchAccount) this.authServ.switchAccount(account, onlySeed);
     this.account = account;
     this.accountRefDialog.close();
     this.select.emit(account);

@@ -70,10 +70,6 @@ export class MultisigTransactionComponent implements OnInit {
     this.account = this.authServ.getCurrAccount();
   }
 
-  ngOnDestroy() {
-    this.authServ.switchMultisigAccount();
-  }
-
   onRefresh() {
     this.refresh.emit(true);
   }
@@ -163,7 +159,7 @@ export class MultisigTransactionComponent implements OnInit {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-    this.authServ.switchAccount(account);
+    this.authServ.switchAccount(account, true);
   }
 
   onDismiss() {

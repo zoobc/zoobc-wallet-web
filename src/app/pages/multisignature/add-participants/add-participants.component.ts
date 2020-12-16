@@ -54,7 +54,6 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.multisigSubs) this.multisigSubs.unsubscribe();
-    this.authServ.switchMultisigAccount();
   }
 
   createParticipant(address: string, signature: string, required: boolean): FormGroup {
@@ -150,7 +149,7 @@ export class AddParticipantsComponent implements OnInit, OnDestroy {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-    this.authServ.switchAccount(account);
+    this.authServ.switchAccount(account, true);
   }
 
   toggleGetSignature() {

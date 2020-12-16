@@ -23,6 +23,7 @@ import { ReceiveComponent } from '../receive/receive.component';
 import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
+import { RestoreAccountService } from 'src/app/services/restore-account.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,6 +53,7 @@ export class DashboardComponent implements OnInit {
   startMatch: number = 0;
   constructor(
     private authServ: AuthService,
+    private restoreServ: RestoreAccountService,
     private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
     private router: Router,
@@ -71,7 +73,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authServ.restoreAccounts();
+    this.restoreServ.restoreAccounts();
   }
 
   ngOnDestroy() {
