@@ -89,7 +89,7 @@ export class SendmoneyComponent implements OnInit {
     await this.getBalance(sender.value);
     const balance = this.accountBalance.spendableBalance / 1e8;
     if (balance >= total) {
-      this.senderAccount = this.authServ.getAccountByAddressValue(sender.value);
+      // this.senderAccount = this.authServ.getAccountByAddressValue(sender.value);
       this.sendMoneyRefDialog = this.dialog.open(ConfirmSendComponent, {
         width: '500px',
         maxHeight: '90vh',

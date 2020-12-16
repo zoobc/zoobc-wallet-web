@@ -34,10 +34,6 @@ export class MultisigApprovalHistoryComponent implements OnInit {
     this.participants = multisigAccount.participants;
   }
 
-  ngOnDestroy() {
-    this.authServ.switchMultisigAccount();
-  }
-
   async getMultiSigTransaction(reload: boolean = false) {
     if (this.isLoading) return;
     if (this.account == undefined) return;
@@ -102,7 +98,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   }
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-    this.authServ.switchAccount(account);
+    this.authServ.switchAccount(account, true);
     this.getMultiSigTransaction(true);
   }
 }

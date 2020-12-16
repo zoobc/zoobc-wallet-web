@@ -73,12 +73,12 @@ export class SendTransactionComponent implements OnInit {
 
   ngOnDestroy() {
     this.multisigSubs.unsubscribe();
-    this.authServ.switchMultisigAccount();
+    // this.authServ.switchMultisigAccount();
   }
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
-    this.authServ.switchAccount(account);
+    this.authServ.switchAccount(account, true);
   }
 
   async onOpenConfirmDialog() {
