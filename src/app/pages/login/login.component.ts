@@ -95,20 +95,32 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  importAccount() {
+  isInstalled(): Promise<boolean> {
+    return new Promise(resolve => {
+      chrome.runtime.sendMessage(this.extensionId, 'installed?', installed => resolve(installed));
+    });
+  }
+
+  async importAccount() {
+    let installed = await this.isInstalled();
+
+    if (installed == undefined) {
+      const message = getTranslation('please install zoobc connect', this.translate);
+      Swal.fire('Opps...', message, 'error');
+      return false;
+    }
+
     try {
       this.isLoadingImport = true;
       this.port = chrome.runtime.connect(this.extensionId);
       this.port.postMessage({ action: 'import-account' });
       this.port.onMessage.addListener(msg => {
-        if (msg.message == 'failed') {
-          let message = getTranslation('extension closed', this.translate);
-          this.isLoadingImport = false;
-          return Swal.fire('Opps...', message, 'error');
-        } else {
-          this.isLoadingImport = false;
+        if (msg.message == 'success') {
           this.byPassLogin(msg.account.address, msg.account.path);
         }
+        this.zone.run(() => {
+          this.isLoadingImport = false;
+        });
       });
     } catch (error) {
       let message = getTranslation('extension not found', this.translate);

@@ -101,7 +101,8 @@ export class SendmoneyComponent implements OnInit {
       });
       this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
         if (onConfirm) {
-          if (this.senderAccount.pathHardware >= 0) return this.sendDataToExtension();
+          if (this.account.type == 'imported' || this.account.type == 'one time login')
+            return this.sendDataToExtension();
           else return this.onOpenPinDialog();
         }
       });
@@ -195,7 +196,7 @@ export class SendmoneyComponent implements OnInit {
       this.port.postMessage({
         action: 'get-signature',
         transaction: this.formSend.value,
-        path: this.senderAccount.pathHardware,
+        path: this.account.path,
       });
       this.port.onMessage.addListener(msg => {
         this.zone.run(() => {
@@ -226,9 +227,43 @@ export class SendmoneyComponent implements OnInit {
     }
   }
 
-  sendMoneyHardware(signature: string) {
-    alert(signature);
+  sendMoneyHardware(signature: any) {
+    signature = Buffer.from(signature);
+
     this.isLoadingExtension = false;
     this.isLoading = true;
+
+    const amountForm = this.formSend.get('amount');
+    const recipientForm = this.formSend.get('recipient');
+    const aliasField = this.formSend.get('alias');
+
+    zoobc.Transactions.post(signature).then(
+      async (res: PostTransactionResponses) => {
+        this.isLoading = false;
+        let message = getTranslation('your transaction is processing', this.translate);
+        let subMessage = getTranslation('you send coins to', this.translate, {
+          amount: amountForm.value,
+          recipient: recipientForm.value,
+        });
+        Swal.fire(message, subMessage, 'success');
+
+        // save address
+        if (aliasField.value) {
+          const newContact: Contact = {
+            name: aliasField.value,
+            address: { value: recipientForm.value, type: 0 },
+          };
+          this.contactServ.add(newContact);
+        }
+        this.router.navigateByUrl('/dashboard');
+      },
+      async err => {
+        this.isLoading = false;
+        console.log(err);
+
+        let message = getTranslation(err.message, this.translate);
+        Swal.fire('Opps...', message, 'error');
+      }
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter, Input } from '@angular/core';
-import { SavedAccount, AuthService } from 'src/app/services/auth.service';
+import { SavedAccount, AuthService, AccountType } from 'src/app/services/auth.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 
@@ -11,7 +11,7 @@ import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.se
 export class AccountSelectorComponent implements OnInit {
   @ViewChild('accountDialog') accountDialog: TemplateRef<any>;
 
-  @Input() type: 'normal' | 'multisig' = null;
+  @Input() type: AccountType = null;
   @Input() switchAccount: boolean = true;
   @Input() selectedValue: string;
   @Input() addresses?: string[];
@@ -55,7 +55,7 @@ export class AccountSelectorComponent implements OnInit {
         } else if (this.switchAccount) {
           this.account = this.accounts.find(acc => this.account.address.value == acc.address.value);
           if (!this.account) this.account = this.accounts[0];
-        } else this.account = undefined;
+        }
 
         this.select.emit(this.account);
       })

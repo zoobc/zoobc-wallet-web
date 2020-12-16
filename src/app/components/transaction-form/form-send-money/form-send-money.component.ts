@@ -29,6 +29,8 @@ export class FormSendMoneyComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
+  accountSelectorType = 'normal';
+
   constructor(private authServ: AuthService, private contactServ: ContactService) {}
 
   ngOnInit() {
@@ -43,6 +45,8 @@ export class FormSendMoneyComponent implements OnInit {
     );
     this.getAccounts();
     if (recipientForm.value) this.isAddressInContacts();
+
+    this.accountSelectorType = this.authServ.getCurrAccount().type;
   }
 
   getAccounts() {

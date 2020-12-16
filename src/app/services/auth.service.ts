@@ -11,12 +11,12 @@ import zoobc, {
 } from 'zbc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
+export type AccountType = 'normal' | 'multisig' | 'one time login' | 'imported';
 export interface SavedAccount {
   name: string;
   path?: number;
-  pathHardware?: number;
-  type: 'normal' | 'multisig';
-  nodeIP: string;
+  type: AccountType;
+  nodeIP?: string;
   address: Address;
   participants?: Address[];
   nonce?: number;
@@ -74,8 +74,11 @@ export class AuthService {
     const passphrase = zoobc.Wallet.decryptPassphrase(encPassphrase, key);
 
     if (passphrase) {
-      const account = this.getCurrAccount();
+      const accounts = this.getAllAccount();
+      const account = this.getCurrAccount().type == 'one time login' ? accounts[0] : this.getCurrAccount();
       this.sourceCurrAccount.next(account);
+      localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+
       this._keyring = new ZooKeyring(passphrase);
       this._seed = this._keyring.calcDerivationPath(account.path);
 
@@ -87,21 +90,13 @@ export class AuthService {
   loginPass(address: Address, path: number): boolean {
     if (!isZBCAddressValid(address.value)) return (this.loggedIn = false);
     const account: SavedAccount = {
-      name: 'Account 1',
+      name: 'Ledger Account',
       address: address,
-      path: 0,
-      pathHardware: path,
-      type: 'normal',
-      nodeIP: null,
+      path,
+      type: 'one time login',
     };
 
-    if (!this.isLoggedInHardware()) {
-      localStorage.removeItem('ACCOUNT');
-      localStorage.setItem('ACCOUNT', JSON.stringify([account]));
-    }
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
-    localStorage.setItem('IS_RESTORED', 'true');
-    localStorage.setItem('IS_HARDWARE_LOGIN', 'true');
     this.sourceCurrAccount.next(account);
     return (this.loggedIn = true);
   }
@@ -132,15 +127,17 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('CURR_ACCOUNT'));
   }
 
-  getAllAccount(type?: 'normal' | 'multisig'): SavedAccount[] {
+  getAllAccount(type?: AccountType): SavedAccount[] {
     let accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
 
     if (type == 'normal') return accounts.filter(acc => acc.type == 'normal');
     else if (type == 'multisig') return accounts.filter(acc => acc.type == 'multisig');
+    else if (type == 'imported') return accounts.filter(acc => acc.type == 'imported');
+    else if (type == 'one time login') return [this.getCurrAccount()];
     return accounts;
   }
 
-  getAccountsWithBalance(type?: 'normal' | 'multisig'): Promise<SavedAccount[]> {
+  getAccountsWithBalance(type?: AccountType): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
       let accounts = this.getAllAccount(type);
 
@@ -148,18 +145,9 @@ export class AuthService {
 
       const addresses = accounts.map(acc => acc.address);
       zoobc.Account.getBalances(addresses)
-        .then((res: AccountBalance[]) => {
-          let balances = res;
-          accounts.map(acc => {
-            acc.balance = 0;
-            for (let i = 0; i < balances.length; i++) {
-              const balance = balances[i];
-              if (balance.address.value == acc.address.value) {
-                acc.balance = balance.spendableBalance;
-                balances.splice(i, 1);
-                break;
-              }
-            }
+        .then((accountBalances: AccountBalance[]) => {
+          accounts.map((acc, i) => {
+            acc.balance = accountBalances[i].balance;
             return acc;
           });
           resolve(accounts);
