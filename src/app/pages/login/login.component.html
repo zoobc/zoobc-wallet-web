@@ -3,19 +3,6 @@
     <img src="/assets/img/icon-zbc.png" alt="" />
     <h2 class="mat-h4">{{ 'welcome to zoobc app' | translate }}</h2>
     <p>{{ 'the easy way to spend and receive zoobc' | translate }}</p>
-    <ng-container *ngIf="!hasAccount">
-      <a routerLink="/signup" mat-flat-button color="primary">
-        {{ 'create new wallet' | translate }}
-      </a>
-      <a routerLink="/open-wallet" mat-stroked-button color="white">
-        {{ 'restore wallet' | translate }}
-      </a>
-
-      <a [disabled]="isLoadingImport" (click)="importAccount()" mat-flat-button color="primary">
-        <span class="text" *ngIf="!isLoadingImport">{{ 'import account' | translate }}</span>
-        <span class="text" *ngIf="isLoadingImport">{{ 'waiting response' | translate }}</span>
-      </a>
-    </ng-container>
 
     <ng-container *ngIf="hasAccount && !isLoggedIn">
       <form [formGroup]="formLoginPin" (submit)="onLoginPin()">
@@ -28,26 +15,41 @@
         <div class="spiner" *ngIf="isLoading">
           <i class="fas fa-circle-notch fa-spin"></i>
         </div>
-        <button style="margin-top: 8px;" routerLink="/signup" mat-flat-button color="primary">
-          {{ 'create new wallet' | translate }}
-        </button>
-        <button style="margin-top: 8px;" routerLink="/open-wallet" mat-stroked-button="primary">
-          {{ 'open another wallet' | translate }}
-        </button>
-
-        <button
-          [disabled]="isLoadingImport"
-          type="button"
-          style="margin-top: 8px;"
-          (click)="importAccount()"
-          mat-flat-button
-          color="primary"
-        >
-          <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingImport"></i>
-          <span class="text" *ngIf="!isLoadingImport">{{ 'import account' | translate }}</span>
-          <span class="text" *ngIf="isLoadingImport">{{ 'waiting response' | translate }}</span>
-        </button>
       </form>
     </ng-container>
+  </div>
+
+  <div class="access-button">
+    <div style="margin: 0 auto 16px;">
+      <button routerLink="/signup" mat-flat-button>
+        <i matPrefix class="fab fa-app-store"></i>
+        {{ 'create new wallet' | translate }}
+      </button>
+      <button routerLink="/open-wallet" mat-flat-button>
+        <i matPrefix class="fab fa-app-store"></i>
+        {{ 'restore wallet' | translate }}
+      </button>
+    </div>
+
+    <div>{{ 'or login with' | translate }}</div>
+    <div style="margin: 0 auto;">
+      <button [disabled]="isLoadingImport" type="button" (click)="importAccount()" mat-stroked-button>
+        <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingImport"></i>
+        <i matPrefix class="fab fa-app-store" *ngIf="!isLoadingImport"></i>
+        {{ 'ledger' | translate }}
+      </button>
+      <button type="button" mat-stroked-button>
+        <i matPrefix class="fab fa-app-store"></i>
+        {{ 'trezor' | translate }}
+      </button>
+      <button type="button" mat-stroked-button (click)="loginWithPrivKey()">
+        <i matPrefix class="fab fa-app-store"></i>
+        {{ 'private key' | translate }}
+      </button>
+      <button type="button" mat-stroked-button>
+        <i matPrefix class="fab fa-app-store"></i>
+        {{ 'view address' | translate }}
+      </button>
+    </div>
   </div>
 </div>

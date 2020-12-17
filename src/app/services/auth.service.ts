@@ -67,10 +67,12 @@ export class AuthService {
     return false;
   }
 
-  loginWithoutPin(account: SavedAccount): boolean {
+  loginWithoutPin(account: SavedAccount, seed?: BIP32Interface): boolean {
     if (!isZBCAddressValid(account.address.value)) return false;
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
     this.sourceCurrAccount.next(account);
+
+    if (seed) this._seed = seed;
     return (this.loggedIn = true);
   }
 

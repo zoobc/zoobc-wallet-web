@@ -100,9 +100,10 @@ export class SendmoneyComponent implements OnInit {
       });
       this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
         if (onConfirm) {
-          if (this.account.type == 'imported' || this.account.type == 'one time login')
-            return this.sendDataToExtension();
-          else return this.onOpenPinDialog();
+          if (this.account.type == 'imported' || this.account.type == 'one time login') {
+            if (this.authServ.seed) return this.onSendMoney();
+            else return this.sendDataToExtension();
+          } else return this.onOpenPinDialog();
         }
       });
     } else {

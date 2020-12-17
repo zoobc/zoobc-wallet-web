@@ -1,0 +1,20 @@
+<h2 class="mat-h2 text-center">{{ 'login with private key' | translate }}</h2>
+<form [formGroup]="form" (submit)="onLogin()" class="grid">
+  <mat-form-field appearance="outline" color="accent">
+    <mat-label>{{ 'private key' | translate }}</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="e.g. KwFtuCkKXYqiE6sWU7BEQsphD8dNFbnxhqg1vy2cSf33eihZUgqi"
+      formControlName="privateKey"
+    />
+  </mat-form-field>
+  <ng-container *ngIf="privKeyField.touched">
+    <mat-error *ngIf="privKeyField.hasError('required')">
+      {{ 'private key is required' | translate }}
+    </mat-error>
+  </ng-container>
+  <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+    <span>{{ 'login' | translate }}</span>
+  </button>
+</form>

@@ -10,6 +10,8 @@ import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { Address } from 'zbc-sdk';
 import { DOCUMENT } from '@angular/platform-browser';
+import { PrivateKeyComponent } from './private-key/private-key.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-login',
@@ -42,6 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private authServ: AuthService,
     private zone: NgZone,
     private translate: TranslateService,
+    private dialog: MatDialog,
     @Inject(DOCUMENT) private document
   ) {
     this.formLoginPin = new FormGroup({
@@ -138,5 +141,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       if (show) boxImage[i].classList.remove('hide');
       else boxImage[i].classList.add('hide');
     }
+  }
+
+  loginWithPrivKey() {
+    this.dialog.open(PrivateKeyComponent, {
+      width: '400px',
+      maxHeight: '99vh',
+    });
   }
 }

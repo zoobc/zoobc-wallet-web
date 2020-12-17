@@ -9,14 +9,12 @@
   background-color: aqua;
 }
 .login-container {
-  display: flex;
-  align-items: center;
   text-align: center;
-  justify-content: center;
   height: calc(93vh - 64px);
   .login-box {
     min-width: 328px;
     max-width: 328px;
+    margin: 0 auto;
 
     img {
       max-width: 136px;
@@ -84,6 +82,32 @@
         font-size: 32px;
         color: white;
       }
+    }
+  }
+}
+
+.access-button {
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+
+  .mat-flat-button {
+    margin: 8px 4px;
+    background-color: white;
+    color: map-get($primary, 500);
+    i {
+      font-size: 24px;
+      margin-right: 4px;
+    }
+  }
+
+  .mat-stroked-button {
+    margin: 8px 4px;
+    color: white;
+    border-color: white !important;
+    i {
+      font-size: 24px;
+      margin-right: 4px;
     }
   }
 }
