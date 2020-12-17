@@ -16,10 +16,10 @@
       </li>
     </ng-template>
 
-    <li>
+    <li *ngIf="account.type != 'address'">
       <div style="position: relative;">
         <a (click)="onClick()">
-          <img src="../../../assets/img/zbc-color.svg">
+          <img src="../../../assets/img/zbc-color.svg" />
           <span>{{ 'Zoobc Transaction' | translate }}</span>
         </a>
         <ng-container *ngIf="show">

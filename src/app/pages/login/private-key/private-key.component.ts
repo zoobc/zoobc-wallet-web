@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { getZBCAddress, ZooKeyring } from 'zbc-sdk';
   selector: 'app-private-key',
   templateUrl: './private-key.component.html',
 })
-export class PrivateKeyComponent implements OnInit {
+export class PrivateKeyComponent {
   form: FormGroup;
   privKeyField = new FormControl('', Validators.required);
 
@@ -23,8 +23,6 @@ export class PrivateKeyComponent implements OnInit {
       privateKey: this.privKeyField,
     });
   }
-
-  ngOnInit() {}
 
   onLogin() {
     if (this.form.valid) {

@@ -19,7 +19,10 @@
           </button>
         </div>
 
-        <span class="account-dropdown" [matMenuTriggerFor]="account">
+        <span class="account-dropdown" *ngIf="!showAccountsList">
+          <span class="name">{{ currAcc.name }}</span>
+        </span>
+        <span class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="showAccountsList">
           <span class="name">{{ currAcc.name }}</span>
           <i class="fa fa-caret-down"></i>
         </span>

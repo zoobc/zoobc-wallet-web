@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import zoobc, { BIP32Interface, ZooKeyring, AccountBalance, Address, isZBCAddressValid } from 'zbc-sdk';
 import { BehaviorSubject } from 'rxjs';
 
-export type AccountType = 'normal' | 'multisig' | 'one time login' | 'imported';
+export type AccountType = 'normal' | 'multisig' | 'one time login' | 'imported' | 'hardware' | 'address';
 export interface SavedAccount {
   name: string;
   path?: number;
@@ -55,7 +55,9 @@ export class AuthService {
 
     if (passphrase) {
       const accounts = this.getAllAccount();
-      const account = this.getCurrAccount().type == 'one time login' ? accounts[0] : this.getCurrAccount();
+      let account = this.getCurrAccount();
+      account =
+        account.type == 'one time login' || account.type == 'address' ? accounts[0] : this.getCurrAccount();
       this.sourceCurrAccount.next(account);
       localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
 
@@ -84,8 +86,6 @@ export class AuthService {
 
   switchAccount(account: SavedAccount, onlySeed: boolean = false) {
     if (!onlySeed) {
-      console.log('here');
-
       localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
       this.sourceCurrAccount.next(account);
     }

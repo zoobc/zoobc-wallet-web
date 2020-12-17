@@ -21,14 +21,8 @@
 
   <div class="access-button">
     <div style="margin: 0 auto 16px;">
-      <button routerLink="/signup" mat-flat-button>
-        <i matPrefix class="fab fa-app-store"></i>
-        {{ 'create new wallet' | translate }}
-      </button>
-      <button routerLink="/open-wallet" mat-flat-button>
-        <i matPrefix class="fab fa-app-store"></i>
-        {{ 'restore wallet' | translate }}
-      </button>
+      <button routerLink="/signup" mat-flat-button>{{ 'create new wallet' | translate }}</button>
+      <button routerLink="/open-wallet" mat-flat-button>{{ 'restore wallet' | translate }}</button>
     </div>
 
     <div>{{ 'or login with' | translate }}</div>
@@ -46,7 +40,7 @@
         <i matPrefix class="fab fa-app-store"></i>
         {{ 'private key' | translate }}
       </button>
-      <button type="button" mat-stroked-button>
+      <button type="button" mat-stroked-button (click)="loginWithAddress()">
         <i matPrefix class="fab fa-app-store"></i>
         {{ 'view address' | translate }}
       </button>

@@ -12,6 +12,7 @@ import { Address } from 'zbc-sdk';
 import { DOCUMENT } from '@angular/platform-browser';
 import { PrivateKeyComponent } from './private-key/private-key.component';
 import { MatDialog } from '@angular/material';
+import { AddressComponent } from './address/address.component';
 
 @Component({
   selector: 'app-login',
@@ -145,6 +146,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loginWithPrivKey() {
     this.dialog.open(PrivateKeyComponent, {
+      width: '400px',
+      maxHeight: '99vh',
+    });
+  }
+
+  loginWithAddress() {
+    this.dialog.open(AddressComponent, {
       width: '400px',
       maxHeight: '99vh',
     });

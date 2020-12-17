@@ -91,6 +91,7 @@ import { FormRemoveAccountDatasetModule } from './components/transaction-form/fo
 import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 import { FormSetupAccountDatasetModule } from './components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
 import { PrivateKeyComponent } from './pages/login/private-key/private-key.component';
+import { AddressComponent } from './pages/login/address/address.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -135,6 +136,7 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigApprovalHistoryComponent,
     NodeRewardListComponent,
     PrivateKeyComponent,
+    AddressComponent,
   ],
   imports: [
     BrowserModule,
@@ -228,6 +230,7 @@ export function getLanguage(languageServ: LanguageService) {
     SetupDatasetComponent,
     NodeRewardListComponent,
     PrivateKeyComponent,
+    AddressComponent,
   ],
 })
 export class AppModule {}
