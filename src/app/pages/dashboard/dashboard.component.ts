@@ -51,6 +51,9 @@ export class DashboardComponent implements OnInit {
   lastRefresh: number;
   lastRefreshAccount: number;
   startMatch: number = 0;
+
+  showAccountsList: boolean = true;
+
   constructor(
     private authServ: AuthService,
     private restoreServ: RestoreAccountService,
@@ -70,6 +73,9 @@ export class DashboardComponent implements OnInit {
       .getRates()
       .then(rates => (this.currencyRates = rates))
       .catch(err => console.log(err));
+
+    this.showAccountsList =
+      this.currAcc.type == 'one time login' || this.currAcc.type == 'address' ? false : true;
   }
 
   ngOnInit() {

@@ -66,11 +66,8 @@ export class SendmoneyComponent implements OnInit {
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
-    if (this.account.type == 'multisig') {
-      let message = getTranslation('please use normal account to use this feature', this.translate);
-      Swal.fire({ type: 'error', title: 'Oops...', text: message });
+    if (this.account.type == 'multisig' || this.account.type == 'address')
       this.router.navigateByUrl('/dashboard');
-    }
   }
 
   ngOnDestroy() {
@@ -100,9 +97,10 @@ export class SendmoneyComponent implements OnInit {
       });
       this.sendMoneyRefDialog.afterClosed().subscribe(onConfirm => {
         if (onConfirm) {
-          if (this.account.type == 'imported' || this.account.type == 'one time login')
-            return this.sendDataToExtension();
-          else return this.onOpenPinDialog();
+          if (this.account.type == 'imported' || this.account.type == 'one time login') {
+            if (this.authServ.seed) return this.onSendMoney();
+            else return this.sendDataToExtension();
+          } else return this.onOpenPinDialog();
         }
       });
     } else {
@@ -216,7 +214,6 @@ export class SendmoneyComponent implements OnInit {
               break;
             default:
               this.isLoadingExtension = false;
-              console.log(msg);
           }
         });
       });

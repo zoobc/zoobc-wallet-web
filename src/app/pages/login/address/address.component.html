@@ -1,0 +1,20 @@
+<h2 class="mat-h2 text-center">{{ 'login with address' | translate }}</h2>
+<form [formGroup]="form" (submit)="onLogin()" class="grid">
+  <mat-form-field appearance="outline" color="accent">
+    <mat-label>{{ 'address' | translate }}</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="e.g. ZBC_F5YUYDXD_WFDJSAV5_K3Y72RCM_GLQP32XI_QDVXOGGD_J7CGSSSK_5VKR7YML"
+      formControlName="address"
+    />
+  </mat-form-field>
+  <ng-container *ngIf="addressField.touched">
+    <mat-error *ngIf="addressField.hasError('required')">
+      {{ 'address is required' | translate }}
+    </mat-error>
+  </ng-container>
+  <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+    <span>{{ 'login' | translate }}</span>
+  </button>
+</form>
