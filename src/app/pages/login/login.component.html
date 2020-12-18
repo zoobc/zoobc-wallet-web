@@ -28,12 +28,14 @@
     <div>{{ 'or login with' | translate }}</div>
     <div style="margin: 0 auto;">
       <button [disabled]="isLoadingImport" type="button" (click)="importAccount()" mat-stroked-button>
-        <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingImport"></i>
-        <i matPrefix class="fab fa-app-store" *ngIf="!isLoadingImport"></i>
+        <!-- <i matPrefix class="fas fa-circle-notch fa-spin" *ngIf="isLoadingImport"></i>
+        <i matPrefix class="fab fa-app-store" *ngIf="!isLoadingImport"></i> -->
+        <img src="assets/img/ledger.png" style="width: 18px; height: 18px;" alt="" />
         {{ 'ledger' | translate }}
       </button>
       <button type="button" mat-stroked-button>
-        <i matPrefix class="fab fa-app-store"></i>
+        <!-- <i matPrefix class="fab fa-app-store"></i> -->
+        <img src="assets/img/trezor.png" style="width: 18px; height: 18px;" alt="" />
         {{ 'trezor' | translate }}
       </button>
       <button type="button" mat-stroked-button (click)="loginWithPrivKey()">
