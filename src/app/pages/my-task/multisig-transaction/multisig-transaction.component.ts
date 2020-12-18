@@ -113,18 +113,17 @@ export class MultisigTransactionComponent implements OnInit {
     });
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {
-        const account = this.authServ.getCurrAccount();
         const seed = this.authServ.seed;
         this.isLoadingConfirmTx = true;
 
         let data: MultiSigInterface = {
-          accountAddress: account.address,
+          accountAddress: this.account.address,
           fee: this.feeForm.value,
           signaturesInfo: {
             txHash: this.multiSigDetail.transactionHash,
             participants: [
               {
-                address: account.address,
+                address: this.account.address,
                 signature: signTransactionHash(this.multiSigDetail.transactionHash, seed),
               },
             ],
