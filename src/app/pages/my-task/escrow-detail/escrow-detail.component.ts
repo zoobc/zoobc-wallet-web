@@ -1,62 +1,54 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
-import zoobc, {
-  Escrow,
-  ApprovalEscrowTransactionResponse,
-  EscrowApprovalInterface,
-  EscrowApproval,
-  AccountBalance,
-} from 'zbc-sdk';
-import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import { environment } from 'src/environments/environment';
-import { getTranslation } from 'src/helpers/utils';
-import { FormGroup } from '@angular/forms';
 import {
   createEscrowApprovalForm,
   escrowApprovalMap,
 } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.component';
+import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { getTranslation } from 'src/helpers/utils';
+import Swal from 'sweetalert2';
+import zoobc, {
+  AccountBalance,
+  ApprovalEscrowTransactionResponse,
+  Escrow,
+  EscrowApproval,
+  EscrowApprovalInterface,
+} from 'zbc-sdk';
 
 @Component({
-  selector: 'app-escrow-transactions',
-  templateUrl: './escrow-transaction.component.html',
-  styleUrls: ['./escrow-transaction.component.scss'],
+  selector: 'app-escrow-detail',
+  templateUrl: './escrow-detail.component.html',
+  styleUrls: ['./escrow-detail.component.scss'],
 })
-export class EscrowTransactionComponent implements OnInit {
-  @Input() escrowTransactionsData: Escrow[];
-  @Input() isLoading: boolean = false;
-  @Input() isError: boolean = false;
-  @Output() refresh: EventEmitter<boolean> = new EventEmitter();
-  @Output() detailEscrowMap: EventEmitter<Escrow> = new EventEmitter();
+export class EscrowDetailComponent implements OnInit {
+  @Input() detail: Escrow;
 
   form: FormGroup;
-  minFee = environment.fee;
+  showProcessFormEscrow: boolean = false;
+  escrowApprovalMap = escrowApprovalMap;
   isLoadingApproveTx: boolean = false;
+
   account: SavedAccount;
   accountBalance: AccountBalance;
-  escrowApprovalMap = escrowApprovalMap;
 
-  constructor(public dialog: MatDialog, private translate: TranslateService, private authServ: AuthService) {
+  constructor(private dialog: MatDialog, private authServ: AuthService, private translate: TranslateService) {
     this.form = createEscrowApprovalForm();
   }
 
   ngOnInit() {
+    console.log(this.detail);
     this.account = this.authServ.getCurrAccount();
-  }
 
-  onRefresh() {
-    this.refresh.emit(true);
-  }
-
-  openDetail(id) {
     this.form.get('sender').patchValue(this.account.address.value);
-    this.form.get('transactionId').patchValue(id);
-    this.form.get('fee').patchValue(this.minFee);
-    zoobc.Escrows.get(id).then((res: Escrow) => {
-      this.detailEscrowMap.emit(res);
-    });
+    this.form.get('transactionId').patchValue(this.detail.id);
+    // this.form.get('fee').patchValue(this.minFee);
+  }
+
+  toogleShowProcessFormEscrow() {
+    this.showProcessFormEscrow = !this.showProcessFormEscrow;
   }
 
   onOpenPinDialog(approvalCode) {
@@ -108,9 +100,9 @@ export class EscrowTransactionComponent implements OnInit {
               showConfirmButton: false,
               timer: 1500,
             });
-            this.escrowTransactionsData = this.escrowTransactionsData.filter(
-              tx => tx.id != transactionIdForm.value
-            );
+            // this.escrowTransactionsData = this.escrowTransactionsData.filter(
+            //   tx => tx.id != transactionIdForm.value
+            // );
           },
           err => {
             this.isLoadingApproveTx = false;
@@ -154,9 +146,9 @@ export class EscrowTransactionComponent implements OnInit {
               showConfirmButton: false,
               timer: 1500,
             });
-            this.escrowTransactionsData = this.escrowTransactionsData.filter(
-              tx => tx.id != transactionIdForm.value
-            );
+            // this.escrowTransactionsData = this.escrowTransactionsData.filter(
+            //   tx => tx.id != transactionIdForm.value
+            // );
           },
           err => {
             this.isLoadingApproveTx = false;
