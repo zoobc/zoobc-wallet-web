@@ -66,11 +66,8 @@ export class EscrowTransactionComponent implements OnInit {
     });
     pinRefDialog.afterClosed().subscribe(isPinValid => {
       if (isPinValid) {
-        if (approvalCode == 0) {
-          this.onConfirm();
-        } else {
-          this.onReject();
-        }
+        if (approvalCode == 0) this.onConfirm();
+        else this.onReject();
       }
     });
   }
@@ -98,29 +95,24 @@ export class EscrowTransactionComponent implements OnInit {
 
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
-        .then(
-          (res: ApprovalEscrowTransactionResponse) => {
-            this.isLoadingApproveTx = false;
-            let message = getTranslation('transaction has been approved', this.translate);
-            Swal.fire({
-              type: 'success',
-              title: message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            this.escrowTransactionsData = this.escrowTransactionsData.filter(
-              tx => tx.id != transactionIdForm.value
-            );
-          },
-          err => {
-            this.isLoadingApproveTx = false;
-            console.log('err', err);
-            let message = getTranslation(err.message, this.translate);
-            Swal.fire('Opps...', message, 'error');
-          }
-        )
-        .finally(() => {
-          // this.onDismiss();
+        .then(() => {
+          this.isLoadingApproveTx = false;
+          let message = getTranslation('transaction has been approved', this.translate);
+          Swal.fire({
+            type: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.escrowTransactionsData = this.escrowTransactionsData.filter(
+            tx => tx.id != transactionIdForm.value
+          );
+        })
+        .catch(err => {
+          this.isLoadingApproveTx = false;
+          console.log('err', err);
+          let message = getTranslation(err.message, this.translate);
+          Swal.fire('Opps...', message, 'error');
         });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
@@ -144,28 +136,25 @@ export class EscrowTransactionComponent implements OnInit {
       };
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
-        .then(
-          (res: ApprovalEscrowTransactionResponse) => {
-            this.isLoadingApproveTx = false;
-            let message = getTranslation('transaction has been rejected', this.translate);
-            Swal.fire({
-              type: 'success',
-              title: message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            this.escrowTransactionsData = this.escrowTransactionsData.filter(
-              tx => tx.id != transactionIdForm.value
-            );
-          },
-          err => {
-            this.isLoadingApproveTx = false;
-            console.log('err', err);
-            let message = getTranslation(err.message, this.translate);
-            Swal.fire('Opps...', message, 'error');
-          }
-        )
-        .finally(() => {});
+        .then(() => {
+          this.isLoadingApproveTx = false;
+          let message = getTranslation('transaction has been rejected', this.translate);
+          Swal.fire({
+            type: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.escrowTransactionsData = this.escrowTransactionsData.filter(
+            tx => tx.id != transactionIdForm.value
+          );
+        })
+        .catch(err => {
+          this.isLoadingApproveTx = false;
+          console.log('err', err);
+          let message = getTranslation(err.message, this.translate);
+          Swal.fire('Opps...', message, 'error');
+        });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });

@@ -23,12 +23,9 @@
     overflow: auto;
     height: 100%;
     @media #{$small-and-down} {
-      // display: none;
       width: 100%;
-      // &.small {
       position: absolute;
       z-index: 2;
-      // }
     }
   }
 }
@@ -40,12 +37,6 @@
 }
 
 .detail-task {
-  // @media #{$small-and-down} {
-  //   z-index: 2;
-  //   left: 13px;
-  //   width: 402px;
-  //   display: block;
-  // }
   .header {
     background: map-get($primary, 600);
     color: white;
