@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,12 +39,14 @@ export class EscrowDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.detail);
     this.account = this.authServ.getCurrAccount();
 
     this.form.get('sender').patchValue(this.account.address.value);
     this.form.get('transactionId').patchValue(this.detail.id);
-    // this.form.get('fee').patchValue(this.minFee);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.form.get('transactionId').patchValue(changes.detail.currentValue.id);
   }
 
   toogleShowProcessFormEscrow() {
@@ -90,29 +92,21 @@ export class EscrowDetailComponent implements OnInit {
 
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
-        .then(
-          (res: ApprovalEscrowTransactionResponse) => {
-            this.isLoadingApproveTx = false;
-            let message = getTranslation('transaction has been approved', this.translate);
-            Swal.fire({
-              type: 'success',
-              title: message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            // this.escrowTransactionsData = this.escrowTransactionsData.filter(
-            //   tx => tx.id != transactionIdForm.value
-            // );
-          },
-          err => {
-            this.isLoadingApproveTx = false;
-            console.log('err', err);
-            let message = getTranslation(err.message, this.translate);
-            Swal.fire('Opps...', message, 'error');
-          }
-        )
-        .finally(() => {
-          // this.onDismiss();
+        .then(() => {
+          this.isLoadingApproveTx = false;
+          let message = getTranslation('transaction has been approved', this.translate);
+          Swal.fire({
+            type: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch(err => {
+          this.isLoadingApproveTx = false;
+          console.log('err', err);
+          let message = getTranslation(err.message, this.translate);
+          Swal.fire('Opps...', message, 'error');
         });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
@@ -136,28 +130,22 @@ export class EscrowDetailComponent implements OnInit {
       };
       const childSeed = this.authServ.seed;
       zoobc.Escrows.approval(data, childSeed)
-        .then(
-          (res: ApprovalEscrowTransactionResponse) => {
-            this.isLoadingApproveTx = false;
-            let message = getTranslation('transaction has been rejected', this.translate);
-            Swal.fire({
-              type: 'success',
-              title: message,
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            // this.escrowTransactionsData = this.escrowTransactionsData.filter(
-            //   tx => tx.id != transactionIdForm.value
-            // );
-          },
-          err => {
-            this.isLoadingApproveTx = false;
-            console.log('err', err);
-            let message = getTranslation(err.message, this.translate);
-            Swal.fire('Opps...', message, 'error');
-          }
-        )
-        .finally(() => {});
+        .then(() => {
+          this.isLoadingApproveTx = false;
+          let message = getTranslation('transaction has been rejected', this.translate);
+          Swal.fire({
+            type: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch(err => {
+          this.isLoadingApproveTx = false;
+          console.log('err', err);
+          let message = getTranslation(err.message, this.translate);
+          Swal.fire('Opps...', message, 'error');
+        });
     } else {
       let message = getTranslation('your balances are not enough for this transaction', this.translate);
       Swal.fire({ type: 'error', title: 'Oops...', text: message });

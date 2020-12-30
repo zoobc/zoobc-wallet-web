@@ -92,12 +92,9 @@ export class MyTaskComponent implements OnInit {
         .then(async (tx: ZBCTransactions) => {
           this.totalMultiSig = tx.total;
           let pendingList = tx.transactions;
-          if (pendingList.length > 0) pendingList = await this.checkVisibleMultisig(pendingList);
-          if (reload) {
-            this.multiSigPendingList = pendingList;
-          } else {
-            this.multiSigPendingList = this.multiSigPendingList.concat(pendingList);
-          }
+          // if (pendingList.length > 0) pendingList = await this.checkVisibleMultisig(pendingList);
+          if (reload) this.multiSigPendingList = pendingList;
+          else this.multiSigPendingList = this.multiSigPendingList.concat(pendingList);
         })
         .catch(err => {
           this.isErrorMultiSig = true;
@@ -111,7 +108,7 @@ export class MyTaskComponent implements OnInit {
     if (!this.isLoadingEscrow) {
       this.isLoadingEscrow = true;
       this.isErrorEscrow = false;
-      const perPage = Math.ceil(window.outerHeight / 72);
+      const perPage = Math.ceil(window.outerHeight / 124);
 
       if (reload) {
         this.escrowTransactions = null;
@@ -133,12 +130,9 @@ export class MyTaskComponent implements OnInit {
         .then(async (res: Escrows) => {
           this.totalEscrow = res.total;
           let txMap = res.escrowList;
-          if (txMap.length > 0) txMap = await this.checkVisibleEscrow(txMap);
-          if (reload) {
-            this.escrowTransactions = txMap;
-          } else {
-            this.escrowTransactions = this.escrowTransactions.concat(txMap);
-          }
+          // if (txMap.length > 0) txMap = await this.checkVisibleEscrow(txMap);
+          if (reload) this.escrowTransactions = txMap;
+          else this.escrowTransactions = this.escrowTransactions.concat(txMap);
         })
         .catch(err => {
           this.isErrorEscrow = true;
@@ -251,17 +245,10 @@ export class MyTaskComponent implements OnInit {
   }
 
   getDetailEscrow($event) {
-    console.log($event);
     this.escrowDetail = $event;
-    // setTimeout(() => {
-    //   this.document.getElementById('dtl-task').style.display = 'block';
-    // }, 30);
   }
 
   getDetailMultisig($event) {
     this.multisigDetail = $event;
-    // setTimeout(() => {
-    //   this.document.getElementById('dtl-task').style.display = 'block';
-    // }, 30);
   }
 }
