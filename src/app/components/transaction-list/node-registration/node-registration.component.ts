@@ -1,6 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ZBCTransaction } from 'zbc-sdk';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'node-registration',
@@ -9,6 +10,8 @@ import { ZBCTransaction } from 'zbc-sdk';
 export class NodeRegistrationComponent {
   @Input() transaction: ZBCTransaction;
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
+
+  expUrl = environment.expUrl;
 
   constructor(private dialog: MatDialog) {}
 

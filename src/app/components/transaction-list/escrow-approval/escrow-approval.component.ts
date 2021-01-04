@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ZBCTransaction } from 'zbc-sdk';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'escrow-approval',
@@ -12,6 +13,7 @@ export class EscrowApprovalComponent {
 
   color: string = '';
   status: string = '';
+  expUrl = environment.expUrl;
 
   constructor(private dialog: MatDialog) {}
 

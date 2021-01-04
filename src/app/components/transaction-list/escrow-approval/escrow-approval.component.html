@@ -20,7 +20,7 @@
     <div class="row" *ngIf="transaction.transactionHash">
       <div class="col-12 col-md-4">{{ 'transaction hash' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <a [href]="'https://zoobc.net/transactions/' + transaction.id" target="_blank">
+        <a [href]="expUrl + transaction.id" target="_blank">
           <wallet-address [value]="transaction.transactionHash"></wallet-address>
         </a>
       </div>
@@ -40,7 +40,7 @@
     <div class="row">
       <div class="col-12 col-md-4">{{ 'escrow transaction id' | translate }}:</div>
       <div class="col-12 col-md-8">
-        <a [href]="'https://zoobc.net/transactions/' + transaction.txBody.transactionid" target="_blank">
+        <a [href]="expUrl + transaction.txBody.transactionid" target="_blank">
           {{ transaction.txBody.transactionid }}
         </a>
       </div>

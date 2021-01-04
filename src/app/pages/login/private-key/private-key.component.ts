@@ -25,21 +25,21 @@ export class PrivateKeyComponent {
   }
 
   onLogin() {
-    if (this.form.valid) {
-      const bip = wif.decode(this.privKeyField.value);
-      const keyring = new ZooKeyring('');
-      const seed = keyring.generateBip32ExtendedKey('ed25519', bip);
-      const address = getZBCAddress(seed.publicKey);
+    // if (this.form.valid) {
+    //   const bip = wif.decode(this.privKeyField.value);
+    //   const keyring = new ZooKeyring('');
+    //   const seed = keyring.generateBip32ExtendedKey('ed25519', bip);
+    //   const address = getZBCAddress(seed.publicKey);
 
-      const account: SavedAccount = {
-        name: 'Imported Account',
-        address: { type: 0, value: address },
-        type: 'one time login',
-      };
-      if (this.authServ.loginWithoutPin(account, seed)) {
-        this.dialogRef.close();
-        this.router.navigateByUrl('/dashboard');
-      }
-    }
+    //   const account: SavedAccount = {
+    //     name: 'Imported Account',
+    //     address: { type: 0, value: address },
+    //     type: 'one time login',
+    //   };
+    //   if (this.authServ.loginWithoutPin(account, seed)) {
+    //     this.dialogRef.close();
+    //     this.router.navigateByUrl('/dashboard');
+    //   }
+    // }
   }
 }

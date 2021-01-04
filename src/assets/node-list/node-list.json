@@ -1,6 +1,16 @@
 {
   "node": [
     {
+      "ip": "http://172.104.62.181:7001",
+      "default": true,
+      "name": "Experimental"
+    },
+    {
+      "ip": "http://n0.beta.proofofparticipation.network:7001",
+      "default": true,
+      "name": "Beta Testnet"
+    },
+    {
       "ip": "http://85.90.246.90:7001",
       "default": true,
       "name": "Dev Testnet 1"
@@ -19,12 +29,7 @@
       "ip": "http://n0.alpha.proofofparticipation.network:7001",
       "default": true,
       "name": "Alpha Testnet"
-    },
-    {
-      "ip": "http://n0.beta.proofofparticipation.network:7001",
-      "default": true,
-      "name": "Beta Testnet"
     }
   ],
-  "timestamp": 1600672362000
+  "timestamp": 1609752170000
 }
