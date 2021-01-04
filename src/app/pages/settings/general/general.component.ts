@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { RevealPassphraseComponent } from 'src/app/components/reveal-passphrase/reveal-passphrase.component';
 import { LanguageService, LANGUAGES } from 'src/app/services/language.service';
+import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-general',
@@ -13,7 +15,11 @@ export class GeneralComponent implements OnInit {
   activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
   languages = LANGUAGES;
 
-  constructor(private dialog: MatDialog, private langServ: LanguageService) {}
+  constructor(
+    private dialog: MatDialog,
+    private langServ: LanguageService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {}
 
@@ -31,7 +37,7 @@ export class GeneralComponent implements OnInit {
 
   resetData() {
     const sentence =
-      'You will reset your setting and data. You will need to restore your recovery seed phrase. Continue?';
+    getTranslation('you will reset your setting and data. you will need to restore your recovery seed phrase. continue?',  this.translate);
     Swal.fire({ text: sentence, showCancelButton: true }).then(() => {
       localStorage.clear();
       window.location.reload();

@@ -19,8 +19,8 @@
     <li *ngIf="account.type != 'address'">
       <div style="position: relative;">
         <a (click)="onClick()">
-          <img src="../../../assets/img/zbc-color.svg" />
-          <span>{{ 'Zoobc Transaction' | translate }}</span>
+          <img src="../../../assets/img/zbc-color.svg">
+          <span>{{ 'zoobc transaction' | translate }}</span>
         </a>
         <ng-container *ngIf="show">
           <mat-card>
@@ -44,7 +44,7 @@
               <li>
                 <a (click)="onComingSoonPage()">
                   <i class="fa fa-paper-plane"></i>
-                  <span>{{ 'Liquid Payment' | translate }}</span>
+                  <span>{{ 'liquid payment' | translate }}</span>
                 </a>
               </li>
             </div>
