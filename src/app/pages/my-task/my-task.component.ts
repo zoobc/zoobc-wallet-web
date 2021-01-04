@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, Inject, ViewChild, ViewChildren } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import zoobc, {
   EscrowListParams,
@@ -14,46 +14,33 @@ import zoobc, {
   Escrow,
 } from 'zbc-sdk';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { DOCUMENT } from '@angular/common';
-import { EscrowTransactionComponent } from './escrow-transaction/escrow-transaction.component';
 import { ZBCTransaction } from 'zbc-sdk';
-import { MultisigTransactionComponent } from './multisig-transaction/multisig-transaction.component';
 
 @Component({
   selector: 'app-my-task',
   templateUrl: './my-task.component.html',
   styleUrls: ['./my-task.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class MyTaskComponent implements OnInit {
   // Escrow Input
-  @Input() isLoadingEscrow: boolean = false;
-  @Input() isErrorEscrow: boolean = false;
-  isLoadingBlockHeight: boolean = false;
+  isLoadingEscrow: boolean = false;
+  isErrorEscrow: boolean = false;
   // Multisignature input
-  @Input() isLoadingMultisig: boolean = false;
-  @Input() isErrorMultiSig: boolean = false;
-
-  @ViewChild(EscrowTransactionComponent)
-  private escrowComponent: EscrowTransactionComponent;
-
-  @ViewChild(MultisigTransactionComponent)
-  private multisigComponent: MultisigTransactionComponent;
-
-  @ViewChildren('checkboxEscrow') private checkboxEscrow: any;
-  @ViewChildren('checkboxMultisig') private checkboxMultisig: any;
+  isLoadingMultisig: boolean = false;
+  isErrorMultiSig: boolean = false;
 
   account: SavedAccount;
-  timeout: number;
 
-  escrowTransactions;
   blockHeight: number;
+  isLoadingBlockHeight: boolean = false;
+
+  escrowTransactions: Escrow[];
   pageEscrow: number = 1;
   perPageEscrow: number = 10;
   totalEscrow: number = 0;
   escrowfinished: boolean = false;
 
-  multiSigPendingList;
+  multiSigPendingList: ZBCTransaction[];
   pageMultiSig: number = 1;
   perPageMultiSig: number = 10;
   totalMultiSig: number = 0;
@@ -63,10 +50,22 @@ export class MyTaskComponent implements OnInit {
   multisigDetail: ZBCTransaction;
   showProcessFormMultisig: boolean = false;
 
-  constructor(public dialog: MatDialog, private authServ: AuthService, @Inject(DOCUMENT) private document) {}
+  largeScreen = window.innerWidth >= 576 ? true : false;
+
+  constructor(public dialog: MatDialog, private authServ: AuthService) {}
 
   ngOnInit() {
     this.account = this.authServ.getCurrAccount();
+    this.getEscrowTx(true);
+    this.getMultiSigPendingList(true);
+    this.getBlockHeight();
+  }
+
+  @HostListener('window:resize', ['$event']) onResize(event) {
+    this.largeScreen = event.target.innerWidth >= 576 ? true : false;
+  }
+
+  onReload() {
     this.getEscrowTx(true);
     this.getMultiSigPendingList(true);
     this.getBlockHeight();
@@ -93,12 +92,9 @@ export class MyTaskComponent implements OnInit {
         .then(async (tx: ZBCTransactions) => {
           this.totalMultiSig = tx.total;
           let pendingList = tx.transactions;
-          if (pendingList.length > 0) pendingList = await this.checkVisibleMultisig(pendingList);
-          if (reload) {
-            this.multiSigPendingList = pendingList;
-          } else {
-            this.multiSigPendingList = this.multiSigPendingList.concat(pendingList);
-          }
+          // if (pendingList.length > 0) pendingList = await this.checkVisibleMultisig(pendingList);
+          if (reload) this.multiSigPendingList = pendingList;
+          else this.multiSigPendingList = this.multiSigPendingList.concat(pendingList);
         })
         .catch(err => {
           this.isErrorMultiSig = true;
@@ -111,7 +107,8 @@ export class MyTaskComponent implements OnInit {
   getEscrowTx(reload: boolean = false) {
     if (!this.isLoadingEscrow) {
       this.isLoadingEscrow = true;
-      const perPage = Math.ceil(window.outerHeight / 72);
+      this.isErrorEscrow = false;
+      const perPage = Math.ceil(window.outerHeight / 124);
 
       if (reload) {
         this.escrowTransactions = null;
@@ -133,12 +130,9 @@ export class MyTaskComponent implements OnInit {
         .then(async (res: Escrows) => {
           this.totalEscrow = res.total;
           let txMap = res.escrowList;
-          if (txMap.length > 0) txMap = await this.checkVisibleEscrow(txMap);
-          if (reload) {
-            this.escrowTransactions = txMap;
-          } else {
-            this.escrowTransactions = this.escrowTransactions.concat(txMap);
-          }
+          // if (txMap.length > 0) txMap = await this.checkVisibleEscrow(txMap);
+          if (reload) this.escrowTransactions = txMap;
+          else this.escrowTransactions = this.escrowTransactions.concat(txMap);
         })
         .catch(err => {
           this.isErrorEscrow = true;
@@ -243,35 +237,18 @@ export class MyTaskComponent implements OnInit {
     } else this.multiSigfinished = true;
   }
 
-  toogleShowProcessFormEscrow() {
-    this.showProcessFormEscrow = !this.showProcessFormEscrow;
-  }
-
-  toogleShowSignFormMultisig() {
-    this.showProcessFormMultisig = !this.showProcessFormMultisig;
-  }
-
   dismiss(e: boolean) {
     if (e == true) {
-      this.document.getElementById('dtl-task').style.display = 'none';
-      this.showProcessFormEscrow = false;
-      this.showProcessFormMultisig = false;
-      if (this.checkboxEscrow._results.length > 0) this.checkboxEscrow._results[0].checked = false;
-      else if (this.checkboxMultisig._results.length > 0) this.checkboxMultisig._results[0].checked = false;
+      this.escrowDetail = undefined;
+      this.multisigDetail = undefined;
     }
   }
 
   getDetailEscrow($event) {
     this.escrowDetail = $event;
-    setTimeout(() => {
-      this.document.getElementById('dtl-task').style.display = 'block';
-    }, 30);
   }
 
   getDetailMultisig($event) {
     this.multisigDetail = $event;
-    setTimeout(() => {
-      this.document.getElementById('dtl-task').style.display = 'block';
-    }, 30);
   }
 }

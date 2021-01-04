@@ -9,7 +9,8 @@ form.grid {
   display: grid;
 }
 
-label {
+label,
+.label {
   font-size: 14px;
   color: $black2;
 }

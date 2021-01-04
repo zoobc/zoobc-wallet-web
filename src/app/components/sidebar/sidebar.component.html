@@ -16,7 +16,7 @@
       </li>
     </ng-template>
 
-    <li>
+    <li *ngIf="account.type != 'address'">
       <div style="position: relative;">
         <a (click)="onClick()">
           <img src="../../../assets/img/zbc-color.svg">

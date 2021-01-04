@@ -90,6 +90,10 @@ import { FormClaimNodeModule } from './components/transaction-form/form-claim-no
 import { FormRemoveAccountDatasetModule } from './components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.module';
 import { FormRemoveNodeModule } from './components/transaction-form/form-remove-node/form-remove-node.module';
 import { FormSetupAccountDatasetModule } from './components/transaction-form/form-setup-account-dataset/form-setup-account-dataset.module';
+import { PrivateKeyComponent } from './pages/login/private-key/private-key.component';
+import { AddressComponent } from './pages/login/address/address.component';
+import { EscrowDetailComponent } from './pages/my-task/escrow-detail/escrow-detail.component';
+import { MultisigDetailComponent } from './pages/my-task/multisig-detail/multisig-detail.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -133,6 +137,10 @@ export function getLanguage(languageServ: LanguageService) {
     SetupDatasetComponent,
     MultisigApprovalHistoryComponent,
     NodeRewardListComponent,
+    PrivateKeyComponent,
+    AddressComponent,
+    EscrowDetailComponent,
+    MultisigDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -225,6 +233,8 @@ export function getLanguage(languageServ: LanguageService) {
     AccountDatasetComponent,
     SetupDatasetComponent,
     NodeRewardListComponent,
+    PrivateKeyComponent,
+    AddressComponent,
   ],
 })
 export class AppModule {}

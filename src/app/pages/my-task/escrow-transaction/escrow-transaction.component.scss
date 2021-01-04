@@ -7,26 +7,22 @@
     padding: 16px 6px;
     margin: 0;
     align-items: center;
+    @include transition(0.3s ease-in all);
+
     &:first-child {
       border-top: 1px solid #ddd;
     }
-    @include transition(0.3s ease-in all);
-    &.hover:hover {
+
+    &:hover {
       background-color: #eee;
       cursor: pointer;
     }
-    .task-item {
-      margin-bottom: 16px;
-      .label-task {
-        color: $black2;
-        font-size: 12px;
-        margin-bottom: 4px;
-        .value-task {
-          color: $black1;
-          font-size: 16px;
-        }
-      }
+
+    .label {
+      margin-bottom: 4px;
+      font-size: 12px;
     }
+
     @media #{$small-and-down} {
       .message {
         text-align: center;

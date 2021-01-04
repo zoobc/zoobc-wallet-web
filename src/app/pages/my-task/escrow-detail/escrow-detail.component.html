@@ -1,0 +1,58 @@
+<div class="content">
+  <div class="item">
+    <div class="label">{{ 'id' | translate }}</div>
+    <div class="value">{{ detail.id }}</div>
+  </div>
+  <div class="item">
+    <div class="label">{{ 'sender' | translate }}</div>
+    <wallet-address class="address" [value]="detail.sender.value" [showFull]="true"></wallet-address>
+  </div>
+  <div class="item">
+    <div class="label">{{ 'recipient' | translate }}</div>
+    <wallet-address class="address" [value]="detail.recipient.value" [showFull]="true"></wallet-address>
+  </div>
+  <div class="item">
+    <div class="label">{{ 'amount' | translate }}</div>
+    <div class="value">ZBC {{ detail.amount / 1e8 | number: '0.0-4' }}</div>
+  </div>
+  <div class="item">
+    <div class="label">{{ 'commission' | translate }}</div>
+    <div class="value">ZBC {{ detail.commission / 1e8 | number: '0.0-4' }}</div>
+  </div>
+  <div class="item">
+    <div class="label">{{ 'instruction' | translate }}</div>
+    <div class="value">{{ detail.instruction }}</div>
+  </div>
+  <div class="item">
+    <mat-checkbox #checkboxEscrow (click)="toogleShowProcessFormEscrow()">
+      {{ 'process this transaction' | translate }}
+    </mat-checkbox>
+
+    <div *ngIf="showProcessFormEscrow" style="margin-top: 16px;">
+      <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval>
+
+      <div class="text-right grouped-button">
+        <button
+          [disabled]="isLoadingApproveTx || !form.valid"
+          mat-flat-button
+          color="warn"
+          (click)="onOpenPinDialog(1)"
+        >
+          <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
+          <span>{{ 'reject' | translate }}</span>
+        </button>
+        <button
+          [disabled]="isLoadingApproveTx || !form.valid"
+          mat-flat-button
+          color="primary"
+          (click)="onOpenPinDialog(0)"
+        >
+          <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
+          <span>
+            {{ 'confirm' | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
