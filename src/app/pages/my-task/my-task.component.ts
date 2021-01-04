@@ -74,6 +74,7 @@ export class MyTaskComponent implements OnInit {
   getMultiSigPendingList(reload: boolean = false) {
     if (!this.isLoadingMultisig) {
       this.isLoadingMultisig = true;
+      this.isErrorMultiSig = false;
       const perPage = Math.ceil(window.outerHeight / 72);
 
       if (reload) {
@@ -244,11 +245,15 @@ export class MyTaskComponent implements OnInit {
     }
   }
 
-  getDetailEscrow($event) {
-    this.escrowDetail = $event;
+  getDetailEscrow(escrow: Escrow) {
+    this.escrowDetail = escrow;
+    this.multisigDetail = undefined;
   }
 
-  getDetailMultisig($event) {
-    this.multisigDetail = $event;
+  getDetailMultisig(multisig: any) {
+    console.log(multisig);
+
+    this.multisigDetail = multisig;
+    this.escrowDetail = undefined;
   }
 }

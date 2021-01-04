@@ -15,7 +15,6 @@ import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ConfirmPassphraseComponent } from './pages/confirm-passphrase/confirm-passphrase.component';
 import { MyTaskComponent } from './pages/my-task/my-task.component';
 import { AccountComponent } from './pages/account/account.component';
-import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -36,7 +35,6 @@ const routes: Routes = [
         path: 'multisignature',
         loadChildren: './pages/multisignature/multisignature.module#MultisignatureModule',
       },
-      { path: 'multisig-approval-history', component: MultisigApprovalHistoryComponent },
       {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',

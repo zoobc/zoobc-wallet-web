@@ -10,13 +10,7 @@ import {
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { getTranslation } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
-import zoobc, {
-  AccountBalance,
-  ApprovalEscrowTransactionResponse,
-  Escrow,
-  EscrowApproval,
-  EscrowApprovalInterface,
-} from 'zbc-sdk';
+import zoobc, { AccountBalance, Escrow, EscrowApproval, EscrowApprovalInterface } from 'zbc-sdk';
 
 @Component({
   selector: 'app-escrow-detail',
