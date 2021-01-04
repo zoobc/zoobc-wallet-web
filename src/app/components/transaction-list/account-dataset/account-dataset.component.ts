@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ZBCTransaction } from 'zbc-sdk';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'account-dataset',
@@ -9,6 +10,8 @@ import { ZBCTransaction } from 'zbc-sdk';
 export class AccountDatasetComponent implements OnInit {
   @ViewChild('dialog') detailDialog: TemplateRef<any>;
   @Input() transaction: ZBCTransaction;
+
+  expUrl = environment.expUrl;
 
   constructor(private dialog: MatDialog) {}
 

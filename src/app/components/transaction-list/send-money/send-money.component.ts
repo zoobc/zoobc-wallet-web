@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
 import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Address, ZBCTransaction } from 'zbc-sdk';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'send-money',
@@ -15,6 +16,7 @@ export class SendMoneyComponent implements OnInit {
   address: Address;
   status: string = '';
   color: string = '';
+  expUrl = environment.expUrl;
 
   currencyRate: Currency;
 

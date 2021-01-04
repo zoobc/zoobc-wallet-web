@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, { TransactionType, TransactionListParams, multisigPendingDetail } from 'zbc-sdk';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-multisig-approval-history',
@@ -23,6 +24,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   lastRefresh: number;
   account: SavedAccount;
   participants: string[] = [];
+  expUrl = environment.expUrl;
 
   detailTransactionRefDialog: MatDialogRef<any>;
   @ViewChild('detailTransaction') detailTransactionDialog: TemplateRef<any>;
@@ -94,7 +96,7 @@ export class MultisigApprovalHistoryComponent implements OnInit {
   }
 
   redirect() {
-    window.open('https://zoobc.net/transactions/' + this.transactionId, '_blank');
+    window.open(this.expUrl + this.transactionId, '_blank');
   }
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
