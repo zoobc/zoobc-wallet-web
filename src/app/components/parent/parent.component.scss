@@ -1,7 +1,7 @@
 @import '../../../styles/variables';
 
 .parent-container {
-  margin: calc(#{$header-height} + 16px) auto 0 auto;
+  margin: calc(#{$announcement-height} + #{$header-height} + 16px) auto 0 auto;
   max-width: $parent-width;
   .drawer-container {
     background-color: transparent !important;
@@ -18,7 +18,7 @@
     height: 100%;
     overflow: initial;
     position: fixed;
-    top: calc(#{$header-height} + 16px);
+    top: calc(#{$announcement-height} + (#{$header-height} + 16px);
     @media only screen and (max-width : calc(#{$parent-width} + 16px)) {
       margin-left: 16px;
       width: calc(#{$sidebar-width} + 16px);
