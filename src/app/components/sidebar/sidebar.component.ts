@@ -43,6 +43,7 @@ export class SidebarComponent {
 
   onToggle() {
     this.appServ.toggle();
+    this.show = false;
   }
 
   onToggleSubMenu() {
@@ -53,7 +54,6 @@ export class SidebarComponent {
   onClick() {
     this.show = !this.show;
   }
-
   openReceiveForm() {
     this.dialog.open(ReceiveComponent, {
       width: '480px',
