@@ -5,51 +5,48 @@
       <span class="message">{{ 'no pending multisignature transaction' | translate }}</span>
     </div>
     <div
-      [className]="withDetail ? 'multisig-transaction-item hover row' : 'multisig-transaction-item hover'"
+      class="multisig-item hover row"
       *ngFor="let multisig of pendingListMultiSig; let i = index"
       (click)="openDetailMultiSignature(multisig.transactionHash)"
     >
       <div class="col-12 col-sm-6">
-        <div class="task-item">
-          <span class="label-task"> {{ 'sender' | translate }}: </span>
-          <wallet-address
-            class="value-task"
-            [value]="multisig.sender.value"
-            [copyButton]="false"
-          ></wallet-address>
+        <div class="label">{{ 'sender' | translate }}:</div>
+        <div style="margin-bottom: 16px;">
+          <wallet-address [value]="multisig.sender.value" [copyButton]="false"></wallet-address>
         </div>
-        <div class="task-item">
-          <span class="label-task"> {{ 'recipient' | translate }}: </span>
-          <wallet-address
-            class="value-task"
-            [value]="multisig.recipient.value"
-            [copyButton]="false"
-          ></wallet-address>
+
+        <div class="label">{{ 'recipient' | translate }}:</div>
+        <div style="margin-bottom: 16px;">
+          <wallet-address [value]="multisig.recipient.value" [copyButton]="false"></wallet-address>
         </div>
       </div>
+
       <div class="col-12 col-sm-6 text-right">
-        <div class="task-item">
-          <span class="label-task" style="display: block;">{{ 'amount' | translate }}</span>
-          <span class="value-task"> ZBC {{ multisig.txBody.amount / 1e8 | number: '0.0-8' }}</span>
-        </div>
-        <div class="task-item">
-          <span class="label-task" style="display: block;"> {{ 'fee' | translate }}</span>
-          <span class="value-task">ZBC {{ multisig.fee / 1e8 | number: '0.0-8' }}</span>
-        </div>
+        <div class="label">{{ 'amount' | translate }}</div>
+        <div style="margin-bottom: 16px;">ZBC {{ multisig.txBody.amount / 1e8 | number: '0.0-8' }}</div>
+
+        <div class="label" style="display: block;">{{ 'fee' | translate }}</div>
+        <div>ZBC {{ multisig.fee / 1e8 | number: '0.0-8' }}</div>
       </div>
     </div>
   </ng-container>
 
   <ng-container *ngIf="isLoading">
-    <div class="multisig-transaction-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+    <div class="multisig-item row skeleton" *ngFor="let i of [0, 1, 2, 3, 4]">
       <div class="col-7 col-sm-8">
-        <div class="skeleton-text" style="width:50%;"></div>
-        <div class="skeleton-text small" style="width:75%;"></div>
         <div class="skeleton-text small" style="width:25%;"></div>
+        <div class="skeleton-text" style="width:100%;"></div>
+        <br />
+
+        <div class="skeleton-text small" style="width:25%;"></div>
+        <div class="skeleton-text" style="width:100%;"></div>
       </div>
       <div class="col-5 col-sm-4">
-        <div class="skeleton-text" style="width:71%;float:right"></div>
         <div class="skeleton-text small" style="width:80%;float:right"></div>
+        <div class="skeleton-text" style="width:71%;float:right; margin-bottom: 16px;"></div>
+
+        <div class="skeleton-text small" style="width:80%;float:right"></div>
+        <div class="skeleton-text" style="width:71%;float:right"></div>
       </div>
     </div>
   </ng-container>

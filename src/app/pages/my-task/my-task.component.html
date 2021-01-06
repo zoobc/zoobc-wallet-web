@@ -3,25 +3,28 @@
     <mat-tab-group mat-align-tabs="center" color="primary" animationDuration="0ms">
       <ng-container *ngIf="account.type === 'multisig'">
         <mat-tab label="Multisignature">
-          <div class="row">
-            <div class="col-6">
-              <label class="block-height" *ngIf="!isLoadingBlockHeight">
-                {{ 'block height' | translate }} : {{ blockHeight | number }}
-              </label>
-            </div>
-            <div class="col-6">
-              <button mat-flat-button (click)="onReload()">Reload</button>
-            </div>
+          <div class="text-right">
+            <span class="mat-body-2" *ngIf="!isLoadingBlockHeight">
+              {{ 'block height' | translate }} : {{ blockHeight | number }}
+            </span>
+            <button
+              mat-icon-button
+              class="reload-button"
+              (click)="onReload()"
+              matTooltip="{{ 'refresh' | translate }}"
+            >
+              <i class="fa fa-redo-alt"></i>
+            </button>
           </div>
+
           <div
             infiniteScroll
             [infiniteScrollDistance]="2"
             [infiniteScrollThrottle]="50"
             (scrolled)="onScrollMultiSig()"
             [scrollWindow]="false"
-            [infiniteScrollContainer]="'.mat-drawer-content'"
+            [infiniteScrollContainer]="'.list-section'"
             [fromRoot]="true"
-            style="margin-top: 16px;"
           >
             <app-multisig-transaction
               [pendingListMultiSig]="multiSigPendingList"
@@ -50,10 +53,7 @@
             <i class="fa fa-redo-alt"></i>
           </button>
         </div>
-        <div class="row">
-          <div class="col-6"></div>
-          <div class="col-6"></div>
-        </div>
+
         <div
           infiniteScroll
           [infiniteScrollDistance]="2"
@@ -77,18 +77,18 @@
   </div>
 
   <div class="detail-section small" *ngIf="largeScreen || escrowDetail">
-    <div class="detail-task" *ngIf="escrowDetail">
+    <div class="detail-task" *ngIf="escrowDetail || multisigDetail">
       <div class="header">
         <h2 class="mat-h2">{{ 'task details' | translate }}</h2>
         <button mat-icon-button class="reload-button" (click)="dismiss(true)">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <!-- <app-multisig-detail></app-multisig-detail> -->
+      <app-multisig-detail [detail]="multisigDetail" *ngIf="multisigDetail"></app-multisig-detail>
       <app-escrow-detail [detail]="escrowDetail" *ngIf="escrowDetail"></app-escrow-detail>
     </div>
 
-    <div style="place-items: center; height: 100%; display: grid;" *ngIf="!escrowDetail">
+    <div style="place-items: center; height: 100%; display: grid;" *ngIf="!escrowDetail && !multisigDetail">
       <div class="no-content">
         <i matPrefix class="fa fa-receipt"></i>
         <span class="message">{{ 'no detail selected' | translate }}</span>
