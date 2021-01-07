@@ -100,7 +100,7 @@
         <div class="col-4 text-center">
           <ul class="list-menu">
             <li [ngClass]="menu == 'multisignature' && 'active'">
-              <a routerLink="/multisignature" (click)="onToggle()">
+              <a routerLink="/multisignature">
                 <i class="fa fa-file-signature"></i>
                 <span>{{ 'multisignature' | translate }}</span>
               </a>
@@ -110,7 +110,7 @@
         <div class="col-4 text-center">
           <ul class="list-menu">
             <li [ngClass]="menu == 'my-tasks' && 'active'">
-              <a routerLink="/my-tasks" (click)="onToggle()">
+              <a routerLink="/my-tasks">
                 <i class="fas fa-tasks"></i>
                 <span>{{ 'my tasks' | translate }}</span>
               </a>
@@ -132,7 +132,7 @@
         <div class="col-6 text-center">
           <ul class="list-menu">
             <li [ngClass]="menu == 'my-tasks' && 'active'">
-              <a routerLink="/my-tasks" (click)="onToggle()">
+              <a routerLink="/my-tasks">
                 <i class="fas fa-tasks"></i>
                 <span>{{ 'my tasks' | translate }}</span>
               </a>
