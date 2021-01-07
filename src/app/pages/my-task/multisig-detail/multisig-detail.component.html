@@ -23,60 +23,55 @@
     <div class="label">{{ 'date' | translate }}</div>
     <div class="value">{{ detail.timestamp | date: 'medium' }}</div>
   </div>
+  <div class="item text-right">
+    <div class="primary-text">
+      <ng-container *ngIf="totalSignature == 0">
+        {{ 'no participants have signed yet' || translate }}
+      </ng-container>
+      <ng-container *ngIf="totalSignature > 0">
+        {{ 'signed by' | translate: { pendingSign: totalSignature, totalSign: minSignature } }}
+      </ng-container>
+    </div>
+  </div>
 
-  <div class="item">
-    <mat-checkbox (click)="onEnableSign()">
-      {{ 'process this transaction' | translate }}
-    </mat-checkbox>
+  <div class="item" *ngIf="!canSign">
+    you cant sign this transaction because you not the one of the participants
+  </div>
+
+  <div class="item" *ngIf="alreadySigned">
+    you already sign this transaction
+  </div>
+
+  <div class="item" *ngIf="canSign && !alreadySigned">
+    <mat-checkbox (click)="onEnableSign()">{{ 'process this transaction' | translate }}</mat-checkbox>
 
     <div *ngIf="enableSign" style="margin-top: 16px;">
       <!-- <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval> -->
 
-      <div class="row" style="border-bottom: none;">
-        <div class="col-12 col-md-10 offset-md-1">
-          <label>{{ 'sign by' | translate }}</label>
-          <account-selector
-            (select)="onSwitchAccount($event)"
-            type="normal"
-            [addresses]="participants"
-            [switchAccount]="true"
-          ></account-selector>
-          <input-amount [group]="form" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-        </div>
-      </div>
-      <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
-        <div class="col-12 col-md-10 offset-md-1">
-          <div class="row" style="border-bottom: none; margin-top: -30px; font-weight: initial;">
-            <div class="col-4 col-sm-3">&nbsp;</div>
-            <div class="col-8 col-sm-9" style="padding: 0 10px;">
-              <ng-container *ngIf="feeForm.touched">
-                <mat-error *ngIf="feeForm.hasError('required')">
-                  {{ 'fee is required' | translate }}
-                </mat-error>
-                <mat-error *ngIf="feeForm.hasError('min')">
-                  {{ 'minimum fee is' | translate: { val: minFee } }}
-                </mat-error>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
+      <label>{{ 'sign by' | translate }}</label>
+      <account-selector
+        (select)="onSwitchAccount($event)"
+        type="normal"
+        [addresses]="participants"
+        [switchAccount]="true"
+      ></account-selector>
+
+      <input-amount [group]="form" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
+      <ng-container *ngIf="feeForm.touched && feeForm.invalid">
+        <mat-error *ngIf="feeForm.hasError('required')">
+          {{ 'fee is required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="feeForm.hasError('min')">
+          {{ 'minimum fee is' | translate: { val: minFee } }}
+        </mat-error>
+      </ng-container>
 
       <div class="text-right grouped-button">
         <button
           [disabled]="isLoadingApproveTx || !form.valid"
           mat-flat-button
-          color="warn"
-          (click)="onOpenPinDialog(1)"
-        >
-          <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
-          <span>{{ 'reject' | translate }}</span>
-        </button>
-        <button
-          [disabled]="isLoadingApproveTx || !form.valid"
-          mat-flat-button
           color="primary"
-          (click)="onOpenPinDialog(0)"
+          (click)="onAccept()"
         >
           <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
           <span>

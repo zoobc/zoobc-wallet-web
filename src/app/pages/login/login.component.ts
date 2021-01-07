@@ -103,12 +103,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isInstalled(): Promise<boolean> {
     return new Promise(resolve => {
-      chrome.runtime.sendMessage(this.extensionId, 'installed?', installed => resolve(installed));
+      chrome.runtime.sendMessage(this.extensionId, 'installed', installed => resolve(installed));
     });
   }
 
   async importAccount() {
-    let installed = await this.isInstalled();
+    console.log('asdasda');
+
+    const installed = await this.isInstalled();
+    console.log(installed);
 
     if (installed == undefined) {
       const message = getTranslation('please install zoobc connect', this.translate);

@@ -7,8 +7,8 @@ export const environment = {
   mnemonicLanguage: 'english',
   mnemonicNumWords: 24,
   fee: 0.01,
-  extId: 'pokdimcnmlapemfeofgahmechldpcnfn',
-  expUrl:'http://localhost:3000/transactions/' ,
+  extId: 'ppdmfnikinekjfcehddjcjdbbjhfpbpb',
+  expUrl: 'http://localhost:3000/transactions/',
 };
 
 /*

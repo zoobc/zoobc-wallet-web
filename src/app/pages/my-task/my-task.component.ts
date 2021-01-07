@@ -251,8 +251,6 @@ export class MyTaskComponent implements OnInit {
   }
 
   getDetailMultisig(multisig: any) {
-    console.log(multisig);
-
     this.multisigDetail = multisig;
     this.escrowDetail = undefined;
   }
