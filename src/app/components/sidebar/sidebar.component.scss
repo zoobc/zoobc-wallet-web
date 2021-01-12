@@ -38,27 +38,5 @@
         margin-bottom: 8px;
       }
     }
-    img {
-      width: 27px;
-      height: 27px;
-      margin: 0 auto 8px;
-    }
-    mat-card {
-      width: 174px;
-      position: absolute;
-      top: 0;
-      left: 96px;
-      box-sizing: border-box;
-      display: flex;
-      flex-wrap: wrap;
-      padding: 4px;
-      div {
-        width: 80px;
-        height: 80px;
-        justify-content: center;
-        display: flex;
-        align-items: center;
-      }
-    }
   }
 }
