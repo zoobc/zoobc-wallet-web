@@ -84,7 +84,10 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <app-multisig-detail [detail]="multisigDetail" *ngIf="multisigDetail"></app-multisig-detail>
+      <app-multisig-detail
+        [txHash]="multisigDetail.transactionHash"
+        *ngIf="multisigDetail"
+      ></app-multisig-detail>
       <app-escrow-detail [detail]="escrowDetail" *ngIf="escrowDetail"></app-escrow-detail>
     </div>
 

@@ -11,6 +11,8 @@
 .login-container {
   text-align: center;
   height: calc(93vh - 64px);
+  display: grid;
+  align-content: center;
   .login-box {
     min-width: 328px;
     max-width: 328px;

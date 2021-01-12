@@ -1,8 +1,9 @@
 <div class="signup-container">
-  <ng-container *ngIf="location == 'signup'">
-    <mat-card style="max-width: 700px; margin: 0 auto; padding-bottom: 32px 16px;">
+  <mat-card style="max-width: 700px; margin: 0 auto; padding: 32px 16px;" *ngIf="location == 'signup'">
+    <div style="max-width: 512px;margin: 0 auto;">
       <h2 class="mat-h2">{{ 'create wallet' | translate }}</h2>
       <h4 class="mat-h4">{{ 'your seed phrase' | translate }}:</h4>
+
       <div class="language-selector">
         <button mat-stroked-button color="primary" [matMenuTriggerFor]="language">
           <span>{{ languages[selectedLang].viewValue }}</span>
@@ -19,7 +20,8 @@
           </button>
         </mat-menu>
       </div>
-      <div class="row passphrase-section">
+
+      <div class="row" style="margin-bottom: 16px;">
         <div class="col-6 col-sm-4" *ngFor="let p of passphrase; let key = index">
           <div class="box-passphrase">
             <div class="number">{{ key + 1 }}.</div>
@@ -27,7 +29,8 @@
           </div>
         </div>
       </div>
-      <div class="btn-grouped">
+
+      <div class="grouped-button block" style="margin-bottom: 16px;">
         <button mat-stroked-button color="primary" (click)="copyPassphrase()">
           <i matPrefix class="far fa-copy"></i>
           <span class="text">{{ 'copy' | translate }}</span>
@@ -37,73 +40,74 @@
           <span class="text">{{ 'regenerate' | translate }}</span>
         </button>
       </div>
-      <div class="row form-section">
-        <form [formGroup]="formTerms">
-          <div class="text-left">
-            <div style="margin-bottom: 8px">
-              <mat-checkbox class="check" formControlName="isWrittenDown">
-                {{ 'i have written or saved my seed phrase safely' | translate }}
-              </mat-checkbox>
-            </div>
-            <div>
-              <mat-checkbox formControlName="isAgree">
-                <span [innerHTML]="'i approve terms of use & privacy policy' | translate"></span>
-              </mat-checkbox>
-            </div>
-          </div>
-          <button
-            class="btn-create"
-            mat-flat-button
-            color="primary"
-            (click)="goToConfirmPage()"
-            type="button"
-            [disabled]="!isWrittenDown.value || !isAgree.value"
-          >
-            <span class="text">{{ 'i wrote it down' | translate }}</span>
-          </button>
-        </form>
-      </div>
-    </mat-card>
-  </ng-container>
-  <ng-container *ngIf="location == 'protect your fund'">
-    <mat-card style="max-width: 700px; margin: 32px auto 0; padding-bottom: 32px;">
-      <div class="explanation">
-        <img src="/assets/img/expl1.png" loading="lazy" />
-        <h3>{{ 'protect your funds!' | translate }}</h3>
-        <div class="text-box">
-          <p
-            [innerHTML]="
-              'in case you lose access to your device you can only re-gain access to the wallet with your seed phrase.'
-                | translate
-            "
-          ></p>
-          <p>{{ 'no backups. no password reset.' | translate }}</p>
+
+      <form [formGroup]="formTerms" class="text-left">
+        <div style="margin-bottom: 8px">
+          <mat-checkbox class="check" formControlName="isWrittenDown">
+            {{ 'i have written or saved my seed phrase safely' | translate }}
+          </mat-checkbox>
         </div>
-        <button mat-flat-button color="primary" (click)="next()">
-          <span class="text">{{ 'i understand' | translate }}</span>
-        </button>
-      </div>
-    </mat-card>
-  </ng-container>
-  <ng-container *ngIf="location == 'what a seedphrase'">
-    <mat-card style="max-width: 700px; margin: 32px auto 0; padding-bottom: 32px;">
-      <div class="explanation">
-        <img src="/assets/img/expl2.png" loading="lazy" />
-        <h3>{{ "what's a seed phrase?" | translate }}</h3>
-        <div class="text-box">
-          <p>
-            {{
-              'seed phrase is a private key to your wallet and its funds. it consists of 24 randomly generated words.'
-                | translate
-            }}
-          </p>
-          <p>{{ 'write down your seed phrase and store it safely.' | translate }}</p>
-          <p>{{ "don't share your seed phrase with anyone." | translate }}</p>
+        <div style="margin-bottom: 16px">
+          <mat-checkbox formControlName="isAgree">
+            <span [innerHTML]="'i approve terms of use & privacy policy' | translate"></span>
+          </mat-checkbox>
         </div>
-        <button mat-flat-button color="primary" (click)="next()">
-          <span class="text">{{ 'reveal seed phrase' | translate }}</span>
+        <button
+          class="block"
+          mat-flat-button
+          color="primary"
+          (click)="goToConfirmPage()"
+          type="button"
+          [disabled]="!isWrittenDown.value || !isAgree.value"
+        >
+          <span class="text">{{ 'i wrote it down' | translate }}</span>
         </button>
+      </form>
+    </div>
+  </mat-card>
+
+  <mat-card
+    style="max-width: 700px; margin: 32px auto 0; padding-bottom: 32px;"
+    *ngIf="location == 'protect your fund'"
+  >
+    <div class="explanation">
+      <img src="/assets/img/expl1.png" loading="lazy" />
+      <h3>{{ 'protect your funds!' | translate }}</h3>
+      <div class="text-box">
+        <p
+          [innerHTML]="
+            'in case you lose access to your device you can only re-gain access to the wallet with your seed phrase.'
+              | translate
+          "
+        ></p>
+        <p>{{ 'no backups. no password reset.' | translate }}</p>
       </div>
-    </mat-card>
-  </ng-container>
+      <button mat-flat-button color="primary" (click)="next()">
+        <span class="text">{{ 'i understand' | translate }}</span>
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card
+    style="max-width: 700px; margin: 32px auto 0; padding-bottom: 32px;"
+    *ngIf="location == 'what a seedphrase'"
+  >
+    <div class="explanation">
+      <img src="/assets/img/expl2.png" loading="lazy" />
+      <h3>{{ "what's a seed phrase?" | translate }}</h3>
+      <div class="text-box">
+        <p>
+          {{
+            'seed phrase is a private key to your wallet and its funds. it consists of 24 randomly generated words.'
+              | translate
+          }}
+        </p>
+        <p>{{ 'write down your seed phrase and store it safely.' | translate }}</p>
+        <p>{{ "don't share your seed phrase with anyone." | translate }}</p>
+      </div>
+      <button mat-flat-button color="primary" (click)="next()">
+        <span class="text">{{ 'reveal seed phrase' | translate }}</span>
+      </button>
+    </div>
+  </mat-card>
 </div>

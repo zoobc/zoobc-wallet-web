@@ -3,8 +3,28 @@
     {
       "ip": "http://n0.beta.proofofparticipation.network:7001",
       "default": true,
-      "name": "Beta Testnet"
+      "name": "Beta Testnet 1"
+    },
+    {
+      "ip": "http://n1.beta.proofofparticipation.network:7001",
+      "default": true,
+      "name": "Beta Testnet 2"
+    },
+    {
+      "ip": "http://n2.beta.proofofparticipation.network:7001",
+      "default": true,
+      "name": "Beta Testnet 3"
+    },
+    {
+      "ip": "http://n3.beta.proofofparticipation.network:7001",
+      "default": true,
+      "name": "Beta Testnet 4"
+    },
+    {
+      "ip": "http://n4.beta.proofofparticipation.network:7001",
+      "default": true,
+      "name": "Beta Testnet 5"
     }
   ],
-  "timestamp": 1600672362000
+  "timestamp": 1609991214000
 }

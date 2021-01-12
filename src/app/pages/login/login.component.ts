@@ -108,11 +108,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async importAccount() {
-    console.log('asdasda');
-
     const installed = await this.isInstalled();
-    console.log(installed);
-
     if (installed == undefined) {
       const message = getTranslation('please install zoobc connect', this.translate);
       Swal.fire('Opps...', message, 'error');

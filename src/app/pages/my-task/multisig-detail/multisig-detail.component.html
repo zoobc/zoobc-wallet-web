@@ -1,27 +1,27 @@
 <div class="content" *ngIf="!isLoading">
   <div class="item">
     <div class="label">{{ 'sender' | translate }}</div>
-    <wallet-address class="address" [value]="detail.sender.value" [showFull]="true"></wallet-address>
+    <wallet-address [value]="multisig.pendingtransaction.sender.value" [showFull]="true"></wallet-address>
   </div>
   <div class="item">
     <div class="label">{{ 'recipient' | translate }}</div>
-    <wallet-address class="address" [value]="detail.recipient.value" [showFull]="true"></wallet-address>
+    <wallet-address [value]="multisig.pendingtransaction.recipient.value" [showFull]="true"></wallet-address>
   </div>
   <div class="item">
     <div class="label">{{ 'amount' | translate }}</div>
-    <div class="value">ZBC {{ detail.txBody.amount / 1e8 | number: '0.0-4' }}</div>
+    <div class="value">ZBC {{ multisig.pendingtransaction.txBody.amount / 1e8 | number: '0.0-4' }}</div>
   </div>
   <div class="item">
     <div class="label">{{ 'fee' | translate }}</div>
-    <div class="value">ZBC {{ detail.fee / 1e8 | number: '0.0-4' }}</div>
+    <div class="value">ZBC {{ multisig.pendingtransaction.fee / 1e8 | number: '0.0-4' }}</div>
   </div>
   <div class="item">
     <div class="label">{{ 'height' | translate }}</div>
-    <div class="value">{{ detail.height }}</div>
+    <div class="value">{{ multisig.pendingtransaction.height }}</div>
   </div>
   <div class="item">
     <div class="label">{{ 'date' | translate }}</div>
-    <div class="value">{{ detail.timestamp | date: 'medium' }}</div>
+    <div class="value">{{ multisig.pendingtransaction.timestamp | date: 'medium' }}</div>
   </div>
   <div class="item text-right">
     <div class="primary-text">
@@ -34,11 +34,10 @@
     </div>
   </div>
 
-  <div class="item" *ngIf="!canSign">
-    you cant sign this transaction because you not the one of the participants
+  <div class="item warn-text text-right" *ngIf="!canSign">
+    you cant sign this transaction because you're not one of the participants
   </div>
-
-  <div class="item" *ngIf="alreadySigned">
+  <div class="item warn-text text-right" *ngIf="alreadySigned">
     you already sign this transaction
   </div>
 
@@ -81,74 +80,4 @@
       </div>
     </div>
   </div>
-
-  <!-- <div class="row">
-    <div class="col-6 col-md-6" style="margin: 16px 0 16px; padding-left: 16px;">
-      <ng-container *ngIf="multisigComponent.enabledSign">
-        <mat-checkbox #checkboxMultisig (click)="toogleShowSignFormMultisig()">
-          {{ 'sign this transaction' || translate }}
-        </mat-checkbox>
-      </ng-container>
-    </div>
-    <div class="col-6 col-md-6 text-right participant-info" style="margin: 16px 0 16px;">
-      <ng-container *ngIf="multisigComponent.pendingSignatures.length == 0">
-        {{ 'no participants have signed yet' || translate }}
-      </ng-container>
-      <ng-container *ngIf="multisigComponent.pendingSignatures.length > 0">
-        {{
-          'signed by'
-            | translate
-              : {
-                  pendingSign: multisigComponent.pendingSignatures.length,
-                  totalSign: multisigComponent.totalParticpants
-                }
-        }}
-      </ng-container>
-    </div>
-  </div> -->
-  <!-- <ng-container *ngIf="showProcessFormMultisig">
-    <div class="row" style="border-bottom: none;">
-      <div class="col-12 col-md-10 offset-md-1">
-        <label>{{ 'sign by' | translate }}</label>
-        <account-selector
-          (select)="multisigComponent.onSwitchAccount($event)"
-          type="normal"
-          [addresses]="multisigComponent.participants"
-          [switchAccount]="true"
-        ></account-selector>
-        <input-amount [group]="multisigComponent.form" amountName="fee" label="{{ 'fee' | translate }}">
-        </input-amount>
-      </div>
-    </div>
-    <div class="row" *ngIf="multisigComponent.feeForm.touched && multisigComponent.feeForm.invalid">
-      <div class="col-12 col-md-10 offset-md-1">
-        <div class="row" style="border-bottom: none; margin-top: -30px; font-weight: initial;">
-          <div class="col-4 col-sm-3">&nbsp;</div>
-          <div class="col-8 col-sm-9" style="padding: 0 10px;">
-            <ng-container *ngIf="multisigComponent.feeForm.touched">
-              <mat-error *ngIf="multisigComponent.feeForm.hasError('required')">
-                {{ 'fee is required' | translate }}
-              </mat-error>
-              <mat-error *ngIf="feeForm.hasError('min')">
-                {{ 'minimum fee is' | translate: { val: minFee } }}
-              </mat-error>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="text-right" style="margin: 8px 0 8px">
-      <button mat-flat-button color="warn" style="margin-right: 8px" (click)="dismiss(true)">
-        {{ 'ignore' | translate }}
-      </button>
-      <button
-        [disabled]="multisigComponent.isLoadingConfirmTx || !multisigComponent.form.valid"
-        mat-flat-button
-        color="primary"
-        (click)="multisigComponent.onAccept()"
-      >
-        {{ 'accept' | translate }}
-      </button>
-    </div>
-  </ng-container> -->
 </div>
