@@ -3,69 +3,39 @@
 .signup-container {
   text-align: center;
   h2 {
-    font-weight: 500;
     margin-bottom: 24px;
     font-size: 32px;
   }
-
   h4 {
-    font-weight: 500;
     color: $black2;
     font-size: 18px;
   }
+
   .language-selector {
     text-align: left;
     max-width: 512px;
     margin: 8px auto;
   }
-  .passphrase-section {
-    position: relative;
-    max-width: 512px;
-    margin: 0 auto;
-    .box-passphrase {
-      display: flex;
-      margin: 8px 0;
-      border-radius: 6px;
-      overflow: hidden;
-      font-size: 14px;
-      .number {
-        background-color: $black3;
-        width: 32px;
-        color: $black1;
-        text-align: center;
-        padding: 8px;
-      }
-      .word {
-        background-color: $black3;
-        color: $black1;
-        width: calc(100% - 32px);
-        text-align: left;
-        padding: 8px 0px;
-      }
-    }
-  }
 
-  .btn-grouped {
-    margin: 16px auto;
-    text-align: center;
-    font-weight: 500;
+  .box-passphrase {
     display: flex;
-    max-width: 512px;
-    button {
-      margin: 0 4px 8px 4px;
-      width: 50%;
+    margin: 8px 0;
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 14px;
+    .number {
+      background-color: $black3;
+      width: 32px;
+      color: $black1;
+      text-align: center;
+      padding: 8px;
     }
-  }
-
-  .form-section {
-    margin: 0 auto;
-    max-width: 512px;
-    form {
-      width: 100%;
-      .btn-create {
-        width: 100%;
-        margin-top: 24px;
-      }
+    .word {
+      background-color: $black3;
+      color: $black1;
+      width: calc(100% - 32px);
+      text-align: left;
+      padding: 8px 0px;
     }
   }
 

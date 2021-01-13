@@ -1,9 +1,22 @@
 // ============================ BUTTON ============================
 .grouped-button {
   margin: 0 -4px;
+  display: flex;
   button,
   a {
     margin: 0px 4px;
+  }
+  &.block {
+    button,
+    a {
+      width: 100%;
+    }
+  }
+  &.text-right {
+    place-content: flex-end;
+  }
+  &.text-center {
+    place-content: center;
   }
 }
 

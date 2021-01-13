@@ -2,8 +2,8 @@
 @import '../../../styles/mixins';
 
 .my-task-card {
-  height: calc(100vh - 100px) !important;
-  max-height: calc(100vh - 100px) !important;
+  height: calc(100vh - #{$header-height} - #{$announcement-height} - 32px) !important;
+  max-height: calc(100vh - #{$header-height} - #{$announcement-height} - 32px) !important;
   padding: 0 !important;
   display: flex !important;
   flex-wrap: wrap;

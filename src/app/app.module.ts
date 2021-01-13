@@ -78,7 +78,6 @@ import { AccountComponent } from './pages/account/account.component';
 import { MultisigInfoComponent } from './pages/account/multisig-info/multisig-info.component';
 import { AccountDatasetComponent } from './pages/account-dataset/account-dataset.component';
 import { SetupDatasetComponent } from './pages/account-dataset/setup-dataset/setup-dataset.component';
-import { MultisigApprovalHistoryComponent } from './pages/my-task/multisig-approval-history/multisig-approval-history.component';
 import { RewardTableModule } from './components/reward-table/reward-table.module';
 import { NodeRewardListComponent } from './components/node-reward-list/node-reward-list.component';
 import { FormRegisterNodeModule } from './components/transaction-form/form-register-node/form-register-node.module';
@@ -135,7 +134,6 @@ export function getLanguage(languageServ: LanguageService) {
     MultisigInfoComponent,
     AccountDatasetComponent,
     SetupDatasetComponent,
-    MultisigApprovalHistoryComponent,
     NodeRewardListComponent,
     PrivateKeyComponent,
     AddressComponent,

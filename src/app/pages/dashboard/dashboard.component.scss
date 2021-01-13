@@ -2,6 +2,8 @@
 @import '../../../styles/mixins';
 
 .dashboard-container {
+  max-width: 600px;
+  margin: 0 auto;
   .account-card {
     background-image: url('/assets/img/home-bg.png');
     background-position: center;
