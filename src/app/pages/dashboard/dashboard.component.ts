@@ -11,10 +11,7 @@ import zoobc, {
   TransactionListParams,
   MempoolListParams,
   TransactionType,
-  EscrowListParams,
-  OrderBy,
   ZBCTransaction,
-  getZBCAddress,
   AccountBalance,
 } from 'zbc-sdk';
 import { Subscription } from 'rxjs';
@@ -125,62 +122,22 @@ export class DashboardComponent implements OnInit {
 
       try {
         const trxList = await zoobc.Transactions.getList(params);
-
-        let lastHeight = 0;
-        let firstHeight = 0;
-        if (trxList.total > 0) {
-          lastHeight = trxList.transactions[0].height;
-          firstHeight = trxList.transactions[trxList.transactions.length - 1].height;
-        }
-
-        const multisigTx = trxList.transactions.filter(trx => trx.multisig == true).map(trx => trx.id);
-
-        const paramEscrow: EscrowListParams = {
-          blockHeightStart: firstHeight,
-          blockHeightEnd: lastHeight,
-          recipient: this.currAcc.address,
-          statusList: [0, 1, 2, 3],
-          latest: false,
-          pagination: {
-            orderBy: OrderBy.DESC,
-            orderField: 'block_height',
-          },
-        };
-        this.startMatch = 0;
-        const escrowTx = await zoobc.Escrows.getList(paramEscrow);
-        const escrowList = escrowTx.escrowList;
-        const escrowGroup = this.groupEscrowList(escrowList);
-        const tx = trxList.transactions;
-
-        tx.map(recent => {
-          let escStatus = this.matchEscrowGroup(recent.height, escrowGroup);
-          recent.senderAlias = this.contactServ.get(recent.sender.value).name || '';
-          recent.recipientAlias = this.contactServ.get(recent.recipient.value).name || '';
-          if (this.txType == 2 || this.txType == 258 || this.txType == 514 || this.txType == 770) {
-            if (recent.txBody.nodepublickey) {
-              const buffer = Buffer.from(recent.txBody.nodepublickey.toString(), 'base64');
-              const pubkey = getZBCAddress(buffer, 'ZNK');
-              recent['txBody'].nodepublickey = pubkey;
-            }
-          }
-          if (escStatus) {
-            recent.escrow = true;
-            recent['txBody'].approval = escStatus.status;
-            recent.escrowStatus = escStatus.status;
-          } else recent.escrow = false;
-          recent.multisig = multisigTx.includes(recent.id);
-          return recent;
+        trxList.transactions.map(transaction => {
+          transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
+          transaction.recipientAlias = this.contactServ.get(transaction.recipient.value).name || '';
+          return transaction;
         });
-        this.recentTx = tx;
+        this.recentTx = trxList.transactions;
         this.totalTx = trxList.total;
-        const paramPool: MempoolListParams = {
-          address: this.currAcc.address,
-        };
+
+        const paramPool: MempoolListParams = { address: this.currAcc.address };
         const unconfirmTx = await zoobc.Mempool.getList(paramPool);
-        this.unconfirmTx = unconfirmTx.transactions.map(uc => {
-          if (uc.escrow) uc['txBody'].approval = 0;
-          return uc;
+        unconfirmTx.transactions.map(transaction => {
+          transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
+          transaction.recipientAlias = this.contactServ.get(transaction.recipient.value).name || '';
+          return transaction;
         });
+        this.unconfirmTx = unconfirmTx.transactions;
       } catch (error) {
         console.log(error);
         this.isError = true;
@@ -235,32 +192,6 @@ export class DashboardComponent implements OnInit {
   reloadBalanceTx() {
     this.getBalance();
     this.getTransactions();
-  }
-  groupEscrowList(escrowList: any[]) {
-    const escrowCopy = escrowList.map(x => Object.assign({}, x));
-    let escrowGroup = [];
-    for (let i = 0; i < escrowCopy.length; i++) {
-      let idx = escrowGroup.findIndex(eg => eg.id == escrowCopy[i].id);
-      if (idx < 0) escrowGroup.push(escrowCopy[i]);
-      else {
-        if (escrowGroup[idx].blockheight > escrowCopy[i].blockheight)
-          escrowGroup[idx]['blockheight'] = escrowCopy[i].blockheight;
-      }
-    }
-    escrowGroup.sort(function(a, b) {
-      return b.blockheight - a.blockheight;
-    });
-    return escrowGroup;
-  }
-  matchEscrowGroup(blockheight, escrowList: any[]) {
-    let escrowObj: any;
-    for (let i = this.startMatch; i < escrowList.length; i++) {
-      if (escrowList[i].blockheight == blockheight) {
-        escrowObj = Object.assign({}, escrowList[i]);
-        this.startMatch = i;
-      }
-    }
-    return escrowObj;
   }
 
   async onComingSoonPage() {
