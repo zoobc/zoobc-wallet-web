@@ -64,7 +64,10 @@ export class MultisigDetailComponent implements OnChanges {
       this.minSignature = multisig.multisignatureinfo.minimumsignatures;
       this.totalSignature = multisig.pendingsignaturesList.length;
       this.multisig = multisig;
-      this.participants = multisig.multisignatureinfo.addressesList.map(res => res.value);
+
+      const pendingSignatures = multisig.pendingsignaturesList.map(sign => sign.accountaddress.value);
+      const participants = multisig.multisignatureinfo.addressesList.map(res => res.value);
+      this.participants = participants.filter(participant => !pendingSignatures.includes(participant));
 
       this.canSign = this.canItSigned(this.multisig);
       this.alreadySigned = this.isAlreadySigned(this.multisig);

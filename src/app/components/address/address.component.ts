@@ -32,6 +32,7 @@ export class AddressComponent {
 
   onCopyText(e) {
     e.stopPropagation();
+    e.preventDefault();
     onCopyText(this.value);
 
     let message = getTranslation('successfully copied to clipboard', this.translate);
