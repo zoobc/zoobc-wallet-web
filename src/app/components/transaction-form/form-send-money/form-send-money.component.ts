@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
-import { sendMoneyBuilder, SendMoneyInterface } from 'zbc-sdk';
+import { sendMoneyBuilder, SendMoneyInterface, TransactionType } from 'zbc-sdk';
+import { MultisigService } from 'src/app/services/multisig.service';
 
 @Component({
   selector: 'form-send-money',
@@ -29,9 +30,13 @@ export class FormSendMoneyComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  accountSelectorType = 'normal';
+  accountSelectorType: string = 'normal';
 
-  constructor(private authServ: AuthService, private contactServ: ContactService) {}
+  constructor(
+    private authServ: AuthService,
+    private contactServ: ContactService,
+    private multisigServ: MultisigService
+  ) {}
 
   ngOnInit() {
     this.group.get('alias').disable();
@@ -63,6 +68,9 @@ export class FormSendMoneyComponent implements OnInit {
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
     this.group.get('sender').patchValue(account.address.value);
+
+    if (account.type == 'multisig')
+      this.multisigServ.initDraft(account, TransactionType.SENDMONEYTRANSACTION);
   }
 
   filterContacts(value: string): Contact[] {

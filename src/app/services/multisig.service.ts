@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
-import { MultiSigInterface, TransactionType } from 'zbc-sdk';
+import { getTranslation } from 'src/helpers/utils';
+import Swal from 'sweetalert2';
+import zoobc, { MultiSigInterface, TransactionType } from 'zbc-sdk';
+import { AuthService, SavedAccount } from './auth.service';
 
 export interface MultiSigDraft extends MultiSigInterface {
   id: number;
@@ -23,7 +28,49 @@ export class MultisigService {
   private sourceMultisig = new BehaviorSubject<MultiSigDraft>({ ...this.multisigTemplate });
   multisig = this.sourceMultisig.asObservable();
 
-  constructor() {}
+  constructor(private authServ: AuthService, private translate: TranslateService, private router: Router) {}
+
+  initDraft(account: SavedAccount, txType: number) {
+    const multisig: MultiSigDraft = {
+      accountAddress: null,
+      fee: 0,
+      id: 0,
+      multisigInfo: null,
+      unisgnedTransactions: null,
+      signaturesInfo: null,
+      txType,
+      txBody: {},
+    };
+
+    const isMultiSignature = account.type == 'multisig' ? true : false;
+    if (isMultiSignature) {
+      const accounts = this.authServ
+        .getAllAccount()
+        .filter(acc => account.participants.some(address => address.value == acc.address.value));
+
+      // if no address on the participants
+      if (accounts.length <= 0) {
+        const message = getTranslation('you dont have any account that in participant list', this.translate);
+        Swal.fire({ type: 'error', title: 'Oops...', text: message });
+        return false;
+      }
+
+      multisig.multisigInfo = {
+        minSigs: account.minSig,
+        nonce: account.nonce,
+        participants: account.participants,
+      };
+
+      const address = zoobc.MultiSignature.createMultiSigAddress(multisig.multisigInfo);
+      multisig.txBody.sender = address;
+
+      this.update(multisig);
+      this.router.navigate(['/multisignature/create/create-transaction']);
+    } else {
+      this.update(multisig);
+      this.router.navigate(['/multisignature/create/add-multisig-info']);
+    }
+  }
 
   update(multisig: MultiSigDraft) {
     this.sourceMultisig.next(multisig);
