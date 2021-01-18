@@ -63,7 +63,15 @@ export class SignupComponent implements OnInit {
 
   async copyPassphrase() {
     const passphrase = this.passphrase.join(' ');
-    onCopyText(passphrase);
+    let strCopy = 'This is your ZooBC passphrase:\n\n With order number\n-------------------------\n';
+    for (let i = 0; i < this.passphrase.length; i++) {
+      strCopy += i + 1 + '.' + this.passphrase[i];
+      if (i < 23) strCopy += ',   ';
+      if ((i + 1) % 3 === 0) strCopy += '\n';
+    }
+    strCopy += '\n\nWithout order number\n-------------------------\n' + passphrase;
+    strCopy += '\n\n----------- End ----------\n\n';
+    onCopyText(strCopy);
 
     let message = getTranslation('seed phrase copied', this.translate);
     this.snackbar.open(message, null, { duration: 3000 });
