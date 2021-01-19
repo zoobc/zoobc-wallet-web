@@ -56,8 +56,8 @@
     </div>
 
     <div class="row">
-      <div class="col-12 col-md-4">{{ 'fee' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transaction.fee / 1e8 | number: '0.0-8' }} ZBC</div>
+      <div class="col-12 col-md-4 ">{{ 'fee' | translate }}:</div>
+      <div class="col-12 col-md-8 warn-text">- {{ transaction.fee / 1e8 | number: '0.0-8' }} ZBC</div>
     </div>
 
     <div class="row" *ngIf="transaction.height">
