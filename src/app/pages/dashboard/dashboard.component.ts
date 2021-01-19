@@ -30,8 +30,6 @@ import { RestoreAccountService } from 'src/app/services/restore-account.service'
 export class DashboardComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
-  txType: number = TransactionType.SENDMONEYTRANSACTION;
-
   accountBalance: AccountBalance;
   isLoading: boolean = false;
   isError: boolean = false;
@@ -113,7 +111,6 @@ export class DashboardComponent implements OnInit {
 
       const params: TransactionListParams = {
         address: this.currAcc.address,
-        transactionType: TransactionType.SENDMONEYTRANSACTION,
         pagination: {
           page: 1,
           limit: 10,

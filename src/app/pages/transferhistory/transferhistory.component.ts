@@ -22,7 +22,7 @@ export class TransferhistoryComponent implements OnDestroy {
   accountHistory: ZBCTransaction[];
   unconfirmTx: ZBCTransaction[];
 
-  txType: number = TransactionType.SENDMONEYTRANSACTION;
+  txType: number = undefined;
 
   page: number = 1;
   perPage: number = 10;
@@ -45,9 +45,7 @@ export class TransferhistoryComponent implements OnDestroy {
   ) {
     this.routerEvent = router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.activeRoute.queryParams.subscribe(res => {
-          this.txType = parseInt(res.type) || TransactionType.SENDMONEYTRANSACTION;
-        });
+        this.activeRoute.queryParams.subscribe(res => (this.txType = parseInt(res.type) || undefined));
         this.getTx(true);
       }
     });

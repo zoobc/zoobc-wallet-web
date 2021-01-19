@@ -9,7 +9,6 @@ export class TransactionListComponent {
   @Input() transactionData: ZBCTransaction[];
   @Input() isLoading: boolean = false;
   @Input() isError: boolean = false;
-  @Input() txType: number = TransactionType.SENDMONEYTRANSACTION;
   @Output() refresh: EventEmitter<boolean> = new EventEmitter();
 
   constructor() {}
