@@ -94,7 +94,6 @@ export class TransferhistoryComponent implements OnDestroy {
         if (reload) {
           const mempoolParams: MempoolListParams = { address: this.address, txType: this.txType };
           const unconfirmTx = await zoobc.Mempool.getList(mempoolParams);
-          console.log(unconfirmTx);
 
           unconfirmTx.transactions.map(transaction => {
             transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
