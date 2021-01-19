@@ -4,20 +4,25 @@
     <span class="message">{{ 'no transaction record' | translate }}</span>
   </div>
 
-  <ng-container *ngIf="txType == 1">
-    <send-money [transaction]="tx" *ngFor="let tx of transactionData"></send-money>
-  </ng-container>
+  <ng-container *ngFor="let tx of transactionData">
+    <send-money [transaction]="tx" *ngIf="tx.transactionType == 1"></send-money>
 
-  <ng-container *ngIf="txType == 2 || txType == 258 || txType == 514 || txType == 770">
-    <node-registration [transaction]="tx" *ngFor="let tx of transactionData"></node-registration>
-  </ng-container>
+    <node-registration
+      [transaction]="tx"
+      *ngIf="
+        tx.transactionType == 2 ||
+        tx.transactionType == 258 ||
+        tx.transactionType == 514 ||
+        tx.transactionType == 770
+      "
+    ></node-registration>
 
-  <ng-container *ngIf="txType == 4">
-    <escrow-approval [transaction]="tx" *ngFor="let tx of transactionData"></escrow-approval>
-  </ng-container>
+    <escrow-approval [transaction]="tx" *ngIf="tx.transactionType == 4"></escrow-approval>
 
-  <ng-container *ngIf="txType == 3 || txType == 259">
-    <account-dataset [transaction]="tx" *ngFor="let tx of transactionData"></account-dataset>
+    <account-dataset
+      [transaction]="tx"
+      *ngIf="tx.transactionType == 3 || tx.transactionType == 259"
+    ></account-dataset>
   </ng-container>
 </ng-container>
 
