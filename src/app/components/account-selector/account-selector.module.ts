@@ -6,14 +6,10 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { DateAgoModule } from 'src/app/pipes/date-ago.module';
-import { MatCardModule, MatButtonModule } from '@angular/material';
+import { MatCardModule, MatButtonModule, MatTooltipModule } from '@angular/material';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
-  return new TranslateHttpLoader(
-    httpClient,
-    './assets/languages/locales/',
-    '.json'
-  );
+  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
 
 @NgModule({
@@ -31,6 +27,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     DateAgoModule,
     MatCardModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
   exports: [AccountSelectorComponent],
 })

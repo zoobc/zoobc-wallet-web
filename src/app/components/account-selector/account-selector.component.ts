@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter, Input 
 import { SavedAccount, AuthService, AccountType } from 'src/app/services/auth.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
+import { AddAccountComponent } from 'src/app/pages/account/add-account/add-account.component';
 
 @Component({
   selector: 'account-selector',
@@ -69,6 +70,17 @@ export class AccountSelectorComponent implements OnInit {
     this.accountRefDialog = this.dialog.open(this.accountDialog, {
       width: '380px',
       maxHeight: '90vh',
+    });
+  }
+
+  openAddAccount() {
+    const dialog = this.dialog.open(AddAccountComponent, {
+      width: '360px',
+      maxHeight: '99vh',
+    });
+
+    dialog.afterClosed().subscribe((added: boolean) => {
+      if (added) this.getAccounts();
     });
   }
 
