@@ -1,6 +1,17 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
+.mat-h2 {
+  margin-bottom: 16px;
+}
+.add-account {
+  color: $black2;
+  i {
+    font-size: 18px;
+    line-height: 18px;
+  }
+}
+
 .from-account {
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -32,7 +43,7 @@
 .account-card {
   border-radius: 6px;
   padding: 12px;
-  margin-top: 12px;
+  margin-bottom: 12px;
   color: $black1;
   font-size: 14px;
   background-color: white;
@@ -40,10 +51,11 @@
     cursor: pointer;
   }
   &.active {
-    background: $primary-gradient;
+    background: map-get($primary, 400);
     color: white;
     .balance,
     .balance-in-currency,
+    .address,
     .name {
       color: white;
     }

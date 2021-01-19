@@ -40,16 +40,29 @@
 </span>
 
 <ng-template #accountDialog>
-  <h2 class="mat-h2">
-    <b>{{ 'your accounts' | translate }}</b>
-  </h2>
+  <div class="row">
+    <div class="col-8">
+      <h2 class="mat-h2">{{ 'your accounts' | translate }}</h2>
+    </div>
+    <div class="col-4 text-right">
+      <button
+        mat-icon-button
+        class="add-account"
+        matTooltip="{{ 'add account' | translate }}"
+        matTooltipPosition="below"
+        (click)="openAddAccount()"
+      >
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
 
   <ng-container *ngIf="accounts">
     <mat-card
       *ngFor="let acc of accounts"
       class="account-card"
       (click)="onSwitchAccount(acc)"
-      [ngClass]="account && account.value == acc.address.value && 'active'"
+      [ngClass]="account && account.address.value == acc.address.value && 'active'"
     >
       <div class="name">{{ acc.name }}</div>
       <div class="address">
