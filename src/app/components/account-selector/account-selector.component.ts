@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter, Input } from '@angular/core';
 import { SavedAccount, AuthService, AccountType } from 'src/app/services/auth.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
-import { CurrencyRateService, Currency } from 'src/app/services/currency-rate.service';
 import { AddAccountComponent } from 'src/app/pages/account/add-account/add-account.component';
 
 @Component({
@@ -28,16 +27,10 @@ export class AccountSelectorComponent implements OnInit {
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  currencyRate: Currency;
-
-  constructor(
-    private authServ: AuthService,
-    private dialog: MatDialog,
-    private currencyServ: CurrencyRateService
-  ) {}
+  constructor(private authServ: AuthService, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
+    // this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
     this.account = this.initAccount = this.authServ.getCurrAccount();
 
     this.getAccounts();

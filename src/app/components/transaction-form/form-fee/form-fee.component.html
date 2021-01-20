@@ -12,18 +12,13 @@
       label="{{ 'fee' | translate }}"
       [displayConverter]="false"
     ></input-amount>
-    <div class="row" *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid">
-      <div class="col-4 col-sm-3">&nbsp;</div>
-      <div class="col-8 col-sm-9">
-        <ng-container *ngIf="group.get(inputMap.fee).touched">
-          <mat-error *ngIf="group.get(inputMap.fee).hasError('required')">
-            {{ 'fee is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="group.get(inputMap.fee).hasError('min')">
-            {{ 'minimum fee is' | translate: { val: minFee } }}
-          </mat-error>
-        </ng-container>
-      </div>
+    <div *ngIf="group.get(inputMap.fee).touched" style="margin-top: -8px;">
+      <mat-error *ngIf="group.get(inputMap.fee).hasError('required')">
+        {{ 'fee is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="group.get(inputMap.fee).hasError('min')">
+        {{ 'minimum fee is' | translate: { val: minFee } }}
+      </mat-error>
     </div>
   </ng-container>
 </div>

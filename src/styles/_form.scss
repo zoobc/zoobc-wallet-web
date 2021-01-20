@@ -74,7 +74,7 @@ mat-form-field {
   }
 
   // if mat-error exactly on bottom
-  & ~ .mat-error {
+  & + .mat-error {
     margin-top: -8px;
   }
 }
@@ -94,6 +94,7 @@ mat-form-field {
 }
 
 .form-address-alias {
+  margin-bottom: 16px;
   color: $black2;
 }
 

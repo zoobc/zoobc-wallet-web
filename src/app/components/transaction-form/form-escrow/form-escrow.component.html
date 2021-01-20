@@ -28,21 +28,13 @@
       label="{{ 'approver commission' | translate }}"
     >
     </input-amount>
-    <div
-      class="row"
-      *ngIf="group.get(inputMap.approverCommission).touched && group.get(inputMap.approverCommission).invalid"
-    >
-      <div class="col-4 col-sm-3">&nbsp;</div>
-      <div class="col-8 col-sm-9">
-        <ng-container *ngIf="group.get(inputMap.approverCommission).touched">
-          <mat-error *ngIf="group.get(inputMap.approverCommission).hasError('required')">
-            {{ 'commission for approver is required' | translate }}
-          </mat-error>
-          <mat-error *ngIf="group.get(inputMap.approverCommission).hasError('min')">
-            {{ 'minimum commission is' | translate: { val: '0.00000001' } }}
-          </mat-error>
-        </ng-container>
-      </div>
+    <div *ngIf="group.get(inputMap.approverCommission).touched" style="margin-top: -8px;">
+      <mat-error *ngIf="group.get(inputMap.approverCommission).hasError('required')">
+        {{ 'commission for approver is required' | translate }}
+      </mat-error>
+      <mat-error *ngIf="group.get(inputMap.approverCommission).hasError('min')">
+        {{ 'minimum commission is' | translate: { val: '0.00000001' } }}
+      </mat-error>
     </div>
 
     <label class="form-block-height">
