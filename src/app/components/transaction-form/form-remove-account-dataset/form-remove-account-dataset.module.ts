@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormRemoveAccountDatasetComponent } from './form-remove-account-dataset.component';
-import { MatCheckboxModule, MatInputModule } from '@angular/material';
+import { MatCheckboxModule, MatDividerModule, MatInputModule } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -34,6 +34,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatCheckboxModule,
     AccountSelectorModule,
     AddressModule,
+    MatDividerModule,
   ],
   exports: [FormRemoveAccountDatasetComponent],
 })

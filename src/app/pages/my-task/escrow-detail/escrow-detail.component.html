@@ -30,6 +30,8 @@
 
     <div *ngIf="showProcessFormEscrow" style="margin-top: 16px;">
       <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval>
+      <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+      <form-fee [group]="form" [inputMap]="escrowApprovalMap"></form-fee>
 
       <div class="text-right grouped-button">
         <button

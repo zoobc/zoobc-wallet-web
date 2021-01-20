@@ -38,6 +38,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { FormEscrowApprovalModule } from 'src/app/components/transaction-form/form-escrow-approval/form-escrow-approval.module';
 import { FormRemoveAccountDatasetModule } from 'src/app/components/transaction-form/form-remove-account-dataset/form-remove-account-dataset.module';
 import { CreateMultisigComponent } from './create-multisig/create-multisig.component';
+import { FormFeeModule } from 'src/app/components/transaction-form/form-fee/form-fee.module';
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -102,6 +103,7 @@ const routes: Routes = [
     FormSetupAccountDatasetModule,
     FormRemoveAccountDatasetModule,
     FormEscrowApprovalModule,
+    FormFeeModule,
   ],
   exports: [OffchainSignComponent],
   entryComponents: [OffchainSignComponent],

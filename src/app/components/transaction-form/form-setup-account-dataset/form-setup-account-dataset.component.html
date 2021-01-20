@@ -34,35 +34,21 @@
     <input-address
       class="input"
       label="{{ 'recipient address' | translate }}"
-      formControlName="{{ inputMap.recipientAddress }}"
+      formControlName="{{ inputMap.recipient }}"
       placeholder="{{ 'target address' | translate }}"
     ></input-address>
-    <ng-container *ngIf="group.get(inputMap.recipientAddress).touched">
-      <mat-error style="margin-top: 4px;" *ngIf="group.get(inputMap.recipientAddress).hasError('required')">
+    <ng-container *ngIf="group.get(inputMap.recipient).touched">
+      <mat-error style="margin-top: 4px;" *ngIf="group.get(inputMap.recipient).hasError('required')">
         {{ 'recipient address is required' | translate }}
       </mat-error>
-      <mat-error
-        style="margin-top: 4px;"
-        *ngIf="group.get(inputMap.recipientAddress).hasError('invalidAddress')"
-      >
+      <mat-error style="margin-top: 4px;" *ngIf="group.get(inputMap.recipient).hasError('invalidAddress')">
         {{ 'recipient address is invalid' | translate }}
       </mat-error>
     </ng-container>
   </ng-container>
 
-  <input-amount [group]="group" amountName="{{ inputMap.fee }}" label="{{ 'fee' | translate }}">
-  </input-amount>
-  <div class="row" *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid">
-    <div class="col-4 col-sm-3">&nbsp;</div>
-    <div class="col-8 col-sm-9">
-      <ng-container *ngIf="group.get(inputMap.fee).touched">
-        <mat-error *ngIf="group.get(inputMap.fee).hasError('required')">
-          {{ 'fee is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="group.get(inputMap.fee).hasError('min')">
-          {{ 'minimum fee is' | translate: { val: minFee } }}
-        </mat-error>
-      </ng-container>
-    </div>
+  <div class="fee-section">
+    <label>Fee</label>
+    <div class="fee-value">{{ group.get(inputMap.fee).value }} <small>ZBC</small></div>
   </div>
 </ng-container>

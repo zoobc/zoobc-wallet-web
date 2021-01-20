@@ -6,20 +6,15 @@
     [addresses]="participants"
     [switchAccount]="true"
   ></account-selector>
-  <input-amount [group]="formSend" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-  <div class="row" *ngIf="feeForm.touched && feeForm.invalid">
-    <div class="col-4 col-sm-3">&nbsp;</div>
-    <div class="col-8 col-sm-9">
-      <ng-container *ngIf="feeForm.touched">
-        <mat-error *ngIf="feeForm.hasError('required')">
-          {{ 'fee is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="feeForm.hasError('min')">
-          {{ 'minimum fee is' | translate: { val: minFee } }}
-        </mat-error>
-      </ng-container>
-    </div>
+
+  <div class="fee-section">
+    <label>Fee</label>
+    <div class="fee-value">{{ feeForm.value }} <small>ZBC</small></div>
   </div>
+
+  <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+  <form-fee [group]="formSend" [inputMap]="mutisigMap"></form-fee>
+
   <div class="row" style="margin-top: 10px;">
     <div class="col">
       <button

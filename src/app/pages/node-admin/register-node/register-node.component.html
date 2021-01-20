@@ -2,7 +2,9 @@
   <h2 class="mat-h2">{{ 'register node' | translate }}</h2>
   <form [formGroup]="formRegisterNode" (submit)="onRegisterNode()" class="grid">
     <form-register-node [group]="formRegisterNode" [inputMap]="registerNodeMap"> </form-register-node>
-    <br />
+    <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+    <form-fee [group]="formRegisterNode" [inputMap]="registerNodeMap"></form-fee>
+
     <button mat-flat-button color="primary" type="submit" [disabled]="formRegisterNode.invalid || isLoading">
       {{ 'register' | translate }}
     </button>

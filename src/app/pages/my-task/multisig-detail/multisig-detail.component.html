@@ -55,19 +55,17 @@
         [switchAccount]="true"
       ></account-selector>
 
-      <input-amount [group]="form" amountName="fee" label="{{ 'fee' | translate }}"> </input-amount>
-      <ng-container *ngIf="feeForm.touched && feeForm.invalid">
-        <mat-error *ngIf="feeForm.hasError('required')">
-          {{ 'fee is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="feeForm.hasError('min')">
-          {{ 'minimum fee is' | translate: { val: minFee } }}
-        </mat-error>
-      </ng-container>
+      <div class="fee-section">
+        <label>Fee</label>
+        <div class="fee-value">{{ feeForm.value }} <small>ZBC</small></div>
+      </div>
+
+      <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+      <form-fee [group]="form" [inputMap]="mutisigMap"></form-fee>
 
       <div class="text-right grouped-button">
         <button
-          [disabled]="isLoadingApproveTx || !form.valid"
+          [disabled]="isLoadingApproveTx || form.invalid"
           mat-flat-button
           color="primary"
           (click)="onAccept()"
