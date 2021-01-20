@@ -38,7 +38,7 @@
     <span>{{ 'address' | translate }}: </span>
     <b>{{ contact.name }}</b>
   </div>
-  <div style="margin-bottom: 8px;" *ngIf="showSaveAddressBtn">
+  <div style="margin-bottom: 16px;" *ngIf="showSaveAddressBtn">
     <mat-checkbox class="checkbox-margin" (change)="toggleSaveAddress()">
       {{ 'save to contact' | translate }}
     </mat-checkbox>
@@ -65,18 +65,13 @@
     amountName="{{ inputMap.amount }}"
     label="{{ 'coin amount' | translate }}"
   ></input-amount>
-  <div class="row" *ngIf="group.get(inputMap.amount).touched && group.get(inputMap.amount).invalid">
-    <div class="col-4 col-sm-3">&nbsp;</div>
-    <div class="col-8 col-sm-9">
-      <ng-container *ngIf="group.get(inputMap.amount).touched">
-        <mat-error *ngIf="group.get(inputMap.amount).hasError('required')">
-          {{ 'amount is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="group.get(inputMap.amount).hasError('min')">
-          {{ 'minimum amount is' | translate: { val: '0.00000001' } }}
-        </mat-error>
-      </ng-container>
-    </div>
+  <div *ngIf="group.get(inputMap.amount).touched" style="margin-top: -8px;">
+    <mat-error *ngIf="group.get(inputMap.amount).hasError('required')">
+      {{ 'amount is required' | translate }}
+    </mat-error>
+    <mat-error *ngIf="group.get(inputMap.amount).hasError('min')">
+      {{ 'minimum amount is' | translate: { val: '0.00000001' } }}
+    </mat-error>
   </div>
 
   <div class="fee-section">

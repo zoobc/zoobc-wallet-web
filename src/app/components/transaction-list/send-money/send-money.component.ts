@@ -1,7 +1,6 @@
 import { Component, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/services/auth.service';
-import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { Address, ZBCTransaction } from 'zbc-sdk';
 import { environment } from 'src/environments/environment';
 
@@ -18,12 +17,8 @@ export class SendMoneyComponent implements OnInit {
   color: string = '';
   expUrl = environment.expUrl;
 
-  currencyRate: Currency;
-
-  constructor(private dialog: MatDialog, authServ: AuthService, private currencyServ: CurrencyRateService) {
+  constructor(private dialog: MatDialog, authServ: AuthService) {
     this.address = authServ.getCurrAccount().address;
-
-    this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
   }
 
   ngOnInit() {

@@ -1,19 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { Currency, CurrencyRateService } from 'src/app/services/currency-rate.service';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
 import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
 
-import zoobc, {
-  TransactionListParams,
-  MempoolListParams,
-  TransactionType,
-  ZBCTransaction,
-  AccountBalance,
-} from 'zbc-sdk';
+import zoobc, { TransactionListParams, MempoolListParams, ZBCTransaction, AccountBalance } from 'zbc-sdk';
 import { Subscription } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
@@ -38,9 +31,6 @@ export class DashboardComponent implements OnInit {
   recentTx: ZBCTransaction[];
   unconfirmTx: ZBCTransaction[];
 
-  currencyRate: Currency;
-  currencyRates: Currency[];
-
   currAcc: SavedAccount;
   accounts: SavedAccount[];
   lastRefresh: number;
@@ -52,7 +42,6 @@ export class DashboardComponent implements OnInit {
   constructor(
     private authServ: AuthService,
     private restoreServ: RestoreAccountService,
-    private currencyServ: CurrencyRateService,
     private dialog: MatDialog,
     private router: Router,
     private contactServ: ContactService,
@@ -62,12 +51,12 @@ export class DashboardComponent implements OnInit {
 
     this.getBalance();
 
-    const subsRate = this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
-    this.subscription.add(subsRate);
-    this.currencyServ
-      .getRates()
-      .then(rates => (this.currencyRates = rates))
-      .catch(err => console.log(err));
+    // const subsRate = this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
+    // this.subscription.add(subsRate);
+    // this.currencyServ
+    //   .getRates()
+    //   .then(rates => (this.currencyRates = rates))
+    //   .catch(err => console.log(err));
 
     this.showAccountsList =
       this.currAcc.type == 'one time login' || this.currAcc.type == 'address' ? false : true;
@@ -147,10 +136,6 @@ export class DashboardComponent implements OnInit {
 
   openReceiveForm() {
     this.dialog.open(ReceiveComponent, { width: '480px' });
-  }
-
-  onChangeRate(rate) {
-    this.currencyServ.updateRate(rate);
   }
 
   onSwitchAccount(account: SavedAccount) {
