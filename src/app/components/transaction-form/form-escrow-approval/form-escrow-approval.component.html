@@ -32,19 +32,8 @@
     </mat-radio-group>
   </ng-container>
 
-  <input-amount [group]="group" amountName="{{ inputMap.fee }}" label="{{ 'fee' | translate }}">
-  </input-amount>
-  <div class="row subtitle" *ngIf="group.get(inputMap.fee).touched && group.get(inputMap.fee).invalid">
-    <div class="col-4 col-sm-3">&nbsp;</div>
-    <div class="col-8 col-sm-9" style="padding: 0 10px;">
-      <ng-container *ngIf="group.get(inputMap.fee).touched">
-        <mat-error *ngIf="group.get(inputMap.fee).hasError('required')">
-          {{ 'fee is required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="group.get(inputMap.fee).hasError('min')">
-          {{ 'minimum fee is' | translate: { val: minFee } }}
-        </mat-error>
-      </ng-container>
-    </div>
+  <div class="fee-section">
+    <label>Fee</label>
+    <div class="fee-value">{{ group.get(inputMap.fee).value }} <small>ZBC</small></div>
   </div>
 </ng-container>

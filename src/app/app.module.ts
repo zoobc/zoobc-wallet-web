@@ -93,6 +93,7 @@ import { PrivateKeyComponent } from './pages/login/private-key/private-key.compo
 import { AddressComponent } from './pages/login/address/address.component';
 import { EscrowDetailComponent } from './pages/my-task/escrow-detail/escrow-detail.component';
 import { MultisigDetailComponent } from './pages/my-task/multisig-detail/multisig-detail.component';
+import { FormFeeModule } from './components/transaction-form/form-fee/form-fee.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -205,6 +206,7 @@ export function getLanguage(languageServ: LanguageService) {
     FormClaimNodeModule,
     FormRemoveAccountDatasetModule,
     FormSetupAccountDatasetModule,
+    FormFeeModule,
   ],
   bootstrap: [AppComponent],
   providers: [

@@ -42,6 +42,10 @@ export class MultisigDetailComponent implements OnChanges {
   account: SavedAccount;
   participants: string[];
 
+  mutisigMap = {
+    fee: 'fee',
+  };
+
   constructor(private dialog: MatDialog, private authServ: AuthService, private translate: TranslateService) {
     this.account = this.authServ.getCurrAccount();
 

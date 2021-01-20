@@ -45,6 +45,10 @@ export class SendTransactionComponent implements OnInit {
   txType: string = '';
   isLoading: boolean = false;
 
+  mutisigMap = {
+    fee: 'fee',
+  };
+
   constructor(
     private authServ: AuthService,
     private dialog: MatDialog,

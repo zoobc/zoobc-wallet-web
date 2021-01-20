@@ -2,7 +2,9 @@
   <h2 class="mat-h2">{{ 'remove node' | translate }}</h2>
   <form [formGroup]="formRemoveNode" (submit)="onRemoveNode()" class="grid">
     <form-remove-node [group]="formRemoveNode" [inputMap]="removeNodeMap"></form-remove-node>
-    <br />
+    <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+    <form-fee [group]="formRemoveNode" [inputMap]="removeNodeMap"></form-fee>
+
     <button mat-flat-button color="primary" type="submit" [disabled]="formRemoveNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
       <span>{{ 'remove node' | translate }}</span>
