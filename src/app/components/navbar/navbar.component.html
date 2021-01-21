@@ -1,6 +1,8 @@
 <div class="header" id="navbar-head">
   <div class="announcement">
-    <div class="blink">{{ 'THIS IS THE ZOOBC TESTNET. ZooBC MainNet will launch on March 22, 2021' | translate }}</div>
+    <div class="blink">
+      {{ 'THIS IS THE ZOOBC TESTNET. ZooBC MainNet will launch on March 22, 2021' | translate }}
+    </div>
   </div>
   <div class="header-container">
     <div class="brand">
@@ -16,25 +18,8 @@
       </a>
     </div>
     <div class="menu">
-      <button
-        mat-flat-button
-        color="accent"
-        style="background-color: #B50020;"
-        routerLink="/feedback"
-        target="_blank"
-      >
+      <button mat-flat-button routerLink="/feedback" target="_blank">
         <span>{{ 'feedback' | translate }}</span>
-      </button>
-
-      <button
-        mat-icon-button
-        matTooltip="{{ 'accounts' | translate }}"
-        class="address-card"
-        routerLink="/accounts"
-        target="_blank"
-        *ngIf="isLoggedIn"
-      >
-        <i class="fa fa-id-card-alt"></i>
       </button>
 
       <!-- language menu -->

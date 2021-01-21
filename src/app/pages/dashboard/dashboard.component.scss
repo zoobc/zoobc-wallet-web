@@ -49,32 +49,26 @@
     }
   }
   .menu {
-    padding: 8px;
-    .list-menu {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      li {
-        padding: 12px 0;
-        &.active a {
-          color: map-get($primary, 500);
-          font-weight: 500;
-        }
-        a {
-          color: $black2;
-          text-decoration: none;
-          font-size: 12px;
-          display: grid;
-          cursor: pointer;
-          @include transition(0.3s ease-in all);
-          &:hover {
-            color: map-get($primary, 500);
-          }
-          i {
-            font-size: 24px;
-            margin-bottom: 8px;
-          }
-        }
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    flex-wrap: wrap;
+
+    a {
+      color: $black2;
+      text-decoration: none;
+      font-size: 12px;
+      margin: 16px 8px;
+      width: 100px;
+      display: grid;
+      cursor: pointer;
+      @include transition(0.3s ease-in all);
+      &:hover {
+        color: map-get($primary, 500);
+      }
+      i {
+        font-size: 24px;
+        margin-bottom: 8px;
       }
     }
   }

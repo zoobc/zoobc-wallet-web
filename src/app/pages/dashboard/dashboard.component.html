@@ -96,59 +96,23 @@
       </div>
 
       <mat-divider></mat-divider>
-      <div *ngIf="currAcc.type == 'normal'" class="row menu">
-        <div class="col-4 text-center">
-          <ul class="list-menu">
-            <li [ngClass]="menu == 'multisignature' && 'active'">
-              <a routerLink="/multisignature">
-                <i class="fa fa-file-signature"></i>
-                <span>{{ 'multisignature' | translate }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-4 text-center">
-          <ul class="list-menu">
-            <li [ngClass]="menu == 'my-tasks' && 'active'">
-              <a routerLink="/my-tasks">
-                <i class="fas fa-tasks"></i>
-                <span>{{ 'my tasks' | translate }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-4 text-center">
-          <ul class="list-menu">
-            <li [ngClass]="menu == 'my-tasks' && 'active'">
-              <a (click)="onComingSoonPage()">
-                <i class="fa fa-paper-plane"></i>
-                <span>{{ 'liquid payment' | translate }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div *ngIf="currAcc.type == 'multisig'" class="row menu">
-        <div class="col-6 text-center">
-          <ul class="list-menu">
-            <li [ngClass]="menu == 'my-tasks' && 'active'">
-              <a routerLink="/my-tasks">
-                <i class="fas fa-tasks"></i>
-                <span>{{ 'my tasks' | translate }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-6 text-center">
-          <ul class="list-menu">
-            <li [ngClass]="menu == 'my-tasks' && 'active'">
-              <a (click)="onComingSoonPage()">
-                <i class="fa fa-paper-plane"></i>
-                <span>{{ 'liquid payment' | translate }}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div class="menu">
+        <a routerLink="/multisignature">
+          <i class="fa fa-file-signature"></i>
+          <span>{{ 'multisignature' | translate }}</span>
+        </a>
+        <a routerLink="/my-tasks">
+          <i class="fas fa-tasks"></i>
+          <span>{{ 'my tasks' | translate }}</span>
+        </a>
+        <a routerLink="/accounts">
+          <i class="far fa-address-card"></i>
+          <span>{{ 'accounts' | translate }}</span>
+        </a>
+        <a (click)="onComingSoonPage()">
+          <i class="fa fa-paper-plane"></i>
+          <span>{{ 'liquid payment' | translate }}</span>
+        </a>
       </div>
     </mat-card>
 
