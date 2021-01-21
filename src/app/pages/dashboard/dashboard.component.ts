@@ -75,7 +75,7 @@ export class DashboardComponent implements OnInit {
 
     this.isLoading = true;
     this.isError = false;
-    this.reloadingTimer = timer(0, 10 * 1000).subscribe(async next => {
+    this.reloadingTimer = timer(0, 60 * 1000).subscribe(async next => {
       if (next == 0) {
         this.isLoading = true;
         this.recentTx = null;
@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit {
         await this.getTransactions();
         this.isError = false;
       } catch {
-        this.isError = true;
+        if (next == 0) this.isError = true;
       }
       this.isLoading = false;
     });
