@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
 
 import zoobc, { TransactionListParams, MempoolListParams, ZBCTransaction, AccountBalance } from 'zbc-sdk';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
 import { getTranslation } from 'src/helpers/utils';
@@ -31,11 +31,11 @@ export class DashboardComponent implements OnInit {
   recentTx: ZBCTransaction[];
   unconfirmTx: ZBCTransaction[];
 
+  reloadingTimer: Subscription;
   currAcc: SavedAccount;
   accounts: SavedAccount[];
   lastRefresh: number;
   lastRefreshAccount: number;
-  startMatch: number = 0;
 
   showAccountsList: boolean = true;
 
@@ -49,8 +49,7 @@ export class DashboardComponent implements OnInit {
   ) {
     this.currAcc = this.authServ.getCurrAccount();
 
-    this.getBalance();
-
+    this.loadBalanceAndTxs();
     // const subsRate = this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
     // this.subscription.add(subsRate);
     // this.currencyServ
@@ -68,69 +67,78 @@ export class DashboardComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.reloadingTimer.unsubscribe();
+  }
+
+  loadBalanceAndTxs() {
+    if (this.reloadingTimer) this.reloadingTimer.unsubscribe();
+
+    this.isLoading = true;
+    this.isError = false;
+    this.reloadingTimer = timer(0, 60 * 1000).subscribe(async next => {
+      if (next == 0) {
+        this.isLoading = true;
+        this.recentTx = null;
+        this.unconfirmTx = null;
+      }
+
+      try {
+        await this.getBalance();
+        await this.getTransactions();
+        this.isError = false;
+      } catch {
+        if (next == 0) this.isError = true;
+      }
+      this.isLoading = false;
+    });
   }
 
   getBalance() {
-    if (!this.isLoading) {
-      this.isLoading = true;
-      this.isError = false;
-
-      zoobc.Account.getBalance(this.currAcc.address)
-        .then((data: AccountBalance) => {
-          this.accountBalance = data;
-          return this.authServ.getAccountsWithBalance();
-        })
-        .then((res: SavedAccount[]) => (this.accounts = res))
-        .catch(e => (this.isError = true))
-        .finally(() => {
-          this.isLoading = false;
-          this.lastRefreshAccount = Date.now();
-          this.getTransactions();
-        });
-    }
+    zoobc.Account.getBalance(this.currAcc.address)
+      .then((data: AccountBalance) => {
+        this.accountBalance = data;
+        return this.authServ.getAccountsWithBalance();
+      })
+      .then((res: SavedAccount[]) => (this.accounts = res))
+      .catch(e => {
+        console.log(e);
+        throw e;
+      })
+      .finally(() => (this.lastRefreshAccount = Date.now()));
   }
 
   async getTransactions() {
-    if (!this.isLoading) {
-      this.recentTx = null;
-      this.unconfirmTx = null;
+    const params: TransactionListParams = {
+      address: this.currAcc.address,
+      pagination: {
+        page: 1,
+        limit: 10,
+      },
+    };
 
-      this.isLoading = true;
-      this.isError = false;
+    try {
+      const trxList = await zoobc.Transactions.getList(params);
+      trxList.transactions.map(transaction => {
+        transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
+        transaction.recipientAlias = this.contactServ.get(transaction.recipient.value).name || '';
+        return transaction;
+      });
+      this.recentTx = trxList.transactions;
+      this.totalTx = trxList.total;
 
-      const params: TransactionListParams = {
-        address: this.currAcc.address,
-        pagination: {
-          page: 1,
-          limit: 10,
-        },
-      };
-
-      try {
-        const trxList = await zoobc.Transactions.getList(params);
-        trxList.transactions.map(transaction => {
-          transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
-          transaction.recipientAlias = this.contactServ.get(transaction.recipient.value).name || '';
-          return transaction;
-        });
-        this.recentTx = trxList.transactions;
-        this.totalTx = trxList.total;
-
-        const paramPool: MempoolListParams = { address: this.currAcc.address };
-        const unconfirmTx = await zoobc.Mempool.getList(paramPool);
-        unconfirmTx.transactions.map(transaction => {
-          transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
-          transaction.recipientAlias = this.contactServ.get(transaction.recipient.value).name || '';
-          return transaction;
-        });
-        this.unconfirmTx = unconfirmTx.transactions;
-      } catch (error) {
-        console.log(error);
-        this.isError = true;
-      } finally {
-        this.isLoading = false;
-        this.lastRefresh = Date.now();
-      }
+      const paramPool: MempoolListParams = { address: this.currAcc.address };
+      const unconfirmTx = await zoobc.Mempool.getList(paramPool);
+      unconfirmTx.transactions.map(transaction => {
+        transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
+        transaction.recipientAlias = this.contactServ.get(transaction.recipient.value).name || '';
+        return transaction;
+      });
+      this.unconfirmTx = unconfirmTx.transactions;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      this.lastRefresh = Date.now();
     }
   }
 
@@ -169,11 +177,6 @@ export class DashboardComponent implements OnInit {
         this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
       }
     });
-  }
-
-  reloadBalanceTx() {
-    this.getBalance();
-    this.getTransactions();
   }
 
   async onComingSoonPage() {
