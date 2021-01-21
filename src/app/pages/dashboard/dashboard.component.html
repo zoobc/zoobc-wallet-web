@@ -6,7 +6,7 @@
         <span class="message">
           {{ 'an error occurred while processing your request' | translate }}
         </span>
-        <button mat-flat-button color="primary" (click)="reloadBalanceTx()">
+        <button mat-flat-button color="primary" (click)="loadBalanceAndTxs()">
           {{ 'try again' | translate }}
         </button>
       </div>
@@ -14,7 +14,7 @@
       <ng-container *ngIf="!isError">
         <div class="text-right">
           <span class="timestamp" *ngIf="!isLoading && !isError">({{ lastRefresh | dateAgo }})</span>
-          <button mat-icon-button class="reload-button" (click)="reloadBalanceTx()">
+          <button mat-icon-button class="reload-button" (click)="loadBalanceAndTxs()">
             <i class="fa fa-redo-alt"></i>
           </button>
         </div>
@@ -128,7 +128,7 @@
           [transactionData]="unconfirmTx"
           [isLoading]="isLoading"
           [isError]="isError"
-          (refresh)="reloadBalanceTx()"
+          (refresh)="loadBalanceAndTxs()"
         ></transaction-list>
       </mat-card>
       <br />
@@ -155,7 +155,7 @@
         [transactionData]="recentTx"
         [isLoading]="isLoading"
         [isError]="isError"
-        (refresh)="reloadBalanceTx()"
+        (refresh)="loadBalanceAndTxs()"
       ></transaction-list>
     </mat-card>
     <br /><br />
