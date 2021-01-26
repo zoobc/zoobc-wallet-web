@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeId from '@angular/common/locales/id';
 import localeEn from '@angular/common/locales/en';
-import localeAr from '@angular/common/locales/ar';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +30,6 @@ export class LanguageService {
         registerLocaleData(localeId, 'id');
       case 'en':
         registerLocaleData(localeEn, 'en');
-      case 'ar':
-        registerLocaleData(localeAr, 'ar');
     }
   }
 }
@@ -45,9 +42,5 @@ export const LANGUAGES = [
   {
     country: 'Indonesian',
     code: 'id',
-  },
-  {
-    country: 'Arabic',
-    code: 'ar',
   },
 ];
