@@ -3,7 +3,7 @@
     <mat-label>{{ 'transaction type' | translate }}</mat-label>
     <mat-select [value]="txType" (selectionChange)="onFilter($event.value)">
       <mat-option [value]="undefined">{{ 'show all' | translate }}</mat-option>
-      <mat-option [value]="1">{{ 'send money' | translate }}</mat-option>
+      <mat-option [value]="1">{{ 'transfer zoobc' | translate }}</mat-option>
       <mat-option [value]="2">{{ 'register node' | translate }}</mat-option>
       <mat-option [value]="258">{{ 'update node' | translate }}</mat-option>
       <mat-option [value]="514">{{ 'remove node' | translate }}</mat-option>
