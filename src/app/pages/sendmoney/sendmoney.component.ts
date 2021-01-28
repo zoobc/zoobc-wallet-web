@@ -153,7 +153,7 @@ export class SendmoneyComponent implements OnInit {
         async (res: PostTransactionResponses) => {
           this.isLoading = false;
           let message = getTranslation('your transaction is processing', this.translate);
-          let subMessage = getTranslation('you send coins to', this.translate, {
+          let subMessage = getTranslation('you transfer zoobc to', this.translate, {
             amount: data.amount,
             recipient: data.recipient.value,
           });
@@ -237,7 +237,7 @@ export class SendmoneyComponent implements OnInit {
       async (res: PostTransactionResponses) => {
         this.isLoading = false;
         let message = getTranslation('your transaction is processing', this.translate);
-        let subMessage = getTranslation('you send coins to', this.translate, {
+        let subMessage = getTranslation('you transfer zoobc to', this.translate, {
           amount: amountForm.value,
           recipient: recipientForm.value,
         });
