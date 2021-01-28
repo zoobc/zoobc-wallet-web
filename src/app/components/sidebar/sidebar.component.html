@@ -48,7 +48,12 @@
 
     <li [ngClass]="menu == 'my-tasks' && 'active'">
       <a routerLink="/my-tasks" (click)="onToggle()">
-        <i class="fas fa-tasks"></i>
+        <i
+          class="fas fa-tasks"
+          [matBadge]="taskCounter"
+          matBadgeColor="warn"
+          [matBadgeHidden]="taskCounter == 0"
+        ></i>
         <span>{{ 'tasks' | translate }}</span>
       </a>
     </li>
