@@ -24,37 +24,31 @@
     <div class="value">{{ detail.instruction }}</div>
   </div>
   <div class="item">
-    <mat-checkbox #checkboxEscrow (click)="toogleShowProcessFormEscrow()">
-      {{ 'process this transaction' | translate }}
-    </mat-checkbox>
+    <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval>
+    <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+    <form-fee [group]="form" [inputMap]="escrowApprovalMap"></form-fee>
 
-    <div *ngIf="showProcessFormEscrow" style="margin-top: 16px;">
-      <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval>
-      <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
-      <form-fee [group]="form" [inputMap]="escrowApprovalMap"></form-fee>
-
-      <div class="text-right grouped-button">
-        <button
-          [disabled]="isLoadingApproveTx || !form.valid"
-          mat-flat-button
-          color="warn"
-          (click)="onOpenPinDialog(1)"
-        >
-          <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
-          <span>{{ 'reject' | translate }}</span>
-        </button>
-        <button
-          [disabled]="isLoadingApproveTx || !form.valid"
-          mat-flat-button
-          color="primary"
-          (click)="onOpenPinDialog(0)"
-        >
-          <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-          <span>
-            {{ 'confirm' | translate }}
-          </span>
-        </button>
-      </div>
+    <div class="text-right grouped-button">
+      <button
+        [disabled]="isLoadingApproveTx || !form.valid"
+        mat-flat-button
+        color="warn"
+        (click)="onOpenPinDialog(1)"
+      >
+        <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp;</span>
+        <span>{{ 'reject' | translate }}</span>
+      </button>
+      <button
+        [disabled]="isLoadingApproveTx || !form.valid"
+        mat-flat-button
+        color="primary"
+        (click)="onOpenPinDialog(0)"
+      >
+        <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
+        <span>
+          {{ 'confirm' | translate }}
+        </span>
+      </button>
     </div>
   </div>
 </div>
