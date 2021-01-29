@@ -31,6 +31,7 @@
         <div class="chip small" *ngIf="transaction.multisig">
           {{ 'multisignature' | translate }}
         </div>
+        <div class="chip small">{{ transaction.transactionTypeString | translate }}</div>
         <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
       </div>
       <div class="status" [style.color]="color" *ngIf="transaction.escrow">

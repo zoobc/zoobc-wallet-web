@@ -18,6 +18,12 @@
       - {{ transaction.fee / 1e8 | number: '0.0-8' }}
       <small>ZBC {{ 'fee' | translate }}</small>
     </div>
+
+    <div class="description">
+      <div class="chips">
+        <div class="chip small">{{ transaction.transactionTypeString | translate }}</div>
+      </div>
+    </div>
   </div>
 </div>
 

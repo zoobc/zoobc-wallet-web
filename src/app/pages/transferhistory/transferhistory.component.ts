@@ -115,7 +115,7 @@ export class TransferhistoryComponent implements OnDestroy {
   }
 
   onScroll() {
-    if (this.accountHistory && this.accountHistory.length < this.total) {
+    if (this.accountHistory && this.accountHistory.length < this.total && !this.isLoading) {
       this.page++;
       this.getTx();
     } else this.finished = true;
