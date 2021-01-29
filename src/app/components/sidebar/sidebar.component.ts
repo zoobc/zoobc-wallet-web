@@ -15,8 +15,10 @@ import zoobc, {
   EscrowListParams,
   EscrowStatus,
   Escrows,
+  TransactionType,
 } from 'zbc-sdk';
 import { timer } from 'rxjs';
+import { MultisigService } from 'src/app/services/multisig.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -38,7 +40,8 @@ export class SidebarComponent implements OnInit {
     private appServ: AppService,
     private router: Router,
     authServ: AuthService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private multisigServ: MultisigService
   ) {
     authServ.currAccount.subscribe(account => (this.account = account));
 
@@ -61,6 +64,12 @@ export class SidebarComponent implements OnInit {
   onToggle() {
     this.appServ.toggle();
     this.show = false;
+  }
+
+  goToMultisig() {
+    if (this.account.type == 'multisig')
+      this.multisigServ.initDraft(this.account, TransactionType.SENDMONEYTRANSACTION);
+    this.onToggle();
   }
 
   onToggleSubMenu() {

@@ -84,9 +84,9 @@
             <i matPrefix class="fa fa-paper-plane"></i>
             <span>{{ 'send' | translate }}</span>
           </button>
-          <button *ngIf="currAcc.type == 'multisig'" mat-button routerLink="/multisignature" color="primary">
-            <i matPrefix class="fa fa-file-signature"></i>
-            <span>{{ 'multisignature' | translate }}</span>
+          <button *ngIf="currAcc.type == 'multisig'" mat-button (click)="goToMultisig()" color="primary">
+            <i matPrefix class="fa fa-paper-plane"></i>
+            <span>{{ 'send' | translate }}</span>
           </button>
         </div>
         <div class="col-6 text-center">
@@ -99,13 +99,13 @@
 
       <mat-divider></mat-divider>
       <div class="menu">
-        <a routerLink="/multisignature">
+        <a routerLink="/manage-multisig">
           <i class="fa fa-file-signature"></i>
-          <span>{{ 'multisignature' | translate }}</span>
+          <span>{{ 'manage multisig' | translate }}</span>
         </a>
         <a routerLink="/my-tasks">
           <i class="fas fa-tasks"></i>
-          <span>{{ 'my tasks' | translate }}</span>
+          <span>{{ 'tasks' | translate }}</span>
         </a>
         <a routerLink="/accounts">
           <i class="far fa-address-card"></i>

@@ -6,7 +6,13 @@ import { AddAccountComponent } from '../account/add-account/add-account.componen
 import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
 
-import zoobc, { TransactionListParams, MempoolListParams, ZBCTransaction, AccountBalance } from 'zbc-sdk';
+import zoobc, {
+  TransactionListParams,
+  MempoolListParams,
+  ZBCTransaction,
+  AccountBalance,
+  TransactionType,
+} from 'zbc-sdk';
 import { Subscription, timer } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ReceiveComponent } from '../receive/receive.component';
@@ -14,6 +20,7 @@ import { getTranslation } from 'src/helpers/utils';
 import { TranslateService } from '@ngx-translate/core';
 import Swal from 'sweetalert2';
 import { RestoreAccountService } from 'src/app/services/restore-account.service';
+import { MultisigService } from 'src/app/services/multisig.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,7 +52,8 @@ export class DashboardComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private contactServ: ContactService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private multisigServ: MultisigService
   ) {
     this.currAcc = this.authServ.getCurrAccount();
 
@@ -140,6 +148,11 @@ export class DashboardComponent implements OnInit {
     } finally {
       this.lastRefresh = Date.now();
     }
+  }
+
+  goToMultisig() {
+    if (this.currAcc.type == 'multisig')
+      this.multisigServ.initDraft(this.currAcc, TransactionType.SENDMONEYTRANSACTION);
   }
 
   openReceiveForm() {
