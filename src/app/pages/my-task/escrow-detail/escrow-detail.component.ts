@@ -21,7 +21,6 @@ export class EscrowDetailComponent implements OnInit {
   @Input() detail: Escrow;
 
   form: FormGroup;
-  showProcessFormEscrow: boolean = false;
   escrowApprovalMap = escrowApprovalMap;
   isLoadingApproveTx: boolean = false;
 
@@ -41,10 +40,6 @@ export class EscrowDetailComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.form.get('transactionId').patchValue(changes.detail.currentValue.id);
-  }
-
-  toogleShowProcessFormEscrow() {
-    this.showProcessFormEscrow = !this.showProcessFormEscrow;
   }
 
   onOpenPinDialog(approvalCode) {
