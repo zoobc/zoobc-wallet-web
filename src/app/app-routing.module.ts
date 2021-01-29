@@ -36,6 +36,10 @@ const routes: Routes = [
         loadChildren: './pages/multisignature/multisignature.module#MultisignatureModule',
       },
       {
+        path: 'manage-multisig',
+        loadChildren: './pages/multisignature/multisignature.module#MultisignatureModule',
+      },
+      {
         path: 'settings',
         loadChildren: './pages/settings/settings.module#SettingsModule',
       },
