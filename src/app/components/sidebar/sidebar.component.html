@@ -31,11 +31,19 @@
         </a>
       </li>
     </ng-container>
+    <ng-container *ngIf="account.type == 'multisig'">
+      <li [ngClass]="menu == 'multisignature' && 'active'">
+        <a (click)="goToMultisig()">
+          <i class="fa fa-paper-plane"></i>
+          <span>{{ 'send' | translate }}</span>
+        </a>
+      </li>
+    </ng-container>
 
-    <li [ngClass]="menu == 'multisignature' && 'active'">
-      <a routerLink="/multisignature" (click)="onToggle()">
+    <li [ngClass]="menu == 'manage-multisig' && 'active'">
+      <a routerLink="/manage-multisig" (click)="onToggle()">
         <i class="fa fa-file-signature"></i>
-        <span>{{ 'multisignature' | translate }}</span>
+        <span>{{ 'manage multisig' | translate }}</span>
       </a>
     </li>
 
@@ -48,7 +56,12 @@
 
     <li [ngClass]="menu == 'my-tasks' && 'active'">
       <a routerLink="/my-tasks" (click)="onToggle()">
-        <i class="fas fa-tasks"></i>
+        <i
+          class="fas fa-tasks"
+          [matBadge]="taskCounter"
+          matBadgeColor="warn"
+          [matBadgeHidden]="taskCounter == 0"
+        ></i>
         <span>{{ 'tasks' | translate }}</span>
       </a>
     </li>

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,10 +21,10 @@ import zoobc, {
 })
 export class MultisigDetailComponent implements OnChanges {
   @Input() txHash: string;
+  @Output() dismiss: EventEmitter<boolean> = new EventEmitter();
 
   canSign: boolean = true;
   alreadySigned: boolean = false;
-  enableSign: boolean = false;
 
   isLoading: boolean = false;
   isError: boolean = false;
@@ -76,10 +76,6 @@ export class MultisigDetailComponent implements OnChanges {
       this.canSign = this.canItSigned(this.multisig);
       this.alreadySigned = this.isAlreadySigned(this.multisig);
     });
-  }
-
-  onEnableSign() {
-    this.enableSign = !this.enableSign;
   }
 
   canItSigned(multisig: multisigPendingDetail): boolean {
@@ -141,6 +137,7 @@ export class MultisigDetailComponent implements OnChanges {
               showConfirmButton: false,
               timer: 1500,
             });
+            this.onDismiss();
 
             // this.pendingListMultiSig = this.pendingListMultiSig.filter(
             //   tx => tx.transactionHash != this.multiSigDetail.transactionHash
@@ -159,5 +156,9 @@ export class MultisigDetailComponent implements OnChanges {
 
   onSwitchAccount(account: SavedAccount) {
     this.account = account;
+  }
+
+  onDismiss() {
+    this.dismiss.emit(true);
   }
 }

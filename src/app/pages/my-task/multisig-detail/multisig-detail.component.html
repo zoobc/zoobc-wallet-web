@@ -42,40 +42,36 @@
   </div>
 
   <div class="item" *ngIf="canSign && !alreadySigned">
-    <mat-checkbox (click)="onEnableSign()">{{ 'process this transaction' | translate }}</mat-checkbox>
+    <!-- <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval> -->
 
-    <div *ngIf="enableSign" style="margin-top: 16px;">
-      <!-- <form-escrow-approval [group]="form" [inputMap]="escrowApprovalMap"> </form-escrow-approval> -->
+    <label>{{ 'sign by' | translate }}</label>
+    <account-selector
+      (select)="onSwitchAccount($event)"
+      type="normal"
+      [addresses]="participants"
+      [switchAccount]="true"
+    ></account-selector>
 
-      <label>{{ 'sign by' | translate }}</label>
-      <account-selector
-        (select)="onSwitchAccount($event)"
-        type="normal"
-        [addresses]="participants"
-        [switchAccount]="true"
-      ></account-selector>
+    <div class="fee-section">
+      <label>Fee</label>
+      <div class="fee-value">{{ feeForm.value }} <small>ZBC</small></div>
+    </div>
 
-      <div class="fee-section">
-        <label>Fee</label>
-        <div class="fee-value">{{ feeForm.value }} <small>ZBC</small></div>
-      </div>
+    <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
+    <form-fee [group]="form" [inputMap]="mutisigMap"></form-fee>
 
-      <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
-      <form-fee [group]="form" [inputMap]="mutisigMap"></form-fee>
-
-      <div class="text-right grouped-button">
-        <button
-          [disabled]="isLoadingApproveTx || form.invalid"
-          mat-flat-button
-          color="primary"
-          (click)="onAccept()"
-        >
-          <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
-          <span>
-            {{ 'confirm' | translate }}
-          </span>
-        </button>
-      </div>
+    <div class="text-right grouped-button">
+      <button
+        [disabled]="isLoadingApproveTx || form.invalid"
+        mat-flat-button
+        color="primary"
+        (click)="onAccept()"
+      >
+        <span *ngIf="isLoadingApproveTx"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
+        <span>
+          {{ 'confirm' | translate }}
+        </span>
+      </button>
     </div>
   </div>
 </div>

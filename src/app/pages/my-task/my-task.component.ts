@@ -47,7 +47,7 @@ export class MyTaskComponent implements OnInit {
   multiSigfinished: boolean = false;
   showProcessFormEscrow: boolean = false;
   escrowDetail: Escrow;
-  multisigDetail: ZBCTransaction;
+  txHash: string;
   showProcessFormMultisig: boolean = false;
 
   largeScreen = window.innerWidth >= 576 ? true : false;
@@ -238,20 +238,18 @@ export class MyTaskComponent implements OnInit {
     } else this.multiSigfinished = true;
   }
 
-  dismiss(e: boolean) {
-    if (e == true) {
-      this.escrowDetail = undefined;
-      this.multisigDetail = undefined;
-    }
+  dismiss() {
+    this.escrowDetail = undefined;
+    this.txHash = undefined;
   }
 
   getDetailEscrow(escrow: Escrow) {
     this.escrowDetail = escrow;
-    this.multisigDetail = undefined;
+    this.txHash = undefined;
   }
 
-  getDetailMultisig(multisig: any) {
-    this.multisigDetail = multisig;
+  getTxHash(txHash: string) {
+    this.txHash = txHash;
     this.escrowDetail = undefined;
   }
 }

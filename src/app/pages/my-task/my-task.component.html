@@ -28,12 +28,10 @@
           >
             <app-multisig-transaction
               [pendingListMultiSig]="multiSigPendingList"
-              [withDetail]="true"
               [isLoading]="isLoadingMultisig"
               [isError]="isErrorMultiSig"
               (refresh)="getMultiSigPendingList(true)"
-              (detailMultisig)="getDetailMultisig($event)"
-              (dismiss)="dismiss(true)"
+              (txHash)="getTxHash($event)"
             ></app-multisig-transaction>
           </div>
         </mat-tab>
@@ -69,7 +67,7 @@
             [isError]="isErrorEscrow"
             (refresh)="getEscrowTx(true)"
             (detailEscrowMap)="getDetailEscrow($event)"
-            (dismiss)="dismiss(true)"
+            (dismiss)="dismiss()"
           ></app-escrow-transactions>
         </div>
       </mat-tab>
@@ -77,21 +75,18 @@
   </div>
 
   <div class="detail-section small" *ngIf="largeScreen || escrowDetail">
-    <div class="detail-task" *ngIf="escrowDetail || multisigDetail">
+    <div class="detail-task" *ngIf="escrowDetail || txHash">
       <div class="header">
         <h2 class="mat-h2">{{ 'task details' | translate }}</h2>
-        <button mat-icon-button class="reload-button" (click)="dismiss(true)">
+        <button mat-icon-button class="reload-button" (click)="dismiss()">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <app-multisig-detail
-        [txHash]="multisigDetail.transactionHash"
-        *ngIf="multisigDetail"
-      ></app-multisig-detail>
+      <app-multisig-detail [txHash]="txHash" (dismiss)="dismiss()" *ngIf="txHash"></app-multisig-detail>
       <app-escrow-detail [detail]="escrowDetail" *ngIf="escrowDetail"></app-escrow-detail>
     </div>
 
-    <div style="place-items: center; height: 100%; display: grid;" *ngIf="!escrowDetail && !multisigDetail">
+    <div style="place-items: center; height: 100%; display: grid;" *ngIf="!escrowDetail && !txHash">
       <div class="no-content">
         <i matPrefix class="fa fa-receipt"></i>
         <span class="message">{{ 'no detail selected' | translate }}</span>
