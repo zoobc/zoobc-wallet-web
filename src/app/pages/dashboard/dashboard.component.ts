@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { AddAccountComponent } from '../account/add-account/add-account.component';
-import { Router } from '@angular/router';
 import { EditAccountComponent } from '../account/edit-account/edit-account.component';
-
+import { Subscription, timer } from 'rxjs';
+import { ContactService } from 'src/app/services/contact.service';
+import { ReceiveComponent } from '../receive/receive.component';
+import { getTranslation } from 'src/helpers/utils';
+import { TranslateService } from '@ngx-translate/core';
+import { RestoreAccountService } from 'src/app/services/restore-account.service';
+import { MultisigService } from 'src/app/services/multisig.service';
 import zoobc, {
   TransactionListParams,
   MempoolListParams,
@@ -13,14 +20,12 @@ import zoobc, {
   AccountBalance,
   TransactionType,
 } from 'zbc-sdk';
-import { Subscription, timer } from 'rxjs';
-import { ContactService } from 'src/app/services/contact.service';
-import { ReceiveComponent } from '../receive/receive.component';
-import { getTranslation } from 'src/helpers/utils';
-import { TranslateService } from '@ngx-translate/core';
-import Swal from 'sweetalert2';
-import { RestoreAccountService } from 'src/app/services/restore-account.service';
-import { MultisigService } from 'src/app/services/multisig.service';
+
+interface AccountBalanceFormatted {
+  currency: String;
+  amount1: String;
+  amount2: String;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +35,7 @@ import { MultisigService } from 'src/app/services/multisig.service';
 export class DashboardComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
+  accountBalanceFormatted: AccountBalanceFormatted;
   accountBalance: AccountBalance;
   isLoading: boolean = false;
   isError: boolean = false;
@@ -101,10 +107,22 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  balanceFormatted(val) {
+    const balance = parseFloat(val) / 1e8;
+    const balances = balance.toString().split('.');
+
+    return {
+      currency: 'ZBC ',
+      amount1: balances[0],
+      amount2: `.${balances[1]}`,
+    };
+  }
+
   getBalance() {
     zoobc.Account.getBalance(this.currAcc.address)
       .then((data: AccountBalance) => {
         this.accountBalance = data;
+        this.accountBalanceFormatted = this.balanceFormatted(data.balance);
         return this.authServ.getAccountsWithBalance();
       })
       .then((res: SavedAccount[]) => (this.accounts = res))

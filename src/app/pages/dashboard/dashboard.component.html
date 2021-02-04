@@ -67,9 +67,14 @@
 
         <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading" style="font-size: 32px;"></i>
         <ng-container *ngIf="!isLoading && !isError">
-          <div class="balance" [popper]="'ZBC ' + accountBalance.balance / 1e8">
+          <span class="balance">
+            <span class="font-medium">{{ accountBalanceFormatted.currency }}</span>
+            <span class="font-big">{{ accountBalanceFormatted.amount1 }}</span>
+            <span class="font-small">{{ accountBalanceFormatted.amount2 }}</span>
+          </span>
+          <!-- <div class="balance" [popper]="'ZBC ' + accountBalance.balance / 1e8">
             ZBC {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
-          </div>
+          </div> -->
           <div class="spendable" [popper]="'ZBC ' + accountBalance.spendableBalance / 1e8">
             {{ 'spendable' | translate }} ZBC {{ accountBalance.spendableBalance / 1e8 | number: '0.0-4' }}
           </div>

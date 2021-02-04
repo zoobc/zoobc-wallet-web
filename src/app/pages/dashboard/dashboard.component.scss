@@ -29,10 +29,25 @@
       word-break: break-all;
     }
 
+    .font-small {
+      color: $white2;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .font-medium {
+      font-size: 24px;
+      color: $white2;
+    }
+    .font-big {
+      font-size: 32px;
+      color: white;
+    }
+
     .balance {
       font-size: 32px;
       font-weight: 500;
     }
+
     .spendable {
       color: $white2;
       font-size: 14px;
