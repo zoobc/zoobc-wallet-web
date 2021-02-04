@@ -114,7 +114,7 @@ export class DashboardComponent implements OnInit {
     return {
       currency: 'ZBC ',
       amount1: balances[0],
-      amount2: `.${balances[1]}`,
+      amount2: balances[1] ? `.${balances[1]}` : '',
     };
   }
 
