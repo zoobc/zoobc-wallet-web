@@ -29,6 +29,11 @@
       word-break: break-all;
     }
 
+    .spendable {
+      font-size: 32px;
+      font-weight: 500;
+    }
+
     .font-small {
       color: $white2;
       font-size: 20px;
@@ -43,12 +48,11 @@
       color: white;
     }
 
-    .balance {
-      font-size: 32px;
-      font-weight: 500;
+    span#top {
+      vertical-align: top;
     }
 
-    .spendable {
+    .locked {
       color: $white2;
       font-size: 14px;
     }

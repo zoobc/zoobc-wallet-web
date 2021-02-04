@@ -21,7 +21,7 @@ import zoobc, {
   TransactionType,
 } from 'zbc-sdk';
 
-interface AccountBalanceFormatted {
+interface AmountFormatted {
   currency: String;
   amount1: String;
   amount2: String;
@@ -35,7 +35,8 @@ interface AccountBalanceFormatted {
 export class DashboardComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
-  accountBalanceFormatted: AccountBalanceFormatted;
+  spendableBalanceFormatted: AmountFormatted;
+  lockedFormatted: AmountFormatted;
   accountBalance: AccountBalance;
   isLoading: boolean = false;
   isError: boolean = false;
@@ -107,7 +108,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  balanceFormatted(val) {
+  spendableBalanceFormatting(val) {
     const balance = parseFloat(val) / 1e8;
     const balances = balance.toString().split('.');
 
@@ -118,11 +119,23 @@ export class DashboardComponent implements OnInit {
     };
   }
 
+  lockedFormatting(balance, spendable) {
+    const diff = parseFloat(balance) - parseFloat(spendable);
+    const diffs = diff.toString().split('.');
+
+    return {
+      currency: 'ZBC ',
+      amount1: diffs[0] ? diffs[0] : null,
+      amount2: diffs[1] ? `.${diffs[1]}` : null,
+    };
+  }
+
   getBalance() {
     zoobc.Account.getBalance(this.currAcc.address)
       .then((data: AccountBalance) => {
         this.accountBalance = data;
-        this.accountBalanceFormatted = this.balanceFormatted(data.balance);
+        this.spendableBalanceFormatted = this.spendableBalanceFormatting(data.spendableBalance);
+        this.lockedFormatted = this.lockedFormatting(data.balance, data.spendableBalance);
         return this.authServ.getAccountsWithBalance();
       })
       .then((res: SavedAccount[]) => (this.accounts = res))
