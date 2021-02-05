@@ -69,11 +69,30 @@
       word-break: break-all;
     }
 
-    .balance {
+    .spendable {
       font-size: 32px;
       font-weight: 500;
     }
-    .spendable {
+
+    .font-small {
+      color: $white2;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .font-medium {
+      font-size: 24px;
+      color: $white2;
+    }
+    .font-big {
+      font-size: 32px;
+      color: white;
+    }
+
+    span#top {
+      vertical-align: top;
+    }
+
+    .locked {
       color: $white2;
       font-size: 14px;
     }
