@@ -1,30 +1,14 @@
-{
-  "node": [
-    {
-      "ip": "http://n0.beta.proofofparticipation.network:7001",
-      "default": true,
-      "name": "Beta Testnet 1"
-    },
-    {
-      "ip": "http://n1.beta.proofofparticipation.network:7001",
-      "default": true,
-      "name": "Beta Testnet 2"
-    },
-    {
-      "ip": "http://n2.beta.proofofparticipation.network:7001",
-      "default": true,
-      "name": "Beta Testnet 3"
-    },
-    {
-      "ip": "http://n3.beta.proofofparticipation.network:7001",
-      "default": true,
-      "name": "Beta Testnet 4"
-    },
-    {
-      "ip": "http://n4.beta.proofofparticipation.network:7001",
-      "default": true,
-      "name": "Beta Testnet 5"
-    }
-  ],
-  "timestamp": 1609991214000
-}
+[
+  {
+    "label": "Beta",
+    "wkps": [
+      "http://n0.alpha.proofofparticipation.network:7001",
+      "http://n1.alpha.proofofparticipation.network:7001",
+      "http://n2.alpha.proofofparticipation.network:7001",
+      "http://n3.alpha.proofofparticipation.network:7001",
+      "http://n4.alpha.proofofparticipation.network:7001",
+      "http://n5.alpha.proofofparticipation.network:7001",
+      "http://n6.alpha.proofofparticipation.network:7001"
+    ]
+  }
+]

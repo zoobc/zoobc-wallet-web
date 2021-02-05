@@ -36,7 +36,7 @@ export class NetworkComponent implements OnInit {
 
   changeNode(idx: number) {
     localStorage.setItem('SELECTED_NODE', idx.toString());
-    zoobc.Network.set(idx);
+    // zoobc.Network.set(idx);
     this.selectedNode = idx;
   }
 
@@ -101,6 +101,6 @@ export class NetworkComponent implements OnInit {
         name: node.name,
       };
     });
-    zoobc.Network.list(list);
+    // zoobc.Network.list(list);
   }
 }

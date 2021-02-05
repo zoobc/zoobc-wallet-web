@@ -5,7 +5,7 @@ import { MatSidenav, MatDrawerContent } from '@angular/material';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from 'src/assets/node-list/node-list.json';
 import { NodeList } from 'src/helpers/node-list';
-import zoobc, { HostInterface } from 'zbc-sdk';
+import zoobc, { GroupData, HostInterface } from 'zbc-sdk';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
 
 @Component({
@@ -53,25 +53,28 @@ export class ParentComponent implements OnInit {
   }
 
   importNodeList() {
-    let nodeList: NodeList = nodeListJson;
-    let currNodeList: NodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
+    // let nodeList: NodeList = nodeListJson;
+    // let currNodeList: NodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
 
     // if there's a new network on node-list.json
-    if (!currNodeList || currNodeList.timestamp < nodeList.timestamp) {
-      localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
-      localStorage.setItem('SELECTED_NODE', '0');
+    // if (!currNodeList || currNodeList.timestamp < nodeList.timestamp) {
+    //   localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
+    //   localStorage.setItem('SELECTED_NODE', '0');
 
-      currNodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
-    }
+    //   currNodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
+    // }
 
-    const list: HostInterface[] = currNodeList.node.map(node => {
-      return {
-        host: node.ip,
-        name: node.name,
-      };
-    });
+    // const list: HostInterface[] = currNodeList.node.map(node => {
+    //   return {
+    //     host: node.ip,
+    //     name: node.name,
+    //   };
+    // });
 
-    zoobc.Network.list(list);
-    zoobc.Network.set(parseInt(localStorage.getItem('SELECTED_NODE')));
+    // zoobc.Network.list(list);
+    // zoobc.Network.set(parseInt(localStorage.getItem('SELECTED_NODE')));
+
+    const groups: GroupData[] = nodeListJson;
+    zoobc.Network.load(groups);
   }
 }
