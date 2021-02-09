@@ -89,7 +89,7 @@ export class AccountComponent implements OnInit {
     fileReader.onload = async () => {
       let fileResult = JSON.parse(fileReader.result.toString());
       if (!this.isSavedAccount(fileResult)) {
-        let message = getTranslation('you imported the wrong file', this.translate);
+        const message = getTranslation('you imported the wrong file', this.translate);
         return Swal.fire('Opps...', message, 'error');
       }
       const accountSave: SavedAccount = fileResult;
@@ -99,7 +99,7 @@ export class AccountComponent implements OnInit {
         return Swal.fire('Opps...', message, 'error');
       }
       this.authServ.addAccount(accountSave);
-      let message = getTranslation('account has been successfully imported', this.translate);
+      const message = getTranslation('account has been successfully imported', this.translate);
       Swal.fire({
         type: 'success',
         title: message,

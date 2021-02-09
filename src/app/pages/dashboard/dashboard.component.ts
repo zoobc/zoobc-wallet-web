@@ -224,7 +224,7 @@ export class DashboardComponent implements OnInit {
   }
 
   async onComingSoonPage() {
-    let message = getTranslation('coming soon', this.translate);
+    const message = getTranslation('coming soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,

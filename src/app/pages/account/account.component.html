@@ -57,7 +57,7 @@
           <div class="action">
             <button
               mat-flat-button
-              matTooltip="Account Dataset"
+              matTooltip="{{ 'account dataset' | translate }}"
               matTooltipPosition="below"
               class="icon-btn accent"
               (click)="onOpenAccDataSet(acc)"
@@ -67,7 +67,7 @@
 
             <button
               mat-flat-button
-              matTooltip="Multi Signature Detail"
+              matTooltip="{{ 'multi signature detail' | translate }}"
               matTooltipPosition="below"
               class="icon-btn accent"
               (click)="onOpenMultisigInfoDialog(acc)"
@@ -78,7 +78,7 @@
             <ng-container>
               <button
                 mat-flat-button
-                matTooltip="Edit"
+                matTooltip="{{ 'edit' | translate }}"
                 matTooltipPosition="below"
                 class="icon-btn primary"
                 (click)="onOpenEditAccount(acc)"
@@ -88,7 +88,7 @@
             </ng-container>
             <button
               mat-flat-button
-              matTooltip="Delete Account"
+              matTooltip="{{ 'delete account' | translate }}"
               matTooltipPosition="below"
               class="icon-btn warn"
               *ngIf="acc.type == 'multisig'"
