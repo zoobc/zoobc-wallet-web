@@ -35,26 +35,6 @@
     </mat-error>
   </ng-container>
 
-  <mat-form-field appearance="outline" color="accent" style="width: 100%;">
-    <mat-label>{{ 'node public key' | translate }}</mat-label>
-    <input
-      matInput
-      type="text"
-      placeholder="{{ 'node public key' | translate }}"
-      formControlName="{{ inputMap.nodePublicKey }}"
-      (keyup)="onChangeNodePublicKey()"
-      class="font-roboto-mono"
-    />
-  </mat-form-field>
-  <ng-container *ngIf="group.get(inputMap.nodePublicKey).touched">
-    <mat-error *ngIf="group.get(inputMap.nodePublicKey).hasError('required')">
-      {{ 'node public key is required' | translate }}
-    </mat-error>
-    <mat-error *ngIf="group.get(inputMap.nodePublicKey).hasError('invalidAddress')">
-      {{ 'node public key is invalid' | translate }}
-    </mat-error>
-  </ng-container>
-
   <div class="fee-section">
     <label>Fee</label>
     <div class="fee-value">{{ group.get(inputMap.fee).value }} <small>ZBC</small></div>
