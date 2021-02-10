@@ -64,7 +64,7 @@ export function getInputMap(txType: number): Object {
 export function getTxType(type: number) {
   switch (type) {
     case TransactionType.SENDMONEYTRANSACTION:
-      return 'transfer zoobc';
+      return 'transfer zbc';
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return 'setup account dataset';
     case TransactionType.REMOVEACCOUNTDATASETTRANSACTION:

@@ -63,7 +63,7 @@
   <input-amount
     [group]="group"
     amountName="{{ inputMap.amount }}"
-    label="{{ 'zoobc amount' | translate }}"
+    label="{{ 'zbc amount' | translate }}"
   ></input-amount>
   <div *ngIf="group.get(inputMap.amount).touched" style="margin-top: -8px;">
     <mat-error *ngIf="group.get(inputMap.amount).hasError('required')">
