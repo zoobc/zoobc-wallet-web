@@ -5,7 +5,7 @@ import { MatSidenav, MatDrawerContent } from '@angular/material';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from '../../../assets/node-list.json';
 import { NodeList } from '../../../helpers/node-list';
-import zoobc, { HostInterface } from 'zoobc-sdk';
+import zoobc, { HostInterface } from 'zbc-sdk';
 
 @Component({
   selector: 'app-parent',

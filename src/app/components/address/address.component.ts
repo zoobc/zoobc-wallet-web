@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { onCopyText } from 'src/helpers/utils';
 import { MatSnackBar } from '@angular/material';
-import { shortenHash } from 'zoobc-sdk';
+import { shortenHash } from 'zbc-sdk';
 
 @Component({
   selector: 'wallet-address',

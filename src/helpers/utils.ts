@@ -1,4 +1,4 @@
-import { SendMoneyInterface } from 'zoobc-sdk';
+import { SendMoneyInterface } from 'zbc-sdk';
 
 export function onCopyText(text: string) {
   let isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);

@@ -2,7 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import zoobc, { getZBCAddress, MultiSigAddress } from 'zoobc-sdk';
+import Swal from 'sweetalert2';
+import zoobc, { Address, getZBCAddress, MultiSigInfo } from 'zbc-sdk';
 
 @Component({
   selector: 'app-add-new-account',
@@ -49,49 +50,59 @@ export class AddAccountComponent {
     this.minSignatureField.setValue(this.account.minSig);
   }
 
-  onAddAccount() {
-    if (this.formAddAccount.valid) {
-      let account: SavedAccount;
+  async onAddAccount() {
+    let account: SavedAccount;
 
-      if (this.isMultiSignature) {
-        let participants: [string] = this.participantsField.value.filter(value => value.length > 0);
-        participants = participants.sort();
-
-        const multiParam: MultiSigAddress = {
-          participants: participants,
-          nonce: this.nonceField.value,
-          minSigs: this.minSignatureField.value,
-        };
-        const multiSignAddress: string = zoobc.MultiSignature.createMultiSigAddress(multiParam);
-
-        account = {
-          name: this.accountNameField.value,
-          type: 'multisig',
-          path: this.signBy.path,
-          nodeIP: null,
-          address: multiSignAddress,
-          participants: participants,
-          nonce: this.nonceField.value,
-          minSig: this.minSignatureField.value,
-          signByAddress: this.signBy.address,
-        };
-      } else {
-        const keyring = this.authServ.keyring;
-        const path = this.authServ.generateDerivationPath();
-        const childSeed = keyring.calcDerivationPath(path);
-        const accountAddress = getZBCAddress(childSeed.publicKey);
-        account = {
-          name: this.accountNameField.value,
-          type: 'normal',
-          path,
-          nodeIP: null,
-          address: accountAddress,
-        };
-      }
-
+    if (!this.isMultiSignature) {
+      const keyring = this.authServ.keyring;
+      const path = this.authServ.generateDerivationPath();
+      const childSeed = keyring.calcDerivationPath(path);
+      const accountAddress = getZBCAddress(childSeed.publicKey);
+      account = {
+        name: this.accountNameField.value,
+        type: 'normal',
+        path,
+        nodeIP: null,
+        address: { value: accountAddress, type: 0 },
+      };
       this.authServ.addAccount(account);
-      this.dialogRef.close(true);
+      return this.dialogRef.close(true);
     }
+
+    let title = 'are you sure?';
+    let message =
+      'once you create multisignature address, you will not be able to edit it anymore. but you can still delete it';
+    let buttonText = 'yes, continue it!';
+    Swal.fire({
+      title: title,
+      text: message,
+      showCancelButton: true,
+      confirmButtonText: buttonText,
+      type: 'warning',
+    }).then(res => {
+      if (!res.value) return null;
+      let addresses: [string] = this.participantsField.value.filter(value => value.length > 0);
+      addresses = addresses.sort();
+      const participants: Address[] = addresses.map(address => ({ value: address, type: 0 }));
+      const multiParam: MultiSigInfo = {
+        participants,
+        nonce: this.nonceField.value,
+        minSigs: this.minSignatureField.value,
+      };
+      const multiSignAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+      account = {
+        name: this.accountNameField.value,
+        type: 'multisig',
+        path: null,
+        nodeIP: null,
+        address: { value: multiSignAddress, type: 0 },
+        participants: participants,
+        nonce: this.nonceField.value,
+        minSig: this.minSignatureField.value,
+      };
+      this.authServ.addAccount(account);
+      return this.dialogRef.close(true);
+    });
   }
 
   disableFieldMultiSignature() {

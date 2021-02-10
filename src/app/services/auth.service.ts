@@ -1,18 +1,25 @@
 import { Injectable } from '@angular/core';
-import zoobc, { BIP32Interface, ZooKeyring, getZBCAddress, TransactionListParams } from 'zoobc-sdk';
+import zoobc, {
+  BIP32Interface,
+  ZooKeyring,
+  getZBCAddress,
+  TransactionListParams,
+  Address,
+  AccountBalance,
+} from 'zbc-sdk';
 import { environment } from 'src/environments/environment';
 
+export type AccountType = 'normal' | 'multisig' | 'one time login' | 'imported' | 'hardware' | 'address';
 export interface SavedAccount {
   name: string;
-  path: number;
-  type: 'normal' | 'multisig';
-  nodeIP: string;
-  address: string;
-  participants?: [string];
+  path?: number;
+  type: AccountType;
+  nodeIP?: string;
+  address: Address;
+  participants?: Address[];
   nonce?: number;
   minSig?: number;
   balance?: number;
-  signByAddress?: string;
 }
 
 @Injectable({
@@ -95,36 +102,24 @@ export class AuthService {
     else return JSON.parse(localStorage.getItem('CURR_ACCOUNT_TEST'));
   }
 
-  getAllAccount(type?: 'normal' | 'multisig'): SavedAccount[] {
-    let accounts: SavedAccount[];
-    if (environment.production) {
-      accounts = JSON.parse(localStorage.getItem('ACCOUNT_MAIN')) || [];
-    } else {
-      accounts = JSON.parse(localStorage.getItem('ACCOUNT_TEST')) || [];
-    }
+  getAllAccount(type?: AccountType): SavedAccount[] {
+    let accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+
     if (type == 'normal') return accounts.filter(acc => acc.type == 'normal');
     else if (type == 'multisig') return accounts.filter(acc => acc.type == 'multisig');
+    else if (type == 'imported') return accounts.filter(acc => acc.type == 'imported');
+    else if (type == 'one time login') return [this.getCurrAccount()];
     return accounts;
   }
 
-  getAccountsWithBalance(type?: 'normal' | 'multisig'): Promise<SavedAccount[]> {
+  getAccountsWithBalance(type?: AccountType): Promise<SavedAccount[]> {
     return new Promise(async (resolve, reject) => {
-      let accounts = this.getAllAccount(type);
+      const accounts = this.getAllAccount(type);
       const addresses = accounts.map(acc => acc.address);
-
       zoobc.Account.getBalances(addresses)
-        .then(res => {
-          let balances = res.accountbalancesList;
-          accounts.map(acc => {
-            acc.balance = 0;
-            for (let i = 0; i < balances.length; i++) {
-              const balance = balances[i];
-              if (balance.accountaddress == acc.address) {
-                acc.balance = parseInt(balance.spendablebalance);
-                balances.splice(i, 1);
-                break;
-              }
-            }
+        .then((accountBalances: AccountBalance[]) => {
+          accounts.map((acc, i) => {
+            acc.balance = accountBalances[i].balance;
             return acc;
           });
           resolve(accounts);
@@ -152,58 +147,6 @@ export class AuthService {
         localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
       }
       this.switchAccount(account);
-    }
-  }
-
-  async restoreAccounts() {
-    const isRestored: boolean = localStorage.getItem('IS_RESTORED') === 'true';
-    if (!isRestored && !this.restoring) {
-      this.restoring = true;
-      const keyring = this._keyring;
-
-      let accountPath: number = 0;
-      let accountsTemp = [];
-      let accounts = [];
-      let counter: number = 0;
-
-      while (counter < 20) {
-        const childSeed = keyring.calcDerivationPath(accountPath);
-        const publicKey = childSeed.publicKey;
-        const address = getZBCAddress(publicKey);
-        const account: SavedAccount = {
-          name: 'Account '.concat((accountPath + 1).toString()),
-          path: accountPath,
-          nodeIP: null,
-          address: address,
-          type: 'normal',
-        };
-        const params: TransactionListParams = {
-          address: address,
-          transactionType: 1,
-          pagination: {
-            page: 1,
-            limit: 1,
-          },
-        };
-        await zoobc.Transactions.getList(params).then(res => {
-          const totalTx = parseInt(res.total);
-          accountsTemp.push(account);
-          if (totalTx > 0) {
-            accounts = accounts.concat(accountsTemp);
-            accountsTemp = [];
-            counter = 0;
-          }
-        });
-        accountPath++;
-        counter++;
-      }
-      if (environment.production) {
-        localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(accounts));
-      } else {
-        localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
-      }
-      localStorage.setItem('IS_RESTORED', 'true');
-      this.restoring = false;
     }
   }
 }

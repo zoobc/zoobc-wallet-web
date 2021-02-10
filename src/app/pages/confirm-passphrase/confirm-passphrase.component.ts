@@ -5,7 +5,7 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { SavedAccount, AuthService } from 'src/app/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zbc-sdk';
 import { Location } from '@angular/common';
 
 @Component({
@@ -115,19 +115,14 @@ export class ConfirmPassphraseComponent implements OnInit {
       type: 'normal',
       path: 0,
       nodeIP: null,
-      address: accountAddress,
+      address: { value: accountAddress, type: 0 },
     };
-    if (environment.production) {
-      localStorage.removeItem('ACCOUNT_MAIN');
-      localStorage.setItem('ENC_PASSPHRASE_SEED_MAIN', encPassphrase);
-      localStorage.setItem('ACCOUNT_MAIN', JSON.stringify([account]));
-      localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(account));
-    } else {
-      localStorage.removeItem('ACCOUNT_TEST');
-      localStorage.setItem('ENC_PASSPHRASE_SEED_TEST', encPassphrase);
-      localStorage.setItem('ACCOUNT_TEST', JSON.stringify([account]));
-      localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(account));
-    }
+
+    localStorage.removeItem('ACCOUNT');
+    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
+    localStorage.setItem('ACCOUNT', JSON.stringify([account]));
+    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    localStorage.setItem('IS_RESTORED', 'false');
 
     this.authServ.login(key);
   }

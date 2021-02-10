@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { onCopyText } from 'src/helpers/utils';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
-import zoobc from 'zoobc-sdk';
+import zoobc from 'zbc-sdk';
 import { environment } from 'src/environments/environment';
 
 @Component({

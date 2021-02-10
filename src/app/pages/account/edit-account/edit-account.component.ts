@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from 
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AddAccountComponent } from '../add-account/add-account.component';
-import zoobc, { MultiSigAddress } from 'zoobc-sdk';
+import zoobc, { MultiSigInfo } from 'zbc-sdk';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -62,48 +62,12 @@ export class EditAccountComponent implements OnInit {
         const account = accounts[i];
         if (account.address == this.account.address) {
           accounts[i].name = this.accountNameField.value;
-          if (this.isMultiSignature) {
-            const multiParam: MultiSigAddress = {
-              participants: this.participantsField.value.filter(value => value.length > 0),
-              nonce: this.nonceField.value,
-              minSigs: this.minSignatureField.value,
-            };
-
-            this.newMultiSigAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
-
-            accounts[i].address = this.newMultiSigAddress;
-            accounts[i].participants = this.participantsField.value.filter(value => value.length > 0);
-            accounts[i].nonce = this.nonceField.value;
-            accounts[i].minSig = this.minSignatureField.value;
-            accounts[i].signByAddress = this.signBy.address;
-            accounts[i].path = this.signBy.path;
-          }
+          localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+          localStorage.setItem('CURR_ACCOUNT', JSON.stringify(accounts[i]));
+          this.dialogRef.close(accounts[i]);
           break;
         }
       }
-      let currAcc = this.authServ.getCurrAccount();
-      if (currAcc.address == this.account.address) {
-        currAcc.name = this.accountNameField.value;
-        if (this.isMultiSignature) {
-          currAcc.address = this.newMultiSigAddress;
-          currAcc.participants = this.participantsField.value.filter(value => value.length > 0);
-          currAcc.nonce = this.nonceField.value;
-          currAcc.minSig = this.minSignatureField.value;
-          currAcc.path = this.signBy.path;
-          currAcc.signByAddress = this.signBy.address;
-        }
-        if (environment.production) {
-          localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(currAcc));
-        } else {
-          localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(currAcc));
-        }
-      }
-      if (environment.production) {
-        localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(accounts));
-      } else {
-        localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
-      }
-      this.dialogRef.close(true);
     }
   }
 

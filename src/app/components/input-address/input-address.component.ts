@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
-import { isZBCAddressValid } from 'zoobc-sdk';
+import { isZBCAddressValid } from 'zbc-sdk';
 @Component({
   selector: 'input-address',
   templateUrl: './input-address.component.html',
