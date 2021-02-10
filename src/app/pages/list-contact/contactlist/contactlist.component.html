@@ -50,7 +50,7 @@
             <div class="action">
               <button
                 mat-flat-button
-                matTooltip="Edit Contact"
+                matTooltip="{{ 'edit contact' | translate }}"
                 matTooltipPosition="below"
                 class="icon-btn primary"
                 (click)="onOpenEditContact(contact)"
@@ -59,7 +59,7 @@
               </button>
               <button
                 mat-flat-button
-                matTooltip="Delete Contact"
+                matTooltip="{{ 'delete contact' | translate }}"
                 matTooltipPosition="below"
                 class="icon-btn warn"
                 (click)="deleteContact(contact)"

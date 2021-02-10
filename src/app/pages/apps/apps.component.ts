@@ -25,7 +25,7 @@ export class AppsComponent implements OnInit {
   }
 
   async onOpenComingSoon() {
-    let message = getTranslation('coming soon', this.translate);
+    const message = getTranslation('coming soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,

@@ -80,7 +80,7 @@ export class NavbarComponent implements OnInit {
   }
 
   onComingSoonPage() {
-    let message = getTranslation('coming soon', this.translate);
+    const message = getTranslation('coming soon', this.translate);
     Swal.fire({
       type: 'info',
       title: message,
@@ -90,11 +90,15 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogout() {
-    let message = getTranslation('are you sure want to logout?', this.translate);
+    const message = getTranslation('are you sure want to logout?', this.translate);
+    const confirmButtonText = getTranslation('ok', this.translate);
+    const cancelButtonText = getTranslation('cancel', this.translate);
     Swal.fire({
       title: message,
       showCancelButton: true,
       showLoaderOnConfirm: true,
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: cancelButtonText,
       preConfirm: () => {
         this.authServ.logout();
         this.router.navigateByUrl('/');

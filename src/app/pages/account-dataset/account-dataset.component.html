@@ -5,7 +5,7 @@
     <div class="text-right" *ngIf="!isError">
       <button
         mat-icon-button
-        matTooltip="Reload"
+        matTooltip="{{ 'reload' | translate }}"
         matTooltipPosition="below"
         class="reload-button"
         (click)="onRefresh()"
@@ -35,7 +35,7 @@
             <div class="action">
               <button
                 mat-flat-button
-                matTooltip="Delete Value"
+                matTooltip="{{ 'delete value' | translate }}"
                 matTooltipPosition="below"
                 class="icon-btn warn"
                 (click)="onDelete(data)"

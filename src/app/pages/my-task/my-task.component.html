@@ -2,7 +2,7 @@
   <div class="list-section">
     <mat-tab-group mat-align-tabs="center" color="primary" animationDuration="0ms">
       <ng-container *ngIf="account.type === 'multisig'">
-        <mat-tab label="Multisignature">
+        <mat-tab label="{{ 'multisignature' | translate }}">
           <div class="text-right">
             <span class="mat-body-2" *ngIf="!isLoadingBlockHeight">
               {{ 'block height' | translate }} : {{ blockHeight | number }}
