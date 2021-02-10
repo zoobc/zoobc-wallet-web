@@ -36,9 +36,18 @@ export class GeneralComponent implements OnInit {
   }
 
   resetData() {
-    const sentence =
-    getTranslation('you will reset your setting and data. you will need to restore your recovery seed phrase. continue?',  this.translate);
-    Swal.fire({ text: sentence, showCancelButton: true }).then(() => {
+    const sentence = getTranslation(
+      'you will reset your setting and data. you will need to restore your recovery seed phrase. continue?',
+      this.translate
+    );
+    const confirmButtonText = getTranslation('ok', this.translate);
+    const cancelButtonText = getTranslation('cancel', this.translate);
+    Swal.fire({
+      text: sentence,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: cancelButtonText,
+    }).then(() => {
       localStorage.clear();
       window.location.reload();
     });

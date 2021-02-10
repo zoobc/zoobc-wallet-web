@@ -4,10 +4,14 @@
       <mat-option *ngFor="let node of nodeList.node; let i = index" [value]="i">
         <span>{{ node.name }}</span>
         <ng-container *ngIf="!node.default">
-          <span class="delete-network" (click)="delete($event, i)" matTooltip="Delete">
+          <span class="delete-network" (click)="delete($event, i)" matTooltip="{{ 'delete' | translate }}">
             <i class="fas fa-trash"></i>
           </span>
-          <span class="edit-network" (click)="openDialog($event, 'edit', node, i)" matTooltip="Edit">
+          <span
+            class="edit-network"
+            (click)="openDialog($event, 'edit', node, i)"
+            matTooltip="{{ 'edit' | translate }}"
+          >
             <i class="fas fa-pen"></i>
           </span>
         </ng-container>

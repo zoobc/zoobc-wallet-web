@@ -130,7 +130,7 @@ export class MultisigDetailComponent implements OnChanges {
         zoobc.MultiSignature.postTransaction(data, seed)
           .then((res: MultisigPostTransactionResponse) => {
             this.isLoading = false;
-            let message = getTranslation('transaction has been accepted', this.translate);
+            const message = getTranslation('transaction has been accepted', this.translate);
             Swal.fire({
               type: 'success',
               title: message,

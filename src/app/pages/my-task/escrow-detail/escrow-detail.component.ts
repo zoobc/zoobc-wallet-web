@@ -83,7 +83,7 @@ export class EscrowDetailComponent implements OnInit {
       zoobc.Escrows.approval(data, childSeed)
         .then(() => {
           this.isLoadingApproveTx = false;
-          let message = getTranslation('transaction has been approved', this.translate);
+          const message = getTranslation('transaction has been approved', this.translate);
           Swal.fire({
             type: 'success',
             title: message,
@@ -121,7 +121,7 @@ export class EscrowDetailComponent implements OnInit {
       zoobc.Escrows.approval(data, childSeed)
         .then(() => {
           this.isLoadingApproveTx = false;
-          let message = getTranslation('transaction has been rejected', this.translate);
+          const message = getTranslation('transaction has been rejected', this.translate);
           Swal.fire({
             type: 'success',
             title: message,
