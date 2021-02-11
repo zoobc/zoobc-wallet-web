@@ -26,6 +26,7 @@ export class AccountComponent implements OnInit {
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.accounts = this.authServ.getAllAccount();
+    console.log(this.accounts);
   }
 
   ngOnInit() {

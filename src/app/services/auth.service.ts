@@ -103,7 +103,8 @@ export class AuthService {
   }
 
   getAllAccount(type?: AccountType): SavedAccount[] {
-    let accounts: SavedAccount[] = JSON.parse(localStorage.getItem('ACCOUNT')) || [];
+    const net = environment.production ? 'MAIN' : 'TEST';
+    let accounts: SavedAccount[] = JSON.parse(localStorage.getItem(`ACCOUNT_${net}`)) || [];
 
     if (type == 'normal') return accounts.filter(acc => acc.type == 'normal');
     else if (type == 'multisig') return accounts.filter(acc => acc.type == 'multisig');

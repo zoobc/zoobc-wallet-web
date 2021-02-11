@@ -118,10 +118,11 @@ export class ConfirmPassphraseComponent implements OnInit {
       address: { value: accountAddress, type: 0 },
     };
 
-    localStorage.removeItem('ACCOUNT');
-    localStorage.setItem('ENC_PASSPHRASE_SEED', encPassphrase);
-    localStorage.setItem('ACCOUNT', JSON.stringify([account]));
-    localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    const net = environment.production ? 'MAIN' : 'TEST';
+    localStorage.removeItem(`ACCOUNT_${net}`);
+    localStorage.setItem(`ENC_PASSPHRASE_SEED_${net}`, encPassphrase);
+    localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify([account]));
+    localStorage.setItem(`CURR_ACCOUNT_${net}`, JSON.stringify(account));
     localStorage.setItem('IS_RESTORED', 'false');
 
     this.authServ.login(key);
