@@ -36,7 +36,10 @@ export class DashboardComponent implements OnInit {
   subscription: Subscription = new Subscription();
 
   spendableBalanceFormatted: AmountFormatted;
-  lockedFormatted: AmountFormatted;
+  accountBalanceFormatted: AmountFormatted;
+  lockedBalanceFormatted: AmountFormatted;
+
+  lockedBalance: number = 0;
   accountBalance: AccountBalance;
   isLoading: boolean = false;
   isError: boolean = false;
@@ -108,25 +111,14 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  spendableBalanceFormatting(val) {
-    const balance = parseFloat(val) / 1e8;
-    const balances = balance.toString().split('.');
+  amountFormatting(val) {
+    const amnt = parseFloat(val) / 1e8;
+    const amnts = amnt.toString().split('.');
 
     return {
       currency: 'ZBC ',
-      amount1: balances[0],
-      amount2: balances[1] ? `.${balances[1]}` : '',
-    };
-  }
-
-  lockedFormatting(balance, spendable) {
-    const diff = parseFloat(balance) - parseFloat(spendable);
-    const diffs = diff.toString().split('.');
-
-    return {
-      currency: 'ZBC ',
-      amount1: diffs[0] ? diffs[0] : null,
-      amount2: diffs[1] ? `.${diffs[1]}` : null,
+      amount1: amnts[0],
+      amount2: amnts[1] ? `.${amnts[1].slice(0, 4)}` : '',
     };
   }
 
@@ -134,8 +126,12 @@ export class DashboardComponent implements OnInit {
     zoobc.Account.getBalance(this.currAcc.address)
       .then((data: AccountBalance) => {
         this.accountBalance = data;
-        this.spendableBalanceFormatted = this.spendableBalanceFormatting(data.spendableBalance);
-        this.lockedFormatted = this.lockedFormatting(data.balance, data.spendableBalance);
+
+        const lockedBalance = data.balance - data.spendableBalance;
+        this.lockedBalance = lockedBalance;
+        this.lockedBalanceFormatted = this.amountFormatting(lockedBalance);
+        this.accountBalanceFormatted = this.amountFormatting(data.balance);
+        this.spendableBalanceFormatted = this.amountFormatting(data.spendableBalance);
         return this.authServ.getAccountsWithBalance();
       })
       .then((res: SavedAccount[]) => (this.accounts = res))

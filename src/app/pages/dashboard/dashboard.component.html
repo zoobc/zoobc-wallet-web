@@ -67,23 +67,21 @@
 
         <i class="fas fa-circle-notch fa-spin" *ngIf="isLoading" style="font-size: 32px;"></i>
         <ng-container *ngIf="!isLoading && !isError">
-          <span class="spendable">
-            <span class="font-medium" id="top">{{ spendableBalanceFormatted.currency }}</span>
+          <span class="spendable" [popper]="'ZBC ' + accountBalance.spendableBalance / 1e8">
+            <span class="font-big">{{ spendableBalanceFormatted.currency }}</span>
             <span class="font-big">{{ spendableBalanceFormatted.amount1 }}</span>
-            <span class="font-small" id="top">{{ spendableBalanceFormatted.amount2 }}</span>
+            <span class="font-small">{{ spendableBalanceFormatted.amount2 }}</span>
           </span>
           <br />
-          <span class="locked" *ngIf="!lockedFormatted.amount1"
-            >( locked :
-            <span
-              >{{ lockedFormatted.currency }} {{ lockedFormatted.amount1 }}
-              {{ lockedFormatted.amount2 }}</span
-            >
-            )
-          </span>
-          <!-- <div class="balance" [popper]="'ZBC ' + accountBalance.balance / 1e8">
-            ZBC {{ accountBalance.balance / 1e8 | number: '0.0-4' }}
-          </div> -->
+          <span
+            *ngIf="lockedBalance > 0"
+            [popper]="'ZBC ' + accountBalance.balance / 1e8 + ', Locked ' + lockedBalance / 1e8"
+          >
+            {{ 'balance' | translate }} {{ accountBalanceFormatted.currency }}
+            {{ accountBalanceFormatted.amount1 }}{{ accountBalanceFormatted.amount2 }},
+            {{ 'locked' | translate }} {{ lockedBalanceFormatted.amount1
+            }}{{ lockedBalanceFormatted.amount2 }}</span
+          >
           <!-- <div class="spendable" [popper]="'ZBC ' + accountBalance.spendableBalance / 1e8">
             {{ 'spendable' | translate }} ZBC {{ accountBalance.spendableBalance / 1e8 | number: '0.0-4' }}
           </div> -->
