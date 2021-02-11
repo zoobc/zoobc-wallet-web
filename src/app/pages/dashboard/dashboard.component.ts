@@ -118,7 +118,7 @@ export class DashboardComponent implements OnInit {
     return {
       currency: 'ZBC ',
       amount1: amnts[0],
-      amount2: amnts[1] ? `.${amnts[1]}` : '',
+      amount2: amnts[1] ? `.${amnts[1].slice(0, 4)}` : '',
     };
   }
 
