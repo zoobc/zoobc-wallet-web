@@ -1,10 +1,12 @@
 export interface NodeList {
-  node: Node[];
-  timestamp: number;
+  label: string;
+  selected: boolean;
+  wkps: string[];
 }
 
 export interface Node {
-  ip: string;
-  name: string;
+  label: string;
   default: boolean;
+  selected: boolean;
+  wkps: string[];
 }

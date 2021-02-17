@@ -1,8 +1,8 @@
 <div class="network-container">
   <mat-form-field appearance="outline" color="accent" class="select-node">
     <mat-select [value]="selectedNode" (selectionChange)="changeNode($event.value)">
-      <mat-option *ngFor="let node of nodeList.node; let i = index" [value]="i">
-        <span>{{ node.name }}</span>
+      <mat-option *ngFor="let node of nodeList; let i = index" [value]="i">
+        <span>{{ node.label }}</span>
         <ng-container *ngIf="!node.default">
           <span class="delete-network" (click)="delete($event, i)" matTooltip="{{ 'delete' | translate }}">
             <i class="fas fa-trash"></i>
@@ -31,36 +31,38 @@
   <h2 class="mat-h3" *ngIf="currAction == 'edit'">
     {{ 'edit network' | translate }}
   </h2>
+
   <form [formGroup]="formNetwork" style="display: grid;" (submit)="submitNetwork()">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'network name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" />
+      <input matInput type="text" formControlName="label" />
     </mat-form-field>
-    <ng-container *ngIf="nameField.touched">
-      <mat-error *ngIf="nameField.hasError('required')">
+    <ng-container *ngIf="labelField.touched">
+      <mat-error *ngIf="labelField.hasError('required')">
         {{ 'network name is required' | translate }}
       </mat-error>
     </ng-container>
 
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'node address' | translate }}</mat-label>
-      <input
+      <textarea
         matInput
-        type="text"
-        placeholder="https://yournode.com:80 {{ 'or' | translate }} http://192.168.43.1:8001"
-        formControlName="ip"
-      />
+        rows="5"
+        placeholder="https://yournode.com {{ 'or' | translate }} http://192.168.43.1:8001"
+        formControlName="wkps"
+      ></textarea>
     </mat-form-field>
-    <ng-container *ngIf="ipField.touched">
-      <mat-error *ngIf="ipField.hasError('required')">
+
+    <ng-container *ngIf="wkpsField.touched">
+      <mat-error *ngIf="wkpsField.hasError('required')">
         {{ 'node address is required' | translate }}
       </mat-error>
-      <mat-error *ngIf="ipField.hasError('pattern')">
+      <mat-error *ngIf="errorPattern">
         {{ 'invalid node address format' | translate }}
       </mat-error>
     </ng-container>
 
-    <button mat-flat-button color="primary" type="submit">
+    <button mat-flat-button color="primary" type="submit" [disabled]="!enableSubmit">
       <span *ngIf="currAction == 'add'">{{ 'add' | translate }}</span>
       <span *ngIf="currAction == 'edit'">{{ 'edit' | translate }}</span>
     </button>
