@@ -28,7 +28,7 @@
       <ng-container *ngFor="let acc of accounts; index as i">
         <div class="account">
           <div class="select-address">
-            <div class="btn-select" *ngIf="currAcc.address == acc.address; else elseAcc">
+            <div class="btn-select" *ngIf="currAcc.address.value == acc.address.value; else elseAcc">
               <i class="fa fa-check-circle"></i>
             </div>
             <ng-template #elseAcc>

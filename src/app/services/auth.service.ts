@@ -46,12 +46,8 @@ export class AuthService {
   }
 
   generateDerivationPath(): number {
-    let accounts: SavedAccount[];
-    if (environment.production) {
-      accounts = JSON.parse(localStorage.getItem('ACCOUNT_MAIN')) || [];
-    } else {
-      accounts = JSON.parse(localStorage.getItem('ACCOUNT_TEST')) || [];
-    }
+    const net = environment.production ? 'MAIN' : 'TEST';
+    const accounts = JSON.parse(localStorage.getItem(`ACCOUNT_${net}`)) || [];
     const highestPath = Math.max.apply(
       Math,
       accounts.map(res => {
@@ -63,12 +59,8 @@ export class AuthService {
 
   login(key: string): boolean {
     // give some delay so that the dom have time to render the spinner
-    let encPassphrase;
-    if (environment.production) {
-      encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
-    } else {
-      encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
-    }
+    const net = environment.production ? 'MAIN' : 'TEST';
+    const encPassphrase = localStorage.getItem(`ENC_PASSPHRASE_SEED_${net}`);
     const passphrase = zoobc.Wallet.decryptPassphrase(encPassphrase, key);
 
     if (passphrase) {
@@ -88,18 +80,16 @@ export class AuthService {
   }
 
   switchAccount(account: SavedAccount) {
-    if (environment.production) {
-      localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(account));
-    } else {
-      localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(account));
-    }
+    const net = environment.production ? 'MAIN' : 'TEST';
+    localStorage.setItem(`CURR_ACCOUNT_${net}`, JSON.stringify(account));
+
     this._keyring.calcDerivationPath(account.path);
     this._seed = this._keyring.calcDerivationPath(account.path);
   }
 
   getCurrAccount(): SavedAccount {
-    if (environment.production) return JSON.parse(localStorage.getItem('CURR_ACCOUNT_MAIN'));
-    else return JSON.parse(localStorage.getItem('CURR_ACCOUNT_TEST'));
+    const net = environment.production ? 'MAIN' : 'TEST';
+    return JSON.parse(localStorage.getItem(`CURR_ACCOUNT_${net}`));
   }
 
   getAllAccount(type?: AccountType): SavedAccount[] {
@@ -142,11 +132,8 @@ export class AuthService {
 
     if (!isDuplicate) {
       accounts.push(account);
-      if (environment.production) {
-        localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(accounts));
-      } else {
-        localStorage.setItem('ACCOUNT_TEST', JSON.stringify(accounts));
-      }
+      const net = environment.production ? 'MAIN' : 'TEST';
+      localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify(accounts));
       this.switchAccount(account);
     }
   }

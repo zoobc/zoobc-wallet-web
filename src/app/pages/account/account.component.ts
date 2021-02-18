@@ -26,7 +26,6 @@ export class AccountComponent implements OnInit {
   ) {
     this.currAcc = this.authServ.getCurrAccount();
     this.accounts = this.authServ.getAllAccount();
-    console.log(this.accounts);
   }
 
   ngOnInit() {
@@ -92,11 +91,8 @@ export class AccountComponent implements OnInit {
         const currAccount = this.authServ.getCurrAccount();
         if (this.accounts[index].address == currAccount.address) this.onSwitchAccount(this.accounts[0]);
         this.accounts.splice(index, 1);
-        if (environment.production) {
-          localStorage.setItem('ACCOUNT_MAIN', JSON.stringify(this.accounts));
-        } else {
-          localStorage.setItem('ACCOUNT_TEST', JSON.stringify(this.accounts));
-        }
+        const net = environment.production ? 'MAIN' : 'TEST';
+        localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify(this.accounts));
         return true;
       },
     });

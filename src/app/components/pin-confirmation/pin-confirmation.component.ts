@@ -33,12 +33,9 @@ export class PinConfirmationComponent implements OnInit {
 
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
-        let encPassphrase;
-        if (environment.production) {
-          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
-        } else {
-          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
-        }
+        const net = environment.production ? 'MAIN' : 'TEST';
+        const encPassphrase = localStorage.getItem(`ENC_PASSPHRASE_SEED_${net}`);
+
         const isPinValid = zoobc.Wallet.decryptPassphrase(encPassphrase, this.pinField.value);
         if (isPinValid) this.dialogRef.close(true);
         else {
