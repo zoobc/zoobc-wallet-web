@@ -25,6 +25,7 @@ export const removeNodeMap = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
   ...escrowMap,
+  message: 'message',
 };
 
 export function createRemoveNodeForm() {
@@ -32,5 +33,6 @@ export function createRemoveNodeForm() {
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     nodePublicKey: new FormControl('', Validators.required),
     ...escrowForm(),
+    message: new FormControl(''),
   });
 }

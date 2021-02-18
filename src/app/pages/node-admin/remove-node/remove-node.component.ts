@@ -53,6 +53,7 @@ export class RemoveNodeComponent implements OnInit {
             accountAddress: this.account.address,
             nodePublicKey: ZBCAddressToBytes(this.formRemoveNode.get('nodePublicKey').value),
             fee: this.formRemoveNode.get('fee').value,
+            message: this.formRemoveNode.get('message').value,
           };
           zoobc.Node.remove(data, this.authServ.seed)
             .then(() => {

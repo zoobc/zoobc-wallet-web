@@ -46,6 +46,7 @@ import { FormRegisterNodeModule } from 'src/app/components/transaction-form/form
 import { FormUpdateNodeModule } from 'src/app/components/transaction-form/form-update-node/form-update-node.module';
 import { FormClaimNodeModule } from 'src/app/components/transaction-form/form-claim-node/form-claim-node.module';
 import { FormFeeModule } from 'src/app/components/transaction-form/form-fee/form-fee.module';
+import { FormMessageModule } from 'src/app/components/transaction-form/form-message/form-message.module';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
@@ -109,6 +110,7 @@ const routes: Routes = [
     FormUpdateNodeModule,
     FormClaimNodeModule,
     FormFeeModule,
+    FormMessageModule,
   ],
   entryComponents: [RegisterNodeComponent, UpdateNodeComponent, ClaimNodeComponent, RemoveNodeComponent],
 })

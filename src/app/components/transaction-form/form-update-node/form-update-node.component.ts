@@ -26,6 +26,7 @@ export const updateNodeMap = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
   ...escrowMap,
+  message: 'message',
 };
 
 export function createUpdateNodeForm() {
@@ -35,5 +36,6 @@ export function createUpdateNodeForm() {
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     nodePublicKey: new FormControl('', Validators.required),
     ...escrowForm(),
+    message: new FormControl(''),
   });
 }

@@ -49,6 +49,7 @@ export class RegisterNodeComponent implements OnInit {
       const ipAddressForm = this.formRegisterNode.get('ipAddress');
       const feeForm = this.formRegisterNode.get('fee');
       const lockedBalanceForm = this.formRegisterNode.get('lockedBalance');
+      const messageForm = this.formRegisterNode.get('message');
 
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
@@ -66,6 +67,7 @@ export class RegisterNodeComponent implements OnInit {
             nodeAddress: ipAddressForm.value,
             fee: feeForm.value,
             funds: lockedBalanceForm.value,
+            message: messageForm.value,
           };
 
           zoobc.Node.register(data, this.authServ.seed)

@@ -38,6 +38,7 @@ export const removeDatasetMap = {
   recipientAddress: 'recipientAddress',
   fee: 'fee',
   ...escrowMap,
+  message: 'message',
 };
 
 export function createRemoveDatasetForm(): FormGroup {
@@ -48,6 +49,7 @@ export function createRemoveDatasetForm(): FormGroup {
     recipientAddress: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     ...escrowForm(),
+    message: new FormControl(''),
   });
 }
 

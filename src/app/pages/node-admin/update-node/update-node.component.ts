@@ -88,6 +88,7 @@ export class UpdateNodeComponent implements OnInit {
             nodePublicKey: ZBCAddressToBytes(this.formUpdateNode.get('nodePublicKey').value),
             nodeAddress: this.formUpdateNode.get('ipAddress').value,
             funds: this.formUpdateNode.get('lockedAmount').value,
+            message: this.formUpdateNode.get('message').value,
           };
 
           zoobc.Node.update(data, this.authServ.seed)

@@ -27,6 +27,7 @@ export const claimNodeMap = {
   nodePublicKey: 'nodePublicKey',
   ipAddress: 'ipAddress',
   ...escrowMap,
+  message: 'message',
 };
 
 export function createClaimNodeForm() {
@@ -35,5 +36,6 @@ export function createClaimNodeForm() {
     nodePublicKey: new FormControl('', Validators.required),
     ipAddress: new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]),
     ...escrowForm(),
+    message: new FormControl(''),
   });
 }

@@ -44,6 +44,7 @@ export class ClaimNodeComponent implements OnInit {
       const nodePublicKeyForm = this.formClaimNode.get('nodePublicKey');
       const feeForm = this.formClaimNode.get('fee');
       const ipAddressForm = this.formClaimNode.get('ipAddress');
+      const messageForm = this.formClaimNode.get('message');
 
       let pinRefDialog = this.dialog.open(PinConfirmationComponent, {
         width: '400px',
@@ -56,6 +57,7 @@ export class ClaimNodeComponent implements OnInit {
             nodePublicKey: ZBCAddressToBytes(nodePublicKeyForm.value),
             fee: feeForm.value,
             nodeAddress: ipAddressForm.value,
+            message: messageForm.value,
           };
           const seed = this.authServ.seed;
 
