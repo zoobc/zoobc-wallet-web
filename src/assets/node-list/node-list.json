@@ -1,6 +1,27 @@
 [
   {
-    "label": "Beta",
+    "label": "Experimental Network",
+    "selected": false,
+    "default": true,
+    "wkps": ["http://172.104.62.181:7001", "http://45.79.35.137:7001", "http://23.92.27.48:7001"]
+  },
+  {
+    "label": "Alpha Network",
+    "selected": true,
+    "default": true,
+    "wkps": [
+      "http://n0.alpha.proofofparticipation.network:7001",
+      "http://n1.alpha.proofofparticipation.network:7001",
+      "http://n2.alpha.proofofparticipation.network:7001",
+      "http://n3.alpha.proofofparticipation.network:7001",
+      "http://n4.alpha.proofofparticipation.network:7001",
+      "http://n5.alpha.proofofparticipation.network:7001"
+    ]
+  },
+  {
+    "label": "Beta Network",
+    "selected": false,
+    "default": true,
     "wkps": [
       "http://n0.beta.proofofparticipation.network:7001",
       "http://n1.beta.proofofparticipation.network:7001",

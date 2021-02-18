@@ -5,8 +5,17 @@ import { MatSidenav, MatDrawerContent } from '@angular/material';
 import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from 'src/assets/node-list/node-list.json';
 import { NodeList } from 'src/helpers/node-list';
-import zoobc, { GroupData, HostInterface } from 'zbc-sdk';
+import zoobc, { GroupData } from 'zbc-sdk';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
+
+function equals(arr1, arr2) {
+  return (
+    Array.isArray(arr1) &&
+    Array.isArray(arr2) &&
+    arr1.length <= arr2.length &&
+    arr1.every((val, idx) => val.label === arr2[idx].label)
+  );
+}
 
 @Component({
   selector: 'app-parent',
@@ -53,28 +62,28 @@ export class ParentComponent implements OnInit {
   }
 
   importNodeList() {
-    // let nodeList: NodeList = nodeListJson;
-    // let currNodeList: NodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
+    /** get default value node list from json file and local storage  */
+    let nodeList: NodeList[] = nodeListJson;
+    let currNodeList: NodeList[] = JSON.parse(localStorage.getItem('NODE_LIST'));
 
-    // if there's a new network on node-list.json
-    // if (!currNodeList || currNodeList.timestamp < nodeList.timestamp) {
-    //   localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
-    //   localStorage.setItem('SELECTED_NODE', '0');
+    /** check and set local storage if current node list not available */
+    if (!currNodeList) {
+      localStorage.setItem('NODE_LIST', JSON.stringify(nodeList));
+      currNodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
+    }
 
-    //   currNodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
-    // }
+    /** update current node list (local storage) if having different from json file */
+    if (!equals(nodeList, currNodeList)) {
+      nodeList.forEach(item => {
+        let idx = currNodeList.map(node => node.label).indexOf(item.label);
+        if (idx !== undefined) currNodeList.splice(idx, 1, item);
+      });
 
-    // const list: HostInterface[] = currNodeList.node.map(node => {
-    //   return {
-    //     host: node.ip,
-    //     name: node.name,
-    //   };
-    // });
+      localStorage.setItem('NODE_LIST', JSON.stringify(currNodeList));
+    }
 
-    // zoobc.Network.list(list);
-    // zoobc.Network.set(parseInt(localStorage.getItem('SELECTED_NODE')));
-
-    const groups: GroupData[] = nodeListJson;
+    /** filter node list who has selected is true */
+    const groups: GroupData[] = currNodeList.filter(f => f.selected === true);
     zoobc.Network.load(groups);
   }
 }
