@@ -6,7 +6,7 @@ import { ConfirmUpdateComponent } from '../confirm-update/confirm-update.compone
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Seat, SeatService } from 'src/app/services/seat.service';
-import { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
+import { ZooKeyring, getZBCAddress } from 'zbc-sdk';
 import { eddsa as EdDSA } from 'elliptic';
 import SHA3 from 'sha3';
 import { WaitingDialogComponent } from '../waiting-dialog/waiting-dialog.component';
@@ -122,7 +122,7 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onSwitch(account: SavedAccount) {
-    this.addressField.setValue(account.address);
+    this.addressField.setValue(account.address.value);
   }
 
   generateNodePublicKey() {

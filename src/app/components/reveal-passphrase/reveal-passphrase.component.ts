@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { onCopyText } from 'src/helpers/utils';
 import { MatDialogRef, MatSnackBar } from '@angular/material';
-import zoobc from 'zoobc-sdk';
+import zoobc from 'zbc-sdk';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -28,12 +28,8 @@ export class RevealPassphraseComponent implements OnInit {
       this.isConfirmPinLoading = true;
 
       setTimeout(() => {
-        let encPassphrase;
-        if (environment.production) {
-          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
-        } else {
-          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
-        }
+        const net = environment.production ? 'MAIN' : 'TEST';
+        const encPassphrase = localStorage.getItem(`ENC_PASSPHRASE_SEED_${net}`);
         this.phrase = zoobc.Wallet.decryptPassphrase(encPassphrase, this.pinField.value);
         if (this.phrase) this.arrPhrase = this.phrase.split(' ');
         else this.formConfirmPin.setErrors({ invalid: true });

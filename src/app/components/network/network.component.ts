@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { NodeList, Node } from '../../../helpers/node-list';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import zoobc, { HostInterface } from 'zoobc-sdk';
+import zoobc, { HostInterface } from 'zbc-sdk';
 
 @Component({
   selector: 'network',
@@ -20,10 +20,7 @@ export class NetworkComponent implements OnInit {
 
   formNetwork: FormGroup;
   nameField = new FormControl('', [Validators.required]);
-  ipField = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^https?://+[\\w.-]+:\\d+$'),
-  ]);
+  ipField = new FormControl('', [Validators.required, Validators.pattern('^https?://+[\\w.-]+:\\d+$')]);
 
   constructor(private dialog: MatDialog) {
     this.formNetwork = new FormGroup({
@@ -34,9 +31,7 @@ export class NetworkComponent implements OnInit {
 
   ngOnInit() {
     this.nodeList = JSON.parse(localStorage.getItem('NODE_LIST'));
-    this.selectedNode = parseInt(
-      JSON.parse(localStorage.getItem('SELECTED_NODE'))
-    );
+    this.selectedNode = parseInt(JSON.parse(localStorage.getItem('SELECTED_NODE')));
   }
 
   changeNode(idx: number) {

@@ -7,25 +7,23 @@
   <div class="content">
     <div class="row">
       <div class="col-12">
-        <div class="label">Participants:</div>
+        <div class="label">{{ 'Participants' }}:</div>
         <ul class="participants" *ngFor="let participant of currAcc.participants">
-          <li><wallet-address [value]="participant" [copyButton]="true"></wallet-address></li>
+          <li>
+            <wallet-address [value]="participant.value"></wallet-address>
+          </li>
         </ul>
         <div class="label nonce">
-          Nonce: <span>{{ currAcc.nonce }}</span>
+          {{ 'Nonce' }}: <span>{{ currAcc.nonce }}</span>
         </div>
         <div class="label">
-          Min Signature:
+          {{ 'Min Signature' }}:
           <span class="min-signature">{{ currAcc.minSig }} address(es)</span>
         </div>
-        <div class="signed-by">
-          <div class="label">Signed By:</div>
-          <wallet-address [value]="currAcc.signByAddress" [copyButton]="true"></wallet-address>
-        </div>
         <div class="share-multisig-info">
-          <button mat-flat-button color="primary" (click)="onCopyText($event)" class="block">
+          <button mat-flat-button color="primary" (click)="onExport()" class="block">
             <span><i class="fa fa-share-alt"></i> &nbsp;</span>
-            <span>Share this multisig info</span>
+            <span>{{ 'Export this multisig info' }}</span>
           </button>
         </div>
       </div>

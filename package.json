@@ -40,7 +40,7 @@
     "tslib": "^1.9.0",
     "web3": "^1.2.9",
     "zone.js": "~0.8.26",
-    "zoobc-sdk": "github:zoobc/zoobc-sdk#develop"
+    "zbc-sdk": "0.0.12-pre-release"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

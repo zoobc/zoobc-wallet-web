@@ -30,7 +30,8 @@ export class GenesisComponent implements OnInit {
         const AccountAddress = await contract.methods.getAccountAddress(i).call();
         if (AccountAddress) {
           const NodeAccountAddress = await contract.methods.getNodePublicKey(i).call();
-          json.push({ AccountAddress, NodeAccountAddress, Smithing: true });
+          const Message = await contract.methods.getGenesisMessage(i).call();
+          json.push({ AccountAddress, NodeAccountAddress, Message, Smithing: true });
         }
         // return resolve({ next: false, prev: false, seats: [] });
       } catch (err) {

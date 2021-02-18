@@ -1,22 +1,24 @@
 <div class="add-account-container">
-  <h2 class="mat-h2 text-center">Add New Account</h2>
+  <h2 class="mat-h2 text-center">{{ 'Add New Account' }}</h2>
   <form [formGroup]="formAddAccount" (submit)="onAddAccount()">
-    <label>Account Name</label>
     <mat-form-field appearance="outline" color="accent" class="block">
+      <mat-label>{{ 'Account Name' }}</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
     <ng-container *ngIf="accountNameField.touched">
-      <mat-error *ngIf="accountNameField.hasError('required')">Account name is required </mat-error>
+      <mat-error *ngIf="accountNameField.hasError('required')">
+        {{ 'Account name is required' }}
+      </mat-error>
     </ng-container>
 
     <div style="margin-bottom: 16px;">
-      <mat-checkbox [value]="isMultiSignature" (click)="toogleMultiSignature()"
-        >Multisignature Account
+      <mat-checkbox [value]="isMultiSignature" (click)="toogleMultiSignature()">
+        {{ 'Multisignature Account' }}
       </mat-checkbox>
     </div>
 
     <ng-container *ngIf="isMultiSignature">
-      <label>Participants</label>
+      <label>{{ 'Participants' }}</label>
       <div formArrayName="participants">
         <ng-container *ngFor="let participant of participantsField.controls; let i = index">
           <ng-container *ngIf="i > 1">
@@ -25,7 +27,7 @@
                 class="input"
                 label=""
                 [formControlName]="i"
-                placeholder="{{ 'Participant ' }} {{ i + 1 }}..."
+                placeholder="{{ 'Participant' }} {{ i + 1 }}..."
               >
               </input-address>
               <button (click)="removeParticipant(i)" type="button" mat-flat-button color="warn">
@@ -34,7 +36,7 @@
             </div>
           </ng-container>
           <ng-container *ngIf="i <= 1">
-            <input-address label="" [formControlName]="i" placeholder="{{ 'Participant ' }} {{ i + 1 }}...">
+            <input-address label="" [formControlName]="i" placeholder="{{ 'Participant' }} {{ i + 1 }}...">
             </input-address>
           </ng-container>
           <ng-container *ngIf="participantsField.controls[i].touched">
@@ -42,7 +44,7 @@
               {{ 'Participant is required' }}
             </mat-error>
             <mat-error *ngIf="participantsField.controls[i].hasError('invalidAddress')">
-              {{ 'Participant Address is invalid' }}
+              {{ 'Participant address is invalid' }}
             </mat-error>
           </ng-container>
         </ng-container>
@@ -59,43 +61,40 @@
           {{ 'Add Participants' }}
         </button>
       </div>
-
-      <label>{{ 'Nonce' }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
-        <input formControlName="nonce" matInput type="number" placeholder="Nonce..." />
+        <mat-label>{{ 'Nonce' }}</mat-label>
+        <input formControlName="nonce" matInput type="number" placeholder="{{ 'Nonce' }}" />
       </mat-form-field>
       <ng-container *ngIf="nonceField.touched">
         <mat-error *ngIf="nonceField.hasError('required')">
           {{ 'Nonce is required' }}
         </mat-error>
         <mat-error *ngIf="nonceField.hasError('min')">
-          {{ 'Minimum Nonce is 1' }}
+          {{ 'Minimum nonce is 1' }}
         </mat-error>
       </ng-container>
 
-      <label>{{ 'Minimum Signature' }}</label>
       <mat-form-field appearance="outline" color="accent" class="block">
-        <input formControlName="minimumSignature" matInput type="number" placeholder="Minimum Signature..." />
+        <mat-label>{{ 'Minimum Signature' }}</mat-label>
+        <input
+          formControlName="minimumSignature"
+          matInput
+          type="number"
+          placeholder="{{ 'Minimum Signature' }}"
+        />
       </mat-form-field>
       <ng-container *ngIf="minSignatureField.touched">
         <mat-error *ngIf="minSignatureField.hasError('required')">
-          {{ 'Minimum Signature is required' }}
+          {{ 'Minimum signature is required' }}
         </mat-error>
         <mat-error *ngIf="minSignatureField.hasError('min')">
-          {{ 'Minimum Signature is 2' }}
+          {{ 'Minimum signature is 2' }}
         </mat-error>
       </ng-container>
-
-      <label>{{ 'Sign by' }}</label>
-      <account-selector
-        [type]="'normal'"
-        [switchAccount]="false"
-        (select)="onSwitchSignBy($event)"
-      ></account-selector>
     </ng-container>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid" class="block">
-      Add
+      {{ 'Add' }}
     </button>
   </form>
 </div>

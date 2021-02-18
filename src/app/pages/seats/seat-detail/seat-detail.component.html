@@ -19,25 +19,20 @@
           <div style="width: calc(100% - 32px)">
             <mat-label class="title">ZooBC Address</mat-label>
             <div class="zoobc-address">
-              <div class="address">
-                <wallet-address
-                  *ngIf="addressField.value"
-                  [value]="addressField.value"
-                  [copyButton]="true"
-                ></wallet-address>
-                <i *ngIf="!addressField.value">(No ZBC Address yet)</i>
-              </div>
-
+              <input-address label="" placeholder="ZooBC Address" formControlName="address"></input-address>
+              <mat-error *ngIf="addressField.hasError('invalidAddress')">
+                {{ 'ZBC address is invalid' }}
+              </mat-error>
               <mat-error *ngIf="addressField.hasError('required')">
-                ZBC Address is required. Please select one of your addresses by click "Change Address" button
+                ZBC Address is required.
               </mat-error>
 
-              <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false">
+              <!-- <account-selector (select)="onSwitch($event)" type="normal" switchAccount="false">
                 <button mat-flat-button type="button" class="block" color="primary">
                   <i matPrefix class="fas fa-exchange-alt"></i>
-                  <span style="text-transform: initial;">CHOOSE ZooBC ADDRESS</span>
+                  <span style="text-transform: initial;">OR CHOOSE ZooBC ADDRESS</span>
                 </button>
-              </account-selector>
+              </account-selector> -->
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { PinSetupDialogComponent } from 'src/app/components/pin-setup-dialog/pin
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
-import zoobc, { ZooKeyring, getZBCAddress } from 'zoobc-sdk';
+import zoobc, { ZooKeyring, getZBCAddress } from 'zbc-sdk';
 
 interface Languages {
   value: string;
@@ -137,20 +137,18 @@ export class RestoreWalletComponent implements OnInit {
       path: 0,
       type: 'normal',
       nodeIP: null,
-      address: address,
+      address: { value: address, type: 0 },
     };
-    if (environment.production) {
-      localStorage.setItem('ENC_PASSPHRASE_SEED_MAIN', encPassphrase);
-      localStorage.setItem('ACCOUNT_MAIN', JSON.stringify([account]));
-      localStorage.setItem('CURR_ACCOUNT_MAIN', JSON.stringify(account));
-    } else {
-      localStorage.setItem('ENC_PASSPHRASE_SEED_TEST', encPassphrase);
-      localStorage.setItem('ACCOUNT_TEST', JSON.stringify([account]));
-      localStorage.setItem('CURR_ACCOUNT_TEST', JSON.stringify(account));
-    }
+
+    const net = environment.production ? 'MAIN' : 'TEST';
+    localStorage.removeItem(`ACCOUNT_${net}`);
+    localStorage.removeItem(`CURR_ACCOUNT_${net}`);
+    localStorage.setItem(`ENC_PASSPHRASE_SEED_${net}`, encPassphrase);
+    localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify([account]));
+    localStorage.setItem(`CURR_ACCOUNT_${net}`, JSON.stringify(account));
+    localStorage.setItem('IS_RESTORED', 'false');
+
     this.authServ.login(key);
-    this.router.navigate(['dashboard'], {
-      state: { loadAccount: true },
-    });
+    this.router.navigate(['dashboard']);
   }
 }

@@ -38,11 +38,8 @@ export class LoginComponent implements OnInit {
     this.formLoginPin = new FormGroup({
       pin: this.pinForm,
     });
-    if (environment.production) {
-      this.encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
-    } else {
-      this.encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
-    }
+    const net = environment.production ? 'MAIN' : 'TEST';
+    this.encPassphrase = localStorage.getItem(`ENC_PASSPHRASE_SEED_${net}`);
     this.hasAccount = this.encPassphrase ? true : false;
   }
 

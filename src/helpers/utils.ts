@@ -1,4 +1,5 @@
-import { SendMoneyInterface } from 'zoobc-sdk';
+import { FormArray, ValidationErrors } from '@angular/forms';
+import { SendMoneyInterface } from 'zbc-sdk';
 
 export function onCopyText(text: string) {
   let isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
@@ -43,4 +44,17 @@ export function base64ToHex(str) {
     result += hex.length === 2 ? hex : '0' + hex;
   }
   return result.toUpperCase();
+}
+
+export function uniqueParticipant(formArray: FormArray): ValidationErrors {
+  const values = formArray.value.filter(val => val.length > 0);
+  const controls = formArray.controls;
+  const result = values.some((element, index) => {
+    return values.indexOf(element) !== index;
+  });
+  const invalidControls = controls.filter(ctrl => ctrl.valid === false);
+  if (result && invalidControls.length == 0) {
+    return { duplicate: true };
+  }
+  return null;
 }

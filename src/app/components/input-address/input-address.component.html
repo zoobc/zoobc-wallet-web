@@ -1,30 +1,30 @@
-<ng-container *ngIf="label.length > 0">
-  <label>{{ label }}</label>
-</ng-container>
 <mat-form-field appearance="outline" [className]="classList" color="accent">
+  <mat-label *ngIf="label.length > 0">{{ label }}</mat-label>
   <input
     matInput
     [disabled]="disabled"
-    (focus)="onChange($event.target.value)"
+    (input)="onChange($event.target.value)"
     (blur)="onChange($event.target.value)"
-    (keyup)="onChange($event.target.value)"
     [value]="value"
     [matAutocomplete]="auto"
     placeholder="{{ placeholder }}"
     [readonly]="readonly"
+    class="font-roboto-mono"
   />
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option disabled>
-      <span class="mat-caption">Search address from your address book or your own account' </span>
+      <span class="mat-caption">
+        {{ 'Search address from your contacts or your own account' }}
+      </span>
     </mat-option>
-    <!-- <mat-option
+    <mat-option
       #matOption
-      (click)="onOptionClick(contact.address)"
+      (click)="onChange(contact.address.value)"
       *ngFor="let contact of filteredContacts"
-      [value]="contact.address"
+      [value]="contact.address.value"
     >
-      <span>{{ contact.alias }}</span> |
-      <small>{{ contact.address }}</small>
-    </mat-option> -->
+      <span>{{ contact.name }}</span> |
+      <small class="font-roboto-mono">{{ contact.address.value }}</small>
+    </mat-option>
   </mat-autocomplete>
 </mat-form-field>

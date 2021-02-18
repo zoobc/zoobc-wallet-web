@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import zoobc from 'zoobc-sdk';
+import zoobc from 'zbc-sdk';
 import { PinsComponent } from '../pins/pins.component';
 import { environment } from 'src/environments/environment';
 
@@ -33,12 +33,9 @@ export class PinConfirmationComponent implements OnInit {
 
       // give some delay so that the dom have time to render the spinner
       setTimeout(() => {
-        let encPassphrase;
-        if (environment.production) {
-          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_MAIN');
-        } else {
-          encPassphrase = localStorage.getItem('ENC_PASSPHRASE_SEED_TEST');
-        }
+        const net = environment.production ? 'MAIN' : 'TEST';
+        const encPassphrase = localStorage.getItem(`ENC_PASSPHRASE_SEED_${net}`);
+
         const isPinValid = zoobc.Wallet.decryptPassphrase(encPassphrase, this.pinField.value);
         if (isPinValid) this.dialogRef.close(true);
         else {
