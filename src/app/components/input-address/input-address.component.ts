@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, EventEmitter, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { Contact, ContactService } from 'src/app/services/contact.service';
 import { isZBCAddressValid } from 'zbc-sdk';
 @Component({
   selector: 'input-address',
@@ -20,27 +21,33 @@ import { isZBCAddressValid } from 'zbc-sdk';
 })
 export class InputAddressComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder: string;
-  @Input() label: string;
+  @Input() label: string = '';
   @Input() classList: string;
   @Input() readonly: boolean = false;
   @Input() exceptContact: SavedAccount;
+  @Output() change = new EventEmitter();
 
   value: string;
   tempVal: string[];
+  contacts: Contact[];
+  contact: Contact;
   account: SavedAccount;
   accounts: SavedAccount[];
+  filteredContacts: Contact[];
 
   private _onChange = (value: any) => {};
   private _onTouched = (value: any) => {};
   disabled: boolean;
 
-  constructor(private authServ: AuthService) {}
+  constructor(private contactServ: ContactService, private authServ: AuthService) {}
 
   ngOnInit() {
-    // this.getAccounts();
+    this.contacts = this.contactServ.getList() || [];
+    this.getAccounts();
+    this.filteredContacts = this.contacts;
   }
 
-  writeValue(value: any) {
+  writeValue(value: string) {
     this.value = value ? value : '';
   }
 
@@ -56,48 +63,48 @@ export class InputAddressComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onChange(value: any) {
-    this._onChange(value);
-    this._onTouched(value);
+  onChange(address: string) {
+    if (address != this.value) {
+      this.filteredContacts = this.filterContacts(address);
+      this._onChange(address);
+      this._onTouched(address);
+      this.change.emit(address);
+    }
+    this.value = address;
   }
 
-  onOptionClick(address: any) {
+  onOptionClick(address: string) {
     this._onChange(address);
   }
 
-  // filterContacts(value: string): Contact[] {
-  //   if (value) {
-  //     const filterValue = value.toLowerCase();
-  //     return this.contacts.filter((contact: Contact) =>
-  //       contact.alias.toLocaleLowerCase().includes(filterValue)
-  //     );
-  //   } else if (value == '') return this.contacts;
-  // }
+  filterContacts(address: string): Contact[] {
+    if (address) {
+      const filterValue = address.toLowerCase();
+      return this.contacts.filter((contact: Contact) =>
+        contact.name.toLocaleLowerCase().includes(filterValue)
+      );
+    } else if (address == '') return this.contacts;
+  }
 
-  // getAccounts() {
-  //   this.accounts = this.authServ.getAllAccount();
-  //   if (this.exceptContact)
-  //     this.accounts = this.accounts.filter(acc => acc.address !== this.exceptContact.address);
-  //   this.accounts.forEach(account => {
-  //     const contact: Contact = {
-  //       address: account.address,
-  //       alias: account.name,
-  //     };
-  //     this.contacts.push(contact);
-  //   });
-  // }
+  getAccounts() {
+    this.accounts = this.authServ.getAllAccount();
+    if (this.exceptContact)
+      this.accounts = this.accounts.filter(acc => acc.address.value !== this.exceptContact.address.value);
+    this.accounts.forEach(account => {
+      const contact: Contact = {
+        address: account.address,
+        name: account.name,
+      };
+      this.contacts.push(contact);
+    });
+  }
 
   validate({ value }: FormControl) {
     let result: boolean = false;
-    if (value) {
-      result = isZBCAddressValid(value);
-    } else {
-      return null;
-    }
+    if (value) result = isZBCAddressValid(value, 'ZBC');
+    else return null;
 
-    if (!result) {
-      return { invalidAddress: true };
-    }
+    if (!result) return { invalidAddress: true };
     return null;
   }
 }

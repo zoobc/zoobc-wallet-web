@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
+import { uniqueParticipant } from 'src/helpers/utils';
 import Swal from 'sweetalert2';
 import zoobc, { Address, getZBCAddress, MultiSigInfo } from 'zbc-sdk';
 
@@ -13,20 +14,15 @@ import zoobc, { Address, getZBCAddress, MultiSigInfo } from 'zbc-sdk';
 export class AddAccountComponent {
   formAddAccount: FormGroup;
   accountNameField = new FormControl('', Validators.required);
-  participantsField = new FormArray([], this.uniqueParticipant);
+  participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
 
-  signBy: SavedAccount;
-
   isMultiSignature: boolean = false;
   minParticipant: number = 2;
+  account: SavedAccount;
 
-  constructor(
-    private authServ: AuthService,
-    private dialogRef: MatDialogRef<AddAccountComponent>,
-    @Inject(MAT_DIALOG_DATA) private account: SavedAccount
-  ) {
+  constructor(private authServ: AuthService, private dialogRef: MatDialogRef<AddAccountComponent>) {
     this.formAddAccount = new FormGroup({
       name: this.accountNameField,
       participants: this.participantsField,
@@ -34,21 +30,11 @@ export class AddAccountComponent {
       minimumSignature: this.minSignatureField,
     });
 
-    if (account) {
-      this.enableFieldMultiSignature();
-      this.pushInitParticipant(account.participants.length);
-      this.prefillAccount();
-    } else {
-      this.pushInitParticipant();
-      this.disableFieldMultiSignature();
-    }
+    this.pushInitParticipant();
+    this.disableFieldMultiSignature();
   }
 
-  prefillAccount() {
-    this.participantsField.setValue(this.account.participants);
-    this.nonceField.setValue(this.account.nonce);
-    this.minSignatureField.setValue(this.account.minSig);
-  }
+  ngOnInit() {}
 
   async onAddAccount() {
     let account: SavedAccount;
@@ -69,7 +55,7 @@ export class AddAccountComponent {
       return this.dialogRef.close(true);
     }
 
-    let title = 'are you sure?';
+    let title = 'Are you sure?';
     let message =
       'once you create multisignature address, you will not be able to edit it anymore. but you can still delete it';
     let buttonText = 'yes, continue it!';
@@ -145,22 +131,5 @@ export class AddAccountComponent {
 
   removeParticipant(index: number) {
     this.participantsField.removeAt(index);
-  }
-
-  onSwitchSignBy(account: SavedAccount) {
-    this.signBy = account;
-  }
-
-  uniqueParticipant(formArray: FormArray): ValidationErrors {
-    const values = formArray.value.filter(val => val.length > 0);
-    const controls = formArray.controls;
-    const result = values.some((element, index) => {
-      return values.indexOf(element) !== index;
-    });
-    const invalidControls = controls.filter(ctrl => ctrl.valid === false);
-    if (result && invalidControls.length == 0) {
-      return { duplicate: true };
-    }
-    return null;
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import zoobc, { getZBCAddress, TransactionListParams, ZBCTransactions } from 'zbc-sdk';
 import { AuthService, SavedAccount } from './auth.service';
 
@@ -70,7 +71,8 @@ export class RestoreAccountService {
         if (!isDuplicate) accounts.push(account);
       }
 
-      localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
+      const net = environment.production ? 'MAIN' : 'TEST';
+      localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify(accounts));
       localStorage.setItem('IS_RESTORED', 'true');
 
       this.restoring = false;

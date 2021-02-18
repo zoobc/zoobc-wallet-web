@@ -141,8 +141,8 @@ export class RestoreWalletComponent implements OnInit {
     };
 
     const net = environment.production ? 'MAIN' : 'TEST';
-    localStorage.removeItem('ACCOUNT');
-    localStorage.removeItem('CURR_ACCOUNT');
+    localStorage.removeItem(`ACCOUNT_${net}`);
+    localStorage.removeItem(`CURR_ACCOUNT_${net}`);
     localStorage.setItem(`ENC_PASSPHRASE_SEED_${net}`, encPassphrase);
     localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify([account]));
     localStorage.setItem(`CURR_ACCOUNT_${net}`, JSON.stringify(account));

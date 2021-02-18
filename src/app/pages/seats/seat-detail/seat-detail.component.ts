@@ -122,7 +122,7 @@ export class SeatDetailComponent implements OnInit {
   }
 
   onSwitch(account: SavedAccount) {
-    this.addressField.setValue(account.address);
+    this.addressField.setValue(account.address.value);
   }
 
   generateNodePublicKey() {

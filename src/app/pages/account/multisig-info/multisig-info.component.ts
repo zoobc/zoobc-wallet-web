@@ -21,7 +21,7 @@ export class MultisigInfoComponent implements OnInit {
 
   ngOnInit() {}
 
-  async onCopyText(e) {
+  async onExport(e) {
     let accountJson = JSON.stringify(this.currAcc);
     const blob = new Blob([accountJson], { type: 'application/JSON' });
     saveAs(blob, `Multisignature-info-${this.currAcc.name}`);

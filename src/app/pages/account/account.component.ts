@@ -18,38 +18,21 @@ export class AccountComponent implements OnInit {
   accounts: SavedAccount[];
   @ViewChild('fileInput') myInputVariable: ElementRef;
 
-  constructor(
-    private authServ: AuthService,
-    public dialog: MatDialog,
-    private snackbar: MatSnackBar,
-    private activeRoute: ActivatedRoute
-  ) {
-    this.currAcc = this.authServ.getCurrAccount();
-    this.accounts = this.authServ.getAllAccount();
+  constructor(private authServ: AuthService, public dialog: MatDialog, private snackbar: MatSnackBar) {
+    this.refreshAccounts();
   }
 
-  ngOnInit() {
-    if (this.activeRoute.snapshot.params['accountBase64']) {
-      const accountBase64: string = this.activeRoute.snapshot.params['accountBase64'];
-      const accountStr = atob(accountBase64);
-      const account: SavedAccount = JSON.parse(accountStr);
-      setTimeout(() => {
-        this.onOpenAddAccount(account);
-      }, 50);
-    }
-  }
+  ngOnInit() {}
 
-  onOpenAddAccount(account: SavedAccount = null) {
+  onOpenAddAccount() {
     const dialog = this.dialog.open(AddAccountComponent, {
       width: '360px',
       maxHeight: '99vh',
-      data: account,
     });
 
     dialog.afterClosed().subscribe((added: boolean) => {
       if (added) {
-        this.accounts = this.authServ.getAllAccount();
-        this.currAcc = this.authServ.getCurrAccount();
+        this.refreshAccounts();
       }
     });
   }
@@ -62,8 +45,7 @@ export class AccountComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((edited: boolean) => {
       if (edited) {
-        this.accounts = this.authServ.getAllAccount();
-        this.currAcc = this.authServ.getCurrAccount();
+        this.refreshAccounts();
       }
     });
   }
@@ -72,29 +54,15 @@ export class AccountComponent implements OnInit {
     this.authServ.switchAccount(account);
     this.currAcc = account;
 
-    let message: string = `${this.currAcc.name} selected`;
+    let message = 'Account selected';
     this.snackbar.open(message, null, { duration: 3000 });
   }
 
   onOpenMultisigInfoDialog(account: SavedAccount) {
     this.dialog.open(MultisigInfoComponent, {
-      width: '300px',
+      width: '360px',
+      maxHeight: '90vh',
       data: account,
-    });
-  }
-
-  async onDelete(index: number) {
-    Swal.fire({
-      title: 'Are you sure want to delete this account?',
-      showCancelButton: true,
-      preConfirm: () => {
-        const currAccount = this.authServ.getCurrAccount();
-        if (this.accounts[index].address == currAccount.address) this.onSwitchAccount(this.accounts[0]);
-        this.accounts.splice(index, 1);
-        const net = environment.production ? 'MAIN' : 'TEST';
-        localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify(this.accounts));
-        return true;
-      },
     });
   }
 
@@ -107,11 +75,6 @@ export class AccountComponent implements OnInit {
     this.currAcc = this.authServ.getCurrAccount();
   }
 
-  isSavedAccount(obj: any): obj is SavedAccount {
-    if ((obj as SavedAccount).type) return true;
-    return false;
-  }
-
   onFileChanged(event) {
     const file = event.target.files[0];
     const fileReader = new FileReader();
@@ -120,22 +83,46 @@ export class AccountComponent implements OnInit {
     fileReader.onload = async () => {
       let fileResult = JSON.parse(fileReader.result.toString());
       if (!this.isSavedAccount(fileResult)) {
-        return Swal.fire('Opps...', 'You mported the wrong file', 'error');
+        let message = 'You imported the wrong file';
+        return Swal.fire('Opps...', message, 'error');
       }
       const accountSave: SavedAccount = fileResult;
       const idx = this.authServ.getAllAccount().findIndex(acc => acc.address == accountSave.address);
       if (idx >= 0) {
-        return Swal.fire('Opps...', 'Account with that address is already exist', 'error');
+        let message = 'account with that address is already exist';
+        return Swal.fire('Opps...', message, 'error');
       }
       this.authServ.addAccount(accountSave);
+      let message = 'account has been successfully imported';
       Swal.fire({
         type: 'success',
-        title: 'Account has been successfully imported',
+        title: message,
         showConfirmButton: false,
         timer: 1000,
       });
       this.refreshAccounts();
     };
     this.myInputVariable.nativeElement.value = '';
+  }
+
+  isSavedAccount(obj: any): obj is SavedAccount {
+    if ((obj as SavedAccount).type) return true;
+    return false;
+  }
+
+  async onDelete(index: number) {
+    const message = 'are you sure want to delete this account?';
+    Swal.fire({
+      title: message,
+      showCancelButton: true,
+      preConfirm: () => {
+        const currAccount = this.authServ.getCurrAccount();
+        if (this.accounts[index].address == currAccount.address) this.onSwitchAccount(this.accounts[0]);
+        this.accounts.splice(index, 1);
+        const net = environment.production ? 'MAIN' : 'TEST';
+        localStorage.setItem(`ACCOUNT_${net}`, JSON.stringify(this.accounts));
+        return true;
+      },
+    });
   }
 }
