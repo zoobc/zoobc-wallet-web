@@ -44,6 +44,7 @@ shall be included in all copies or substantial portions of the Software. -->
     <form-remove-node [group]="formRemoveNode" [inputMap]="removeNodeMap"></form-remove-node>
     <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
     <form-fee [group]="formRemoveNode" [inputMap]="removeNodeMap"></form-fee>
+    <form-message [group]="formRemoveNode" [inputMap]="removeNodeMap"></form-message>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formRemoveNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>

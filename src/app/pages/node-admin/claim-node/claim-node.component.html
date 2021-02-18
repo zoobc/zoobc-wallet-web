@@ -44,6 +44,7 @@ shall be included in all copies or substantial portions of the Software. -->
     <form-claim-node [group]="formClaimNode" [inputMap]="claimNodeMap"></form-claim-node>
     <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
     <form-fee [group]="formClaimNode" [inputMap]="claimNodeMap"></form-fee>
+    <form-message [group]="formClaimNode" [inputMap]="claimNodeMap"></form-message>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formClaimNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>

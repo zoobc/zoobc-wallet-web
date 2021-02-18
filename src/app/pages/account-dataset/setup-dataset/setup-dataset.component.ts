@@ -87,6 +87,7 @@ export class SetupDatasetComponent implements OnInit {
       setterAccountAddress: { value: this.formGroup.get('sender').value, type: 0 },
       recipientAccountAddress: { value: this.formGroup.get('recipient').value, type: 0 },
       fee: this.formGroup.get('fee').value,
+      message: this.formGroup.get('message').value,
     };
 
     const seed: BIP32Interface = this.authServ.seed;

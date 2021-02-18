@@ -161,6 +161,7 @@ export const sendMoneyMap = {
   amount: 'amount',
   fee: 'fee',
   ...escrowMap,
+  message: 'message',
 };
 
 export function createSendMoneyForm(): FormGroup {
@@ -171,6 +172,7 @@ export function createSendMoneyForm(): FormGroup {
     alias: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     ...escrowForm(),
+    message: new FormControl(''),
   });
 }
 

@@ -72,6 +72,7 @@ export const registerNodeMap = {
   fee: 'fee',
   nodePublicKey: 'nodePublicKey',
   ...escrowMap,
+  message: 'message',
 };
 
 export function createRegisterNodeForm() {
@@ -81,5 +82,6 @@ export function createRegisterNodeForm() {
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
     nodePublicKey: new FormControl('', Validators.required),
     ...escrowForm(),
+    message: new FormControl(''),
   });
 }

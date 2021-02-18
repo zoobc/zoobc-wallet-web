@@ -177,6 +177,7 @@ export class SendmoneyComponent implements OnInit {
       const timeoutField = this.formSend.get('timeout');
       const instructionField = this.formSend.get('instruction');
       const aliasField = this.formSend.get('alias');
+      const messageField = this.formSend.get('message');
 
       let data: SendMoneyInterface = {
         sender: { value: senderForm.value, type: 0 },
@@ -187,6 +188,7 @@ export class SendmoneyComponent implements OnInit {
         commission: approverCommissionField.value,
         timeout: timeoutField.value,
         instruction: instructionField.value,
+        message: messageField.value,
       };
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(

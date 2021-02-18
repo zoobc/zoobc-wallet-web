@@ -44,6 +44,7 @@ shall be included in all copies or substantial portions of the Software. -->
     <form-register-node [group]="formRegisterNode" [inputMap]="registerNodeMap"> </form-register-node>
     <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
     <form-fee [group]="formRegisterNode" [inputMap]="registerNodeMap"></form-fee>
+    <form-message [group]="formRegisterNode" [inputMap]="registerNodeMap"></form-message>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formRegisterNode.invalid || isLoading">
       {{ 'register' | translate }}

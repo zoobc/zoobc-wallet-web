@@ -44,6 +44,7 @@ shall be included in all copies or substantial portions of the Software. -->
     <form-update-node [group]="formUpdateNode" [inputMap]="updateNodeMap"></form-update-node>
     <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
     <form-fee [group]="formUpdateNode" [inputMap]="updateNodeMap"></form-fee>
+    <form-message [group]="formUpdateNode" [inputMap]="updateNodeMap"></form-message>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="formUpdateNode.invalid || isLoading">
       <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>

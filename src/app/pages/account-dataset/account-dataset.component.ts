@@ -131,6 +131,7 @@ export class AccountDatasetComponent implements OnInit {
       property: this.dataSet.property,
       value: this.dataSet.value,
       fee: this.form.get('fee').value,
+      message: this.form.get('message').value,
     };
 
     zoobc.AccountDataset.removeDataset(param, seed)

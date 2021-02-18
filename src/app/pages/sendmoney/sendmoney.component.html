@@ -46,6 +46,7 @@ shall be included in all copies or substantial portions of the Software. -->
       <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
       <form-escrow [group]="formSend" [inputMap]="sendMoneyMap"></form-escrow>
       <form-fee [group]="formSend" [inputMap]="sendMoneyMap"></form-fee>
+      <form-message [group]="formSend" [inputMap]="sendMoneyMap"></form-message>
 
       <span *ngIf="isLoadingExtension" class="device-approval">
         {{ 'waiting for device approval' | translate }}
