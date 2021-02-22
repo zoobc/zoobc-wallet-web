@@ -1,8 +1,48 @@
+<!-- ZooBC Copyright (C) 2020 Quasisoft Limited - Hong Kong
+This file is part of ZooBC <https://github.com/zoobc/zoobc-wallet-web>
+
+ZooBC is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ZooBC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ZooBC.  If not, see <http:www.gnu.org/licenses/>.
+
+Additional Permission Under GNU GPL Version 3 section 7.
+As the special exception permitted under Section 7b, c and e,
+in respect with the Author’s copyright, please refer to this section:
+
+1. You are free to convey this Program according to GNU GPL Version 3,
+    as long as you respect and comply with the Author’s copyright by
+    showing in its user interface an Appropriate Notice that the derivate
+    program and its source code are “powered by ZooBC”.
+    This is an acknowledgement for the copyright holder, ZooBC,
+    as the implementation of appreciation of the exclusive right of the
+    creator and to avoid any circumvention on the rights under trademark
+    law for use of some trade names, trademarks, or service marks.
+
+    2. Complying to the GNU GPL Version 3, you may distribute
+    the program without any permission from the Author.
+    However a prior notification to the authors will be appreciated.
+
+ZooBC is architected by Roberto Capodieci & Barton Johnston
+contact us at roberto.capodieci[at]blockchainzoo.com
+and barton.johnston[at]blockchainzoo.com
+
+IMPORTANT: The above copyright notice and this permission notice
+shall be included in all copies or substantial portions of the Software. -->
+
 <div class="network-container">
   <mat-form-field appearance="outline" color="accent" class="select-node">
     <mat-select [value]="selectedNode" (selectionChange)="changeNode($event.value)">
-      <mat-option *ngFor="let node of nodeList.node; let i = index" [value]="i">
-        <span>{{ node.name }}</span>
+      <mat-option *ngFor="let node of nodeList; let i = index" [value]="i">
+        <span>{{ node.label }}</span>
         <ng-container *ngIf="!node.default">
           <span class="delete-network" (click)="delete($event, i)" matTooltip="{{ 'delete' | translate }}">
             <i class="fas fa-trash"></i>
@@ -31,36 +71,38 @@
   <h2 class="mat-h3" *ngIf="currAction == 'edit'">
     {{ 'edit network' | translate }}
   </h2>
+
   <form [formGroup]="formNetwork" style="display: grid;" (submit)="submitNetwork()">
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'network name' | translate }}</mat-label>
-      <input matInput type="text" formControlName="name" />
+      <input matInput type="text" formControlName="label" />
     </mat-form-field>
-    <ng-container *ngIf="nameField.touched">
-      <mat-error *ngIf="nameField.hasError('required')">
+    <ng-container *ngIf="labelField.touched">
+      <mat-error *ngIf="labelField.hasError('required')">
         {{ 'network name is required' | translate }}
       </mat-error>
     </ng-container>
 
     <mat-form-field appearance="outline" color="accent">
       <mat-label>{{ 'node address' | translate }}</mat-label>
-      <input
+      <textarea
         matInput
-        type="text"
-        placeholder="https://yournode.com:80 {{ 'or' | translate }} http://192.168.43.1:8001"
-        formControlName="ip"
-      />
+        rows="5"
+        placeholder="https://yournode.com {{ 'or' | translate }} http://192.168.43.1:8001"
+        formControlName="wkps"
+      ></textarea>
     </mat-form-field>
-    <ng-container *ngIf="ipField.touched">
-      <mat-error *ngIf="ipField.hasError('required')">
+
+    <ng-container *ngIf="wkpsField.touched">
+      <mat-error *ngIf="wkpsField.hasError('required')">
         {{ 'node address is required' | translate }}
       </mat-error>
-      <mat-error *ngIf="ipField.hasError('pattern')">
+      <mat-error *ngIf="errorPattern">
         {{ 'invalid node address format' | translate }}
       </mat-error>
     </ng-container>
 
-    <button mat-flat-button color="primary" type="submit">
+    <button mat-flat-button color="primary" type="submit" [disabled]="!enableSubmit">
       <span *ngIf="currAction == 'add'">{{ 'add' | translate }}</span>
       <span *ngIf="currAction == 'edit'">{{ 'edit' | translate }}</span>
     </button>

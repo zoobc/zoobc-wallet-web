@@ -1,0 +1,13 @@
+<div [formGroup]="group" style="margin-bottom: 16px;">
+  <div style="margin-bottom: 16px;">
+    <mat-checkbox #advanceCheckBox class="checkbox-margin" (click)="toggleAdvancedMenu()">
+      {{ 'add message' | translate }}
+    </mat-checkbox>
+  </div>
+  <ng-container *ngIf="showMessage">
+    <mat-form-field appearance="outline" class="block" color="accent">
+      <mat-label>{{ 'message' | translate }}</mat-label>
+      <textarea matInput formControlName="{{ inputMap.message }}" rows="5"></textarea>
+    </mat-form-field>
+  </ng-container>
+</div>
