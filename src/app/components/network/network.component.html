@@ -97,10 +97,10 @@ shall be included in all copies or substantial portions of the Software. -->
       <mat-error *ngIf="wkpsField.hasError('required')">
         {{ 'node address is required' | translate }}
       </mat-error>
-      <mat-error *ngIf="errorPattern">
-        {{ 'invalid node address format' | translate }}
-      </mat-error>
     </ng-container>
+    <mat-error *ngIf="errorPattern">
+      {{ 'invalid node address format' | translate }}
+    </mat-error>
 
     <button mat-flat-button color="primary" type="submit" [disabled]="!enableSubmit">
       <span *ngIf="currAction == 'add'">{{ 'add' | translate }}</span>

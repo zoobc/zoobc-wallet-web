@@ -174,7 +174,6 @@ export class NetworkComponent implements OnInit {
          * if current index network bigger than users index of removed network
          * host length will be minus by one so it can be out of index error
          */
-        //
         if (this.selectedNode >= idx) {
           this.selectedNode--;
           this.changeNode(this.selectedNode);
