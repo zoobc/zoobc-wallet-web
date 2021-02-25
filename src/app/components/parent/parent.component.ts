@@ -144,21 +144,23 @@ export class ParentComponent implements OnInit {
       if (currNodeList && currNodeList.length > 0) {
         const networks = await zoobc.Network.save();
 
-        networks.forEach(item => {
-          let idx = currNodeList.map(n => n.label).indexOf(item.label);
-          if (idx !== undefined) {
-            const currNode = currNodeList[idx];
-            const payload = {
-              label: currNode.label,
-              selected: currNode.selected,
-              default: currNode.default,
-              wkps: item.wkps,
-            };
-            currNodeList.splice(idx, 1, payload);
-          }
-        });
+        if (networks && networks.length > 0) {
+          networks.forEach(item => {
+            let idx = currNodeList.map(n => n.label).indexOf(item.label);
+            if (idx !== undefined) {
+              const currNode = currNodeList[idx];
+              const payload = {
+                label: currNode.label,
+                selected: currNode.selected,
+                default: currNode.default,
+                wkps: item.wkps,
+              };
+              currNodeList.splice(idx, 1, payload);
+            }
+          });
 
-        localStorage.setItem('NODE_LIST', JSON.stringify(currNodeList));
+          localStorage.setItem('NODE_LIST', JSON.stringify(currNodeList));
+        }
       }
     });
   }
