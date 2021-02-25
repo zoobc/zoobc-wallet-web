@@ -56,6 +56,7 @@ import {
   sendMoneyMap,
 } from 'src/app/components/transaction-form/form-send-money/form-send-money.component';
 import { environment } from 'src/environments/environment';
+import moment from 'moment';
 
 @Component({
   selector: 'app-sendmoney',
@@ -92,7 +93,7 @@ export class SendmoneyComponent implements OnInit {
   ) {
     this.formSend = createSendMoneyForm();
     // disable alias field (saveAddress = false)
-    const aliasField = this.formSend.get('alias');
+    // const aliasField = this.formSend.get('alias');
     const amountForm = this.formSend.get('amount');
     const recipientForm = this.formSend.get('recipient');
 
@@ -118,7 +119,7 @@ export class SendmoneyComponent implements OnInit {
     const amountForm = this.formSend.get('amount');
     const feeForm = this.formSend.get('fee');
     // const approverCommissionField = this.formSend.get('approverCommission');
-    const aliasField = this.formSend.get('alias');
+    // const aliasField = this.formSend.get('alias');
 
     // this.getMinimumFee();
     const total = amountForm.value + feeForm.value;
@@ -186,19 +187,21 @@ export class SendmoneyComponent implements OnInit {
         amount: amountForm.value,
         approverAddress: { value: addressApproverField.value, type: 0 },
         commission: approverCommissionField.value,
-        timeout: timeoutField.value,
+        timeout: moment(timeoutField.value).unix(),
         instruction: instructionField.value,
         message: messageField.value,
       };
+
       const childSeed = this.authServ.seed;
       zoobc.Transactions.sendMoney(data, childSeed).then(
         async (res: PostTransactionResponses) => {
           this.isLoading = false;
           let message = getTranslation('your transaction is processing', this.translate);
-          let subMessage = getTranslation('you transfer zbc to', this.translate, {
-            amount: data.amount,
-            recipient: data.recipient.value,
-          });
+          let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
+          // let subMessage = getTranslation('you transfer zbc to', this.translate, {
+          //   amount: data.amount,
+          //   recipient: data.recipient.value,
+          // });
           Swal.fire(message, subMessage, 'success');
 
           // save address

@@ -40,14 +40,15 @@
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import zoobc, { HostInfoResponse } from 'zbc-sdk';
-import { calcMinFee } from 'src/helpers/utils';
+import { calculateMinimumFee } from 'zbc-sdk';
+import { calcPer24Hour } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
 import { MatCheckbox } from '@angular/material';
 
 @Component({
   selector: 'form-escrow',
   templateUrl: './form-escrow.component.html',
+  styleUrls: ['./form-escrow.component.scss'],
 })
 export class FormEscrowComponent implements OnInit {
   @Input() group: FormGroup;
@@ -59,6 +60,8 @@ export class FormEscrowComponent implements OnInit {
 
   minFee: number = environment.fee;
 
+  minDate = new Date();
+
   constructor() {}
 
   ngOnInit() {
@@ -68,17 +71,17 @@ export class FormEscrowComponent implements OnInit {
     }
   }
 
-  getBlockHeight() {
-    zoobc.Host.getInfo()
-      .then((res: HostInfoResponse) => {
-        res.chainstatusesList.filter(chain => {
-          if (chain.chaintype === 0) this.blockHeight = chain.height;
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+  // getBlockHeight() {
+  //   zoobc.Host.getInfo()
+  //     .then((res: HostInfoResponse) => {
+  //       res.chainstatusesList.filter(chain => {
+  //         if (chain.chaintype === 0) this.blockHeight = chain.height;
+  //       });
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // }
 
   toggleAdvancedMenu() {
     this.showEscrow = !this.showEscrow;
@@ -99,7 +102,8 @@ export class FormEscrowComponent implements OnInit {
     this.group.get(this.inputMap.instruction).enable();
     this.group.get(this.inputMap.timeout).enable();
     this.resetValue();
-    this.getBlockHeight();
+    this.onCalculateMinimumFee();
+    // this.getBlockHeight();
   }
 
   disableFieldEscrow() {
@@ -109,20 +113,42 @@ export class FormEscrowComponent implements OnInit {
     this.group.get(this.inputMap.timeout).disable();
   }
 
-  async getMinimumFee() {
-    const feeForm = this.group.get('fee');
-    const fee: number = calcMinFee(this.group.value);
+  async onCalculateMinimumFee() {
+    const instruction = this.group.get('instruction').value;
+    const lengthInst = instruction ? instruction.length : 0;
+
+    const message = this.group.get('message').value;
+    const lengthMsg = message ? message.length : 0;
+
+    const timeout = this.group.get('timeout').value;
+    const hour = calcPer24Hour(timeout);
+
+    const fee: number = timeout
+      ? await parseFloat(calculateMinimumFee(lengthInst + lengthMsg, hour).toFixed(5))
+      : 0.01;
     this.minFee = fee;
 
+    const feeForm = this.group.get('fee');
     feeForm.setValidators([Validators.required, Validators.min(fee)]);
-    if (fee > feeForm.value) feeForm.patchValue(fee);
+    feeForm.patchValue(fee);
     feeForm.updateValueAndValidity();
     feeForm.markAsTouched();
   }
 
-  onChangeTimeOut() {
-    this.getMinimumFee();
-  }
+  // async getMinimumFee() {
+  //   const fee: number = calcMinFee(this.group.value);
+  //   this.minFee = fee;
+
+  //   const feeForm = this.group.get('fee');
+  //   feeForm.setValidators([Validators.required, Validators.min(fee)]);
+  //   if (fee > feeForm.value) feeForm.patchValue(fee);
+  //   feeForm.updateValueAndValidity();
+  //   feeForm.markAsTouched();
+  // }
+
+  // onChangeTimeOut() {
+  //   this.getMinimumFee();
+  // }
 }
 
 export const escrowMap = {
@@ -140,11 +166,12 @@ export function escrowForm() {
       Validators.required,
       Validators.min(1 / 1e8),
     ]),
-    timeout: new FormControl({ value: '', disabled: true }, [
-      Validators.required,
-      Validators.min(1),
-      Validators.max(720),
-    ]),
+    // timeout: new FormControl({ value: '', disabled: true }, [
+    //   Validators.required,
+    //   Validators.min(1),
+    //   Validators.max(720),
+    // ]),
+    timeout: new FormControl({ value: '', disabled: true }, Validators.required),
     instruction: new FormControl({ value: '', disabled: true }, Validators.required),
   };
 }

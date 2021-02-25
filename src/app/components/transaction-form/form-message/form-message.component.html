@@ -7,7 +7,15 @@
   <ng-container *ngIf="showMessage">
     <mat-form-field appearance="outline" class="block" color="accent">
       <mat-label>{{ 'message' | translate }}</mat-label>
-      <textarea matInput formControlName="{{ inputMap.message }}" rows="5"></textarea>
+      <textarea
+        #input
+        matInput
+        rows="5"
+        maxlength="60000"
+        (keyup)="onCalculateMinimumFee()"
+        formControlName="{{ inputMap.message }}"
+      ></textarea>
+      <mat-hint align="end" class="hint">{{ input.value?.length || 0 }}/60000</mat-hint>
     </mat-form-field>
   </ng-container>
 </div>

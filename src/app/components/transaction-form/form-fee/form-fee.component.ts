@@ -40,8 +40,10 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
+import { calculateMinimumFee } from 'zbc-sdk';
+import { calcPer24Hour } from 'src/helpers/utils';
 import { environment } from 'src/environments/environment';
-import { calcMinFee } from 'src/helpers/utils';
+// import { calcMinFee } from 'src/helpers/utils';
 
 @Component({
   selector: 'form-fee',
@@ -66,26 +68,49 @@ export class FormFeeComponent implements OnInit {
 
   resetValue() {
     this.group.get(this.inputMap.fee).setValue(this.minFee);
-    this.getMinimumFee();
+    // this.getMinimumFee();
   }
 
   enableFieldEscrow() {
     this.group.get(this.inputMap.fee).enable();
     this.resetValue();
+    this.onCalculateMinimumFee();
   }
 
   disableFieldEscrow() {
     this.group.get(this.inputMap.fee).disable();
   }
 
-  async getMinimumFee() {
-    const feeForm = this.group.get('fee');
-    const fee: number = calcMinFee(this.group.value);
+  async onCalculateMinimumFee() {
+    const instruction = this.group.get('instruction').value;
+    const lengthInst = instruction ? instruction.length : 0;
+
+    const message = this.group.get('message').value;
+    const lengthMsg = message ? message.length : 0;
+
+    const timeout = this.group.get('timeout').value;
+    const hour = calcPer24Hour(timeout);
+
+    const fee: number = timeout
+      ? await parseFloat(calculateMinimumFee(lengthInst + lengthMsg, hour).toFixed(5))
+      : 0.01;
     this.minFee = fee;
 
+    const feeForm = this.group.get('fee');
     feeForm.setValidators([Validators.required, Validators.min(fee)]);
-    if (fee > feeForm.value) feeForm.patchValue(fee);
+    feeForm.patchValue(fee);
     feeForm.updateValueAndValidity();
     feeForm.markAsTouched();
   }
+
+  // async getMinimumFee() {
+  //   const feeForm = this.group.get('fee');
+  //   const fee: number = calcMinFee(this.group.value);
+  //   this.minFee = fee;
+
+  //   feeForm.setValidators([Validators.required, Validators.min(fee)]);
+  //   if (fee > feeForm.value) feeForm.patchValue(fee);
+  //   feeForm.updateValueAndValidity();
+  //   feeForm.markAsTouched();
+  // }
 }
