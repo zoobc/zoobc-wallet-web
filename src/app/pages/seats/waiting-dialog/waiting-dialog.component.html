@@ -16,6 +16,9 @@
     Please DO NOT CLOSE or REFRESH this page. You will lose your certificate and need to re-register your seat
     again
   </i>
+  <button mat-flat-button type="button" class="block" color="primary" (click)="onWaitingDownload()">
+    <i matPrefix class="fa fa-download"></i> Download Certificate
+  </button>
 </div>
 
 <button mat-flat-button type="button" class="block" color="warn" (click)="onCancel()" *ngIf="canCancel">
