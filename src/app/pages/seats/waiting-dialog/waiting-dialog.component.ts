@@ -72,6 +72,38 @@ export class WaitingDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onWaitingDownload() {
+    const key = this.data.password;
+    const cert = {
+      nodeSeed: this.data.nodeKey,
+      ownerAccount: this.data.seat.zbcAddress,
+      nodePublicKey: this.data.seat.nodePubKey,
+    };
+
+    let plainText = JSON.stringify(cert);
+    while (plainText.length < 512) {
+      plainText += ' ';
+    }
+
+    let enc: string = GibberishAES.enc(plainText, key);
+    enc = enc.replace(/(\r\n|\n|\r)/gm, '');
+
+    const address = cert.ownerAccount.slice(0, 21);
+    const m = new Date();
+    const dateString =
+      m.getFullYear() +
+      ('0' + (m.getMonth() + 1)).slice(-2) +
+      ('0' + m.getDate()).slice(-2) +
+      '_' +
+      ('0' + m.getHours()).slice(-2) +
+      ('0' + m.getMinutes()).slice(-2) +
+      ('0' + m.getSeconds()).slice(-2);
+
+    const blob = new Blob([enc]);
+    saveAs(blob, `${address}_${dateString}.zbc`);
+
+  }
+
   onDownload() {
     const key = this.data.password;
     const cert = {
