@@ -49,6 +49,8 @@ import { FormEscrowComponent } from './form-escrow.component';
 import { InputAddressComponent } from 'src/app/components/input-address/input-address.component';
 import { InputAmountModule } from 'src/app/components/input-amount/input-amount.module';
 import { InputAddressModule } from '../../input-address/input-address.module';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
@@ -69,6 +71,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     MatInputModule,
     InputAmountModule,
     InputAddressModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   exports: [FormEscrowComponent],
 })
