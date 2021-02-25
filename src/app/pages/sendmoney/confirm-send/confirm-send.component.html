@@ -80,11 +80,15 @@ shall be included in all copies or substantial portions of the Software. -->
           </div>
           <div class="label">{{ 'timeout' | translate }}:</div>
           <div class="amount">
-            {{ form.timeout }}
+            {{ form.timeout | date: 'medium' }}
           </div>
           <div class="label">{{ 'instruction' | translate }}:</div>
           <div class="instruction">
             {{ form.instruction }}
+          </div>
+          <div *ngIf="form.message">
+            <div class="label">{{ 'add message' | translate }}:</div>
+            <div class="instruction">{{ form.message }}</div>
           </div>
         </ng-container>
       </div>

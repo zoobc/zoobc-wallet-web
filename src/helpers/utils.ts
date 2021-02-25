@@ -40,6 +40,7 @@
 
 import { ValidationErrors, FormArray } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import moment from 'moment';
 
 export function onCopyText(text: string) {
   let isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
@@ -65,6 +66,15 @@ export function onCopyText(text: string) {
 
 export function truncate(num: number, places: number): number {
   return Math.trunc(num * Math.pow(10, places)) / Math.pow(10, places);
+}
+
+export function calcPer24Hour(data: any) {
+  if (!data) return 0;
+
+  const h = moment().diff(data, 'hours');
+  const hour = h < 0 ? h * -1 : h;
+
+  return hour > 24 ? Math.ceil(hour / 24) : 1;
 }
 
 export function calcMinFee(data: any) {
