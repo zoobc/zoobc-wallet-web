@@ -49,7 +49,12 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { AccountBalance, PostTransactionResponses, SendMoneyInterface } from 'zbc-sdk';
+import zoobc, {
+  AccountBalance,
+  PostTransactionResponses,
+  SendZBCInterface,
+  LiquidTransactionsInterface,
+} from 'zbc-sdk';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 import {
   createSendMoneyForm,
@@ -179,49 +184,84 @@ export class SendmoneyComponent implements OnInit {
       const instructionField = this.formSend.get('instruction');
       const aliasField = this.formSend.get('alias');
       const messageField = this.formSend.get('message');
-
-      let data: SendMoneyInterface = {
-        sender: { value: senderForm.value, type: 0 },
-        recipient: { value: recipientForm.value, type: 0 },
-        fee: feeForm.value,
-        amount: amountForm.value,
-        approverAddress: { value: addressApproverField.value, type: 0 },
-        commission: approverCommissionField.value,
-        timeout: moment(timeoutField.value).unix(),
-        instruction: instructionField.value,
-        message: messageField.value,
-      };
+      const completeMinutesField = this.formSend.get('completeMinutes');
 
       const childSeed = this.authServ.seed;
-      zoobc.Transactions.sendMoney(data, childSeed).then(
-        async (res: PostTransactionResponses) => {
-          this.isLoading = false;
-          let message = getTranslation('your transaction is processing', this.translate);
-          let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
-          // let subMessage = getTranslation('you transfer zbc to', this.translate, {
-          //   amount: data.amount,
-          //   recipient: data.recipient.value,
-          // });
-          Swal.fire(message, subMessage, 'success');
 
-          // save address
-          if (aliasField.value) {
-            const newContact: Contact = {
-              name: aliasField.value,
-              address: { value: recipientForm.value, type: 0 },
-            };
-            this.contactServ.add(newContact);
+      /** checking if completeMinutesField having value so that processing liquid transaction  */
+      if (completeMinutesField && completeMinutesField.value) {
+        let data: LiquidTransactionsInterface = {
+          sender: { value: senderForm.value, type: 0 },
+          recipient: { value: recipientForm.value, type: 0 },
+          fee: feeForm.value,
+          amount: amountForm.value,
+          approverAddress: { value: addressApproverField.value, type: 0 },
+          commission: approverCommissionField.value,
+          timeout: timeoutField.value ? moment(timeoutField.value).unix() : null,
+          instruction: instructionField.value,
+          message: messageField.value,
+          completeMinutes: completeMinutesField.value,
+        };
+
+        zoobc.Liquid.sendLiquid(data, childSeed).then(
+          async (res: PostTransactionResponses) => {
+            this.isLoading = false;
+            let message = getTranslation('your transaction is processing', this.translate);
+            let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
+            Swal.fire(message, subMessage, 'success');
+            this.router.navigateByUrl('/dashboard');
+          },
+          async err => {
+            this.isLoading = false;
+            console.log(err);
+
+            let message = getTranslation(err.message, this.translate);
+            Swal.fire('Opps...', message, 'error');
           }
-          this.router.navigateByUrl('/dashboard');
-        },
-        async err => {
-          this.isLoading = false;
-          console.log(err);
+        );
+      } else {
+        let data: SendZBCInterface = {
+          sender: { value: senderForm.value, type: 0 },
+          recipient: { value: recipientForm.value, type: 0 },
+          fee: feeForm.value,
+          amount: amountForm.value,
+          approverAddress: { value: addressApproverField.value, type: 0 },
+          commission: approverCommissionField.value,
+          timeout: timeoutField.value ? moment(timeoutField.value).unix() : null,
+          instruction: instructionField.value,
+          message: messageField.value,
+        };
 
-          let message = getTranslation(err.message, this.translate);
-          Swal.fire('Opps...', message, 'error');
-        }
-      );
+        zoobc.Transactions.SendZBC(data, childSeed).then(
+          async (res: PostTransactionResponses) => {
+            this.isLoading = false;
+            let message = getTranslation('your transaction is processing', this.translate);
+            let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
+            // let subMessage = getTranslation('you transfer zbc to', this.translate, {
+            //   amount: data.amount,
+            //   recipient: data.recipient.value,
+            // });
+            Swal.fire(message, subMessage, 'success');
+
+            // save address
+            if (aliasField.value) {
+              const newContact: Contact = {
+                name: aliasField.value,
+                address: { value: recipientForm.value, type: 0 },
+              };
+              this.contactServ.add(newContact);
+            }
+            this.router.navigateByUrl('/dashboard');
+          },
+          async err => {
+            this.isLoading = false;
+            console.log(err);
+
+            let message = getTranslation(err.message, this.translate);
+            Swal.fire('Opps...', message, 'error');
+          }
+        );
+      }
     }
   }
 

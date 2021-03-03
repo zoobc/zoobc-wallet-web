@@ -59,6 +59,8 @@ shall be included in all copies or substantial portions of the Software. -->
 
     <escrow-approval [transaction]="tx" *ngIf="tx.transactionType == 4"></escrow-approval>
 
+    <liquid-transaction [transaction]="tx" *ngIf="tx.transactionType == 6"></liquid-transaction>
+
     <account-dataset
       [transaction]="tx"
       *ngIf="tx.transactionType == 3 || tx.transactionType == 259"

@@ -38,44 +38,42 @@
 // IMPORTANT: The above copyright notice and this permission notice
 // shall be included in all copies or substantial portions of the Software.
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Component, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { AuthService } from 'src/app/services/auth.service';
+import { Address, ZBCTransaction } from 'zbc-sdk';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-confirm-send',
-  templateUrl: './confirm-send.component.html',
-  styleUrls: ['./confirm-send.component.scss'],
+  selector: 'liquid-transaction',
+  templateUrl: './liquid-transaction.component.html',
+  styleUrls: ['./liquid-transaction.component.scss'],
 })
-export class ConfirmSendComponent implements OnInit {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialog: MatDialog,
-    public dialogRef: MatDialogRef<ConfirmSendComponent>
-  ) {}
-  form: any;
-  advancedMenu: boolean = false;
-  advancedLiquid: boolean = false;
-  subsRate: Subscription;
+export class LiquidTransactionComponent implements OnInit {
+  @ViewChild('dialog') detailDialog: TemplateRef<any>;
+  @Input() transaction: ZBCTransaction;
+
+  address: Address;
+  status: string = '';
+  color: string = '';
+  expUrl = environment.expUrl;
+
+  constructor(private dialog: MatDialog, authServ: AuthService) {
+    this.address = authServ.getCurrAccount().address;
+  }
 
   ngOnInit() {
-    // this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-    //   this.currencyRate = rate;
-    // });
-
-    this.form = this.data.form;
-    if (this.data.form.addressApprover) this.advancedMenu = true;
-    if (this.data.form.completeMinutes) this.advancedLiquid = true;
+    const approval = this.transaction.txBody.approval;
+    this.color = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
+    this.status =
+      approval == '0' ? 'pending' : approval == '1' ? 'approved' : approval == '2' ? 'rejected' : 'expired';
   }
 
-  ngOnDestroy() {
-    if (this.subsRate) this.subsRate.unsubscribe();
-  }
-
-  closeDialog() {
-    this.dialog.closeAll();
-  }
-  onConfirm() {
-    this.dialogRef.close(true);
+  openDetail(id) {
+    this.dialog.open(this.detailDialog, {
+      width: '500px',
+      maxHeight: '90vh',
+      data: id,
+    });
   }
 }

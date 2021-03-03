@@ -66,7 +66,7 @@ export class MultisignatureComponent implements OnInit {
   multiSigDrafts: MultiSigDraft[];
 
   form: FormGroup;
-  txTypeField = new FormControl(TransactionType.SENDMONEYTRANSACTION, Validators.required);
+  txTypeField = new FormControl(TransactionType.SENDZBCTRANSACTION, Validators.required);
   chainTypeField = new FormControl('onchain', Validators.required);
 
   draftSignedBy: number[] = [];
@@ -74,7 +74,7 @@ export class MultisignatureComponent implements OnInit {
   showMenu = false;
 
   txType = [
-    { code: TransactionType.SENDMONEYTRANSACTION, type: 'transfer zbc' },
+    { code: TransactionType.SENDZBCTRANSACTION, type: 'transfer zbc' },
     { code: TransactionType.SETUPACCOUNTDATASETTRANSACTION, type: 'setup account dataset' },
     { code: TransactionType.REMOVEACCOUNTDATASETTRANSACTION, type: 'remove account dataset' },
     { code: TransactionType.APPROVALESCROWTRANSACTION, type: 'escrow approval' },

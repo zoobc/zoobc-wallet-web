@@ -62,7 +62,7 @@ export class MultisigService {
     id: 0,
     accountAddress: null,
     fee: 0,
-    txType: TransactionType.SENDMONEYTRANSACTION,
+    txType: TransactionType.SENDZBCTRANSACTION,
   };
 
   private sourceMultisig = new BehaviorSubject<MultiSigDraft>({ ...this.multisigTemplate });

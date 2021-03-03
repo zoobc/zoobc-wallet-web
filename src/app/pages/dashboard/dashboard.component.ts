@@ -219,7 +219,7 @@ export class DashboardComponent implements OnInit {
 
   goToMultisig() {
     if (this.currAcc.type == 'multisig')
-      this.multisigServ.initDraft(this.currAcc, TransactionType.SENDMONEYTRANSACTION);
+      this.multisigServ.initDraft(this.currAcc, TransactionType.SENDZBCTRANSACTION);
   }
 
   openReceiveForm() {

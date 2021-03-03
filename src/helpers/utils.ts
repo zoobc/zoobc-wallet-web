@@ -69,7 +69,7 @@ export function truncate(num: number, places: number): number {
 }
 
 export function calcPer24Hour(data: any) {
-  if (!data) return 0;
+  if (!data) return 1;
 
   const h = moment().diff(data, 'hours');
   const hour = h < 0 ? h * -1 : h;

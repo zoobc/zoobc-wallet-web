@@ -108,11 +108,11 @@ shall be included in all copies or substantial portions of the Software. -->
       ></textarea>
       <mat-hint align="end" class="hint">{{ input.value?.length || 0 }}/60000</mat-hint>
     </mat-form-field>
-    <ng-container *ngIf="group.get(inputMap.instruction).touched">
+    <!-- <ng-container *ngIf="group.get(inputMap.instruction).touched">
       <mat-error *ngIf="group.get(inputMap.instruction).hasError('required')">
         {{ 'instruction is required' | translate }}
       </mat-error>
-    </ng-container>
+    </ng-container> -->
 
     <!-- <label class="form-block-height">
       <b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b>

@@ -1,0 +1,30 @@
+<div [formGroup]="group" style="margin-bottom: 16px;">
+  <div style="margin-bottom: 16px;">
+    <mat-checkbox #advanceCheckBox class="checkbox-margin" (click)="toggleAdvancedMenu()">
+      {{ 'liquid transaction' | translate }}
+    </mat-checkbox>
+  </div>
+
+  <ng-container *ngIf="showLiquid">
+    <mat-form-field appearance="outline" class="block" color="accent">
+      <mat-label>{{ 'complete minutes' | translate }}</mat-label>
+      <input
+        matInput
+        [min]="1"
+        type="number"
+        formControlName="{{ inputMap.completeMinutes }}"
+        placeholder="{{ 'complete minutes' | translate }}"
+      />
+    </mat-form-field>
+
+    <ng-container *ngIf="group.get(inputMap.completeMinutes).touched">
+      <mat-error *ngIf="group.get(inputMap.completeMinutes).hasError('required')">
+        {{ 'complete minutes is required' | translate }}
+      </mat-error>
+    </ng-container>
+
+    <mat-error *ngIf="group.get(inputMap.completeMinutes).hasError('min')">
+      {{ 'minimum complete minutes is 1' | translate }}
+    </mat-error>
+  </ng-container>
+</div>

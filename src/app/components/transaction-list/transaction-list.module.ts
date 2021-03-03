@@ -51,6 +51,7 @@ import { SendMoneyComponent } from './send-money/send-money.component';
 import { EscrowApprovalComponent } from './escrow-approval/escrow-approval.component';
 import { NodeRegistrationComponent } from './node-registration/node-registration.component';
 import { AccountDatasetComponent } from './account-dataset/account-dataset.component';
+import { LiquidTransactionComponent } from './liquid-transaction/liquid-transaction.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { AccountDatasetComponent } from './account-dataset/account-dataset.compo
     EscrowApprovalComponent,
     NodeRegistrationComponent,
     AccountDatasetComponent,
+    LiquidTransactionComponent,
   ],
   imports: [
     CommonModule,
