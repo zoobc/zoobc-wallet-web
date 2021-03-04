@@ -58,9 +58,6 @@ shall be included in all copies or substantial portions of the Software. -->
     <ng-container *ngIf="transaction.sender.value == address.value; else recipientAmount">
       <div class="amount-send">- ZBC {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }}</div>
       <div class="fee">- ZBC {{ transaction.fee / 1e8 | number: '0.0-8' }} {{ fee | translate }}</div>
-      <!-- <div class="amount-currency">
-        - USD {{ (transaction.txBody.amount * currencyRate.value) / 1e8 | number: '0.0-8' }}
-      </div> -->
     </ng-container>
     <ng-template #recipientAmount>
       <div class="amount-receive">+ {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
@@ -80,7 +77,7 @@ shall be included in all copies or substantial portions of the Software. -->
 <ng-template #dialog>
   <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
     <div class="row" *ngIf="transaction.transactionTypeString">
-      <div class="col-12 col-md-4 strong">{{ transaction.transactionTypeString | translate }}:</div>
+      <h3>{{ transaction.transactionTypeString | translate }}</h3>
     </div>
 
     <div class="row" *ngIf="transaction.transactionHash">
@@ -137,7 +134,7 @@ shall be included in all copies or substantial portions of the Software. -->
 
     <div class="row" *ngIf="transaction.txBody">
       <div class="col-12 col-md-4">{{ 'complete minutes' | translate }}:</div>
-      <div class="col-12 col-md-8">{{ transaction.txBody.completeminutes }}</div>
+      <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.txBody.completeminutes }}</div>
     </div>
 
     <div class="row">
@@ -145,6 +142,11 @@ shall be included in all copies or substantial portions of the Software. -->
       <div class="col-12 col-md-8 font-roboto-mono">
         {{ transaction.timestamp | date: 'dd MMMM yyyy HH:mm:ss' }}
       </div>
+    </div>
+
+    <div class="row" *ngIf="transaction.message">
+      <div class="col-12 col-md-4">{{ 'message' | translate }}:</div>
+      <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.message }}</div>
     </div>
   </div>
 </ng-template>

@@ -197,10 +197,14 @@ export class SendmoneyComponent implements OnInit {
           amount: amountForm.value,
           approverAddress: { value: addressApproverField.value, type: 0 },
           commission: approverCommissionField.value,
-          timeout: timeoutField.value ? moment(timeoutField.value).unix() : null,
           instruction: instructionField.value,
           message: messageField.value,
           completeMinutes: completeMinutesField.value,
+          timeout: timeoutField.value
+            ? moment(timeoutField.value)
+                .utc()
+                .unix()
+            : null,
         };
 
         zoobc.Liquid.sendLiquid(data, childSeed).then(
@@ -227,9 +231,13 @@ export class SendmoneyComponent implements OnInit {
           amount: amountForm.value,
           approverAddress: { value: addressApproverField.value, type: 0 },
           commission: approverCommissionField.value,
-          timeout: timeoutField.value ? moment(timeoutField.value).unix() : null,
           instruction: instructionField.value,
           message: messageField.value,
+          timeout: timeoutField.value
+            ? moment(timeoutField.value)
+                .utc()
+                .unix()
+            : null,
         };
 
         zoobc.Transactions.SendZBC(data, childSeed).then(
@@ -237,10 +245,6 @@ export class SendmoneyComponent implements OnInit {
             this.isLoading = false;
             let message = getTranslation('your transaction is processing', this.translate);
             let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
-            // let subMessage = getTranslation('you transfer zbc to', this.translate, {
-            //   amount: data.amount,
-            //   recipient: data.recipient.value,
-            // });
             Swal.fire(message, subMessage, 'success');
 
             // save address
@@ -251,6 +255,7 @@ export class SendmoneyComponent implements OnInit {
               };
               this.contactServ.add(newContact);
             }
+
             this.router.navigateByUrl('/dashboard');
           },
           async err => {

@@ -68,10 +68,10 @@ shall be included in all copies or substantial portions of the Software. -->
 
     <div class="description">
       <div class="chips">
+        <div class="chip small">{{ transaction.transactionTypeString | translate }}</div>
         <div class="chip small" *ngIf="transaction.multisig">
           {{ 'multisignature' | translate }}
         </div>
-        <div class="chip small">{{ transaction.transactionTypeString | translate }}</div>
         <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
       </div>
       <div class="status" [style.color]="color" *ngIf="transaction.escrow">
@@ -83,6 +83,14 @@ shall be included in all copies or substantial portions of the Software. -->
 
 <ng-template #dialog>
   <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
+    <div class="row" *ngIf="transaction.transactionTypeString">
+      <h3>{{ transaction.transactionTypeString | translate }}</h3>
+      <h3 class="chip small" *ngIf="transaction.multisig">
+        &nbsp;({{ 'multisignature' | translate }})
+      </h3>
+      <h3 class="chip small" *ngIf="transaction.escrow">&nbsp;({{ 'escrow transaction' | translate }})</h3>
+    </div>
+
     <div class="row" *ngIf="transaction.transactionHash">
       <div class="col-12 col-md-4">{{ 'transaction hash' | translate }}:</div>
       <div class="col-12 col-md-8">
@@ -140,6 +148,11 @@ shall be included in all copies or substantial portions of the Software. -->
       <div class="col-12 col-md-8 font-roboto-mono">
         {{ transaction.timestamp | date: 'dd MMMM yyyy HH:mm:ss' }}
       </div>
+    </div>
+
+    <div class="row" *ngIf="transaction.message">
+      <div class="col-12 col-md-4">{{ 'message' | translate }}:</div>
+      <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.message }}</div>
     </div>
   </div>
 </ng-template>

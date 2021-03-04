@@ -54,20 +54,12 @@ export class LiquidTransactionComponent implements OnInit {
   @Input() transaction: ZBCTransaction;
 
   address: Address;
-  status: string = '';
-  color: string = '';
-  expUrl = environment.expUrl;
 
   constructor(private dialog: MatDialog, authServ: AuthService) {
     this.address = authServ.getCurrAccount().address;
   }
 
-  ngOnInit() {
-    const approval = this.transaction.txBody.approval;
-    this.color = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
-    this.status =
-      approval == '0' ? 'pending' : approval == '1' ? 'approved' : approval == '2' ? 'rejected' : 'expired';
-  }
+  ngOnInit() {}
 
   openDetail(id) {
     this.dialog.open(this.detailDialog, {

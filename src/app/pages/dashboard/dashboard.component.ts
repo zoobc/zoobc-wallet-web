@@ -183,15 +183,14 @@ export class DashboardComponent implements OnInit {
   }
 
   async getTransactions() {
-    const params: TransactionListParams = {
-      address: this.currAcc.address,
-      pagination: {
-        page: 1,
-        limit: 10,
-      },
-    };
-
     try {
+      const params: TransactionListParams = {
+        address: this.currAcc.address,
+        pagination: {
+          page: 1,
+          limit: 10,
+        },
+      };
       const trxList = await zoobc.Transactions.getList(params);
       trxList.transactions.map(transaction => {
         transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';

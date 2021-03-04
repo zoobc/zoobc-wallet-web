@@ -87,6 +87,6 @@ export const liquidMap = { completeMinutes: 'completeMinutes' };
 
 export function liquidForm() {
   return {
-    completeMinutes: new FormControl({ value: 0, disabled: true }, [Validators.required, Validators.min(1)]),
+    completeMinutes: new FormControl({ value: 0, disabled: true }, [Validators.required, Validators.min(0)]),
   };
 }
