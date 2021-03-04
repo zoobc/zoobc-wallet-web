@@ -231,7 +231,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onOpenAddAccount() {
-    const dialog = this.dialog.open(AddAccountComponent, { width: '360px', maxHeight: '99vh' });
+    const dialog = this.dialog.open(AddAccountComponent, { width: '700px', maxHeight: '99vh' });
 
     dialog.afterClosed().subscribe((added: boolean) => {
       if (added) {
