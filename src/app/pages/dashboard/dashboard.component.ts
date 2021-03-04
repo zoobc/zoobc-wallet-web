@@ -257,14 +257,4 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-
-  async onComingSoonPage() {
-    const message = getTranslation('coming soon', this.translate);
-    Swal.fire({
-      type: 'info',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
 }
