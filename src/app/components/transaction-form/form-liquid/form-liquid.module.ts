@@ -38,44 +38,34 @@
 // IMPORTANT: The above copyright notice and this permission notice
 // shall be included in all copies or substantial portions of the Software.
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
-
-@Component({
-  selector: 'app-confirm-send',
-  templateUrl: './confirm-send.component.html',
-  styleUrls: ['./confirm-send.component.scss'],
-})
-export class ConfirmSendComponent implements OnInit {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialog: MatDialog,
-    public dialogRef: MatDialogRef<ConfirmSendComponent>
-  ) {}
-  form: any;
-  advancedMenu: boolean = false;
-  advancedLiquid: boolean = false;
-  subsRate: Subscription;
-
-  ngOnInit() {
-    // this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-    //   this.currencyRate = rate;
-    // });
-
-    this.form = this.data.form;
-    if (this.data.form.addressApprover) this.advancedMenu = true;
-    if (this.data.form.completeMinutes) this.advancedLiquid = true;
-  }
-
-  ngOnDestroy() {
-    if (this.subsRate) this.subsRate.unsubscribe();
-  }
-
-  closeDialog() {
-    this.dialog.closeAll();
-  }
-  onConfirm() {
-    this.dialogRef.close(true);
-  }
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormLiquidComponent } from './form-liquid.component';
+import { HttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+export function HttpLoaderFactory(httpClient: HttpClient) {
+  return new TranslateHttpLoader(httpClient, './assets/languages/locales/', '.json');
 }
+
+@NgModule({
+  declarations: [FormLiquidComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
+  exports: [FormLiquidComponent],
+})
+export class FormLiquidModule {}

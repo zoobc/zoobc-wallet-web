@@ -38,44 +38,28 @@
 // IMPORTANT: The above copyright notice and this permission notice
 // shall be included in all copies or substantial portions of the Software.
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Component({
-  selector: 'app-confirm-send',
-  templateUrl: './confirm-send.component.html',
-  styleUrls: ['./confirm-send.component.scss'],
-})
-export class ConfirmSendComponent implements OnInit {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialog: MatDialog,
-    public dialogRef: MatDialogRef<ConfirmSendComponent>
-  ) {}
-  form: any;
-  advancedMenu: boolean = false;
-  advancedLiquid: boolean = false;
-  subsRate: Subscription;
+import { LiquidTransactionComponent } from './liquid-transaction.component';
 
-  ngOnInit() {
-    // this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-    //   this.currencyRate = rate;
-    // });
+describe('LiquidTransactionComponent', () => {
+  let component: LiquidTransactionComponent;
+  let fixture: ComponentFixture<LiquidTransactionComponent>;
 
-    this.form = this.data.form;
-    if (this.data.form.addressApprover) this.advancedMenu = true;
-    if (this.data.form.completeMinutes) this.advancedLiquid = true;
-  }
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ LiquidTransactionComponent ]
+    })
+    .compileComponents();
+  }));
 
-  ngOnDestroy() {
-    if (this.subsRate) this.subsRate.unsubscribe();
-  }
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LiquidTransactionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-  closeDialog() {
-    this.dialog.closeAll();
-  }
-  onConfirm() {
-    this.dialogRef.close(true);
-  }
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

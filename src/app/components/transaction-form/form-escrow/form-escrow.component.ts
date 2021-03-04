@@ -123,9 +123,7 @@ export class FormEscrowComponent implements OnInit {
     const timeout = this.group.get('timeout').value;
     const hour = calcPer24Hour(timeout);
 
-    const fee: number = timeout
-      ? await parseFloat(calculateMinimumFee(lengthInst + lengthMsg, hour).toFixed(5))
-      : 0.01;
+    const fee: number = await parseFloat(calculateMinimumFee(lengthInst + lengthMsg, hour).toFixed(5));
     this.minFee = fee;
 
     const feeForm = this.group.get('fee');
@@ -172,6 +170,6 @@ export function escrowForm() {
     //   Validators.max(720),
     // ]),
     timeout: new FormControl({ value: '', disabled: true }, Validators.required),
-    instruction: new FormControl({ value: '', disabled: true }, Validators.required),
+    instruction: new FormControl({ value: '', disabled: true }),
   };
 }

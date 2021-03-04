@@ -38,44 +38,55 @@
 // IMPORTANT: The above copyright notice and this permission notice
 // shall be included in all copies or substantial portions of the Software.
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatCheckbox } from '@angular/material';
 
 @Component({
-  selector: 'app-confirm-send',
-  templateUrl: './confirm-send.component.html',
-  styleUrls: ['./confirm-send.component.scss'],
+  selector: 'form-liquid',
+  templateUrl: './form-liquid.component.html',
+  styleUrls: ['./form-liquid.component.scss'],
 })
-export class ConfirmSendComponent implements OnInit {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialog: MatDialog,
-    public dialogRef: MatDialogRef<ConfirmSendComponent>
-  ) {}
-  form: any;
-  advancedMenu: boolean = false;
-  advancedLiquid: boolean = false;
-  subsRate: Subscription;
+export class FormLiquidComponent implements OnInit {
+  @Input() group: FormGroup;
+  @Input() inputMap: any;
+
+  @ViewChild('advanceCheckBox') advanceCheckBox: MatCheckbox;
+  showLiquid: boolean = false;
+
+  constructor() {}
 
   ngOnInit() {
-    // this.subsRate = this.currencyServ.rate.subscribe((rate: Currency) => {
-    //   this.currencyRate = rate;
-    // });
-
-    this.form = this.data.form;
-    if (this.data.form.addressApprover) this.advancedMenu = true;
-    if (this.data.form.completeMinutes) this.advancedLiquid = true;
+    if (this.group.get(this.inputMap.completeMinutes).enabled) {
+      this.showLiquid = true;
+      this.advanceCheckBox.checked = true;
+    }
   }
 
-  ngOnDestroy() {
-    if (this.subsRate) this.subsRate.unsubscribe();
+  toggleAdvancedMenu() {
+    this.showLiquid = !this.showLiquid;
+    this.enableFieldLiquid();
+    if (!this.showLiquid) this.disableFieldLiquid();
   }
 
-  closeDialog() {
-    this.dialog.closeAll();
+  resetValue() {
+    this.group.get(this.inputMap.completeMinutes).reset();
   }
-  onConfirm() {
-    this.dialogRef.close(true);
+
+  enableFieldLiquid() {
+    this.group.get(this.inputMap.completeMinutes).enable();
+    this.resetValue();
   }
+
+  disableFieldLiquid() {
+    this.group.get(this.inputMap.completeMinutes).disable();
+  }
+}
+
+export const liquidMap = { completeMinutes: 'completeMinutes' };
+
+export function liquidForm() {
+  return {
+    completeMinutes: new FormControl({ value: 0, disabled: true }, [Validators.required, Validators.min(0)]),
+  };
 }

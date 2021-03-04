@@ -40,7 +40,7 @@
     "sweetalert2": "^8.11.7",
     "tslib": "^1.9.0",
     "wif": "^2.0.6",
-    "zbc-sdk": "0.0.15-pre-release",
+    "zbc-sdk": "0.0.27-pre-release",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

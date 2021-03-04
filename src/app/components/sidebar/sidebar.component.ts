@@ -108,7 +108,7 @@ export class SidebarComponent implements OnInit {
 
   goToMultisig() {
     if (this.account.type == 'multisig')
-      this.multisigServ.initDraft(this.account, TransactionType.SENDMONEYTRANSACTION);
+      this.multisigServ.initDraft(this.account, TransactionType.SENDZBCTRANSACTION);
     this.onToggle();
   }
 
