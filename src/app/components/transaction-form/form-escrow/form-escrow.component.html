@@ -77,7 +77,44 @@ shall be included in all copies or substantial portions of the Software. -->
       </mat-error>
     </div>
 
-    <label class="form-block-height">
+    <mat-form-field appearance="outline" class="block" color="accent">
+      <input
+        matInput
+        type="datetime"
+        [min]="minDate"
+        [owlDateTime]="dt"
+        [owlDateTimeTrigger]="dt"
+        formControlName="{{ inputMap.timeout }}"
+        placeholder="{{ 'timeout' | translate }}"
+        (dateTimeChange)="onCalculateMinimumFee()"
+      />
+      <owl-date-time #dt></owl-date-time>
+    </mat-form-field>
+    <ng-container *ngIf="group.get(inputMap.timeout).touched">
+      <mat-error *ngIf="group.get(inputMap.timeout).hasError('required')">{{
+        'timeout is required' | translate
+      }}</mat-error>
+    </ng-container>
+
+    <mat-form-field appearance="outline" class="block" color="accent">
+      <mat-label>{{ 'instruction' | translate }}</mat-label>
+      <textarea
+        #input
+        matInput
+        rows="5"
+        maxlength="60000"
+        (keyup)="onCalculateMinimumFee()"
+        formControlName="{{ inputMap.instruction }}"
+      ></textarea>
+      <mat-hint align="end" class="hint">{{ input.value?.length || 0 }}/60000</mat-hint>
+    </mat-form-field>
+    <!-- <ng-container *ngIf="group.get(inputMap.instruction).touched">
+      <mat-error *ngIf="group.get(inputMap.instruction).hasError('required')">
+        {{ 'instruction is required' | translate }}
+      </mat-error>
+    </ng-container> -->
+
+    <!-- <label class="form-block-height">
       <b>{{ 'block height' | translate }} : {{ blockHeight | number }}</b>
     </label>
     <mat-form-field appearance="outline" class="block" color="accent">
@@ -100,16 +137,6 @@ shall be included in all copies or substantial portions of the Software. -->
       <mat-error *ngIf="group.get(inputMap.timeout).hasError('max')">
         {{ 'maximum timeout is 720' | translate }}
       </mat-error>
-    </ng-container>
-
-    <mat-form-field appearance="outline" class="block" color="accent">
-      <mat-label>{{ 'instruction' | translate }}</mat-label>
-      <textarea matInput formControlName="{{ inputMap.instruction }}" rows="5"></textarea>
-    </mat-form-field>
-    <ng-container *ngIf="group.get(inputMap.instruction).touched">
-      <mat-error *ngIf="group.get(inputMap.instruction).hasError('required')">
-        {{ 'instruction is required' | translate }}
-      </mat-error>
-    </ng-container>
+    </ng-container> -->
   </ng-container>
 </div>

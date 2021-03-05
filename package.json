@@ -29,6 +29,7 @@
     "@zxing/ngx-scanner": "^3.0.0",
     "file-saver": "^2.0.2",
     "google-protobuf": "^3.8.0",
+    "moment": "^2.29.1",
     "ng-pick-datetime": "^7.0.0",
     "ngx-build-plus": "^7.8.3",
     "ngx-infinite-scroll": "^7.0.0",
@@ -39,7 +40,7 @@
     "sweetalert2": "^8.11.7",
     "tslib": "^1.9.0",
     "wif": "^2.0.6",
-    "zbc-sdk": "^0.0.12-pre-release",
+    "zbc-sdk": "0.0.27-pre-release",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -53,13 +54,13 @@
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~4.0.0",
+    "karma": "^6.1.1",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
     "prettier": "1.18.2",
-    "protractor": "~5.4.0",
+    "protractor": "^7.0.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"

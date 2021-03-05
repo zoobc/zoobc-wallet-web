@@ -40,6 +40,7 @@
 
 export interface NodeList {
   label: string;
+  default: boolean;
   selected: boolean;
   wkps: string[];
 }

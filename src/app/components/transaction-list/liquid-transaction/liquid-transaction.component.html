@@ -58,9 +58,6 @@ shall be included in all copies or substantial portions of the Software. -->
     <ng-container *ngIf="transaction.sender.value == address.value; else recipientAmount">
       <div class="amount-send">- ZBC {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }}</div>
       <div class="fee">- ZBC {{ transaction.fee / 1e8 | number: '0.0-8' }} {{ fee | translate }}</div>
-      <!-- <div class="amount-currency">
-        - USD {{ (transaction.txBody.amount * currencyRate.value) / 1e8 | number: '0.0-8' }}
-      </div> -->
     </ng-container>
     <ng-template #recipientAmount>
       <div class="amount-receive">+ {{ transaction.txBody.amount / 1e8 | number: '0.0-8' }} ZBC</div>
@@ -69,10 +66,6 @@ shall be included in all copies or substantial portions of the Software. -->
     <div class="description">
       <div class="chips">
         <div class="chip small">{{ transaction.transactionTypeString | translate }}</div>
-        <div class="chip small" *ngIf="transaction.multisig">
-          {{ 'multisignature' | translate }}
-        </div>
-        <div class="chip small" *ngIf="transaction.escrow">{{ 'escrow transaction' | translate }}</div>
       </div>
       <div class="status" [style.color]="color" *ngIf="transaction.escrow">
         <i class="fas fa-dot-circle" matTooltip="{{ status | translate }}" matTooltipPosition="above"></i>
@@ -85,10 +78,6 @@ shall be included in all copies or substantial portions of the Software. -->
   <div class="transaction-detail-container" *ngIf="transaction && !isLoading">
     <div class="row" *ngIf="transaction.transactionTypeString">
       <h3>{{ transaction.transactionTypeString | translate }}</h3>
-      <h3 class="chip small" *ngIf="transaction.multisig">
-        &nbsp;({{ 'multisignature' | translate }})
-      </h3>
-      <h3 class="chip small" *ngIf="transaction.escrow">&nbsp;({{ 'escrow transaction' | translate }})</h3>
     </div>
 
     <div class="row" *ngIf="transaction.transactionHash">
@@ -141,6 +130,11 @@ shall be included in all copies or substantial portions of the Software. -->
     <div class="row" *ngIf="transaction.transactionIndex">
       <div class="col-12 col-md-4">{{ 'transaction index' | translate }}:</div>
       <div class="col-12 col-md-8">{{ transaction.transactionIndex }}</div>
+    </div>
+
+    <div class="row" *ngIf="transaction.txBody">
+      <div class="col-12 col-md-4">{{ 'complete minutes' | translate }}:</div>
+      <div class="col-12 col-md-8 font-roboto-mono">{{ transaction.txBody.completeminutes }}</div>
     </div>
 
     <div class="row">

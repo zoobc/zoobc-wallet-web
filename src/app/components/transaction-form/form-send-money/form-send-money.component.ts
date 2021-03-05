@@ -46,8 +46,9 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
-import { sendMoneyBuilder, SendMoneyInterface, TransactionType } from 'zbc-sdk';
+import { SendZBCBuilder, SendZBCInterface, TransactionType } from 'zbc-sdk';
 import { MultisigService } from 'src/app/services/multisig.service';
+import { liquidForm, liquidMap } from '../form-liquid/form-liquid.component';
 
 @Component({
   selector: 'form-send-money',
@@ -109,8 +110,7 @@ export class FormSendMoneyComponent implements OnInit {
     this.account = account;
     this.group.get('sender').patchValue(account.address.value);
 
-    if (account.type == 'multisig')
-      this.multisigServ.initDraft(account, TransactionType.SENDMONEYTRANSACTION);
+    if (account.type == 'multisig') this.multisigServ.initDraft(account, TransactionType.SENDZBCTRANSACTION);
   }
 
   filterContacts(value: string): Contact[] {
@@ -160,29 +160,31 @@ export const sendMoneyMap = {
   alias: 'alias',
   amount: 'amount',
   fee: 'fee',
-  ...escrowMap,
   message: 'message',
+  ...escrowMap,
+  ...liquidMap,
 };
 
 export function createSendMoneyForm(): FormGroup {
   return new FormGroup({
     sender: new FormControl('', Validators.required),
     recipient: new FormControl('', Validators.required),
-    amount: new FormControl('', [Validators.required, Validators.min(1 / 1e8)]),
+    amount: new FormControl('', [Validators.required, Validators.min(0)]),
     alias: new FormControl('', Validators.required),
     fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    ...escrowForm(),
     message: new FormControl(''),
+    ...escrowForm(),
+    ...liquidForm(),
   });
 }
 
 export function createSendMoneyBytes(form: any): Buffer {
   const { sender, fee, amount, recipient } = form;
-  const data: SendMoneyInterface = {
+  const data: SendZBCInterface = {
     sender: { value: sender, type: 0 },
     fee,
     amount,
     recipient: { value: recipient, type: 0 },
   };
-  return sendMoneyBuilder(data);
+  return SendZBCBuilder(data);
 }

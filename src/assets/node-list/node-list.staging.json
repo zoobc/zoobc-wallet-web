@@ -1,6 +1,8 @@
 [
   {
-    "label": "Beta",
+    "label": "Alpha Network",
+    "selected": true,
+    "default": true,
     "wkps": [
       "http://n0.alpha.proofofparticipation.network:7001",
       "http://n1.alpha.proofofparticipation.network:7001",

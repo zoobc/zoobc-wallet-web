@@ -44,8 +44,9 @@ shall be included in all copies or substantial portions of the Software. -->
     <form [formGroup]="formSend" (submit)="onOpenDialogDetailSendMoney()">
       <form-send-money [group]="formSend" [inputMap]="sendMoneyMap"></form-send-money>
       <span class="form-advanced-option">{{ 'advanced option' | translate }}</span>
-      <form-escrow [group]="formSend" [inputMap]="sendMoneyMap"></form-escrow>
       <form-fee [group]="formSend" [inputMap]="sendMoneyMap"></form-fee>
+      <form-escrow [group]="formSend" [inputMap]="sendMoneyMap"></form-escrow>
+      <form-liquid [group]="formSend" [inputMap]="sendMoneyMap"></form-liquid>
       <form-message [group]="formSend" [inputMap]="sendMoneyMap"></form-message>
 
       <span *ngIf="isLoadingExtension" class="device-approval">

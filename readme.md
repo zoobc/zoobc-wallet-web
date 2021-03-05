@@ -24,6 +24,9 @@
   $ npm install
   # install node_modules packages
 
+  $ ./language.sh
+  # update submodule (language files)
+
   $ ng serve
   # serving Angular apps
 ```

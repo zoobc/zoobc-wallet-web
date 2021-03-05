@@ -63,9 +63,32 @@ export class SendMoneyComponent implements OnInit {
 
   ngOnInit() {
     const approval = this.transaction.txBody.approval;
-    this.color = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
-    this.status =
-      approval == '0' ? 'pending' : approval == '1' ? 'approved' : approval == '2' ? 'rejected' : 'expired';
+    switch (approval) {
+      case '1':
+        this.color = 'green';
+        break;
+      case '2':
+        this.color = 'red';
+        break;
+      default:
+        this.color = 'orange';
+        break;
+    }
+
+    switch (approval) {
+      case '1':
+        this.status = 'approved';
+        break;
+      case '2':
+        this.status = 'rejected';
+        break;
+      default:
+        this.status = 'pending';
+        break;
+    }
+    // this.color = approval == '0' ? 'yellow' : approval == '1' ? 'green' : approval == '2' ? 'red' : 'red';
+    // this.status =
+    //   approval == '0' ? 'pending' : approval == '1' ? 'approved' : approval == '2' ? 'rejected' : 'expired';
   }
 
   openDetail(id) {

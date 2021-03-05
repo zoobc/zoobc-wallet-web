@@ -38,51 +38,28 @@
 // IMPORTANT: The above copyright notice and this permission notice
 // shall be included in all copies or substantial portions of the Software.
 
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { environment } from 'src/environments/environment';
-import { EscrowApprovalInterface, escrowBuilder } from 'zbc-sdk';
-import { escrowForm, escrowMap } from '../form-escrow/form-escrow.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Component({
-  selector: 'form-escrow-approval',
-  templateUrl: './form-escrow-approval.component.html',
-})
-export class FormEscrowApprovalComponent {
-  @Input() group: FormGroup;
-  @Input() inputMap: any;
-  @Input() multisig: boolean = false;
+import { LiquidTransactionComponent } from './liquid-transaction.component';
 
-  minFee = environment.fee;
+describe('LiquidTransactionComponent', () => {
+  let component: LiquidTransactionComponent;
+  let fixture: ComponentFixture<LiquidTransactionComponent>;
 
-  constructor() {}
-}
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ LiquidTransactionComponent ]
+    })
+    .compileComponents();
+  }));
 
-export const escrowApprovalMap = {
-  fee: 'fee',
-  transactionId: 'transactionId',
-  sender: 'sender',
-  approvalCode: 'approvalCode',
-  ...escrowMap,
-};
-
-export function createEscrowApprovalForm(): FormGroup {
-  return new FormGroup({
-    sender: new FormControl('', Validators.required),
-    fee: new FormControl(environment.fee, [Validators.required, Validators.min(environment.fee)]),
-    transactionId: new FormControl('', Validators.required),
-    approvalCode: new FormControl(0, Validators.required),
-    ...escrowForm(),
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LiquidTransactionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
-}
 
-export function createEscrowApprovalBytes(form: any): Buffer {
-  const { approvalCode, fee, transactionId, sender } = form;
-  const data: EscrowApprovalInterface = {
-    fee,
-    approvalCode,
-    approvalAddress: { value: sender, type: 0 },
-    transactionId,
-  };
-  return escrowBuilder(data);
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -49,13 +49,19 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { getTranslation } from 'src/helpers/utils';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PinConfirmationComponent } from 'src/app/components/pin-confirmation/pin-confirmation.component';
-import zoobc, { AccountBalance, PostTransactionResponses, SendMoneyInterface } from 'zbc-sdk';
+import zoobc, {
+  AccountBalance,
+  PostTransactionResponses,
+  SendZBCInterface,
+  LiquidTransactionsInterface,
+} from 'zbc-sdk';
 import { ConfirmSendComponent } from './confirm-send/confirm-send.component';
 import {
   createSendMoneyForm,
   sendMoneyMap,
 } from 'src/app/components/transaction-form/form-send-money/form-send-money.component';
 import { environment } from 'src/environments/environment';
+import moment from 'moment';
 
 @Component({
   selector: 'app-sendmoney',
@@ -92,7 +98,7 @@ export class SendmoneyComponent implements OnInit {
   ) {
     this.formSend = createSendMoneyForm();
     // disable alias field (saveAddress = false)
-    const aliasField = this.formSend.get('alias');
+    // const aliasField = this.formSend.get('alias');
     const amountForm = this.formSend.get('amount');
     const recipientForm = this.formSend.get('recipient');
 
@@ -118,7 +124,7 @@ export class SendmoneyComponent implements OnInit {
     const amountForm = this.formSend.get('amount');
     const feeForm = this.formSend.get('fee');
     // const approverCommissionField = this.formSend.get('approverCommission');
-    const aliasField = this.formSend.get('alias');
+    // const aliasField = this.formSend.get('alias');
 
     // this.getMinimumFee();
     const total = amountForm.value + feeForm.value;
@@ -178,47 +184,89 @@ export class SendmoneyComponent implements OnInit {
       const instructionField = this.formSend.get('instruction');
       const aliasField = this.formSend.get('alias');
       const messageField = this.formSend.get('message');
+      const completeMinutesField = this.formSend.get('completeMinutes');
 
-      let data: SendMoneyInterface = {
-        sender: { value: senderForm.value, type: 0 },
-        recipient: { value: recipientForm.value, type: 0 },
-        fee: feeForm.value,
-        amount: amountForm.value,
-        approverAddress: { value: addressApproverField.value, type: 0 },
-        commission: approverCommissionField.value,
-        timeout: timeoutField.value,
-        instruction: instructionField.value,
-        message: messageField.value,
-      };
       const childSeed = this.authServ.seed;
-      zoobc.Transactions.sendMoney(data, childSeed).then(
-        async (res: PostTransactionResponses) => {
-          this.isLoading = false;
-          let message = getTranslation('your transaction is processing', this.translate);
-          let subMessage = getTranslation('you transfer zbc to', this.translate, {
-            amount: data.amount,
-            recipient: data.recipient.value,
-          });
-          Swal.fire(message, subMessage, 'success');
 
-          // save address
-          if (aliasField.value) {
-            const newContact: Contact = {
-              name: aliasField.value,
-              address: { value: recipientForm.value, type: 0 },
-            };
-            this.contactServ.add(newContact);
+      /** checking if completeMinutesField having value so that processing liquid transfer  */
+      if (completeMinutesField && completeMinutesField.value) {
+        let data: LiquidTransactionsInterface = {
+          sender: { value: senderForm.value, type: 0 },
+          recipient: { value: recipientForm.value, type: 0 },
+          fee: feeForm.value,
+          amount: amountForm.value,
+          approverAddress: { value: addressApproverField.value, type: 0 },
+          commission: approverCommissionField.value,
+          instruction: instructionField.value,
+          message: messageField.value,
+          completeMinutes: completeMinutesField.value,
+          timeout: timeoutField.value
+            ? moment(timeoutField.value)
+                .utc()
+                .unix()
+            : null,
+        };
+
+        zoobc.Liquid.sendLiquid(data, childSeed).then(
+          async (res: PostTransactionResponses) => {
+            this.isLoading = false;
+            let message = getTranslation('your transaction is processing', this.translate);
+            let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
+            Swal.fire(message, subMessage, 'success');
+            this.router.navigateByUrl('/dashboard');
+          },
+          async err => {
+            this.isLoading = false;
+            console.log(err);
+
+            let message = getTranslation(err.message, this.translate);
+            Swal.fire('Opps...', message, 'error');
           }
-          this.router.navigateByUrl('/dashboard');
-        },
-        async err => {
-          this.isLoading = false;
-          console.log(err);
+        );
+      } else {
+        let data: SendZBCInterface = {
+          sender: { value: senderForm.value, type: 0 },
+          recipient: { value: recipientForm.value, type: 0 },
+          fee: feeForm.value,
+          amount: amountForm.value,
+          approverAddress: { value: addressApproverField.value, type: 0 },
+          commission: approverCommissionField.value,
+          instruction: instructionField.value,
+          message: messageField.value,
+          timeout: timeoutField.value
+            ? moment(timeoutField.value)
+                .utc()
+                .unix()
+            : null,
+        };
 
-          let message = getTranslation(err.message, this.translate);
-          Swal.fire('Opps...', message, 'error');
-        }
-      );
+        zoobc.Transactions.SendZBC(data, childSeed).then(
+          async (res: PostTransactionResponses) => {
+            this.isLoading = false;
+            let message = getTranslation('your transaction is processing', this.translate);
+            let subMessage = getTranslation('you transfer zbc to ', this.translate) + data.recipient.value;
+            Swal.fire(message, subMessage, 'success');
+
+            // save address
+            if (aliasField.value) {
+              const newContact: Contact = {
+                name: aliasField.value,
+                address: { value: recipientForm.value, type: 0 },
+              };
+              this.contactServ.add(newContact);
+            }
+
+            this.router.navigateByUrl('/dashboard');
+          },
+          async err => {
+            this.isLoading = false;
+            console.log(err);
+
+            let message = getTranslation(err.message, this.translate);
+            Swal.fire('Opps...', message, 'error');
+          }
+        );
+      }
     }
   }
 

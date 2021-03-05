@@ -1,14 +1,16 @@
 [
   {
-    "label": "Beta",
+    "label": "Beta Network",
+    "selected": true,
+    "default": true,
     "wkps": [
-      "http://n0.alpha.proofofparticipation.network:7001",
-      "http://n1.alpha.proofofparticipation.network:7001",
-      "http://n2.alpha.proofofparticipation.network:7001",
-      "http://n3.alpha.proofofparticipation.network:7001",
-      "http://n4.alpha.proofofparticipation.network:7001",
-      "http://n5.alpha.proofofparticipation.network:7001",
-      "http://n6.alpha.proofofparticipation.network:7001"
+      "http://n0.beta.proofofparticipation.network:7001",
+      "http://n1.beta.proofofparticipation.network:7001",
+      "http://n2.beta.proofofparticipation.network:7001",
+      "http://n3.beta.proofofparticipation.network:7001",
+      "http://n4.beta.proofofparticipation.network:7001",
+      "http://n5.beta.proofofparticipation.network:7001",
+      "http://n6.beta.proofofparticipation.network:7001"
     ]
   }
 ]

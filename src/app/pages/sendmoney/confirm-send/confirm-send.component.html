@@ -64,6 +64,7 @@ shall be included in all copies or substantial portions of the Software. -->
         <div class="address">
           <wallet-address [value]="form.recipient"></wallet-address>
         </div>
+
         <ng-container *ngIf="advancedMenu">
           <mat-divider style="margin-bottom: 10px;"></mat-divider>
           <div class="label">{{ 'approver address' | translate }}:</div>
@@ -80,11 +81,23 @@ shall be included in all copies or substantial portions of the Software. -->
           </div>
           <div class="label">{{ 'timeout' | translate }}:</div>
           <div class="amount">
-            {{ form.timeout }}
+            {{ form.timeout | date: 'medium' }}
           </div>
           <div class="label">{{ 'instruction' | translate }}:</div>
           <div class="instruction">
             {{ form.instruction }}
+          </div>
+          <div *ngIf="form.message">
+            <div class="label">{{ 'add message' | translate }}:</div>
+            <div class="instruction">{{ form.message }}</div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="advancedLiquid">
+          <mat-divider style="margin-bottom: 10px;"></mat-divider>
+          <div class="label">{{ 'liquid transfer' | translate }}:</div>
+          <div class="instruction">
+            {{ 'complete' | translate }} {{ form.completeMinutes }} {{ 'minutes' | translate }}
           </div>
         </ng-container>
       </div>

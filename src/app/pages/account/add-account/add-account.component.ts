@@ -40,7 +40,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatTabChangeEvent } from '@angular/material';
 import { AuthService, SavedAccount } from 'src/app/services/auth.service';
 import zoobc, { getZBCAddress, MultiSigInfo, Address } from 'zbc-sdk';
 import { uniqueParticipant } from '../../../../helpers/utils';
@@ -54,12 +54,14 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AddAccountComponent implements OnInit {
   formAddAccount: FormGroup;
-  accountNameField = new FormControl('', Validators.required);
+  accountNameNormalField = new FormControl('', Validators.required);
+  accountNameMultisigField = new FormControl('', Validators.required);
   participantsField = new FormArray([], uniqueParticipant);
   nonceField = new FormControl('', [Validators.required, Validators.min(1)]);
   minSignatureField = new FormControl('', [Validators.required, Validators.min(2)]);
 
-  isMultiSignature: boolean = false;
+  isMultiSignature: boolean = true;
+  isNormal: boolean = true;
   minParticipant: number = 2;
   account: SavedAccount;
 
@@ -69,12 +71,13 @@ export class AddAccountComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.formAddAccount = new FormGroup({
-      name: this.accountNameField,
+      nameNormal: this.accountNameNormalField,
+      nameMultisig: this.accountNameMultisigField,
       participants: this.participantsField,
       nonce: this.nonceField,
       minimumSignature: this.minSignatureField,
     });
-
+    this.enableFieldNormal();
     this.pushInitParticipant();
     this.disableFieldMultiSignature();
   }
@@ -84,13 +87,13 @@ export class AddAccountComponent implements OnInit {
   async onAddAccount() {
     let account: SavedAccount;
 
-    if (!this.isMultiSignature) {
+    if (this.isNormal) {
       const keyring = this.authServ.keyring;
       const path = this.authServ.generateDerivationPath();
       const childSeed = keyring.calcDerivationPath(path);
       const accountAddress = getZBCAddress(childSeed.publicKey);
       account = {
-        name: this.accountNameField.value,
+        name: this.accountNameNormalField.value,
         type: 'normal',
         path,
         nodeIP: null,
@@ -98,73 +101,111 @@ export class AddAccountComponent implements OnInit {
       };
       this.authServ.addAccount(account);
       return this.dialogRef.close(true);
+    } else if (this.isMultiSignature) {
+      const title = getTranslation('are you sure?', this.translate);
+      const message = getTranslation(
+        'once you create multisignature address, you will not be able to edit it anymore. but you can still delete it',
+        this.translate
+      );
+      const confirmButtonText = getTranslation('yes, continue it!', this.translate);
+      const cancelButtonText = getTranslation('cancel', this.translate);
+      Swal.fire({
+        title: title,
+        text: message,
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: cancelButtonText,
+        type: 'warning',
+      }).then(res => {
+        if (!res.value) return null;
+        let addresses: [string] = this.participantsField.value.filter(value => value.length > 0);
+        addresses = addresses.sort();
+        const participants: Address[] = addresses.map(address => ({ value: address, type: 0 }));
+        const multiParam: MultiSigInfo = {
+          participants,
+          nonce: this.nonceField.value,
+          minSigs: this.minSignatureField.value,
+        };
+        const multiSignAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
+        account = {
+          name: this.accountNameMultisigField.value,
+          type: 'multisig',
+          path: null,
+          nodeIP: null,
+          address: { value: multiSignAddress, type: 0 },
+          participants: participants,
+          nonce: this.nonceField.value,
+          minSig: this.minSignatureField.value,
+        };
+        this.authServ.addAccount(account);
+        return this.dialogRef.close(true);
+      });
     }
-
-    const title = getTranslation('are you sure?', this.translate);
-    const message = getTranslation(
-      'once you create multisignature address, you will not be able to edit it anymore. but you can still delete it',
-      this.translate
-    );
-    const confirmButtonText = getTranslation('yes, continue it!', this.translate);
-    const cancelButtonText = getTranslation('cancel', this.translate);
-    Swal.fire({
-      title: title,
-      text: message,
-      showCancelButton: true,
-      confirmButtonText: confirmButtonText,
-      cancelButtonText: cancelButtonText,
-      type: 'warning',
-    }).then(res => {
-      if (!res.value) return null;
-      let addresses: [string] = this.participantsField.value.filter(value => value.length > 0);
-      addresses = addresses.sort();
-      const participants: Address[] = addresses.map(address => ({ value: address, type: 0 }));
-      const multiParam: MultiSigInfo = {
-        participants,
-        nonce: this.nonceField.value,
-        minSigs: this.minSignatureField.value,
-      };
-      const multiSignAddress = zoobc.MultiSignature.createMultiSigAddress(multiParam);
-      account = {
-        name: this.accountNameField.value,
-        type: 'multisig',
-        path: null,
-        nodeIP: null,
-        address: { value: multiSignAddress, type: 0 },
-        participants: participants,
-        nonce: this.nonceField.value,
-        minSig: this.minSignatureField.value,
-      };
-      this.authServ.addAccount(account);
-      return this.dialogRef.close(true);
-    });
   }
 
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    if (tabChangeEvent.index == 0) {
+      this.enableFieldNormal();
+      this.disableFieldMultiSignature();
+    } else if (tabChangeEvent.index == 1) {
+      this.enableFieldMultiSignature();
+      this.disableFieldNormal();
+    } else if (tabChangeEvent.index == 2 || tabChangeEvent.index == 3) {
+      const message = getTranslation('coming soon', this.translate);
+      Swal.fire({
+        type: 'info',
+        title: message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }
+
+  disableFieldNormal() {
+    this.isNormal = false;
+
+    this.accountNameNormalField.disable();
+  }
+
+  enableFieldNormal() {
+    this.isNormal = true;
+    this.accountNameNormalField.enable();
+
+    const len = this.authServ.getAllAccount('normal').length + 1;
+    this.accountNameNormalField.setValue(`Account ${len}`);
+  }
   disableFieldMultiSignature() {
     this.isMultiSignature = false;
 
+    this.accountNameMultisigField.disable();
     this.participantsField.disable();
     this.nonceField.disable();
     this.minSignatureField.disable();
-
-    const len = this.authServ.getAllAccount('normal').length + 1;
-    this.accountNameField.setValue(`Account ${len}`);
   }
 
   enableFieldMultiSignature() {
     this.isMultiSignature = true;
 
+    this.resetValueMultisignature();
+    this.accountNameMultisigField.enable();
     this.participantsField.enable();
     this.nonceField.enable();
     this.minSignatureField.enable();
 
     const len = this.authServ.getAllAccount('multisig').length + 1;
-    this.accountNameField.setValue(`Multisig Account ${len}`);
+    this.accountNameMultisigField.setValue(`Multisig Account ${len}`);
   }
 
-  toogleMultiSignature() {
-    if (!this.isMultiSignature) this.enableFieldMultiSignature();
-    else this.disableFieldMultiSignature();
+  resetValueMultisignature() {
+    this.accountNameMultisigField.reset();
+    this.nonceField.reset();
+    this.minSignatureField.reset();
+
+    while (this.participantsField.length) {
+      this.participantsField.removeAt(this.participantsField.length - 1);
+    }
+
+    this.pushInitParticipant();
   }
 
   pushInitParticipant(size = 2) {

@@ -46,6 +46,7 @@ import { ExtendedScrollToOptions } from '@angular/cdk/scrolling';
 import nodeListJson from 'src/assets/node-list/node-list.json';
 import { NodeList } from 'src/helpers/node-list';
 import zoobc, { GroupData } from 'zbc-sdk';
+import { Subscription, timer } from 'rxjs';
 import { MultiSigDraft } from 'src/app/services/multisig.service';
 
 function equals(arr1, arr2) {
@@ -71,6 +72,9 @@ export class ParentComponent implements OnInit {
 
   isLogin: boolean;
 
+  subscription: Subscription = new Subscription();
+  reloadingTimer: Subscription;
+
   constructor(private router: Router, private route: ActivatedRoute, private appServ: AppService) {
     this.routerEvent = this.router.events.subscribe(res => {
       if (res instanceof NavigationEnd) {
@@ -87,6 +91,8 @@ export class ParentComponent implements OnInit {
 
     const multisigList: MultiSigDraft[] = JSON.parse(localStorage.getItem('MULTISIG_DRAFTS')) || [];
     if (multisigList.length == 0) localStorage.setItem('MULTISIG_DRAFTS', '[]');
+
+    this.saveFreshNetwork();
   }
 
   @HostListener('window:resize', ['$event']) onResize(event) {
@@ -99,6 +105,8 @@ export class ParentComponent implements OnInit {
 
   ngOnDestroy() {
     this.routerEvent.unsubscribe();
+    this.subscription.unsubscribe();
+    this.reloadingTimer.unsubscribe();
   }
 
   importNodeList() {
@@ -125,5 +133,35 @@ export class ParentComponent implements OnInit {
     /** filter node list who has selected is true */
     const groups: GroupData[] = currNodeList.filter(f => f.selected === true);
     zoobc.Network.load(groups);
+  }
+
+  async saveFreshNetwork() {
+    if (this.reloadingTimer) this.reloadingTimer.unsubscribe();
+
+    this.reloadingTimer = timer(0, 60 * 1000).subscribe(async () => {
+      let currNodeList: NodeList[] = JSON.parse(localStorage.getItem('NODE_LIST'));
+
+      if (currNodeList && currNodeList.length > 0) {
+        const networks = await zoobc.Network.save();
+
+        if (networks && networks.length > 0) {
+          networks.forEach(item => {
+            let idx = currNodeList.map(n => n.label).indexOf(item.label);
+            if (idx !== undefined) {
+              const currNode = currNodeList[idx];
+              const payload = {
+                label: currNode.label,
+                selected: currNode.selected,
+                default: currNode.default,
+                wkps: item.wkps,
+              };
+              currNodeList.splice(idx, 1, payload);
+            }
+          });
+
+          localStorage.setItem('NODE_LIST', JSON.stringify(currNodeList));
+        }
+      }
+    });
   }
 }

@@ -183,15 +183,14 @@ export class DashboardComponent implements OnInit {
   }
 
   async getTransactions() {
-    const params: TransactionListParams = {
-      address: this.currAcc.address,
-      pagination: {
-        page: 1,
-        limit: 10,
-      },
-    };
-
     try {
+      const params: TransactionListParams = {
+        address: this.currAcc.address,
+        pagination: {
+          page: 1,
+          limit: 10,
+        },
+      };
       const trxList = await zoobc.Transactions.getList(params);
       trxList.transactions.map(transaction => {
         transaction.senderAlias = this.contactServ.get(transaction.sender.value).name || '';
@@ -219,7 +218,7 @@ export class DashboardComponent implements OnInit {
 
   goToMultisig() {
     if (this.currAcc.type == 'multisig')
-      this.multisigServ.initDraft(this.currAcc, TransactionType.SENDMONEYTRANSACTION);
+      this.multisigServ.initDraft(this.currAcc, TransactionType.SENDZBCTRANSACTION);
   }
 
   openReceiveForm() {
@@ -232,7 +231,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onOpenAddAccount() {
-    const dialog = this.dialog.open(AddAccountComponent, { width: '360px', maxHeight: '99vh' });
+    const dialog = this.dialog.open(AddAccountComponent, { width: '700px', maxHeight: '99vh' });
 
     dialog.afterClosed().subscribe((added: boolean) => {
       if (added) {
@@ -256,16 +255,6 @@ export class DashboardComponent implements OnInit {
         this.currAcc = account;
         this.authServ.getAccountsWithBalance().then(accounts => (this.accounts = accounts));
       }
-    });
-  }
-
-  async onComingSoonPage() {
-    const message = getTranslation('coming soon', this.translate);
-    Swal.fire({
-      type: 'info',
-      title: message,
-      showConfirmButton: false,
-      timer: 1500,
     });
   }
 }

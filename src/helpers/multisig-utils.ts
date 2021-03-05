@@ -64,7 +64,7 @@ import { TransactionType } from 'zbc-sdk';
 
 export function createInnerTxForm(txType: number) {
   switch (txType) {
-    case TransactionType.SENDMONEYTRANSACTION:
+    case TransactionType.SENDZBCTRANSACTION:
       return createSendMoneyForm();
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return createSetupDatasetForm();
@@ -77,7 +77,7 @@ export function createInnerTxForm(txType: number) {
 
 export function createInnerTxBytes(form: any, txType: number): Buffer {
   switch (txType) {
-    case TransactionType.SENDMONEYTRANSACTION:
+    case TransactionType.SENDZBCTRANSACTION:
       return createSendMoneyBytes(form);
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return createSetupDatasetBytes(form);
@@ -90,7 +90,7 @@ export function createInnerTxBytes(form: any, txType: number): Buffer {
 
 export function getInputMap(txType: number): Object {
   switch (txType) {
-    case TransactionType.SENDMONEYTRANSACTION:
+    case TransactionType.SENDZBCTRANSACTION:
       return sendMoneyMap;
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return setupDatasetMap;
@@ -103,7 +103,7 @@ export function getInputMap(txType: number): Object {
 
 export function getTxType(type: number) {
   switch (type) {
-    case TransactionType.SENDMONEYTRANSACTION:
+    case TransactionType.SENDZBCTRANSACTION:
       return 'transfer zbc';
     case TransactionType.SETUPACCOUNTDATASETTRANSACTION:
       return 'setup account dataset';
