@@ -188,7 +188,7 @@ export class SendmoneyComponent implements OnInit {
 
       const childSeed = this.authServ.seed;
 
-      /** checking if completeMinutesField having value so that processing liquid transaction  */
+      /** checking if completeMinutesField having value so that processing liquid transfer  */
       if (completeMinutesField && completeMinutesField.value) {
         let data: LiquidTransactionsInterface = {
           sender: { value: senderForm.value, type: 0 },

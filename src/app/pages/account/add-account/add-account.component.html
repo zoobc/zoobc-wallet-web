@@ -42,7 +42,7 @@ shall be included in all copies or substantial portions of the Software. -->
   <!-- <h2 class="mat-h2 text-center">{{ 'add new account' | translate }}</h2> -->
   <form [formGroup]="formAddAccount" (submit)="onAddAccount()">
     <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChanged($event)" mat-align-tabs="center">
-      <mat-tab label="Normal Account">
+      <mat-tab label="{{ 'normal account' | translate }}">
         <ng-container *ngIf="isNormal">
           <mat-form-field appearance="outline" color="accent" class="block" style="padding-top: 20px;">
             <mat-label>{{ 'account name' | translate }}</mat-label>
@@ -65,7 +65,7 @@ shall be included in all copies or substantial portions of the Software. -->
         </ng-container>
       </mat-tab>
 
-      <mat-tab label="Multisignature">
+      <mat-tab label="{{ 'multisignature' | translate }}">
         <ng-container *ngIf="isMultiSignature">
           <mat-form-field appearance="outline" color="accent" class="block" style="padding-top: 20px;">
             <mat-label>{{ 'account name' | translate }}</mat-label>
@@ -163,8 +163,8 @@ shall be included in all copies or substantial portions of the Software. -->
           </button>
         </ng-container>
       </mat-tab>
-      <mat-tab label="Ledger">cooming soon</mat-tab>
-      <mat-tab label="Private Key">cooming soon</mat-tab>
+      <mat-tab label="{{ 'ledger' | translate }}">{{ 'coming soon' | translate }}</mat-tab>
+      <mat-tab label="{{ 'private key' | translate }}">{{ 'coming soon' | translate }}</mat-tab>
     </mat-tab-group>
   </form>
 </div>
