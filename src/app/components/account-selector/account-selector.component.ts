@@ -108,7 +108,7 @@ export class AccountSelectorComponent implements OnInit {
 
   openAddAccount() {
     const dialog = this.dialog.open(AddAccountComponent, {
-      width: '360px',
+      width: '700px',
       maxHeight: '99vh',
     });
 
