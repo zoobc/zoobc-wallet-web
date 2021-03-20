@@ -163,7 +163,7 @@ shall be included in all copies or substantial portions of the Software. -->
           <i class="far fa-address-card"></i>
           <span>{{ 'accounts' | translate }}</span>
         </a>
-        <a routerLink="/sendmoney">
+        <a routerLink="/sendmoney" *ngIf="currAcc.type == 'normal'">
           <i class="fa fa-paper-plane"></i>
           <span>{{ 'liquid transfer' | translate }}</span>
         </a>
