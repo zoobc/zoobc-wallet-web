@@ -65,6 +65,7 @@ export class AuthService {
 
   private sourceCurrAccount = new BehaviorSubject<SavedAccount>(null);
   currAccount = this.sourceCurrAccount.asObservable();
+  loginWithPinOrAddress = false;
 
   constructor() {
     const account = this.getCurrAccount();
@@ -103,7 +104,7 @@ export class AuthService {
 
       this._keyring = new ZooKeyring(passphrase);
       this._seed = this._keyring.calcDerivationPath(account.path);
-
+      this.loginWithPinOrAddress = false;
       return (this.loggedIn = true);
     }
     return false;
@@ -112,6 +113,7 @@ export class AuthService {
   loginWithoutPin(account: SavedAccount, seed?: BIP32Interface): boolean {
     if (!isZBCAddressValid(account.address.value)) return false;
     localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+    this.loginWithPinOrAddress = true;
     this.sourceCurrAccount.next(account);
 
     if (seed) this._seed = seed;
@@ -119,6 +121,7 @@ export class AuthService {
   }
 
   logout() {
+    this.loginWithPinOrAddress = false;
     this.loggedIn = false;
     this._keyring = null;
     this._seed = null;

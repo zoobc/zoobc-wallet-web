@@ -59,10 +59,10 @@ shall be included in all copies or substantial portions of the Software. -->
           </button>
         </div>
 
-        <span class="account-dropdown" *ngIf="!showAccountsList">
+        <span class="account-dropdown" *ngIf="loginWithouPin">
           <span class="name">{{ currAcc.name }}</span>
         </span>
-        <span class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="showAccountsList">
+        <span class="account-dropdown" [matMenuTriggerFor]="account" *ngIf="!loginWithouPin">
           <span class="name">{{ currAcc.name }}</span>
           <i class="fa fa-caret-down"></i>
         </span>
@@ -75,12 +75,7 @@ shall be included in all copies or substantial portions of the Software. -->
                 <span>{{ 'add new account' | translate }}</span>
               </button>
               <mat-divider></mat-divider>
-              <button
-                *ngFor="let acc of accounts"
-                (click)="onSwitchAccount(acc)"
-                mat-menu-item
-                class="account"
-              >
+              <button *ngFor="let acc of accounts" (click)="onSwitchAccount(acc)" mat-menu-item class="account">
                 <div class="account-left">
                   <i class="fas fa-user" *ngIf="acc.address != currAcc.address"></i>
                   <i class="fas fa-check" *ngIf="acc.address == currAcc.address"></i>
@@ -89,11 +84,8 @@ shall be included in all copies or substantial portions of the Software. -->
                   <div>{{ acc.name }}</div>
                   <div class="balance">{{ acc.balance / 1e8 | number: '0.0-2' }} ZBC</div>
                 </div>
-                <div
-                  class="account-right"
-                  (click)="onOpenEditAccount($event, acc)"
-                  matTooltip="{{ 'edit' | translate }}"
-                >
+                <div class="account-right" (click)="onOpenEditAccount($event, acc)"
+                  matTooltip="{{ 'edit' | translate }}">
                   <i class="fas fa-pen"></i>
                 </div>
               </button>
@@ -113,15 +105,12 @@ shall be included in all copies or substantial portions of the Software. -->
             <span class="font-small">{{ spendableBalanceFormatted.amount2 }}</span>
           </span>
           <br />
-          <span
-            *ngIf="lockedBalance > 0"
-            [popper]="'ZBC ' + accountBalance.balance / 1e8 + ', Locked ' + lockedBalance / 1e8"
-          >
+          <span *ngIf="lockedBalance > 0"
+            [popper]="'ZBC ' + accountBalance.balance / 1e8 + ', Locked ' + lockedBalance / 1e8">
             {{ 'balance' | translate }} {{ accountBalanceFormatted.currency }}
             {{ accountBalanceFormatted.amount1 }}{{ accountBalanceFormatted.amount2 }},
             {{ 'locked' | translate }} {{ lockedBalanceFormatted.amount1
-            }}{{ lockedBalanceFormatted.amount2 }}</span
-          >
+            }}{{ lockedBalanceFormatted.amount2 }}</span>
           <!-- <div class="spendable" [popper]="'ZBC ' + accountBalance.spendableBalance / 1e8">
             {{ 'spendable' | translate }} ZBC {{ accountBalance.spendableBalance / 1e8 | number: '0.0-4' }}
           </div> -->
@@ -159,7 +148,7 @@ shall be included in all copies or substantial portions of the Software. -->
           <i class="fas fa-tasks"></i>
           <span>{{ 'tasks' | translate }}</span>
         </a>
-        <a routerLink="/accounts">
+        <a routerLink="/accounts" *ngIf="!loginWithouPin">
           <i class="far fa-address-card"></i>
           <span>{{ 'accounts' | translate }}</span>
         </a>
@@ -178,12 +167,8 @@ shall be included in all copies or substantial portions of the Software. -->
         </div>
         <mat-divider></mat-divider>
 
-        <transaction-list
-          [transactionData]="unconfirmTx"
-          [isLoading]="isLoading"
-          [isError]="isError"
-          (refresh)="loadBalanceAndTxs()"
-        ></transaction-list>
+        <transaction-list [transactionData]="unconfirmTx" [isLoading]="isLoading" [isError]="isError"
+          (refresh)="loadBalanceAndTxs()"></transaction-list>
       </mat-card>
       <br />
     </ng-container>
@@ -205,12 +190,8 @@ shall be included in all copies or substantial portions of the Software. -->
       </div>
       <mat-divider></mat-divider>
 
-      <transaction-list
-        [transactionData]="recentTx"
-        [isLoading]="isLoading"
-        [isError]="isError"
-        (refresh)="loadBalanceAndTxs()"
-      ></transaction-list>
+      <transaction-list [transactionData]="recentTx" [isLoading]="isLoading" [isError]="isError"
+        (refresh)="loadBalanceAndTxs()"></transaction-list>
     </mat-card>
     <br /><br />
   </div>

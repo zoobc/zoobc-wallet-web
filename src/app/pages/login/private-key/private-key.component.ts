@@ -66,11 +66,13 @@ export class PrivateKeyComponent {
 
   onLogin() {
     if (this.form.valid) {
-      const bip = wif.decode(this.privKeyField.value);
+      const hexPriv = this.privKeyField.value;
+      var privateKey = Buffer.from(hexPriv, 'hex');
+      var key = wif.encode(128, privateKey, true);
+      const bip = wif.decode(key);
       const keyring = new ZooKeyring('');
       const seed = keyring.generateBip32ExtendedKey('ed25519', bip);
       const address = getZBCAddress(seed.publicKey);
-
       const account: SavedAccount = {
         name: 'Imported Account',
         address: { type: 0, value: address },

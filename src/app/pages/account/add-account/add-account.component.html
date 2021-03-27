@@ -53,13 +53,7 @@ shall be included in all copies or substantial portions of the Software. -->
               {{ 'account name is required' | translate }}
             </mat-error>
           </ng-container>
-          <button
-            mat-flat-button
-            color="primary"
-            type="submit"
-            [disabled]="formAddAccount.invalid"
-            class="block"
-          >
+          <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid" class="block">
             {{ 'add' | translate }}
           </button>
         </ng-container>
@@ -81,12 +75,8 @@ shall be included in all copies or substantial portions of the Software. -->
             <ng-container *ngFor="let participant of participantsField.controls; let i = index">
               <ng-container *ngIf="i > 1">
                 <div class="inline-control">
-                  <input-address
-                    class="input"
-                    label=""
-                    [formControlName]="i"
-                    placeholder="{{ 'participant' | translate }} {{ i + 1 }}..."
-                  >
+                  <input-address class="input" label="" [formControlName]="i"
+                    placeholder="{{ 'participant' | translate }} {{ i + 1 }}...">
                   </input-address>
                   <button (click)="removeParticipant(i)" type="button" mat-flat-button color="warn">
                     <i class="fas fa-trash"></i>
@@ -94,11 +84,8 @@ shall be included in all copies or substantial portions of the Software. -->
                 </div>
               </ng-container>
               <ng-container *ngIf="i <= 1">
-                <input-address
-                  label=""
-                  [formControlName]="i"
-                  placeholder="{{ 'participant' | translate }} {{ i + 1 }}..."
-                >
+                <input-address label="" [formControlName]="i"
+                  placeholder="{{ 'participant' | translate }} {{ i + 1 }}...">
                 </input-address>
               </ng-container>
               <ng-container *ngIf="participantsField.controls[i].touched">
@@ -137,12 +124,8 @@ shall be included in all copies or substantial portions of the Software. -->
 
           <mat-form-field appearance="outline" color="accent" class="block">
             <mat-label>{{ 'minimum signature' | translate }}</mat-label>
-            <input
-              formControlName="minimumSignature"
-              matInput
-              type="number"
-              placeholder="{{ 'minimum signature' | translate }}"
-            />
+            <input formControlName="minimumSignature" matInput type="number"
+              placeholder="{{ 'minimum signature' | translate }}" />
           </mat-form-field>
           <ng-container *ngIf="minSignatureField.touched">
             <mat-error *ngIf="minSignatureField.hasError('required')">
@@ -152,19 +135,13 @@ shall be included in all copies or substantial portions of the Software. -->
               {{ 'minimum signature is 2' | translate }}
             </mat-error>
           </ng-container>
-          <button
-            mat-flat-button
-            color="primary"
-            type="submit"
-            [disabled]="formAddAccount.invalid"
-            class="block"
-          >
+          <button mat-flat-button color="primary" type="submit" [disabled]="formAddAccount.invalid" class="block">
             {{ 'add' | translate }}
           </button>
         </ng-container>
       </mat-tab>
-      <mat-tab label="{{ 'ledger' | translate }}">{{ 'coming soon' | translate }}</mat-tab>
-      <mat-tab label="{{ 'private key' | translate }}">{{ 'coming soon' | translate }}</mat-tab>
+      <!-- <mat-tab label="{{ 'ledger' | translate }}">{{ 'coming soon' | translate }}</mat-tab>
+      <mat-tab label="{{ 'private key' | translate }}">{{ 'coming soon' | translate }}</mat-tab> -->
     </mat-tab-group>
   </form>
 </div>

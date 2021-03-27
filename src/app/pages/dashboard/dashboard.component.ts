@@ -93,6 +93,7 @@ export class DashboardComponent implements OnInit {
   accounts: SavedAccount[];
   lastRefresh: number;
   lastRefreshAccount: number;
+  loginWithouPin = false;
 
   showAccountsList: boolean = true;
 
@@ -120,6 +121,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loginWithouPin = this.authServ.loginWithPinOrAddress;
+    console.log('== this.loginWithouPin: ', this.loginWithouPin);
     this.restoreServ.restoreAccounts();
   }
 

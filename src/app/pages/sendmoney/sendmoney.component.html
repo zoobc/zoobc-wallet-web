@@ -52,13 +52,8 @@ shall be included in all copies or substantial portions of the Software. -->
       <span *ngIf="isLoadingExtension" class="device-approval">
         {{ 'waiting for device approval' | translate }}
       </span>
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        class="block button-margin"
-        [disabled]="formSend.invalid || isLoading || isError || isLoadingExtension"
-      >
+      <button mat-flat-button color="primary" type="submit" class="block button-margin"
+        [disabled]="formSend.invalid || isLoading || isError || isLoadingExtension">
         <span *ngIf="isLoading"> <i class="fas fa-circle-notch fa-spin"></i>&nbsp; </span>
         <span>{{ 'send' | translate }}</span>
       </button>
