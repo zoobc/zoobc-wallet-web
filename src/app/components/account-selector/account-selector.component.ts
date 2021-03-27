@@ -62,15 +62,17 @@ export class AccountSelectorComponent implements OnInit {
 
   isLoading = false;
   isError = false;
+  loginWithoutPin = false;
 
   initAccount: SavedAccount;
   account: SavedAccount;
   accounts: SavedAccount[];
 
-  constructor(private authServ: AuthService, private dialog: MatDialog) {}
+  constructor(private authServ: AuthService, private dialog: MatDialog) { }
 
   ngOnInit() {
     // this.currencyServ.rate.subscribe(rate => (this.currencyRate = rate));
+    this.loginWithoutPin = this.authServ.loginWithPinOrAddress;
     this.account = this.initAccount = this.authServ.getCurrAccount();
 
     this.getAccounts();
