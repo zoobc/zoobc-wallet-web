@@ -69,6 +69,7 @@ export class NavbarComponent implements OnInit {
   node: string = '';
 
   routerEvent: Subscription;
+  networkSelected = "Main Net";
 
   constructor(
     private langServ: LanguageService,
@@ -85,9 +86,36 @@ export class NavbarComponent implements OnInit {
         this.node = this.account ? this.account.nodeIP : null;
       }
     });
+
+    // if network changed reload data
+    this.appServ.netWorkEvent.subscribe(() => {
+      this.loadNetwork();
+    });
+
+  }
+
+  ngOnChanges() {
+    console.log(' ngOnChanges: ngOnChanges');
+  }
+  ngAfterViewInit() {
+    console.log(' navbar: loading');
+  }
+
+  loadNetwork() {
+    const ndList = JSON.parse(localStorage.getItem('NODE_LIST'));
+    if (ndList && ndList.length > 0) {
+      const lst = ndList.filter((x: any) => x.selected == true);
+      console.log('network selected: ', lst.length + ': ', lst);
+      this.networkSelected = lst[0].label;
+      console.log('network label: ', this.networkSelected);
+    }
   }
 
   ngOnInit() {
+    try {
+      this.loadNetwork();
+    } catch { }
+
     this.languages = LANGUAGES;
     this.activeLanguage = localStorage.getItem('SELECTED_LANGUAGE') || 'en';
   }
