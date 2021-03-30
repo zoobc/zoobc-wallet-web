@@ -38,10 +38,11 @@ and barton.johnston[at]blockchainzoo.com
 IMPORTANT: The above copyright notice and this permission notice
 shall be included in all copies or substantial portions of the Software. -->
 
-<div class="header" id="navbar-head">
-  <div class="announcement">
+<div [ngClass]="{'header': networkSelected !== 'Main Network', 'header2':networkSelected === 'Main Network'}"
+  id="navbar-head">
+  <div class="announcement" *ngIf="networkSelected !== 'Main Network'">
     <div class="blink">
-      THIS IS THE ZOOBC TESTNET. ZooBC MainNet will launch on March 30, 2021 03:30 GMT +8
+      Attention: you are NOT in the ZooBC MainNet
     </div>
   </div>
   <div class="header-container">
@@ -68,11 +69,7 @@ shall be included in all copies or substantial portions of the Software. -->
         <i class="fa fa-caret-down"></i>
       </button>
       <mat-menu #language="matMenu">
-        <button
-          *ngFor="let language of languages"
-          (click)="selectActiveLanguage(language.code)"
-          mat-menu-item
-        >
+        <button *ngFor="let language of languages" (click)="selectActiveLanguage(language.code)" mat-menu-item>
           {{ language.country }}
         </button>
       </mat-menu>

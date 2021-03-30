@@ -201,6 +201,90 @@
   }
 }
 
+.header2 {
+  height: $header-height;
+  background-color: map-get($primary, 600);
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  z-index: 99;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.12);
+  .header-container {
+    margin: 0 auto;
+    display: flex;
+    max-width: $parent-width;
+    align-items: center;
+    height: 64px;
+    color: white;
+    @media only screen and (max-width: 800px) {
+      padding: 0 16px;
+    }
+    .brand {
+      width: 40%;
+      display: flex;
+      text-decoration: none;
+      .brand-text {
+        height: 40px;
+        display: inherit;
+        &:hover {
+          opacity: 1;
+        }
+        .version {
+          font-size: 12px;
+          margin-top: 0px;
+          font-style: italic;
+        }
+      }
+      .hamburger {
+        margin-right: 8px;
+        @media #{$medium-and-up} {
+          display: none;
+        }
+      }
+      img {
+        width: 40px;
+      }
+      h3 {
+        margin: 0;
+        color: white;
+        padding-left: 16px;
+        font-weight: 200;
+        font-size: 22px;
+        @media #{$small-and-down} {
+          display: none;
+        }
+      }
+    }
+    .menu {
+      width: 70%;
+      text-align: right;
+      ::ng-deep .mat-flat-button {
+        background-color: #b50020;
+        color: white;
+      }
+      .account-dropdown {
+        margin: 0 4px;
+        color: white;
+        i {
+          font-size: 22px;
+        }
+      }
+      .language-dropdown {
+        @media #{$small-and-down} {
+          display: none;
+        }
+        i {
+          margin-left: 8px;
+        }
+        span {
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}
+
 .account-dropdown-list {
   button i {
     margin-right: 8px;

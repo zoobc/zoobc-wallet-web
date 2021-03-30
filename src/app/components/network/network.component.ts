@@ -46,6 +46,7 @@ import zoobc, { GroupData } from 'zbc-sdk';
 import Swal from 'sweetalert2';
 import { TranslateService } from '@ngx-translate/core';
 import { getTranslation } from 'src/helpers/utils';
+import { AppService } from 'src/app/app.service';
 
 @Component({
   selector: 'network',
@@ -70,7 +71,9 @@ export class NetworkComponent implements OnInit {
   wkpsField = new FormControl('', [Validators.required]);
   regex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
-  constructor(private dialog: MatDialog, private translate: TranslateService) {
+  constructor(private dialog: MatDialog,
+    private appService: AppService,
+    private translate: TranslateService) {
     this.formNetwork = new FormGroup({
       label: this.labelField,
       wkps: this.wkpsField,
@@ -114,6 +117,7 @@ export class NetworkComponent implements OnInit {
 
     const groups: GroupData[] = [this.nodeList[selectedId]];
     zoobc.Network.load(groups);
+    this.appService.netWorkEvent.next(selectedId);
   }
 
   openDialog(e, action, node?: Node, idx?: number) {

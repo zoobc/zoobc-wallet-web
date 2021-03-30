@@ -42,14 +42,15 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { MatSidenav } from '@angular/material';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppService implements CanActivate {
   private sidenav: MatSidenav;
-
-  constructor(private router: Router, private authServ: AuthService) {}
+  netWorkEvent: Subject<any> = new Subject<any>();
+  constructor(private router: Router, private authServ: AuthService) { }
 
   isLoggedIn(): boolean {
     return this.authServ.isLoggedIn() ? true : false;
