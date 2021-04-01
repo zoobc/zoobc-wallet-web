@@ -225,6 +225,9 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
   }
 
   streamNodeHardwareInfo() {
+    console.log('== this.account.nodeIP: ', this.account.nodeIP);
+    console.log('== this.authServ.seed: ', this.authServ.seed);
+
     this.isNodeHardwareLoading = true;
     this.isNodeHardwareError = false;
     this.stream = zoobc.Node.getHardwareInfo(this.account.nodeIP, this.authServ.seed).subscribe(
@@ -262,7 +265,7 @@ export class NodeAdminComponent implements OnInit, OnDestroy {
           }
         }
       },
-      err => {}
+      err => { }
     );
   }
 

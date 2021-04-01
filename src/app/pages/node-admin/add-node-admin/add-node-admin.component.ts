@@ -76,7 +76,7 @@ export class AddNodeAdminComponent {
     if (this.formAddNodeAdmin.valid) {
       this.isLoading = true;
       const childSeed = this.authSrv.seed;
-
+      console.log('--- childSeed: ', childSeed);
       const auth: string = zoobc.Poown.createAuth(RequestType.GETPROOFOFOWNERSHIP, childSeed);
 
       zoobc.Poown.request(auth, this.ipAddressField.value)

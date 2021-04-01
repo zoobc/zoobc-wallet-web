@@ -70,6 +70,7 @@ export class NavbarComponent implements OnInit {
 
   routerEvent: Subscription;
   networkSelected = "Main Net";
+  allowNodeAdmin = true;
 
   constructor(
     private langServ: LanguageService,
@@ -83,6 +84,12 @@ export class NavbarComponent implements OnInit {
       if (res instanceof NavigationEnd) {
         this.isLoggedIn = this.authServ.isLoggedIn() ? true : false;
         this.account = authServ.getCurrAccount();
+        if (this.account && this.account.type === 'address') {
+          this.allowNodeAdmin = false;
+        } else {
+          this.allowNodeAdmin = true;
+        }
+
         this.node = this.account ? this.account.nodeIP : null;
       }
     });
@@ -105,9 +112,7 @@ export class NavbarComponent implements OnInit {
     const ndList = JSON.parse(localStorage.getItem('NODE_LIST'));
     if (ndList && ndList.length > 0) {
       const lst = ndList.filter((x: any) => x.selected == true);
-      console.log('network selected: ', lst.length + ': ', lst);
       this.networkSelected = lst[0].label;
-      console.log('network label: ', this.networkSelected);
     }
   }
 

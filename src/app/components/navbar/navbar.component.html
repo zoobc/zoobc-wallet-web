@@ -80,7 +80,7 @@ shall be included in all copies or substantial portions of the Software. -->
       </button>
       <mat-menu #account="matMenu">
         <div class="account-dropdown-list">
-          <ng-container *ngIf="!node">
+          <ng-container *ngIf="!node && allowNodeAdmin">
             <button mat-menu-item (click)="onOpenAddNodeAdmin()">
               <i class="fas fa-plus"></i>
               <span>{{ 'add node admin' | translate }}</span>
