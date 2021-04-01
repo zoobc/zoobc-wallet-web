@@ -69,10 +69,14 @@ export class EditAccountComponent implements OnInit {
 
   onEditAccount() {
     if (this.formEditAccount.valid) {
+      console.log('=== this.formEditAccount.valid: ', this.formEditAccount.valid);
       let accounts = this.authServ.getAllAccount();
+      console.log('=== accounts: ', accounts);
+
       for (let i = 0; i < accounts.length; i++) {
         const account = accounts[i];
-        if (account.address == this.account.address) {
+        if (account && account.address && account.address.value === this.account.address.value) {
+
           accounts[i].name = this.accountNameField.value;
           localStorage.setItem('ACCOUNT', JSON.stringify(accounts));
           localStorage.setItem('CURR_ACCOUNT', JSON.stringify(accounts[i]));

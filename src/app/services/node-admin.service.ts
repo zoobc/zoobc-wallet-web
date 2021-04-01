@@ -45,12 +45,17 @@ import { AuthService, SavedAccount } from './auth.service';
   providedIn: 'root',
 })
 export class NodeAdminService {
-  constructor(private authServ: AuthService) {}
+  constructor(private authServ: AuthService) { }
 
   addNodeAdmin(ip: string) {
     let account: SavedAccount = this.authServ.getCurrAccount();
-    let accounts: SavedAccount[] = this.authServ.getAllAccount();
+    if (account.type === 'one time login') {
+      account.nodeIP = ip;
+      localStorage.setItem('CURR_ACCOUNT', JSON.stringify(account));
+      return;
+    }
 
+    let accounts: SavedAccount[] = this.authServ.getAllAccount();
     for (let i = 0; i < accounts.length; i++) {
       const acc = accounts[i];
       if (acc.address.value == account.address.value) {
