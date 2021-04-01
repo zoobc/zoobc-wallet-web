@@ -48,9 +48,15 @@ import { AuthService, SavedAccount } from './auth.service';
 export class RestoreAccountService {
   private restoring = false;
 
-  constructor(private authServ: AuthService) {}
+  constructor(private authServ: AuthService) { }
 
   async restoreAccounts() {
+
+    const account = this.authServ.getCurrAccount();
+    if (account.type == 'address' || account.type == 'one time login') {
+      return;
+    }
+
     const isRestored: boolean = localStorage.getItem('IS_RESTORED') === 'true';
     if (!isRestored && !this.restoring) {
       this.restoring = true;
